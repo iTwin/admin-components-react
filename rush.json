@@ -1,0 +1,18 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/rush/v5/rush.schema.json",
+  "rushVersion": "5.40.5",
+  "pnpmVersion": "5.17.3",
+  "nodeSupportedVersionRange": ">=10.13.0 <13.0.0",
+  "projectFolderMinDepth": 2,
+  "projectFolderMaxDepth": 3,
+  "repository": {
+    "url": "https://github.com/iTwin/admin-components-react"
+  },
+  "projects": [
+    {
+      "packageName": "@bentley/admin-components-react-scripts",
+      "projectFolder": "common/scripts",
+      "shouldPublish": false
+    }
+  ]
+}
