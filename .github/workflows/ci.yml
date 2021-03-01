@@ -17,15 +17,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with: 
+          ref: ${{ github.event.pull_request.head.ref }}
       - name: Use Node.js ${{ matrix.node-version }}
-        # run: git checkout "${GITHUB_REF:11}"
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
       - run: |
           set -e
-
-          git switch -c "pull-request"
           
           echo 'Installing...'
           node common/scripts/install-run-rush.js install
@@ -37,7 +36,7 @@ jobs:
           node common/scripts/install-run-rush.js rebuild
                
           echo 'Verifying Changes...'
-          node common/scripts/install-run-rush.js change --verify --target-branch origin/pull-request
+          node common/scripts/install-run-rush.js change --verify --target-branch origin/main
 
           echo 'Testing...'
           node common/scripts/install-run-rush.js test --verbose
