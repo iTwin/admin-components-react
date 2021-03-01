@@ -37,7 +37,7 @@ jobs:
           node common/scripts/install-run-rush.js rebuild
                
           echo 'Verifying Changes...'
-          node common/scripts/install-run-rush.js change --verify --target-branch pull-request
+          node common/scripts/install-run-rush.js change --verify --target-branch origin/pull-request
 
           echo 'Testing...'
           node common/scripts/install-run-rush.js test --verbose
