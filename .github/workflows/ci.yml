@@ -23,6 +23,8 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: |
           set -e
+          git checkout "${GITHUB_REF:11}"
+          
           echo 'Installing...'
           node common/scripts/install-run-rush.js install
 
