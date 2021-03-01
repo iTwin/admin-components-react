@@ -25,7 +25,7 @@ jobs:
       - run: |
           set -e
 
-          git checkout "${GITHUB_REF:11}"
+          git switch -c "pull-request"
           
           echo 'Installing...'
           node common/scripts/install-run-rush.js install
@@ -37,7 +37,7 @@ jobs:
           node common/scripts/install-run-rush.js rebuild
                
           echo 'Verifying Changes...'
-          node common/scripts/install-run-rush.js change --verify --target-branch $GITHUB_WORKSPACE
+          node common/scripts/install-run-rush.js change --verify --target-branch pull-request
 
           echo 'Testing...'
           node common/scripts/install-run-rush.js test --verbose
