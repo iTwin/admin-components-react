@@ -4,9 +4,9 @@ Copyright © Bentley Systems, Incorporated. All rights reserved.
 
 iTwin Administration feature components for the iTwin Platform.
 
-| Name                    | Folder                          | Description                                       |
-| ----------------------- | ------------------------------- | ------------------------------------------------- |
-| @bentley/sample-package | packages/modules/sample-package | Example of table row. Remove once packages exist. |
+| Name                  | Folder                          | Description                                       |
+| --------------------- | ------------------------------- | ------------------------------------------------- |
+| @itwin/sample-package | packages/modules/sample-package | Example of table row. Remove once packages exist. |
 
 ## Contributing
 

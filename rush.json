@@ -10,7 +10,7 @@
   },
   "projects": [
     {
-      "packageName": "@bentley/admin-components-react-scripts",
+      "packageName": "@itwin/admin-components-react-scripts",
       "projectFolder": "common/scripts",
       "shouldPublish": false
     }
