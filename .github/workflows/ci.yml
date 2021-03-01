@@ -22,6 +22,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: |
+          set -e
           echo 'Installing...'
           node common/scripts/install-run-rush.js install
 
