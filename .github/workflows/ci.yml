@@ -19,13 +19,15 @@ jobs:
       # - uses: actions/checkout@v2
       # - name: Use Node.js ${{ matrix.node-version }}
       - name: Prepare repository
-        run: git checkout "${GITHUB_REF:11}"
+        # run: git checkout "${GITHUB_REF:11}"
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
       - run: |
           set -e
 
+          git checkout "${GITHUB_REF:11}"
+          
           echo 'Installing...'
           node common/scripts/install-run-rush.js install
 
