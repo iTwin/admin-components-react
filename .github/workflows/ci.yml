@@ -34,7 +34,7 @@ jobs:
           node common/scripts/install-run-rush.js rebuild
                
           echo 'Verifying Changes...'
-          node common/scripts/install-run-rush.js change --verify --target-branch "${$GITHUB_WORKSPACE}"
+          node common/scripts/install-run-rush.js change --verify --target-branch $GITHUB_WORKSPACE
 
           echo 'Testing...'
           node common/scripts/install-run-rush.js test --verbose
