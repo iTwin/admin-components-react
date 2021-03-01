@@ -13,8 +13,8 @@ async function preCommit() {
         "node ./common/scripts/node_modules/prettier --write --config ./.prettierrc --ignore-path ./.prettierignore",
       ],
       "*.{scss,css}": [
-        "node ./common/scripts/copyright-linter.js --",
         "node ./common/scripts/node_modules/stylelint --fix --config ./.stylelintrc",
+        "node ./common/scripts/copyright-linter.js --",
       ],
     },
     verbose: true,
