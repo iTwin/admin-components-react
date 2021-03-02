@@ -17,8 +17,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-        # with: 
-        #   ref: ${{ github.event.pull_request.head.ref }}
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
@@ -35,8 +33,5 @@ jobs:
           echo 'Building...'
           node common/scripts/install-run-rush.js rebuild
                
-          echo 'Verifying Changes...'
-          node common/scripts/install-run-rush.js change --verify --target-branch origin/main
-
           echo 'Testing...'
           node common/scripts/install-run-rush.js test --verbose
