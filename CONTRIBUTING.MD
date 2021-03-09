@@ -15,12 +15,18 @@ Please take a read through this document to help streamline the process of getti
 
 A Project is defined as a self-contained piece of functionality. Each new project is in a sub-folder of the `./packages` folder in this repository. The name of the folder should share a similar name of the package that will be published and should contain the source code for that project.
 
+### Ownership
+
 Because each Project is self-contained, it is necessary for the contributor of the Project to specify a contact for PRs and bug reports. To do this, add an entry to the CODEOWNERS file in the root directory of the repository, e.g.:
 
     # Clara Developer owns the new extension snippet
     /packages/imodel-select  @clara.developer
 
 Remember that the last entry for a matching directory or file name pattern takes precedence over any earlier entries.
+
+### Mono-repo config
+
+Update the file `./rush.json` | `projects` section with the package you are adding.
 
 ### Naming conventions
 
