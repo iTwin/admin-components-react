@@ -26,7 +26,7 @@ Remember that the last entry for a matching directory or file name pattern takes
 
 ### Mono-repo config
 
-Update the file `./rush.json` | `projects` section with the package you are adding.
+Update the `./README.md` and `./rush.json` files with the package you are adding.
 
 ### Naming conventions
 

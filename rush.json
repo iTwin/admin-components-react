@@ -17,13 +17,11 @@
     {
       "packageName": "@itwin/storybook-auth-addon",
       "projectFolder": "packages/modules/storybook-auth-addon",
-      "versionPolicyName": "independentModule",
       "shouldPublish": false
     },
     {
       "packageName": "@itwin/platform-storybook",
       "projectFolder": "packages/apps/storybook",
-      "versionPolicyName": "independentModule",
       "shouldPublish": false
     }
   ]
