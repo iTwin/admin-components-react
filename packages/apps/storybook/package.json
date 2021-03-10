@@ -26,7 +26,8 @@
   },
   "scripts": {
     "start": "start-storybook -s ./node_modules/@itwin/storybook-auth-addon/build,./node_modules/@itwin/storybook-auth-addon/fallback -p 6006",
-    "build": "build-storybook -s ./node_modules/@itwin/storybook-auth-addon/build --loglevel error --quiet"
+    "build": "build-storybook -s ./node_modules/@itwin/storybook-auth-addon/build --loglevel error --quiet",
+    "test": ""
   },
   "dependencies": {
     "sass": "~1.32.8"
