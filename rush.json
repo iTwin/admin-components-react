@@ -13,6 +13,16 @@
       "packageName": "@itwin/admin-components-react-scripts",
       "projectFolder": "common/scripts",
       "shouldPublish": false
+    },
+    {
+      "packageName": "@itwin/storybook-auth-addon",
+      "projectFolder": "packages/modules/storybook-auth-addon",
+      "shouldPublish": false
+    },
+    {
+      "packageName": "@itwin/platform-storybook",
+      "projectFolder": "packages/apps/storybook",
+      "shouldPublish": false
     }
   ]
 }

@@ -4,9 +4,10 @@ Copyright © Bentley Systems, Incorporated. All rights reserved.
 
 iTwin Administration feature components for the iTwin Platform.
 
-| Name                  | Folder                          | Description                                       |
-| --------------------- | ------------------------------- | ------------------------------------------------- |
-| @itwin/sample-package | packages/modules/sample-package | Example of table row. Remove once packages exist. |
+| Name                        | Folder                                | Description                                                          |
+| --------------------------- | ------------------------------------- | -------------------------------------------------------------------- |
+| @itwin/platform-storybook   | packages/apps/storybook               | Storybook to facilitate development of components                    |
+| @itwin/storybook-auth-addon | packages/modules/storybook-auth-addon | Addon to storybook to enable OIDC client authentication for stories. |
 
 ## Contributing
 

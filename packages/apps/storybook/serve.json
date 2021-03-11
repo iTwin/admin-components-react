@@ -1,0 +1,1 @@
+{ "cleanUrls": ["!/**/+(signin-oidc|iframe).html"], "public": "storybook-static" }
