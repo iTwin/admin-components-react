@@ -1,6 +1,20 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
 import addons, { types } from "@storybook/addons";
-import { useAddonState, useArgTypes, useGlobals, useParameter } from "@storybook/api";
-import { IconButton, Icons, TooltipLinkList, WithTooltip } from "@storybook/components";
+import {
+  useAddonState,
+  useArgTypes,
+  useGlobals,
+  useParameter,
+} from "@storybook/api";
+import {
+  IconButton,
+  Icons,
+  TooltipLinkList,
+  WithTooltip,
+} from "@storybook/components";
 import React from "react";
 
 addons.register("project/toolbar", () => {
