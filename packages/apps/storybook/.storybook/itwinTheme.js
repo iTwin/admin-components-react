@@ -16,7 +16,8 @@ export const lightTheme = create({
   // Typography
   fontBase:
     'BlinkMacSystemFont, -apple-system, "Open Sans", "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif',
-  fontCode: '"SF Mono", SFMono-Regular, ui-monospace, "DejaVu Sans Mono", Menlo, Consolas, monospace',
+  fontCode:
+    '"SF Mono", SFMono-Regular, ui-monospace, "DejaVu Sans Mono", Menlo, Consolas, monospace',
 
   // Text colors
   textColor: "rgba(000,000,000,0.8)",
@@ -49,7 +50,8 @@ export const darkTheme = create({
   // Typography
   fontBase:
     'BlinkMacSystemFont, -apple-system, "Open Sans", "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif',
-  fontCode: '"SF Mono", SFMono-Regular, ui-monospace, "DejaVu Sans Mono", Menlo, Consolas, monospace',
+  fontCode:
+    '"SF Mono", SFMono-Regular, ui-monospace, "DejaVu Sans Mono", Menlo, Consolas, monospace',
 
   // Text colors
   textColor: "rgba(255,255,255,0.85)",
@@ -64,4 +66,6 @@ export const darkTheme = create({
   inputBorder: "rgba(255,255,255,0.45)",
   inputTextColor: "rgba(255,255,255,0.85)",
   inputBorderRadius: 3,
+  textInverseColor: "rgba(255,255,255,0.85)",
+  textMutedColor: "rgba(255,255,255,0.40)",
 });

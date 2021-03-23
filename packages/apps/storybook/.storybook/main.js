@@ -7,6 +7,7 @@ module.exports = {
     "@storybook/addon-links",
     "@storybook/addon-essentials",
     "@itwin/storybook-auth-addon",
+    "../src/addon/register.js",
   ],
   webpackFinal: async (config, { configType }) => {
     // `configType` has a value of 'DEVELOPMENT' or 'PRODUCTION'
@@ -18,6 +19,8 @@ module.exports = {
       test: /\.scss$/,
       use: ["style-loader", "css-loader", "sass-loader"],
     });
+
+    config.resolve.mainFields = ["storybookSource", "module", "main"];
 
     // Return the altered config
     return config;

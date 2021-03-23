@@ -1,0 +1,127 @@
+{
+  "name": "@itwin/imodel-browser",
+  "description": "Components that lets the user browse the iModels of a context and select one.",
+  "repository": "https://github.com/iTwin/admin-components-react/tree/main/package/imodel-browser",
+  "private": "false",
+  "version": "0.0.1-alpha",
+  "main": "lib/index.js",
+  "module": "build/index.js",
+  "types": "lib/index.d.ts",
+  "author": "Bentley Systems, Inc.",
+  "license": "MIT",
+  "scripts": {
+    "start": "concurrently npm:watch-build npm:watch-scss npm:watch-images",
+    "watch-build": "concurrently \"npm:dev-build -- -w\" \"npm:prod-build -- -w\"",
+    "watch-scss": "nodemon -e scss --watch src --exec \"yarn dev-copy-scss\"",
+    "watch-images": "nodemon -e * --watch src/images --exec \"yarn dev-copy-images\"",
+    "build": "yarn run dual-build && yarn run copy-scss && yarn run copy-images",
+    "dual-build": "concurrently npm:dev-build npm:prod-build",
+    "dev-build": "tsc -p development.tsconfig.json",
+    "prod-build": "tsc -b",
+    "copy-scss": "concurrently npm:dev-copy-scss npm:prod-copy-scss",
+    "dev-copy-scss": "copyfiles -u1 \"./src/**/*.scss\" ./build",
+    "prod-copy-scss": "copyfiles -u1 \"./src/**/*.scss\" ./lib",
+    "copy-images": "concurrently npm:dev-copy-images npm:prod-copy-images",
+    "dev-copy-images": "copyfiles -u1 \"./src/images/**\" ./build",
+    "prod-copy-images": "copyfiles -u1 \"./src/images/**\" ./lib",
+    "prepare": "yarn run build",
+    "test": "jest --silent",
+    "test:watch": "jest --watch",
+    "securityscan": "tslint --config tslint-securityscan.json --force -o securityscan.log -p tsconfig.json \"src/*.ts*\"",
+    "clean:build": "rimraf lib build",
+    "rebuild": "npm run clean:build && npm run build",
+    "precommit": "lint-staged --verbose"
+  },
+  "storybookSource": "src/index.ts",
+  "files": [
+    "lib/**/*",
+    "build/**/*"
+  ],
+  "dependencies": {
+    "classnames": "^2.2.6",
+    "@bentley/itwinui-react": "~0.5.1"
+  },
+  "devDependencies": {
+    "@bentley/appsec-tslint-rules": "^1.2.20",
+    "@testing-library/react": "^11.0.0",
+    "@types/jest": "^26.0.0",
+    "@types/react": "16.9.23",
+    "@types/react-dom": "16.9.5",
+    "concurrently": "^4.1.0",
+    "copyfiles": "^2.1.0",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^26.0.0",
+    "jest-mock-console": "^1.0.0",
+    "nodemon": "^1.19.1",
+    "react": "16.13.1",
+    "react-dom": "16.13.1",
+    "react-test-renderer": "16.13.1",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^26.0.0",
+    "typescript": "^4.0.0",
+    "@types/classnames": "~2.2.11",
+    "msw": "~0.27.1",
+    "@testing-library/react-hooks": "~5.1.0",
+    "jest-fetch-mock": "~3.0.3"
+  },
+  "peerDependencies": {
+    "react": "^16.13.0",
+    "react-dom": "^16.13.0"
+  },
+  "publishConfig": {
+    "registry": "https://pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/",
+    "access": "public"
+  },
+  "jest": {
+    "roots": [
+      "<rootDir>/src"
+    ],
+    "transform": {
+      "^.+\\.(ts|tsx)$": "ts-jest"
+    },
+    "transformIgnorePatterns": [
+      "[/\\\\]node_modules[/\\\\](?!@bentley/ui).+\\.(js|jsx|ts|tsx)$",
+      "^.+\\.module\\.(css|sass|scss)$"
+    ],
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga|svg?.+)$": "<rootDir>/src/tests/mocks/fileMock.js",
+      "\\.(css|less|scss|sass)$": "identity-obj-proxy"
+    },
+    "verbose": true,
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "test",
+      ".d.ts"
+    ],
+    "collectCoverageFrom": [
+      "<rootDir>/src/**"
+    ],
+    "setupFilesAfterEnv": [
+      "./scripts/setupJest.js"
+    ]
+  },
+  "resolutions": {
+    "minimist": "^1.2.5"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "node --max_old_space_size=4096 ../../../node_modules/eslint/bin/eslint.js --config ../../../.eslintrc.ts.autofix.json --ignore-path ../../../.eslintignore --fix",
+      "prettier --write --config ../../../.prettierrc --ignore-path ../../../.prettierignore",
+      "node --max_old_space_size=4096 ../../../node_modules/eslint/bin/eslint.js --config ../../../.eslintrc.ts.json --ignore-path ../../../.eslintignore --color",
+      "node ../../../scripts/copyright-linter.js --"
+    ],
+    "*.{js,jsx}": [
+      "node --max_old_space_size=4096 ../../../node_modules/eslint/bin/eslint.js --ignore-path ../../../.eslintignore --no-eslintrc --parser-options=ecmaVersion:2018,sourceType:module --plugin=simple-import-sort --rule=simple-import-sort/sort:error --fix",
+      "prettier --write --config ../../../.prettierrc --ignore-path ../../../.prettierignore",
+      "node --max_old_space_size=4096 ../../../node_modules/eslint/bin/eslint.js --config ../../../.eslintrc.js.json --ignore-path ../../../.eslintignore --color",
+      "node ../../../scripts/copyright-linter.js --"
+    ],
+    "*.{md,json}": [
+      "prettier --write --config ../../../.prettierrc --ignore-path ../../../.prettierignore"
+    ],
+    "*.{scss,css}": [
+      "stylelint --fix --config ../../../.stylelintrc",
+      "node ../../../scripts/copyright-linter.js --"
+    ]
+  }
+}

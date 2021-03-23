@@ -12,8 +12,9 @@ addons.register("auth/toolbar", () => {
     type: types.TOOL,
     //👇 Shows the Toolbar UI element if either the Canvas or Docs tab is active
     match: ({ viewMode }) => !!(viewMode && viewMode.match(/^(story|docs)$/)),
-    render: ({ active }) => {
+    render: () => {
       const [globals, updateGlobals] = useGlobals();
+
       const [state, setState] = useAddonState("auth/toolbar", {
         loading: false,
         email: "",
@@ -22,24 +23,32 @@ addons.register("auth/toolbar", () => {
       const client = React.useRef(null);
 
       const authenticate = async () => {
+        if (state.loading) {
+          return;
+        }
         setState({ loading: true });
-        let email = state.email;
+        let email = "";
         let tokenString = "";
         try {
           if (!client.current) {
             client.current = new BrowserAuthorizationClient({
               ...authClientConfig,
               redirectUri: `${window.location.origin}${window.location.pathname}signin-oidc.html`,
+              postSignoutRedirectUri: `${window.location.origin}${window.location.pathname}signin-oidc.html`,
               responseType: "code",
             });
           }
           const context = new ClientRequestContext();
-          await client.current.signInPopup(context);
-          tokenString = (
-            await client.current.getAccessToken(context)
-          ).toTokenString();
-          email = (await client.current.getAccessToken(context)).getUserInfo()
-            .email?.id;
+          if (!globals.accessToken) {
+            await client.current.signInPopup(context);
+            tokenString = (
+              await client.current.getAccessToken(context)
+            ).toTokenString();
+            email = JSON.parse(atob(tokenString.split(" ")[1]?.split(".")[1]))
+              .email;
+          } else {
+            await client.current.signOutPopup(context).catch(() => {});
+          }
         } finally {
           updateGlobals({ accessToken: tokenString });
           setState({ loading: false, email });
@@ -48,24 +57,22 @@ addons.register("auth/toolbar", () => {
 
       return (
         <IconButton
-          active={active}
+          active={globals.accessToken}
           title={
             state.loading
               ? "Authenticating..."
               : globals.accessToken
-              ? `Authenticated: ${state.email}`
+              ? `Authenticated: ${state.email}, click to sign off`
               : `Authenticate`
           }
+          onClick={() => authenticate()}
         >
           {state.loading ? (
             <div style={{ width: 16, position: "relative" }}>
               <Loader size={16} />
             </div>
           ) : (
-            <Icons
-              icon={globals.accessToken ? "lock" : "key"}
-              onClick={() => authenticate()}
-            />
+            <Icons icon={globals.accessToken ? "lock" : "key"} />
           )}
         </IconButton>
       );
