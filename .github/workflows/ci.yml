@@ -21,11 +21,11 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-        env:
-          ADO_PAT: ${{ secrets.ADO_PAT }}
       - run: |
           set -e
-          
+
+          echo "//pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/:_authToken=${{secrets.ADO_PAT}}" > common/config/.npmrc
+
           echo 'Installing...'
           node common/scripts/install-run-rush.js install
 
