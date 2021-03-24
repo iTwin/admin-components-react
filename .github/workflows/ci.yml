@@ -21,6 +21,8 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
+        env:
+          ADO_PAT: ${{ secrets.ADO_PAT }}
       - run: |
           set -e
           
