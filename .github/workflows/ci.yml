@@ -24,7 +24,7 @@ jobs:
       - run: |
           set -e
 
-          echo "//pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/:_authToken=${{secrets.ADO_PAT}}" > common/config/.npmrc
+          echo "//pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/:_authToken=${{secrets.ADO_PAT}}" > common/config/rush/.npmrc
 
           echo 'Installing...'
           node common/scripts/install-run-rush.js install
