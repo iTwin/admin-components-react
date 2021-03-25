@@ -2,6 +2,7 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
+
 import React from "react";
 
 import { GridStructure } from "../../components/gridStructure/GridStructure";
@@ -18,11 +19,14 @@ export interface IModelGridProps {
   projectId: string | undefined;
   /** Asset Id to list the iModels from (mutually exclusive to projectId) */
   assetId: string | undefined;
-  /** Thumbnail click handler */
+  /** Thumbnail click handler. */
   onThumbnailClick?(iModel: IModelFull): void;
-  /** List of options to build for each imodel context menu */
+  /** List of options to build for each imodel context menu. */
   iModelOptions?: ContextMenuBuilderItem<IModelFull>[];
-  /** Object that configures different overrides for the API */
+  /** Object that configures different overrides for the API.
+   * @property `data`: Array of iModels used in the grid.
+   * @property `serverEnvironmentPrefix`: Either qa- or dev-.
+   */
   apiOverrides?: ApiOverrides<IModelFull[]>;
 }
 
