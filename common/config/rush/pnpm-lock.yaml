@@ -1,6 +1,5 @@
 dependencies:
   '@babel/core': 7.13.1
-  '@bentley/appsec-tslint-rules': 1.2.21
   '@bentley/bentleyjs-core': 2.11.0
   '@bentley/frontend-authorization-client': 2.11.0_124fd8799cc8196bebc67d27cf7bf3e3
   '@bentley/itwin-client': 2.11.0_@bentley+bentleyjs-core@2.11.0
@@ -31,8 +30,6 @@ dependencies:
   '@typescript-eslint/parser': 3.10.1_eslint@7.20.0+typescript@4.2.3
   babel-loader: 8.2.2_@babel+core@7.13.1
   classnames: 2.2.6
-  concurrently: 4.1.2
-  copyfiles: 2.4.1
   css-loader: 5.2.0
   eslint: 7.20.0
   eslint-config-airbnb: 0.0.4
@@ -48,12 +45,10 @@ dependencies:
   identity-obj-proxy: 3.0.0
   jest: 26.6.0
   jest-fetch-mock: 3.0.3
-  jest-mock-console: 1.0.1_jest@26.6.0
   lint-staged: 10.5.4
   msw: 0.27.1
   mv: 2.1.1
   node-sass: 5.0.0
-  nodemon: 1.19.4
   postcss: 8.2.8
   prettier: 2.2.1
   react: 16.13.1
@@ -20597,7 +20592,7 @@ packages:
     dev: false
     name: '@rush-temp/imodel-browser'
     resolution:
-      integrity: sha512-pbjtk+GnhrKE8SwkOOFCWYNqaWrAuVFMe0PncKi8oU5Datv4e0Q2gKydnrWNZ49v3abefB2UdnY4s3HDLSJZsw==
+      integrity: sha512-5shewElMOQ65zahyGWxRbnAafafcOg9jeqwkDnTh2BGSbkJPlW/uF+Dx81wH9IQb7xaNwUAZVeAz3++5tyaK2A==
       tarball: file:projects/imodel-browser.tgz
     version: 0.0.0
   file:projects/platform-storybook.tgz_b58b18af5da254a63d5f476c2bfd8b28:
@@ -20665,7 +20660,6 @@ packages:
 registry: ''
 specifiers:
   '@babel/core': ^7.12.10
-  '@bentley/appsec-tslint-rules': ^1.2.20
   '@bentley/bentleyjs-core': 2.11.0
   '@bentley/frontend-authorization-client': 2.11.0
   '@bentley/itwin-client': 2.11.0
@@ -20696,8 +20690,6 @@ specifiers:
   '@typescript-eslint/parser': ^3.6.0
   babel-loader: ^8.2.2
   classnames: ^2.2.6
-  concurrently: ^4.1.0
-  copyfiles: ^2.1.0
   css-loader: ^5.0.1
   eslint: ^7.4.0
   eslint-config-airbnb: ^0.0.4
@@ -20713,12 +20705,10 @@ specifiers:
   identity-obj-proxy: ^3.0.0
   jest: ^26.0.0
   jest-fetch-mock: ^3.0.3
-  jest-mock-console: ^1.0.0
   lint-staged: ^10.2.11
   msw: ^0.27.1
   mv: ^2.1.1
   node-sass: ^5.0.0
-  nodemon: ^1.19.1
   postcss: ^8.2.8
   prettier: ^2.0.5
   react: ^16.13.0

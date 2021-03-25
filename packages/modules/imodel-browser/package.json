@@ -13,9 +13,7 @@
     "start": "rollup -cw",
     "build": "rollup --silent -c",
     "test": "jest --silent",
-    "securityscan": "tslint --config tslint-securityscan.json --force -o securityscan.log -p tsconfig.json \"src/*.ts*\"",
-    "clean": "rimraf cjs esm",
-    "precommit": "lint-staged --verbose"
+    "clean": "rimraf cjs esm"
   },
   "storybookSource": "src/index.ts",
   "files": [
@@ -27,7 +25,6 @@
     "@bentley/itwinui-react": "^0.5.1"
   },
   "devDependencies": {
-    "@bentley/appsec-tslint-rules": "^1.2.20",
     "@rollup/plugin-commonjs": "~17.1.0",
     "@testing-library/react-hooks": "^5.1.0",
     "@testing-library/react": "^11.1.0",
@@ -37,8 +34,6 @@
     "@types/react": "16.9.23",
     "@typescript-eslint/eslint-plugin": "^3.6.0",
     "@typescript-eslint/parser": "^3.6.0",
-    "concurrently": "^4.1.0",
-    "copyfiles": "^2.1.0",
     "eslint-config-airbnb": "^0.0.4",
     "eslint-config-prettier": "^6.11.0",
     "eslint-config-react-app": "^5.2.1",
@@ -52,11 +47,9 @@
     "eslint": "^7.4.0",
     "identity-obj-proxy": "^3.0.0",
     "jest-fetch-mock": "^3.0.3",
-    "jest-mock-console": "^1.0.0",
     "jest": "^26.0.0",
     "msw": "^0.27.1",
     "node-sass": "^5.0.0",
-    "nodemon": "^1.19.1",
     "postcss": "^8.2.8",
     "prettier": "^2.0.5",
     "react-dom": "^16.13.0",
