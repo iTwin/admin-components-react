@@ -1,6 +1,6 @@
 # Description
 
-Components that lets the user browse the iModels of a context and select one.
+Components that let the user browse the iModels of a context and select one.
 
 # Development
 
