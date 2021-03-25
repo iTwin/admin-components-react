@@ -4,9 +4,9 @@
   "repository": "https://github.com/iTwin/admin-components-react/tree/main/package/imodel-browser",
   "private": "false",
   "version": "0.0.1-alpha",
-  "main": "lib/index.js",
-  "module": "build/index.js",
-  "types": "lib/index.d.ts",
+  "main": "cjs/index.js",
+  "module": "esm/index.js",
+  "types": "cjs/index.d.ts",
   "author": "Bentley Systems, Inc.",
   "license": "MIT",
   "scripts": {
@@ -14,13 +14,13 @@
     "build": "rollup --silent -c",
     "test": "jest --silent",
     "securityscan": "tslint --config tslint-securityscan.json --force -o securityscan.log -p tsconfig.json \"src/*.ts*\"",
-    "clean": "rimraf lib build",
+    "clean": "rimraf cjs esm",
     "precommit": "lint-staged --verbose"
   },
   "storybookSource": "src/index.ts",
   "files": [
-    "lib/**/*",
-    "build/**/*"
+    "cjs/**/*",
+    "esm/**/*"
   ],
   "dependencies": {
     "classnames": "^2.2.6",
