@@ -31,8 +31,8 @@ export const parameters = {
     theme: { ...themes.light, ...lightTheme },
   },
   authClientConfig: {
-    clientId: "spa-tHirojFEXwyjUz0VdYYubeNQ5",
-    scope: ["email", "imodels:read", "projects:read"].join(" "),
+    clientId: process.env.STORYBOOK_AUTH_CLIENT_ID,
+    scope: ["imodels:read", "projects:read"].join(" "),
     authority: "https://qa-ims.bentley.com",
   },
 };
