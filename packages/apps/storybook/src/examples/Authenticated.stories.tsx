@@ -12,7 +12,6 @@ import {
 } from "../utils/storyHelp";
 import { Authentiated, AuthenticatedProps } from "./Authenticated";
 
-// also exported from '@storybook/react' if you can deal with breaking changes in 6.1
 export default {
   title: "Example/Authenticated",
   component: Authentiated,
