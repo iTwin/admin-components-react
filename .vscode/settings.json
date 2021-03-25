@@ -1,0 +1,21 @@
+{
+  "stylelint.autoFixOnSave": true,
+  "eslint.validate": [
+    "typescript",
+    "typescriptreact",
+    "javascript",
+    "javascriptreact"
+  ],
+  "eslint.workingDirectories": [
+    {
+      "directory": "packages/modules/imodel-browser",
+    }
+  ],
+  "files.exclude": {
+    "obj": true,
+    "bin": true
+  },
+  "search.exclude": {
+    "**/CHANGELOG.md": true
+  }
+}
