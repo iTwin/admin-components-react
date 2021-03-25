@@ -7,7 +7,7 @@ import { BrowserAuthorizationClient } from "@bentley/frontend-authorization-clie
 import addons, { types } from "@storybook/addons";
 import { useAddonState, useGlobals, useParameter } from "@storybook/api";
 import { IconButton, Icons, Loader } from "@storybook/components";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 addons.register("auth/toolbar", () => {
   addons.add("auth-toolbar-addon/toolbar", {
@@ -18,7 +18,7 @@ addons.register("auth/toolbar", () => {
     match: ({ viewMode }) => !!(viewMode && viewMode.match(/^(story|docs)$/)),
     render: () => {
       const [globals, updateGlobals] = useGlobals();
-
+      const redirectURI = `${window.location.origin}${window.location.pathname}signin-oidc.html`;
       const [state, setState] = useAddonState("auth/toolbar", {
         loading: false,
         email: "",
@@ -26,10 +26,18 @@ addons.register("auth/toolbar", () => {
       const authClientConfig = useParameter("authClientConfig", {});
       const client = React.useRef(null);
 
+      const [buildMissing, setBuildMissing] = useState(false);
+
       const authenticate = async () => {
-        if (state.loading) {
+        if (state.loading || buildMissing) {
           return;
         }
+        const response = await fetch(redirectURI);
+        if (!response.ok && response.status === 404) {
+          setBuildMissing(true);
+          return;
+        }
+
         setState({ loading: true });
         let email = "";
         let tokenString = "";
@@ -37,8 +45,8 @@ addons.register("auth/toolbar", () => {
           if (!client.current) {
             client.current = new BrowserAuthorizationClient({
               ...authClientConfig,
-              redirectUri: `${window.location.origin}${window.location.pathname}signin-oidc.html`,
-              postSignoutRedirectUri: `${window.location.origin}${window.location.pathname}signin-oidc.html`,
+              redirectUri: redirectURI,
+              postSignoutRedirectUri: redirectURI,
               responseType: "code",
             });
           }
@@ -63,7 +71,9 @@ addons.register("auth/toolbar", () => {
         <IconButton
           active={globals.accessToken}
           title={
-            state.loading
+            buildMissing
+              ? `"storybook-auth-addon" is likely not built, run "rush build"`
+              : state.loading
               ? "Authenticating..."
               : globals.accessToken
               ? `Authenticated: ${state.email}, click to sign off`
@@ -71,9 +81,18 @@ addons.register("auth/toolbar", () => {
           }
           onClick={() => authenticate()}
         >
-          {state.loading ? (
+          {buildMissing ? (
+            <Icons icon={"alert"} style={{ color: "#FF4400" }} />
+          ) : state.loading ? (
             <div style={{ width: 16, position: "relative" }}>
-              <Loader size={16} />
+              <Loader
+                size={16}
+                style={{
+                  borderLeftColor: "currentColor",
+                  borderBottomColor: "currentColor",
+                  borderRightColor: "currentColor",
+                }}
+              />
             </div>
           ) : (
             <Icons icon={globals.accessToken ? "lock" : "key"} />

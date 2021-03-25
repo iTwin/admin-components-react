@@ -18,14 +18,16 @@
     "@storybook/theming": "^6.1.11",
     "babel-loader": "^8.2.2",
     "css-loader": "^5.0.1",
-    "sass": "~1.32.8",
+    "node-sass": "^5.0.0",
+    "rimraf": "^3.0.2",
     "sass-loader": "^10.1.1",
     "storybook-dark-mode": "^1.0.4",
     "style-loader": "^2.0.0"
   },
   "scripts": {
-    "start": "start-storybook -s ./node_modules/@itwin/storybook-auth-addon/build,./node_modules/@itwin/storybook-auth-addon/fallback -p 6006",
+    "start": "start-storybook -s ./node_modules/@itwin/storybook-auth-addon/build -p 6006",
     "build": "build-storybook -s ./node_modules/@itwin/storybook-auth-addon/build --loglevel error --quiet",
-    "test": ""
+    "test": "",
+    "clean": "rimraf storybook-static"
   }
 }
