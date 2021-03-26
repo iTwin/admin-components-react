@@ -10,9 +10,11 @@ export interface AuthenticatedProps {
    * Bearer token with "email" scope
    */
   accessToken: string | undefined;
+  /** Unauthenticated messsage */
+  unauthenticatedText: string | undefined;
 }
 export const Authentiated = (props: AuthenticatedProps) => {
-  let text = "Unauthenticated";
+  let text = props.unauthenticatedText ?? "Unauthenticated";
   const token = props.accessToken;
   if (token) {
     try {

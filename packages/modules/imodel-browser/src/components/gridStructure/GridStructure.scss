@@ -1,0 +1,18 @@
+/*---------------------------------------------------------------------------------------------
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
+@import "../../index.scss";
+$space-for-shadows: 3px;
+
+.iac-grid-structure {
+  display: grid;
+  justify-content: space-between;
+  grid-template-columns: repeat(auto-fill, minmax(288px, 1fr));
+  grid-auto-rows: min-content;
+  margin: calc(22px - #{$space-for-shadows})
+    calc(#{$responsive-grid-margin} - #{$space-for-shadows});
+  gap: $responsive-grid-gutter;
+  overflow: hidden;
+  padding: $space-for-shadows;
+}

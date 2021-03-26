@@ -17,8 +17,9 @@
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "mv": "^2.1.1",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
+    "react-dom": "^16.13.0",
+    "react": "^16.13.0",
+    "rimraf": "^3.0.2",
     "web-vitals": "^0.2.4"
   },
   "peerDependencies": {
@@ -29,7 +30,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build && node ./scripts/renameAuth.js",
     "test": "",
-    "eject": "react-scripts eject"
+    "clean": "rimraf build"
   },
   "eslintConfig": {
     "extends": [

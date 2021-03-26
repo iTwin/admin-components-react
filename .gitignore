@@ -7,6 +7,8 @@ yarn-error.log*
 # Output
 /**/build
 /**/lib
+/**/cjs
+/**/esm
 
 # Dependency directories
 node_modules/
@@ -29,3 +31,5 @@ common/temp/
 **/report.**.json
 
 *.eslintcache
+
+.env*.local

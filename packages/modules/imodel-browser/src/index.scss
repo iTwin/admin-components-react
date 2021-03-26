@@ -1,0 +1,10 @@
+/*---------------------------------------------------------------------------------------------
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
+$responsive-grid-margin: var(--responsive-grid-margin, 64px);
+$responsive-grid-gutter: var(--responsive-grid-gutter, 24px);
+$responsive-grid-columns: var(--responsive-grid-columns, 12);
+$responsive-grid-medium-max-width: 768px;
+$responsive-grid-small-max-width: 480px;
+$responsive-grid-x-small-max-width: 320px;

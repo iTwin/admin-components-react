@@ -1,19 +1,22 @@
-import { UiCore } from "@bentley/ui-core";
 import addons from "@storybook/addons";
 import { themes } from "@storybook/theming";
 
-import { darkTheme, lightTheme } from "./uicoreTheme";
+import { darkTheme, lightTheme } from "./itwinTheme";
 
 // get an instance to the communication channel for the manager and preview
 const channel = addons.getChannel();
 
-//This is ONLY there so UiCore registers the css theme colors;
-UiCore.length;
 // switch body class for story along with interface theme
 channel.on("DARK_MODE", (isDark) => {
   document.documentElement.setAttribute(
     "data-theme",
     isDark ? "dark" : "light"
+  );
+  document.documentElement.classList.add(
+    `iui-theme-${isDark ? "dark" : "light"}`
+  );
+  document.documentElement.classList.remove(
+    `iui-theme-${!isDark ? "dark" : "light"}`
   );
 });
 
@@ -28,8 +31,8 @@ export const parameters = {
     theme: { ...themes.light, ...lightTheme },
   },
   authClientConfig: {
-    clientId: "spa-tHirojFEXwyjUz0VdYYubeNQ5",
-    scope: ["email", "imodels:read", "projects:read"].join(" "),
+    clientId: process.env.STORYBOOK_AUTH_CLIENT_ID,
+    scope: ["imodels:read", "projects:read"].join(" "),
     authority: "https://qa-ims.bentley.com",
   },
 };

@@ -23,7 +23,17 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: |
           set -e
-          
+
+          npm config set @bentley:registry pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/
+          npm config set //pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/:username Default
+          npm config set //pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/:_password ${{secrets.ADO_PAT}}
+          npm config set //pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/:email user@bentley.com
+          npm config set //pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/:always-auth true
+          npm config set //pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/:username Default
+          npm config set //pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/:_password ${{secrets.ADO_PAT}}
+          npm config set //pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/:email user@bentley.com
+          npm config set //pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/:always-auth true
+
           echo 'Installing...'
           node common/scripts/install-run-rush.js install
 
