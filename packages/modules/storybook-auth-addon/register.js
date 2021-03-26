@@ -6,7 +6,7 @@ import { ClientRequestContext } from "@bentley/bentleyjs-core";
 import { BrowserAuthorizationClient } from "@bentley/frontend-authorization-client";
 import addons, { types } from "@storybook/addons";
 import { useAddonState, useGlobals, useParameter } from "@storybook/api";
-import { IconButton, Icons, Loader } from "@storybook/components";
+import { IconButton, Icons, Loader, WithTooltip } from "@storybook/components";
 import React, { useEffect, useState } from "react";
 
 addons.register("auth/toolbar", () => {
@@ -32,16 +32,16 @@ addons.register("auth/toolbar", () => {
         if (state.loading || buildMissing) {
           return;
         }
-        const response = await fetch(redirectURI);
-        if (!response.ok && response.status === 404) {
-          setBuildMissing(true);
-          return;
-        }
 
         setState({ loading: true });
         let email = "";
         let tokenString = "";
         try {
+          const response = await fetch(redirectURI);
+          if (!response.ok && response.status === 404) {
+            setBuildMissing(true);
+            return;
+          }
           if (!client.current) {
             client.current = new BrowserAuthorizationClient({
               ...authClientConfig,
@@ -68,36 +68,47 @@ addons.register("auth/toolbar", () => {
       };
 
       return (
-        <IconButton
-          active={globals.accessToken}
-          title={
-            buildMissing
-              ? `"storybook-auth-addon" is likely not built, run "rush build"`
-              : state.loading
-              ? "Authenticating..."
-              : globals.accessToken
-              ? `Authenticated: ${state.email}, click to sign off`
-              : `Authenticate`
-          }
-          onClick={() => authenticate()}
+        <WithTooltip
+          placement="auto"
+          trigger="hover"
+          closeOnClick
+          tooltip={({ onHide }) => {
+            return (
+              <div style={{ padding: "5px 10px" }} onClick={onHide}>
+                {buildMissing
+                  ? `${redirectURI} not found: "storybook-auth-addon" is likely not built, run "rush build"`
+                  : state.loading
+                  ? "Authenticating..."
+                  : globals.accessToken
+                  ? `Authenticated: ${state.email}, click to sign off`
+                  : `Authenticate`}
+              </div>
+            );
+          }}
         >
-          {buildMissing ? (
-            <Icons icon={"alert"} style={{ color: "#FF4400" }} />
-          ) : state.loading ? (
-            <div style={{ width: 16, position: "relative" }}>
-              <Loader
-                size={16}
-                style={{
-                  borderLeftColor: "currentColor",
-                  borderBottomColor: "currentColor",
-                  borderRightColor: "currentColor",
-                }}
-              />
-            </div>
-          ) : (
-            <Icons icon={globals.accessToken ? "lock" : "key"} />
-          )}
-        </IconButton>
+          <IconButton
+            active={globals.accessToken}
+            onClick={() => authenticate()}
+          >
+            {buildMissing ? (
+              <Icons icon={"alert"} style={{ color: "#FF4400" }} />
+            ) : state.loading ? (
+              <div style={{ width: 16, position: "relative" }}>
+                <Loader
+                  size={16}
+                  style={{
+                    borderLeftColor: "currentColor",
+                    borderBottomColor: "currentColor",
+                    borderRightColor: "currentColor",
+                    borderTopColor: "rgba(0,0,0,0)",
+                  }}
+                />
+              </div>
+            ) : (
+              <Icons icon={globals.accessToken ? "lock" : "key"} />
+            )}
+          </IconButton>
+        </WithTooltip>
       );
     },
   });
