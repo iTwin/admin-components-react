@@ -3,6 +3,7 @@
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 
-export * from "./containers/imodel-grid/IModelGrid";
-export * from "./containers/imodel-grid/IModelTile";
-export * from "./components/iModelThumbnail/IModelThumbnail";
+
+export * from "./containers/iModelGrid/IModelGrid";
+export * from "./containers/iModelTile/IModelTile";
+export * from "./containers/iModelThumbnail/IModelThumbnail";

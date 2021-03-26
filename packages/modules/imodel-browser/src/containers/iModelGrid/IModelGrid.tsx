@@ -8,7 +8,7 @@ import React from "react";
 import { GridStructure } from "../../components/gridStructure/GridStructure";
 import { ApiOverrides, IModelFull } from "../../types";
 import { ContextMenuBuilderItem } from "../../utils/_buildMenuOptions";
-import { IModelTile } from "./IModelTile";
+import { IModelTile } from "../iModelTile/IModelTile";
 import { useIModelData } from "./useIModelData";
 
 export interface IModelGridProps {
