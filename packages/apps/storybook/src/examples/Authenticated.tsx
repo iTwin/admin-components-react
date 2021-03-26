@@ -7,7 +7,7 @@ import React from "react";
 
 export interface AuthenticatedProps {
   /**
-   * Bearer token with "email" scope
+   * Bearer token with no particular scope
    */
   accessToken: string | undefined;
   /** Unauthenticated messsage */
