@@ -76,50 +76,5 @@
   "publishConfig": {
     "registry": "https://pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/",
     "access": "public"
-  },
-  "jest": {
-    "roots": [
-      "<rootDir>/src"
-    ],
-    "transform": {
-      "^.+\\.(ts|tsx)$": "ts-jest"
-    },
-    "transformIgnorePatterns": [
-      "[/\\\\]node_modules[/\\\\](?!@bentley/ui).+\\.(js|jsx|ts|tsx)$",
-      "^.+\\.module\\.(css|sass|scss)$"
-    ],
-    "moduleNameMapper": {
-      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga|svg?.+)$": "<rootDir>/src/tests/mocks/fileMock.js",
-      "\\.(css|less|scss|sass)$": "identity-obj-proxy"
-    },
-    "verbose": true,
-    "coveragePathIgnorePatterns": [
-      "/node_modules/",
-      "test",
-      ".d.ts"
-    ],
-    "collectCoverageFrom": [
-      "<rootDir>/src/**"
-    ],
-    "setupFilesAfterEnv": [
-      "./scripts/setupJest.js"
-    ]
-  },
-  "resolutions": {
-    "minimist": "^1.2.5"
-  },
-  "eslintConfig": {
-    "extends": [
-      "../../../common/scripts/.eslintrc.ts.autofix.json",
-      "../../../common/scripts/.eslintrc.ts.json"
-    ],
-    "rules": {
-      "prettier/prettier": [
-        "off",
-        {
-          "endOfLine": "lf"
-        }
-      ]
-    }
   }
 }
