@@ -30,7 +30,6 @@ dependencies:
   '@typescript-eslint/parser': 3.10.1_eslint@7.20.0+typescript@4.2.3
   babel-loader: 8.2.2_@babel+core@7.13.1
   classnames: 2.2.6
-  css-loader: 5.2.0
   eslint: 7.20.0
   eslint-config-airbnb: 0.0.4
   eslint-config-prettier: 6.15.0_eslint@7.20.0
@@ -59,9 +58,7 @@ dependencies:
   rollup-plugin-peer-deps-external: 2.2.4_rollup@2.42.4
   rollup-plugin-postcss: 4.0.0_postcss@8.2.8
   rollup-plugin-typescript2: 0.30.0_rollup@2.42.4+typescript@4.2.3
-  sass-loader: 10.1.1_node-sass@5.0.0
   storybook-dark-mode: 1.0.6_16bfb8b22ea2d0be1b21ffb3c73b4fbe
-  style-loader: 2.0.0
   stylelint: 13.11.0
   stylelint-config-prettier: 8.0.2_stylelint@13.11.0
   stylelint-config-sass-guidelines: 7.1.0_stylelint@13.11.0
@@ -20626,7 +20623,7 @@ packages:
       react-dom: '*'
       typescript: '*'
     resolution:
-      integrity: sha512-NkwhfKhtFZdoYoVECNdExGtzUUL78q5Jcxl4guqnda+2y1n3+qx8vlTEvi5alUrVpTT5Nja1BgHivHkDw977qQ==
+      integrity: sha512-F1OrHEGKzYZKwqG6/VHQ/nQUSQoOwOQqrFi3HoC8AmaK1if1pPBXG+hVjBsEy5VgFGfCpj4VGUO4pN072ycIUw==
       tarball: file:projects/platform-storybook.tgz
     version: 0.0.0
   file:projects/storybook-auth-addon.tgz_f7805e32c1d7793bc2164f8c531a8739:
@@ -20690,7 +20687,6 @@ specifiers:
   '@typescript-eslint/parser': ^3.6.0
   babel-loader: ^8.2.2
   classnames: ^2.2.6
-  css-loader: ^5.0.1
   eslint: ^7.4.0
   eslint-config-airbnb: ^0.0.4
   eslint-config-prettier: ^6.11.0
@@ -20719,9 +20715,7 @@ specifiers:
   rollup-plugin-peer-deps-external: ^2.2.4
   rollup-plugin-postcss: ^4.0.0
   rollup-plugin-typescript2: ^0.30.0
-  sass-loader: ^10.1.1
   storybook-dark-mode: ^1.0.4
-  style-loader: ^2.0.0
   stylelint: ^13.6.1
   stylelint-config-prettier: ^8.0.2
   stylelint-config-sass-guidelines: ^7.0.0
