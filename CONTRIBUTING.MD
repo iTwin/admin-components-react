@@ -14,7 +14,7 @@ Please take a read through this document to help streamline the process of getti
 
 ## Available Tools
 
-This monorepo put some tools at your disposal.
+Tooling to assist with development of component libraries within the monorepo. 
 
 ### Rush
 
@@ -28,30 +28,30 @@ This monorepo is using [Rush.js](https://rushjs.io/pages/developer/new_developer
 
 `rush test`: This command should be run **before a _git commit_**, it will run all tests for the full repository.
 
-`rush clean`: This command is available to delete all build artifact, each packages needs to define that script themselves.
+`rush clean`: This command is available to delete all build artifacts. Each package should define the script to meet their own needs.
 
 ### Storybook
 
-[Storybook](https://storybook.js.org/) is a tool that will allow developing components without having to create a separate test app, some [addons](#storybook-addons) are included to facilitate accessToken management, and selection, for example.
+[Storybook](https://storybook.js.org/) is a tool that will allow developing components without having to create a separate test application. Some [addons](#storybook-addons) are included to facilitate access token management and project selection, for example.
 
 Storybook is using an addon that is built locally, so you will need to have run `rush build` at least once before starting storybook.
 
-It also requires an OIDC client Id registered for SPA use of [Bentley API's](https://qa-developer.bentley.com/register), this client will require scopes that will evolve over time. [Current storybook configuration](packages/apps/storybook/.storybook/preview.js) should show which are required at the moment. (Look for `authClientConfig:scope` in the parameters json object). That client should have the `http://localhost:6006/signin-oidc.html` redirect url.
+It also requires an OIDC client id registered for SPA use of [Bentley API's](https://qa-developer.bentley.com/register). This client will require scopes that may evolve over time. The [current storybook configuration](packages/apps/storybook/.storybook/preview.js) should show which are required at the moment. (Look for `authClientConfig:scope` in the parameters json object). The client should have the `http://localhost:6006/signin-oidc.html` redirect url.
 
-Once you have that client id, you can create the environment file here: `packages/apps/storybook/.env.local` and put `STORYBOOK_AUTH_CLIENT_ID=yourClientId`, or any other mean of setting in the Environment variables.
+Once you have a client id, you should set the value of the STORYBOOK_AUTH_CLIENT_ID environment variable to your client id. One approach to accomplish this would be to add a `packages/apps/storybook/.env.local` file and add `STORYBOOK_AUTH_CLIENT_ID=yourClientId` to the file.
 
 You can start storybook by running the following commands:
 
     cd packages/apps/storybook
     rushx start
 
-Note: In order for the storybook documentation to be created automatically out of your code, you will need to add a `"storybookSource": "[path to your source entry point, ie 'src/index.ts']"` prop in your `package.json`. (That is being worked on)
+Note: In order for the storybook documentation to be created automatically out of your code, you will need to add a  "storybookSource" property in your `package.json` and set its value to the path of your package's main barrel file (i.e. `"storybookSource": "['src/index.ts']"`). This is work in progress, but should meet your needs for now.
 
 ### Storybook addons
 
-If your component uses `accessToken` as a prop, you can wrap your story with `withAccessTokenOverride` HOC which will take the token from the toolbar addon, never what a user could enter in the "Control" section, see [this story](packages/apps/storybook/src/examples/Authenticated.stories.tsx) for a usage example.
+If your component uses `accessToken` as a prop, you can wrap your story with the `withAccessTokenOverride` HOC, which will use the token from the toolbar add-on instead of what a user could enter in the "Control" section.  See [this story](packages/apps/storybook/src/examples/Authenticated.stories.tsx) for a usage example.
 
-Similarly, if your component uses `projectId` as a prop, you can wrap your story with `withProjectIdOverride` HOC which will take the projectId from the toolbar addon (only showing if the active story have a `projectId` prop and user is authenticated), note that, if you enter something in the storybook control panel for projectId, the addon will not override that value. See [this story](packages/apps/storybook/src/examples/ProjectAwareComponent.stories.tsx) for a usage example. Note that the project presented in the toolbar are the one **Favorite** in [CONNECT QA](https://qa-connect-webportal.bentley.com/SelectProject/Index#FAVS), so to fill that list, you need to go to CONNECT and toggle favorite for some projects.
+Similarly, if your component uses `projectId` as a prop, you can wrap your story with the `withProjectIdOverride` HOC, which will take the projectId from the toolbar add-on. This add-on will only show if the active story has a `projectId` prop and the user is authenticated. The projects that will be available in the toolbar are the authenticated user's **Favorite** Projects in [CONNECT QA](https://qa-connect-webportal.bentley.com/SelectProject/Index#FAVS). To fill the list, you would need to go to CONNECT and toggle favorite for some projects. Note that if you enter a value for `projectId` in the storybook Control panel, the add-on will not override this value. See [this story](packages/apps/storybook/src/examples/ProjectAwareComponent.stories.tsx) for a usage example. 
 
 ## Adding a New Project
 
