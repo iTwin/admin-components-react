@@ -51,7 +51,7 @@ addons.register("project/toolbar", () => {
             if (projects.length === 0) {
               projects.push({
                 displayName:
-                  "'Favorite' a project in CONNECT to show it here, refresh this page to see the results",
+                  "'Favorite' a project in CONNECT (QA) to show it here, refresh this page to see the results",
               });
             }
             setState({ projects });

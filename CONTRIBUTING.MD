@@ -6,10 +6,52 @@ Please take a read through this document to help streamline the process of getti
 
 ## Table of Contents
 
+- [Available tools](#available-tools)
 - [Adding a New Project](#adding-a-new-project)
 - [Creating Issues and Enhancements](#creating-issues-and-enhancements)
   - [Writing Good Bug Reports and Feature Requests](#writing-good-bug-reports-and-feature-requests)
 - [Pull Requests](#pull-requests)
+
+## Available Tools
+
+Tooling to assist with development of component libraries within the monorepo. 
+
+### Rush
+
+This monorepo is using [Rush.js](https://rushjs.io/pages/developer/new_developer/) tooling.
+
+`rush update`: This command should be run **after a _git checkout_ (or a _git pull_)** and **after _adding_ or _removing_ a depenency to a package**, if you _remove_ a dependency, use `--recheck` flag so that dependency get removed from the lock files. This will download and update your packages (akin _npm install_)
+
+`rush build`: This command should be run **after a _rush update_**. This will build the packages for which change have been detected, `rush rebuild` will do the same, but with all packages, regardless of change detection.
+
+`rush change`: This command should be run **before creating a pull request**, it will ask changes questions for published packages, and create a CHANGELOG.md out of the answers.
+
+`rush test`: This command should be run **before a _git commit_**, it will run all tests for the full repository.
+
+`rush clean`: This command is available to delete all build artifacts. Each package should define the script to meet their own needs.
+
+### Storybook
+
+[Storybook](https://storybook.js.org/) is a tool that will allow developing components without having to create a separate test application. Some [addons](#storybook-addons) are included to facilitate access token management and project selection, for example.
+
+Storybook is using an addon that is built locally, so you will need to have run `rush build` at least once before starting storybook.
+
+It also requires an OIDC client id registered for SPA use of [Bentley API's](https://qa-developer.bentley.com/register). This client will require scopes that may evolve over time. The [current storybook configuration](packages/apps/storybook/.storybook/preview.js) should show which are required at the moment. (Look for `authClientConfig:scope` in the parameters json object). The client should have the `http://localhost:6006/signin-oidc.html` redirect url.
+
+Once you have a client id, you should set the value of the STORYBOOK_AUTH_CLIENT_ID environment variable to your client id. One approach to accomplish this would be to add a `packages/apps/storybook/.env.local` file and add `STORYBOOK_AUTH_CLIENT_ID=yourClientId` to the file.
+
+You can start storybook by running the following commands:
+
+    cd packages/apps/storybook
+    rushx start
+
+Note: In order for the storybook documentation to be created automatically out of your code, you will need to add a  "storybookSource" property in your `package.json` and set its value to the path of your package's main barrel file (i.e. `"storybookSource": "['src/index.ts']"`). This is work in progress, but should meet your needs for now.
+
+### Storybook addons
+
+If your component uses `accessToken` as a prop, you can wrap your story with the `withAccessTokenOverride` HOC, which will use the token from the toolbar add-on instead of what a user could enter in the "Control" section.  See [this story](packages/apps/storybook/src/examples/Authenticated.stories.tsx) for a usage example.
+
+Similarly, if your component uses `projectId` as a prop, you can wrap your story with the `withProjectIdOverride` HOC, which will take the projectId from the toolbar add-on. This add-on will only show if the active story has a `projectId` prop and the user is authenticated. The projects that will be available in the toolbar are the authenticated user's **Favorite** Projects in [CONNECT QA](https://qa-connect-webportal.bentley.com/SelectProject/Index#FAVS). To fill the list, you would need to go to CONNECT and toggle favorite for some projects. Note that if you enter a value for `projectId` in the storybook Control panel, the add-on will not override this value. See [this story](packages/apps/storybook/src/examples/ProjectAwareComponent.stories.tsx) for a usage example. 
 
 ## Adding a New Project
 
@@ -63,11 +105,16 @@ Every change must be described with a change log: Run "rush change" on your comm
 
 ### Code Change Workflow
 
-1. Make source code changes on a new Git branch.
-2. Ensure unit tests pass when run locally: `rush test`.
-3. Commit your changes.
-4. Add a changelog entry (which could potentially cover several commits): `rush change`.
-5. Follow prompts to enter a change description or press ENTER if the change does not warrant a changelog entry. If multiple packages have changed, multiple sets of prompts will be presented.
-6. Completing the `rush change` prompts will cause a new changelog entry JSON files to be created.
-7. Commit the changelog JSON files.
-8. Publish changes to the branch and open a pull request.
+1. Get latest change from "main": `git checkout main` and `git pull`
+2. Install all required packages locally: `rush update`
+3. Build all modules, (required for storybook to work correctly): `rush build`
+4. Make a new Git branch: `git checkout -b [mybranch]`
+5. Make source code changes.
+   - Remember that you can use storybook as a running environment for your package.
+6. Ensure unit tests pass when run locally: `rush test`.
+7. Commit your changes.
+8. Add a changelog entry (which could potentially cover several commits): `rush change -b origin/main`.
+9. Follow prompts to enter a change description or press ENTER if the change does not warrant a changelog entry. If multiple packages have changed, multiple sets of prompts will be presented.
+10. Completing the `rush change` prompts will cause a new changelog entry JSON files to be created.
+11. Commit the changelog JSON files.
+12. Publish changes to the branch and [open a pull request](https://github.com/iTwin/admin-components-react/pulls): `git push [mybranch] -u origin/[mybranch]`
