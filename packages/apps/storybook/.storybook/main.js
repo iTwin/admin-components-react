@@ -14,13 +14,7 @@ module.exports = {
     // You can change the configuration based on that.
     // 'PRODUCTION' is used when building the static version of storybook.
 
-    // Make whatever fine-grained changes you need
-    config.module.rules.push({
-      test: /\.scss$/,
-      use: ["style-loader", "css-loader", "sass-loader"],
-    });
-
-    config.resolve.mainFields = ["storybookSource", "module", "main"];
+    config.resolve.mainFields = ["module", "main"];
 
     // Return the altered config
     return config;

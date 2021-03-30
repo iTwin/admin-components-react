@@ -3,7 +3,10 @@
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 
-import { IModelGrid, IModelGridProps } from "@itwin/imodel-browser";
+import {
+  IModelGrid as ExternalComponent,
+  IModelGridProps,
+} from "@itwin/imodel-browser";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
 
@@ -13,10 +16,15 @@ import {
   withProjectIdOverride,
 } from "../utils/storyHelp";
 
+export const IModelGrid = (props: IModelGridProps) => (
+  <ExternalComponent {...props} />
+);
+
 export default {
   title: "imodel-browser/IModelGrid",
   component: IModelGrid,
   argTypes: accessTokenArgTypes,
+  excludeStories: ["IModelGrid"],
 } as Meta;
 
 const Template: Story<IModelGridProps> = withProjectIdOverride(

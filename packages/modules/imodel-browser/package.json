@@ -15,7 +15,6 @@
     "test": "jest --silent",
     "clean": "rimraf cjs esm"
   },
-  "storybookSource": "src/index.ts",
   "files": [
     "cjs/**/*",
     "esm/**/*"
