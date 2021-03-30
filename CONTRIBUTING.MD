@@ -20,7 +20,7 @@ Tooling to assist with development of component libraries within the monorepo.
 
 This monorepo is using [Rush.js](https://rushjs.io/pages/developer/new_developer/) tooling.
 
-`rush update`: This command should be run **after a _git checkout_ (or a _git pull_)** and **after _adding_ or _removing_ a depenency to a package**, if you _remove_ a dependency, use `--recheck` flag so that dependency get removed from the lock files. This will download and update your packages (akin _npm install_)
+`rush update`: This command should be run **after a _git checkout_ (or a _git pull_)** and **after _adding_ or _removing_ a dependency to a package**, if you _remove_ a dependency, use `--recheck` flag so that dependency get removed from the lock files. This will download and update your packages (akin _npm install_)
 
 `rush build`: This command should be run **after a _rush update_**. This will build the packages for which change have been detected, `rush rebuild` will do the same, but with all packages, regardless of change detection.
 
