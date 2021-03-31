@@ -14,7 +14,7 @@ Please take a read through this document to help streamline the process of getti
 
 ## Available Tools
 
-Tooling to assist with development of component libraries within the monorepo. 
+Tooling to assist with development of component libraries within the monorepo.
 
 ### Rush
 
@@ -45,13 +45,13 @@ You can start storybook by running the following commands:
     cd packages/apps/storybook
     rushx start
 
-Note: In order for the storybook documentation to be created automatically out of your code, you will need to add a  "storybookSource" property in your `package.json` and set its value to the path of your package's main barrel file (i.e. `"storybookSource": "['src/index.ts']"`). This is work in progress, but should meet your needs for now.
+Note: In order for the storybook documentation to be created automatically out of your code, you will need to declare the component used in the story within storybook, [this story](packages/apps/storybook/src/examples/SampleModuleComponent.stories.tsx) gives details on the required steps.
 
 ### Storybook addons
 
-If your component uses `accessToken` as a prop, you can wrap your story with the `withAccessTokenOverride` HOC, which will use the token from the toolbar add-on instead of what a user could enter in the "Control" section.  See [this story](packages/apps/storybook/src/examples/Authenticated.stories.tsx) for a usage example.
+If your component uses `accessToken` as a prop, you can wrap your story with the `withAccessTokenOverride` HOC, which will use the token from the toolbar add-on instead of what a user could enter in the "Control" section. See [this story](packages/apps/storybook/src/examples/Authenticated.stories.tsx) for a usage example.
 
-Similarly, if your component uses `projectId` as a prop, you can wrap your story with the `withProjectIdOverride` HOC, which will take the projectId from the toolbar add-on. This add-on will only show if the active story has a `projectId` prop and the user is authenticated. The projects that will be available in the toolbar are the authenticated user's **Favorite** Projects in [CONNECT QA](https://qa-connect-webportal.bentley.com/SelectProject/Index#FAVS). To fill the list, you would need to go to CONNECT and toggle favorite for some projects. Note that if you enter a value for `projectId` in the storybook Control panel, the add-on will not override this value. See [this story](packages/apps/storybook/src/examples/ProjectAwareComponent.stories.tsx) for a usage example. 
+Similarly, if your component uses `projectId` as a prop, you can wrap your story with the `withProjectIdOverride` HOC, which will take the projectId from the toolbar add-on. This add-on will only show if the active story has a `projectId` prop and the user is authenticated. The projects that will be available in the toolbar are the authenticated user's **Favorite** Projects in [CONNECT QA](https://qa-connect-webportal.bentley.com/SelectProject/Index#FAVS). To fill the list, you would need to go to CONNECT and toggle favorite for some projects. Note that if you enter a value for `projectId` in the storybook Control panel, the add-on will not override this value. See [this story](packages/apps/storybook/src/examples/ProjectAwareComponent.stories.tsx) for a usage example.
 
 ## Adding a New Project
 
