@@ -14,11 +14,13 @@
     "@storybook/addon-links": "^6.1.11",
     "@storybook/addons": "^6.1.11",
     "@storybook/api": "^6.1.11",
+    "@storybook/core-events": "^6.1.21",
     "@storybook/react": "^6.1.11",
     "@storybook/theming": "^6.1.11",
     "babel-loader": "^8.2.2",
     "rimraf": "^3.0.2",
-    "storybook-dark-mode": "^1.0.4"
+    "storybook-dark-mode": "^1.0.4",
+    "webpack": "^5.28.0"
   },
   "scripts": {
     "start": "start-storybook -s ./node_modules/@itwin/storybook-auth-addon/build -p 6006",
