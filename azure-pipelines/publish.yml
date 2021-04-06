@@ -1,0 +1,36 @@
+# Node.js
+# Build a general Node.js project with npm.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '10.x'
+  displayName: 'Install Node.js'
+
+- script: node common/scripts/install-run-rush.js install
+  displayName: 'rush install'
+
+- script: node common/scripts/install-run-rush.js rebuild
+  displayName: 'rush rebuild'
+
+- script: git config --local user.name "iTwinViewerWorkflow"
+  displayName: 'git config username'
+
+- script: git config --local user.email "itwinviewer@users.noreply.github.com"
+  displayName: 'git config email'
+
+- script: node common/scripts/install-run-rush.js version --bump --target-branch main 
+  displayName: 'rush version'
+
+- script: node common/scripts/install-run-rush.js publish --include-all --set-access-level public --apply --publish --npm-auth-token $NPM_TOKEN --target-branch main --registry https://pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/
+  displayName: 'rush publish'
+
+
