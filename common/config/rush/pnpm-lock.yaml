@@ -9,7 +9,7 @@ dependencies:
   '@rush-temp/admin-components-react-scripts': file:projects/admin-components-react-scripts.tgz
   '@rush-temp/imodel-browser': file:projects/imodel-browser.tgz
   '@rush-temp/platform-storybook': file:projects/platform-storybook.tgz_8f3022012f3f21c8b957c596db565d88
-  '@rush-temp/storybook-auth-addon': file:projects/storybook-auth-addon.tgz_f7805e32c1d7793bc2164f8c531a8739
+  '@rush-temp/storybook-auth-addon': file:projects/storybook-auth-addon.tgz_node-sass@5.0.0+prettier@2.2.1
   '@storybook/addon-actions': 6.1.21_153d3a961815977ed06c165593131b36
   '@storybook/addon-essentials': 6.1.21_cdea5e29cfd9a53eeb89e1d84877a995
   '@storybook/addon-links': 6.1.21_react-dom@16.13.1+react@16.13.1
@@ -3938,23 +3938,6 @@ packages:
       node: '>=10'
     resolution:
       integrity: sha512-v4GzWtltaiDE0yRikLlcLAfEiiK8+ptu6OuuIebm9GdC2XlZTNDPGEfM2UkEtnH7hr9TRq2sivT5EA9P1Oy7bw==
-  /@testing-library/jest-dom/5.11.9:
-    dependencies:
-      '@babel/runtime': 7.13.7
-      '@types/testing-library__jest-dom': 5.9.5
-      aria-query: 4.2.2
-      chalk: 3.0.0
-      css: 3.0.0
-      css.escape: 1.5.1
-      lodash: 4.17.21
-      redent: 3.0.0
-    dev: false
-    engines:
-      node: '>=8'
-      npm: '>=6'
-      yarn: '>=1'
-    resolution:
-      integrity: sha512-Mn2gnA9d1wStlAIT2NU8J15LNob0YFBVjs2aEQ3j8rsfRQo+lAs7/ui1i2TGaJjapLmuNPLTsrm+nPjmZDwpcQ==
   /@testing-library/react-hooks/5.1.0_216f63de86fbc10352ace49d86b619ee:
     dependencies:
       '@babel/runtime': 7.13.7
@@ -3992,17 +3975,6 @@ packages:
       react-dom: '*'
     resolution:
       integrity: sha512-yEx7oIa/UWLe2F2dqK0FtMF9sJWNXD+2PPtp39BvE0Kh9MJ9Kl0HrZAgEuhUJR+Lx8Di6Xz+rKwSdEPY2UV8ZQ==
-  /@testing-library/user-event/12.8.3:
-    dependencies:
-      '@babel/runtime': 7.13.7
-    dev: false
-    engines:
-      node: '>=10'
-      npm: '>=6'
-    peerDependencies:
-      '@testing-library/dom': '>=7.21.4'
-    resolution:
-      integrity: sha512-IR0iWbFkgd56Bu5ZI/ej8yQwrkCv8Qydx6RzwbKz9faXazR/+5tvYKsZQgyXJiwgpcva127YO6JcWy7YlCfofQ==
   /@types/anymatch/1.3.1:
     dev: false
     resolution:
@@ -4306,12 +4278,6 @@ packages:
     dev: false
     resolution:
       integrity: sha512-W+bw9ds02rAQaMvaLYxAbJ6cvguW/iJXNT6lTssS1ps6QdrMKttqEAMEG/b5CR8TZl3/L7/lH0ZV5nNR1LXikA==
-  /@types/testing-library__jest-dom/5.9.5:
-    dependencies:
-      '@types/jest': 26.0.20
-    dev: false
-    resolution:
-      integrity: sha512-ggn3ws+yRbOHog9GxnXiEZ/35Mow6YtPZpd7Z5mKDeZS/o7zx3yAle0ov/wjhVB5QT4N2Dt+GNoGCdqkBGCajQ==
   /@types/through/0.0.30:
     dependencies:
       '@types/node': 14.14.33
@@ -7654,10 +7620,6 @@ packages:
       node: '>= 6'
     resolution:
       integrity: sha512-ACUm3L0/jiZTqfzRM3Hi9Q8eZqd6IK37mMWPLz9PJxkLWllYeRf+EHUSHYEtFop2Eqytaq1FizFVh7XfBnXCDQ==
-  /css.escape/1.5.1:
-    dev: false
-    resolution:
-      integrity: sha1-QuJ9T6BK4y+TGktNQZH6nN3ul8s=
   /css/2.2.4:
     dependencies:
       inherits: 2.0.4
@@ -7667,14 +7629,6 @@ packages:
     dev: false
     resolution:
       integrity: sha512-oUnjmWpy0niI3x/mPL8dVEI1l7MnG3+HHyRPHf+YFSbK+svOhXpmSOcDURUh2aOCgl2grzrOPt1nHLuCVFULLw==
-  /css/3.0.0:
-    dependencies:
-      inherits: 2.0.4
-      source-map: 0.6.1
-      source-map-resolve: 0.6.0
-    dev: false
-    resolution:
-      integrity: sha512-DG9pFfwOrzc+hawpmqX/dHYHJG+Bsdb0klhyi1sDneOgGOXy9wQIC8hzyVp1e4NRYDBdxcylvywPkkXCHAzTyQ==
   /cssdb/4.4.0:
     dev: false
     resolution:
@@ -17784,13 +17738,6 @@ packages:
     dev: false
     resolution:
       integrity: sha512-Htz+RnsXWk5+P2slx5Jh3Q66vhQj1Cllm0zvnaY98+NFx+Dv2CF/f5O/t8x+KaNdrdIAsruNzoh/KpialbqAnw==
-  /source-map-resolve/0.6.0:
-    dependencies:
-      atob: 2.1.2
-      decode-uri-component: 0.2.0
-    dev: false
-    resolution:
-      integrity: sha512-KXBr9d/fO/bWo97NXsPIAW1bFSBOuCnjbNTBMO7N59hsv5i9yzRDfcYwwt0l04+VqnKC+EwzvJZIP/qkuMgR/w==
   /source-map-support/0.2.10:
     dependencies:
       source-map: 0.1.32
@@ -19903,10 +19850,6 @@ packages:
     dev: false
     resolution:
       integrity: sha512-wYxSGajtmoP4WxfejAPIr4l0fVh+jeMXZb08wNc0tMg6xsfZXj3cECqIK0G7ZAqUq0PP8WlMDtaOGVBTAWztNw==
-  /web-vitals/0.2.4:
-    dev: false
-    resolution:
-      integrity: sha512-6BjspCO9VriYy12z356nL6JBS0GYeEcA457YyRzD+dD6XYCQ75NKhcOHUMHentOE7OcVCIXXDvOm0jKFfQG2Gg==
   /webidl-conversions/5.0.0:
     dev: false
     engines:
@@ -20857,7 +20800,7 @@ packages:
       integrity: sha512-jq6hl0ZbLQjpdrVl+ElpR2F4lZoGpzERQo0Pquq1t8IulbPZ4khgoSo1WICdV4hZGayFDf3mlgeKHdgP2ZS9jg==
       tarball: file:projects/platform-storybook.tgz
     version: 0.0.0
-  file:projects/storybook-auth-addon.tgz_f7805e32c1d7793bc2164f8c531a8739:
+  file:projects/storybook-auth-addon.tgz_node-sass@5.0.0+prettier@2.2.1:
     dependencies:
       '@bentley/bentleyjs-core': 2.11.0
       '@bentley/frontend-authorization-client': 2.11.0_124fd8799cc8196bebc67d27cf7bf3e3
@@ -20866,23 +20809,35 @@ packages:
       '@storybook/addons': 6.1.21_react-dom@16.13.1+react@16.13.1
       '@storybook/api': 6.1.21_react-dom@16.13.1+react@16.13.1
       '@storybook/components': 6.1.21_153d3a961815977ed06c165593131b36
-      '@testing-library/jest-dom': 5.11.9
-      '@testing-library/react': 11.2.5_react-dom@16.13.1+react@16.13.1
-      '@testing-library/user-event': 12.8.3
+      '@types/react': 16.9.23
+      '@types/react-dom': 16.9.5
+      '@typescript-eslint/eslint-plugin': 4.20.0_d57f2e28d7d26e6d296dfd75247d8327
+      '@typescript-eslint/parser': 4.20.0_eslint@7.20.0+typescript@4.2.3
+      babel-eslint: 10.1.0_eslint@7.20.0
+      eslint: 7.20.0
+      eslint-config-airbnb: 0.0.4
+      eslint-config-prettier: 6.15.0_eslint@7.20.0
+      eslint-config-react-app: 6.0.0_3050c5f4541700150cee7c9885ae733e
+      eslint-plugin-flowtype: 5.3.1_eslint@7.20.0
+      eslint-plugin-import: 2.22.1_eslint@7.20.0
+      eslint-plugin-jsx-a11y: 6.4.1_eslint@7.20.0
+      eslint-plugin-prettier: 3.3.1_a965e97aa706aa034072dc2d8249e40b
+      eslint-plugin-react: 7.22.0_eslint@7.20.0
+      eslint-plugin-react-hooks: 4.2.0_eslint@7.20.0
+      eslint-plugin-simple-import-sort: 5.0.3_eslint@7.20.0
       mv: 2.1.1
       react: 16.13.1
       react-dom: 16.13.1_react@16.13.1
       rimraf: 3.0.2
-      web-vitals: 0.2.4
+      typescript: 4.2.3
     dev: false
     id: file:projects/storybook-auth-addon.tgz
     name: '@rush-temp/storybook-auth-addon'
     peerDependencies:
-      '@types/react': '*'
       node-sass: '*'
-      typescript: '*'
+      prettier: '*'
     resolution:
-      integrity: sha512-4ieDj4v0J2ApDsHrZ1HELNkmoLpyF517PcmUrAgWjwsjDil7bON92W0P3L7VNJ4K6iQIZo14AF7hAr1vyk3R6g==
+      integrity: sha512-6RusYenqW4RXqOG9BrBNS2g1pu8tMu9IzXf1Kg8E3DPdfYlRrYrK3s1HiVetVFugJw4h5j9u+Gpvpy2j1TAbXQ==
       tarball: file:projects/storybook-auth-addon.tgz
     version: 0.0.0
 registry: ''

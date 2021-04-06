@@ -16,9 +16,6 @@
       "node": {
         "extensions": [".js", ".jsx", ".ts", ".tsx"]
       }
-    },
-    "react": {
-      "version": "16.3"
     }
   },
   "plugins": ["simple-import-sort", "@typescript-eslint"],
