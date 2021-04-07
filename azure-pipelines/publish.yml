@@ -83,9 +83,9 @@ steps:
 - script: node common/scripts/install-run-rush.js version --bump --target-branch main 
   displayName: 'rush version'
 
-- script: node common/scripts/install-run-rush.js publish --include-all --set-access-level public --apply --publish --registry https://pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/ --npm-auth-token "$NPM_TOKEN" --target-branch main 
+- script: node common/scripts/install-run-rush.js publish --include-all --set-access-level public --apply --publish --registry https://pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/ --npm-auth-token $NPM_TOKEN --target-branch main 
   displayName: 'rush publish'
   env: 
-    NPM_TOKEN: Bearer $(NPM_PAT)
+    NPM_TOKEN: $(NPM_PAT)
 
 
