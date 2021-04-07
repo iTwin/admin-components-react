@@ -6,11 +6,6 @@
     "javascript",
     "javascriptreact"
   ],
-  "eslint.workingDirectories": [
-    {
-      "directory": "packages/modules/imodel-browser",
-    }
-  ],
   "files.exclude": {
     "obj": true,
     "bin": true

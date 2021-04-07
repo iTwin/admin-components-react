@@ -2,12 +2,13 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+/* eslint-disable react-hooks/rules-of-hooks */
 import { ClientRequestContext } from "@bentley/bentleyjs-core";
 import { BrowserAuthorizationClient } from "@bentley/frontend-authorization-client";
 import addons, { types } from "@storybook/addons";
 import { useAddonState, useGlobals, useParameter } from "@storybook/api";
 import { IconButton, Icons, Loader, WithTooltip } from "@storybook/components";
-import React, { useEffect, useState } from "react";
+import React, { useRef, useState } from "react";
 
 addons.register("auth/toolbar", () => {
   addons.add("auth-toolbar-addon/toolbar", {
@@ -15,7 +16,7 @@ addons.register("auth/toolbar", () => {
     //👇 Sets the type of UI element in Storybook
     type: types.TOOL,
     //👇 Shows the Toolbar UI element if either the Canvas or Docs tab is active
-    match: ({ viewMode }) => !!(viewMode && viewMode.match(/^(story|docs)$/)),
+    match: ({ viewMode }) => !!viewMode?.match(/^(story|docs)$/),
     render: () => {
       const [globals, updateGlobals] = useGlobals();
       const redirectURI = `${window.location.origin}${window.location.pathname}signin-oidc.html`;
@@ -24,12 +25,13 @@ addons.register("auth/toolbar", () => {
         email: "",
       });
       const authClientConfig = useParameter("authClientConfig", {});
-      const client = React.useRef(null);
+      const client = useRef(null);
 
       const [buildMissing, setBuildMissing] = useState(false);
+      const [clientIdMissing, setClientIdMissing] = useState(false);
 
       const authenticate = async () => {
-        if (state.loading || buildMissing) {
+        if (state.loading || buildMissing || clientIdMissing) {
           return;
         }
 
@@ -37,6 +39,10 @@ addons.register("auth/toolbar", () => {
         let email = "";
         let tokenString = "";
         try {
+          if (!authClientConfig.clientId) {
+            setClientIdMissing(true);
+            return;
+          }
           const response = await fetch(redirectURI);
           if (!response.ok && response.status === 404) {
             setBuildMissing(true);
@@ -59,7 +65,9 @@ addons.register("auth/toolbar", () => {
             email = JSON.parse(atob(tokenString.split(" ")[1]?.split(".")[1]))
               .email;
           } else {
-            await client.current.signOutPopup(context).catch(() => {});
+            await client.current.signOutPopup(context).catch(() => {
+              // Intentionally a noop, user closing the window is not an issue.
+            });
           }
         } finally {
           updateGlobals({ accessToken: tokenString });
@@ -69,13 +77,21 @@ addons.register("auth/toolbar", () => {
 
       return (
         <WithTooltip
-          placement="auto"
+          placement="bottom"
           trigger="hover"
           closeOnClick
           tooltip={({ onHide }) => {
             return (
-              <div style={{ padding: "5px 10px" }} onClick={onHide}>
-                {buildMissing
+              <div
+                style={{ padding: "5px 10px" }}
+                onClick={() => {
+                  onHide();
+                  void authenticate();
+                }}
+              >
+                {clientIdMissing
+                  ? `No client Id configured: clientId must be provided in 'authClientConfig' parameter in preview.js`
+                  : buildMissing
                   ? `${redirectURI} not found: "storybook-auth-addon" is likely not built, run "rush build"`
                   : state.loading
                   ? "Authenticating..."
@@ -90,7 +106,7 @@ addons.register("auth/toolbar", () => {
             active={globals.accessToken}
             onClick={() => authenticate()}
           >
-            {buildMissing ? (
+            {buildMissing || clientIdMissing ? (
               <Icons icon={"alert"} style={{ color: "#FF4400" }} />
             ) : state.loading ? (
               <div style={{ width: 16, position: "relative" }}>

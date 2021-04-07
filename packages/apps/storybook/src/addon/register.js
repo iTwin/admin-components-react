@@ -2,9 +2,16 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+/* eslint-disable react-hooks/rules-of-hooks */
 import addons, { types } from "@storybook/addons";
 import { useAddonState, useArgTypes, useGlobals } from "@storybook/api";
-import { IconButton, Icons, TooltipLinkList, WithTooltip } from "@storybook/components";
+import {
+  IconButton,
+  Icons,
+  Loader,
+  TooltipLinkList,
+  WithTooltip,
+} from "@storybook/components";
 import React from "react";
 
 addons.register("project/toolbar", () => {
@@ -13,7 +20,7 @@ addons.register("project/toolbar", () => {
     //👇 Sets the type of UI element in Storybook
     type: types.TOOL,
     //👇 Shows the Toolbar UI element if either the Canvas or Docs tab is active
-    match: ({ viewMode }) => !!(viewMode && viewMode.match(/^(story|docs)$/)),
+    match: ({ viewMode }) => !!viewMode?.match(/^(story|docs)$/),
     render: () => {
       const [globals, updateGlobals] = useGlobals();
       const { projectId: withProjectId } = useArgTypes();
@@ -35,7 +42,30 @@ addons.register("project/toolbar", () => {
         }
 
         try {
-          setState({ projects: [{}] });
+          setState({
+            projects: [
+              {
+                displayName: (
+                  <div style={{ display: "flex", gap: 4 }}>
+                    <div
+                      style={{ width: 16, height: 16, position: "relative" }}
+                    >
+                      <Loader
+                        size={16}
+                        style={{
+                          borderLeftColor: "currentColor",
+                          borderBottomColor: "currentColor",
+                          borderRightColor: "currentColor",
+                          borderTopColor: "rgba(0,0,0,0)",
+                        }}
+                      />
+                    </div>
+                    <span>Fetching favorites</span>
+                  </div>
+                ),
+              },
+            ],
+          });
           const response = await fetch(
             "https://qa-api.bentley.com/projects/favorites",
             {
@@ -59,7 +89,7 @@ addons.register("project/toolbar", () => {
         } catch (e) {
           console.error("Error", e);
         }
-      }, [state.mustLoad, globals.accessToken]);
+      }, [state.mustLoad, globals.accessToken, setState]);
 
       const buildLinks = React.useCallback(
         (onHide) =>
@@ -75,7 +105,7 @@ addons.register("project/toolbar", () => {
             },
             active: globals.projectId === project.id,
           })),
-        [state.projects, globals.projectId]
+        [state.projects, globals.projectId, updateGlobals]
       );
 
       return withProjectId && globals.accessToken ? (
