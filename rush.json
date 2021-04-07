@@ -17,7 +17,8 @@
     {
       "packageName": "@itwin/imodel-browser",
       "projectFolder": "packages/modules/imodel-browser",
-      "shouldPublish": false
+      "shouldPublish": true,
+      "versionPolicyName": "independentModule"
     },
     {
       "packageName": "@itwin/platform-storybook",
