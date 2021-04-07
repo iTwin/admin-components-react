@@ -1,8 +1,7 @@
 /*---------------------------------------------------------------------------------------------
-* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
-* See LICENSE.md in the project root for license terms and full copyright notice.
-*--------------------------------------------------------------------------------------------*/
-
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
 import { Tile } from "@bentley/itwinui-react";
 import React from "react";
 
@@ -41,21 +40,23 @@ export const IModelTile = ({
     [iModelOptions, iModel]
   );
   const thumbnailApiOverride =
-    apiOverrides || iModel.thumbnail
+    apiOverrides || iModel?.thumbnail
       ? {
           ...(apiOverrides ?? {}),
-          data: iModel.thumbnail,
+          data: iModel?.thumbnail,
         }
       : undefined;
   return (
     <Tile
-      key={iModel.id}
-      name={iModel.displayName}
-      description={iModel.description || ""}
+      key={iModel?.id}
+      name={<span title={iModel?.displayName}>{iModel?.displayName}</span>}
+      description={
+        <span title={iModel?.description}>{iModel?.description ?? ""}</span>
+      }
       moreOptions={moreOptions}
       thumbnail={
         <IModelThumbnail
-          iModelId={iModel.id}
+          iModelId={iModel?.id}
           accessToken={accessToken}
           onClick={() => onThumbnailClick?.(iModel)}
           apiOverrides={thumbnailApiOverride}

@@ -1,9 +1,8 @@
 /*---------------------------------------------------------------------------------------------
-* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
-* See LICENSE.md in the project root for license terms and full copyright notice.
-*--------------------------------------------------------------------------------------------*/
-
-
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+import { Body } from "@bentley/itwinui-react";
 import React from "react";
 
 import { ApiOverrides } from "../../types";
@@ -40,5 +39,10 @@ export const IModelThumbnail = ({
       alt=""
       onClick={() => onClick?.(iModelId)}
     />
-  ) : null;
+  ) : (
+    <Body
+      isSkeleton={true}
+      style={{ height: "100%", width: "100%", margin: 0 }}
+    ></Body>
+  );
 };

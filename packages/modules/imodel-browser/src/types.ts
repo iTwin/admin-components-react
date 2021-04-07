@@ -1,7 +1,7 @@
 /*---------------------------------------------------------------------------------------------
-* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
-* See LICENSE.md in the project root for license terms and full copyright notice.
-*--------------------------------------------------------------------------------------------*/
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
 /** Full representation of the iModel. */
 export interface IModelFull {
   /** "Globally Unique Identifier of the iModel" */
@@ -38,4 +38,12 @@ export interface ApiOverrides<T = never> {
   serverEnvironmentPrefix?: string;
   /** Data as props */
   data?: T;
+}
+
+export enum DataStatus {
+  Fetching = "fetching",
+  Complete = "complete",
+  FetchFailed = "error_fetchFailed",
+  TokenRequired = "error_tokenRequired",
+  ContextRequired = "error_contextRequired",
 }

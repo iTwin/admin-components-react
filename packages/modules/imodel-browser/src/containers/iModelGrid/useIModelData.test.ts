@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------------------------
-* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
-* See LICENSE.md in the project root for license terms and full copyright notice.
-*--------------------------------------------------------------------------------------------*/
-
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
 import { renderHook } from "@testing-library/react-hooks";
 import { rest } from "msw";
 
 import { server } from "../../tests/mocks/server";
+import { DataStatus } from "../../types";
 import { useIModelData } from "./useIModelData";
 
 describe("useIModelData hook", () => {
@@ -28,7 +28,7 @@ describe("useIModelData hook", () => {
       id: "fakeId",
       displayName: "fakeName",
     });
-    expect(result.current.status).toEqual("complete");
+    expect(result.current.status).toEqual(DataStatus.Complete);
   });
 
   it("returns error status and no data on failure", async () => {
@@ -44,7 +44,7 @@ describe("useIModelData hook", () => {
 
     await waitForValueToChange(() => result.current.status);
     expect(result.current.iModels).toEqual([]);
-    expect(result.current.status).toEqual("fetch_error");
+    expect(result.current.status).toEqual(DataStatus.FetchFailed);
   });
 
   it("returns apiOverrides.data without fetching when it is provided", async () => {
@@ -66,27 +66,41 @@ describe("useIModelData hook", () => {
     await waitForNextUpdate();
 
     expect(result.current.iModels).toEqual([]);
-    expect(result.current.status).toEqual("complete");
+    expect(result.current.status).toEqual(DataStatus.Complete);
     expect(watcher).toHaveBeenCalledTimes(1);
 
     rerender([
-      "projectId",
       "",
-      "accessToken",
+      "",
+      "",
       { data: [{ id: "rerenderedId", displayName: "rerenderedDisplayName" }] },
     ]);
 
     expect(result.current.iModels).toEqual([
       { id: "rerenderedId", displayName: "rerenderedDisplayName" },
     ]);
-    expect(result.current.status).toEqual("override");
+    expect(result.current.status).toEqual(DataStatus.Complete);
     expect(watcher).toHaveBeenCalledTimes(1);
 
     rerender(["projectId", "", "accessToken"]);
     await waitForNextUpdate();
 
     expect(result.current.iModels).toEqual([]);
-    expect(result.current.status).toEqual("complete");
+    expect(result.current.status).toEqual(DataStatus.Complete);
     expect(watcher).toHaveBeenCalledTimes(2);
+  });
+
+  it("returns proper error if no accessToken is provided without data override", async () => {
+    const { result } = renderHook(() => useIModelData("projectId", "", ""));
+
+    expect(result.current.iModels).toEqual([]);
+    expect(result.current.status).toEqual(DataStatus.TokenRequired);
+  });
+
+  it("returns proper error if no context is provided without data override", async () => {
+    const { result } = renderHook(() => useIModelData("", "", "accessToken"));
+
+    expect(result.current.iModels).toEqual([]);
+    expect(result.current.status).toEqual(DataStatus.ContextRequired);
   });
 });

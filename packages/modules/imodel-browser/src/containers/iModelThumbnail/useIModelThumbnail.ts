@@ -1,8 +1,7 @@
 /*---------------------------------------------------------------------------------------------
-* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
-* See LICENSE.md in the project root for license terms and full copyright notice.
-*--------------------------------------------------------------------------------------------*/
-
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
 import { useEffect, useState } from "react";
 
 import { ApiOverrides } from "../../types";
@@ -73,6 +72,6 @@ export const useIModelThumbnail = (
     return () => {
       // possibility: put a x minutes expiration on previous download when we dismount?
     };
-  }, [accessToken, iModelId, thumbnail, apiOverrides?.data]);
+  }, [accessToken, iModelId, thumbnail, apiOverrides?.data, apiOverrides]);
   return thumbnail;
 };

@@ -24,6 +24,8 @@
     "@bentley/itwinui-react": "^0.5.1"
   },
   "devDependencies": {
+    "@bentley/icons-generic-webfont": "^1.0.34",
+    "@bentley/itwinui": "^0.4.2",
     "@rollup/plugin-commonjs": "~17.1.0",
     "@testing-library/react-hooks": "^5.1.0",
     "@testing-library/react": "^11.1.0",

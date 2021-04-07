@@ -1,13 +1,22 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
 import commonjs from "@rollup/plugin-commonjs";
 import peerDepsExternal from "rollup-plugin-peer-deps-external";
 import postcss from "rollup-plugin-postcss";
 import { terser } from "rollup-plugin-terser";
 import typescript from "rollup-plugin-typescript2";
 
-const packageJson = require("./package.json");
-export default {
+import * as packageJson from "./package.json";
+
+const rollupConfig = {
   input: "src/index.ts",
-  external: [/@bentley\/itwinui-react(\/.*)?/, /classnames/],
+  external: [
+    /@bentley\/itwinui-react(\/.*)?/,
+    /classnames/,
+    /@bentley\/icons-generic-webfont/,
+  ],
   output: [
     {
       file: packageJson.main,
@@ -18,5 +27,17 @@ export default {
       format: "esm",
     },
   ],
-  plugins: [peerDepsExternal(), commonjs(), typescript(), postcss(), terser()],
+  plugins: [
+    peerDepsExternal(),
+    commonjs(),
+    typescript(),
+    postcss({
+      use: {
+        sass: { outputStyle: "compressed" },
+      },
+    }),
+    terser(),
+  ],
 };
+
+export default rollupConfig;

@@ -1,11 +1,10 @@
 /*---------------------------------------------------------------------------------------------
-* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
-* See LICENSE.md in the project root for license terms and full copyright notice.
-*--------------------------------------------------------------------------------------------*/
-
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
 import React from "react";
 
-import { ApiOverrides, IModelFull } from "../../types";
+import { ApiOverrides, DataStatus, IModelFull } from "../../types";
 import { _getAPIServer } from "../../utils/_apiOverrides";
 
 export const useIModelData = (
@@ -15,27 +14,25 @@ export const useIModelData = (
   apiOverrides?: ApiOverrides<IModelFull[]>
 ) => {
   const [iModels, setIModels] = React.useState<IModelFull[]>([]);
-  const [status, setStatus] = React.useState<
-    "uninitialized" | "fetching" | "complete" | "fetch_error" | "override"
-  >("uninitialized");
+  const [status, setStatus] = React.useState<DataStatus>();
   React.useEffect(() => {
     if (apiOverrides?.data) {
       setIModels(apiOverrides.data);
-      setStatus("override");
+      setStatus(DataStatus.Complete);
       return;
     }
-    if (apiOverrides?.data || !accessToken || (!projectId && !assetId)) {
-      if (iModels) {
-        setIModels([]);
-      }
+    if (!accessToken || (!projectId && !assetId)) {
+      setStatus(
+        !accessToken ? DataStatus.TokenRequired : DataStatus.ContextRequired
+      );
+      setIModels([]);
       return;
     }
-    setStatus("fetching");
+    setStatus(DataStatus.Fetching);
     const url = `${_getAPIServer(apiOverrides)}/imodels/${
       projectId ? `?projectId=${projectId}` : ""
     }${assetId ? `?assetId=${assetId}` : ""}`; //[&$skip][&$top]
     const options: RequestInit = {
-      cache: "no-store",
       headers: {
         Authorization: accessToken,
         Prefer: "return=representation",
@@ -46,18 +43,18 @@ export const useIModelData = (
         if (response.ok) {
           return response.json();
         } else {
-          setStatus("fetch_error");
           return response.text().then((errorText) => {
             throw new Error(errorText);
           });
         }
       })
       .then((result: { iModels: IModelFull[] }) => {
-        setStatus("complete");
+        setStatus(DataStatus.Complete);
         setIModels(result.iModels);
       })
       .catch((e) => {
-        setStatus("fetch_error");
+        setIModels([]);
+        setStatus(DataStatus.FetchFailed);
         console.error(e);
       });
   }, [accessToken, projectId, assetId, apiOverrides?.data, apiOverrides]);

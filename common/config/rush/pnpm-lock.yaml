@@ -2,7 +2,9 @@ dependencies:
   '@babel/core': 7.13.1
   '@bentley/bentleyjs-core': 2.11.0
   '@bentley/frontend-authorization-client': 2.11.0_124fd8799cc8196bebc67d27cf7bf3e3
+  '@bentley/icons-generic-webfont': 1.0.34
   '@bentley/itwin-client': 2.11.0_@bentley+bentleyjs-core@2.11.0
+  '@bentley/itwinui': 0.4.2
   '@bentley/itwinui-react': 0.5.1_react-dom@16.13.1+react@16.13.1
   '@bentley/react-scripts': 4.0.3-dev.0_8f91d2b23d861db64783d0882327b032
   '@rollup/plugin-commonjs': 17.1.0_rollup@2.42.4
@@ -2275,6 +2277,10 @@ packages:
     dev: false
     resolution:
       integrity: sha1-mRxo0O9DWAoRbp5mP7u9lTe/Igg=
+  /@bentley/icons-generic-webfont/1.0.34:
+    dev: false
+    resolution:
+      integrity: sha1-g3tZcYMhM114GWJgRCshi2JO/84=
   /@bentley/illustrations/1.0.1:
     dev: false
     resolution:
@@ -20697,6 +20703,8 @@ packages:
   file:projects/imodel-browser.tgz:
     dependencies:
       '@bentley/appsec-tslint-rules': 1.2.21
+      '@bentley/icons-generic-webfont': 1.0.34
+      '@bentley/itwinui': 0.4.2
       '@bentley/itwinui-react': 0.5.1_react-dom@16.13.1+react@16.13.1
       '@rollup/plugin-commonjs': 17.1.0_rollup@2.42.4
       '@testing-library/react': 11.2.5_react-dom@16.13.1+react@16.13.1
@@ -20750,7 +20758,7 @@ packages:
     dev: false
     name: '@rush-temp/imodel-browser'
     resolution:
-      integrity: sha512-k3ll1Lu2rwlovXLDew7omsln//PIVd5PjsEEvtOewNiHn5SePamR1mURbtSl5trj2pJL7kyks5C+aY6FeMGuWw==
+      integrity: sha512-aze/lzsg4uDkFLeJvOEAJJVTC0kT0pb3w6bzRkYZ+7Xf7srCTw6oABugJ2hEVuykYoxGjgDNaBxLCWHWCjhtxg==
       tarball: file:projects/imodel-browser.tgz
     version: 0.0.0
   file:projects/platform-storybook.tgz_8f3022012f3f21c8b957c596db565d88:
@@ -20845,7 +20853,9 @@ specifiers:
   '@babel/core': ^7.12.10
   '@bentley/bentleyjs-core': 2.11.0
   '@bentley/frontend-authorization-client': 2.11.0
+  '@bentley/icons-generic-webfont': ^1.0.34
   '@bentley/itwin-client': 2.11.0
+  '@bentley/itwinui': ^0.4.2
   '@bentley/itwinui-react': ^0.5.1
   '@bentley/react-scripts': 4.0.3-dev.0
   '@rollup/plugin-commonjs': ~17.1.0
