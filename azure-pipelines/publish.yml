@@ -87,6 +87,6 @@ steps:
   displayName: 'rush publish'
   env: 
     NPM_TOKEN: $(NPM_PAT)
-    NPM_ADMIN_TOKEN: Bearer $(SYSTEM_ACCESSTOKEN)
+    NPM_ADMIN_TOKEN: Bearer $(System.AccessToken)
 
 
