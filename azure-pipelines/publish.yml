@@ -37,7 +37,7 @@ steps:
 - script: npm config set //pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/:username Default
   displayName: 'NPM config set username'
 
-- script: npm config set //pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/:_password $NPM_TOKEN
+- script: npm config set //pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/:_password $ENCODED_NPM_TOKEN
   displayName: 'NPM config set password'
   env: 
     NPM_TOKEN: $(NPM_PAT)
@@ -54,7 +54,7 @@ steps:
 - script: npm config set //pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/:username Default
   displayName: 'NPM config set username packages'
 
-- script: npm config set //pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/:_password $NPM_TOKEN
+- script: npm config set //pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/:_password $ENCODED_NPM_TOKEN
   displayName: 'NPM config set password packages'
   env: 
     NPM_TOKEN: $(NPM_PAT)
@@ -83,10 +83,10 @@ steps:
 - script: node common/scripts/install-run-rush.js version --bump --target-branch main 
   displayName: 'rush version'
 
-- script: node common/scripts/install-run-rush.js publish --include-all --set-access-level public --apply --publish --registry https://pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/ --npm-auth-token "$NPM_ADMIN_TOKEN" --target-branch main 
+- script: node common/scripts/install-run-rush.js publish --include-all --set-access-level public --apply --publish --registry https://pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/ --npm-auth-token $NPM_TOKEN --target-branch main 
   displayName: 'rush publish'
   env: 
     NPM_TOKEN: $(NPM_PAT)
-    NPM_ADMIN_TOKEN: Bearer $(System.AccessToken)
+    ENCODED_NPM_TOKEN: $(ENCODED_NPM_PAT)
 
 
