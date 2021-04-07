@@ -21,7 +21,7 @@ steps:
 - script: npm config set //pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/:username Default
   displayName: 'NPM config set username'
 
-- script: npm config set //pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/:_password $(SYSTEM_ACCESSTOKEN)
+- script: npm config set //pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/:_password $(NPM_PAT)
   displayName: 'NPM config set password'
           
 - script: npm config set //pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/:email user@bentley.com
