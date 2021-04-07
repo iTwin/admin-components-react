@@ -2,6 +2,24 @@
   "name": "@itwin/imodel-browser",
   "entries": [
     {
+      "version": "0.2.0",
+      "tag": "@itwin/imodel-browser_v0.2.0",
+      "date": "Wed, 07 Apr 2021 20:49:45 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Add empty state messages to `IModelGrid`"
+          },
+          {
+            "comment": "Add `NoResults` component"
+          },
+          {
+            "comment": "Add `IModelGhostTile` component"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.1.1",
       "tag": "@itwin/imodel-browser_v0.1.1",
       "date": "Wed, 07 Apr 2021 17:37:55 GMT",
