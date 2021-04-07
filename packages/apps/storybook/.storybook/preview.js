@@ -1,3 +1,7 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
 import addons from "@storybook/addons";
 import { themes } from "@storybook/theming";
 
@@ -23,6 +27,7 @@ channel.on("DARK_MODE", (isDark) => {
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
   backgrounds: { disable: true },
+  controls: { expanded: true },
   darkMode: {
     dark: { ...themes.dark, ...darkTheme },
     light: { ...themes.light, ...lightTheme },
