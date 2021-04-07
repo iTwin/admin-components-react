@@ -10,9 +10,9 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
-- checkout: self
-  clean: true
-  persistCredentials: true
+# - checkout: self
+#   clean: true
+#   persistCredentials: true
   
 - task: NodeTool@0
   inputs:
