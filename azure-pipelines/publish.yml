@@ -15,6 +15,36 @@ steps:
     versionSpec: '10.x'
   displayName: 'Install Node.js'
 
+- script: npm config set @bentley:registry pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/
+  displayName: 'NPM config set registry'
+
+- script: npm config set //pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/:username Default
+  displayName: 'NPM config set username'
+
+- script: npm config set //pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/:_password $(SYSTEM_ACCESSTOKEN)
+  displayName: 'NPM config set password'
+          
+- script: npm config set //pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/:email user@bentley.com
+  displayName: 'NPM config set email'
+
+- script: npm config set //pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/:always-auth true
+  displayName: 'NPM config set always auth'
+          
+- script: npm config set //pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/:always-auth true
+  displayName: 'NPM config set always auth'
+
+- script: npm config set //pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/:username Default
+  displayName: 'NPM config set username packages'
+
+- script: npm config set //pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/:_password $(SYSTEM_ACCESSTOKEN)
+  displayName: 'NPM config set password packages'
+
+- script: npm config set //pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/:email user@bentley.com
+  displayName: 'NPM config set email packages'
+
+- script: npm config set //pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/:always-auth true
+  displayName: 'NPM config set always auth packages'
+
 - script: node common/scripts/install-run-rush.js install
   displayName: 'rush install'
 
