@@ -81,10 +81,10 @@ steps:
 - script: npm config delete //pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/:password
   displayName: 'NPM config delete packages password'
 
-- script: git config --local user.name "iTwinViewerWorkflow"
+- script: git config --local user.name "iTwinAdminWorkflow"
   displayName: 'git config username'
 
-- script: git config --local user.email "itwinviewer@users.noreply.github.com"
+- script: git config --local user.email "itwinadmin@users.noreply.github.com"
   displayName: 'git config email'
 
 - script: git config --global url."git@github.com:".insteadOf "https://github.com/"
