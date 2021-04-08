@@ -31,39 +31,39 @@ steps:
   env:
     PUBLIC_KEY: $(PUBLIC_KEY)
 
-# - script: npm config set @bentley:registry pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/
-#   displayName: 'NPM config set registry'
+- script: npm config set @bentley:registry pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/
+  displayName: 'NPM config set registry'
 
-# - script: npm config set //pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/:username Default
-#   displayName: 'NPM config set username'
+- script: npm config set //pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/:username Default
+  displayName: 'NPM config set username'
 
-# - script: npm config set //pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/:_password $NPM_TOKEN
-#   displayName: 'NPM config set password'
-#   env: 
-#     NPM_TOKEN: $(ENCODED_NPM_PAT)
+- script: npm config set //pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/:_password $NPM_TOKEN
+  displayName: 'NPM config set password'
+  env: 
+    NPM_TOKEN: $(ENCODED_NPM_PAT)
           
-# - script: npm config set //pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/:email user@bentley.com
-#   displayName: 'NPM config set email'
+- script: npm config set //pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/:email user@bentley.com
+  displayName: 'NPM config set email'
 
-# - script: npm config set //pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/:always-auth true
-#   displayName: 'NPM config set always auth'
+- script: npm config set //pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/:always-auth true
+  displayName: 'NPM config set always auth'
           
-# - script: npm config set //pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/:always-auth true
-#   displayName: 'NPM config set always auth'
+- script: npm config set //pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/:always-auth true
+  displayName: 'NPM config set always auth'
 
-# - script: npm config set //pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/:username Default
-#   displayName: 'NPM config set username packages'
+- script: npm config set //pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/:username Default
+  displayName: 'NPM config set username packages'
 
-# - script: npm config set //pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/:_password $NPM_TOKEN
-#   displayName: 'NPM config set password packages'
-#   env: 
-#     NPM_TOKEN: $(ENCODED_NPM_PAT)
+- script: npm config set //pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/:_password $NPM_TOKEN
+  displayName: 'NPM config set password packages'
+  env: 
+    NPM_TOKEN: $(ENCODED_NPM_PAT)
 
-# - script: npm config set //pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/:email user@bentley.com
-#   displayName: 'NPM config set email packages'
+- script: npm config set //pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/:email user@bentley.com
+  displayName: 'NPM config set email packages'
 
-# - script: npm config set //pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/:always-auth true
-#   displayName: 'NPM config set always auth packages'
+- script: npm config set //pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/:always-auth true
+  displayName: 'NPM config set always auth packages'
 
 - script: node common/scripts/install-run-rush.js install
   displayName: 'rush install'
@@ -71,14 +71,8 @@ steps:
 - script: node common/scripts/install-run-rush.js rebuild
   displayName: 'rush rebuild'
 
-- script: git config --local user.name "iTwinViewerWorkflow"
-  displayName: 'git config username'
-
-- script: git config --local user.email "itwinviewer@users.noreply.github.com"
-  displayName: 'git config email'
-
-- script: git config --global url."git@github.com:".insteadOf "https://github.com/"
-  displayName: 'git config ssh'
+- script: npm config edit
+  displayName: 'NPM config reset'
 
 - script: node common/scripts/install-run-rush.js version --bump --target-branch main 
   displayName: 'rush version'
