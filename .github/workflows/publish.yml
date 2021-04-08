@@ -44,7 +44,7 @@ jobs:
           git config user.name "iTwinAdminWorkflow"
           git config user.email "itwinadmin@users.noreply.github.com"
           node common/scripts/install-run-rush.js version --bump --target-branch main
-          node common/scripts/install-run-rush.js publish --registry https://pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/ --include-all --set-access-level public --apply --publish --npm-auth-token $NPM_TOKEN --target-branch main 
+          node common/scripts/install-run-rush.js publish --registry https://pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/ --include-all --set-access-level public --apply --publish --target-branch main 
         env:
           NPM_ENCODED: ${{ secrets.ADO_PAT }}
           NPM_TOKEN: ${{ secrets.PUBLISH_PAT }}
