@@ -42,8 +42,8 @@ jobs:
           node common/scripts/install-run-rush.js rebuild
              
           echo 'Publishing...'
-          git config user.name "iTwinViewerWorkflow"
-          git config user.email "itwinviewer@users.noreply.github.com"
+          git config user.name "iTwinAdminWorkflow"
+          git config user.email "itwinadmin@users.noreply.github.com"
           node common/scripts/install-run-rush.js version --bump --target-branch main
           node common/scripts/install-run-rush.js publish https://pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/ --include-all --set-access-level public --apply --publish --npm-auth-token $NPM_TOKEN --target-branch main 
         env:
