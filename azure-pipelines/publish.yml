@@ -71,8 +71,17 @@ steps:
 - script: node common/scripts/install-run-rush.js rebuild
   displayName: 'rush rebuild'
 
-- script: npm config edit
-  displayName: 'NPM config reset'
+- script: npm config delete //pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/:username
+  displayName: 'NPM config delete username'
+
+- script: npm config delete //pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/:password
+  displayName: 'NPM config delete password'
+
+- script: npm config delete //pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/:username
+  displayName: 'NPM config delete packages username'
+
+- script: npm config delete //pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/:password
+  displayName: 'NPM config delete packages password'
 
 - script: node common/scripts/install-run-rush.js version --bump --target-branch main 
   displayName: 'rush version'
