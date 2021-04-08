@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser
 
-This log was last generated on Wed, 07 Apr 2021 20:49:45 GMT and should not be manually modified.
+This log was last generated on Thu, 08 Apr 2021 18:18:13 GMT and should not be manually modified.
+
+## 0.2.1
+Thu, 08 Apr 2021 18:18:13 GMT
+
+### Patches
+
+- Add comment
 
 ## 0.2.0
 Wed, 07 Apr 2021 20:49:45 GMT
