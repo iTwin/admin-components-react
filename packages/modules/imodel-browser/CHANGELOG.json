@@ -2,6 +2,18 @@
   "name": "@itwin/imodel-browser",
   "entries": [
     {
+      "version": "0.3.0",
+      "tag": "@itwin/imodel-browser_v0.3.0",
+      "date": "Fri, 09 Apr 2021 15:38:33 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Made `IModelGrid` props `accessToken`, `projectId` and `assetId` not required"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.2.1",
       "tag": "@itwin/imodel-browser_v0.2.1",
       "date": "Thu, 08 Apr 2021 18:18:13 GMT",

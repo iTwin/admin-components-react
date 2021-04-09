@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser
 
-This log was last generated on Thu, 08 Apr 2021 18:18:13 GMT and should not be manually modified.
+This log was last generated on Fri, 09 Apr 2021 15:38:33 GMT and should not be manually modified.
+
+## 0.3.0
+Fri, 09 Apr 2021 15:38:33 GMT
+
+### Minor changes
+
+- Made `IModelGrid` props `accessToken`, `projectId` and `assetId` not required
 
 ## 0.2.1
 Thu, 08 Apr 2021 18:18:13 GMT
