@@ -18,11 +18,11 @@ import { useIModelData } from "./useIModelData";
 export interface IModelGridProps {
   /**
    * Access token that requires the `imodels:read` scope. */
-  accessToken: string | undefined;
+  accessToken?: string | undefined;
   /** Project Id to list the iModels from (mutually exclusive to assetId) */
-  projectId: string | undefined;
+  projectId?: string | undefined;
   /** Asset Id to list the iModels from (mutually exclusive to projectId) */
-  assetId: string | undefined;
+  assetId?: string | undefined;
   /** Thumbnail click handler. */
   onThumbnailClick?(iModel: IModelFull): void;
   /** List of options to build for each imodel context menu. */
