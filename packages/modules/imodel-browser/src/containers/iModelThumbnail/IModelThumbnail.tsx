@@ -2,6 +2,8 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+import "./IModelThumbnail.scss";
+
 import { Body } from "@bentley/itwinui-react";
 import React from "react";
 
@@ -32,8 +34,10 @@ export const IModelThumbnail = ({
   const thumbnail = useIModelThumbnail(iModelId, accessToken, apiOverrides);
   return thumbnail ? (
     <img
-      className="iui-picture"
-      style={{ cursor: onClick ? "pointer" : "auto" }}
+      className="iui-picture iac-thumbnail"
+      style={{
+        cursor: onClick ? "pointer" : "auto",
+      }}
       id="base64image"
       src={thumbnail ?? ""}
       alt=""

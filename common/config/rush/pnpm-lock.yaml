@@ -4,7 +4,7 @@ dependencies:
   '@bentley/frontend-authorization-client': 2.11.0_124fd8799cc8196bebc67d27cf7bf3e3
   '@bentley/icons-generic-webfont': 1.0.34
   '@bentley/itwin-client': 2.11.0_@bentley+bentleyjs-core@2.11.0
-  '@bentley/itwinui': 0.4.2
+  '@bentley/itwinui': 0.7.0
   '@bentley/itwinui-react': 0.5.1_react-dom@16.13.1+react@16.13.1
   '@bentley/react-scripts': 4.0.3-dev.0_8f91d2b23d861db64783d0882327b032
   '@rollup/plugin-commonjs': 17.1.0_rollup@2.42.4
@@ -2320,6 +2320,10 @@ packages:
     dev: false
     resolution:
       integrity: sha1-HZYWXXrbw9EErSkEXpVXa69s+ZQ=
+  /@bentley/itwinui/0.7.0:
+    dev: false
+    resolution:
+      integrity: sha1-EvxIAeYQo2k5Ft6JWF9UXiGPfjc=
   /@bentley/react-scripts/4.0.3-dev.0_8f91d2b23d861db64783d0882327b032:
     dependencies:
       '@babel/core': 7.12.3
@@ -20794,7 +20798,7 @@ packages:
     dependencies:
       '@bentley/appsec-tslint-rules': 1.2.21
       '@bentley/icons-generic-webfont': 1.0.34
-      '@bentley/itwinui': 0.4.2
+      '@bentley/itwinui': 0.7.0
       '@bentley/itwinui-react': 0.5.1_react-dom@16.13.1+react@16.13.1
       '@rollup/plugin-commonjs': 17.1.0_rollup@2.42.4
       '@testing-library/react': 11.2.5_react-dom@16.13.1+react@16.13.1
@@ -20848,7 +20852,7 @@ packages:
     dev: false
     name: '@rush-temp/imodel-browser'
     resolution:
-      integrity: sha512-aze/lzsg4uDkFLeJvOEAJJVTC0kT0pb3w6bzRkYZ+7Xf7srCTw6oABugJ2hEVuykYoxGjgDNaBxLCWHWCjhtxg==
+      integrity: sha512-yvBuG2tI2vAxU9O+rnhor99LC+Nkm+Wf/IK41XLe7LA3fPIIxdVBUdaE9BetdX8Wr37OQ2UnhR5hEBDie2CvBg==
       tarball: file:projects/imodel-browser.tgz
     version: 0.0.0
   file:projects/platform-storybook.tgz_201e3756f34be7daf0312fc0cffaefcf:
@@ -20857,6 +20861,7 @@ packages:
       '@bentley/bentleyjs-core': 2.11.0
       '@bentley/frontend-authorization-client': 2.11.0_124fd8799cc8196bebc67d27cf7bf3e3
       '@bentley/itwin-client': 2.11.0_@bentley+bentleyjs-core@2.11.0
+      '@bentley/itwinui-react': 0.5.1_react-dom@16.13.1+react@16.13.1
       '@storybook/addon-actions': 6.2.5_153d3a961815977ed06c165593131b36
       '@storybook/addon-essentials': 6.2.5_cdea5e29cfd9a53eeb89e1d84877a995
       '@storybook/addon-links': 6.2.5_react-dom@16.13.1+react@16.13.1
@@ -20895,7 +20900,7 @@ packages:
       prettier: '*'
       typescript: '*'
     resolution:
-      integrity: sha512-cQM54cfvCAKFQ+YTyEObCqtDHTDhhmil5RpbAIpM1wI6AgjqbUxDumoY+pBJ9apNK7bqeIG6oPsioY1nttWFtA==
+      integrity: sha512-jZbKu8jX8hNpTdPzAYVZ4o6JXhqVnQui7+fO/Tz0SIft7NsDkYf7pxAVqk43Z4q1I+GS39YJmhATFf1mTkQDfA==
       tarball: file:projects/platform-storybook.tgz
     version: 0.0.0
   file:projects/storybook-auth-addon.tgz_node-sass@5.0.0+prettier@2.2.1:
@@ -20945,7 +20950,7 @@ specifiers:
   '@bentley/frontend-authorization-client': 2.11.0
   '@bentley/icons-generic-webfont': ^1.0.34
   '@bentley/itwin-client': 2.11.0
-  '@bentley/itwinui': ^0.4.2
+  '@bentley/itwinui': ^0.7.0
   '@bentley/itwinui-react': ^0.5.1
   '@bentley/react-scripts': 4.0.3-dev.0
   '@rollup/plugin-commonjs': ~17.1.0
