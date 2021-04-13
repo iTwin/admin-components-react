@@ -2,6 +2,21 @@
   "name": "@itwin/imodel-browser",
   "entries": [
     {
+      "version": "0.4.0",
+      "tag": "@itwin/imodel-browser_v0.4.0",
+      "date": "Tue, 13 Apr 2021 19:09:57 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Add possibility to configure each Tiles in the `IModelGrid`"
+          },
+          {
+            "comment": "Add possibility to configure `Tile` used by `IModelTile` with `tileProps` new prop"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.3.0",
       "tag": "@itwin/imodel-browser_v0.3.0",
       "date": "Fri, 09 Apr 2021 15:38:33 GMT",

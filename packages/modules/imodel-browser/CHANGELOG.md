@@ -1,6 +1,14 @@
 # Change Log - @itwin/imodel-browser
 
-This log was last generated on Fri, 09 Apr 2021 15:38:33 GMT and should not be manually modified.
+This log was last generated on Tue, 13 Apr 2021 19:09:57 GMT and should not be manually modified.
+
+## 0.4.0
+Tue, 13 Apr 2021 19:09:57 GMT
+
+### Minor changes
+
+- Add possibility to configure each Tiles in the `IModelGrid`
+- Add possibility to configure `Tile` used by `IModelTile` with `tileProps` new prop
 
 ## 0.3.0
 Fri, 09 Apr 2021 15:38:33 GMT
