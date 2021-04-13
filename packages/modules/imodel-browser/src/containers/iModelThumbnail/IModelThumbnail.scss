@@ -1,0 +1,13 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+@import "~@bentley/itwinui/scss/variables";
+
+.iac-thumbnail {
+  @include themed {
+    // Override because starting with 0.6.0, tile thumbnail background color is too light for
+    // default image provided for iModels (transparent PNG)
+    background-color: t(iui-color-background-2);
+  }
+}

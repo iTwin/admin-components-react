@@ -7,3 +7,5 @@ export * from "./containers/iModelTiles/IModelTile";
 export * from "./containers/iModelTiles/IModelGhostTile";
 export * from "./containers/iModelThumbnail/IModelThumbnail";
 export * from "./components/noResults/NoResults";
+export * from "./types";
+export { TileProps } from "@bentley/itwinui-react";

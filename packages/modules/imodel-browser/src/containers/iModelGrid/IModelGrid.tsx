@@ -12,7 +12,7 @@ import { ApiOverrides, DataStatus, IModelFull } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
 import { ContextMenuBuilderItem } from "../../utils/_buildMenuOptions";
 import { IModelGhostTile } from "../iModelTiles/IModelGhostTile";
-import { IModelTile } from "../iModelTiles/IModelTile";
+import { IModelTile, IModelTileProps } from "../iModelTiles/IModelTile";
 import { useIModelData } from "./useIModelData";
 
 export interface IModelGridProps {
@@ -27,6 +27,13 @@ export interface IModelGridProps {
   onThumbnailClick?(iModel: IModelFull): void;
   /** List of options to build for each imodel context menu. */
   iModelOptions?: ContextMenuBuilderItem<IModelFull>[];
+  /** Function (can be a react hook) that returns state for an iModel, returned values will be applied as props to the IModelTile, overrides IModelGrid provided values */
+  useIndividualState?: (
+    iModel: IModelFull,
+    iModelTileProps: IModelTileProps
+  ) => Partial<IModelTileProps>;
+  /** Static props to apply over each tile, mainly used for tileProps, overrides IModelGrid provided values */
+  tileOverrides?: Partial<IModelTileProps>;
   /** Strings displayed by the browser */
   stringsOverrides?: {
     /** Displayed after successful fetch, but no iModels are returned. */
@@ -54,6 +61,8 @@ export const IModelGrid = ({
   projectId,
   assetId,
   onThumbnailClick,
+  useIndividualState,
+  tileOverrides,
   stringsOverrides,
   apiOverrides,
 }: IModelGridProps) => {
@@ -81,7 +90,7 @@ export const IModelGrid = ({
     [DataStatus.ContextRequired]: strings.noContext,
   }[fetchStatus ?? DataStatus.Fetching];
 
-  const tileOverrides = apiOverrides
+  const tileApiOverrides = apiOverrides
     ? { serverEnvironmentPrefix: apiOverrides.serverEnvironmentPrefix }
     : undefined;
   return iModels.length === 0 && noResultsText ? (
@@ -96,16 +105,40 @@ export const IModelGrid = ({
         </>
       ) : (
         iModels?.map((iModel) => (
-          <IModelTile
+          <IModelHookedTile
             key={iModel.id}
             iModel={iModel}
             iModelOptions={iModelOptions}
             accessToken={accessToken}
             onThumbnailClick={onThumbnailClick}
-            apiOverrides={tileOverrides}
+            apiOverrides={tileApiOverrides}
+            useTileState={useIndividualState}
+            {...tileOverrides}
           />
         ))
       )}
     </GridStructure>
   );
+};
+
+type IModelHookedTileProps = IModelTileProps & {
+  useTileState?: (
+    iModel: IModelFull,
+    iModelTileProps: IModelTileProps
+  ) => Partial<IModelTileProps>;
+};
+const noOp = () => ({} as Partial<IModelTileProps>);
+const IModelHookedTile = (props: IModelHookedTileProps) => {
+  const { useTileState = noOp, ...iModelTileProps } = props;
+
+  const hookIdentity = React.useRef(useTileState);
+
+  if (hookIdentity.current !== useTileState) {
+    throw new Error(
+      "Even when used in a prop, useTilePropsForIModel identity must remain stable as it is used as a hook."
+    );
+  }
+
+  const tileState = useTileState(props.iModel, iModelTileProps);
+  return <IModelTile {...iModelTileProps} {...tileState} />;
 };

@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { Tile } from "@bentley/itwinui-react";
+import { Tile, TileProps } from "@bentley/itwinui-react";
 import React from "react";
 
 import { ApiOverrides, IModelFull } from "../../types";
@@ -21,6 +21,8 @@ export interface IModelTileProps {
   iModelOptions?: ContextMenuBuilderItem<IModelFull>[];
   /** Function to call on thumbnail click */
   onThumbnailClick?(iModel: IModelFull): void;
+  /** Tile props that will be applied after normal use. (Will override IModelTile if used) */
+  tileProps?: Partial<TileProps>;
   /** Object that configures different overrides for the API */
   apiOverrides?: ApiOverrides;
 }
@@ -34,6 +36,7 @@ export const IModelTile = ({
   accessToken,
   onThumbnailClick,
   apiOverrides,
+  tileProps,
 }: IModelTileProps) => {
   const moreOptions = React.useMemo(
     () => _buildManagedContextMenuOptions(iModelOptions, iModel),
@@ -62,7 +65,7 @@ export const IModelTile = ({
           apiOverrides={thumbnailApiOverride}
         />
       }
-      // {...(generatedProps ?? {})}
+      {...(tileProps ?? {})}
     />
   );
 };

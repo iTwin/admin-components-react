@@ -1,7 +1,7 @@
 /*---------------------------------------------------------------------------------------------
-* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
-* See LICENSE.md in the project root for license terms and full copyright notice.
-*--------------------------------------------------------------------------------------------*/
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
 import { Story } from "@storybook/react/types-6-0";
 
 const ACCESS_TOKEN_DEFAULT_VALUE =
@@ -14,7 +14,7 @@ export const accessTokenArgTypes = {
 
 /** HOC that will override the "accessToken" prop with the Addon token */
 export const withAccessTokenOverride: <
-  T extends { accessToken: string | undefined }
+  T extends { accessToken?: string | undefined }
 >(
   story: Story<T>
 ) => Story<T> = (Story) => (args, context) =>
@@ -22,7 +22,7 @@ export const withAccessTokenOverride: <
 
 /** HOC that will override the "projectId" prop with the Addon projectId */
 export const withProjectIdOverride: <
-  T extends { projectId: string | undefined }
+  T extends { projectId?: string | undefined }
 >(
   story: Story<T>
 ) => Story<T> = (Story) => (args, context) =>
