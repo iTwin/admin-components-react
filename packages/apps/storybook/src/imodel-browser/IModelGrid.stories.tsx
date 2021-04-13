@@ -7,11 +7,11 @@ import {
   IModelFull,
   IModelGrid as ExternalComponent,
   IModelGridProps,
+  IModelTileProps,
 } from "@itwin/imodel-browser";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
 
-import { IModelTileProps } from "../../../../modules/imodel-browser/src";
 import {
   accessTokenArgTypes,
   withAccessTokenOverride,
