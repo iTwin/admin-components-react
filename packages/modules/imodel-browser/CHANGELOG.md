@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser
 
-This log was last generated on Tue, 13 Apr 2021 19:09:57 GMT and should not be manually modified.
+This log was last generated on Wed, 14 Apr 2021 17:50:21 GMT and should not be manually modified.
+
+## 0.5.0
+Wed, 14 Apr 2021 17:50:21 GMT
+
+### Minor changes
+
+- Add `IModelGrid` sort options
 
 ## 0.4.0
 Tue, 13 Apr 2021 19:09:57 GMT
