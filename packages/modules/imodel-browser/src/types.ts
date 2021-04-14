@@ -49,7 +49,7 @@ export enum DataStatus {
 }
 
 type SortOptions<T, K extends keyof T> =
-  | { sortType: K; ascending: boolean }
+  | { sortType: K; descending: boolean }
   | ((a: T, b: T) => number);
 
 /** Supported IModel sorting types */

@@ -69,15 +69,15 @@ describe("useIModelSort hook", () => {
       },
     ];
     const { result, rerender } = renderHook(
-      (props: { ascending: boolean }) =>
-        useIModelSort(iModels, { sortType, ascending: props.ascending }),
-      { initialProps: { ascending: true } }
+      (props: { descending: boolean }) =>
+        useIModelSort(iModels, { sortType, descending: props.descending }),
+      { initialProps: { descending: false } }
     );
     expect(result.current.map((iModel) => iModel.id)).toEqual(
       expectedSortOrder
     );
 
-    rerender({ ascending: false });
+    rerender({ descending: true });
     expect(result.current.map((iModel) => iModel.id)).toEqual(
       expectedSortOrder.reverse()
     );
@@ -198,7 +198,7 @@ describe("useIModelSort hook", () => {
     expect(result.current).toBe(iModels);
   });
 
-  it("return provided array on undefined options", () => {
+  it("return provided array on unsupported sortType", () => {
     const iModels: IModelFull[] = [
       {
         id: "1",
@@ -227,7 +227,10 @@ describe("useIModelSort hook", () => {
       },
     ];
     const { result } = renderHook(() =>
-      useIModelSort(iModels, { sortType: "thumbnail" as any, ascending: true })
+      useIModelSort(iModels, {
+        sortType: "thumbnail" as any,
+        descending: false,
+      })
     );
     expect(result.current).toBe(iModels);
   });

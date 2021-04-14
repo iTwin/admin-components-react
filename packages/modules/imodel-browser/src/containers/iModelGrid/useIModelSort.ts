@@ -38,8 +38,8 @@ export const useIModelSort = (
 ) => {
   const sortType =
     typeof options !== "function" ? options?.sortType : undefined;
-  const ascending =
-    typeof options !== "function" ? options?.ascending : undefined;
+  const descending =
+    typeof options !== "function" ? options?.descending ?? false : undefined;
   const sortFn = typeof options === "function" ? options : undefined;
   return React.useMemo(() => {
     if (sortFn) {
@@ -64,6 +64,6 @@ export const useIModelSort = (
         return sortStringValues(a, b);
       }
     );
-    return ascending ? sorted : sorted.reverse();
-  }, [sortFn, sortType, iModels, ascending]);
+    return descending ? sorted.reverse() : sorted;
+  }, [sortFn, sortType, iModels, descending]);
 };
