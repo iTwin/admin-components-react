@@ -20,7 +20,7 @@ describe("useIModelData hook", () => {
 
   it("returns the data and proper status on successful call", async () => {
     const { result, waitForNextUpdate } = renderHook(() =>
-      useIModelData("projectId", "", "accessToken")
+      useIModelData({ projectId: "projectId", accessToken: "accessToken" })
     );
 
     await waitForNextUpdate();
@@ -39,7 +39,7 @@ describe("useIModelData hook", () => {
     );
 
     const { result, waitForValueToChange } = renderHook(() =>
-      useIModelData("projectId", "", "accessToken")
+      useIModelData({ projectId: "projectId", accessToken: "accessToken" })
     );
 
     await waitForValueToChange(() => result.current.status);
@@ -60,7 +60,7 @@ describe("useIModelData hook", () => {
       Parameters<typeof useIModelData>,
       ReturnType<typeof useIModelData>
     >((initialValue) => useIModelData(...initialValue), {
-      initialProps: ["projectId", "", "accessToken"],
+      initialProps: [{ projectId: "projectId", accessToken: "accessToken" }],
     });
 
     await waitForNextUpdate();
@@ -70,10 +70,11 @@ describe("useIModelData hook", () => {
     expect(watcher).toHaveBeenCalledTimes(1);
 
     rerender([
-      "",
-      "",
-      "",
-      { data: [{ id: "rerenderedId", displayName: "rerenderedDisplayName" }] },
+      {
+        apiOverrides: {
+          data: [{ id: "rerenderedId", displayName: "rerenderedDisplayName" }],
+        },
+      },
     ]);
 
     expect(result.current.iModels).toEqual([
@@ -82,7 +83,7 @@ describe("useIModelData hook", () => {
     expect(result.current.status).toEqual(DataStatus.Complete);
     expect(watcher).toHaveBeenCalledTimes(1);
 
-    rerender(["projectId", "", "accessToken"]);
+    rerender([{ projectId: "projectId", accessToken: "accessToken" }]);
     await waitForNextUpdate();
 
     expect(result.current.iModels).toEqual([]);
@@ -91,14 +92,18 @@ describe("useIModelData hook", () => {
   });
 
   it("returns proper error if no accessToken is provided without data override", async () => {
-    const { result } = renderHook(() => useIModelData("projectId", "", ""));
+    const { result } = renderHook(() =>
+      useIModelData({ projectId: "projectId" })
+    );
 
     expect(result.current.iModels).toEqual([]);
     expect(result.current.status).toEqual(DataStatus.TokenRequired);
   });
 
   it("returns proper error if no context is provided without data override", async () => {
-    const { result } = renderHook(() => useIModelData("", "", "accessToken"));
+    const { result } = renderHook(() =>
+      useIModelData({ accessToken: "accessToken" })
+    );
 
     expect(result.current.iModels).toEqual([]);
     expect(result.current.status).toEqual(DataStatus.ContextRequired);

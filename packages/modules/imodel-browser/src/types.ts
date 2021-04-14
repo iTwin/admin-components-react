@@ -47,3 +47,17 @@ export enum DataStatus {
   TokenRequired = "error_tokenRequired",
   ContextRequired = "error_contextRequired",
 }
+
+export type SortOptions<T> =
+  | { sortType: keyof T; ascending: boolean }
+  | ((a: T, b: T) => number);
+
+export type IModelSortOptionsKeys =
+  | "displayName"
+  | "name"
+  | "description"
+  | "initialized"
+  | "createdDateTime";
+export type IModelSortOptions = SortOptions<
+  Pick<IModelFull, IModelSortOptionsKeys>
+>;

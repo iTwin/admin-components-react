@@ -4,17 +4,33 @@
  *--------------------------------------------------------------------------------------------*/
 import React from "react";
 
-import { ApiOverrides, DataStatus, IModelFull } from "../../types";
+import {
+  ApiOverrides,
+  DataStatus,
+  IModelFull,
+  IModelSortOptions,
+} from "../../types";
 import { _getAPIServer } from "../../utils/_apiOverrides";
+import { useIModelSort } from "./useIModelSort";
 
-export const useIModelData = (
-  projectId: string | undefined,
-  assetId: string | undefined,
-  accessToken: string | undefined,
-  apiOverrides?: ApiOverrides<IModelFull[]>
-) => {
+export interface IModelDataHookOptions {
+  projectId?: string | undefined;
+  assetId?: string | undefined;
+  accessToken?: string | undefined;
+  sortOptions?: IModelSortOptions;
+  apiOverrides?: ApiOverrides<IModelFull[]>;
+}
+
+export const useIModelData = ({
+  projectId,
+  assetId,
+  accessToken,
+  sortOptions,
+  apiOverrides,
+}: IModelDataHookOptions) => {
   const [iModels, setIModels] = React.useState<IModelFull[]>([]);
   const [status, setStatus] = React.useState<DataStatus>();
+  const sortedIModels = useIModelSort(iModels, sortOptions);
   React.useEffect(() => {
     if (apiOverrides?.data) {
       setIModels(apiOverrides.data);
@@ -58,5 +74,5 @@ export const useIModelData = (
         console.error(e);
       });
   }, [accessToken, projectId, assetId, apiOverrides?.data, apiOverrides]);
-  return { iModels, status };
+  return { iModels: sortedIModels, status };
 };
