@@ -30,7 +30,7 @@ export interface IModelGridProps {
   assetId?: string | undefined;
   /** Thumbnail click handler. */
   onThumbnailClick?(iModel: IModelFull): void;
-  /** Sort type */
+  /** Object/function that configure IModel sorting behavior. */
   sortOptions?: IModelSortOptions;
   /** List of options to build for each imodel context menu. */
   iModelOptions?: ContextMenuBuilderItem<IModelFull>[];
