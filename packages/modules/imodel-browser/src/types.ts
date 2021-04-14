@@ -48,8 +48,8 @@ export enum DataStatus {
   ContextRequired = "error_contextRequired",
 }
 
-export type SortOptions<T> =
-  | { sortType: keyof T; ascending: boolean }
+export type SortOptions<T, K extends keyof T> =
+  | { sortType: K; ascending: boolean }
   | ((a: T, b: T) => number);
 
 export type IModelSortOptionsKeys =
@@ -58,6 +58,4 @@ export type IModelSortOptionsKeys =
   | "description"
   | "initialized"
   | "createdDateTime";
-export type IModelSortOptions = SortOptions<
-  Pick<IModelFull, IModelSortOptionsKeys>
->;
+export type IModelSortOptions = SortOptions<IModelFull, IModelSortOptionsKeys>;
