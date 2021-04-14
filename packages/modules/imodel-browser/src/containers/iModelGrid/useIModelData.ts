@@ -7,16 +7,19 @@ import React from "react";
 import {
   ApiOverrides,
   DataStatus,
+  IModelFilterOptions,
   IModelFull,
   IModelSortOptions,
 } from "../../types";
 import { _getAPIServer } from "../../utils/_apiOverrides";
+import { useIModelFilter } from "./useIModelFilter";
 import { useIModelSort } from "./useIModelSort";
 
 export interface IModelDataHookOptions {
   projectId?: string | undefined;
   assetId?: string | undefined;
   accessToken?: string | undefined;
+  filterOptions?: IModelFilterOptions;
   sortOptions?: IModelSortOptions;
   apiOverrides?: ApiOverrides<IModelFull[]>;
 }
@@ -25,12 +28,14 @@ export const useIModelData = ({
   projectId,
   assetId,
   accessToken,
+  filterOptions,
   sortOptions,
   apiOverrides,
 }: IModelDataHookOptions) => {
   const [iModels, setIModels] = React.useState<IModelFull[]>([]);
   const [status, setStatus] = React.useState<DataStatus>();
-  const sortedIModels = useIModelSort(iModels, sortOptions);
+  const filteredIModels = useIModelFilter(iModels, filterOptions);
+  const sortedIModels = useIModelSort(filteredIModels, sortOptions);
   React.useEffect(() => {
     if (apiOverrides?.data) {
       setIModels(apiOverrides.data);
