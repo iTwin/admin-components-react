@@ -8,7 +8,12 @@ import React from "react";
 
 import { GridStructure } from "../../components/gridStructure/GridStructure";
 import { NoResults } from "../../components/noResults/NoResults";
-import { ApiOverrides, DataStatus, IModelFull } from "../../types";
+import {
+  ApiOverrides,
+  DataStatus,
+  IModelFull,
+  IModelSortOptions,
+} from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
 import { ContextMenuBuilderItem } from "../../utils/_buildMenuOptions";
 import { IModelGhostTile } from "../iModelTiles/IModelGhostTile";
@@ -25,6 +30,11 @@ export interface IModelGridProps {
   assetId?: string | undefined;
   /** Thumbnail click handler. */
   onThumbnailClick?(iModel: IModelFull): void;
+  /** Object/function that configure IModel sorting behavior.
+   * Object form allow sorting on the provided keys.
+   * Function form allow custom sorting (like sorting on 2 props at a time).
+   */
+  sortOptions?: IModelSortOptions;
   /** List of options to build for each imodel context menu. */
   iModelOptions?: ContextMenuBuilderItem<IModelFull>[];
   /** Function (can be a react hook) that returns state for an iModel, returned values will be applied as props to the IModelTile, overrides IModelGrid provided values */
@@ -60,6 +70,7 @@ export const IModelGrid = ({
   iModelOptions,
   projectId,
   assetId,
+  sortOptions,
   onThumbnailClick,
   useIndividualState,
   tileOverrides,
@@ -75,12 +86,13 @@ export const IModelGrid = ({
     },
     stringsOverrides
   );
-  const { iModels, status: fetchStatus } = useIModelData(
+  const { iModels, status: fetchStatus } = useIModelData({
     projectId,
     assetId,
     accessToken,
-    apiOverrides
-  );
+    apiOverrides,
+    sortOptions,
+  });
 
   const noResultsText = {
     [DataStatus.Fetching]: "",

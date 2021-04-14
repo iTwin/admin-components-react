@@ -47,3 +47,18 @@ export enum DataStatus {
   TokenRequired = "error_tokenRequired",
   ContextRequired = "error_contextRequired",
 }
+
+type SortOptions<T, K extends keyof T> =
+  | { sortType: K; descending: boolean }
+  | ((a: T, b: T) => number);
+
+/** Supported IModel sorting types */
+export type IModelSortOptionsKeys =
+  | "displayName"
+  | "name"
+  | "description"
+  | "initialized"
+  | "createdDateTime";
+
+/** Object/function that configure IModel sorting behavior. */
+export type IModelSortOptions = SortOptions<IModelFull, IModelSortOptionsKeys>;
