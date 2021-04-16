@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import "./projectTile.scss";
+import "./ProjectTile.scss";
 
 import { Badge, Tile, TileProps } from "@bentley/itwinui-react";
 import React from "react";
