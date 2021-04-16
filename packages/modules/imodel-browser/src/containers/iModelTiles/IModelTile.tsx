@@ -54,7 +54,9 @@ export const IModelTile = ({
       key={iModel?.id}
       name={<span title={iModel?.displayName}>{iModel?.displayName}</span>}
       description={
-        <span title={iModel?.description}>{iModel?.description ?? ""}</span>
+        <span title={iModel?.description ?? ""}>
+          {iModel?.description ?? ""}
+        </span>
       }
       moreOptions={moreOptions}
       thumbnail={
