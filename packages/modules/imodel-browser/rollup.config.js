@@ -3,6 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import commonjs from "@rollup/plugin-commonjs";
+import svgr from "@svgr/rollup";
 import peerDepsExternal from "rollup-plugin-peer-deps-external";
 import postcss from "rollup-plugin-postcss";
 import { terser } from "rollup-plugin-terser";
@@ -13,7 +14,7 @@ import * as packageJson from "./package.json";
 const rollupConfig = {
   input: "src/index.ts",
   external: [
-    /@bentley\/itwinui-react(\/.*)?/,
+    /@itwin\/itwinui-react(\/.*)?/,
     /classnames/,
     /@bentley\/icons-generic-webfont/,
   ],
@@ -31,6 +32,7 @@ const rollupConfig = {
     peerDepsExternal(),
     commonjs(),
     typescript(),
+    svgr(),
     postcss({
       use: {
         sass: { outputStyle: "compressed" },
