@@ -6,7 +6,7 @@ import { renderHook } from "@testing-library/react-hooks";
 import { rest } from "msw";
 
 import { server } from "../../tests/mocks/server";
-import { DataStatus } from "../../types";
+import { DataStatus, IModelSortOptionsKeys } from "../../types";
 import { useIModelData } from "./useIModelData";
 
 describe("useIModelData hook", () => {
@@ -48,6 +48,7 @@ describe("useIModelData hook", () => {
   });
 
   it("returns apiOverrides.data without fetching when it is provided", async () => {
+    const data = [{ id: "rerenderedId", displayName: "rerenderedDisplayName" }];
     const watcher = jest.fn();
     server.use(
       rest.get("https://api.bentley.com/imodels/", (req, res, ctx) => {
@@ -72,7 +73,7 @@ describe("useIModelData hook", () => {
     rerender([
       {
         apiOverrides: {
-          data: [{ id: "rerenderedId", displayName: "rerenderedDisplayName" }],
+          data,
         },
       },
     ]);
@@ -107,5 +108,118 @@ describe("useIModelData hook", () => {
 
     expect(result.current.iModels).toEqual([]);
     expect(result.current.status).toEqual(DataStatus.ContextRequired);
+  });
+
+  it("apply sorting", async () => {
+    const expectedSortOrder = ["2", "4", "5", "1", "3"];
+    const options = {
+      apiOverrides: {
+        data: [
+          {
+            id: "1",
+            displayName: "d",
+            name: "c",
+            description: "e",
+            initialized: true,
+            createdDateTime: "2020-09-05T12:42:51.593Z",
+          },
+          {
+            id: "2",
+            displayName: "a",
+            name: "d",
+            description: "d",
+            initialized: true,
+            createdDateTime: "2020-09-03T12:42:51.593Z",
+          },
+          {
+            id: "3",
+            displayName: "e",
+            name: "a",
+            description: "c",
+            initialized: false,
+            createdDateTime: "2020-09-04T12:42:51.593Z",
+          },
+          {
+            id: "4",
+            displayName: "b",
+            name: "b",
+            description: "b",
+            initialized: false,
+            createdDateTime: "2020-09-01T12:42:51.593Z",
+          },
+          {
+            id: "5",
+            displayName: "c",
+            name: "d",
+            description: "a",
+            initialized: true,
+            createdDateTime: "2020-09-02T12:42:51.593Z",
+          },
+        ],
+      },
+      sortOptions: {
+        sortType: "displayName" as IModelSortOptionsKeys,
+        descending: false,
+      },
+    };
+    const { result } = renderHook(() => useIModelData(options));
+
+    expect(result.current.iModels.map((iModel) => iModel.id)).toEqual(
+      expectedSortOrder
+    );
+  });
+
+  it("apply filtering", async () => {
+    const expected = ["2", "5"];
+    const options = {
+      apiOverrides: {
+        data: [
+          {
+            id: "1",
+            displayName: "d",
+            name: "c",
+            description: "e",
+            initialized: true,
+            createdDateTime: "2020-09-05T12:42:51.593Z",
+          },
+          {
+            id: "2",
+            displayName: "a",
+            name: "d",
+            description: "d",
+            initialized: true,
+            createdDateTime: "2020-09-03T12:42:51.593Z",
+          },
+          {
+            id: "3",
+            displayName: "e",
+            name: "a",
+            description: "c",
+            initialized: false,
+            createdDateTime: "2020-09-04T12:42:51.593Z",
+          },
+          {
+            id: "4",
+            displayName: "b",
+            name: "b",
+            description: "b",
+            initialized: false,
+            createdDateTime: "2020-09-01T12:42:51.593Z",
+          },
+          {
+            id: "5",
+            displayName: "c",
+            name: "d",
+            description: "a",
+            initialized: true,
+            createdDateTime: "2020-09-02T12:42:51.593Z",
+          },
+        ],
+      },
+      filterOptions: "a",
+    };
+    const { result } = renderHook(() => useIModelData(options));
+
+    expect(result.current.iModels.map((iModel) => iModel.id)).toEqual(expected);
   });
 });

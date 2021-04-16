@@ -40,6 +40,11 @@ export interface ApiOverrides<T = never> {
   data?: T;
 }
 
+type FilterOptions<T> = string | ((filterable: T) => boolean);
+
+/** String/function that configure IModel filtering behavior. */
+export type IModelFilterOptions = FilterOptions<IModelFull>;
+
 export enum DataStatus {
   Fetching = "fetching",
   Complete = "complete",
