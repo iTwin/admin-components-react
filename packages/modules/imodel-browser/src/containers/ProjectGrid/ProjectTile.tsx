@@ -85,6 +85,7 @@ export const ProjectTile = ({
         <span
           className={"iui-picture iac-project-thumbnail"}
           onClick={() => onThumbnailClick?.(project)}
+          style={{ cursor: onThumbnailClick ? "pointer" : "auto" }}
         >
           <ProjectIcon className={"iac-project-thumbnail"} />
         </span>
