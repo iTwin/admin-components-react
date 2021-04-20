@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser
 
-This log was last generated on Fri, 16 Apr 2021 13:59:05 GMT and should not be manually modified.
+This log was last generated on Tue, 20 Apr 2021 13:30:06 GMT and should not be manually modified.
+
+## 0.7.0
+Tue, 20 Apr 2021 13:30:06 GMT
+
+### Minor changes
+
+- Add `ProjectGrid` (same features as IModelGrid)
 
 ## 0.6.0
 Fri, 16 Apr 2021 13:59:05 GMT
