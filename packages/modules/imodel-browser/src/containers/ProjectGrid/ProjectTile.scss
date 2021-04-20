@@ -1,0 +1,13 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+.iac-project-thumbnail {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  & > * {
+    width: 85%;
+    height: 85%;
+  }
+}

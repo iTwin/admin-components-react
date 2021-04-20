@@ -21,6 +21,7 @@ dependencies:
   '@storybook/core-events': 6.2.5
   '@storybook/react': 6.2.5_bf70f9382921f0c8fa0d17fd07819422
   '@storybook/theming': 6.2.5_react-dom@16.13.1+react@16.13.1
+  '@svgr/rollup': 5.5.0
   '@testing-library/react': 11.2.5_react-dom@16.13.1+react@16.13.1
   '@testing-library/react-hooks': 5.1.0_216f63de86fbc10352ace49d86b619ee
   '@types/classnames': 2.2.11
@@ -4155,6 +4156,21 @@ packages:
       node: '>=10'
     resolution:
       integrity: sha512-r5swKk46GuQl4RrVejVwpeeJaydoxkdwkM1mBKOgJLBUJPGaLci6ylg/IjhrRsREKDkr4kbMWdgOtbXEh0fyLQ==
+  /@svgr/rollup/5.5.0:
+    dependencies:
+      '@babel/core': 7.13.1
+      '@babel/plugin-transform-react-constant-elements': 7.13.10_@babel+core@7.13.1
+      '@babel/preset-env': 7.13.10_@babel+core@7.13.1
+      '@babel/preset-react': 7.12.13_@babel+core@7.13.1
+      '@svgr/core': 5.5.0
+      '@svgr/plugin-jsx': 5.5.0
+      '@svgr/plugin-svgo': 5.5.0
+      rollup-pluginutils: 2.8.2
+    dev: false
+    engines:
+      node: '>=10'
+    resolution:
+      integrity: sha512-EiZmH2VTr+Xzyb6Ga8XtGa9MEbiU3WQnB5vHmqhwAUqibU3uwuwr7MN+QwIh/gtBk1ucMim8BCfcRTlLVREM8A==
   /@svgr/webpack/5.5.0:
     dependencies:
       '@babel/core': 7.13.1
@@ -20801,6 +20817,7 @@ packages:
       '@bentley/itwinui': 0.7.0
       '@bentley/itwinui-react': 0.5.1_react-dom@16.13.1+react@16.13.1
       '@rollup/plugin-commonjs': 17.1.0_rollup@2.42.4
+      '@svgr/rollup': 5.5.0
       '@testing-library/react': 11.2.5_react-dom@16.13.1+react@16.13.1
       '@testing-library/react-hooks': 5.1.0_216f63de86fbc10352ace49d86b619ee
       '@types/classnames': 2.2.11
@@ -20852,7 +20869,7 @@ packages:
     dev: false
     name: '@rush-temp/imodel-browser'
     resolution:
-      integrity: sha512-yvBuG2tI2vAxU9O+rnhor99LC+Nkm+Wf/IK41XLe7LA3fPIIxdVBUdaE9BetdX8Wr37OQ2UnhR5hEBDie2CvBg==
+      integrity: sha512-udvTyzmh1HDY9WwA0zX2g16vS9UoAZzne3cCXrVrCSTam+KhhLTMdkb38SvPUCE34YNvo6+ynVJ/z+IULOpRdA==
       tarball: file:projects/imodel-browser.tgz
     version: 0.0.0
   file:projects/platform-storybook.tgz_201e3756f34be7daf0312fc0cffaefcf:
@@ -20900,7 +20917,7 @@ packages:
       prettier: '*'
       typescript: '*'
     resolution:
-      integrity: sha512-jZbKu8jX8hNpTdPzAYVZ4o6JXhqVnQui7+fO/Tz0SIft7NsDkYf7pxAVqk43Z4q1I+GS39YJmhATFf1mTkQDfA==
+      integrity: sha512-cdBTIGwQC0j27MbbipebhmNCpGFIVH/a4VFbwhWbMvWUORYKrHR9o+e/6BmzaGPoyskr1s0wthwFd3dCJL/jrQ==
       tarball: file:projects/platform-storybook.tgz
     version: 0.0.0
   file:projects/storybook-auth-addon.tgz_node-sass@5.0.0+prettier@2.2.1:
@@ -20967,6 +20984,7 @@ specifiers:
   '@storybook/core-events': ^6.2.5
   '@storybook/react': ^6.2.5
   '@storybook/theming': ^6.2.5
+  '@svgr/rollup': ^5.5.0
   '@testing-library/react': ^11.1.0
   '@testing-library/react-hooks': ^5.1.0
   '@types/classnames': ^2.2.11

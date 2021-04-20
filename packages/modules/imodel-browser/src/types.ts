@@ -14,7 +14,7 @@ export interface IModelFull {
   name?: string;
 
   /** "Description of the iModel." */
-  description?: string;
+  description?: string | null;
 
   /** "Boolean flag indicating when iModel is ready to be used." */
   initialized?: boolean;
@@ -32,6 +32,24 @@ export interface IModelFull {
   thumbnail?: string;
 }
 
+/** Full representation of a Project */
+export interface ProjectFull {
+  id: string;
+  displayName?: string;
+  projectNumber?: string;
+  registrationDateTime?: string;
+  industry?: string;
+  projectType?: string;
+  geographicLocation?: string;
+  latitude?: string;
+  longitude?: string;
+  timeZone?: string;
+  dataCenterLocation?: string;
+  billingCountry?: string;
+  status?: "Active" | "Inactive" | "Trial";
+  allowExternalTeamMembers?: boolean;
+}
+
 /** An object that allow various configuration of the API access */
 export interface ApiOverrides<T = never> {
   /** dev- or qa- */
@@ -44,6 +62,9 @@ type FilterOptions<T> = string | ((filterable: T) => boolean);
 
 /** String/function that configure IModel filtering behavior. */
 export type IModelFilterOptions = FilterOptions<IModelFull>;
+
+/** String/function that configures Project filtering behavior. */
+export type ProjectFilterOptions = FilterOptions<ProjectFull>;
 
 export enum DataStatus {
   Fetching = "fetching",
@@ -67,3 +88,22 @@ export type IModelSortOptionsKeys =
 
 /** Object/function that configure IModel sorting behavior. */
 export type IModelSortOptions = SortOptions<IModelFull, IModelSortOptionsKeys>;
+
+/** Supported Project sorting types */
+export type ProjectSortOptionsKeys =
+  | "displayName"
+  | "projectNumber"
+  | "registrationDateTime"
+  | "industry"
+  | "projectType"
+  | "geographicLocation"
+  | "dataCenterLocation"
+  | "billingCountry"
+  | "status"
+  | "allowExternalTeamMembers";
+
+/** Object/function that configure Project sorting behavior. */
+export type ProjectSortOptions = SortOptions<
+  ProjectFull,
+  ProjectSortOptionsKeys
+>;

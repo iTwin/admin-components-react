@@ -3,6 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import commonjs from "@rollup/plugin-commonjs";
+import svgr from "@svgr/rollup";
 import peerDepsExternal from "rollup-plugin-peer-deps-external";
 import postcss from "rollup-plugin-postcss";
 import { terser } from "rollup-plugin-terser";
@@ -31,6 +32,7 @@ const rollupConfig = {
     peerDepsExternal(),
     commonjs(),
     typescript(),
+    svgr(),
     postcss({
       use: {
         sass: { outputStyle: "compressed" },

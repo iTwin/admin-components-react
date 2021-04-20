@@ -3,6 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import "./NoResults.scss";
+import "@bentley/icons-generic-webfont/dist/bentley-icons-generic-webfont.css";
 
 import { Leading } from "@bentley/itwinui-react";
 import classnames from "classnames";

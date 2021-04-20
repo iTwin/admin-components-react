@@ -9,3 +9,5 @@ export * from "./containers/iModelThumbnail/IModelThumbnail";
 export * from "./components/noResults/NoResults";
 export * from "./types";
 export { TileProps } from "@bentley/itwinui-react";
+export * from "./containers/ProjectGrid/ProjectGrid";
+export * from "./containers/ProjectGrid/ProjectTile";

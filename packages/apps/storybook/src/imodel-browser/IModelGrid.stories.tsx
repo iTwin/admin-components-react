@@ -2,7 +2,12 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { DropdownButton, MenuItem, TileProps } from "@bentley/itwinui-react";
+import {
+  Button,
+  DropdownButton,
+  MenuItem,
+  TileProps,
+} from "@bentley/itwinui-react";
 import {
   IModelFull,
   IModelGrid as ExternalComponent,
@@ -170,7 +175,7 @@ const useIndividualState = (iModel: IModelFull, props: IModelTileProps) => {
     () => ({
       buttons:
         versions?.length === 0
-          ? [<span key="Create">Create version</span>]
+          ? [<Button key="Create">Create version</Button>]
           : undefined,
       isNew: versions?.length === 0,
       metadata: (
