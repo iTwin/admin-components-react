@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import "./ProjectTile.scss";
 
-import { Badge, Tile, TileProps } from "@bentley/itwinui-react";
+import { Badge, Tile, TileProps } from "@itwin/itwinui-react";
 import React from "react";
 
 import ProjectIcon from "../../images/project.svg";

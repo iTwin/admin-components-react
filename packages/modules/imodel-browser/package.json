@@ -19,12 +19,12 @@
     "esm/**/*"
   ],
   "dependencies": {
+    "@bentley/icons-generic-webfont": "^1.0.34",
     "classnames": "^2.2.6",
-    "@bentley/itwinui-react": "^0.5.1"
+    "@itwin/itwinui-react": "^1.0.0"
   },
   "devDependencies": {
-    "@bentley/icons-generic-webfont": "^1.0.34",
-    "@bentley/itwinui": "^0.7.0",
+    "@itwin/itwinui-css": "^0.9.0",
     "@rollup/plugin-commonjs": "~17.1.0",
     "@svgr/rollup": "^5.5.0",
     "@testing-library/react-hooks": "^5.1.0",

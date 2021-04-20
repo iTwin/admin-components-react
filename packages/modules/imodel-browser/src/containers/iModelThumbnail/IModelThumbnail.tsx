@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import "./IModelThumbnail.scss";
 
-import { Body } from "@bentley/itwinui-react";
+import { Body } from "@itwin/itwinui-react";
 import React from "react";
 
 import { ApiOverrides } from "../../types";

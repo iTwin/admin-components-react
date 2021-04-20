@@ -3,17 +3,17 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import {
+  IndividualProjectStateHook,
+  ProjectGrid as ExternalComponent,
+  ProjectGridProps,
+} from "@itwin/imodel-browser";
+import {
   Button,
   Code,
   DropdownButton,
   MenuItem,
   TileProps,
-} from "@bentley/itwinui-react";
-import {
-  IndividualProjectStateHook,
-  ProjectGrid as ExternalComponent,
-  ProjectGridProps,
-} from "@itwin/imodel-browser";
+} from "@itwin/itwinui-react";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React, { PropsWithChildren } from "react";
 
