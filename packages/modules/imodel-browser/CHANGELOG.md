@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser
 
-This log was last generated on Tue, 20 Apr 2021 13:30:06 GMT and should not be manually modified.
+This log was last generated on Tue, 20 Apr 2021 16:34:50 GMT and should not be manually modified.
+
+## 0.8.0
+Tue, 20 Apr 2021 16:34:50 GMT
+
+### Minor changes
+
+- Updated dependency to use @itwin/iTwinUi-* packages
 
 ## 0.7.0
 Tue, 20 Apr 2021 13:30:06 GMT

@@ -2,6 +2,18 @@
   "name": "@itwin/imodel-browser",
   "entries": [
     {
+      "version": "0.8.0",
+      "tag": "@itwin/imodel-browser_v0.8.0",
+      "date": "Tue, 20 Apr 2021 16:34:50 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Updated dependency to use @itwin/iTwinUi-* packages"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.7.0",
       "tag": "@itwin/imodel-browser_v0.7.0",
       "date": "Tue, 20 Apr 2021 13:30:06 GMT",
