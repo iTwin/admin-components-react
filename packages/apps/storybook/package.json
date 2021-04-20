@@ -7,7 +7,7 @@
     "@bentley/bentleyjs-core": "2.11.0",
     "@bentley/frontend-authorization-client": "2.11.0",
     "@bentley/itwin-client": "2.11.0",
-    "@itwin/imodel-browser": "~0.7.0",
+    "@itwin/imodel-browser": "~0.8.0",
     "@itwin/itwinui-react": "^1.0.0",
     "@itwin/storybook-auth-addon": "^0.1.0",
     "@storybook/addon-actions": "^6.2.5",
