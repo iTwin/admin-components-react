@@ -3,17 +3,17 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import {
-  Button,
-  DropdownButton,
-  MenuItem,
-  TileProps,
-} from "@bentley/itwinui-react";
-import {
   IModelFull,
   IModelGrid as ExternalComponent,
   IModelGridProps,
   IModelTileProps,
 } from "@itwin/imodel-browser";
+import {
+  Button,
+  DropdownButton,
+  MenuItem,
+  TileProps,
+} from "@itwin/itwinui-react";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
 

@@ -5,7 +5,7 @@
 import "./NoResults.scss";
 import "@bentley/icons-generic-webfont/dist/bentley-icons-generic-webfont.css";
 
-import { Leading } from "@bentley/itwinui-react";
+import { Leading } from "@itwin/itwinui-react";
 import classnames from "classnames";
 import React from "react";
 
