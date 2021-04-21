@@ -50,10 +50,12 @@ export const useIModelData = ({
       return;
     }
     setStatus(DataStatus.Fetching);
+    const abortController = new AbortController();
     const url = `${_getAPIServer(apiOverrides)}/imodels/${
       projectId ? `?projectId=${projectId}` : ""
     }${assetId ? `?assetId=${assetId}` : ""}`; //[&$skip][&$top]
     const options: RequestInit = {
+      signal: abortController.signal,
       headers: {
         Authorization: accessToken,
         Prefer: "return=representation",
@@ -74,10 +76,17 @@ export const useIModelData = ({
         setIModels(result.iModels);
       })
       .catch((e) => {
+        if (e.name === "AbortError") {
+          // Aborting because unmounting is not an error, swallow.
+          return;
+        }
         setIModels([]);
         setStatus(DataStatus.FetchFailed);
         console.error(e);
       });
+    return () => {
+      abortController.abort();
+    };
   }, [accessToken, projectId, assetId, apiOverrides?.data, apiOverrides]);
   return { iModels: sortedIModels, status };
 };

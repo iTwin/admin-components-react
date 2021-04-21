@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/imodel-browser",
+      "comment": "Only download thumbnails if tile is in view",
+      "type": "patch"
+    }
+  ],
+  "packageName": "@itwin/imodel-browser",
+  "email": "1904889+raplemie@users.noreply.github.com"
+}

@@ -47,8 +47,10 @@ export const useProjectData = ({
       return;
     }
     setStatus(DataStatus.Fetching);
+    const abortController = new AbortController();
     const url = `${_getAPIServer(apiOverrides)}/projects/${requestType}`; //[&$skip][&$top]
     const options: RequestInit = {
+      signal: abortController.signal,
       headers: {
         Authorization: accessToken,
         Prefer: "return=representation",
@@ -69,10 +71,17 @@ export const useProjectData = ({
         setProjects(result.projects);
       })
       .catch((e) => {
+        if (e.name === "AbortError") {
+          // Aborting because unmounting is not an error, swallow.
+          return;
+        }
         setProjects([]);
         setStatus(DataStatus.FetchFailed);
         console.error(e);
       });
+    return () => {
+      abortController.abort();
+    };
   }, [accessToken, requestType, data, apiOverrides]);
   return { projects: sortedProjects, status };
 };

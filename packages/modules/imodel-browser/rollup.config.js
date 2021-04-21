@@ -17,6 +17,7 @@ const rollupConfig = {
     /@itwin\/itwinui-react(\/.*)?/,
     /classnames/,
     /@bentley\/icons-generic-webfont/,
+    /react-intersection-observer/,
   ],
   output: [
     {
