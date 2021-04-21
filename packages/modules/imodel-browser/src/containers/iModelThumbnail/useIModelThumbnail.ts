@@ -36,8 +36,10 @@ export const useIModelThumbnail = (
       setThumbnail(apiOverrides.data);
       return;
     }
+    const abortController = new AbortController();
     if (!thumbnail && accessToken && iModelId) {
-      const options = {
+      const options: RequestInit = {
+        signal: abortController.signal,
         headers: {
           Authorization: accessToken,
           Prefer: "return=representation",
@@ -62,15 +64,19 @@ export const useIModelThumbnail = (
           setThumbnail(thumbnail);
           cache[iModelId] = thumbnail;
         })
-        .catch((e) =>
+        .catch((e) => {
+          if (e.name === "AbortError") {
+            // Aborting because unmounting is not an error, swallow.
+            return;
+          }
           console.error("Thumbnail download error", "Thumbnail Fetch", {
             iModelId,
             e,
-          })
-        );
+          });
+        });
     }
     return () => {
-      // possibility: put a x minutes expiration on previous download when we dismount?
+      abortController.abort();
     };
   }, [accessToken, iModelId, thumbnail, apiOverrides?.data, apiOverrides]);
   return thumbnail;
