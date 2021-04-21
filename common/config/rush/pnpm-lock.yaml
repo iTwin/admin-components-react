@@ -55,6 +55,7 @@ dependencies:
   prettier: 2.2.1
   react: 16.13.1
   react-dom: 16.13.1_react@16.13.1
+  react-intersection-observer: 8.31.1_react@16.13.1
   react-test-renderer: 16.13.1_react@16.13.1
   rimraf: 3.0.2
   rollup: 2.42.4
@@ -16410,6 +16411,14 @@ packages:
       react: ^16.8.4
     resolution:
       integrity: sha512-JAwswiengIcxi4X/Ssb8nf6suOuQsyit8Fxo04+iPKTnPNY3XIOuagjMZSzpJDDKkYcc/ARlySOYZZv626WUvA==
+  /react-intersection-observer/8.31.1_react@16.13.1:
+    dependencies:
+      react: 16.13.1
+    dev: false
+    peerDependencies:
+      react: ^15.0.0 || ^16.0.0 || ^17.0.0|| ^18.0.0
+    resolution:
+      integrity: sha512-Q4OH2aUXcEi6tPBBgOBjfodoRM68wikXqqbPf8FaY4VBMcSACbxulfkW/OqcfLYfSAOEPGvxN+NCn9PqBgAOfQ==
   /react-is/16.13.1:
     dev: false
     resolution:
@@ -20913,6 +20922,7 @@ packages:
       prettier: 2.2.1
       react: 16.13.1
       react-dom: 16.13.1_react@16.13.1
+      react-intersection-observer: 8.31.1_react@16.13.1
       react-test-renderer: 16.13.1_react@16.13.1
       rimraf: 3.0.2
       rollup: 2.42.4
@@ -20930,7 +20940,7 @@ packages:
     dev: false
     name: '@rush-temp/imodel-browser'
     resolution:
-      integrity: sha512-VwPmGjX58SoDM1yznPqyoRNdQOvIsSy83c2dR/bYSrmiOLE1KZuDcFcY7XB7bv/1Ly5AdFqfBgM6DK5IhODVCg==
+      integrity: sha512-JQNeZA60fS8Jf+bs7rH0Lu7qEF/djzTsH3vs1y8hXn1nTaR1x9SvY+jdHwCpufnjsBKq1poQG+2a75JKRZuvPQ==
       tarball: file:projects/imodel-browser.tgz
     version: 0.0.0
   file:projects/platform-storybook.tgz_201e3756f34be7daf0312fc0cffaefcf:
@@ -20979,7 +20989,7 @@ packages:
       prettier: '*'
       typescript: '*'
     resolution:
-      integrity: sha512-giFv8Cj4jqRAkgjD5YminTHIeHNTg3LMxpaoNYRVomu7eW1i+bbRfFuVIM6d8H5rr8p0iyk1SdDIroCL65dqgQ==
+      integrity: sha512-DsS4ByoXZrhKTVFJEZeSa8jrz5TrYfi2oTSRzPzplrGLpXUw0gWoPf32X2b+eIhXnEbOjuDiq5Px8a5fki9+WQ==
       tarball: file:projects/platform-storybook.tgz
     version: 0.0.0
   file:projects/storybook-auth-addon.tgz_node-sass@5.0.0+prettier@2.2.1:
@@ -21080,6 +21090,7 @@ specifiers:
   prettier: ^2.0.5
   react: ^16.13.0
   react-dom: ^16.13.0
+  react-intersection-observer: ^8.31.1
   react-test-renderer: ^16.13.0
   rimraf: ^3.0.2
   rollup: ^2.42.4

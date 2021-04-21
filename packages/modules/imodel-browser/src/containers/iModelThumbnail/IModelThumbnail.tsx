@@ -6,6 +6,7 @@ import "./IModelThumbnail.scss";
 
 import { Body } from "@itwin/itwinui-react";
 import React from "react";
+import { useInView } from "react-intersection-observer";
 
 import { ApiOverrides } from "../../types";
 import { useIModelThumbnail } from "./useIModelThumbnail";
@@ -31,7 +32,15 @@ export const IModelThumbnail = ({
   accessToken,
   apiOverrides,
 }: IModelThumbnailProps) => {
-  const thumbnail = useIModelThumbnail(iModelId, accessToken, apiOverrides);
+  const { ref, inView } = useInView({
+    triggerOnce: true,
+    skip: !!apiOverrides?.data,
+  });
+  const thumbnail = useIModelThumbnail(
+    iModelId,
+    inView ? accessToken : undefined,
+    apiOverrides
+  );
   return thumbnail ? (
     <img
       className="iui-picture iac-thumbnail"
@@ -45,6 +54,7 @@ export const IModelThumbnail = ({
     />
   ) : (
     <Body
+      ref={ref}
       isSkeleton={true}
       style={{ height: "100%", width: "100%", margin: 0 }}
     ></Body>
