@@ -1,6 +1,14 @@
 # Change Log - @itwin/imodel-browser
 
-This log was last generated on Tue, 20 Apr 2021 16:34:50 GMT and should not be manually modified.
+This log was last generated on Wed, 21 Apr 2021 19:27:23 GMT and should not be manually modified.
+
+## 0.8.1
+Wed, 21 Apr 2021 19:27:23 GMT
+
+### Patches
+
+- Only download thumbnails if tile is in view
+- Abort `fetch` request when unmounting components
 
 ## 0.8.0
 Tue, 20 Apr 2021 16:34:50 GMT
