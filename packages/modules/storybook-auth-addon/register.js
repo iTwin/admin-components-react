@@ -60,9 +60,14 @@ addons.register("auth/toolbar", () => {
                 return;
               }
               let tokenString = accessToken.toTokenString();
-              let email = JSON.parse(
-                atob(tokenString.split(" ")[1]?.split(".")[1])
-              ).email;
+              let email = "";
+              try {
+                email = JSON.parse(
+                  atob(tokenString.split(" ")[1]?.split(".")[1])
+                ).email;
+              } catch (e) {
+                email = "Email parsing failed";
+              }
               updateGlobals({ accessToken: tokenString });
               setState({ loading: false, email });
             });
