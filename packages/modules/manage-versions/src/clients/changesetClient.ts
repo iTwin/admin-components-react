@@ -2,6 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+import { LogFunc } from "../components/ManageVersions/types";
 import { Changeset } from "../models/changeset";
 import { HttpHeaderNames } from "../models/http";
 import { HttpClient } from "./httpClient";
@@ -11,8 +12,8 @@ export class ChangesetClient {
   private _http: HttpClient;
   private _environment: string | undefined;
 
-  constructor(token: string, environment?: string) {
-    this._http = new HttpClient(token);
+  constructor(token: string, environment?: string, log?: LogFunc) {
+    this._http = new HttpClient(token, log);
     this._environment = environment;
   }
 

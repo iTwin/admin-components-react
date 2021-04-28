@@ -5,4 +5,7 @@
 export { ManageVersions } from "./components/ManageVersions/ManageVersions";
 export type { ManageVersionsProps } from "./components/ManageVersions/ManageVersions";
 
-export type { ManageVersionsStringOverrides } from "./components/ManageVersions/types";
+export type {
+  LogFunc,
+  ManageVersionsStringOverrides,
+} from "./components/ManageVersions/types";

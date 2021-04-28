@@ -10,7 +10,7 @@ import { NamedVersionClient } from "../../clients/namedVersionClient";
 import { Changeset } from "../../models/changeset";
 import { NamedVersion } from "../../models/namedVersion";
 import ChangesTab from "./ChangesTab/ChangesTab";
-import { ManageVersionsStringOverrides, RequestStatus } from "./types";
+import { LogFunc, ManageVersionsStringOverrides, RequestStatus } from "./types";
 import VersionsTab from "./VersionsTab/VersionsTab";
 
 const defaultStrings: ManageVersionsStringOverrides = {
@@ -36,6 +36,8 @@ export type ManageVersionsProps = {
   imodelId: string;
   /** Strings overrides for localization. */
   stringsOverrides?: ManageVersionsStringOverrides;
+  /** Method that logs inner component errors. */
+  log?: LogFunc;
 };
 
 enum ManageVersionsTabs {
@@ -49,6 +51,7 @@ export const ManageVersions = (props: ManageVersionsProps) => {
     environment,
     imodelId,
     stringsOverrides = defaultStrings,
+    log,
   } = props;
 
   const versionClient = React.useMemo(
@@ -82,9 +85,9 @@ export const ManageVersions = (props: ManageVersionsProps) => {
       })
       .catch((e) => {
         setVersionStatus(RequestStatus.Failed);
-        console.log(e);
+        log?.("Failed to fetch Named Versions", e);
       });
-  }, [imodelId, versionClient]);
+  }, [imodelId, log, versionClient]);
 
   React.useEffect(() => {
     if (
@@ -99,10 +102,10 @@ export const ManageVersions = (props: ManageVersionsProps) => {
         })
         .catch((e) => {
           setChangesetStatus(RequestStatus.Failed);
-          console.log(e);
+          log?.("Failed to fetch changes", e);
         });
     }
-  }, [changesetClient, changesetStatus, currentTab, imodelId]);
+  }, [changesetClient, changesetStatus, currentTab, imodelId, log]);
 
   return (
     <div>

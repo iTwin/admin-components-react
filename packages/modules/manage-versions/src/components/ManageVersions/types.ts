@@ -29,3 +29,8 @@ export type ManageVersionsStringOverrides = {
   /** Message when there are no changes. Default `There are no changes synchronized.`. */
   messageNoChanges: string;
 };
+
+export type LogFunc = (
+  message: string,
+  customProps?: Record<string, any>
+) => void;

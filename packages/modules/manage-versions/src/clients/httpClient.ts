@@ -2,6 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+import { LogFunc } from "../components/ManageVersions/types";
 import { ApimError, HttpHeaderNames } from "../models/http";
 
 export interface HttpRequestOptions {
@@ -19,10 +20,13 @@ export interface HttpRequest {
 
 export class HttpClient {
   private _token: string;
+  private _log: LogFunc | undefined;
+  private readonly _errorMessagePrefix = "@itwin/manage-versions";
   private readonly _defaultErrorMessage = "HTTP error without a message.";
 
-  constructor(token: string) {
+  constructor(token: string, log?: LogFunc) {
     this._token = token;
+    this._log = log;
   }
 
   public async get<T = any>(
@@ -83,7 +87,7 @@ export class HttpClient {
 
       return responseBody;
     } catch (error) {
-      // this.logError(error, request);
+      this.logError(error, request);
       throw error;
     }
   }
@@ -96,26 +100,26 @@ export class HttpClient {
     };
   }
 
-  // private logError(error: any, request: HttpRequest) {
-  //   logger.logError(
-  //     `${error.message || this._defaultErrorMessage}`,
-  //     undefined,
-  //     {
-  //       devTeamId: Constants.devTeamId,
-  //       request: this.getRequestToLog(request),
-  //       error,
-  //     }
-  //   );
-  // }
+  private logError(error: any, request: HttpRequest) {
+    this._log?.(
+      `${this._errorMessagePrefix} - ${
+        error.message || this._defaultErrorMessage
+      }`,
+      {
+        request: this.getRequestToLog(request),
+        error,
+      }
+    );
+  }
 
-  // private getRequestToLog(request: HttpRequest) {
-  //   const headers = { ...request.headers };
-  //   delete headers[HttpHeaderNames.Authorization];
+  private getRequestToLog(request: HttpRequest) {
+    const headers = { ...request.headers };
+    delete headers[HttpHeaderNames.Authorization];
 
-  //   return {
-  //     headers: headers,
-  //     url: request.url,
-  //     method: request.method,
-  //   };
-  // }
+    return {
+      headers: headers,
+      url: request.url,
+      method: request.method,
+    };
+  }
 }
