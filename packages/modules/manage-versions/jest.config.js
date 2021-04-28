@@ -17,7 +17,13 @@ module.exports = {
     "\\.(css|less|scss|sass)$": "identity-obj-proxy",
   },
   verbose: true,
-  coveragePathIgnorePatterns: ["/node_modules/", "test", ".d.ts"],
+  coveragePathIgnorePatterns: [
+    "/node_modules/",
+    "test",
+    ".d.ts",
+    "src/mocks.ts",
+  ],
   collectCoverageFrom: ["<rootDir>/src/**"],
-  setupFilesAfterEnv: ["./scripts/setupJest.js"],
+  collectCoverage: true,
+  coverageReporters: ["json", "lcov", "text", "clover", "cobertura"],
 };

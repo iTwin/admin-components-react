@@ -12,6 +12,7 @@
     "start": "rollup -cw",
     "build": "rollup --silent -c",
     "test": "jest --silent",
+    "test:watch": "jest --watch",
     "clean": "rimraf cjs esm"
   },
   "files": [

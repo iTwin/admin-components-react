@@ -13,7 +13,7 @@ import ChangesTab from "./ChangesTab/ChangesTab";
 import { LogFunc, ManageVersionsStringOverrides, RequestStatus } from "./types";
 import VersionsTab from "./VersionsTab/VersionsTab";
 
-const defaultStrings: ManageVersionsStringOverrides = {
+export const defaultStrings: ManageVersionsStringOverrides = {
   namedVersions: "Named Versions",
   changes: "Changes",
   name: "Name",
@@ -55,12 +55,12 @@ export const ManageVersions = (props: ManageVersionsProps) => {
   } = props;
 
   const versionClient = React.useMemo(
-    () => new NamedVersionClient(accessToken, environment),
-    [accessToken, environment]
+    () => new NamedVersionClient(accessToken, environment, log),
+    [accessToken, environment, log]
   );
   const changesetClient = React.useMemo(
-    () => new ChangesetClient(accessToken, environment),
-    [accessToken, environment]
+    () => new ChangesetClient(accessToken, environment, log),
+    [accessToken, environment, log]
   );
 
   const [currentTab, setCurrentTab] = React.useState(
@@ -83,11 +83,8 @@ export const ManageVersions = (props: ManageVersionsProps) => {
         setVersionStatus(RequestStatus.Finished);
         setVersions(versions);
       })
-      .catch((e) => {
-        setVersionStatus(RequestStatus.Failed);
-        log?.("Failed to fetch Named Versions", e);
-      });
-  }, [imodelId, log, versionClient]);
+      .catch(() => setVersionStatus(RequestStatus.Failed));
+  }, [imodelId, versionClient]);
 
   React.useEffect(() => {
     if (
@@ -100,12 +97,9 @@ export const ManageVersions = (props: ManageVersionsProps) => {
           setChangesetStatus(RequestStatus.Finished);
           setChangesets(changesets);
         })
-        .catch((e) => {
-          setChangesetStatus(RequestStatus.Failed);
-          log?.("Failed to fetch changes", e);
-        });
+        .catch(() => setChangesetStatus(RequestStatus.Failed));
     }
-  }, [changesetClient, changesetStatus, currentTab, imodelId, log]);
+  }, [changesetClient, changesetStatus, currentTab, imodelId]);
 
   return (
     <div>
