@@ -29,6 +29,12 @@
       "packageName": "@itwin/storybook-auth-addon",
       "projectFolder": "packages/modules/storybook-auth-addon",
       "shouldPublish": false
+    },
+    {
+      "packageName": "@itwin/manage-versions",
+      "projectFolder": "packages/modules/manage-versions",
+      "shouldPublish": true,
+      "versionPolicyName": "independentModule"
     }
   ]
 }

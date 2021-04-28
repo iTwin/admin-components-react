@@ -1,0 +1,77 @@
+{
+  "name": "@itwin/manage-versions",
+  "description": "Components that let the user to view Named Versions and Changesets, create new ones and etc.",
+  "repository": "https://github.com/iTwin/admin-components-react/tree/main/package/manage-versions",
+  "version": "0.1.0",
+  "main": "cjs/index.js",
+  "module": "esm/index.js",
+  "types": "cjs/index.d.ts",
+  "author": "Bentley Systems, Inc.",
+  "license": "MIT",
+  "scripts": {
+    "start": "rollup -cw",
+    "build": "rollup --silent -c",
+    "test": "jest --silent",
+    "clean": "rimraf cjs esm"
+  },
+  "files": [
+    "cjs/**/*",
+    "esm/**/*"
+  ],
+  "dependencies": {
+    "@itwin/itwinui-react": "^1.1.0",
+    "classnames": "^2.2.6"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "~17.1.0",
+    "@svgr/rollup": "^5.5.0",
+    "@testing-library/react-hooks": "^5.1.0",
+    "@testing-library/react": "^11.1.0",
+    "@types/classnames": "^2.2.11",
+    "@types/jest": "^26.0.0",
+    "@types/react": "16.9.23",
+    "@types/react-dom": "16.9.5",
+    "@types/react-table": "^7.0.29",
+    "@typescript-eslint/eslint-plugin": "^4.20.0",
+    "@typescript-eslint/parser": "^4.20.0",
+    "eslint-config-airbnb": "^0.0.4",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-config-react-app": "^6.0.0",
+    "eslint-plugin-flowtype": "^5.2.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-jsx-a11y": "^6.3.1",
+    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-react-hooks": "^4.0.7",
+    "eslint-plugin-react": "^7.20.3",
+    "eslint-plugin-simple-import-sort": "^5.0.3",
+    "eslint": "^7.4.0",
+    "jest": "^26.0.0",
+    "node-sass": "^5.0.0",
+    "postcss": "^8.2.8",
+    "prettier": "^2.0.5",
+    "react": "^16.13.0",
+    "react-dom": "^16.13.0",
+    "react-test-renderer": "^16.13.0",
+    "rimraf": "^3.0.2",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "rollup-plugin-postcss": "^4.0.0",
+    "rollup-plugin-typescript2": "^0.30.0",
+    "rollup": "^2.42.4",
+    "stylelint-config-prettier": "^8.0.2",
+    "stylelint-config-sass-guidelines": "^7.0.0",
+    "stylelint-prettier": "^1.1.2",
+    "stylelint-scss": "^3.18.0",
+    "stylelint": "^13.6.1",
+    "ts-jest": "^26.0.0",
+    "tslib": "^2.1.0",
+    "typescript": "^4.2.3"
+  },
+  "peerDependencies": {
+    "react": "^16.13.0",
+    "react-dom": "^16.13.0"
+  },
+  "publishConfig": {
+    "registry": "https://pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/",
+    "access": "public"
+  }
+}

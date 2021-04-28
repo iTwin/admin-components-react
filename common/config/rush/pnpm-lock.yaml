@@ -6,10 +6,10 @@ dependencies:
   '@bentley/itwin-client': 2.11.0_@bentley+bentleyjs-core@2.11.0
   '@bentley/react-scripts': 4.0.3-dev.0_8f91d2b23d861db64783d0882327b032
   '@itwin/itwinui-css': 0.9.0
-  '@itwin/itwinui-react': 1.0.0_react-dom@16.13.1+react@16.13.1
   '@rollup/plugin-commonjs': 17.1.0_rollup@2.42.4
   '@rush-temp/admin-components-react-scripts': file:projects/admin-components-react-scripts.tgz
   '@rush-temp/imodel-browser': file:projects/imodel-browser.tgz
+  '@rush-temp/manage-versions': file:projects/manage-versions.tgz_babel-eslint@10.1.0
   '@rush-temp/platform-storybook': file:projects/platform-storybook.tgz_201e3756f34be7daf0312fc0cffaefcf
   '@rush-temp/storybook-auth-addon': file:projects/storybook-auth-addon.tgz_node-sass@5.0.0+prettier@2.2.1
   '@storybook/addon-actions': 6.2.5_153d3a961815977ed06c165593131b36
@@ -28,6 +28,7 @@ dependencies:
   '@types/jest': 26.0.20
   '@types/react': 16.9.23
   '@types/react-dom': 16.9.5
+  '@types/react-table': 7.0.29
   '@typescript-eslint/eslint-plugin': 4.20.0_d57f2e28d7d26e6d296dfd75247d8327
   '@typescript-eslint/parser': 4.20.0_eslint@7.20.0+typescript@4.2.3
   babel-eslint: 10.1.0_eslint@7.20.0
@@ -2619,6 +2620,10 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-ZXRY4jNvVgSVQ8DL3LTcakaAtXwTVUxE81hslsyD2AtoXW/wVob10HkOJ1X/pAlcI7D+2YoZKg5do8G/w6RYgA==
+  /@itwin/itwinui-css/0.10.0:
+    dev: false
+    resolution:
+      integrity: sha512-Ttz9RqaaunWojONN1eutzm1OMzx4FmIUkyOqh5O2K0LbrrzSN9c0xFtTpuNMadTsrLB7BswqozGWC3xHPSNPnw==
   /@itwin/itwinui-css/0.9.0:
     dev: false
     resolution:
@@ -2643,9 +2648,9 @@ packages:
       react-dom: '>=16.8.6'
     resolution:
       integrity: sha512-mX09el9b0/xB0obzEV8mitFK7J2D5PvnmxCNedxOlzVCl+jNopcOHFzxBrvzkPv1vgjCAhmQOY8tMr8wT+FUxw==
-  /@itwin/itwinui-react/1.0.0_react-dom@16.13.1+react@16.13.1:
+  /@itwin/itwinui-react/1.1.0_react-dom@16.13.1+react@16.13.1:
     dependencies:
-      '@itwin/itwinui-css': 0.9.0
+      '@itwin/itwinui-css': 0.10.0
       '@itwin/itwinui-icons-react': 0.1.0_react-dom@16.13.1+react@16.13.1
       '@itwin/itwinui-illustrations-react': 0.1.0_react-dom@16.13.1+react@16.13.1
       '@tippyjs/react': 4.2.5_react-dom@16.13.1+react@16.13.1
@@ -2660,7 +2665,7 @@ packages:
       react: ^16.8.6 || ^17.0.0
       react-dom: ^16.8.6 || ^17.0.0
     resolution:
-      integrity: sha512-IyBLOZf8PqEoSOEmt3sV6LvEA+ogTdtQIkC9b5jSQpQuGTJpv8ksb/zEtmSIRJCFbHaAQJwVQPYTrS3tHiqqZQ==
+      integrity: sha512-YjD8z3pYZI9UzxXU3fvchkEG37xRZNhF5YSFTYInGNlKuOQT9St/Mu1Fpqleu+M05LB5+iwrTgnaWRHDAdIafA==
   /@jest/console/26.6.2:
     dependencies:
       '@jest/types': 26.6.2
@@ -20885,7 +20890,7 @@ packages:
       '@bentley/itwinui': 0.7.0
       '@bentley/itwinui-react': 0.5.1_react-dom@16.13.1+react@16.13.1
       '@itwin/itwinui-css': 0.9.0
-      '@itwin/itwinui-react': 1.0.0_react-dom@16.13.1+react@16.13.1
+      '@itwin/itwinui-react': 1.1.0_react-dom@16.13.1+react@16.13.1
       '@rollup/plugin-commonjs': 17.1.0_rollup@2.42.4
       '@svgr/rollup': 5.5.0
       '@testing-library/react': 11.2.5_react-dom@16.13.1+react@16.13.1
@@ -20943,6 +20948,61 @@ packages:
       integrity: sha512-JQNeZA60fS8Jf+bs7rH0Lu7qEF/djzTsH3vs1y8hXn1nTaR1x9SvY+jdHwCpufnjsBKq1poQG+2a75JKRZuvPQ==
       tarball: file:projects/imodel-browser.tgz
     version: 0.0.0
+  file:projects/manage-versions.tgz_babel-eslint@10.1.0:
+    dependencies:
+      '@itwin/itwinui-react': 1.1.0_react-dom@16.13.1+react@16.13.1
+      '@rollup/plugin-commonjs': 17.1.0_rollup@2.42.4
+      '@svgr/rollup': 5.5.0
+      '@testing-library/react': 11.2.5_react-dom@16.13.1+react@16.13.1
+      '@testing-library/react-hooks': 5.1.0_216f63de86fbc10352ace49d86b619ee
+      '@types/classnames': 2.2.11
+      '@types/jest': 26.0.20
+      '@types/react': 16.9.23
+      '@types/react-dom': 16.9.5
+      '@types/react-table': 7.0.29
+      '@typescript-eslint/eslint-plugin': 4.20.0_d57f2e28d7d26e6d296dfd75247d8327
+      '@typescript-eslint/parser': 4.20.0_eslint@7.20.0+typescript@4.2.3
+      classnames: 2.2.6
+      eslint: 7.20.0
+      eslint-config-airbnb: 0.0.4
+      eslint-config-prettier: 6.15.0_eslint@7.20.0
+      eslint-config-react-app: 6.0.0_3050c5f4541700150cee7c9885ae733e
+      eslint-plugin-flowtype: 5.3.1_eslint@7.20.0
+      eslint-plugin-import: 2.22.1_eslint@7.20.0
+      eslint-plugin-jsx-a11y: 6.4.1_eslint@7.20.0
+      eslint-plugin-prettier: 3.3.1_a965e97aa706aa034072dc2d8249e40b
+      eslint-plugin-react: 7.22.0_eslint@7.20.0
+      eslint-plugin-react-hooks: 4.2.0_eslint@7.20.0
+      eslint-plugin-simple-import-sort: 5.0.3_eslint@7.20.0
+      jest: 26.6.0
+      node-sass: 5.0.0
+      postcss: 8.2.8
+      prettier: 2.2.1
+      react: 16.13.1
+      react-dom: 16.13.1_react@16.13.1
+      react-test-renderer: 16.13.1_react@16.13.1
+      rimraf: 3.0.2
+      rollup: 2.42.4
+      rollup-plugin-peer-deps-external: 2.2.4_rollup@2.42.4
+      rollup-plugin-postcss: 4.0.0_postcss@8.2.8
+      rollup-plugin-typescript2: 0.30.0_rollup@2.42.4+typescript@4.2.3
+      stylelint: 13.11.0
+      stylelint-config-prettier: 8.0.2_stylelint@13.11.0
+      stylelint-config-sass-guidelines: 7.1.0_stylelint@13.11.0
+      stylelint-prettier: 1.1.2_prettier@2.2.1+stylelint@13.11.0
+      stylelint-scss: 3.19.0_stylelint@13.11.0
+      ts-jest: 26.5.3_jest@26.6.0+typescript@4.2.3
+      tslib: 2.1.0
+      typescript: 4.2.3
+    dev: false
+    id: file:projects/manage-versions.tgz
+    name: '@rush-temp/manage-versions'
+    peerDependencies:
+      babel-eslint: '*'
+    resolution:
+      integrity: sha512-dZeGpebzB03yIDqqvIMXbLUdn+PwkvcU7Gki4yDUwUB5tuXhRe5GrOMOgvdoGp+APjQMgxkhlfBdnNaSIxqR+Q==
+      tarball: file:projects/manage-versions.tgz
+    version: 0.0.0
   file:projects/platform-storybook.tgz_201e3756f34be7daf0312fc0cffaefcf:
     dependencies:
       '@babel/core': 7.13.1
@@ -20950,7 +21010,7 @@ packages:
       '@bentley/frontend-authorization-client': 2.11.0_124fd8799cc8196bebc67d27cf7bf3e3
       '@bentley/itwin-client': 2.11.0_@bentley+bentleyjs-core@2.11.0
       '@bentley/itwinui-react': 0.5.1_react-dom@16.13.1+react@16.13.1
-      '@itwin/itwinui-react': 1.0.0_react-dom@16.13.1+react@16.13.1
+      '@itwin/itwinui-react': 1.1.0_react-dom@16.13.1+react@16.13.1
       '@storybook/addon-actions': 6.2.5_153d3a961815977ed06c165593131b36
       '@storybook/addon-essentials': 6.2.5_cdea5e29cfd9a53eeb89e1d84877a995
       '@storybook/addon-links': 6.2.5_react-dom@16.13.1+react@16.13.1
@@ -20989,7 +21049,7 @@ packages:
       prettier: '*'
       typescript: '*'
     resolution:
-      integrity: sha512-DsS4ByoXZrhKTVFJEZeSa8jrz5TrYfi2oTSRzPzplrGLpXUw0gWoPf32X2b+eIhXnEbOjuDiq5Px8a5fki9+WQ==
+      integrity: sha512-doLDkz9kwrNnp5t9XrL6copPc6jHKzWtEGqihOozp8e329huYeR3meBcclefhhMgO3DNOi6HV/PcT9DddHLqGQ==
       tarball: file:projects/platform-storybook.tgz
     version: 0.0.0
   file:projects/storybook-auth-addon.tgz_node-sass@5.0.0+prettier@2.2.1:
@@ -21041,10 +21101,10 @@ specifiers:
   '@bentley/itwin-client': 2.11.0
   '@bentley/react-scripts': 4.0.3-dev.0
   '@itwin/itwinui-css': ^0.9.0
-  '@itwin/itwinui-react': ^1.0.0
   '@rollup/plugin-commonjs': ~17.1.0
   '@rush-temp/admin-components-react-scripts': file:./projects/admin-components-react-scripts.tgz
   '@rush-temp/imodel-browser': file:./projects/imodel-browser.tgz
+  '@rush-temp/manage-versions': file:./projects/manage-versions.tgz
   '@rush-temp/platform-storybook': file:./projects/platform-storybook.tgz
   '@rush-temp/storybook-auth-addon': file:./projects/storybook-auth-addon.tgz
   '@storybook/addon-actions': ^6.2.5
@@ -21063,6 +21123,7 @@ specifiers:
   '@types/jest': ^26.0.0
   '@types/react': 16.9.23
   '@types/react-dom': 16.9.5
+  '@types/react-table': ^7.0.29
   '@typescript-eslint/eslint-plugin': ^4.20.0
   '@typescript-eslint/parser': ^4.20.0
   babel-eslint: ^10.0.0
