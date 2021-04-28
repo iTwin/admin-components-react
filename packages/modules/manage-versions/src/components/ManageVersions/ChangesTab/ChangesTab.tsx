@@ -7,15 +7,16 @@ import React from "react";
 import { CellProps } from "react-table";
 
 import { Changeset } from "../../../models/changeset";
-import { RequestStatus } from "../types";
+import { ManageVersionsStringOverrides, RequestStatus } from "../types";
 
 export type ChangesTabProps = {
   changesets: Changeset[];
   status: RequestStatus;
+  stringsOverrides: ManageVersionsStringOverrides;
 };
 
 const ChangesTab = (props: ChangesTabProps) => {
-  const { changesets, status } = props;
+  const { changesets, status, stringsOverrides } = props;
 
   const columns = React.useMemo(() => {
     return [
@@ -30,12 +31,12 @@ const ChangesTab = (props: ChangesTabProps) => {
           },
           {
             id: "DESCRIPTION",
-            Header: "Description",
+            Header: stringsOverrides.description,
             accessor: "description",
           },
           {
             id: "PUSH_DATE",
-            Header: "Time",
+            Header: stringsOverrides.time,
             accessor: "pushDateTime",
             maxWidth: 220,
             Cell: (props: CellProps<Changeset>) => {
@@ -49,13 +50,17 @@ const ChangesTab = (props: ChangesTabProps) => {
         ],
       },
     ];
-  }, []);
+  }, [stringsOverrides.description, stringsOverrides.time]);
 
   const emptyTableContent = React.useMemo(() => {
     return status === RequestStatus.Failed
-      ? "Could not get changes. Please try again later."
-      : "There are no changes synchronized.";
-  }, [status]);
+      ? stringsOverrides.messageFailedGetChanges
+      : stringsOverrides.messageNoChanges;
+  }, [
+    status,
+    stringsOverrides.messageFailedGetChanges,
+    stringsOverrides.messageNoChanges,
+  ]);
 
   return (
     <Table<Changeset>

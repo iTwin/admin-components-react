@@ -10,8 +10,22 @@ import { NamedVersionClient } from "../../clients/namedVersionClient";
 import { Changeset } from "../../models/changeset";
 import { NamedVersion } from "../../models/namedVersion";
 import ChangesTab from "./ChangesTab/ChangesTab";
-import { RequestStatus } from "./types";
+import { ManageVersionsStringOverrides, RequestStatus } from "./types";
 import VersionsTab from "./VersionsTab/VersionsTab";
+
+const defaultStrings: ManageVersionsStringOverrides = {
+  namedVersions: "Named Versions",
+  changes: "Changes",
+  name: "Name",
+  description: "Description",
+  time: "Time",
+  messageFailedGetNamedVersions:
+    "Could not get Named Versions. Please try again later.",
+  messageNoNamedVersions:
+    "There are no Named Versions created. To create first go to Changes.",
+  messageFailedGetChanges: "Could not get changes. Please try again later.",
+  messageNoChanges: "There are no changes synchronized.",
+};
 
 export type ManageVersionsProps = {
   /** Access token that requires the `imodels:read` scope. */
@@ -20,6 +34,8 @@ export type ManageVersionsProps = {
   environment?: string;
   /** Id of iModel. */
   imodelId: string;
+  /** Strings overrides for localization. */
+  stringsOverrides?: ManageVersionsStringOverrides;
 };
 
 enum ManageVersionsTabs {
@@ -28,7 +44,12 @@ enum ManageVersionsTabs {
 }
 
 export const ManageVersions = (props: ManageVersionsProps) => {
-  const { accessToken, environment, imodelId } = props;
+  const {
+    accessToken,
+    environment,
+    imodelId,
+    stringsOverrides = defaultStrings,
+  } = props;
 
   const versionClient = React.useMemo(
     () => new NamedVersionClient(accessToken, environment),
@@ -86,16 +107,24 @@ export const ManageVersions = (props: ManageVersionsProps) => {
   return (
     <div>
       <HorizontalTabs
-        labels={["Named Versions", "Changes"]}
+        labels={[stringsOverrides.namedVersions, stringsOverrides.changes]}
         activeIndex={currentTab}
         onTabSelected={(index) => setCurrentTab(index)}
         type="borderless"
       />
       {currentTab === ManageVersionsTabs.Version && (
-        <VersionsTab versions={versions ?? []} status={versionStatus} />
+        <VersionsTab
+          versions={versions ?? []}
+          status={versionStatus}
+          stringsOverrides={stringsOverrides}
+        />
       )}
       {currentTab === ManageVersionsTabs.Changes && (
-        <ChangesTab changesets={changesets ?? []} status={changesetStatus} />
+        <ChangesTab
+          changesets={changesets ?? []}
+          status={changesetStatus}
+          stringsOverrides={stringsOverrides}
+        />
       )}
     </div>
   );

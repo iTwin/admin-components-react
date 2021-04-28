@@ -7,15 +7,16 @@ import React from "react";
 import { CellProps } from "react-table";
 
 import { NamedVersion } from "../../../models/namedVersion";
-import { RequestStatus } from "../types";
+import { ManageVersionsStringOverrides, RequestStatus } from "../types";
 
 export type VersionsTabProps = {
   versions: NamedVersion[];
   status: RequestStatus;
+  stringsOverrides: ManageVersionsStringOverrides;
 };
 
 const VersionsTab = (props: VersionsTabProps) => {
-  const { versions, status } = props;
+  const { versions, status, stringsOverrides } = props;
 
   const columns = React.useMemo(() => {
     return [
@@ -24,17 +25,17 @@ const VersionsTab = (props: VersionsTabProps) => {
         columns: [
           {
             id: "NAME",
-            Header: "Name",
+            Header: stringsOverrides.name,
             accessor: "name",
           },
           {
             id: "DESCRIPTION",
-            Header: "Description",
+            Header: stringsOverrides.description,
             accessor: "description",
           },
           {
             id: "CREATED_DATE",
-            Header: "Time",
+            Header: stringsOverrides.time,
             accessor: "createdDateTime",
             maxWidth: 220,
             Cell: (props: CellProps<NamedVersion>) => {
@@ -50,13 +51,21 @@ const VersionsTab = (props: VersionsTabProps) => {
         ],
       },
     ];
-  }, []);
+  }, [
+    stringsOverrides.description,
+    stringsOverrides.name,
+    stringsOverrides.time,
+  ]);
 
   const emptyTableContent = React.useMemo(() => {
     return status === RequestStatus.Failed
-      ? "Could not get Named Versions. Please try again later."
-      : "There are no Named Versions created. To create first go to Changes.";
-  }, [status]);
+      ? stringsOverrides.messageFailedGetNamedVersions
+      : stringsOverrides.messageNoNamedVersions;
+  }, [
+    status,
+    stringsOverrides.messageFailedGetNamedVersions,
+    stringsOverrides.messageNoNamedVersions,
+  ]);
 
   return (
     <Table<NamedVersion>
