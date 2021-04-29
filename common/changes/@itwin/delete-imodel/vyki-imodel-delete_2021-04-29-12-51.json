@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/delete-imodel",
+      "comment": "Added delete iModel component",
+      "type": "minor"
+    }
+  ],
+  "packageName": "@itwin/delete-imodel",
+  "email": "81580355+veekeys@users.noreply.github.com"
+}
