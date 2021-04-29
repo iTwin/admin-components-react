@@ -11,7 +11,9 @@ import * as packageJson from "./package.json";
 
 const rollupConfig = {
   input: "src/index.ts",
-  external: [/@itwin\/itwinui-react(\/.*)?/, /classnames/],
+  external: Object.keys(packageJson.dependencies).map(
+    (dep) => new RegExp(`${dep}(/.*)?`, "g")
+  ),
   output: [
     {
       file: packageJson.main,
