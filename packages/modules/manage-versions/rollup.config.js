@@ -3,9 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import commonjs from "@rollup/plugin-commonjs";
-import svgr from "@svgr/rollup";
 import peerDepsExternal from "rollup-plugin-peer-deps-external";
-import postcss from "rollup-plugin-postcss";
 import { terser } from "rollup-plugin-terser";
 import typescript from "rollup-plugin-typescript2";
 
@@ -24,18 +22,7 @@ const rollupConfig = {
       format: "esm",
     },
   ],
-  plugins: [
-    peerDepsExternal(),
-    commonjs(),
-    typescript(),
-    svgr(),
-    postcss({
-      use: {
-        sass: { outputStyle: "compressed" },
-      },
-    }),
-    terser(),
-  ],
+  plugins: [peerDepsExternal(), commonjs(), typescript(), terser()],
 };
 
 export default rollupConfig;
