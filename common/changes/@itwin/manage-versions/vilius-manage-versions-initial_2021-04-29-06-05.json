@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/manage-versions",
+      "comment": "Initial implementation of manage-versions package. Currently only fetches and shows Named Versions and Changesets.",
+      "type": "minor"
+    }
+  ],
+  "packageName": "@itwin/manage-versions",
+  "email": "36186912+bentleyvk@users.noreply.github.com"
+}
