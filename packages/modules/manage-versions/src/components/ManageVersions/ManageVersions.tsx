@@ -30,8 +30,8 @@ export const defaultStrings: ManageVersionsStringOverrides = {
 export type ManageVersionsProps = {
   /** Access token that requires the `imodels:read` scope. */
   accessToken: string;
-  /** Environment: `DEV` or `QA`. Default is production. */
-  environment?: string;
+  /** Environment. Default is production. */
+  environment?: "dev" | "qa" | "";
   /** Id of iModel. */
   imodelId: string;
   /** Strings overrides for localization. */
