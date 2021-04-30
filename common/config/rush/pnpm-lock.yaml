@@ -11,7 +11,7 @@ dependencies:
   '@rollup/plugin-commonjs': 17.1.0_rollup@2.42.4
   '@rollup/plugin-image': 2.0.6_rollup@2.42.4
   '@rush-temp/admin-components-react-scripts': file:projects/admin-components-react-scripts.tgz
-  '@rush-temp/delete-imodel': file:projects/delete-imodel.tgz_2675aeea7e7504b4a5336e41f1d232c6
+  '@rush-temp/delete-imodel': file:projects/delete-imodel.tgz_babel-eslint@10.1.0
   '@rush-temp/imodel-browser': file:projects/imodel-browser.tgz
   '@rush-temp/platform-storybook': file:projects/platform-storybook.tgz_201e3756f34be7daf0312fc0cffaefcf
   '@rush-temp/storybook-auth-addon': file:projects/storybook-auth-addon.tgz_node-sass@5.0.0+prettier@2.2.1
@@ -65,7 +65,6 @@ dependencies:
   rollup-plugin-postcss: 4.0.0_postcss@8.2.8
   rollup-plugin-terser: 7.0.2_rollup@2.42.4
   rollup-plugin-typescript2: 0.30.0_rollup@2.42.4+typescript@4.2.3
-  sass-loader: 10.1.1_node-sass@5.0.0+webpack@5.28.0
   storybook-dark-mode: 1.0.7_c50de5d9e75775c638c87fb106a0bde7
   stylelint: 13.11.0
   stylelint-config-prettier: 8.0.2_stylelint@13.11.0
@@ -18747,32 +18746,6 @@ packages:
         optional: true
     resolution:
       integrity: sha512-W6gVDXAd5hR/WHsPicvZdjAWHBcEJ44UahgxcIE196fW2ong0ZHMPO1kZuI5q0VlvMQZh32gpv69PLWQm70qrw==
-  /sass-loader/10.1.1_node-sass@5.0.0+webpack@5.28.0:
-    dependencies:
-      klona: 2.0.4
-      loader-utils: 2.0.0
-      neo-async: 2.6.2
-      node-sass: 5.0.0
-      schema-utils: 3.0.0
-      semver: 7.3.4
-      webpack: 5.28.0
-    dev: false
-    engines:
-      node: '>= 10.13.0'
-    peerDependencies:
-      fibers: '>= 3.1.0'
-      node-sass: ^4.0.0 || ^5.0.0
-      sass: ^1.3.0
-      webpack: ^4.36.0 || ^5.0.0
-    peerDependenciesMeta:
-      fibers:
-        optional: true
-      node-sass:
-        optional: true
-      sass:
-        optional: true
-    resolution:
-      integrity: sha512-W6gVDXAd5hR/WHsPicvZdjAWHBcEJ44UahgxcIE196fW2ong0ZHMPO1kZuI5q0VlvMQZh32gpv69PLWQm70qrw==
   /sass/1.32.8:
     dependencies:
       chokidar: 3.5.1
@@ -22220,7 +22193,7 @@ packages:
       integrity: sha512-TxjQ8Od0Zjlf/MuMa64YZMO0d+1X7lr0KTVnJDjpHCjlkIe3B63uB9w2aHqPPtP97lTlfMapTgH7yYqhTrVK6w==
       tarball: file:projects/admin-components-react-scripts.tgz
     version: 0.0.0
-  file:projects/delete-imodel.tgz_2675aeea7e7504b4a5336e41f1d232c6:
+  file:projects/delete-imodel.tgz_babel-eslint@10.1.0:
     dependencies:
       '@itwin/itwinui-css': 0.9.0
       '@itwin/itwinui-icons-react': 0.1.0_react-dom@16.13.1+react@16.13.1
@@ -22256,7 +22229,6 @@ packages:
       rollup-plugin-postcss: 4.0.0_postcss@8.2.8
       rollup-plugin-terser: 7.0.2_rollup@2.42.4
       rollup-plugin-typescript2: 0.30.0_rollup@2.42.4+typescript@4.2.3
-      sass-loader: 10.1.1_node-sass@5.0.0+webpack@5.28.0
       ts-jest: 26.5.3_jest@26.6.0+typescript@4.2.3
       tslib: 2.1.0
       typescript: 4.2.3
@@ -22265,9 +22237,8 @@ packages:
     name: '@rush-temp/delete-imodel'
     peerDependencies:
       babel-eslint: '*'
-      webpack: '*'
     resolution:
-      integrity: sha512-FOCojx4mi3jmV4OZ99nDHmE3JM9OE8L2p9xsCaTRb9ZwvHViPV1ZwiUisAcg/UMH7wYg9ie8BTQ7hPO/6iYUpg==
+      integrity: sha512-eRZcZXcOkrzkxJ+RSFRC0oFMbyh7zD+RbQyxnOXDVP5vO8lLq/VWDZndGyzgtMTnW+9ofMaIjAnYvJxXVaoo+w==
       tarball: file:projects/delete-imodel.tgz
     version: 0.0.0
   file:projects/imodel-browser.tgz:
@@ -22492,7 +22463,6 @@ specifiers:
   rollup-plugin-postcss: ^4.0.0
   rollup-plugin-terser: ^7.0.2
   rollup-plugin-typescript2: ^0.30.0
-  sass-loader: 10.1.1
   storybook-dark-mode: ^1.0.7
   stylelint: ^13.6.1
   stylelint-config-prettier: ^8.0.2
