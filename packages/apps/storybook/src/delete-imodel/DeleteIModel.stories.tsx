@@ -7,6 +7,7 @@ import {
   DeleteIModelProps,
 } from "@itwin/delete-imodel";
 import { Button } from "@itwin/itwinui-react";
+import { useState } from "@storybook/addons";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
 
@@ -28,7 +29,7 @@ export default {
 
 export const Primary: Story<DeleteIModelProps> = withAccessTokenOverride(
   (args) => {
-    const [showDialog, setShowDialog] = React.useState(false);
+    const [showDialog, setShowDialog] = useState(false);
 
     return (
       <>

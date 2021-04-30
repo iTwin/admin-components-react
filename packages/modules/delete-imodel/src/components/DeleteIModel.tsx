@@ -55,10 +55,10 @@ export function DeleteIModel(props: DeleteIModelProps) {
     stringsOverrides,
   } = props;
   const [isOpen, setIsOpen] = React.useState(true);
-  const [isLoading, SetIsLoading] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const deleteiModel = async () => {
-    SetIsLoading(true);
+    setIsLoading(true);
     try {
       const response = await fetch(
         `https://${
@@ -69,7 +69,7 @@ export function DeleteIModel(props: DeleteIModelProps) {
       if (!response.ok) {
         throw new Error(response.statusText);
       } else {
-        SetIsLoading(false);
+        setIsLoading(false);
         toaster.positive(
           stringsOverrides?.successMessage ?? "iModel deleted successfully."
         );
@@ -82,17 +82,14 @@ export function DeleteIModel(props: DeleteIModelProps) {
     }
   };
 
-  const error = React.useCallback(
-    (error: Error) => {
-      SetIsLoading(false);
-      toaster.negative(
-        stringsOverrides?.errorMessage ??
-          "Could not delete an iModel. Please try again later."
-      );
-      onError?.(error);
-    },
-    [onError, stringsOverrides]
-  );
+  const error = (error: Error) => {
+    setIsLoading(false);
+    toaster.negative(
+      stringsOverrides?.errorMessage ??
+        "Could not delete an iModel. Please try again later."
+    );
+    onError?.(error);
+  };
 
   const close = React.useCallback(() => {
     setIsOpen(false);
