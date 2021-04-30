@@ -53,5 +53,5 @@ Primary.args = {
     id: "de47c5ad-5657-42b8-a2bc-f2b8bf84cd4b",
     name: "Random guid iModel",
   },
-  environment: "dev",
+  apiOverrides: { serverEnvironmentPrefix: "dev" },
 };

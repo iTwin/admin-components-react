@@ -19,8 +19,8 @@ export type DeleteIModelProps = {
   imodel: { name?: string; id: string };
   /** Bearer access token with scope `imodels:modify`. */
   accessToken: string;
-  /** Change the environment. */
-  environment?: "dev" | "qa" | "";
+  /** Object that configures different overrides for the API. */
+  apiOverrides?: { serverEnvironmentPrefix?: "dev" | "qa" | "" };
   /** Callback on closed dialog. */
   onClose?: () => void;
   /** Callback on failed delete. */
@@ -48,7 +48,7 @@ export function DeleteIModel(props: DeleteIModelProps) {
   const {
     imodel: { id: imodelId, name: imodelName },
     accessToken,
-    environment = "",
+    apiOverrides = { serverEnvironmentPrefix: "" },
     onClose,
     onError,
     onSuccess,
@@ -62,7 +62,8 @@ export function DeleteIModel(props: DeleteIModelProps) {
     try {
       const response = await fetch(
         `https://${
-          environment && `${environment}-`
+          apiOverrides?.serverEnvironmentPrefix &&
+          `${apiOverrides.serverEnvironmentPrefix}-`
         }api.bentley.com/imodels/${imodelId}`,
         { method: "DELETE", headers: { Authorization: `${accessToken}` } }
       );

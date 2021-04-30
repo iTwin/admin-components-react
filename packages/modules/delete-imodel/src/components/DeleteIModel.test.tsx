@@ -37,7 +37,7 @@ describe("DeleteIModel", () => {
     const { getByText } = render(
       <DeleteIModel
         imodel={{ id: "111", name: "test imodel" }}
-        environment="dev"
+        apiOverrides={{ serverEnvironmentPrefix: "dev" }}
         accessToken="dd"
         onSuccess={successMock}
       />
