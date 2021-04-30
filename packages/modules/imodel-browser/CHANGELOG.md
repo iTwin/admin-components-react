@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser
 
-This log was last generated on Wed, 21 Apr 2021 19:27:23 GMT and should not be manually modified.
+This log was last generated on Fri, 30 Apr 2021 00:07:09 GMT and should not be manually modified.
+
+## 0.9.0
+Fri, 30 Apr 2021 00:07:09 GMT
+
+### Minor changes
+
+- Fix `ProjectGrid`.`onThumbnailClick` argument type.
 
 ## 0.8.1
 Wed, 21 Apr 2021 19:27:23 GMT
