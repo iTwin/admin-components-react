@@ -9,7 +9,6 @@ import { NoResults } from "../../components/noResults/NoResults";
 import {
   ApiOverrides,
   DataStatus,
-  IModelFull,
   ProjectFilterOptions,
   ProjectFull,
   ProjectSortOptions,
@@ -34,7 +33,7 @@ export interface ProjectGridProps {
   /** Type of project to request */
   requestType?: "favorites" | "recents" | "";
   /** Thumbnail click handler. */
-  onThumbnailClick?(iModel: IModelFull): void;
+  onThumbnailClick?(project: ProjectFull): void;
   /** String/function that configure Project filtering behavior.
    * A string will filter on displayed text only ().
    * A function allow filtering on anything, is used in a normal array.filter.
