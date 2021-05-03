@@ -9,18 +9,21 @@ import { UrlBuilder } from "./urlBuilder";
 
 export class NamedVersionClient {
   private _http: HttpClient;
-  private _environment: string | undefined;
+  private _serverEnvironmentPrefix: string | undefined;
 
-  constructor(token: string, environment?: string, log?: LogFunc) {
+  constructor(token: string, serverEnvironmentPrefix?: string, log?: LogFunc) {
     this._http = new HttpClient(token, log);
-    this._environment = environment;
+    this._serverEnvironmentPrefix = serverEnvironmentPrefix;
   }
 
   public async get(imodelId: string): Promise<NamedVersion[]> {
     return this._http
-      .get(UrlBuilder.buildVersionsUrl(imodelId, this._environment), {
-        headers: { [HttpHeaderNames.Prefer]: "return=representation" },
-      })
+      .get(
+        UrlBuilder.buildVersionsUrl(imodelId, this._serverEnvironmentPrefix),
+        {
+          headers: { [HttpHeaderNames.Prefer]: "return=representation" },
+        }
+      )
       .then((resp) => resp.namedVersions);
   }
 }
