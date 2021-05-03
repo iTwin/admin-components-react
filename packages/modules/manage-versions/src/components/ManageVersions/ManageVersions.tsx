@@ -30,8 +30,8 @@ export const defaultStrings: ManageVersionsStringOverrides = {
 export type ManageVersionsProps = {
   /** Access token that requires the `imodels:read` scope. */
   accessToken: string;
-  /** Environment. Default is production. */
-  environment?: "dev" | "qa" | "";
+  /** Object that configures different overrides for the API. */
+  apiOverrides?: { serverEnvironmentPrefix?: "dev" | "qa" | "" };
   /** Id of iModel. */
   imodelId: string;
   /** Strings overrides for localization. */
@@ -48,19 +48,29 @@ enum ManageVersionsTabs {
 export const ManageVersions = (props: ManageVersionsProps) => {
   const {
     accessToken,
-    environment,
+    apiOverrides,
     imodelId,
     stringsOverrides = defaultStrings,
     log,
   } = props;
 
   const versionClient = React.useMemo(
-    () => new NamedVersionClient(accessToken, environment, log),
-    [accessToken, environment, log]
+    () =>
+      new NamedVersionClient(
+        accessToken,
+        apiOverrides?.serverEnvironmentPrefix,
+        log
+      ),
+    [accessToken, apiOverrides?.serverEnvironmentPrefix, log]
   );
   const changesetClient = React.useMemo(
-    () => new ChangesetClient(accessToken, environment, log),
-    [accessToken, environment, log]
+    () =>
+      new ChangesetClient(
+        accessToken,
+        apiOverrides?.serverEnvironmentPrefix,
+        log
+      ),
+    [accessToken, apiOverrides?.serverEnvironmentPrefix, log]
   );
 
   const [currentTab, setCurrentTab] = React.useState(

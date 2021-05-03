@@ -26,7 +26,6 @@ export default {
   excludeStories: ["ManageVersions"],
   argTypes: {
     ...accessTokenArgTypes,
-    environment: { defaultValue: "qa" },
     log: { defaultValue: action("Error logged. "), control: { disable: true } },
   },
 } as Meta;
@@ -36,4 +35,8 @@ const Template: Story<ManageVersionsProps> = withAccessTokenOverride((args) => (
 ));
 
 export const Primary = Template.bind({});
-Primary.args = {};
+Primary.args = {
+  apiOverrides: {
+    serverEnvironmentPrefix: "qa",
+  },
+};
