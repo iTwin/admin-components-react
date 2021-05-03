@@ -6,7 +6,7 @@ import { Table } from "@itwin/itwinui-react";
 import React from "react";
 import { CellProps } from "react-table";
 
-import { NamedVersion } from "../../../models/namedVersion";
+import { NamedVersion } from "../../../models";
 import { ManageVersionsStringOverrides, RequestStatus } from "../types";
 
 export type VersionsTabProps = {

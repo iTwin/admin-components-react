@@ -3,8 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { LogFunc } from "../components/ManageVersions/types";
-import { HttpHeaderNames } from "../models/http";
-import { NamedVersion } from "../models/namedVersion";
+import { HttpHeaderNames, NamedVersion } from "../models";
 import { HttpClient } from "./httpClient";
 import { UrlBuilder } from "./urlBuilder";
 

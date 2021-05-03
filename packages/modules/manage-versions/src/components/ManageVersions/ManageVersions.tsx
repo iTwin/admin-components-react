@@ -7,8 +7,7 @@ import React from "react";
 
 import { ChangesetClient } from "../../clients/changesetClient";
 import { NamedVersionClient } from "../../clients/namedVersionClient";
-import { Changeset } from "../../models/changeset";
-import { NamedVersion } from "../../models/namedVersion";
+import { Changeset, NamedVersion } from "../../models";
 import ChangesTab from "./ChangesTab/ChangesTab";
 import { LogFunc, ManageVersionsStringOverrides, RequestStatus } from "./types";
 import VersionsTab from "./VersionsTab/VersionsTab";

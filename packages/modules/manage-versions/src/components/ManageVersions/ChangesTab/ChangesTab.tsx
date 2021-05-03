@@ -6,7 +6,7 @@ import { Table } from "@itwin/itwinui-react";
 import React from "react";
 import { CellProps } from "react-table";
 
-import { Changeset } from "../../../models/changeset";
+import { Changeset } from "../../../models";
 import { ManageVersionsStringOverrides, RequestStatus } from "../types";
 
 export type ChangesTabProps = {

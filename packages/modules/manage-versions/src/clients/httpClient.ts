@@ -3,7 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { LogFunc } from "../components/ManageVersions/types";
-import { ApimError, HttpHeaderNames } from "../models/http";
+import { ApimError, HttpHeaderNames } from "../models";
 
 export interface HttpRequestOptions {
   headers?: { [key: string]: string };

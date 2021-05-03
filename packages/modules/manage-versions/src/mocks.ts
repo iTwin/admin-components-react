@@ -2,8 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { Changeset } from "./models/changeset";
-import { NamedVersion } from "./models/namedVersion";
+import { Changeset, NamedVersion } from "./models";
 
 export const MOCKED_DATE = new Date(2019, 8, 9).toISOString();
 export const MOCKED_IMODEL_ID = "80abe4ef-e2cc-4ade-8fad-14546af23fbd";

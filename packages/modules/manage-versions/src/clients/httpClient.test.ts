@@ -3,7 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { MockedVersion, MockedVersionList } from "../mocks";
-import { ApimError, HttpHeaderNames } from "../models/http";
+import { ApimError, HttpHeaderNames } from "../models";
 import { NamedVersion } from "../models/namedVersion";
 import { HttpClient } from "./httpClient";
 
