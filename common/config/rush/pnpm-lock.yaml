@@ -6,9 +6,12 @@ dependencies:
   '@bentley/itwin-client': 2.11.0_@bentley+bentleyjs-core@2.11.0
   '@bentley/react-scripts': 4.0.3-dev.0_8f91d2b23d861db64783d0882327b032
   '@itwin/itwinui-css': 0.9.0
+  '@itwin/itwinui-icons-react': 0.1.0_react-dom@16.13.1+react@16.13.1
   '@itwin/itwinui-react': 1.0.0_react-dom@16.13.1+react@16.13.1
   '@rollup/plugin-commonjs': 17.1.0_rollup@2.42.4
+  '@rollup/plugin-image': 2.0.6_rollup@2.42.4
   '@rush-temp/admin-components-react-scripts': file:projects/admin-components-react-scripts.tgz
+  '@rush-temp/delete-imodel': file:projects/delete-imodel.tgz_babel-eslint@10.1.0
   '@rush-temp/imodel-browser': file:projects/imodel-browser.tgz
   '@rush-temp/manage-versions': file:projects/manage-versions.tgz_babel-eslint@10.1.0
   '@rush-temp/platform-storybook': file:projects/platform-storybook.tgz_201e3756f34be7daf0312fc0cffaefcf
@@ -27,6 +30,7 @@ dependencies:
   '@testing-library/react-hooks': 5.1.0_216f63de86fbc10352ace49d86b619ee
   '@types/classnames': 2.2.11
   '@types/jest': 26.0.20
+  '@types/node': 14.14.43
   '@types/react': 16.9.23
   '@types/react-dom': 16.9.5
   '@types/react-table': 7.0.29
@@ -63,6 +67,7 @@ dependencies:
   rollup: 2.42.4
   rollup-plugin-peer-deps-external: 2.2.4_rollup@2.42.4
   rollup-plugin-postcss: 4.0.0_postcss@8.2.8
+  rollup-plugin-terser: 7.0.2_rollup@2.42.4
   rollup-plugin-typescript2: 0.30.0_rollup@2.42.4+typescript@4.2.3
   storybook-dark-mode: 1.0.7_c50de5d9e75775c638c87fb106a0bde7
   stylelint: 13.11.0
@@ -3053,6 +3058,18 @@ packages:
       rollup: ^2.30.0
     resolution:
       integrity: sha512-PoMdXCw0ZyvjpCMT5aV4nkL0QywxP29sODQsSGeDpr/oI49Qq9tRtAsb/LbYbDzFlOydVEqHmmZWFtXJEAX9ew==
+  /@rollup/plugin-image/2.0.6_rollup@2.42.4:
+    dependencies:
+      '@rollup/pluginutils': 3.1.0_rollup@2.42.4
+      mini-svg-data-uri: 1.2.3
+      rollup: 2.42.4
+    dev: false
+    engines:
+      node: '>= 8.0.0'
+    peerDependencies:
+      rollup: ^1.20.0 || ^2.0.0
+    resolution:
+      integrity: sha512-bB+spXogbPiFjhBS7i8ajUOgOnVwWK3bnJ6VroxKey/q8/EPRkoSh+4O1qPCw97qMIDspF4TlzXVBhZ7nojIPw==
   /@rollup/plugin-node-resolve/7.1.3_rollup@1.32.1:
     dependencies:
       '@rollup/pluginutils': 3.1.0_rollup@1.32.1
@@ -4485,6 +4502,10 @@ packages:
     dev: false
     resolution:
       integrity: sha512-oJqcTrgPUF29oUP8AsUqbXGJNuPutsetaa9kTQAQce5Lx5dTYWV02ScBiT/k1BX/Z7pKeqedmvp39Wu4zR7N7g==
+  /@types/node/14.14.43:
+    dev: false
+    resolution:
+      integrity: sha512-3pwDJjp1PWacPTpH0LcfhgjvurQvrZFBrC6xxjaUEZ7ifUtT32jtjPxEMMblpqd2Mvx+k8haqQJLQxolyGN/cQ==
   /@types/normalize-package-data/2.4.0:
     dev: false
     resolution:
@@ -12448,7 +12469,7 @@ packages:
       integrity: sha512-51PE4haMSXcHohnSMdM42anbvZANYTqMrr52tVKPqqsPJMzoP6FYYDVqahX/HrAoKEKz3uUPzSvKs9A3qR4iVw==
   /jest-worker/26.6.2:
     dependencies:
-      '@types/node': 14.14.33
+      '@types/node': 14.14.43
       merge-stream: 2.0.0
       supports-color: 7.2.0
     dev: false
@@ -13595,6 +13616,10 @@ packages:
       webpack: ^4.4.0 || ^5.0.0
     resolution:
       integrity: sha512-n9BA8LonkOkW1/zn+IbLPQmovsL0wMb9yx75fMJQZf2X1Zoec9yTZtyMePcyu19wPkmFbzZZA6fLTotpFhQsOA==
+  /mini-svg-data-uri/1.2.3:
+    dev: false
+    resolution:
+      integrity: sha512-zd6KCAyXgmq6FV1mR10oKXYtvmA9vRoB6xPSTUJTbFApCtkefDnYueVR1gkof3KcdLZo1Y8mjF2DFmQMIxsHNQ==
   /minimalistic-assert/1.0.1:
     dev: false
     resolution:
@@ -17307,6 +17332,18 @@ packages:
       rollup: '>=0.66.0 <3'
     resolution:
       integrity: sha512-1pkwkervMJQGFYvM9nscrUoncPwiKR/K+bHdjv6PFgRo3cgPHoRT83y2Aa3GvINj4539S15t/tpFPb775TDs6w==
+  /rollup-plugin-terser/7.0.2_rollup@2.42.4:
+    dependencies:
+      '@babel/code-frame': 7.12.13
+      jest-worker: 26.6.2
+      rollup: 2.42.4
+      serialize-javascript: 4.0.0
+      terser: 5.6.0
+    dev: false
+    peerDependencies:
+      rollup: ^2.0.0
+    resolution:
+      integrity: sha512-w3iIaU4OxcF52UUXiZNsNeuXIMDvFrr+ZXK6bFZ0Q60qyVfq4uLptoS4bbq3paG3x216eQllFZX7zt6TIImguQ==
   /rollup-plugin-typescript2/0.30.0_rollup@2.42.4+typescript@4.2.3:
     dependencies:
       '@rollup/pluginutils': 4.1.0_rollup@2.42.4
@@ -20880,6 +20917,54 @@ packages:
       integrity: sha512-TxjQ8Od0Zjlf/MuMa64YZMO0d+1X7lr0KTVnJDjpHCjlkIe3B63uB9w2aHqPPtP97lTlfMapTgH7yYqhTrVK6w==
       tarball: file:projects/admin-components-react-scripts.tgz
     version: 0.0.0
+  file:projects/delete-imodel.tgz_babel-eslint@10.1.0:
+    dependencies:
+      '@itwin/itwinui-css': 0.9.0
+      '@itwin/itwinui-icons-react': 0.1.0_react-dom@16.13.1+react@16.13.1
+      '@itwin/itwinui-react': 1.0.0_react-dom@16.13.1+react@16.13.1
+      '@rollup/plugin-commonjs': 17.1.0_rollup@2.42.4
+      '@rollup/plugin-image': 2.0.6_rollup@2.42.4
+      '@testing-library/react': 11.2.5_react-dom@16.13.1+react@16.13.1
+      '@types/jest': 26.0.20
+      '@types/node': 14.14.43
+      '@types/react': 16.9.23
+      '@typescript-eslint/eslint-plugin': 4.20.0_d57f2e28d7d26e6d296dfd75247d8327
+      '@typescript-eslint/parser': 4.20.0_eslint@7.20.0+typescript@4.2.3
+      eslint: 7.20.0
+      eslint-config-airbnb: 0.0.4
+      eslint-config-prettier: 6.15.0_eslint@7.20.0
+      eslint-config-react-app: 6.0.0_3050c5f4541700150cee7c9885ae733e
+      eslint-plugin-flowtype: 5.3.1_eslint@7.20.0
+      eslint-plugin-import: 2.22.1_eslint@7.20.0
+      eslint-plugin-jsx-a11y: 6.4.1_eslint@7.20.0
+      eslint-plugin-prettier: 3.3.1_a965e97aa706aa034072dc2d8249e40b
+      eslint-plugin-react: 7.22.0_eslint@7.20.0
+      eslint-plugin-react-hooks: 4.2.0_eslint@7.20.0
+      eslint-plugin-simple-import-sort: 5.0.3_eslint@7.20.0
+      jest: 26.6.0
+      node-sass: 5.0.0
+      postcss: 8.2.8
+      prettier: 2.2.1
+      react: 16.13.1
+      react-dom: 16.13.1_react@16.13.1
+      rimraf: 3.0.2
+      rollup: 2.42.4
+      rollup-plugin-peer-deps-external: 2.2.4_rollup@2.42.4
+      rollup-plugin-postcss: 4.0.0_postcss@8.2.8
+      rollup-plugin-terser: 7.0.2_rollup@2.42.4
+      rollup-plugin-typescript2: 0.30.0_rollup@2.42.4+typescript@4.2.3
+      ts-jest: 26.5.3_jest@26.6.0+typescript@4.2.3
+      tslib: 2.1.0
+      typescript: 4.2.3
+    dev: false
+    id: file:projects/delete-imodel.tgz
+    name: '@rush-temp/delete-imodel'
+    peerDependencies:
+      babel-eslint: '*'
+    resolution:
+      integrity: sha512-eRZcZXcOkrzkxJ+RSFRC0oFMbyh7zD+RbQyxnOXDVP5vO8lLq/VWDZndGyzgtMTnW+9ofMaIjAnYvJxXVaoo+w==
+      tarball: file:projects/delete-imodel.tgz
+    version: 0.0.0
   file:projects/imodel-browser.tgz:
     dependencies:
       '@bentley/appsec-tslint-rules': 1.2.21
@@ -21035,7 +21120,7 @@ packages:
       prettier: '*'
       typescript: '*'
     resolution:
-      integrity: sha512-TCs8ZYC21bj8LeZYBFKEs7m7NVxrd43qGMldvVeVSLPwEsxMMiBigi4aIiEQ5UKrrQxUDITRGsdwoXYNXO2/ow==
+      integrity: sha512-cyQ0CWRWUH5yaKn2m62RBNeRSbFMSZvs8Ui/VxtnkLFPbk0fyfQQhdNzfNoIYfNE1ilj49zyq6DTNgpYn7qzoA==
       tarball: file:projects/platform-storybook.tgz
     version: 0.0.0
   file:projects/storybook-auth-addon.tgz_node-sass@5.0.0+prettier@2.2.1:
@@ -21087,9 +21172,12 @@ specifiers:
   '@bentley/itwin-client': 2.11.0
   '@bentley/react-scripts': 4.0.3-dev.0
   '@itwin/itwinui-css': ^0.9.0
+  '@itwin/itwinui-icons-react': ^0.1.0
   '@itwin/itwinui-react': ^1.0.0
   '@rollup/plugin-commonjs': ~17.1.0
+  '@rollup/plugin-image': ^2.0.6
   '@rush-temp/admin-components-react-scripts': file:./projects/admin-components-react-scripts.tgz
+  '@rush-temp/delete-imodel': file:./projects/delete-imodel.tgz
   '@rush-temp/imodel-browser': file:./projects/imodel-browser.tgz
   '@rush-temp/manage-versions': file:./projects/manage-versions.tgz
   '@rush-temp/platform-storybook': file:./projects/platform-storybook.tgz
@@ -21108,6 +21196,7 @@ specifiers:
   '@testing-library/react-hooks': ^5.1.0
   '@types/classnames': ^2.2.11
   '@types/jest': ^26.0.0
+  '@types/node': ^14.14.35
   '@types/react': 16.9.23
   '@types/react-dom': 16.9.5
   '@types/react-table': ^7.0.29
@@ -21144,6 +21233,7 @@ specifiers:
   rollup: ^2.42.4
   rollup-plugin-peer-deps-external: ^2.2.4
   rollup-plugin-postcss: ^4.0.0
+  rollup-plugin-terser: ^7.0.2
   rollup-plugin-typescript2: ^0.30.0
   storybook-dark-mode: ^1.0.7
   stylelint: ^13.6.1

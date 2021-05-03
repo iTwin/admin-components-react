@@ -2,6 +2,14 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
 import addons from "@storybook/addons";
 import { themes } from "@storybook/theming";
 
@@ -37,7 +45,7 @@ export const parameters = {
   },
   authClientConfig: {
     clientId: process.env.STORYBOOK_AUTH_CLIENT_ID,
-    scope: ["imodels:read", "projects:read"].join(" "),
+    scope: ["imodels:read", "imodels:modify", "projects:read"].join(" "),
     authority: "https://qa-ims.bentley.com",
   },
 };

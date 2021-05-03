@@ -36,8 +36,6 @@ addons.register("auth/toolbar", () => {
         }
 
         setState({ loading: true });
-        let email = "";
-        let tokenString = "";
         try {
           if (!authClientConfig.clientId) {
             setClientIdMissing(true);
@@ -55,23 +53,35 @@ addons.register("auth/toolbar", () => {
               postSignoutRedirectUri: redirectURI,
               responseType: "code",
             });
+            client.current.onUserStateChanged.addListener((accessToken) => {
+              if (!accessToken) {
+                updateGlobals({ accessToken: "" });
+                setState({ loading: false });
+                return;
+              }
+              let tokenString = accessToken.toTokenString();
+              let email = "";
+              try {
+                email = JSON.parse(
+                  atob(tokenString.split(" ")[1]?.split(".")[1])
+                ).email;
+              } catch (e) {
+                email = "Email parsing failed";
+              }
+              updateGlobals({ accessToken: tokenString });
+              setState({ loading: false, email });
+            });
           }
           const context = new ClientRequestContext();
           if (!globals.accessToken) {
             await client.current.signInPopup(context);
-            tokenString = (
-              await client.current.getAccessToken(context)
-            ).toTokenString();
-            email = JSON.parse(atob(tokenString.split(" ")[1]?.split(".")[1]))
-              .email;
           } else {
             await client.current.signOutPopup(context).catch(() => {
               // Intentionally a noop, user closing the window is not an issue.
             });
           }
-        } finally {
-          updateGlobals({ accessToken: tokenString });
-          setState({ loading: false, email });
+        } catch (e) {
+          setState({ loading: false });
         }
       };
 

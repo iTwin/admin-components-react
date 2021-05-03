@@ -31,6 +31,12 @@
       "shouldPublish": false
     },
     {
+      "packageName": "@itwin/delete-imodel",
+      "projectFolder": "packages/modules/delete-imodel",
+      "shouldPublish": true,
+      "versionPolicyName": "independentModule"
+    },
+    {
       "packageName": "@itwin/manage-versions",
       "projectFolder": "packages/modules/manage-versions",
       "shouldPublish": true,

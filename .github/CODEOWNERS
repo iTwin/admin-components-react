@@ -7,5 +7,8 @@
 # the repo, unless a later match takes precedence.
 *       @kckst8 @raplemie
 
+# delete-imodel
+packages/modules/delete-imodel/ @bentleyvk @veekeys 
+
 # manage-versions
 packages/modules/manage-versions/ @bentleyvk @veekeys
