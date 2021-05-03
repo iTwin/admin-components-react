@@ -29,6 +29,12 @@
       "packageName": "@itwin/storybook-auth-addon",
       "projectFolder": "packages/modules/storybook-auth-addon",
       "shouldPublish": false
+    },
+    {
+      "packageName": "@itwin/delete-imodel",
+      "projectFolder": "packages/modules/delete-imodel",
+      "shouldPublish": true,
+      "versionPolicyName": "independentModule"
     }
   ]
 }
