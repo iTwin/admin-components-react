@@ -33,3 +33,6 @@ common/temp/
 *.eslintcache
 
 .env*.local
+
+# Test reports
+packages/modules/manage-versions/coverage/

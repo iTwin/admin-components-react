@@ -9,3 +9,6 @@
 
 # delete-imodel
 packages/modules/delete-imodel/ @bentleyvk @veekeys 
+
+# manage-versions
+packages/modules/manage-versions/ @bentleyvk @veekeys
