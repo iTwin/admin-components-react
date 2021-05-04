@@ -1,0 +1,17 @@
+{
+  "name": "@itwin/manage-versions",
+  "entries": [
+    {
+      "version": "0.2.0",
+      "tag": "@itwin/manage-versions_v0.2.0",
+      "date": "Tue, 04 May 2021 09:25:11 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Initial implementation of manage-versions package. Currently only fetches and shows Named Versions and Changesets."
+          }
+        ]
+      }
+    }
+  ]
+}
