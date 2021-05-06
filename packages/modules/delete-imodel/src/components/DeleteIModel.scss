@@ -2,15 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------------------------
- * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
- * See LICENSE.md in the project root for license terms and full copyright notice.
- *--------------------------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------------------------
- * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
- * See LICENSE.md in the project root for license terms and full copyright notice.
- *--------------------------------------------------------------------------------------------*/
- @import "~@itwin/itwinui-css/scss/variables";
+@import "~@itwin/itwinui-css/scss/variables";
 
 .iac-delete-title {
   display: flex;
@@ -25,11 +17,11 @@
   }
 }
 
-.iac-overlay-container { 
+.iac-overlay-container {
   position: fixed;
-  z-index: 99999; 
+  z-index: 99999;
   background-color: rgba(0, 0, 0, 0.1);
-  display: flex; 
+  display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
