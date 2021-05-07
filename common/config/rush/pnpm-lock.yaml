@@ -14,6 +14,7 @@ dependencies:
   '@rush-temp/create-imodel': file:projects/create-imodel.tgz_babel-eslint@10.1.0
   '@rush-temp/delete-imodel': file:projects/delete-imodel.tgz_babel-eslint@10.1.0
   '@rush-temp/imodel-browser': file:projects/imodel-browser.tgz
+  '@rush-temp/manage-versions': file:projects/manage-versions.tgz_babel-eslint@10.1.0
   '@rush-temp/platform-storybook': file:projects/platform-storybook.tgz_201e3756f34be7daf0312fc0cffaefcf
   '@rush-temp/storybook-auth-addon': file:projects/storybook-auth-addon.tgz_node-sass@5.0.0+prettier@2.2.1
   '@storybook/addon-actions': 6.2.5_153d3a961815977ed06c165593131b36
@@ -33,6 +34,7 @@ dependencies:
   '@types/node': 14.14.43
   '@types/react': 16.9.23
   '@types/react-dom': 16.9.5
+  '@types/react-table': 7.0.29
   '@typescript-eslint/eslint-plugin': 4.20.0_d57f2e28d7d26e6d296dfd75247d8327
   '@typescript-eslint/parser': 4.20.0_eslint@7.20.0+typescript@4.2.3
   babel-eslint: 10.1.0_eslint@7.20.0
@@ -20971,7 +20973,7 @@ packages:
     peerDependencies:
       babel-eslint: '*'
     resolution:
-      integrity: sha512-dfAf+5ULMz4zz5Lb7PwmU+sWNlTvt3hHqi0FuWScJNci3V8/hQhew/L8ve4hXwqfp8TMHgEmnnZHhY8HqSkJ+A==
+      integrity: sha512-rN353iRfIwYg02KUml0KB9aKWATlvmvOt8gyQimcxQV8F/f13SXCGvFtvpj+p48kJ9lGFqTXOAosU9vUMPTSWQ==
       tarball: file:projects/create-imodel.tgz
     version: 0.0.0
   file:projects/delete-imodel.tgz_babel-eslint@10.1.0:
@@ -21087,6 +21089,50 @@ packages:
       integrity: sha512-JQNeZA60fS8Jf+bs7rH0Lu7qEF/djzTsH3vs1y8hXn1nTaR1x9SvY+jdHwCpufnjsBKq1poQG+2a75JKRZuvPQ==
       tarball: file:projects/imodel-browser.tgz
     version: 0.0.0
+  file:projects/manage-versions.tgz_babel-eslint@10.1.0:
+    dependencies:
+      '@itwin/itwinui-react': 1.0.0_react-dom@16.13.1+react@16.13.1
+      '@rollup/plugin-commonjs': 17.1.0_rollup@2.42.4
+      '@testing-library/react': 11.2.5_react-dom@16.13.1+react@16.13.1
+      '@types/classnames': 2.2.11
+      '@types/jest': 26.0.20
+      '@types/react': 16.9.23
+      '@types/react-dom': 16.9.5
+      '@types/react-table': 7.0.29
+      '@typescript-eslint/eslint-plugin': 4.20.0_d57f2e28d7d26e6d296dfd75247d8327
+      '@typescript-eslint/parser': 4.20.0_eslint@7.20.0+typescript@4.2.3
+      classnames: 2.2.6
+      eslint: 7.20.0
+      eslint-config-airbnb: 0.0.4
+      eslint-config-prettier: 6.15.0_eslint@7.20.0
+      eslint-config-react-app: 6.0.0_3050c5f4541700150cee7c9885ae733e
+      eslint-plugin-flowtype: 5.3.1_eslint@7.20.0
+      eslint-plugin-import: 2.22.1_eslint@7.20.0
+      eslint-plugin-jsx-a11y: 6.4.1_eslint@7.20.0
+      eslint-plugin-prettier: 3.3.1_a965e97aa706aa034072dc2d8249e40b
+      eslint-plugin-react: 7.22.0_eslint@7.20.0
+      eslint-plugin-react-hooks: 4.2.0_eslint@7.20.0
+      eslint-plugin-simple-import-sort: 5.0.3_eslint@7.20.0
+      jest: 26.6.0
+      prettier: 2.2.1
+      react: 16.13.1
+      react-dom: 16.13.1_react@16.13.1
+      rimraf: 3.0.2
+      rollup: 2.42.4
+      rollup-plugin-peer-deps-external: 2.2.4_rollup@2.42.4
+      rollup-plugin-typescript2: 0.30.0_rollup@2.42.4+typescript@4.2.3
+      ts-jest: 26.5.3_jest@26.6.0+typescript@4.2.3
+      tslib: 2.1.0
+      typescript: 4.2.3
+    dev: false
+    id: file:projects/manage-versions.tgz
+    name: '@rush-temp/manage-versions'
+    peerDependencies:
+      babel-eslint: '*'
+    resolution:
+      integrity: sha512-dOr+z4lfNSFHUnGHaIbhdJIU6PCYg2PodDOoUIsUCIYGvCe6CaN84TQK9Zgf6djklAG/uc7ujZU5NfEDa1+19w==
+      tarball: file:projects/manage-versions.tgz
+    version: 0.0.0
   file:projects/platform-storybook.tgz_201e3756f34be7daf0312fc0cffaefcf:
     dependencies:
       '@babel/core': 7.13.1
@@ -21133,7 +21179,7 @@ packages:
       prettier: '*'
       typescript: '*'
     resolution:
-      integrity: sha512-ZPMro325GM5hoTtKAwBm4cmNtNw0DYKjyrLtPZOWKRpvr9rnkSFpbLdM4T/fuCw1E85kDgegQ5N4dbNQtqppmg==
+      integrity: sha512-wtDYTowGcmj+/gnyQ2J7+fjlhXugT8KXeRL5Lnn+0omy4LujeJEAo3m5wPDGPu0NGNAu/ZDOeY5aCRyoCyI7pA==
       tarball: file:projects/platform-storybook.tgz
     version: 0.0.0
   file:projects/storybook-auth-addon.tgz_node-sass@5.0.0+prettier@2.2.1:
@@ -21193,6 +21239,7 @@ specifiers:
   '@rush-temp/create-imodel': file:./projects/create-imodel.tgz
   '@rush-temp/delete-imodel': file:./projects/delete-imodel.tgz
   '@rush-temp/imodel-browser': file:./projects/imodel-browser.tgz
+  '@rush-temp/manage-versions': file:./projects/manage-versions.tgz
   '@rush-temp/platform-storybook': file:./projects/platform-storybook.tgz
   '@rush-temp/storybook-auth-addon': file:./projects/storybook-auth-addon.tgz
   '@storybook/addon-actions': ^6.2.5
@@ -21212,6 +21259,7 @@ specifiers:
   '@types/node': ^14.14.35
   '@types/react': 16.9.23
   '@types/react-dom': 16.9.5
+  '@types/react-table': ^7.0.29
   '@typescript-eslint/eslint-plugin': ^4.20.0
   '@typescript-eslint/parser': ^4.20.0
   babel-eslint: ^10.0.0
