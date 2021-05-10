@@ -5,7 +5,8 @@
 import { toaster } from "@itwin/itwinui-react";
 import React from "react";
 
-import { BaseIModel, BaseIModelPage } from "../base-imodel/BaseIModel";
+import { BaseIModel, IModelFull } from "../../types";
+import { BaseIModelPage } from "../base-imodel/BaseIModel";
 
 export type CreateIModelProps = {
   /** Bearer access token with scope `imodels:modify`. */
@@ -19,7 +20,7 @@ export type CreateIModelProps = {
     error: { error: { code?: string; message?: string } } | any
   ) => void;
   /** Callback on successful create. */
-  onSuccess?: () => void;
+  onSuccess?: (createdimodel: { iModel: IModelFull }) => void;
   /** Object of string overrides. */
   stringsOverrides?: {
     /** Displayed after successful create. */
@@ -59,6 +60,14 @@ export function CreateIModel(props: CreateIModelProps) {
   } = props;
   const [isLoading, setIsLoading] = React.useState(false);
 
+  const updatedStrings = {
+    successMessage: "iModel created successfully.",
+    errorMessage: "Could not create an iModel. Please try again later.",
+    errorMessageIModelExists:
+      "iModel with the same name already exists within the project.",
+    ...stringsOverrides,
+  };
+
   const createiModel = async (imodel: BaseIModel) => {
     setIsLoading(true);
     try {
@@ -69,7 +78,10 @@ export function CreateIModel(props: CreateIModelProps) {
         }api.bentley.com/imodels`,
         {
           method: "POST",
-          headers: { Authorization: `${accessToken}` },
+          headers: {
+            Authorization: `${accessToken}`,
+            Prefer: "return=representation",
+          },
           body: JSON.stringify({
             iModel: {
               projectId,
@@ -85,12 +97,12 @@ export function CreateIModel(props: CreateIModelProps) {
         error = { ...error, ...responseBody };
         throw error;
       } else {
+        const createdimodel = await response.json();
         setIsLoading(false);
-        toaster.positive(
-          stringsOverrides?.successMessage ?? "iModel created successfully.",
-          { hasCloseButton: true }
-        );
-        onSuccess?.();
+        toaster.positive(updatedStrings.successMessage, {
+          hasCloseButton: true,
+        });
+        onSuccess?.(createdimodel);
       }
       onClose?.();
     } catch (err) {
@@ -105,10 +117,8 @@ export function CreateIModel(props: CreateIModelProps) {
     setIsLoading(false);
     const errorString =
       error?.error?.code === "iModelExists"
-        ? stringsOverrides?.errorMessageIModelExists ??
-          "iModel with the same name already exists within the project."
-        : stringsOverrides?.errorMessage ??
-          "Could not create an iModel. Please try again later.";
+        ? updatedStrings.errorMessageIModelExists
+        : updatedStrings.errorMessage;
     toaster.negative(errorString, { hasCloseButton: true });
     onError?.(error);
   };
@@ -116,7 +126,7 @@ export function CreateIModel(props: CreateIModelProps) {
   return (
     <>
       <BaseIModelPage
-        stringsOverrides={stringsOverrides}
+        stringsOverrides={updatedStrings}
         isLoading={isLoading}
         onActionClick={createiModel}
         onClose={onClose}

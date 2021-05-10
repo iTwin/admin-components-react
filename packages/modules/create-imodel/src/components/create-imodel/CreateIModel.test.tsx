@@ -9,7 +9,13 @@ import React from "react";
 import { CreateIModel } from "./CreateIModel";
 
 describe("CreateIModel", () => {
-  const fetchMock = jest.fn(() => Promise.resolve({ ok: true } as Response));
+  const mockedimodel = { iModel: { id: "dd", name: "name" } };
+  const fetchMock = jest.fn(() =>
+    Promise.resolve({
+      ok: true,
+      json: () => Promise.resolve(mockedimodel),
+    } as Response)
+  );
   global.fetch = fetchMock;
 
   beforeEach(() => {
@@ -54,7 +60,7 @@ describe("CreateIModel", () => {
         }),
       }
     );
-    expect(successMock).toHaveBeenCalled();
+    expect(successMock).toHaveBeenCalledWith(mockedimodel);
     expect(toaster.positive).toHaveBeenCalledWith(
       "iModel created successfully.",
       {

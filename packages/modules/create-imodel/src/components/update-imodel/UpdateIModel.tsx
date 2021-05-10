@@ -5,7 +5,8 @@
 import { toaster } from "@itwin/itwinui-react";
 import React from "react";
 
-import { BaseIModel, BaseIModelPage } from "../base-imodel/BaseIModel";
+import { BaseIModel, IModelFull } from "../../types";
+import { BaseIModelPage } from "../base-imodel/BaseIModel";
 
 export type UpdateIModelProps = {
   /** Bearer access token with scope `imodels:modify`. */
@@ -19,7 +20,7 @@ export type UpdateIModelProps = {
     error: { error: { code?: string; message?: string } } | any
   ) => void;
   /** Callback on successful update. */
-  onSuccess?: () => void;
+  onSuccess?: (updatedIModel: { iModel: IModelFull }) => void;
   /** Object of string overrides. */
   stringsOverrides?: {
     /** Displayed after successful update. */
@@ -63,6 +64,10 @@ export function UpdateIModel(props: UpdateIModelProps) {
   const [isLoading, setIsLoading] = React.useState(false);
 
   const updatedStrings = {
+    successMessage: "iModel updated successfully.",
+    errorMessage: "Could not update an iModel. Please try again later.",
+    errorMessageIModelExists:
+      "iModel with the same name already exists within the project.",
     titleString: "Update an iModel",
     confirmButton: "Update",
     ...stringsOverrides,
@@ -78,7 +83,10 @@ export function UpdateIModel(props: UpdateIModelProps) {
         }api.bentley.com/imodels/${imodelId}`,
         {
           method: "PATCH",
-          headers: { Authorization: `${accessToken}` },
+          headers: {
+            Authorization: `${accessToken}`,
+            Prefer: "return=representation",
+          },
           body: JSON.stringify({
             iModel: {
               name: imodel.name,
@@ -93,12 +101,12 @@ export function UpdateIModel(props: UpdateIModelProps) {
         error = { ...error, ...responseBody };
         throw error;
       } else {
+        const updatedimodel = await response.json();
         setIsLoading(false);
-        toaster.positive(
-          stringsOverrides?.successMessage ?? "iModel updated successfully.",
-          { hasCloseButton: true }
-        );
-        onSuccess?.();
+        toaster.positive(updatedStrings.successMessage, {
+          hasCloseButton: true,
+        });
+        onSuccess?.(updatedimodel);
       }
       onClose?.();
     } catch (err) {
@@ -113,10 +121,8 @@ export function UpdateIModel(props: UpdateIModelProps) {
     setIsLoading(false);
     const errorString =
       error?.error?.code === "iModelExists"
-        ? stringsOverrides?.errorMessageIModelExists ??
-          "iModel with the same name already exists within the project."
-        : stringsOverrides?.errorMessage ??
-          "Could not update an iModel. Please try again later.";
+        ? updatedStrings.errorMessageIModelExists
+        : updatedStrings.errorMessage;
     toaster.negative(errorString, { hasCloseButton: true });
     onError?.(error);
   };

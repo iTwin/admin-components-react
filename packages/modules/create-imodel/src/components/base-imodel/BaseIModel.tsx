@@ -13,15 +13,12 @@ import {
 } from "@itwin/itwinui-react";
 import React from "react";
 
-export type BaseIModel = {
-  name: string;
-  description?: string;
-};
+import { BaseIModel } from "../../types";
 
 export type BaseIModelProps = {
   /** Callback on canceled action. */
   onClose?: () => void;
-  /** Callback on successful create. */
+  /** Callback on action. */
   onActionClick?: (imodel: BaseIModel) => void;
   /** Object of string overrides. */
   stringsOverrides?: {
@@ -64,6 +61,17 @@ export function BaseIModelPage(props: BaseIModelProps) {
     description: initialIModel?.description ?? "",
   });
 
+  const updatedStrings = {
+    titleString: "Create an iModel",
+    nameString: "Name",
+    descriptionString: "Description",
+    confirmButton: "Create",
+    cancelButton: "Cancel",
+    nameTooLong: `The value exceeds allowed ${MAX_LENGTH} characters.`,
+    descriptionTooLong: `The value exceeds allowed ${MAX_LENGTH} characters.`,
+    ...stringsOverrides,
+  };
+
   const onPropChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -97,12 +105,10 @@ export function BaseIModelPage(props: BaseIModelProps) {
     <>
       <div className="iac-imodel-base">
         <div>
-          <Headline>
-            {stringsOverrides?.titleString ?? "Create an iModel"}
-          </Headline>
+          <Headline>{updatedStrings.titleString}</Headline>
           <div className="iac-inputs-container">
             <LabeledInput
-              label={stringsOverrides?.nameString ?? "Name"}
+              label={updatedStrings.nameString}
               name="name"
               setFocus
               required
@@ -110,22 +116,20 @@ export function BaseIModelPage(props: BaseIModelProps) {
               onChange={onPropChange}
               message={
                 isPropertyInvalid(imodel.name)
-                  ? stringsOverrides?.nameTooLong ??
-                    `The value exceeds allowed ${MAX_LENGTH} characters.`
+                  ? updatedStrings.nameTooLong
                   : undefined
               }
               status={isPropertyInvalid(imodel.name) ? "negative" : undefined}
             />
             <LabeledTextarea
-              label={stringsOverrides?.descriptionString ?? "Description"}
+              label={updatedStrings.descriptionString ?? "Description"}
               name="description"
               value={imodel.description}
               onChange={onPropChange}
               rows={4}
               message={
                 isPropertyInvalid(imodel.description)
-                  ? stringsOverrides?.descriptionTooLong ??
-                    `The value exceeds allowed ${MAX_LENGTH} characters.`
+                  ? updatedStrings.descriptionTooLong
                   : undefined
               }
               status={
@@ -141,10 +145,10 @@ export function BaseIModelPage(props: BaseIModelProps) {
             disabled={!isDataChanged() || !isDataValid() || isLoading}
             onClick={() => onActionClick?.(imodel)}
           >
-            {stringsOverrides?.confirmButton ?? "Create"}
+            {updatedStrings.confirmButton}
           </Button>
           <Button size="large" onClick={onClose}>
-            {stringsOverrides?.cancelButton ?? "Cancel"}
+            {updatedStrings.cancelButton}
           </Button>
         </div>
         {isLoading && <OverlaySpinner />}
