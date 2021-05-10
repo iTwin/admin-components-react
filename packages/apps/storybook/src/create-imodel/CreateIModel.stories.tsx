@@ -25,6 +25,9 @@ export default {
   argTypes: accessTokenArgTypes,
 } as Meta;
 
+const root = document.getElementById("root") as HTMLElement;
+root.style.height = "90vh";
+
 export const Create: Story<CreateIModelProps> = withAccessTokenOverride(
   (args) => {
     return (
