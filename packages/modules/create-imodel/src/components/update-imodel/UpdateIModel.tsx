@@ -108,10 +108,8 @@ export function UpdateIModel(props: UpdateIModelProps) {
         });
         onSuccess?.(updatedimodel);
       }
-      onClose?.();
     } catch (err) {
       error(err);
-      onClose?.();
     }
   };
 

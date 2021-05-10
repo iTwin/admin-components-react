@@ -104,10 +104,8 @@ export function CreateIModel(props: CreateIModelProps) {
         });
         onSuccess?.(createdimodel);
       }
-      onClose?.();
     } catch (err) {
       error(err);
-      onClose?.();
     }
   };
 
