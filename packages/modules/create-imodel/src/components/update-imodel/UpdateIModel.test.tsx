@@ -54,7 +54,7 @@ describe("UpdateIModel", () => {
       "https://dev-api.bentley.com/imodels/de47c5ad-5657-42b8-a2bc-f2b8bf84cd4b",
       {
         method: "PATCH",
-        headers: { Authorization: "dd" },
+        headers: { Authorization: "dd", Prefer: "return=representation" },
         body: JSON.stringify({
           iModel: {
             name: "Some other name",
@@ -102,7 +102,7 @@ describe("UpdateIModel", () => {
       "https://dev-api.bentley.com/imodels/de47c5ad-5657-42b8-a2bc-f2b8bf84cd4b",
       {
         method: "PATCH",
-        headers: { Authorization: "dd" },
+        headers: { Authorization: "dd", Prefer: "return=representation" },
         body: JSON.stringify({
           iModel: {
             name: "Some name",
@@ -150,7 +150,7 @@ describe("UpdateIModel", () => {
       "https://dev-api.bentley.com/imodels/de47c5ad-5657-42b8-a2bc-f2b8bf84cd4b",
       {
         method: "PATCH",
-        headers: { Authorization: "dd" },
+        headers: { Authorization: "dd", Prefer: "return=representation" },
         body: JSON.stringify({
           iModel: {
             name: "Some name",
