@@ -60,4 +60,27 @@ describe("CreateIModel", () => {
     ) as HTMLButtonElement;
     expect(confirmButton.disabled).toBe(true);
   });
+
+  it("should show base page with filled values", () => {
+    const { container } = render(
+      <BaseIModelPage
+        initialIModel={{
+          name: "Some name",
+          description: "Some description",
+        }}
+      />
+    );
+
+    const name = container.querySelector(
+      ".iac-inputs-container input"
+    ) as HTMLInputElement;
+    expect(name).toBeTruthy();
+    expect(name.value).toBe("Some name");
+
+    const description = container.querySelector(
+      ".iac-inputs-container textarea"
+    ) as HTMLInputElement;
+    expect(description).toBeTruthy();
+    expect(description.value).toBe("Some description");
+  });
 });

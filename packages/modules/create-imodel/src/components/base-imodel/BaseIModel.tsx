@@ -15,7 +15,7 @@ import React from "react";
 
 export type BaseIModel = {
   name: string;
-  description: string;
+  description?: string;
 };
 
 export type BaseIModelProps = {
@@ -42,7 +42,7 @@ export type BaseIModelProps = {
   };
   /** If action is loading. */
   isLoading?: boolean;
-  /** Initial iModel state used for edit. */
+  /** Initial iModel state used for update. */
   initialIModel?: BaseIModel;
 };
 
@@ -56,7 +56,10 @@ export function BaseIModelPage(props: BaseIModelProps) {
     isLoading = false,
     stringsOverrides,
   } = props;
-  const [imodel, setImodel] = React.useState<BaseIModel>({
+  const [imodel, setImodel] = React.useState<{
+    name: string;
+    description: string;
+  }>({
     name: initialIModel?.name ?? "",
     description: initialIModel?.description ?? "",
   });

@@ -7,26 +7,26 @@ import React from "react";
 
 import { BaseIModel, BaseIModelPage } from "../base-imodel/BaseIModel";
 
-export type CreateIModelProps = {
+export type UpdateIModelProps = {
   /** Bearer access token with scope `imodels:modify`. */
   accessToken: string;
   /** Object that configures different overrides for the API. */
   apiOverrides?: { serverEnvironmentPrefix?: "dev" | "qa" | "" };
   /** Callback on canceled action. */
   onClose?: () => void;
-  /** Callback on failed create. */
+  /** Callback on failed update. */
   onError?: (
     error: { error: { code?: string; message?: string } } | any
   ) => void;
-  /** Callback on successful create. */
+  /** Callback on successful update. */
   onSuccess?: () => void;
   /** Object of string overrides. */
   stringsOverrides?: {
-    /** Displayed after successful create. */
+    /** Displayed after successful update. */
     successMessage?: string;
-    /** Displayed after failed create. */
+    /** Displayed after failed update. */
     errorMessage?: string;
-    /** Displayed after failed create because of the duplicate name. */
+    /** Displayed after failed update because of the duplicate name. */
     errorMessageIModelExists?: string;
     /** The title of the page. */
     titleString?: string;
@@ -43,11 +43,13 @@ export type CreateIModelProps = {
     /** Error message when description is too long. */
     descriptionTooLong?: string;
   };
-  /** ProjectId where to create an iModel. */
-  projectId: string;
+  /** iModel id to update. */
+  imodelId: string;
+  /** Initial iModel data. */
+  initialIModel: BaseIModel;
 };
 
-export function CreateIModel(props: CreateIModelProps) {
+export function UpdateIModel(props: UpdateIModelProps) {
   const {
     accessToken,
     apiOverrides = { serverEnvironmentPrefix: "" },
@@ -55,24 +57,30 @@ export function CreateIModel(props: CreateIModelProps) {
     onError,
     onSuccess,
     stringsOverrides,
-    projectId,
+    imodelId,
+    initialIModel,
   } = props;
   const [isLoading, setIsLoading] = React.useState(false);
 
-  const createiModel = async (imodel: BaseIModel) => {
+  const updatedStrings = {
+    titleString: "Update an iModel",
+    confirmButton: "Update",
+    ...stringsOverrides,
+  };
+
+  const updateiModel = async (imodel: BaseIModel) => {
     setIsLoading(true);
     try {
       const response = await fetch(
         `https://${
           apiOverrides?.serverEnvironmentPrefix &&
           `${apiOverrides.serverEnvironmentPrefix}-`
-        }api.bentley.com/imodels`,
+        }api.bentley.com/imodels/${imodelId}`,
         {
-          method: "POST",
+          method: "PATCH",
           headers: { Authorization: `${accessToken}` },
           body: JSON.stringify({
             iModel: {
-              projectId,
               name: imodel.name,
               description: imodel.description,
             },
@@ -87,7 +95,7 @@ export function CreateIModel(props: CreateIModelProps) {
       } else {
         setIsLoading(false);
         toaster.positive(
-          stringsOverrides?.successMessage ?? "iModel created successfully.",
+          stringsOverrides?.successMessage ?? "iModel updated successfully.",
           { hasCloseButton: true }
         );
         onSuccess?.();
@@ -108,7 +116,7 @@ export function CreateIModel(props: CreateIModelProps) {
         ? stringsOverrides?.errorMessageIModelExists ??
           "iModel with the same name already exists within the project."
         : stringsOverrides?.errorMessage ??
-          "Could not create an iModel. Please try again later.";
+          "Could not update an iModel. Please try again later.";
     toaster.negative(errorString, { hasCloseButton: true });
     onError?.(error);
   };
@@ -116,10 +124,11 @@ export function CreateIModel(props: CreateIModelProps) {
   return (
     <>
       <BaseIModelPage
-        stringsOverrides={stringsOverrides}
+        stringsOverrides={updatedStrings}
         isLoading={isLoading}
-        onActionClick={createiModel}
+        onActionClick={updateiModel}
         onClose={onClose}
+        initialIModel={initialIModel}
       />
     </>
   );
