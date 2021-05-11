@@ -1,0 +1,17 @@
+{
+  "name": "@itwin/create-imodel",
+  "entries": [
+    {
+      "version": "0.1.0",
+      "tag": "@itwin/create-imodel_v0.1.0",
+      "date": "Tue, 11 May 2021 08:48:25 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "create-imodel component"
+          }
+        ]
+      }
+    }
+  ]
+}
