@@ -6,10 +6,10 @@ import "./BaseIModel.scss";
 
 import {
   Button,
-  Headline,
   LabeledInput,
   LabeledTextarea,
   ProgressRadial,
+  Title,
 } from "@itwin/itwinui-react";
 import React from "react";
 
@@ -105,7 +105,7 @@ export function BaseIModelPage(props: BaseIModelProps) {
     <>
       <div className="iac-imodel-base">
         <div>
-          <Headline>{updatedStrings.titleString}</Headline>
+          <Title>{updatedStrings.titleString}</Title>
           <div className="iac-inputs-container">
             <LabeledInput
               label={updatedStrings.nameString}
@@ -141,15 +141,12 @@ export function BaseIModelPage(props: BaseIModelProps) {
         <div className="iac-button-bar">
           <Button
             styleType="cta"
-            size="large"
             disabled={!isDataChanged() || !isDataValid() || isLoading}
             onClick={() => onActionClick?.(imodel)}
           >
             {updatedStrings.confirmButton}
           </Button>
-          <Button size="large" onClick={onClose}>
-            {updatedStrings.cancelButton}
-          </Button>
+          <Button onClick={onClose}>{updatedStrings.cancelButton}</Button>
         </div>
         {isLoading && <OverlaySpinner />}
       </div>
