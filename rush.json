@@ -41,6 +41,12 @@
       "projectFolder": "packages/modules/manage-versions",
       "shouldPublish": true,
       "versionPolicyName": "independentModule"
-    }
+    },
+    {
+      "packageName": "@itwin/create-imodel",
+      "projectFolder": "packages/modules/create-imodel",
+      "shouldPublish": true,
+      "versionPolicyName": "independentModule"
+    } 
   ]
 }

@@ -12,3 +12,6 @@ packages/modules/delete-imodel/ @bentleyvk @veekeys
 
 # manage-versions
 packages/modules/manage-versions/ @bentleyvk @veekeys
+
+# create-imodel
+packages/modules/create-imodel/ @bentleyvk @veekeys 
