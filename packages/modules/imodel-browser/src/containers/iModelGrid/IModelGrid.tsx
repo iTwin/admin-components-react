@@ -41,8 +41,12 @@ export interface IModelGridProps {
    * Function form allow custom sorting (like sorting on 2 props at a time).
    */
   sortOptions?: IModelSortOptions;
-  /** List of options to build for each imodel context menu. */
+  /** Renamed to iModelActions, use iModelActions instead, will be removed in 1.0.
+   * @deprecated
+   * */
   iModelOptions?: ContextMenuBuilderItem<IModelFull>[];
+  /** List of actions to build for each imodel context menu. */
+  iModelActions?: ContextMenuBuilderItem<IModelFull>[];
   /** Function (can be a react hook) that returns state for an iModel, returned values will be applied as props to the IModelTile, overrides IModelGrid provided values */
   useIndividualState?: (
     iModel: IModelFull,
@@ -77,6 +81,7 @@ export const IModelGrid = ({
   assetId,
   filterOptions,
   iModelOptions,
+  iModelActions,
   onThumbnailClick,
   projectId,
   sortOptions,
@@ -110,6 +115,14 @@ export const IModelGrid = ({
     [DataStatus.ContextRequired]: strings.noContext,
   }[fetchStatus ?? DataStatus.Fetching];
 
+  React.useEffect(() => {
+    if (!!iModelOptions) {
+      console.warn(
+        "@itwin/imodel-browser: IModelGrid 'iModelOptions' prop is deprecated and will be removed in 1.0, use 'iModelActions' prop instead."
+      );
+    }
+  }, [iModelOptions]);
+
   const tileApiOverrides = apiOverrides
     ? { serverEnvironmentPrefix: apiOverrides.serverEnvironmentPrefix }
     : undefined;
@@ -128,7 +141,7 @@ export const IModelGrid = ({
           <IModelHookedTile
             key={iModel.id}
             iModel={iModel}
-            iModelOptions={iModelOptions}
+            iModelOptions={iModelActions ?? iModelOptions}
             accessToken={accessToken}
             onThumbnailClick={onThumbnailClick}
             apiOverrides={tileApiOverrides}

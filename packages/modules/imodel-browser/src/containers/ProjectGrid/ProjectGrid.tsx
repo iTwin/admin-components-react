@@ -44,8 +44,12 @@ export interface ProjectGridProps {
    * Function form allow custom sorting (like sorting on 2 props at a time).
    */
   sortOptions?: ProjectSortOptions;
-  /** List of options to build for each project context menu. */
+  /** Renamed to projectActions, use projectActions instead, will be removed in 1.0.
+   * @deprecated
+   * */
   projectOptions?: ContextMenuBuilderItem<ProjectFull>[];
+  /** List of actions to build for each project context menu. */
+  projectActions?: ContextMenuBuilderItem<ProjectFull>[];
   /** Function (can be a react hook) that returns state for a project, returned values will be applied as props to the ProjectTile, overrides ProjectGrid provided values */
   useIndividualState?: IndividualProjectStateHook;
   /** Static props to apply over each tile, mainly used for tileProps, overrides ProjectGrid provided values */
@@ -79,6 +83,7 @@ export const ProjectGrid = ({
   filterOptions,
   onThumbnailClick,
   projectOptions,
+  projectActions,
   requestType,
   sortOptions,
   stringsOverrides,
@@ -111,6 +116,14 @@ export const ProjectGrid = ({
     [DataStatus.ContextRequired]: "",
   }[fetchStatus ?? DataStatus.Fetching];
 
+  React.useEffect(() => {
+    if (!!projectOptions) {
+      console.warn(
+        "@itwin/imodel-browser: ProjectGrid 'projectOptions' prop is deprecated and will be removed in 1.0, use 'projectActions' prop instead."
+      );
+    }
+  }, [projectOptions]);
+
   return projects.length === 0 && noResultsText ? (
     <NoResults text={noResultsText} />
   ) : (
@@ -138,7 +151,7 @@ export const ProjectGrid = ({
             }}
             key={project.id}
             project={project}
-            projectOptions={projectOptions}
+            projectOptions={projectActions ?? projectOptions}
             onThumbnailClick={onThumbnailClick}
             useTileState={useIndividualState}
             {...tileOverrides}
