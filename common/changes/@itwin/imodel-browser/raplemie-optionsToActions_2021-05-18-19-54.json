@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/imodel-browser",
+      "comment": "Rename iModelOptions and projectOptions to iModelActions and projectActions",
+      "type": "minor"
+    }
+  ],
+  "packageName": "@itwin/imodel-browser",
+  "email": "1904889+raplemie@users.noreply.github.com"
+}
