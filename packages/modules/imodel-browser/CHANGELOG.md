@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser
 
-This log was last generated on Fri, 30 Apr 2021 00:07:09 GMT and should not be manually modified.
+This log was last generated on Tue, 18 May 2021 20:16:18 GMT and should not be manually modified.
+
+## 0.10.0
+Tue, 18 May 2021 20:16:18 GMT
+
+### Minor changes
+
+- Rename iModelOptions and projectOptions to iModelActions and projectActions
 
 ## 0.9.0
 Fri, 30 Apr 2021 00:07:09 GMT

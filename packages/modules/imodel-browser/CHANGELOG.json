@@ -2,6 +2,18 @@
   "name": "@itwin/imodel-browser",
   "entries": [
     {
+      "version": "0.10.0",
+      "tag": "@itwin/imodel-browser_v0.10.0",
+      "date": "Tue, 18 May 2021 20:16:18 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Rename iModelOptions and projectOptions to iModelActions and projectActions"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.9.0",
       "tag": "@itwin/imodel-browser_v0.9.0",
       "date": "Fri, 30 Apr 2021 00:07:09 GMT",
