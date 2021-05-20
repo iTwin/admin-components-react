@@ -46,7 +46,7 @@ export interface ProjectFull {
   timeZone?: string;
   dataCenterLocation?: string;
   billingCountry?: string;
-  status?: "Active" | "Inactive" | "Trial";
+  status?: "Active" | "Inactive" | "Trial" | "active" | "inactive" | "trial";
   allowExternalTeamMembers?: boolean;
 }
 

@@ -66,15 +66,15 @@ export const ProjectTile = ({
       }
       badge={
         project?.status &&
-        project.status !== "Active" && (
+        project.status.toLocaleLowerCase() !== "active" && (
           <Badge
             backgroundColor={
-              project.status === "Inactive"
+              project.status.toLocaleLowerCase() === "inactive"
                 ? "#A47854" /** $iui-color-dataviz-oak */
                 : "#4585A5" /** $iui-color-dataviz-steelblue */
             }
           >
-            {project.status === "Inactive"
+            {project.status.toLocaleLowerCase() === "inactive"
               ? strings.inactiveBadge
               : strings.trialBadge}
           </Badge>
