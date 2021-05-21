@@ -83,11 +83,9 @@ export function CreateIModel(props: CreateIModelProps) {
             Prefer: "return=representation",
           },
           body: JSON.stringify({
-            iModel: {
-              projectId,
-              name: imodel.name,
-              description: imodel.description,
-            },
+            projectId,
+            name: imodel.name,
+            description: imodel.description,
           }),
         }
       );

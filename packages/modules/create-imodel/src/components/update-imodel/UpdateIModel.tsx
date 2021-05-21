@@ -88,10 +88,8 @@ export function UpdateIModel(props: UpdateIModelProps) {
             Prefer: "return=representation",
           },
           body: JSON.stringify({
-            iModel: {
-              name: imodel.name,
-              description: imodel.description,
-            },
+            name: imodel.name,
+            description: imodel.description,
           }),
         }
       );

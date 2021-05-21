@@ -56,10 +56,8 @@ describe("UpdateIModel", () => {
         method: "PATCH",
         headers: { Authorization: "dd", Prefer: "return=representation" },
         body: JSON.stringify({
-          iModel: {
-            name: "Some other name",
-            description: "Initial description",
-          },
+          name: "Some other name",
+          description: "Initial description",
         }),
       }
     );
@@ -104,10 +102,8 @@ describe("UpdateIModel", () => {
         method: "PATCH",
         headers: { Authorization: "dd", Prefer: "return=representation" },
         body: JSON.stringify({
-          iModel: {
-            name: "Some name",
-            description: "Initial description",
-          },
+          name: "Some name",
+          description: "Initial description",
         }),
       }
     );
@@ -152,10 +148,8 @@ describe("UpdateIModel", () => {
         method: "PATCH",
         headers: { Authorization: "dd", Prefer: "return=representation" },
         body: JSON.stringify({
-          iModel: {
-            name: "Some name",
-            description: "Initial description",
-          },
+          name: "Some name",
+          description: "Initial description",
         }),
       }
     );
