@@ -52,11 +52,9 @@ describe("CreateIModel", () => {
         method: "POST",
         headers: { Authorization: "dd", Prefer: "return=representation" },
         body: JSON.stringify({
-          iModel: {
-            projectId: "de47c5ad-5657-42b8-a2bc-f2b8bf84cd4b",
-            name: "Some name",
-            description: "",
-          },
+          projectId: "de47c5ad-5657-42b8-a2bc-f2b8bf84cd4b",
+          name: "Some name",
+          description: "",
         }),
       }
     );
@@ -97,11 +95,9 @@ describe("CreateIModel", () => {
         method: "POST",
         headers: { Authorization: "dd", Prefer: "return=representation" },
         body: JSON.stringify({
-          iModel: {
-            projectId: "de47c5ad-5657-42b8-a2bc-f2b8bf84cd4b",
-            name: "Some name",
-            description: "",
-          },
+          projectId: "de47c5ad-5657-42b8-a2bc-f2b8bf84cd4b",
+          name: "Some name",
+          description: "",
         }),
       }
     );
@@ -142,11 +138,9 @@ describe("CreateIModel", () => {
         method: "POST",
         headers: { Authorization: "dd", Prefer: "return=representation" },
         body: JSON.stringify({
-          iModel: {
-            projectId: "de47c5ad-5657-42b8-a2bc-f2b8bf84cd4b",
-            name: "Some name",
-            description: "",
-          },
+          projectId: "de47c5ad-5657-42b8-a2bc-f2b8bf84cd4b",
+          name: "Some name",
+          description: "",
         }),
       }
     );
