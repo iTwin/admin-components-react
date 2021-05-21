@@ -1,6 +1,6 @@
 # Description
 
-Contains component to delete an iModel.
+Contains a component to delete an iModel.
 
 Consider this package as unstable until 1.0 release.
 
