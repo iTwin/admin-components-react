@@ -1,7 +1,10 @@
 {
   "name": "@itwin/delete-imodel",
   "version": "0.2.0",
+  "author": "Bentley Systems, Inc.",
   "license": "MIT",
+  "description": "Component to delete the selected iModel.",
+  "repository": "https://github.com/iTwin/admin-components-react/tree/main/packages/modules/delete-imodel",
   "main": "cjs/index.js",
   "module": "esm/index.js",
   "types": "cjs/index.d.ts",

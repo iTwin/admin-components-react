@@ -1,7 +1,7 @@
 {
   "name": "@itwin/create-imodel",
   "version": "0.1.0",
-  "description": "omponents to create or edit an iModel..",
+  "description": "Components to create or update an iModel.",
   "repository": "https://github.com/iTwin/admin-components-react/tree/main/packages/modules/create-imodel",
   "author": "Bentley Systems, Inc.",
   "license": "MIT",
