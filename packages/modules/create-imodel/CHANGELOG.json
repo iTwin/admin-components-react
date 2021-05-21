@@ -2,6 +2,18 @@
   "name": "@itwin/create-imodel",
   "entries": [
     {
+      "version": "0.2.0",
+      "tag": "@itwin/create-imodel_v0.2.0",
+      "date": "Fri, 21 May 2021 14:24:03 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Updated body in calls after APIM changes"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.1.0",
       "tag": "@itwin/create-imodel_v0.1.0",
       "date": "Tue, 11 May 2021 08:48:25 GMT",
