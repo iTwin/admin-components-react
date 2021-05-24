@@ -44,6 +44,9 @@ enum ManageVersionsTabs {
   Changes = 1,
 }
 
+const NAMED_VERSION_TOP = 1000;
+const CHANGESET_TOP = 100;
+
 export const ManageVersions = (props: ManageVersionsProps) => {
   const {
     accessToken,
@@ -87,7 +90,7 @@ export const ManageVersions = (props: ManageVersionsProps) => {
 
   React.useEffect(() => {
     versionClient
-      .get(imodelId)
+      .get(imodelId, { top: NAMED_VERSION_TOP })
       .then((versions) => {
         setVersionStatus(RequestStatus.Finished);
         setVersions(versions);
@@ -95,20 +98,29 @@ export const ManageVersions = (props: ManageVersionsProps) => {
       .catch(() => setVersionStatus(RequestStatus.Failed));
   }, [imodelId, versionClient]);
 
+  const getChangesets = React.useCallback(() => {
+    if (changesets && changesets.length % CHANGESET_TOP !== 0) {
+      return;
+    }
+
+    setChangesetStatus(RequestStatus.InProgress);
+    changesetClient
+      .get(imodelId, { top: CHANGESET_TOP, skip: changesets?.length })
+      .then((newChangesets) => {
+        setChangesetStatus(RequestStatus.Finished);
+        setChangesets([...(changesets ?? []), ...newChangesets]);
+      })
+      .catch(() => setChangesetStatus(RequestStatus.Failed));
+  }, [changesetClient, changesets, imodelId]);
+
   React.useEffect(() => {
     if (
       currentTab === ManageVersionsTabs.Changes &&
       changesetStatus === RequestStatus.NotStarted
     ) {
-      changesetClient
-        .get(imodelId)
-        .then((changesets) => {
-          setChangesetStatus(RequestStatus.Finished);
-          setChangesets(changesets);
-        })
-        .catch(() => setChangesetStatus(RequestStatus.Failed));
+      getChangesets();
     }
-  }, [changesetClient, changesetStatus, currentTab, imodelId]);
+  }, [changesetStatus, currentTab, getChangesets]);
 
   return (
     <div>
@@ -130,6 +142,7 @@ export const ManageVersions = (props: ManageVersionsProps) => {
           changesets={changesets ?? []}
           status={changesetStatus}
           stringsOverrides={stringsOverrides}
+          loadMoreChanges={getChangesets}
         />
       )}
     </div>

@@ -59,7 +59,9 @@ describe("ManageVersions", () => {
         new Date(MockedVersion(index).createdDateTime).toLocaleString()
       );
     });
-    expect(mockGetVersions).toHaveBeenCalledWith(MOCKED_IMODEL_ID);
+    expect(mockGetVersions).toHaveBeenCalledWith(MOCKED_IMODEL_ID, {
+      top: 1000,
+    });
   });
 
   it("should show changesets table with data", async () => {
@@ -86,7 +88,10 @@ describe("ManageVersions", () => {
         new Date(MockedChangeset(index).pushDateTime).toLocaleString()
       );
     });
-    expect(mockGetChangesets).toHaveBeenCalledWith(MOCKED_IMODEL_ID);
+    expect(mockGetChangesets).toHaveBeenCalledWith(MOCKED_IMODEL_ID, {
+      top: 100,
+      skip: undefined,
+    });
   });
 
   it("should query data only once when switching tabs", async () => {
