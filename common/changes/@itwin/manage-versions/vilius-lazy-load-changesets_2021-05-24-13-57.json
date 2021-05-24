@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/manage-versions",
+      "comment": "Loading all Named Versions and lazy-loading Changesets",
+      "type": "minor"
+    }
+  ],
+  "packageName": "@itwin/manage-versions",
+  "email": "36186912+bentleyvk@users.noreply.github.com"
+}

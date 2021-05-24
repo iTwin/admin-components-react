@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/create-imodel",
+      "comment": "Updated @itwin/itwinui-react",
+      "type": "patch"
+    }
+  ],
+  "packageName": "@itwin/create-imodel",
+  "email": "36186912+bentleyvk@users.noreply.github.com"
+}
