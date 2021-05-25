@@ -2,7 +2,7 @@
 
 ## Description
 
-Contains a component that lets the user to view Named Versions and Changesets, create new ones and etc.
+Contains a component that allows a user to manage Named Versions and Changesets.
 
 Consider this package as unstable until 1.0 release.
 
