@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/manage-versions",
+      "comment": "update license extension",
+      "type": "patch"
+    }
+  ],
+  "packageName": "@itwin/manage-versions",
+  "email": "6283674+kckst8@users.noreply.github.com"
+}
