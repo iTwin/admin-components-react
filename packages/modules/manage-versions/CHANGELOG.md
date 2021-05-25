@@ -1,6 +1,13 @@
 # Change Log - @itwin/manage-versions
 
-This log was last generated on Tue, 04 May 2021 09:25:11 GMT and should not be manually modified.
+This log was last generated on Tue, 25 May 2021 12:22:38 GMT and should not be manually modified.
+
+## 0.3.0
+Tue, 25 May 2021 12:22:38 GMT
+
+### Minor changes
+
+- Loading all Named Versions and lazy-loading Changesets
 
 ## 0.2.0
 Tue, 04 May 2021 09:25:11 GMT
