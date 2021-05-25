@@ -75,9 +75,5 @@
   "peerDependencies": {
     "react": "^16.13.0",
     "react-dom": "^16.13.0"
-  },
-  "publishConfig": {
-    "registry": "https://pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/",
-    "access": "public"
   }
 }
