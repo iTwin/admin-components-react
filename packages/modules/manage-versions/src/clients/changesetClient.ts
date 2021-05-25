@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { LogFunc } from "../components/ManageVersions/types";
 import { Changeset, HttpHeaderNames } from "../models";
+import { RequestOptions } from "../models/requestOptions";
 import { HttpClient } from "./httpClient";
 import { UrlBuilder } from "./urlBuilder";
 
@@ -16,10 +17,16 @@ export class ChangesetClient {
     this._serverEnvironmentPrefix = serverEnvironmentPrefix;
   }
 
-  public async get(imodelId: string): Promise<Changeset[]> {
+  public async get(
+    imodelId: string,
+    requestOptions: RequestOptions = {}
+  ): Promise<Changeset[]> {
     return this._http
       .get(
-        UrlBuilder.buildChangesetUrl(imodelId, this._serverEnvironmentPrefix),
+        `${UrlBuilder.buildChangesetUrl(
+          imodelId,
+          this._serverEnvironmentPrefix
+        )}${UrlBuilder.getQuery(requestOptions)}`,
         {
           headers: { [HttpHeaderNames.Prefer]: "return=representation" },
         }

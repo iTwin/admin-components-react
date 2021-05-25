@@ -1,6 +1,6 @@
 {
   "name": "@itwin/manage-versions",
-  "description": "Components that let the user to view Named Versions and Changesets, create new ones and etc.",
+  "description": "Components that allow a user to manage Named Versions and Changesets.",
   "repository": "https://github.com/iTwin/admin-components-react/tree/main/package/manage-versions",
   "version": "0.2.0",
   "main": "cjs/index.js",
@@ -20,7 +20,7 @@
     "esm/**/*"
   ],
   "dependencies": {
-    "@itwin/itwinui-react": "^1.0.0",
+    "@itwin/itwinui-react": "^1.5.0",
     "classnames": "^2.2.6"
   },
   "devDependencies": {

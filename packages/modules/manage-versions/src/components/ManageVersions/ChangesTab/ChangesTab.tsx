@@ -13,10 +13,11 @@ export type ChangesTabProps = {
   changesets: Changeset[];
   status: RequestStatus;
   stringsOverrides: ManageVersionsStringOverrides;
+  loadMoreChanges: () => void;
 };
 
 const ChangesTab = (props: ChangesTabProps) => {
-  const { changesets, status, stringsOverrides } = props;
+  const { changesets, status, stringsOverrides, loadMoreChanges } = props;
 
   const columns = React.useMemo(() => {
     return [
@@ -71,6 +72,7 @@ const ChangesTab = (props: ChangesTabProps) => {
         status === RequestStatus.NotStarted
       }
       emptyTableContent={emptyTableContent}
+      onBottomReached={loadMoreChanges}
     />
   );
 };

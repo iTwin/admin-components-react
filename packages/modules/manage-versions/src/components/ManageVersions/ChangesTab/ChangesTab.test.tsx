@@ -15,6 +15,7 @@ const renderComponent = (initialProps?: Partial<ChangesTabProps>) => {
     changesets: MockedChangesetList(),
     status: RequestStatus.Finished,
     stringsOverrides: defaultStrings,
+    loadMoreChanges: jest.fn(),
     ...initialProps,
   };
   return render(<ChangesTab {...props} />);
