@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser
 
-This log was last generated on Thu, 20 May 2021 18:18:30 GMT and should not be manually modified.
+This log was last generated on Thu, 27 May 2021 18:16:45 GMT and should not be manually modified.
+
+## 0.10.2
+Thu, 27 May 2021 18:16:45 GMT
+
+### Patches
+
+- Add `IModelThumbnail` `classname` prop, remove default `iui-picture` class.
 
 ## 0.10.1
 Thu, 20 May 2021 18:18:30 GMT
