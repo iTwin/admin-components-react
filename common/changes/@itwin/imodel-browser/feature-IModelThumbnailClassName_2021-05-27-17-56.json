@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/imodel-browser",
+      "comment": "Add `IModelThumbnail` `classname` prop, remove default `iui-picture` class.",
+      "type": "patch"
+    }
+  ],
+  "packageName": "@itwin/imodel-browser",
+  "email": "1904889+raplemie@users.noreply.github.com"
+}
