@@ -5,6 +5,7 @@
 import "./IModelThumbnail.scss";
 
 import { Body } from "@itwin/itwinui-react";
+import classNames from "classnames";
 import React from "react";
 import { useInView } from "react-intersection-observer";
 
@@ -12,6 +13,7 @@ import { ApiOverrides } from "../../types";
 import { useIModelThumbnail } from "./useIModelThumbnail";
 
 export interface IModelThumbnailProps {
+  className?: string;
   /** Id of the iModel to fetch thumbnail for */
   iModelId: string;
   /** Triggered on the image click, controls pointer */
@@ -31,6 +33,7 @@ export const IModelThumbnail = ({
   onClick,
   accessToken,
   apiOverrides,
+  className,
 }: IModelThumbnailProps) => {
   const { ref, inView } = useInView({
     triggerOnce: true,
@@ -43,7 +46,7 @@ export const IModelThumbnail = ({
   );
   return thumbnail ? (
     <img
-      className="iui-picture iac-thumbnail"
+      className={classNames("iac-thumbnail", className)}
       style={{
         cursor: onClick ? "pointer" : "auto",
       }}
