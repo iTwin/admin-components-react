@@ -21105,6 +21105,8 @@ packages:
     version: 0.0.0
   file:projects/manage-versions.tgz_babel-eslint@10.1.0:
     dependencies:
+      '@itwin/itwinui-css': 0.9.0
+      '@itwin/itwinui-icons-react': 0.1.0_react-dom@16.13.1+react@16.13.1
       '@itwin/itwinui-react': 1.5.0_react-dom@16.13.1+react@16.13.1
       '@rollup/plugin-commonjs': 17.1.0_rollup@2.42.4
       '@testing-library/react': 11.2.5_react-dom@16.13.1+react@16.13.1
@@ -21128,12 +21130,16 @@ packages:
       eslint-plugin-react-hooks: 4.2.0_eslint@7.20.0
       eslint-plugin-simple-import-sort: 5.0.3_eslint@7.20.0
       jest: 26.6.0
+      node-sass: 5.0.0
+      postcss: 8.2.8
       prettier: 2.2.1
       react: 16.13.1
       react-dom: 16.13.1_react@16.13.1
       rimraf: 3.0.2
       rollup: 2.42.4
       rollup-plugin-peer-deps-external: 2.2.4_rollup@2.42.4
+      rollup-plugin-postcss: 4.0.0_postcss@8.2.8
+      rollup-plugin-terser: 7.0.2_rollup@2.42.4
       rollup-plugin-typescript2: 0.30.0_rollup@2.42.4+typescript@4.2.3
       ts-jest: 26.5.3_jest@26.6.0+typescript@4.2.3
       tslib: 2.1.0
@@ -21144,7 +21150,7 @@ packages:
     peerDependencies:
       babel-eslint: '*'
     resolution:
-      integrity: sha512-/Cr2qoWZAynPqfQSc8GfKYvI0XonF9O1y606+O9FTeOK9sqeSB7aROdvVt2QFcNui+IwNmQfGP/wmbbtP2etpw==
+      integrity: sha512-aJBkrvhI1O7LAF6nzTVqCqFFKEcJfgUGr618BZgJZCw5DLcZ5nBIyoL6E8PpsTAAE09egTIBDnZ0GW+lJDkwkQ==
       tarball: file:projects/manage-versions.tgz
     version: 0.0.0
   file:projects/platform-storybook.tgz_201e3756f34be7daf0312fc0cffaefcf:
@@ -21193,7 +21199,7 @@ packages:
       prettier: '*'
       typescript: '*'
     resolution:
-      integrity: sha512-+xvCt4KGUZ8LXOT2frnrePEjMiPr/cpsgIlYdTaDvaJ58wfVC1ADbJgk+qWysE7KS0OjxlsIzWC5kWRfdKqW8Q==
+      integrity: sha512-b9MoYmKdyS84rZ4IIWrZKtlZU0tcjBJB16hlNGMe99h1aDQS81r2l7KU4O1bGHqUj62FENKtN5EsGCcaHfLlEg==
       tarball: file:projects/platform-storybook.tgz
     version: 0.0.0
   file:projects/storybook-auth-addon.tgz_node-sass@5.0.0+prettier@2.2.1:

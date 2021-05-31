@@ -19,11 +19,12 @@ export class UrlBuilder {
 
   public static buildVersionsUrl(
     imodelId: string,
+    versionId?: string,
     serverEnvironmentPrefix?: string
   ) {
     return `${this.getBaseUrl(
       serverEnvironmentPrefix
-    )}/imodels/${imodelId}/namedversions`;
+    )}/imodels/${imodelId}/namedversions${versionId ? `/${versionId}` : ""}`;
   }
 
   public static buildChangesetUrl(

@@ -26,6 +26,7 @@ export class NamedVersionClient {
       .get(
         `${UrlBuilder.buildVersionsUrl(
           imodelId,
+          undefined,
           this._serverEnvironmentPrefix
         )}${UrlBuilder.getQuery({ skip, top })}`,
         {
@@ -46,6 +47,45 @@ export class NamedVersionClient {
           ];
         }
         return namedVersions;
-      });
+      })
+      .then((namedVersions) =>
+        namedVersions.map((nv) => ({
+          ...nv,
+          changesetId: nv._links.changeSet.href.split("/")[6],
+        }))
+      );
+  }
+
+  public async create(
+    imodelId: string,
+    version: { name: string; description: string; changeSetId: string }
+  ): Promise<NamedVersion> {
+    return this._http
+      .post(
+        UrlBuilder.buildVersionsUrl(
+          imodelId,
+          undefined,
+          this._serverEnvironmentPrefix
+        ),
+        version
+      )
+      .then((resp) => resp.namedVersion);
+  }
+
+  public async update(
+    imodelId: string,
+    versionId: string,
+    version: { name: string; description: string }
+  ): Promise<NamedVersion> {
+    return this._http
+      .patch(
+        UrlBuilder.buildVersionsUrl(
+          imodelId,
+          versionId,
+          this._serverEnvironmentPrefix
+        ),
+        version
+      )
+      .then((resp) => resp.namedVersion);
   }
 }

@@ -20,6 +20,12 @@ export type ManageVersionsStringOverrides = {
   description: string;
   /** Table column title for time. Default `Time`. */
   time: string;
+  /** Title for Named Version creation. Default `Create a Named Version` */
+  createNamedVersion: string;
+  cancel: string;
+  create: string;
+  updateNamedVersion: string;
+  update: string;
   /** Error message when failed to fetch Named Versions. Default `Could not get Named Versions. Please try again later.`. */
   messageFailedGetNamedVersions: string;
   /** Message when there are no Named Versions. Default `There are no Named Versions created. To create first go to Changes.`. */
@@ -28,6 +34,13 @@ export type ManageVersionsStringOverrides = {
   messageFailedGetChanges: string;
   /** Message when there are no changes. Default `There are no changes synchronized.`. */
   messageNoChanges: string;
+  messageVersionCreated: string;
+  messageVersionNameExists: string;
+  messageInsufficientPermissionsToCreateVersion: string;
+  messageCouldNotCreateVersion: string;
+  messageVersionUpdated: string;
+  messageInsufficientPermissionsToUpdateVersion: string;
+  messageCouldNotUpdateVersion: string;
 };
 
 export type LogFunc = (

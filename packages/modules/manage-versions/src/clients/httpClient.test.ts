@@ -104,6 +104,24 @@ describe("HttpClient", () => {
     });
   });
 
+  it("should have correct request parameters on patch without options", async () => {
+    mockFetch(true, { changedInstance: MockedVersion() });
+
+    const versions = await http.patch<NamedVersion>("https://someApiUrl.com", {
+      instance: MockedVersion(),
+    });
+
+    expect(versions).toEqual({ changedInstance: MockedVersion() });
+    expect(fetchMock).toHaveBeenCalledWith("https://someApiUrl.com", {
+      method: "PATCH",
+      headers: expect.objectContaining({
+        [HttpHeaderNames.Authorization]: "token",
+        [HttpHeaderNames.ContentType]: "application/json",
+      }),
+      body: JSON.stringify({ instance: MockedVersion() }),
+    });
+  });
+
   it("should have correct request parameters on delete without options", async () => {
     mockFetch(true, { changedInstance: MockedVersion() });
 
@@ -126,7 +144,12 @@ describe("HttpClient", () => {
   });
 
   it("should log and throw when response is not ok", async () => {
-    mockFetch(false, new ApimError({ message: "error" }));
+    mockFetch(false, {
+      error: new ApimError({
+        code: "InsufficientPermissions",
+        message: "error",
+      }),
+    });
 
     return assertFailure();
   });

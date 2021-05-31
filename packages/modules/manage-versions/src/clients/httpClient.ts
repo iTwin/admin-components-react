@@ -57,6 +57,21 @@ export class HttpClient {
     return this.makeRequest<T>(requestData);
   }
 
+  public async patch<T = any>(
+    url: string,
+    body: any,
+    options?: HttpRequestOptions
+  ): Promise<T> {
+    const requestData: HttpRequest = {
+      method: "PATCH",
+      url: url,
+      headers: { ...options?.headers },
+      body: body,
+      signal: options?.abortController?.signal,
+    };
+    return this.makeRequest<T>(requestData);
+  }
+
   public async delete<T>(
     url: string,
     options?: HttpRequestOptions
@@ -82,7 +97,7 @@ export class HttpClient {
 
       const responseBody = await response.json();
       if (!response.ok) {
-        throw new ApimError(responseBody, response.status);
+        throw new ApimError(responseBody?.error, response.status);
       }
 
       return responseBody;

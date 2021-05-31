@@ -52,7 +52,7 @@ describe("ManageVersions", () => {
 
     versionRows.forEach((row, index) => {
       const cells = row.querySelectorAll(".iui-tables-cell");
-      expect(cells.length).toBe(3);
+      expect(cells.length).toBe(4);
       expect(cells[0].textContent).toContain(MockedVersion(index).name);
       expect(cells[1].textContent).toContain(MockedVersion(index).description);
       expect(cells[2].textContent).toContain(
@@ -79,7 +79,7 @@ describe("ManageVersions", () => {
 
     changesetRows.forEach((row, index) => {
       const cells = row.querySelectorAll(".iui-tables-cell");
-      expect(cells.length).toBe(3);
+      expect(cells.length).toBe(4);
       expect(cells[0].textContent).toContain(MockedChangeset(index).index);
       expect(cells[1].textContent).toContain(
         MockedChangeset(index).description
