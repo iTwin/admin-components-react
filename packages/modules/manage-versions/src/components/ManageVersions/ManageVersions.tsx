@@ -10,7 +10,12 @@ import { NamedVersionClient } from "../../clients/namedVersionClient";
 import { ConfigProvider } from "../../common/configContext";
 import { Changeset, NamedVersion } from "../../models";
 import ChangesTab from "./ChangesTab/ChangesTab";
-import { LogFunc, ManageVersionsStringOverrides, RequestStatus } from "./types";
+import {
+  ApiOverrides,
+  LogFunc,
+  ManageVersionsStringOverrides,
+  RequestStatus,
+} from "./types";
 import VersionsTab from "./VersionsTab/VersionsTab";
 
 export const defaultStrings: ManageVersionsStringOverrides = {
@@ -47,7 +52,7 @@ export type ManageVersionsProps = {
   /** Access token that requires the `imodels:modify` scope. */
   accessToken: string;
   /** Object that configures different overrides for the API. */
-  apiOverrides?: { serverEnvironmentPrefix?: "dev" | "qa" | "" };
+  apiOverrides?: ApiOverrides;
   /** Id of iModel. */
   imodelId: string;
   /** Strings overrides for localization. */
@@ -159,7 +164,7 @@ export const ManageVersions = (props: ManageVersionsProps) => {
 
   const latestVersion = React.useMemo(
     () =>
-      versions?.sort(
+      [...(versions ?? [])].sort(
         (v1, v2) =>
           new Date(v1.createdDateTime).valueOf() -
           new Date(v2.createdDateTime).valueOf()

@@ -5,6 +5,7 @@
 import React from "react";
 
 import {
+  ApiOverrides,
   LogFunc,
   ManageVersionsStringOverrides,
 } from "../components/ManageVersions/types";
@@ -12,7 +13,7 @@ import {
 const ConfigContext = React.createContext<
   | {
       accessToken: string;
-      apiOverrides?: { serverEnvironmentPrefix?: "dev" | "qa" | "" };
+      apiOverrides?: ApiOverrides;
       imodelId: string;
       stringsOverrides: ManageVersionsStringOverrides;
       log?: LogFunc;
@@ -22,7 +23,7 @@ const ConfigContext = React.createContext<
 
 export type ConfigProviderProps = {
   accessToken: string;
-  apiOverrides?: { serverEnvironmentPrefix?: "dev" | "qa" | "" };
+  apiOverrides?: ApiOverrides;
   imodelId: string;
   stringsOverrides: ManageVersionsStringOverrides;
   log?: LogFunc;
