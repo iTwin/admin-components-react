@@ -9,7 +9,6 @@ import { NamedVersionClient } from "../../../clients/namedVersionClient";
 import { useConfig } from "../../../common/configContext";
 import { ApimCodes, ApimError, NamedVersion } from "../../../models";
 import { VersionModal } from "../VersionModal";
-// import "./UpdateVersionModal.scss";
 
 export type UpdateVersionModalProps = {
   version: NamedVersion;
