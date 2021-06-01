@@ -47,16 +47,6 @@ export const VersionModal = (props: VersionModalProps) => {
     description: initialVersion?.description ?? "",
   });
 
-  // TODO: remove after itwinui-react update
-  // Workaround because Modal applies `overflow: hidden` and does not remove upon destruction.
-  const originalBodyOverflow = React.useRef("");
-  React.useLayoutEffect(() => {
-    originalBodyOverflow.current = document.body.style.overflow;
-    return () => {
-      document.body.style.overflow = originalBodyOverflow.current;
-    };
-  }, []);
-
   const onChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
