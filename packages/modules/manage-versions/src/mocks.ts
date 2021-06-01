@@ -17,7 +17,7 @@ export const MOCKED_CONFIG_PROPS = {
 
 export const MockedVersion = (
   index = 1,
-  props?: NamedVersion
+  props?: Partial<NamedVersion>
 ): NamedVersion => {
   return {
     id: `nv${index}`,
@@ -39,7 +39,10 @@ export const MockedVersionList = (count = 3) => {
   return [...new Array(count)].map((_, index) => MockedVersion(index));
 };
 
-export const MockedChangeset = (index = 1, props?: Changeset): Changeset => {
+export const MockedChangeset = (
+  index = 1,
+  props?: Partial<Changeset>
+): Changeset => {
   return {
     id: `ch${index}`,
     index: `${index}`,
