@@ -134,8 +134,15 @@ describe("ManageVersions", () => {
   });
 
   it("should create new version", async () => {
+    const latestVersion = {
+      ...MockedVersion(2),
+      createdDateTime: "9999-01-01",
+    };
     mockGetVersions.mockResolvedValueOnce(
-      MockedVersionList().map((v) => ({ ...v, changesetId: "" }))
+      [MockedVersion(1), latestVersion, MockedVersion(3)].map((v) => ({
+        ...v,
+        changesetId: "",
+      }))
     );
     mockGetVersions.mockResolvedValueOnce([
       MockedVersion(4, { name: "test name", description: "test description" }),
@@ -158,6 +165,15 @@ describe("ManageVersions", () => {
     ) as HTMLElement;
     expect(createVersionButton).toBeTruthy();
     createVersionButton.click();
+
+    const additionalInfos = document.querySelectorAll(".iac-additional-info");
+    expect(additionalInfos.length).toBe(2);
+    const latestVersionInfo = additionalInfos[1].querySelectorAll("span");
+    expect(latestVersionInfo.length).toBe(2);
+    expect(latestVersionInfo[0].textContent).toEqual(latestVersion.name);
+    expect(latestVersionInfo[1].textContent).toEqual(
+      new Date(latestVersion.createdDateTime).toLocaleString()
+    );
 
     const nameInput = document.querySelector("input") as HTMLInputElement;
     expect(nameInput).toBeTruthy();

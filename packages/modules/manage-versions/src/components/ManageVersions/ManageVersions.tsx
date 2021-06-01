@@ -164,10 +164,11 @@ export const ManageVersions = (props: ManageVersionsProps) => {
 
   const latestVersion = React.useMemo(
     () =>
-      [...(versions ?? [])].sort(
-        (v1, v2) =>
-          new Date(v1.createdDateTime).valueOf() -
-          new Date(v2.createdDateTime).valueOf()
+      [...(versions ?? [])].sort((v1, v2) =>
+        new Date(v1.createdDateTime).valueOf() <
+        new Date(v2.createdDateTime).valueOf()
+          ? 1
+          : -1
       )[0],
     [versions]
   );
