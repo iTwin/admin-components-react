@@ -9,7 +9,7 @@
     "@bentley/itwin-client": "2.11.0",
     "@itwin/create-imodel": "^0.2.1",
     "@itwin/delete-imodel": "^0.2.0",
-    "@itwin/imodel-browser": "~0.10.1",
+    "@itwin/imodel-browser": "~0.10.2",
     "@itwin/itwinui-react": "^1.6.0",
     "@itwin/manage-versions": "~0.3.0",
     "@itwin/storybook-auth-addon": "^0.1.0",
