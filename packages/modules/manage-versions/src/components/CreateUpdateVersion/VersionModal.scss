@@ -2,8 +2,8 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-.iac-version-modal {
-  max-width: 600px;
+.iac-version-modal .iui-modal-dialog {
+  max-width: calc(min(600px, 50%));
 }
 
 .iac-version-modal-overlay {

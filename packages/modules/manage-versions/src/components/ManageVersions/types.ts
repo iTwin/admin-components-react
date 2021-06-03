@@ -52,6 +52,8 @@ export type ManageVersionsStringOverrides = {
   messageInsufficientPermissionsToUpdateVersion: string;
   /** Default `Could not update a Named Version. Please try again later.` */
   messageCouldNotUpdateVersion: string;
+  /** Default `The value exceeds allowed {{length}} characters.` - `{{length}}` - max length */
+  messageValueTooLong: string;
 };
 
 export type LogFunc = (

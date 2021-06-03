@@ -19,7 +19,7 @@ const renderComponent = (initialProps?: Partial<VersionsTabProps>) => {
   const props: VersionsTabProps = {
     versions: MockedVersionList(),
     status: RequestStatus.Finished,
-    onVersionEdited: jest.fn(),
+    onVersionUpdated: jest.fn(),
     ...initialProps,
   };
   return render(
@@ -43,7 +43,7 @@ describe("VersionsTab", () => {
       expect(cells[2].textContent).toContain(
         new Date(MockedVersion(index).createdDateTime).toLocaleString()
       );
-      expect(cells[3].querySelector(".iac-edit-version-icon")).toBeTruthy();
+      expect(cells[3].querySelector(".iac-update-version-icon")).toBeTruthy();
     });
   });
 

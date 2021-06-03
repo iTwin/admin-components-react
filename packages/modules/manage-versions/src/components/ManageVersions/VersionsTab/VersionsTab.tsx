@@ -17,20 +17,21 @@ import { RequestStatus } from "../types";
 export type VersionsTabProps = {
   versions: NamedVersion[];
   status: RequestStatus;
-  onVersionEdited: () => void;
+  onVersionUpdated: () => void;
 };
 
 const VersionsTab = (props: VersionsTabProps) => {
-  const { versions, status, onVersionEdited } = props;
+  const { versions, status, onVersionUpdated } = props;
 
   const { stringsOverrides } = useConfig();
 
   const [currentVersion, setCurrentVersion] = React.useState<
     NamedVersion | undefined
   >(undefined);
-  const [isEditVersionModalOpen, setIsEditVersionModalOpen] = React.useState(
-    false
-  );
+  const [
+    isUpdateVersionModalOpen,
+    setIsUpdateVersionModalOpen,
+  ] = React.useState(false);
 
   const columns = React.useMemo(() => {
     return [
@@ -69,10 +70,10 @@ const VersionsTab = (props: VersionsTabProps) => {
               return (
                 <>
                   <div
-                    className="iac-edit-version-icon"
+                    className="iac-update-version-icon"
                     onClick={() => {
                       setCurrentVersion(props.row.original);
-                      setIsEditVersionModalOpen(true);
+                      setIsUpdateVersionModalOpen(true);
                     }}
                     title={stringsOverrides.updateNamedVersion}
                   >
@@ -114,15 +115,15 @@ const VersionsTab = (props: VersionsTabProps) => {
         emptyTableContent={emptyTableContent}
         className="iac-versions-table"
       />
-      {isEditVersionModalOpen && (
+      {isUpdateVersionModalOpen && (
         <UpdateVersionModal
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           version={currentVersion!}
           onUpdate={() => {
-            setIsEditVersionModalOpen(false);
-            onVersionEdited();
+            setIsUpdateVersionModalOpen(false);
+            onVersionUpdated();
           }}
-          onClose={() => setIsEditVersionModalOpen(false)}
+          onClose={() => setIsUpdateVersionModalOpen(false)}
         />
       )}
     </>

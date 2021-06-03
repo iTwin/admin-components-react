@@ -75,7 +75,7 @@ export const VersionModal = (props: VersionModalProps) => {
         title={title}
         isOpen
         onClose={onClose}
-        className=".iac-version-modal"
+        className="iac-version-modal"
       >
         <LabeledInput
           name="name"
@@ -86,7 +86,10 @@ export const VersionModal = (props: VersionModalProps) => {
           message={
             isLengthValid(version.name)
               ? undefined
-              : `The value exceeds allowed ${MAX_LENGTH} characters.`
+              : stringsOverrides.messageValueTooLong.replace(
+                  "{{length}}",
+                  MAX_LENGTH.toString()
+                )
           }
           required
           setFocus
@@ -100,7 +103,10 @@ export const VersionModal = (props: VersionModalProps) => {
           message={
             isLengthValid(version.description)
               ? undefined
-              : `The value exceeds allowed ${MAX_LENGTH} characters.`
+              : stringsOverrides.messageValueTooLong.replace(
+                  "{{length}}",
+                  MAX_LENGTH.toString()
+                )
           }
           rows={3}
         />

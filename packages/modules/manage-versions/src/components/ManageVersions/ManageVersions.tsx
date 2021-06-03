@@ -46,6 +46,7 @@ export const defaultStrings: ManageVersionsStringOverrides = {
     "You do not have the required permissions to update a Named Version.",
   messageCouldNotUpdateVersion:
     "Could not update a Named Version. Please try again later.",
+  messageValueTooLong: "The value exceeds allowed {{length}} characters.",
 };
 
 export type ManageVersionsProps = {
@@ -192,7 +193,7 @@ export const ManageVersions = (props: ManageVersionsProps) => {
           <VersionsTab
             versions={versions ?? []}
             status={versionStatus}
-            onVersionEdited={getVersions}
+            onVersionUpdated={getVersions}
           />
         )}
         {currentTab === ManageVersionsTabs.Changes && (

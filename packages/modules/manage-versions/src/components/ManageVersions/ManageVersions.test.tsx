@@ -207,11 +207,11 @@ describe("ManageVersions", () => {
       container.querySelector(".iui-progress-indicator-radial")
     );
 
-    const editVersionButton = container.querySelector(
-      ".iac-edit-version-icon"
+    const updateVersionButton = container.querySelector(
+      ".iac-update-version-icon"
     ) as HTMLElement;
-    expect(editVersionButton).toBeTruthy();
-    editVersionButton.click();
+    expect(updateVersionButton).toBeTruthy();
+    updateVersionButton.click();
 
     const nameInput = document.querySelector("input") as HTMLInputElement;
     expect(nameInput).toBeTruthy();
