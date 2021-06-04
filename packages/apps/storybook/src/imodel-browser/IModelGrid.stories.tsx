@@ -7,7 +7,7 @@ import {
   IModelGrid as ExternalComponent,
   IModelGridProps,
   IModelTileProps,
-} from "@itwin/imodel-browser";
+} from "@itwin/imodel-browser-react";
 import {
   Button,
   DropdownButton,

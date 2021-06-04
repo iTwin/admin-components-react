@@ -118,7 +118,7 @@ export const IModelGrid = ({
   React.useEffect(() => {
     if (!!iModelOptions) {
       console.warn(
-        "@itwin/imodel-browser: IModelGrid 'iModelOptions' prop is deprecated and will be removed in 1.0, use 'iModelActions' prop instead."
+        "@itwin/imodel-browser-react: IModelGrid 'iModelOptions' prop is deprecated and will be removed in 1.0, use 'iModelActions' prop instead."
       );
     }
   }, [iModelOptions]);

@@ -1,11 +1,11 @@
 {
   "changes": [
     {
-      "packageName": "@itwin/manage-versions",
+      "packageName": "@itwin/manage-versions-react",
       "comment": "update license extension",
       "type": "patch"
     }
   ],
-  "packageName": "@itwin/manage-versions",
+  "packageName": "@itwin/manage-versions-react",
   "email": "6283674+kckst8@users.noreply.github.com"
 }

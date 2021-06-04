@@ -1,9 +1,9 @@
 {
-  "name": "@itwin/delete-imodel",
+  "name": "@itwin/delete-imodel-react",
   "entries": [
     {
       "version": "0.2.0",
-      "tag": "@itwin/delete-imodel_v0.2.0",
+      "tag": "@itwin/delete-imodel-react_v0.2.0",
       "date": "Mon, 03 May 2021 09:28:44 GMT",
       "comments": {
         "minor": [

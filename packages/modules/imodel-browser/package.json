@@ -1,5 +1,5 @@
 {
-  "name": "@itwin/imodel-browser",
+  "name": "@itwin/imodel-browser-react",
   "description": "Components that let the user browse the iModels of a context and select one.",
   "repository": "https://github.com/iTwin/admin-components-react/tree/main/package/imodel-browser",
   "version": "0.10.3",

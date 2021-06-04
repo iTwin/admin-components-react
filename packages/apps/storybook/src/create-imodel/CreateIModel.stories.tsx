@@ -5,7 +5,7 @@
 import {
   CreateIModel as ExternalComponent,
   CreateIModelProps,
-} from "@itwin/create-imodel";
+} from "@itwin/create-imodel-react";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
 

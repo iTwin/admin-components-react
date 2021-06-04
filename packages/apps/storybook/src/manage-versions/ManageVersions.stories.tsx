@@ -6,7 +6,7 @@
 import {
   ManageVersions as ExternalComponent,
   ManageVersionsProps,
-} from "@itwin/manage-versions";
+} from "@itwin/manage-versions-react";
 import { action } from "@storybook/addon-actions";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";

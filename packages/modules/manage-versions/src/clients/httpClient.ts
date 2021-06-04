@@ -21,7 +21,7 @@ export interface HttpRequest {
 export class HttpClient {
   private _token: string;
   private _log: LogFunc | undefined;
-  private readonly _errorMessagePrefix = "@itwin/manage-versions";
+  private readonly _errorMessagePrefix = "@itwin/manage-versions-react";
   private readonly _defaultErrorMessage = "HTTP error without a message.";
 
   constructor(token: string, log?: LogFunc) {

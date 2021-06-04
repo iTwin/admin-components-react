@@ -1,5 +1,5 @@
 {
-  "name": "@itwin/create-imodel",
+  "name": "@itwin/create-imodel-react",
   "version": "0.2.1",
   "description": "Components to create or update an iModel.",
   "repository": "https://github.com/iTwin/admin-components-react/tree/main/packages/modules/create-imodel",
