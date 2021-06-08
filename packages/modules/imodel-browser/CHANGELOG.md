@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser
 
-This log was last generated on Thu, 27 May 2021 18:16:45 GMT and should not be manually modified.
+This log was last generated on Tue, 08 Jun 2021 16:27:51 GMT and should not be manually modified.
+
+## 0.10.3
+Tue, 08 Jun 2021 16:27:51 GMT
+
+### Patches
+
+- Update serverEnvironmentPrefix to not require the "-"
 
 ## 0.10.2
 Thu, 27 May 2021 18:16:45 GMT
