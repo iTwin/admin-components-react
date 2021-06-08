@@ -1,6 +1,13 @@
 # Change Log - @itwin/manage-versions
 
-This log was last generated on Tue, 25 May 2021 12:22:38 GMT and should not be manually modified.
+This log was last generated on Tue, 08 Jun 2021 05:57:26 GMT and should not be manually modified.
+
+## 0.4.0
+Tue, 08 Jun 2021 05:57:26 GMT
+
+### Minor changes
+
+- Added create and update Named Version functionality.
 
 ## 0.3.0
 Tue, 25 May 2021 12:22:38 GMT
