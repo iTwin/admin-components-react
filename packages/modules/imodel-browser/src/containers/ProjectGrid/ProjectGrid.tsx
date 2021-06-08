@@ -69,7 +69,7 @@ export interface ProjectGridProps {
   };
   /** Object that configures different overrides for the API.
    * @property `data`: Array of Projects used in the grid.
-   * @property `serverEnvironmentPrefix`: Either qa- or dev-.
+   * @property `serverEnvironmentPrefix`: Either qa or dev.
    */
   apiOverrides?: ApiOverrides<ProjectFull[]>;
 }

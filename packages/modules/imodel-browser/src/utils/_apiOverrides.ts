@@ -9,7 +9,12 @@ import { ApiOverrides } from "../types";
  */
 export const _getAPIServer = (
   apiOverrides: ApiOverrides<unknown> | undefined
-) => `https://${apiOverrides?.serverEnvironmentPrefix ?? ""}api.bentley.com`;
+) =>
+  `https://${
+    apiOverrides?.serverEnvironmentPrefix
+      ? `${apiOverrides.serverEnvironmentPrefix}-`
+      : ""
+  }api.bentley.com`;
 
 /**
  * Merge 2 objects without overriding keys with undefined or null values.

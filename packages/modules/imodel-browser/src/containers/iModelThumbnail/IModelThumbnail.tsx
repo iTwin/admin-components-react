@@ -22,7 +22,7 @@ export interface IModelThumbnailProps {
   accessToken?: string;
   /** Object that configures different overrides for the API
    * @property data thumbnail URL
-   * @property serverEnvironmentPrefix Either qa- or dev-
+   * @property serverEnvironmentPrefix Either qa or dev
    */
   apiOverrides?: ApiOverrides<string>;
 }
