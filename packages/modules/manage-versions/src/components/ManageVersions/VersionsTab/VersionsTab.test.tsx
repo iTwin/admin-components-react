@@ -5,7 +5,12 @@
 import { render, screen } from "@testing-library/react";
 import React from "react";
 
-import { MockedVersion, MockedVersionList } from "../../../mocks";
+import { ConfigProvider } from "../../../common/configContext";
+import {
+  MOCKED_CONFIG_PROPS,
+  MockedVersion,
+  MockedVersionList,
+} from "../../../mocks";
 import { defaultStrings } from "../ManageVersions";
 import { RequestStatus } from "../types";
 import VersionsTab, { VersionsTabProps } from "./VersionsTab";
@@ -14,10 +19,14 @@ const renderComponent = (initialProps?: Partial<VersionsTabProps>) => {
   const props: VersionsTabProps = {
     versions: MockedVersionList(),
     status: RequestStatus.Finished,
-    stringsOverrides: defaultStrings,
+    onVersionUpdated: jest.fn(),
     ...initialProps,
   };
-  return render(<VersionsTab {...props} />);
+  return render(
+    <ConfigProvider {...MOCKED_CONFIG_PROPS}>
+      <VersionsTab {...props} />
+    </ConfigProvider>
+  );
 };
 
 describe("VersionsTab", () => {
@@ -28,12 +37,13 @@ describe("VersionsTab", () => {
 
     rows.forEach((row, index) => {
       const cells = row.querySelectorAll(".iui-tables-cell");
-      expect(cells.length).toBe(3);
+      expect(cells.length).toBe(4);
       expect(cells[0].textContent).toContain(MockedVersion(index).name);
       expect(cells[1].textContent).toContain(MockedVersion(index).description);
       expect(cells[2].textContent).toContain(
         new Date(MockedVersion(index).createdDateTime).toLocaleString()
       );
+      expect(cells[3].querySelector(".iac-update-version-icon")).toBeTruthy();
     });
   });
 

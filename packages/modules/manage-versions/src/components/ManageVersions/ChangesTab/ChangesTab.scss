@@ -2,11 +2,19 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-export { ManageVersions } from "./components/ManageVersions/ManageVersions";
-export type { ManageVersionsProps } from "./components/ManageVersions/ManageVersions";
+@import "~@itwin/itwinui-css/scss/variables";
 
-export type {
-  ApiOverrides,
-  LogFunc,
-  ManageVersionsStringOverrides,
-} from "./components/ManageVersions/types";
+.iac-changes-table {
+  .iui-tables-body .iui-tables-cell {
+    word-break: break-word;
+  }
+}
+
+.iac-create-version-icon {
+  width: $iui-m;
+  height: $iui-m;
+  @include themed {
+    fill: t(iui-icons-color-actionable);
+  }
+  cursor: pointer;
+}

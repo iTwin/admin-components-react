@@ -7,9 +7,15 @@ import React from "react";
 
 import { ChangesetClient } from "../../clients/changesetClient";
 import { NamedVersionClient } from "../../clients/namedVersionClient";
+import { ConfigProvider } from "../../common/configContext";
 import { Changeset, NamedVersion } from "../../models";
 import ChangesTab from "./ChangesTab/ChangesTab";
-import { LogFunc, ManageVersionsStringOverrides, RequestStatus } from "./types";
+import {
+  ApiOverrides,
+  LogFunc,
+  ManageVersionsStringOverrides,
+  RequestStatus,
+} from "./types";
 import VersionsTab from "./VersionsTab/VersionsTab";
 
 export const defaultStrings: ManageVersionsStringOverrides = {
@@ -18,19 +24,36 @@ export const defaultStrings: ManageVersionsStringOverrides = {
   name: "Name",
   description: "Description",
   time: "Time",
+  createNamedVersion: "Create a Named Version",
+  cancel: "Cancel",
+  create: "Create",
+  updateNamedVersion: "Update a Named Version",
+  update: "Update",
   messageFailedGetNamedVersions:
     "Could not get Named Versions. Please try again later.",
   messageNoNamedVersions:
     "There are no Named Versions created. To create first go to Changes.",
   messageFailedGetChanges: "Could not get changes. Please try again later.",
   messageNoChanges: "There are no changes synchronized.",
+  messageVersionCreated: 'Named Version "{{name}}" was successfully created.',
+  messageVersionNameExists: "Named Version with the same name already exists.",
+  messageInsufficientPermissionsToCreateVersion:
+    "You do not have the required permissions to create a Named Version.",
+  messageCouldNotCreateVersion:
+    "Could not create a Named Version. Please try again later.",
+  messageVersionUpdated: 'Named Version "{{name}}" was successfully updated.',
+  messageInsufficientPermissionsToUpdateVersion:
+    "You do not have the required permissions to update a Named Version.",
+  messageCouldNotUpdateVersion:
+    "Could not update a Named Version. Please try again later.",
+  messageValueTooLong: "The value exceeds allowed {{length}} characters.",
 };
 
 export type ManageVersionsProps = {
-  /** Access token that requires the `imodels:read` scope. */
+  /** Access token that requires the `imodels:modify` scope. */
   accessToken: string;
   /** Object that configures different overrides for the API. */
-  apiOverrides?: { serverEnvironmentPrefix?: "dev" | "qa" | "" };
+  apiOverrides?: ApiOverrides;
   /** Id of iModel. */
   imodelId: string;
   /** Strings overrides for localization. */
@@ -88,7 +111,9 @@ export const ManageVersions = (props: ManageVersionsProps) => {
     RequestStatus.NotStarted
   );
 
-  React.useEffect(() => {
+  const getVersions = React.useCallback(() => {
+    setVersionStatus(RequestStatus.InProgress);
+    setVersions(undefined);
     versionClient
       .get(imodelId, { top: NAMED_VERSION_TOP })
       .then((versions) => {
@@ -97,6 +122,10 @@ export const ManageVersions = (props: ManageVersionsProps) => {
       })
       .catch(() => setVersionStatus(RequestStatus.Failed));
   }, [imodelId, versionClient]);
+
+  React.useEffect(() => {
+    getVersions();
+  }, [getVersions]);
 
   const getChangesets = React.useCallback(() => {
     if (changesets && changesets.length % CHANGESET_TOP !== 0) {
@@ -122,29 +151,62 @@ export const ManageVersions = (props: ManageVersionsProps) => {
     }
   }, [changesetStatus, currentTab, getChangesets]);
 
+  const canCreateVersion = React.useCallback(
+    (changesetId: string): boolean => {
+      return !versions?.some((v) => changesetId === v.changesetId);
+    },
+    [versions]
+  );
+
+  const onVersionCreated = React.useCallback(() => {
+    setCurrentTab(ManageVersionsTabs.Version);
+    getVersions();
+  }, [getVersions]);
+
+  const latestVersion = React.useMemo(
+    () =>
+      [...(versions ?? [])].sort((v1, v2) =>
+        new Date(v1.createdDateTime).valueOf() <
+        new Date(v2.createdDateTime).valueOf()
+          ? 1
+          : -1
+      )[0],
+    [versions]
+  );
+
   return (
-    <div>
-      <HorizontalTabs
-        labels={[stringsOverrides.namedVersions, stringsOverrides.changes]}
-        activeIndex={currentTab}
-        onTabSelected={(index) => setCurrentTab(index)}
-        type="borderless"
-      />
-      {currentTab === ManageVersionsTabs.Version && (
-        <VersionsTab
-          versions={versions ?? []}
-          status={versionStatus}
-          stringsOverrides={stringsOverrides}
+    <ConfigProvider
+      accessToken={accessToken}
+      imodelId={imodelId}
+      apiOverrides={apiOverrides}
+      stringsOverrides={stringsOverrides}
+      log={log}
+    >
+      <div>
+        <HorizontalTabs
+          labels={[stringsOverrides.namedVersions, stringsOverrides.changes]}
+          activeIndex={currentTab}
+          onTabSelected={(index) => setCurrentTab(index)}
+          type="borderless"
         />
-      )}
-      {currentTab === ManageVersionsTabs.Changes && (
-        <ChangesTab
-          changesets={changesets ?? []}
-          status={changesetStatus}
-          stringsOverrides={stringsOverrides}
-          loadMoreChanges={getChangesets}
-        />
-      )}
-    </div>
+        {currentTab === ManageVersionsTabs.Version && (
+          <VersionsTab
+            versions={versions ?? []}
+            status={versionStatus}
+            onVersionUpdated={getVersions}
+          />
+        )}
+        {currentTab === ManageVersionsTabs.Changes && (
+          <ChangesTab
+            changesets={changesets ?? []}
+            status={changesetStatus}
+            loadMoreChanges={getChangesets}
+            canCreateVersion={canCreateVersion}
+            onVersionCreated={onVersionCreated}
+            latestVersion={latestVersion}
+          />
+        )}
+      </div>
+    </ConfigProvider>
   );
 };

@@ -2,21 +2,36 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+import "./VersionsTab.scss";
+
+import { SvgEdit } from "@itwin/itwinui-icons-react";
 import { Table } from "@itwin/itwinui-react";
 import React from "react";
 import { CellProps } from "react-table";
 
+import { useConfig } from "../../../common/configContext";
 import { NamedVersion } from "../../../models";
-import { ManageVersionsStringOverrides, RequestStatus } from "../types";
+import { UpdateVersionModal } from "../../CreateUpdateVersion/UpdateVersionModal/UpdateVersionModal";
+import { RequestStatus } from "../types";
 
 export type VersionsTabProps = {
   versions: NamedVersion[];
   status: RequestStatus;
-  stringsOverrides: ManageVersionsStringOverrides;
+  onVersionUpdated: () => void;
 };
 
 const VersionsTab = (props: VersionsTabProps) => {
-  const { versions, status, stringsOverrides } = props;
+  const { versions, status, onVersionUpdated } = props;
+
+  const { stringsOverrides } = useConfig();
+
+  const [currentVersion, setCurrentVersion] = React.useState<
+    NamedVersion | undefined
+  >(undefined);
+  const [
+    isUpdateVersionModalOpen,
+    setIsUpdateVersionModalOpen,
+  ] = React.useState(false);
 
   const columns = React.useMemo(() => {
     return [
@@ -48,6 +63,26 @@ const VersionsTab = (props: VersionsTabProps) => {
               );
             },
           },
+          {
+            id: "versions-table-actions",
+            width: 62,
+            Cell: (props: CellProps<NamedVersion>) => {
+              return (
+                <>
+                  <div
+                    className="iac-update-version-icon"
+                    onClick={() => {
+                      setCurrentVersion(props.row.original);
+                      setIsUpdateVersionModalOpen(true);
+                    }}
+                    title={stringsOverrides.updateNamedVersion}
+                  >
+                    <SvgEdit />
+                  </div>
+                </>
+              );
+            },
+          },
         ],
       },
     ];
@@ -55,6 +90,7 @@ const VersionsTab = (props: VersionsTabProps) => {
     stringsOverrides.description,
     stringsOverrides.name,
     stringsOverrides.time,
+    stringsOverrides.updateNamedVersion,
   ]);
 
   const emptyTableContent = React.useMemo(() => {
@@ -68,15 +104,29 @@ const VersionsTab = (props: VersionsTabProps) => {
   ]);
 
   return (
-    <Table<NamedVersion>
-      columns={columns}
-      data={versions}
-      isLoading={
-        status === RequestStatus.InProgress ||
-        status === RequestStatus.NotStarted
-      }
-      emptyTableContent={emptyTableContent}
-    />
+    <>
+      <Table<NamedVersion>
+        columns={columns}
+        data={versions}
+        isLoading={
+          status === RequestStatus.InProgress ||
+          status === RequestStatus.NotStarted
+        }
+        emptyTableContent={emptyTableContent}
+        className="iac-versions-table"
+      />
+      {isUpdateVersionModalOpen && (
+        <UpdateVersionModal
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          version={currentVersion!}
+          onUpdate={() => {
+            setIsUpdateVersionModalOpen(false);
+            onVersionUpdated();
+          }}
+          onClose={() => setIsUpdateVersionModalOpen(false)}
+        />
+      )}
+    </>
   );
 };
 

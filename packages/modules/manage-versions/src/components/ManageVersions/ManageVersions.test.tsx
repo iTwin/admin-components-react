@@ -2,7 +2,12 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { render, screen, waitFor } from "@testing-library/react";
+import {
+  fireEvent,
+  render,
+  screen,
+  waitForElementToBeRemoved,
+} from "@testing-library/react";
 import React from "react";
 
 import { ChangesetClient } from "../../clients/changesetClient";
@@ -31,6 +36,8 @@ const renderComponent = (initialProps?: Partial<ManageVersionsProps>) => {
 
 describe("ManageVersions", () => {
   const mockGetVersions = jest.spyOn(NamedVersionClient.prototype, "get");
+  const mockCreateVersion = jest.spyOn(NamedVersionClient.prototype, "create");
+  const mockUpdateVersion = jest.spyOn(NamedVersionClient.prototype, "update");
   const mockGetChangesets = jest.spyOn(ChangesetClient.prototype, "get");
 
   beforeEach(() => {
@@ -42,8 +49,8 @@ describe("ManageVersions", () => {
   it("should show versions table with data", async () => {
     const { container } = renderComponent();
 
-    await waitFor(
-      () => !container.querySelector(".iui-progress-indicator-radial")
+    await waitForElementToBeRemoved(() =>
+      container.querySelector(".iui-progress-indicator-radial")
     );
     const versionRows = container.querySelectorAll(
       ".iui-tables-body .iui-tables-row"
@@ -52,7 +59,7 @@ describe("ManageVersions", () => {
 
     versionRows.forEach((row, index) => {
       const cells = row.querySelectorAll(".iui-tables-cell");
-      expect(cells.length).toBe(3);
+      expect(cells.length).toBe(4);
       expect(cells[0].textContent).toContain(MockedVersion(index).name);
       expect(cells[1].textContent).toContain(MockedVersion(index).description);
       expect(cells[2].textContent).toContain(
@@ -69,8 +76,8 @@ describe("ManageVersions", () => {
 
     screen.getByText(defaultStrings.changes).click();
 
-    await waitFor(
-      () => !container.querySelector(".iui-progress-indicator-radial")
+    await waitForElementToBeRemoved(() =>
+      container.querySelector(".iui-progress-indicator-radial")
     );
     const changesetRows = container.querySelectorAll(
       ".iui-tables-body .iui-tables-row"
@@ -79,7 +86,7 @@ describe("ManageVersions", () => {
 
     changesetRows.forEach((row, index) => {
       const cells = row.querySelectorAll(".iui-tables-cell");
-      expect(cells.length).toBe(3);
+      expect(cells.length).toBe(4);
       expect(cells[0].textContent).toContain(MockedChangeset(index).index);
       expect(cells[1].textContent).toContain(
         MockedChangeset(index).description
@@ -97,13 +104,13 @@ describe("ManageVersions", () => {
   it("should query data only once when switching tabs", async () => {
     const { container } = renderComponent();
 
-    await waitFor(
-      () => !container.querySelector(".iui-progress-indicator-radial")
+    await waitForElementToBeRemoved(() =>
+      container.querySelector(".iui-progress-indicator-radial")
     );
 
     screen.getByText(defaultStrings.changes).click();
-    await waitFor(
-      () => !container.querySelector(".iui-progress-indicator-radial")
+    await waitForElementToBeRemoved(() =>
+      container.querySelector(".iui-progress-indicator-radial")
     );
 
     expect(mockGetVersions).toHaveBeenCalledTimes(1);
@@ -123,5 +130,106 @@ describe("ManageVersions", () => {
 
     screen.getByText(defaultStrings.changes).click();
     await screen.findByText(defaultStrings.messageFailedGetChanges);
+  });
+
+  it("should create new version", async () => {
+    const latestVersion = {
+      ...MockedVersion(2),
+      createdDateTime: "9999-01-01",
+    };
+    mockGetVersions.mockResolvedValueOnce(
+      [MockedVersion(1), latestVersion, MockedVersion(3)].map((v) => ({
+        ...v,
+        changesetId: "",
+      }))
+    );
+    mockGetVersions.mockResolvedValueOnce([
+      MockedVersion(4, { name: "test name", description: "test description" }),
+      ...MockedVersionList(),
+    ]);
+    mockCreateVersion.mockResolvedValue(MockedVersion());
+    const { container } = renderComponent();
+
+    await waitForElementToBeRemoved(() =>
+      container.querySelector(".iui-progress-indicator-radial")
+    );
+
+    screen.getByText(defaultStrings.changes).click();
+    await waitForElementToBeRemoved(() =>
+      container.querySelector(".iui-progress-indicator-radial")
+    );
+
+    const createVersionButton = container.querySelector(
+      ".iac-create-version-icon"
+    ) as HTMLElement;
+    expect(createVersionButton).toBeTruthy();
+    createVersionButton.click();
+
+    const additionalInfos = document.querySelectorAll(".iac-additional-info");
+    expect(additionalInfos.length).toBe(2);
+    const latestVersionInfo = additionalInfos[1].querySelectorAll("span");
+    expect(latestVersionInfo.length).toBe(2);
+    expect(latestVersionInfo[0].textContent).toEqual(latestVersion.name);
+    expect(latestVersionInfo[1].textContent).toEqual(
+      new Date(latestVersion.createdDateTime).toLocaleString()
+    );
+
+    const nameInput = document.querySelector("input") as HTMLInputElement;
+    expect(nameInput).toBeTruthy();
+    fireEvent.change(nameInput, { target: { value: "test name" } });
+
+    screen.getByText("Create").click();
+    await waitForElementToBeRemoved(() =>
+      document.querySelector(".iui-progress-indicator-overlay")
+    );
+
+    const versionCells = container.querySelectorAll(
+      ".iui-tables-body .iui-tables-row:first-child .iui-tables-cell"
+    );
+    expect(versionCells.length).toBe(4);
+    expect(versionCells[0].textContent).toEqual("test name");
+    expect(versionCells[1].textContent).toEqual("test description");
+
+    expect(mockGetVersions).toHaveBeenCalledTimes(2);
+    expect(mockCreateVersion).toHaveBeenCalled();
+  });
+
+  it("should update version", async () => {
+    mockGetVersions.mockResolvedValueOnce(MockedVersionList());
+    mockGetVersions.mockResolvedValueOnce([
+      MockedVersion(3, { name: "test name", description: "test description" }),
+      ...MockedVersionList(2),
+    ]);
+    mockUpdateVersion.mockResolvedValue(MockedVersion());
+    const { container } = renderComponent();
+
+    await waitForElementToBeRemoved(() =>
+      container.querySelector(".iui-progress-indicator-radial")
+    );
+
+    const updateVersionButton = container.querySelector(
+      ".iac-update-version-icon"
+    ) as HTMLElement;
+    expect(updateVersionButton).toBeTruthy();
+    updateVersionButton.click();
+
+    const nameInput = document.querySelector("input") as HTMLInputElement;
+    expect(nameInput).toBeTruthy();
+    fireEvent.change(nameInput, { target: { value: "test name" } });
+
+    screen.getByText("Update").click();
+    await waitForElementToBeRemoved(() =>
+      document.querySelector(".iui-progress-indicator-overlay")
+    );
+
+    const versionCells = container.querySelectorAll(
+      ".iui-tables-body .iui-tables-row:first-child .iui-tables-cell"
+    );
+    expect(versionCells.length).toBe(4);
+    expect(versionCells[0].textContent).toEqual("test name");
+    expect(versionCells[1].textContent).toEqual("test description");
+
+    expect(mockGetVersions).toHaveBeenCalledTimes(2);
+    expect(mockUpdateVersion).toHaveBeenCalled();
   });
 });

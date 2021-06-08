@@ -10,7 +10,12 @@ describe("UrlBuilder", () => {
     expect(UrlBuilder.buildVersionsUrl(MOCKED_IMODEL_ID)).toEqual(
       `https://api.bentley.com/imodels/${MOCKED_IMODEL_ID}/namedversions`
     );
-    expect(UrlBuilder.buildVersionsUrl(MOCKED_IMODEL_ID, "dev")).toEqual(
+    expect(UrlBuilder.buildVersionsUrl(MOCKED_IMODEL_ID, "nv1")).toEqual(
+      `https://api.bentley.com/imodels/${MOCKED_IMODEL_ID}/namedversions/nv1`
+    );
+    expect(
+      UrlBuilder.buildVersionsUrl(MOCKED_IMODEL_ID, undefined, "dev")
+    ).toEqual(
       `https://dev-api.bentley.com/imodels/${MOCKED_IMODEL_ID}/namedversions`
     );
   });

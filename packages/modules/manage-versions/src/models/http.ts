@@ -8,15 +8,19 @@ export enum HttpHeaderNames {
   Prefer = "Prefer",
 }
 
-export enum HttpStatusCodes {
-  Forbidden_403 = 403,
-}
+export type ApimCodes = "NamedVersionExists" | "InsufficientPermissions";
 
 export class ApimError extends Error {
   public statusCode: number | undefined;
+  public code: ApimCodes | undefined;
 
-  constructor(error: any, statusCode?: number) {
+  constructor(
+    error?: { code: ApimCodes; message: string },
+
+    statusCode?: number
+  ) {
     super(error?.message);
-    this.statusCode = statusCode ?? error.statusCode;
+    this.code = error?.code;
+    this.statusCode = statusCode;
   }
 }

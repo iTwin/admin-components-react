@@ -2,11 +2,15 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-export { ManageVersions } from "./components/ManageVersions/ManageVersions";
-export type { ManageVersionsProps } from "./components/ManageVersions/ManageVersions";
+.iac-version-modal .iui-modal-dialog {
+  max-width: calc(min(600px, 50%));
+}
 
-export type {
-  ApiOverrides,
-  LogFunc,
-  ManageVersionsStringOverrides,
-} from "./components/ManageVersions/types";
+.iac-version-modal-overlay {
+  position: fixed;
+  z-index: 99999;
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  left: 0;
+}
