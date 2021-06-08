@@ -11,7 +11,7 @@ describe("apiOverrides", () => {
 
       expect(result).toEqual("https://api.bentley.com");
     });
-    it("returns https://[prefix]api.bentley.com when provided with [prefix]", () => {
+    it("returns https://[prefix]-api.bentley.com when provided with [prefix]", () => {
       const result = _getAPIServer({ serverEnvironmentPrefix: "qa" });
 
       expect(result).toEqual("https://qa-api.bentley.com");
