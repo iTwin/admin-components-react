@@ -11,7 +11,7 @@
     "@itwin/delete-imodel": "^0.2.0",
     "@itwin/imodel-browser": "~0.10.2",
     "@itwin/itwinui-react": "^1.6.0",
-    "@itwin/manage-versions": "~0.3.0",
+    "@itwin/manage-versions": "~0.4.0",
     "@itwin/storybook-auth-addon": "^0.1.0",
     "@storybook/addon-actions": "^6.2.5",
     "@storybook/addon-essentials": "^6.2.5",
