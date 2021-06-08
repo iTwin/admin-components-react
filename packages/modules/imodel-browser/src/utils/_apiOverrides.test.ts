@@ -11,10 +11,10 @@ describe("apiOverrides", () => {
 
       expect(result).toEqual("https://api.bentley.com");
     });
-    it("returns https://[prefix]api.bentley.com when provided with [prefix]", () => {
-      const result = _getAPIServer({ serverEnvironmentPrefix: "[prefix]" });
+    it("returns https://[prefix]-api.bentley.com when provided with [prefix]", () => {
+      const result = _getAPIServer({ serverEnvironmentPrefix: "qa" });
 
-      expect(result).toEqual("https://[prefix]api.bentley.com");
+      expect(result).toEqual("https://qa-api.bentley.com");
     });
     it("handles undefined overrdies", () => {
       const result = _getAPIServer(undefined);

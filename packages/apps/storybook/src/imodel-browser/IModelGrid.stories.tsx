@@ -40,7 +40,7 @@ const Template: Story<IModelGridProps> = withProjectIdOverride(
 
 export const Primary = Template.bind({});
 Primary.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa-" },
+  apiOverrides: { serverEnvironmentPrefix: "qa" },
 };
 
 export const OverrideApiData = Template.bind({});
@@ -68,7 +68,7 @@ OverrideApiData.args = {
 
 export const IndividualContextMenu = Template.bind({});
 IndividualContextMenu.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa-" },
+  apiOverrides: { serverEnvironmentPrefix: "qa" },
   iModelOptions: [
     {
       children: "displayName contains 'R'",
@@ -93,7 +93,7 @@ IndividualContextMenu.args = {
 
 export const SimpleTilePropsOverrides = Template.bind({});
 SimpleTilePropsOverrides.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa-" },
+  apiOverrides: { serverEnvironmentPrefix: "qa" },
   tileOverrides: { tileProps: { style: { width: "100%" } } },
 };
 
@@ -145,7 +145,11 @@ const useIndividualState = (iModel: IModelFull, props: IModelTileProps) => {
       ]);
       // Start the fetch
       const response = await fetch(
-        `https://${props.apiOverrides?.serverEnvironmentPrefix}api.bentley.com/imodels/${iModel.id}/namedversions`,
+        `https://${
+          props.apiOverrides?.serverEnvironmentPrefix
+            ? `${props.apiOverrides?.serverEnvironmentPrefix}-`
+            : ""
+        }api.bentley.com/imodels/${iModel.id}/namedversions`,
         {
           headers: {
             Authorization: props.accessToken ?? "",
@@ -212,6 +216,6 @@ const useIndividualState = (iModel: IModelFull, props: IModelTileProps) => {
 
 export const StatefulPropsOverrides = Template.bind({});
 StatefulPropsOverrides.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa-" },
+  apiOverrides: { serverEnvironmentPrefix: "qa" },
   useIndividualState,
 };

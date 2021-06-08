@@ -38,7 +38,7 @@ const Template: Story<ProjectGridProps> = withAccessTokenOverride((args) => (
 ));
 export const Primary = Template.bind({});
 Primary.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa-" },
+  apiOverrides: { serverEnvironmentPrefix: "qa" },
 };
 
 export const OverrideApiData = Template.bind({});
@@ -62,7 +62,7 @@ OverrideApiData.args = {
 
 export const IndividualContextMenu = Template.bind({});
 IndividualContextMenu.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa-" },
+  apiOverrides: { serverEnvironmentPrefix: "qa" },
   projectOptions: [
     {
       children: "displayName contains 'R'",
@@ -89,7 +89,7 @@ IndividualContextMenu.args = {
 
 export const SimpleTilePropsOverrides = Template.bind({});
 SimpleTilePropsOverrides.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa-" },
+  apiOverrides: { serverEnvironmentPrefix: "qa" },
   tileOverrides: { tileProps: { style: { width: "100%" }, variant: "folder" } },
 };
 
@@ -155,7 +155,11 @@ const useIndividualState: IndividualProjectStateHook = (project, props) => {
   // but would automatically trigger for EVERY project, causing potentially huge network traffic at startup.
   const fetchIModelList = React.useCallback(
     async (
-      url = `https://${props.gridProps.apiOverrides?.serverEnvironmentPrefix}api.bentley.com/imodels/?projectId=${project.id}&$top=10`
+      url = `https://${
+        props.gridProps.apiOverrides?.serverEnvironmentPrefix
+          ? `${props.gridProps.apiOverrides?.serverEnvironmentPrefix}-`
+          : ""
+      }api.bentley.com/imodels/?projectId=${project.id}&$top=10`
     ) => {
       try {
         // Show the skeleton, plus prevent further calls to this function.
@@ -251,6 +255,6 @@ const useIndividualState: IndividualProjectStateHook = (project, props) => {
 
 export const StatefulPropsOverrides = Template.bind({});
 StatefulPropsOverrides.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa-" },
+  apiOverrides: { serverEnvironmentPrefix: "qa" },
   useIndividualState,
 };

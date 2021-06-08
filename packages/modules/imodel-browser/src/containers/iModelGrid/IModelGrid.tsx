@@ -67,7 +67,7 @@ export interface IModelGridProps {
   };
   /** Object that configures different overrides for the API.
    * @property `data`: Array of iModels used in the grid.
-   * @property `serverEnvironmentPrefix`: Either qa- or dev-.
+   * @property `serverEnvironmentPrefix`: Either qa or dev.
    */
   apiOverrides?: ApiOverrides<IModelFull[]>;
 }

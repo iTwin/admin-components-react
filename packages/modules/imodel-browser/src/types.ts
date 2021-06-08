@@ -52,8 +52,8 @@ export interface ProjectFull {
 
 /** An object that allow various configuration of the API access */
 export interface ApiOverrides<T = never> {
-  /** dev- or qa- */
-  serverEnvironmentPrefix?: string;
+  /** dev or qa */
+  serverEnvironmentPrefix?: "dev" | "qa" | "";
   /** Data as props */
   data?: T;
 }
