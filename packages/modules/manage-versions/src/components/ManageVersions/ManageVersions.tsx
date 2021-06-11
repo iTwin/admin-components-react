@@ -111,23 +111,29 @@ export const ManageVersions = (props: ManageVersionsProps) => {
     RequestStatus.NotStarted
   );
 
-  const getVersions = React.useCallback(() => {
-    setVersionStatus(RequestStatus.InProgress);
-    versionClient
-      .get(imodelId, { top: NAMED_VERSION_TOP, skip: versions?.length })
-      .then((newVersions) => {
-        setVersionStatus(RequestStatus.Finished);
-        setVersions((oldVersions) => [...(oldVersions ?? []), ...newVersions]);
-      })
-      .catch(() => setVersionStatus(RequestStatus.Failed));
-  }, [imodelId, versionClient, versions]);
+  const getVersions = React.useCallback(
+    (skip?: number) => {
+      setVersionStatus(RequestStatus.InProgress);
+      versionClient
+        .get(imodelId, { top: NAMED_VERSION_TOP, skip })
+        .then((newVersions) => {
+          setVersionStatus(RequestStatus.Finished);
+          setVersions((oldVersions) => [
+            ...(oldVersions ?? []),
+            ...newVersions,
+          ]);
+        })
+        .catch(() => setVersionStatus(RequestStatus.Failed));
+    },
+    [imodelId, versionClient]
+  );
 
   const getMoreVersions = React.useCallback(() => {
     if (versions && versions.length % NAMED_VERSION_TOP !== 0) {
       return;
     }
 
-    getVersions();
+    getVersions(versions?.length);
   }, [getVersions, versions]);
 
   const refreshVersions = React.useCallback(() => {
