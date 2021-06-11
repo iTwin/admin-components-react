@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/manage-versions",
+      "comment": "Ordering changesets from the newest, changed create version icon, added lazy-loading to versions, other APIM related changes.",
+      "type": "minor"
+    }
+  ],
+  "packageName": "@itwin/manage-versions",
+  "email": "36186912+bentleyvk@users.noreply.github.com"
+}
