@@ -26,7 +26,7 @@ export class ChangesetClient {
         `${UrlBuilder.buildChangesetUrl(
           imodelId,
           this._serverEnvironmentPrefix
-        )}${UrlBuilder.getQuery(requestOptions)}`,
+        )}${UrlBuilder.getQuery({ orderBy: "index+desc", ...requestOptions })}`,
         {
           headers: { [HttpHeaderNames.Prefer]: "return=representation" },
         }

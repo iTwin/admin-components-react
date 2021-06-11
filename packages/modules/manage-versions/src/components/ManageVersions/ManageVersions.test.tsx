@@ -67,7 +67,8 @@ describe("ManageVersions", () => {
       );
     });
     expect(mockGetVersions).toHaveBeenCalledWith(MOCKED_IMODEL_ID, {
-      top: 1000,
+      top: 100,
+      skip: undefined,
     });
   });
 
@@ -137,16 +138,23 @@ describe("ManageVersions", () => {
       ...MockedVersion(2),
       createdDateTime: "9999-01-01",
     };
-    mockGetVersions.mockResolvedValueOnce(
-      [MockedVersion(1), latestVersion, MockedVersion(3)].map((v) => ({
-        ...v,
-        changesetId: "",
-      }))
-    );
+    mockGetVersions.mockResolvedValueOnce([
+      MockedVersion(1),
+      latestVersion,
+      MockedVersion(3),
+    ]);
     mockGetVersions.mockResolvedValueOnce([
       MockedVersion(4, { name: "test name", description: "test description" }),
       ...MockedVersionList(),
     ]);
+    mockGetChangesets.mockResolvedValue([
+      MockedChangeset(1),
+      MockedChangeset(2, {
+        _links: { namedVersion: { href: "https://test.url" } },
+      }),
+      MockedChangeset(3),
+    ]);
+
     mockCreateVersion.mockResolvedValue(MockedVersion());
     const { container } = renderComponent();
 

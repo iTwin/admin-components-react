@@ -67,7 +67,7 @@ enum ManageVersionsTabs {
   Changes = 1,
 }
 
-const NAMED_VERSION_TOP = 1000;
+const NAMED_VERSION_TOP = 100;
 const CHANGESET_TOP = 100;
 
 export const ManageVersions = (props: ManageVersionsProps) => {
@@ -113,19 +113,33 @@ export const ManageVersions = (props: ManageVersionsProps) => {
 
   const getVersions = React.useCallback(() => {
     setVersionStatus(RequestStatus.InProgress);
-    setVersions(undefined);
     versionClient
-      .get(imodelId, { top: NAMED_VERSION_TOP })
-      .then((versions) => {
+      .get(imodelId, { top: NAMED_VERSION_TOP, skip: versions?.length })
+      .then((newVersions) => {
         setVersionStatus(RequestStatus.Finished);
-        setVersions(versions);
+        setVersions((oldVersions) => [...(oldVersions ?? []), ...newVersions]);
       })
       .catch(() => setVersionStatus(RequestStatus.Failed));
-  }, [imodelId, versionClient]);
+  }, [imodelId, versionClient, versions]);
 
-  React.useEffect(() => {
+  const getMoreVersions = React.useCallback(() => {
+    if (versions && versions.length % NAMED_VERSION_TOP !== 0) {
+      return;
+    }
+
+    getVersions();
+  }, [getVersions, versions]);
+
+  const refreshVersions = React.useCallback(() => {
+    setVersions(undefined);
     getVersions();
   }, [getVersions]);
+
+  React.useEffect(() => {
+    if (versionStatus === RequestStatus.NotStarted) {
+      getVersions();
+    }
+  }, [getVersions, versionStatus]);
 
   const getChangesets = React.useCallback(() => {
     if (changesets && changesets.length % CHANGESET_TOP !== 0) {
@@ -151,17 +165,10 @@ export const ManageVersions = (props: ManageVersionsProps) => {
     }
   }, [changesetStatus, currentTab, getChangesets]);
 
-  const canCreateVersion = React.useCallback(
-    (changesetId: string): boolean => {
-      return !versions?.some((v) => changesetId === v.changesetId);
-    },
-    [versions]
-  );
-
   const onVersionCreated = React.useCallback(() => {
     setCurrentTab(ManageVersionsTabs.Version);
-    getVersions();
-  }, [getVersions]);
+    refreshVersions();
+  }, [refreshVersions]);
 
   const latestVersion = React.useMemo(
     () =>
@@ -193,7 +200,8 @@ export const ManageVersions = (props: ManageVersionsProps) => {
           <VersionsTab
             versions={versions ?? []}
             status={versionStatus}
-            onVersionUpdated={getVersions}
+            onVersionUpdated={refreshVersions}
+            loadMoreVersions={getMoreVersions}
           />
         )}
         {currentTab === ManageVersionsTabs.Changes && (
@@ -201,7 +209,6 @@ export const ManageVersions = (props: ManageVersionsProps) => {
             changesets={changesets ?? []}
             status={changesetStatus}
             loadMoreChanges={getChangesets}
-            canCreateVersion={canCreateVersion}
             onVersionCreated={onVersionCreated}
             latestVersion={latestVersion}
           />

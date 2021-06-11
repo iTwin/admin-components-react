@@ -18,10 +18,11 @@ export type VersionsTabProps = {
   versions: NamedVersion[];
   status: RequestStatus;
   onVersionUpdated: () => void;
+  loadMoreVersions: () => void;
 };
 
 const VersionsTab = (props: VersionsTabProps) => {
-  const { versions, status, onVersionUpdated } = props;
+  const { versions, status, onVersionUpdated, loadMoreVersions } = props;
 
   const { stringsOverrides } = useConfig();
 
@@ -113,6 +114,7 @@ const VersionsTab = (props: VersionsTabProps) => {
           status === RequestStatus.NotStarted
         }
         emptyTableContent={emptyTableContent}
+        onBottomReached={loadMoreVersions}
         className="iac-versions-table"
       />
       {isUpdateVersionModalOpen && (
