@@ -1,6 +1,13 @@
-# Change Log - @itwin/manage-versions
+# Change Log - @itwin/manage-versions-react
 
-This log was last generated on Tue, 08 Jun 2021 05:57:26 GMT and should not be manually modified.
+This log was last generated on Fri, 11 Jun 2021 16:24:41 GMT and should not be manually modified.
+
+## 0.4.1
+Fri, 11 Jun 2021 16:24:41 GMT
+
+### Patches
+
+- update license extension
 
 ## 0.4.0
 Tue, 08 Jun 2021 05:57:26 GMT
