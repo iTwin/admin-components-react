@@ -1,5 +1,5 @@
 {
-  "name": "@itwin/create-imodel",
+  "name": "@itwin/create-imodel-react",
   "version": "0.2.1",
   "description": "Components to create or update an iModel.",
   "repository": "https://github.com/iTwin/admin-components-react/tree/main/packages/modules/create-imodel",
@@ -60,9 +60,5 @@
   "peerDependencies": {
     "react": "^16.13.0",
     "react-dom": "^16.13.0"
-  },
-  "publishConfig": {
-    "registry": "https://pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/",
-    "access": "public"
   }
 }

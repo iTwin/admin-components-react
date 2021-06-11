@@ -1,5 +1,5 @@
 {
-  "name": "@itwin/manage-versions",
+  "name": "@itwin/manage-versions-react",
   "description": "Components that allow a user to manage Named Versions and Changesets.",
   "repository": "https://github.com/iTwin/admin-components-react/tree/main/package/manage-versions",
   "version": "0.4.0",
@@ -65,9 +65,5 @@
   "peerDependencies": {
     "react": "^16.13.0",
     "react-dom": "^16.13.0"
-  },
-  "publishConfig": {
-    "registry": "https://pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/",
-    "access": "public"
   }
 }

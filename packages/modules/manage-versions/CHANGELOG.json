@@ -1,5 +1,5 @@
 {
-  "name": "@itwin/manage-versions",
+  "name": "@itwin/manage-versions-react",
   "entries": [
     {
       "version": "0.4.0",
@@ -15,7 +15,7 @@
     },
     {
       "version": "0.3.0",
-      "tag": "@itwin/manage-versions_v0.3.0",
+      "tag": "@itwin/manage-versions-react_v0.3.0",
       "date": "Tue, 25 May 2021 12:22:38 GMT",
       "comments": {
         "minor": [
@@ -27,7 +27,7 @@
     },
     {
       "version": "0.2.0",
-      "tag": "@itwin/manage-versions_v0.2.0",
+      "tag": "@itwin/manage-versions-react_v0.2.0",
       "date": "Tue, 04 May 2021 09:25:11 GMT",
       "comments": {
         "minor": [
