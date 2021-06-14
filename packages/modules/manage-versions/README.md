@@ -1,4 +1,4 @@
-# @itwin/manage-versions
+# @itwin/manage-versions-react
 
 ## Description
 
@@ -9,22 +9,22 @@ Consider this package as unstable until 1.0 release.
 ## Install
 
 ```
-npm install @itwin/manage-versions
+npm install @itwin/manage-versions-react
 ```
 
 ```
-yarn add @itwin/manage-versions
+yarn add @itwin/manage-versions-react
 ```
 
 ## Use
 
 ```jsx
-import { ManageVersions } from '@itwin/manage-versions';
+import { ManageVersions } from "@itwin/manage-versions-react";
 
 const App = () => (
-  <ManageVersions 
-    accessToken='Bearer ...'
-    imodelId='d667d711-a0ee-4843-957b-a8c3ed1caad2'
+  <ManageVersions
+    accessToken="Bearer ..."
+    imodelId="d667d711-a0ee-4843-957b-a8c3ed1caad2"
   />
 );
 ```

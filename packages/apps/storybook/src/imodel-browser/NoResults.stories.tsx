@@ -5,7 +5,7 @@
 import {
   NoResults as ExternalComponent,
   NoResultsProps,
-} from "@itwin/imodel-browser";
+} from "@itwin/imodel-browser-react";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
 

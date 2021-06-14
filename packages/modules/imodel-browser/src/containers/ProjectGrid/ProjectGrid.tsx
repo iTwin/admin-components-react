@@ -119,7 +119,7 @@ export const ProjectGrid = ({
   React.useEffect(() => {
     if (!!projectOptions) {
       console.warn(
-        "@itwin/imodel-browser: ProjectGrid 'projectOptions' prop is deprecated and will be removed in 1.0, use 'projectActions' prop instead."
+        "@itwin/imodel-browser-react: ProjectGrid 'projectOptions' prop is deprecated and will be removed in 1.0, use 'projectActions' prop instead."
       );
     }
   }, [projectOptions]);

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------------------------
-* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
-* See LICENSE.md in the project root for license terms and full copyright notice.
-*--------------------------------------------------------------------------------------------*/
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
 
 import {
   IModelThumbnail as ExternalComponent,
   IModelThumbnailProps,
-} from "@itwin/imodel-browser";
+} from "@itwin/imodel-browser-react";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
 
@@ -18,7 +18,7 @@ import React from "react";
  */
 
 // 1. Imports the external component under a different name from the module
-// Eg: `import { NoResults as ExternalComponent, NoResultsProps } from "@itwin/imodel-browser";`
+// Eg: `import { NoResults as ExternalComponent, NoResultsProps } from "@itwin/imodel-browser-react";`
 
 // 2. Export a newly created component with the original name and imported props type.
 // This component must be exported so react-docgen-typescript can process it.

@@ -1,11 +1,11 @@
 {
   "changes": [
     {
-      "packageName": "@itwin/delete-imodel",
+      "packageName": "@itwin/delete-imodel-react",
       "comment": "",
       "type": "none"
     }
   ],
-  "packageName": "@itwin/delete-imodel",
+  "packageName": "@itwin/delete-imodel-react",
   "email": "36186912+bentleyvk@users.noreply.github.com"
 }

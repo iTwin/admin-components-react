@@ -5,7 +5,7 @@
 import {
   DeleteIModel as ExternalComponent,
   DeleteIModelProps,
-} from "@itwin/delete-imodel";
+} from "@itwin/delete-imodel-react";
 import { Button } from "@itwin/itwinui-react";
 import { useState } from "@storybook/addons";
 import { Meta, Story } from "@storybook/react/types-6-0";

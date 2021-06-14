@@ -27,7 +27,7 @@ describe("HttpClient", () => {
       .then(() => fail())
       .catch((error) => {
         expect(mockLog).toHaveBeenCalledWith(
-          `@itwin/manage-versions - ${error.message}`,
+          `@itwin/manage-versions-react - ${error.message}`,
           {
             error,
             request: {

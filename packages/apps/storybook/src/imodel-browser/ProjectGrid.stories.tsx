@@ -6,7 +6,7 @@ import {
   IndividualProjectStateHook,
   ProjectGrid as ExternalComponent,
   ProjectGridProps,
-} from "@itwin/imodel-browser";
+} from "@itwin/imodel-browser-react";
 import {
   Button,
   Code,

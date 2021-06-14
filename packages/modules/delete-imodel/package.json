@@ -1,5 +1,5 @@
 {
-  "name": "@itwin/delete-imodel",
+  "name": "@itwin/delete-imodel-react",
   "version": "0.2.0",
   "author": "Bentley Systems, Inc.",
   "license": "MIT",
@@ -62,9 +62,5 @@
   "peerDependencies": {
     "react": "^16.13.0",
     "react-dom": "^16.13.0"
-  },
-  "publishConfig": {
-    "registry": "https://pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/",
-    "access": "public"
   }
 }

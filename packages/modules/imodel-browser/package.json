@@ -1,7 +1,7 @@
 {
-  "name": "@itwin/imodel-browser",
+  "name": "@itwin/imodel-browser-react",
   "description": "Components that let the user browse the iModels of a context and select one.",
-  "repository": "https://github.com/iTwin/admin-components-react/tree/main/package/imodel-browser",
+  "repository": "https://github.com/iTwin/admin-components-react/tree/main/packages/modules/imodel-browser",
   "version": "0.10.3",
   "main": "cjs/index.js",
   "module": "esm/index.js",
@@ -75,9 +75,5 @@
   "peerDependencies": {
     "react": "^16.13.0",
     "react-dom": "^16.13.0"
-  },
-  "publishConfig": {
-    "registry": "https://pkgs.dev.azure.com/bentleycs/_packaging/Packages/npm/registry/",
-    "access": "public"
   }
 }

@@ -15,7 +15,7 @@
       "shouldPublish": false
     },
     {
-      "packageName": "@itwin/imodel-browser",
+      "packageName": "@itwin/imodel-browser-react",
       "projectFolder": "packages/modules/imodel-browser",
       "shouldPublish": true,
       "versionPolicyName": "independentModule"
@@ -31,19 +31,19 @@
       "shouldPublish": false
     },
     {
-      "packageName": "@itwin/delete-imodel",
+      "packageName": "@itwin/delete-imodel-react",
       "projectFolder": "packages/modules/delete-imodel",
       "shouldPublish": true,
       "versionPolicyName": "independentModule"
     },
     {
-      "packageName": "@itwin/manage-versions",
+      "packageName": "@itwin/manage-versions-react",
       "projectFolder": "packages/modules/manage-versions",
       "shouldPublish": true,
       "versionPolicyName": "independentModule"
     },
     {
-      "packageName": "@itwin/create-imodel",
+      "packageName": "@itwin/create-imodel-react",
       "projectFolder": "packages/modules/create-imodel",
       "shouldPublish": true,
       "versionPolicyName": "independentModule"
