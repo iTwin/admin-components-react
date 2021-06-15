@@ -147,8 +147,17 @@ describe("ManageVersions", () => {
       MockedVersion(4, { name: "test name", description: "test description" }),
       ...MockedVersionList(),
     ]);
-    mockGetChangesets.mockResolvedValue([
+    mockGetChangesets.mockResolvedValueOnce([
       MockedChangeset(1),
+      MockedChangeset(2, {
+        _links: { namedVersion: { href: "https://test.url" } },
+      }),
+      MockedChangeset(3),
+    ]);
+    mockGetChangesets.mockResolvedValueOnce([
+      MockedChangeset(1, {
+        _links: { namedVersion: { href: "https://test.url" } },
+      }),
       MockedChangeset(2, {
         _links: { namedVersion: { href: "https://test.url" } },
       }),
@@ -200,6 +209,13 @@ describe("ManageVersions", () => {
 
     expect(mockGetVersions).toHaveBeenCalledTimes(2);
     expect(mockCreateVersion).toHaveBeenCalled();
+
+    screen.getByText(defaultStrings.changes).click();
+    await waitForElementToBeRemoved(() =>
+      container.querySelector(".iui-progress-indicator-radial")
+    );
+
+    expect(mockGetChangesets).toHaveBeenCalledTimes(2);
   });
 
   it("should update version", async () => {

@@ -174,6 +174,8 @@ export const ManageVersions = (props: ManageVersionsProps) => {
   const onVersionCreated = React.useCallback(() => {
     setCurrentTab(ManageVersionsTabs.Version);
     refreshVersions();
+    setChangesets(undefined);
+    setChangesetStatus(RequestStatus.NotStarted);
   }, [refreshVersions]);
 
   const latestVersion = React.useMemo(
