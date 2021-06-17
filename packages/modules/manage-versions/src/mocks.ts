@@ -25,12 +25,6 @@ export const MockedVersion = (
     name: `nv_name${index}`,
     description: `nv_description${index}`,
     createdDateTime: MOCKED_DATE,
-    changesetId: `ch${index}`,
-    _links: {
-      changeSet: {
-        href: `https://dev-api.bentley.com/iModels/${MOCKED_IMODEL_ID}/changesets/ch${index}`,
-      },
-    },
     ...props,
   };
 };
@@ -49,6 +43,7 @@ export const MockedChangeset = (
     displayName: `${index}`,
     description: `ch_description${index}`,
     pushDateTime: MOCKED_DATE,
+    _links: {},
     ...props,
   };
 };

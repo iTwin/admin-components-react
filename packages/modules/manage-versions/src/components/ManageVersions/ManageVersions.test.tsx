@@ -67,7 +67,8 @@ describe("ManageVersions", () => {
       );
     });
     expect(mockGetVersions).toHaveBeenCalledWith(MOCKED_IMODEL_ID, {
-      top: 1000,
+      top: 100,
+      skip: undefined,
     });
   });
 
@@ -137,16 +138,32 @@ describe("ManageVersions", () => {
       ...MockedVersion(2),
       createdDateTime: "9999-01-01",
     };
-    mockGetVersions.mockResolvedValueOnce(
-      [MockedVersion(1), latestVersion, MockedVersion(3)].map((v) => ({
-        ...v,
-        changesetId: "",
-      }))
-    );
+    mockGetVersions.mockResolvedValueOnce([
+      MockedVersion(1),
+      latestVersion,
+      MockedVersion(3),
+    ]);
     mockGetVersions.mockResolvedValueOnce([
       MockedVersion(4, { name: "test name", description: "test description" }),
       ...MockedVersionList(),
     ]);
+    mockGetChangesets.mockResolvedValueOnce([
+      MockedChangeset(1),
+      MockedChangeset(2, {
+        _links: { namedVersion: { href: "https://test.url" } },
+      }),
+      MockedChangeset(3),
+    ]);
+    mockGetChangesets.mockResolvedValueOnce([
+      MockedChangeset(1, {
+        _links: { namedVersion: { href: "https://test.url" } },
+      }),
+      MockedChangeset(2, {
+        _links: { namedVersion: { href: "https://test.url" } },
+      }),
+      MockedChangeset(3),
+    ]);
+
     mockCreateVersion.mockResolvedValue(MockedVersion());
     const { container } = renderComponent();
 
@@ -192,6 +209,13 @@ describe("ManageVersions", () => {
 
     expect(mockGetVersions).toHaveBeenCalledTimes(2);
     expect(mockCreateVersion).toHaveBeenCalled();
+
+    screen.getByText(defaultStrings.changes).click();
+    await waitForElementToBeRemoved(() =>
+      container.querySelector(".iui-progress-indicator-radial")
+    );
+
+    expect(mockGetChangesets).toHaveBeenCalledTimes(2);
   });
 
   it("should update version", async () => {

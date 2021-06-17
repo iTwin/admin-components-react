@@ -8,4 +8,7 @@ export type Changeset = {
   description: string;
   index: string;
   pushDateTime: string;
+  _links: {
+    namedVersion?: { href: string };
+  };
 };

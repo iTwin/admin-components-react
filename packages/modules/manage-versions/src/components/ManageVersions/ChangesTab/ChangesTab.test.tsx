@@ -20,7 +20,6 @@ const renderComponent = (initialProps?: Partial<ChangesTabProps>) => {
     changesets: MockedChangesetList(),
     status: RequestStatus.Finished,
     loadMoreChanges: jest.fn(),
-    canCreateVersion: () => true,
     latestVersion: undefined,
     onVersionCreated: jest.fn(),
     ...initialProps,
@@ -72,14 +71,20 @@ describe("ChangesTab", () => {
     ).toBeTruthy();
   });
 
-  it("should not show create version icon when can not create version", () => {
-    const { container } = renderComponent({ canCreateVersion: () => false });
+  it("should not show create version icon when changeset already has a version", () => {
+    const { container } = renderComponent({
+      changesets: [
+        MockedChangeset(1, {
+          _links: { namedVersion: { href: "https://test.url" } },
+        }),
+      ],
+    });
     const rows = container.querySelectorAll(".iui-tables-body .iui-tables-row");
-    expect(rows.length).toBe(3);
+    expect(rows.length).toBe(1);
 
-    const createVersionicons = container.querySelectorAll(
+    const createVersionicon = container.querySelector(
       ".iac-create-version-icon"
     );
-    expect(createVersionicons.length).toBe(0);
+    expect(createVersionicon).toBeFalsy();
   });
 });

@@ -21,39 +21,18 @@ export class NamedVersionClient {
     imodelId: string,
     requestOptions: RequestOptions = {}
   ): Promise<NamedVersion[]> {
-    const { skip = 0, top } = requestOptions;
     return this._http
       .get(
         `${UrlBuilder.buildVersionsUrl(
           imodelId,
           undefined,
           this._serverEnvironmentPrefix
-        )}${UrlBuilder.getQuery({ skip, top })}`,
+        )}${UrlBuilder.getQuery(requestOptions)}`,
         {
           headers: { [HttpHeaderNames.Prefer]: "return=representation" },
         }
       )
-      .then((resp) => resp.namedVersions as NamedVersion[])
-      .then(async (namedVersions) => {
-        // Recursively load all Named Versions
-        const versionCount = namedVersions.length;
-        if (versionCount === top) {
-          return [
-            ...namedVersions,
-            ...(await this.get(imodelId, {
-              skip: skip + versionCount,
-              top,
-            })),
-          ];
-        }
-        return namedVersions;
-      })
-      .then((namedVersions) =>
-        namedVersions.map((nv) => ({
-          ...nv,
-          changesetId: nv._links.changeSet.href.split("/")[6],
-        }))
-      );
+      .then((resp) => resp.namedVersions);
   }
 
   public async create(

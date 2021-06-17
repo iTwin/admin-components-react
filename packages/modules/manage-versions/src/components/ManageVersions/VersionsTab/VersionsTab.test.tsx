@@ -20,6 +20,7 @@ const renderComponent = (initialProps?: Partial<VersionsTabProps>) => {
     versions: MockedVersionList(),
     status: RequestStatus.Finished,
     onVersionUpdated: jest.fn(),
+    loadMoreVersions: jest.fn(),
     ...initialProps,
   };
   return render(

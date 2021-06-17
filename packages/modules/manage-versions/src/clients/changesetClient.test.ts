@@ -21,7 +21,7 @@ describe("ChangesetClient", () => {
     expect(
       mockHttpGet
     ).toHaveBeenCalledWith(
-      `https://api.bentley.com/imodels/${MOCKED_IMODEL_ID}/changesets`,
+      `https://api.bentley.com/imodels/${MOCKED_IMODEL_ID}/changesets?$orderBy=index+desc`,
       { headers: { Prefer: "return=representation" } }
     );
   });
@@ -33,7 +33,7 @@ describe("ChangesetClient", () => {
     expect(
       mockHttpGet
     ).toHaveBeenCalledWith(
-      `https://api.bentley.com/imodels/${MOCKED_IMODEL_ID}/changesets?$top=10&$skip=20`,
+      `https://api.bentley.com/imodels/${MOCKED_IMODEL_ID}/changesets?$orderBy=index+desc&$top=10&$skip=20`,
       { headers: { Prefer: "return=representation" } }
     );
   });
