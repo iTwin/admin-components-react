@@ -20334,7 +20334,7 @@ packages:
       babel-eslint: '*'
     resolution:
       integrity: sha512-LOVXjy0qEQKkCCUqC/pl1TBSX4sxVMlYMyckIz9yfk266RtrGioE5J06KU9GduEzBsukZ4udccwSlfYs3edPeQ==
-      tarball: file:projects/delete-imodel.tgz
+      tarball: file:projects/delete-imodel-react.tgz
     version: 0.0.0
   file:projects/imodel-browser-react.tgz:
     dependencies:
@@ -20442,7 +20442,7 @@ packages:
       babel-eslint: '*'
     resolution:
       integrity: sha512-7Nh6rD9n7UnfGzeF48sMDUdkHLIRUYMRlYebumYvZyZe/ZK1OyKzZN1rhgavWfiIw/FnU4Uk7Rvzc6XwqyTkAw==
-      tarball: file:projects/manage-versions.tgz
+      tarball: file:projects/manage-versions-react.tgz
     version: 0.0.0
   file:projects/platform-storybook.tgz_201e3756f34be7daf0312fc0cffaefcf:
     dependencies:
