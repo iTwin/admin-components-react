@@ -1,6 +1,13 @@
 # Change Log - @itwin/manage-versions-react
 
-This log was last generated on Fri, 11 Jun 2021 16:24:41 GMT and should not be manually modified.
+This log was last generated on Tue, 22 Jun 2021 07:28:46 GMT and should not be manually modified.
+
+## 0.5.0
+Tue, 22 Jun 2021 07:28:46 GMT
+
+### Minor changes
+
+- Ordering changesets from the newest, changed create version icon, added lazy-loading to versions, other APIM related changes.
 
 ## 0.4.1
 Fri, 11 Jun 2021 16:24:41 GMT
