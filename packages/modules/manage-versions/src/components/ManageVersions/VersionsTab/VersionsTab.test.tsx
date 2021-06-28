@@ -42,7 +42,6 @@ describe("VersionsTab", () => {
       const cells = row.querySelectorAll(".iui-tables-cell");
       expect(cells.length).toBe(5);
       expect(cells[0].textContent).toContain(MockedVersion(index).name);
-      fireEvent.click(cells[0].querySelector(".iui-anchor") as HTMLElement);
       expect(cells[1].textContent).toContain(MockedVersion(index).description);
       expect(cells[2].textContent).toContain(
         new Date(MockedVersion(index).createdDateTime).toLocaleString()
@@ -52,21 +51,13 @@ describe("VersionsTab", () => {
       expect(cells[4].querySelector(".iac-update-version-icon")).toBeTruthy();
     });
 
-    expect(onViewClick).toHaveBeenCalledTimes(6);
+    expect(onViewClick).toHaveBeenCalledTimes(3);
   });
 
   it("should not show view column and name should not be clickable when onViewClick is not provided", () => {
     const { container } = renderComponent({ onViewClick: undefined });
     const rows = container.querySelectorAll(".iui-tables-body .iui-tables-row");
     expect(rows.length).toBe(3);
-
-    rows.forEach((row, index) => {
-      const cells = row.querySelectorAll(".iui-tables-cell");
-      expect(cells.length).toBe(4);
-      expect(cells[0].textContent).toContain(MockedVersion(index).name);
-      expect(cells[0].querySelector(".iui-anchor")).toBeFalsy();
-    });
-
     expect(screen.queryAllByText(defaultStrings.view).length).toBe(0);
   });
 

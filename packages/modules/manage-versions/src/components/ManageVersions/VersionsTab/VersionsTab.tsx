@@ -50,22 +50,6 @@ const VersionsTab = (props: VersionsTabProps) => {
             id: "NAME",
             Header: stringsOverrides.name,
             accessor: "name",
-            Cell: (props: CellProps<NamedVersion>) => {
-              return (
-                <>
-                  {onViewClick ? (
-                    <span
-                      className="iui-anchor"
-                      onClick={() => onViewClick(props.row.original)}
-                    >
-                      {props.row.original.name}
-                    </span>
-                  ) : (
-                    <>{props.row.original.name}</>
-                  )}
-                </>
-              );
-            },
           },
           {
             id: "DESCRIPTION",
