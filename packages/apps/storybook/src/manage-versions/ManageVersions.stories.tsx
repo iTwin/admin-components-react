@@ -27,6 +27,10 @@ export default {
   argTypes: {
     ...accessTokenArgTypes,
     log: { defaultValue: action("Error logged. "), control: { disable: true } },
+    onViewClick: {
+      defaultValue: action("View Named Version clicked"),
+      control: { disable: true },
+    },
   },
 } as Meta;
 

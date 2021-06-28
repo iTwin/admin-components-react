@@ -10,3 +10,5 @@ export type {
   LogFunc,
   ManageVersionsStringOverrides,
 } from "./components/ManageVersions/types";
+
+export type { NamedVersion } from "./models";
