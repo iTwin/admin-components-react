@@ -1,6 +1,13 @@
 # Change Log - @itwin/manage-versions-react
 
-This log was last generated on Tue, 22 Jun 2021 07:28:46 GMT and should not be manually modified.
+This log was last generated on Wed, 30 Jun 2021 12:19:08 GMT and should not be manually modified.
+
+## 0.6.0
+Wed, 30 Jun 2021 12:19:08 GMT
+
+### Minor changes
+
+- Added View column and click handler prop. Currently allowing to view all Named Versions as APIM is missing Checkpoints API.
 
 ## 0.5.0
 Tue, 22 Jun 2021 07:28:46 GMT

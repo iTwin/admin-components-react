@@ -2,6 +2,18 @@
   "name": "@itwin/manage-versions-react",
   "entries": [
     {
+      "version": "0.6.0",
+      "tag": "@itwin/manage-versions-react_v0.6.0",
+      "date": "Wed, 30 Jun 2021 12:19:08 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Added View column and click handler prop. Currently allowing to view all Named Versions as APIM is missing Checkpoints API."
+          }
+        ]
+      }
+    },
+    {
       "version": "0.5.0",
       "tag": "@itwin/manage-versions-react_v0.5.0",
       "date": "Tue, 22 Jun 2021 07:28:46 GMT",
