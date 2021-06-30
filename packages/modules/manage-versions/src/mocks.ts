@@ -25,6 +25,11 @@ export const MockedVersion = (
     name: `nv_name${index}`,
     description: `nv_description${index}`,
     createdDateTime: MOCKED_DATE,
+    _links: {
+      changeSet: {
+        href: "https://someChangesetUrl.com",
+      },
+    },
     ...props,
   };
 };

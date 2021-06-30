@@ -30,6 +30,8 @@ export type ManageVersionsStringOverrides = {
   updateNamedVersion: string;
   /** Default: `Update` */
   update: string;
+  /** Default: `View` */
+  view: string;
   /** Error message when failed to fetch Named Versions. Default `Could not get Named Versions. Please try again later.`. */
   messageFailedGetNamedVersions: string;
   /** Message when there are no Named Versions. Default `There are no Named Versions created. To create first go to Changes.`. */

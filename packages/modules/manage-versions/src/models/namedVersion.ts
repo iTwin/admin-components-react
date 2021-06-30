@@ -8,4 +8,9 @@ export type NamedVersion = {
   name: string;
   description: string;
   createdDateTime: string;
+  _links: {
+    changeSet: {
+      href: string;
+    };
+  };
 };

@@ -29,6 +29,7 @@ export const defaultStrings: ManageVersionsStringOverrides = {
   create: "Create",
   updateNamedVersion: "Update a Named Version",
   update: "Update",
+  view: "View",
   messageFailedGetNamedVersions:
     "Could not get Named Versions. Please try again later.",
   messageNoNamedVersions:
@@ -60,6 +61,8 @@ export type ManageVersionsProps = {
   stringsOverrides?: ManageVersionsStringOverrides;
   /** Method that logs inner component errors. */
   log?: LogFunc;
+  /** Callback when view Named Version is clicked. If not present, then `View` won't be shown. */
+  onViewClick?: (version: NamedVersion) => void;
 };
 
 enum ManageVersionsTabs {
@@ -77,6 +80,7 @@ export const ManageVersions = (props: ManageVersionsProps) => {
     imodelId,
     stringsOverrides = defaultStrings,
     log,
+    onViewClick,
   } = props;
 
   const versionClient = React.useMemo(
@@ -210,6 +214,7 @@ export const ManageVersions = (props: ManageVersionsProps) => {
             status={versionStatus}
             onVersionUpdated={refreshVersions}
             loadMoreVersions={getMoreVersions}
+            onViewClick={onViewClick}
           />
         )}
         {currentTab === ManageVersionsTabs.Changes && (

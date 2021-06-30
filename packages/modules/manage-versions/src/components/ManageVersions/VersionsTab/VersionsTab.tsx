@@ -19,10 +19,17 @@ export type VersionsTabProps = {
   status: RequestStatus;
   onVersionUpdated: () => void;
   loadMoreVersions: () => void;
+  onViewClick?: (version: NamedVersion) => void;
 };
 
 const VersionsTab = (props: VersionsTabProps) => {
-  const { versions, status, onVersionUpdated, loadMoreVersions } = props;
+  const {
+    versions,
+    status,
+    onVersionUpdated,
+    loadMoreVersions,
+    onViewClick,
+  } = props;
 
   const { stringsOverrides } = useConfig();
 
@@ -35,7 +42,7 @@ const VersionsTab = (props: VersionsTabProps) => {
   ] = React.useState(false);
 
   const columns = React.useMemo(() => {
-    return [
+    const tableColumns = [
       {
         Header: "Name",
         columns: [
@@ -87,11 +94,30 @@ const VersionsTab = (props: VersionsTabProps) => {
         ],
       },
     ];
+    if (onViewClick) {
+      tableColumns[0].columns.splice(3, 0, {
+        id: "versions-table-view",
+        width: 100,
+        Cell: (props: CellProps<NamedVersion>) => {
+          return (
+            <span
+              className="iui-anchor"
+              onClick={() => onViewClick(props.row.original)}
+            >
+              {stringsOverrides.view}
+            </span>
+          );
+        },
+      });
+    }
+    return tableColumns;
   }, [
+    onViewClick,
     stringsOverrides.description,
     stringsOverrides.name,
     stringsOverrides.time,
     stringsOverrides.updateNamedVersion,
+    stringsOverrides.view,
   ]);
 
   const emptyTableContent = React.useMemo(() => {
