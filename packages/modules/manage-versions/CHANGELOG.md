@@ -1,6 +1,13 @@
 # Change Log - @itwin/manage-versions-react
 
-This log was last generated on Wed, 30 Jun 2021 12:19:08 GMT and should not be manually modified.
+This log was last generated on Thu, 01 Jul 2021 12:45:44 GMT and should not be manually modified.
+
+## 0.6.1
+Thu, 01 Jul 2021 12:45:44 GMT
+
+### Patches
+
+- Fix when old changesets list is returned after Named Version creation.
 
 ## 0.6.0
 Wed, 30 Jun 2021 12:19:08 GMT
