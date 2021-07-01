@@ -18,11 +18,14 @@ describe("ChangesetClient", () => {
     mockHttpGet.mockResolvedValue({ changesets: MockedChangesetList() });
 
     await changesetClient.get(MOCKED_IMODEL_ID);
-    expect(
-      mockHttpGet
-    ).toHaveBeenCalledWith(
+    expect(mockHttpGet).toHaveBeenCalledWith(
       `https://api.bentley.com/imodels/${MOCKED_IMODEL_ID}/changesets?$orderBy=index+desc`,
-      { headers: { Prefer: "return=representation" } }
+      {
+        headers: {
+          Prefer: "return=representation",
+          "Cache-Control": "no-cache",
+        },
+      }
     );
   });
 
@@ -30,11 +33,14 @@ describe("ChangesetClient", () => {
     mockHttpGet.mockResolvedValue({ changesets: MockedChangesetList() });
 
     await changesetClient.get(MOCKED_IMODEL_ID, { top: 10, skip: 20 });
-    expect(
-      mockHttpGet
-    ).toHaveBeenCalledWith(
+    expect(mockHttpGet).toHaveBeenCalledWith(
       `https://api.bentley.com/imodels/${MOCKED_IMODEL_ID}/changesets?$orderBy=index+desc&$top=10&$skip=20`,
-      { headers: { Prefer: "return=representation" } }
+      {
+        headers: {
+          Prefer: "return=representation",
+          "Cache-Control": "no-cache",
+        },
+      }
     );
   });
 });
