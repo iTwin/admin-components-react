@@ -30,7 +30,7 @@ export class ChangesetClient {
         {
           headers: {
             [HttpHeaderNames.Prefer]: "return=representation",
-            // Requesting new changesets every time until APIM fixes its bug with a eTag.
+            // Requesting new changesets every time until APIM fixes its bug with an eTag.
             [HttpHeaderNames.CacheControl]: "no-cache",
           },
         }
