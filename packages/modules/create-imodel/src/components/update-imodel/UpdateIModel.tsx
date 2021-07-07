@@ -73,26 +73,28 @@ export function UpdateIModel(props: UpdateIModelProps) {
     ...stringsOverrides,
   };
 
-  const updateiModel = async (imodel: BaseIModel) => {
+  const updateiModel = async (imodel: {
+    name: string;
+    description: string;
+    thumbnail?: { src?: ArrayBuffer; type: string };
+  }) => {
     setIsLoading(true);
     try {
-      const response = await fetch(
-        `https://${
-          apiOverrides?.serverEnvironmentPrefix &&
-          `${apiOverrides.serverEnvironmentPrefix}-`
-        }api.bentley.com/imodels/${imodelId}`,
-        {
-          method: "PATCH",
-          headers: {
-            Authorization: `${accessToken}`,
-            Prefer: "return=representation",
-          },
-          body: JSON.stringify({
-            name: imodel.name,
-            description: imodel.description,
-          }),
-        }
-      );
+      const imodelUrl = `https://${
+        apiOverrides?.serverEnvironmentPrefix &&
+        `${apiOverrides.serverEnvironmentPrefix}-`
+      }api.bentley.com/imodels/${imodelId}`;
+      const response = await fetch(imodelUrl, {
+        method: "PATCH",
+        headers: {
+          Authorization: `${accessToken}`,
+          Prefer: "return=representation",
+        },
+        body: JSON.stringify({
+          name: imodel.name,
+          description: imodel.description,
+        }),
+      });
       if (!response.ok) {
         let error = new Error();
         const responseBody = await response.json();
@@ -100,6 +102,16 @@ export function UpdateIModel(props: UpdateIModelProps) {
         throw error;
       } else {
         const updatedimodel = await response.json();
+        if (imodel.thumbnail?.src) {
+          await fetch(`${imodelUrl}/thumbnail`, {
+            method: "PUT",
+            headers: {
+              Authorization: `${accessToken}`,
+              "Content-Type": imodel.thumbnail.type,
+            },
+            body: imodel.thumbnail.src,
+          });
+        }
         setIsLoading(false);
         toaster.positive(updatedStrings.successMessage, {
           hasCloseButton: true,

@@ -14,12 +14,17 @@ import {
 import React from "react";
 
 import { BaseIModel } from "../../types";
+import { UploadImage } from "../upload-image/UploadImage";
 
 export type BaseIModelProps = {
   /** Callback on canceled action. */
   onClose?: () => void;
   /** Callback on action. */
-  onActionClick?: (imodel: BaseIModel) => void;
+  onActionClick?: (imodel: {
+    name: string;
+    description: string;
+    thumbnail?: { src?: ArrayBuffer; type: string };
+  }) => void;
   /** Object of string overrides. */
   stringsOverrides?: {
     /** The title of the page. */
@@ -56,10 +61,15 @@ export function BaseIModelPage(props: BaseIModelProps) {
   const [imodel, setImodel] = React.useState<{
     name: string;
     description: string;
+    thumbnail?: { src?: ArrayBuffer; type: string };
   }>({
     name: initialIModel?.name ?? "",
     description: initialIModel?.description ?? "",
+    thumbnail: { src: initialIModel?.thumbnail, type: "image/png" },
   });
+  const [isThumbnailChanged, setIsThumbnailChanged] = React.useState<boolean>(
+    false
+  );
 
   const updatedStrings = {
     titleString: "Create an iModel",
@@ -97,8 +107,17 @@ export function BaseIModelPage(props: BaseIModelProps) {
   const isDataChanged = () => {
     return (
       imodel.name !== initialIModel?.name ||
-      imodel.description !== initialIModel?.description
+      imodel.description !== initialIModel?.description ||
+      isThumbnailChanged
     );
+  };
+
+  const onImageChange = (src: ArrayBuffer, type: string) => {
+    setIsThumbnailChanged(true);
+    setImodel((prevState) => ({
+      ...prevState,
+      thumbnail: { src, type },
+    }));
   };
 
   return (
@@ -106,43 +125,54 @@ export function BaseIModelPage(props: BaseIModelProps) {
       <div className="iac-imodel-base">
         <div>
           <Title>{updatedStrings.titleString}</Title>
-          <div className="iac-inputs-container">
-            <LabeledInput
-              label={updatedStrings.nameString}
-              name="name"
-              setFocus
-              required
-              value={imodel.name}
-              onChange={onPropChange}
-              message={
-                isPropertyInvalid(imodel.name)
-                  ? updatedStrings.nameTooLong
-                  : undefined
-              }
-              status={isPropertyInvalid(imodel.name) ? "negative" : undefined}
-            />
-            <LabeledTextarea
-              label={updatedStrings.descriptionString ?? "Description"}
-              name="description"
-              value={imodel.description}
-              onChange={onPropChange}
-              rows={4}
-              message={
-                isPropertyInvalid(imodel.description)
-                  ? updatedStrings.descriptionTooLong
-                  : undefined
-              }
-              status={
-                isPropertyInvalid(imodel.description) ? "negative" : undefined
-              }
-            />
+          <div>
+            <div className="iac-inputs-container">
+              <LabeledInput
+                label={updatedStrings.nameString}
+                name="name"
+                setFocus
+                required
+                value={imodel.name}
+                onChange={onPropChange}
+                message={
+                  isPropertyInvalid(imodel.name)
+                    ? updatedStrings.nameTooLong
+                    : undefined
+                }
+                status={isPropertyInvalid(imodel.name) ? "negative" : undefined}
+              />
+              <LabeledTextarea
+                label={updatedStrings.descriptionString ?? "Description"}
+                name="description"
+                value={imodel.description}
+                onChange={onPropChange}
+                rows={4}
+                message={
+                  isPropertyInvalid(imodel.description)
+                    ? updatedStrings.descriptionTooLong
+                    : undefined
+                }
+                status={
+                  isPropertyInvalid(imodel.description) ? "negative" : undefined
+                }
+              />
+              <UploadImage
+                onChange={onImageChange}
+                src={imodel.thumbnail?.src}
+              />
+            </div>
           </div>
         </div>
         <div className="iac-button-bar">
           <Button
             styleType="cta"
             disabled={!isDataChanged() || !isDataValid() || isLoading}
-            onClick={() => onActionClick?.(imodel)}
+            onClick={() =>
+              onActionClick?.({
+                ...imodel,
+                thumbnail: isThumbnailChanged ? imodel.thumbnail : undefined,
+              })
+            }
           >
             {updatedStrings.confirmButton}
           </Button>

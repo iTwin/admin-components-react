@@ -7,7 +7,7 @@ import React from "react";
 
 import { BaseIModelPage } from "./BaseIModel";
 
-describe("CreateIModel", () => {
+describe("BaseIModel", () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -25,6 +25,11 @@ describe("CreateIModel", () => {
     expect(container.querySelector(".iac-inputs-container input")).toBeTruthy();
     expect(
       container.querySelector(".iac-inputs-container textarea")
+    ).toBeTruthy();
+    expect(
+      container.querySelector(
+        ".iac-inputs-container .iac-file-upload-container"
+      )
     ).toBeTruthy();
 
     const confirmButton = container.querySelector(
