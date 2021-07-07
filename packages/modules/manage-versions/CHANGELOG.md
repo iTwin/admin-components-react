@@ -1,6 +1,27 @@
 # Change Log - @itwin/manage-versions-react
 
-This log was last generated on Fri, 11 Jun 2021 16:24:41 GMT and should not be manually modified.
+This log was last generated on Thu, 01 Jul 2021 12:45:44 GMT and should not be manually modified.
+
+## 0.6.1
+Thu, 01 Jul 2021 12:45:44 GMT
+
+### Patches
+
+- Fix when old changesets list is returned after Named Version creation.
+
+## 0.6.0
+Wed, 30 Jun 2021 12:19:08 GMT
+
+### Minor changes
+
+- Added View column and click handler prop. Currently allowing to view all Named Versions as APIM is missing Checkpoints API.
+
+## 0.5.0
+Tue, 22 Jun 2021 07:28:46 GMT
+
+### Minor changes
+
+- Ordering changesets from the newest, changed create version icon, added lazy-loading to versions, other APIM related changes.
 
 ## 0.4.1
 Fri, 11 Jun 2021 16:24:41 GMT

@@ -26,9 +26,13 @@ export class ChangesetClient {
         `${UrlBuilder.buildChangesetUrl(
           imodelId,
           this._serverEnvironmentPrefix
-        )}${UrlBuilder.getQuery(requestOptions)}`,
+        )}${UrlBuilder.getQuery({ orderBy: "index+desc", ...requestOptions })}`,
         {
-          headers: { [HttpHeaderNames.Prefer]: "return=representation" },
+          headers: {
+            [HttpHeaderNames.Prefer]: "return=representation",
+            // Requesting new changesets every time until APIM fixes its bug with an eTag.
+            [HttpHeaderNames.CacheControl]: "no-cache",
+          },
         }
       )
       .then((resp) => resp.changesets);

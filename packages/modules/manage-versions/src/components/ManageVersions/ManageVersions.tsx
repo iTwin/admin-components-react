@@ -29,6 +29,7 @@ export const defaultStrings: ManageVersionsStringOverrides = {
   create: "Create",
   updateNamedVersion: "Update a Named Version",
   update: "Update",
+  view: "View",
   messageFailedGetNamedVersions:
     "Could not get Named Versions. Please try again later.",
   messageNoNamedVersions:
@@ -60,6 +61,8 @@ export type ManageVersionsProps = {
   stringsOverrides?: ManageVersionsStringOverrides;
   /** Method that logs inner component errors. */
   log?: LogFunc;
+  /** Callback when view Named Version is clicked. If not present, then `View` won't be shown. */
+  onViewClick?: (version: NamedVersion) => void;
 };
 
 enum ManageVersionsTabs {
@@ -67,7 +70,7 @@ enum ManageVersionsTabs {
   Changes = 1,
 }
 
-const NAMED_VERSION_TOP = 1000;
+const NAMED_VERSION_TOP = 100;
 const CHANGESET_TOP = 100;
 
 export const ManageVersions = (props: ManageVersionsProps) => {
@@ -77,6 +80,7 @@ export const ManageVersions = (props: ManageVersionsProps) => {
     imodelId,
     stringsOverrides = defaultStrings,
     log,
+    onViewClick,
   } = props;
 
   const versionClient = React.useMemo(
@@ -111,21 +115,41 @@ export const ManageVersions = (props: ManageVersionsProps) => {
     RequestStatus.NotStarted
   );
 
-  const getVersions = React.useCallback(() => {
-    setVersionStatus(RequestStatus.InProgress);
-    setVersions(undefined);
-    versionClient
-      .get(imodelId, { top: NAMED_VERSION_TOP })
-      .then((versions) => {
-        setVersionStatus(RequestStatus.Finished);
-        setVersions(versions);
-      })
-      .catch(() => setVersionStatus(RequestStatus.Failed));
-  }, [imodelId, versionClient]);
+  const getVersions = React.useCallback(
+    (skip?: number) => {
+      setVersionStatus(RequestStatus.InProgress);
+      versionClient
+        .get(imodelId, { top: NAMED_VERSION_TOP, skip })
+        .then((newVersions) => {
+          setVersionStatus(RequestStatus.Finished);
+          setVersions((oldVersions) => [
+            ...(oldVersions ?? []),
+            ...newVersions,
+          ]);
+        })
+        .catch(() => setVersionStatus(RequestStatus.Failed));
+    },
+    [imodelId, versionClient]
+  );
 
-  React.useEffect(() => {
+  const getMoreVersions = React.useCallback(() => {
+    if (versions && versions.length % NAMED_VERSION_TOP !== 0) {
+      return;
+    }
+
+    getVersions(versions?.length);
+  }, [getVersions, versions]);
+
+  const refreshVersions = React.useCallback(() => {
+    setVersions(undefined);
     getVersions();
   }, [getVersions]);
+
+  React.useEffect(() => {
+    if (versionStatus === RequestStatus.NotStarted) {
+      getVersions();
+    }
+  }, [getVersions, versionStatus]);
 
   const getChangesets = React.useCallback(() => {
     if (changesets && changesets.length % CHANGESET_TOP !== 0) {
@@ -151,17 +175,12 @@ export const ManageVersions = (props: ManageVersionsProps) => {
     }
   }, [changesetStatus, currentTab, getChangesets]);
 
-  const canCreateVersion = React.useCallback(
-    (changesetId: string): boolean => {
-      return !versions?.some((v) => changesetId === v.changesetId);
-    },
-    [versions]
-  );
-
   const onVersionCreated = React.useCallback(() => {
     setCurrentTab(ManageVersionsTabs.Version);
-    getVersions();
-  }, [getVersions]);
+    refreshVersions();
+    setChangesets(undefined);
+    setChangesetStatus(RequestStatus.NotStarted);
+  }, [refreshVersions]);
 
   const latestVersion = React.useMemo(
     () =>
@@ -193,7 +212,9 @@ export const ManageVersions = (props: ManageVersionsProps) => {
           <VersionsTab
             versions={versions ?? []}
             status={versionStatus}
-            onVersionUpdated={getVersions}
+            onVersionUpdated={refreshVersions}
+            loadMoreVersions={getMoreVersions}
+            onViewClick={onViewClick}
           />
         )}
         {currentTab === ManageVersionsTabs.Changes && (
@@ -201,7 +222,6 @@ export const ManageVersions = (props: ManageVersionsProps) => {
             changesets={changesets ?? []}
             status={changesetStatus}
             loadMoreChanges={getChangesets}
-            canCreateVersion={canCreateVersion}
             onVersionCreated={onVersionCreated}
             latestVersion={latestVersion}
           />

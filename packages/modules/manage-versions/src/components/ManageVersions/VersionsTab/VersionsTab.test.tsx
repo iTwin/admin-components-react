@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import React from "react";
 
 import { ConfigProvider } from "../../../common/configContext";
@@ -20,6 +20,8 @@ const renderComponent = (initialProps?: Partial<VersionsTabProps>) => {
     versions: MockedVersionList(),
     status: RequestStatus.Finished,
     onVersionUpdated: jest.fn(),
+    loadMoreVersions: jest.fn(),
+    onViewClick: jest.fn(),
     ...initialProps,
   };
   return render(
@@ -31,20 +33,32 @@ const renderComponent = (initialProps?: Partial<VersionsTabProps>) => {
 
 describe("VersionsTab", () => {
   it("should show data in versions table", () => {
-    const { container } = renderComponent();
+    const onViewClick = jest.fn();
+    const { container } = renderComponent({ onViewClick });
     const rows = container.querySelectorAll(".iui-tables-body .iui-tables-row");
     expect(rows.length).toBe(3);
 
     rows.forEach((row, index) => {
       const cells = row.querySelectorAll(".iui-tables-cell");
-      expect(cells.length).toBe(4);
+      expect(cells.length).toBe(5);
       expect(cells[0].textContent).toContain(MockedVersion(index).name);
       expect(cells[1].textContent).toContain(MockedVersion(index).description);
       expect(cells[2].textContent).toContain(
         new Date(MockedVersion(index).createdDateTime).toLocaleString()
       );
-      expect(cells[3].querySelector(".iac-update-version-icon")).toBeTruthy();
+      expect(cells[3].textContent).toContain(defaultStrings.view);
+      fireEvent.click(cells[3].querySelector(".iui-anchor") as HTMLElement);
+      expect(cells[4].querySelector(".iac-update-version-icon")).toBeTruthy();
     });
+
+    expect(onViewClick).toHaveBeenCalledTimes(3);
+  });
+
+  it("should not show view column and name should not be clickable when onViewClick is not provided", () => {
+    const { container } = renderComponent({ onViewClick: undefined });
+    const rows = container.querySelectorAll(".iui-tables-body .iui-tables-row");
+    expect(rows.length).toBe(3);
+    expect(screen.queryAllByText(defaultStrings.view).length).toBe(0);
   });
 
   it("should show empty data message", () => {

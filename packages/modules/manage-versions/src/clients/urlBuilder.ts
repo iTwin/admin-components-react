@@ -3,7 +3,11 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 export class UrlBuilder {
-  public static getQuery = (params: { skip?: number; top?: number }) => {
+  public static getQuery = (params: {
+    skip?: number;
+    top?: number;
+    orderBy?: string;
+  }) => {
     const query = Object.entries(params)
       .filter(([key, value]) => !!value)
       .map(([key, value]) => `$${key}=${value}`)

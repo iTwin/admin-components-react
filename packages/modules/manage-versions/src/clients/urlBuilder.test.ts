@@ -30,9 +30,9 @@ describe("UrlBuilder", () => {
   });
 
   it("should return query with given params", () => {
-    expect(UrlBuilder.getQuery({ skip: 20, top: 10 })).toEqual(
-      "?$skip=20&$top=10"
-    );
+    expect(
+      UrlBuilder.getQuery({ skip: 20, top: 10, orderBy: "index+desc" })
+    ).toEqual("?$skip=20&$top=10&$orderBy=index+desc");
   });
 
   it("should return query with given params (one with falsy value)", () => {

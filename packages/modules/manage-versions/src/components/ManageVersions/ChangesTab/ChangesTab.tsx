@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import "./ChangesTab.scss";
 
-import { SvgFlag } from "@itwin/itwinui-icons-react";
+import { SvgNamedVersionAdd } from "@itwin/itwinui-icons-react";
 import { Table } from "@itwin/itwinui-react";
 import React from "react";
 import { CellProps } from "react-table";
@@ -18,7 +18,6 @@ export type ChangesTabProps = {
   changesets: Changeset[];
   status: RequestStatus;
   loadMoreChanges: () => void;
-  canCreateVersion: (changesetId: string) => boolean;
   onVersionCreated: () => void;
   latestVersion: NamedVersion | undefined;
 };
@@ -28,7 +27,6 @@ const ChangesTab = (props: ChangesTabProps) => {
     changesets,
     status,
     loadMoreChanges,
-    canCreateVersion,
     onVersionCreated,
     latestVersion,
   } = props;
@@ -43,6 +41,10 @@ const ChangesTab = (props: ChangesTabProps) => {
   const [currentChangeset, setCurrentChangeset] = React.useState<
     Changeset | undefined
   >(undefined);
+
+  const canCreateVersion = React.useCallback((changeset: Changeset) => {
+    return !changeset._links.namedVersion;
+  }, []);
 
   const columns = React.useMemo(() => {
     return [
@@ -80,7 +82,7 @@ const ChangesTab = (props: ChangesTabProps) => {
               const changeset = props.data[props.row.index];
               return (
                 <>
-                  {canCreateVersion(changeset.id) && (
+                  {canCreateVersion(changeset) && (
                     <div
                       className="iac-create-version-icon"
                       onClick={() => {
@@ -89,7 +91,7 @@ const ChangesTab = (props: ChangesTabProps) => {
                       }}
                       title={stringsOverrides.createNamedVersion}
                     >
-                      <SvgFlag />
+                      <SvgNamedVersionAdd />
                     </div>
                   )}
                 </>
