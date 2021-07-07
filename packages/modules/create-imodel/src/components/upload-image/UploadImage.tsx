@@ -61,15 +61,6 @@ export function UploadImage({
       return;
     }
 
-    // const fileReader = new FileReader();
-    // fileReader.onloadend = () => {
-    //   if (!!fileReader.error) {
-    //     return;
-    //   }
-    //   setImageUrl(fileReader.result as string);
-    // };
-    // fileReader.readAsDataURL(new Blob([src]));
-
     setImageUrl(convertArrayBufferToUrlBase64PNG(src));
   }, [src]);
 

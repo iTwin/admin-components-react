@@ -140,6 +140,7 @@ export function BaseIModelPage(props: BaseIModelProps) {
                     : undefined
                 }
                 status={isPropertyInvalid(imodel.name) ? "negative" : undefined}
+                autoComplete="off"
               />
               <LabeledTextarea
                 label={updatedStrings.descriptionString ?? "Description"}
@@ -155,6 +156,7 @@ export function BaseIModelPage(props: BaseIModelProps) {
                 status={
                   isPropertyInvalid(imodel.description) ? "negative" : undefined
                 }
+                autoComplete="off"
               />
               <UploadImage
                 onChange={onImageChange}
