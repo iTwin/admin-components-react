@@ -37,6 +37,9 @@
     width: 100%;
     max-width: 600px;
   }
+  > * {
+    margin-bottom: $iui-s;
+  }
 }
 
 .iac-imodel-base {

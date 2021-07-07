@@ -110,6 +110,7 @@ export function UploadImage({
         label={updatedStrings.uploadLabel}
         subtitle={updatedStrings.uploadSubLabel}
         onChange={onFileChange}
+        acceptType=".jpeg,.png"
       />
     </FileUpload>
   );
