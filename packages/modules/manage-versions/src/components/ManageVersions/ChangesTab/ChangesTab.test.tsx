@@ -34,11 +34,11 @@ const renderComponent = (initialProps?: Partial<ChangesTabProps>) => {
 describe("ChangesTab", () => {
   it("should show data in versions table", () => {
     const { container } = renderComponent();
-    const rows = container.querySelectorAll(".iui-tables-body .iui-tables-row");
+    const rows = container.querySelectorAll(".iui-table-body .iui-row");
     expect(rows.length).toBe(3);
 
     rows.forEach((row, index) => {
-      const cells = row.querySelectorAll(".iui-tables-cell");
+      const cells = row.querySelectorAll(".iui-cell");
       expect(cells.length).toBe(4);
       expect(cells[0].textContent).toContain(MockedChangeset(index).index);
       expect(cells[1].textContent).toContain(
@@ -79,7 +79,7 @@ describe("ChangesTab", () => {
         }),
       ],
     });
-    const rows = container.querySelectorAll(".iui-tables-body .iui-tables-row");
+    const rows = container.querySelectorAll(".iui-table-body .iui-row");
     expect(rows.length).toBe(1);
 
     const createVersionicon = container.querySelector(
