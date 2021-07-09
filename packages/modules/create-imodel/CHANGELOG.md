@@ -1,6 +1,13 @@
-# Change Log - @itwin/create-imodel
+# Change Log - @itwin/create-imodel-react
 
-This log was last generated on Tue, 25 May 2021 12:22:38 GMT and should not be manually modified.
+This log was last generated on Fri, 09 Jul 2021 07:47:52 GMT and should not be manually modified.
+
+## 0.3.0
+Fri, 09 Jul 2021 07:47:52 GMT
+
+### Minor changes
+
+- Upload thumbnail when creating or updating an iModel
 
 ## 0.2.1
 Tue, 25 May 2021 12:22:38 GMT
