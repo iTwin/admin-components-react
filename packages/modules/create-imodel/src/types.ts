@@ -31,4 +31,5 @@ export interface IModelFull {
 export type BaseIModel = {
   name: string;
   description?: string;
+  thumbnail?: ArrayBuffer;
 };

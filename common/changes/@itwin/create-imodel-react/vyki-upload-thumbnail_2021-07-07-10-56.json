@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/create-imodel-react",
+      "comment": "Upload thumbnail when creating or updating an iModel",
+      "type": "minor"
+    }
+  ],
+  "packageName": "@itwin/create-imodel-react",
+  "email": "81580355+veekeys@users.noreply.github.com"
+}

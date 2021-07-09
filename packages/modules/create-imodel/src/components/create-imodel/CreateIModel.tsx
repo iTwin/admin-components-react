@@ -68,34 +68,46 @@ export function CreateIModel(props: CreateIModelProps) {
     ...stringsOverrides,
   };
 
-  const createiModel = async (imodel: BaseIModel) => {
+  const createiModel = async (imodel: {
+    name: string;
+    description: string;
+    thumbnail?: { src?: ArrayBuffer; type: string };
+  }) => {
     setIsLoading(true);
     try {
-      const response = await fetch(
-        `https://${
-          apiOverrides?.serverEnvironmentPrefix &&
-          `${apiOverrides.serverEnvironmentPrefix}-`
-        }api.bentley.com/imodels`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `${accessToken}`,
-            Prefer: "return=representation",
-          },
-          body: JSON.stringify({
-            projectId,
-            name: imodel.name,
-            description: imodel.description,
-          }),
-        }
-      );
+      const imodelsUrl = `https://${
+        apiOverrides?.serverEnvironmentPrefix &&
+        `${apiOverrides.serverEnvironmentPrefix}-`
+      }api.bentley.com/imodels`;
+      const response = await fetch(imodelsUrl, {
+        method: "POST",
+        headers: {
+          Authorization: `${accessToken}`,
+          Prefer: "return=representation",
+        },
+        body: JSON.stringify({
+          projectId,
+          name: imodel.name,
+          description: imodel.description,
+        }),
+      });
       if (!response.ok) {
         let error = new Error();
         const responseBody = await response.json();
         error = { ...error, ...responseBody };
         throw error;
       } else {
-        const createdimodel = await response.json();
+        const createdimodel: { iModel: IModelFull } = await response.json();
+        if (imodel.thumbnail?.src) {
+          await fetch(`${imodelsUrl}/${createdimodel.iModel.id}/thumbnail`, {
+            method: "PUT",
+            headers: {
+              Authorization: `${accessToken}`,
+              "Content-Type": imodel.thumbnail.type,
+            },
+            body: imodel.thumbnail.src,
+          });
+        }
         setIsLoading(false);
         toaster.positive(updatedStrings.successMessage, {
           hasCloseButton: true,

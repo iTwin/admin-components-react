@@ -52,13 +52,11 @@ describe("ManageVersions", () => {
     await waitForElementToBeRemoved(() =>
       container.querySelector(".iui-progress-indicator-radial")
     );
-    const versionRows = container.querySelectorAll(
-      ".iui-tables-body .iui-tables-row"
-    );
+    const versionRows = container.querySelectorAll(".iui-table-body .iui-row");
     expect(versionRows.length).toBe(3);
 
     versionRows.forEach((row, index) => {
-      const cells = row.querySelectorAll(".iui-tables-cell");
+      const cells = row.querySelectorAll(".iui-cell");
       expect(cells.length).toBe(4);
       expect(cells[0].textContent).toContain(MockedVersion(index).name);
       expect(cells[1].textContent).toContain(MockedVersion(index).description);
@@ -81,12 +79,12 @@ describe("ManageVersions", () => {
       container.querySelector(".iui-progress-indicator-radial")
     );
     const changesetRows = container.querySelectorAll(
-      ".iui-tables-body .iui-tables-row"
+      ".iui-table-body .iui-row"
     );
     expect(changesetRows.length).toBe(3);
 
     changesetRows.forEach((row, index) => {
-      const cells = row.querySelectorAll(".iui-tables-cell");
+      const cells = row.querySelectorAll(".iui-cell");
       expect(cells.length).toBe(4);
       expect(cells[0].textContent).toContain(MockedChangeset(index).index);
       expect(cells[1].textContent).toContain(
@@ -201,7 +199,7 @@ describe("ManageVersions", () => {
     );
 
     const versionCells = container.querySelectorAll(
-      ".iui-tables-body .iui-tables-row:first-child .iui-tables-cell"
+      ".iui-table-body .iui-row:first-child .iui-cell"
     );
     expect(versionCells.length).toBe(4);
     expect(versionCells[0].textContent).toEqual("test name");
@@ -247,7 +245,7 @@ describe("ManageVersions", () => {
     );
 
     const versionCells = container.querySelectorAll(
-      ".iui-tables-body .iui-tables-row:first-child .iui-tables-cell"
+      ".iui-table-body .iui-row:first-child .iui-cell"
     );
     expect(versionCells.length).toBe(4);
     expect(versionCells[0].textContent).toEqual("test name");

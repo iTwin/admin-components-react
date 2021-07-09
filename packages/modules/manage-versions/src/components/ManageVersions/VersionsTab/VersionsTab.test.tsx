@@ -35,11 +35,11 @@ describe("VersionsTab", () => {
   it("should show data in versions table", () => {
     const onViewClick = jest.fn();
     const { container } = renderComponent({ onViewClick });
-    const rows = container.querySelectorAll(".iui-tables-body .iui-tables-row");
+    const rows = container.querySelectorAll(".iui-table-body .iui-row");
     expect(rows.length).toBe(3);
 
     rows.forEach((row, index) => {
-      const cells = row.querySelectorAll(".iui-tables-cell");
+      const cells = row.querySelectorAll(".iui-cell");
       expect(cells.length).toBe(5);
       expect(cells[0].textContent).toContain(MockedVersion(index).name);
       expect(cells[1].textContent).toContain(MockedVersion(index).description);
@@ -56,7 +56,7 @@ describe("VersionsTab", () => {
 
   it("should not show view column and name should not be clickable when onViewClick is not provided", () => {
     const { container } = renderComponent({ onViewClick: undefined });
-    const rows = container.querySelectorAll(".iui-tables-body .iui-tables-row");
+    const rows = container.querySelectorAll(".iui-table-body .iui-row");
     expect(rows.length).toBe(3);
     expect(screen.queryAllByText(defaultStrings.view).length).toBe(0);
   });

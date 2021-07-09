@@ -21,7 +21,7 @@
   "dependencies": {
     "@itwin/itwinui-css": "^0.9.0",
     "@itwin/itwinui-icons-react": "^1.2.0",
-    "@itwin/itwinui-react": "^1.6.0"
+    "@itwin/itwinui-react": "^1.11.0"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "~17.1.0",
