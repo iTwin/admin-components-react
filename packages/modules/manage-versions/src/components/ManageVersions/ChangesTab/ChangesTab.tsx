@@ -5,7 +5,7 @@
 import "./ChangesTab.scss";
 
 import { SvgNamedVersionAdd } from "@itwin/itwinui-icons-react";
-import { Table } from "@itwin/itwinui-react";
+import { IconButton, Table } from "@itwin/itwinui-react";
 import React from "react";
 import { CellProps } from "react-table";
 
@@ -83,16 +83,16 @@ const ChangesTab = (props: ChangesTabProps) => {
               return (
                 <>
                   {canCreateVersion(changeset) && (
-                    <div
-                      className="iac-create-version-icon"
+                    <IconButton
                       onClick={() => {
                         setCurrentChangeset(changeset);
                         setIsCreateVersionModalOpen(true);
                       }}
                       title={stringsOverrides.createNamedVersion}
+                      styleType="borderless"
                     >
                       <SvgNamedVersionAdd />
-                    </div>
+                    </IconButton>
                   )}
                 </>
               );

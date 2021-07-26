@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import React from "react";
 
 import { ConfigProvider } from "../../../common/configContext";
@@ -48,7 +48,9 @@ describe("VersionsTab", () => {
       );
       expect(cells[3].textContent).toContain(defaultStrings.view);
       fireEvent.click(cells[3].querySelector(".iui-anchor") as HTMLElement);
-      expect(cells[4].querySelector(".iac-update-version-icon")).toBeTruthy();
+      within(cells[4] as HTMLElement).getByTitle(
+        defaultStrings.updateNamedVersion
+      );
     });
 
     expect(onViewClick).toHaveBeenCalledTimes(3);

@@ -5,7 +5,7 @@
 import "./VersionsTab.scss";
 
 import { SvgEdit } from "@itwin/itwinui-icons-react";
-import { Table } from "@itwin/itwinui-react";
+import { IconButton, Table } from "@itwin/itwinui-react";
 import React from "react";
 import { CellProps } from "react-table";
 
@@ -77,16 +77,16 @@ const VersionsTab = (props: VersionsTabProps) => {
             Cell: (props: CellProps<NamedVersion>) => {
               return (
                 <>
-                  <div
-                    className="iac-update-version-icon"
+                  <IconButton
                     onClick={() => {
                       setCurrentVersion(props.row.original);
                       setIsUpdateVersionModalOpen(true);
                     }}
                     title={stringsOverrides.updateNamedVersion}
+                    styleType="borderless"
                   >
                     <SvgEdit />
-                  </div>
+                  </IconButton>
                 </>
               );
             },
