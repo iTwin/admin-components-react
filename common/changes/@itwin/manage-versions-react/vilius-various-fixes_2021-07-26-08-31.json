@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/manage-versions-react",
+      "comment": "Turned off autocomplete, removed workaround for APIM bug when wrong cached changesets were returned, using IconButton in Tables.",
+      "type": "patch"
+    }
+  ],
+  "packageName": "@itwin/manage-versions-react",
+  "email": "36186912+bentleyvk@users.noreply.github.com"
+}
