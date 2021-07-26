@@ -93,6 +93,7 @@ export const VersionModal = (props: VersionModalProps) => {
           }
           required
           setFocus
+          autoComplete="off"
         />
         <LabeledTextarea
           name="description"
@@ -109,6 +110,7 @@ export const VersionModal = (props: VersionModalProps) => {
                 )
           }
           rows={3}
+          autoComplete="off"
         />
         {children}
         <ModalButtonBar>
