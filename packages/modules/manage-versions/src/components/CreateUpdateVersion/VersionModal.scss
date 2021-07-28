@@ -2,6 +2,8 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+@import "~@itwin/itwinui-css/scss/variables";
+
 .iac-version-modal .iui-modal-dialog {
   max-width: calc(min(600px, 50%));
 }
@@ -13,4 +15,8 @@
   width: 100vw;
   top: 0;
   left: 0;
+}
+
+.iac-version-modal .iui-input-container {
+  margin-bottom: $iui-baseline;
 }

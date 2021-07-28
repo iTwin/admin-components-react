@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import React from "react";
 
 import { ConfigProvider } from "../../../common/configContext";
@@ -47,7 +47,9 @@ describe("ChangesTab", () => {
       expect(cells[2].textContent).toContain(
         new Date(MockedChangeset(index).pushDateTime).toLocaleString()
       );
-      expect(cells[3].querySelector(".iac-create-version-icon")).toBeTruthy();
+      within(cells[3] as HTMLElement).getByTitle(
+        defaultStrings.createNamedVersion
+      );
     });
   });
 
@@ -82,8 +84,8 @@ describe("ChangesTab", () => {
     const rows = container.querySelectorAll(".iui-table-body .iui-row");
     expect(rows.length).toBe(1);
 
-    const createVersionicon = container.querySelector(
-      ".iac-create-version-icon"
+    const createVersionicon = screen.queryByTitle(
+      defaultStrings.createNamedVersion
     );
     expect(createVersionicon).toBeFalsy();
   });

@@ -174,11 +174,11 @@ describe("ManageVersions", () => {
       container.querySelector(".iui-progress-indicator-radial")
     );
 
-    const createVersionButton = container.querySelector(
-      ".iac-create-version-icon"
-    ) as HTMLElement;
-    expect(createVersionButton).toBeTruthy();
-    createVersionButton.click();
+    const createVersionButtons = screen.getAllByTitle(
+      defaultStrings.createNamedVersion
+    );
+    expect(createVersionButtons.length).toBe(2);
+    createVersionButtons[0].click();
 
     const additionalInfos = document.querySelectorAll(".iac-additional-info");
     expect(additionalInfos.length).toBe(2);
@@ -229,11 +229,11 @@ describe("ManageVersions", () => {
       container.querySelector(".iui-progress-indicator-radial")
     );
 
-    const updateVersionButton = container.querySelector(
-      ".iac-update-version-icon"
-    ) as HTMLElement;
-    expect(updateVersionButton).toBeTruthy();
-    updateVersionButton.click();
+    const updateVersionButtons = screen.getAllByTitle(
+      defaultStrings.updateNamedVersion
+    );
+    expect(updateVersionButtons.length).toBe(3);
+    updateVersionButtons[0].click();
 
     const nameInput = document.querySelector("input") as HTMLInputElement;
     expect(nameInput).toBeTruthy();

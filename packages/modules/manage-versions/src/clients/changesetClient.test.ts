@@ -23,7 +23,6 @@ describe("ChangesetClient", () => {
       {
         headers: {
           Prefer: "return=representation",
-          "Cache-Control": "no-cache",
         },
       }
     );
@@ -38,7 +37,6 @@ describe("ChangesetClient", () => {
       {
         headers: {
           Prefer: "return=representation",
-          "Cache-Control": "no-cache",
         },
       }
     );

@@ -9,12 +9,3 @@
     word-break: break-word;
   }
 }
-
-.iac-update-version-icon {
-  width: $iui-m;
-  height: $iui-m;
-  @include themed {
-    fill: t(iui-icons-color-actionable);
-  }
-  cursor: pointer;
-}
