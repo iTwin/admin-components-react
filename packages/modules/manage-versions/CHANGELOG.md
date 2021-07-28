@@ -1,6 +1,13 @@
 # Change Log - @itwin/manage-versions-react
 
-This log was last generated on Thu, 01 Jul 2021 12:45:44 GMT and should not be manually modified.
+This log was last generated on Wed, 28 Jul 2021 05:23:14 GMT and should not be manually modified.
+
+## 0.6.2
+Wed, 28 Jul 2021 05:23:14 GMT
+
+### Patches
+
+- Turned off autocomplete, removed workaround for APIM bug when wrong cached changesets were returned, using IconButton in Tables.
 
 ## 0.6.1
 Thu, 01 Jul 2021 12:45:44 GMT
