@@ -23,6 +23,7 @@ import {
   defaultStrings,
   ManageVersions,
   ManageVersionsProps,
+  ManageVersionsTabs,
 } from "./ManageVersions";
 
 const renderComponent = (initialProps?: Partial<ManageVersionsProps>) => {
@@ -254,4 +255,40 @@ describe("ManageVersions", () => {
     expect(mockGetVersions).toHaveBeenCalledTimes(2);
     expect(mockUpdateVersion).toHaveBeenCalled();
   });
+});
+
+it("should render with changesets tab opened", async () => {
+  const { container } = renderComponent({
+    currentTab: ManageVersionsTabs.Changes,
+  });
+
+  await waitForElementToBeRemoved(() =>
+    container.querySelector(".iui-progress-indicator-radial")
+  );
+  const changesetRows = container.querySelectorAll(".iui-table-body .iui-row");
+  expect(changesetRows.length).toBe(3);
+
+  changesetRows.forEach((row, index) => {
+    const cells = row.querySelectorAll(".iui-cell");
+    expect(cells.length).toBe(4);
+    expect(cells[0].textContent).toContain(MockedChangeset(index).index);
+    expect(cells[1].textContent).toContain(MockedChangeset(index).description);
+    expect(cells[2].textContent).toContain(
+      new Date(MockedChangeset(index).pushDateTime).toLocaleString()
+    );
+  });
+});
+
+it("should trigger onTabChange", async () => {
+  const onTabChange = jest.fn();
+  const { container } = renderComponent({ onTabChange });
+
+  screen.getByText(defaultStrings.changes).click();
+  await waitForElementToBeRemoved(() =>
+    container.querySelector(".iui-progress-indicator-radial")
+  );
+  expect(onTabChange).toHaveBeenCalledWith(ManageVersionsTabs.Changes);
+
+  screen.getByText(defaultStrings.namedVersions).click();
+  expect(onTabChange).toHaveBeenCalledWith(ManageVersionsTabs.Versions);
 });

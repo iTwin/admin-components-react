@@ -63,10 +63,16 @@ export type ManageVersionsProps = {
   log?: LogFunc;
   /** Callback when view Named Version is clicked. If not present, then `View` won't be shown. */
   onViewClick?: (version: NamedVersion) => void;
+  /** Sets current tab.
+   * @default ManageVersionsTabs.Versions
+   */
+  currentTab?: ManageVersionsTabs;
+  /** Callback when tabs are switched. */
+  onTabChange?: (tab: ManageVersionsTabs) => void;
 };
 
-enum ManageVersionsTabs {
-  Version = 0,
+export enum ManageVersionsTabs {
+  Versions = 0,
   Changes = 1,
 }
 
@@ -81,6 +87,8 @@ export const ManageVersions = (props: ManageVersionsProps) => {
     stringsOverrides = defaultStrings,
     log,
     onViewClick,
+    currentTab = ManageVersionsTabs.Versions,
+    onTabChange,
   } = props;
 
   const versionClient = React.useMemo(
@@ -102,9 +110,11 @@ export const ManageVersions = (props: ManageVersionsProps) => {
     [accessToken, apiOverrides?.serverEnvironmentPrefix, log]
   );
 
-  const [currentTab, setCurrentTab] = React.useState(
-    ManageVersionsTabs.Version
-  );
+  const [_currentTab, setCurrentTab] = React.useState(currentTab);
+  React.useEffect(() => {
+    setCurrentTab(currentTab);
+  }, [currentTab]);
+
   const [versions, setVersions] = React.useState<NamedVersion[]>();
   const [versionStatus, setVersionStatus] = React.useState(
     RequestStatus.NotStarted
@@ -113,6 +123,14 @@ export const ManageVersions = (props: ManageVersionsProps) => {
   const [changesets, setChangesets] = React.useState<Changeset[]>();
   const [changesetStatus, setChangesetStatus] = React.useState(
     RequestStatus.NotStarted
+  );
+
+  const changeTab = React.useCallback(
+    (tab: ManageVersionsTabs) => {
+      setCurrentTab(tab);
+      onTabChange?.(tab);
+    },
+    [onTabChange]
   );
 
   const getVersions = React.useCallback(
@@ -168,19 +186,19 @@ export const ManageVersions = (props: ManageVersionsProps) => {
 
   React.useEffect(() => {
     if (
-      currentTab === ManageVersionsTabs.Changes &&
+      _currentTab === ManageVersionsTabs.Changes &&
       changesetStatus === RequestStatus.NotStarted
     ) {
       getChangesets();
     }
-  }, [changesetStatus, currentTab, getChangesets]);
+  }, [changesetStatus, _currentTab, getChangesets]);
 
   const onVersionCreated = React.useCallback(() => {
-    setCurrentTab(ManageVersionsTabs.Version);
+    changeTab(ManageVersionsTabs.Versions);
     refreshVersions();
     setChangesets(undefined);
     setChangesetStatus(RequestStatus.NotStarted);
-  }, [refreshVersions]);
+  }, [changeTab, refreshVersions]);
 
   const latestVersion = React.useMemo(
     () =>
@@ -204,11 +222,11 @@ export const ManageVersions = (props: ManageVersionsProps) => {
       <div>
         <HorizontalTabs
           labels={[stringsOverrides.namedVersions, stringsOverrides.changes]}
-          activeIndex={currentTab}
-          onTabSelected={(index) => setCurrentTab(index)}
+          activeIndex={_currentTab}
+          onTabSelected={(index) => changeTab(index)}
           type="borderless"
         />
-        {currentTab === ManageVersionsTabs.Version && (
+        {_currentTab === ManageVersionsTabs.Versions && (
           <VersionsTab
             versions={versions ?? []}
             status={versionStatus}
@@ -217,7 +235,7 @@ export const ManageVersions = (props: ManageVersionsProps) => {
             onViewClick={onViewClick}
           />
         )}
-        {currentTab === ManageVersionsTabs.Changes && (
+        {_currentTab === ManageVersionsTabs.Changes && (
           <ChangesTab
             changesets={changesets ?? []}
             status={changesetStatus}
