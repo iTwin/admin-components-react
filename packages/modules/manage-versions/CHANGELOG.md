@@ -1,6 +1,13 @@
 # Change Log - @itwin/manage-versions-react
 
-This log was last generated on Wed, 28 Jul 2021 05:23:14 GMT and should not be manually modified.
+This log was last generated on Fri, 30 Jul 2021 05:20:04 GMT and should not be manually modified.
+
+## 0.7.0
+Fri, 30 Jul 2021 05:20:04 GMT
+
+### Minor changes
+
+- Allowing to control current opened tab.
 
 ## 0.6.2
 Wed, 28 Jul 2021 05:23:14 GMT
