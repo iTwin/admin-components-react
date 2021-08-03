@@ -7,7 +7,7 @@ import { rest } from "msw";
 
 import { server } from "../../tests/mocks/server";
 import { DataStatus, IModelSortOptionsKeys } from "../../types";
-import { useIModelData } from "./useIModelData";
+import { IModelDataHookOptions, useIModelData } from "./useIModelData";
 
 describe("useIModelData hook", () => {
   // Establish API mocking before all tests.
@@ -112,7 +112,7 @@ describe("useIModelData hook", () => {
 
   it("apply sorting", async () => {
     const expectedSortOrder = ["2", "4", "5", "1", "3"];
-    const options = {
+    const options: IModelDataHookOptions = {
       apiOverrides: {
         data: [
           {
@@ -120,7 +120,7 @@ describe("useIModelData hook", () => {
             displayName: "d",
             name: "c",
             description: "e",
-            initialized: true,
+            state: "initialized",
             createdDateTime: "2020-09-05T12:42:51.593Z",
           },
           {
@@ -128,7 +128,7 @@ describe("useIModelData hook", () => {
             displayName: "a",
             name: "d",
             description: "d",
-            initialized: true,
+            state: "initialized",
             createdDateTime: "2020-09-03T12:42:51.593Z",
           },
           {
@@ -136,7 +136,7 @@ describe("useIModelData hook", () => {
             displayName: "e",
             name: "a",
             description: "c",
-            initialized: false,
+            state: "notInitialized",
             createdDateTime: "2020-09-04T12:42:51.593Z",
           },
           {
@@ -144,7 +144,7 @@ describe("useIModelData hook", () => {
             displayName: "b",
             name: "b",
             description: "b",
-            initialized: false,
+            state: "notInitialized",
             createdDateTime: "2020-09-01T12:42:51.593Z",
           },
           {
@@ -152,7 +152,7 @@ describe("useIModelData hook", () => {
             displayName: "c",
             name: "d",
             description: "a",
-            initialized: true,
+            state: "initialized",
             createdDateTime: "2020-09-02T12:42:51.593Z",
           },
         ],
@@ -171,7 +171,7 @@ describe("useIModelData hook", () => {
 
   it("apply filtering", async () => {
     const expected = ["2", "5"];
-    const options = {
+    const options: IModelDataHookOptions = {
       apiOverrides: {
         data: [
           {
@@ -179,7 +179,7 @@ describe("useIModelData hook", () => {
             displayName: "d",
             name: "c",
             description: "e",
-            initialized: true,
+            state: "initialized",
             createdDateTime: "2020-09-05T12:42:51.593Z",
           },
           {
@@ -187,7 +187,7 @@ describe("useIModelData hook", () => {
             displayName: "a",
             name: "d",
             description: "d",
-            initialized: true,
+            state: "initialized",
             createdDateTime: "2020-09-03T12:42:51.593Z",
           },
           {
@@ -195,7 +195,7 @@ describe("useIModelData hook", () => {
             displayName: "e",
             name: "a",
             description: "c",
-            initialized: false,
+            state: "notInitialized",
             createdDateTime: "2020-09-04T12:42:51.593Z",
           },
           {
@@ -203,7 +203,7 @@ describe("useIModelData hook", () => {
             displayName: "b",
             name: "b",
             description: "b",
-            initialized: false,
+            state: "notInitialized",
             createdDateTime: "2020-09-01T12:42:51.593Z",
           },
           {
@@ -211,7 +211,7 @@ describe("useIModelData hook", () => {
             displayName: "c",
             name: "d",
             description: "a",
-            initialized: true,
+            state: "initialized",
             createdDateTime: "2020-09-02T12:42:51.593Z",
           },
         ],

@@ -47,31 +47,31 @@ describe("useIModelFilter hook", () => {
       {
         id: "1",
         displayName: "c",
-        initialized: true,
+        state: "initialized",
       },
       {
         id: "2",
         displayName: "a",
-        initialized: true,
+        state: "initialized",
       },
       {
         id: "3",
         displayName: "e",
-        initialized: false,
+        state: "notInitialized",
       },
       {
         id: "4",
         displayName: "d",
-        initialized: false,
+        state: "notInitialized",
       },
       {
         id: "5",
         displayName: "b",
-        initialized: true,
+        state: "initialized",
       },
     ];
     // Show only uninitialized.
-    const filterFn = (a: IModelFull) => !a.initialized;
+    const filterFn = (a: IModelFull) => a.state === "notInitialized";
     const { result } = renderHook(() => useIModelFilter(iModels, filterFn));
     expect(result.current.map((iModel) => iModel.id)).toEqual(expected);
   });
@@ -82,31 +82,31 @@ describe("useIModelFilter hook", () => {
       {
         id: "1",
         displayName: "c",
-        initialized: true,
+        state: "initialized",
       },
       {
         id: "2",
         displayName: "a",
-        initialized: true,
+        state: "initialized",
       },
       {
         id: "3",
         displayName: "e",
-        initialized: false,
+        state: "notInitialized",
       },
       {
         id: "4",
         displayName: "d",
-        initialized: false,
+        state: "notInitialized",
       },
       {
         id: "5",
         displayName: "b",
-        initialized: true,
+        state: "initialized",
       },
     ];
     // Show only uninitialized
-    const filterFn = (a: IModelFull) => !a.initialized;
+    const filterFn = (a: IModelFull) => a.state === "notInitialized";
     const { result } = renderHook(() => useIModelFilter(iModels, filterFn));
 
     expect(result.current).not.toBe(iModels);
@@ -118,27 +118,27 @@ describe("useIModelFilter hook", () => {
       {
         id: "1",
         displayName: "c",
-        initialized: true,
+        state: "initialized",
       },
       {
         id: "2",
         displayName: "a",
-        initialized: true,
+        state: "initialized",
       },
       {
         id: "3",
         displayName: "e",
-        initialized: false,
+        state: "notInitialized",
       },
       {
         id: "4",
         displayName: "d",
-        initialized: false,
+        state: "notInitialized",
       },
       {
         id: "5",
         displayName: "b",
-        initialized: true,
+        state: "initialized",
       },
     ];
     const { result } = renderHook(() => useIModelFilter(iModels, undefined));

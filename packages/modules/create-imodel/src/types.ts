@@ -15,8 +15,8 @@ export interface IModelFull {
   /** "Description of the iModel." */
   description?: string | null;
 
-  /** "Boolean flag indicating when iModel is ready to be used." */
-  initialized?: boolean;
+  /** "Enum indicating when iModel is ready to be used." */
+  state?: "initialized" | "notInitialized";
 
   /** "Date when the iModel was created." */
   createdDateTime?: string;

@@ -16,13 +16,9 @@ function isSupportedSortType(
 ): sortType is IModelSortOptionsKeys {
   return (
     !!sortType &&
-    [
-      "displayName",
-      "name",
-      "description",
-      "initialized",
-      "createdDateTime",
-    ].includes(sortType)
+    ["displayName", "name", "description", "state", "createdDateTime"].includes(
+      sortType
+    )
   );
 }
 
