@@ -19,6 +19,20 @@ export const handlers = [
     );
   }),
   rest.get("https://api.bentley.com/projects/", (req, res, ctx) => {
+    const search = req.url.searchParams.get("$search");
+    if (search === "searched") {
+      return res(
+        ctx.status(200),
+        ctx.json({
+          projects: [
+            {
+              id: "my1",
+              displayName: "mySearchediModel",
+            },
+          ],
+        })
+      );
+    }
     return res(
       ctx.status(200),
       ctx.json({

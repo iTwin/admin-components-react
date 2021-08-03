@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/imodel-browser-react",
+      "comment": "Disable imodel thumbnail caching and leave it to the network",
+      "type": "patch"
+    }
+  ],
+  "packageName": "@itwin/imodel-browser-react",
+  "email": "1904889+raplemie@users.noreply.github.com"
+}

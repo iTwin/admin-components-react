@@ -30,6 +30,22 @@ describe("useProjectData hook", () => {
     });
     expect(result.current.status).toEqual(DataStatus.Complete);
   });
+  it("returns searched projects and proper status on successful call", async () => {
+    const { result, waitForNextUpdate } = renderHook(() =>
+      useProjectData({
+        accessToken: "accessToken",
+        requestType: "search=searched",
+      })
+    );
+
+    await waitForNextUpdate();
+    expect(result.current.projects).toContainEqual({
+      id: "my1",
+      displayName: "mySearchediModel",
+    });
+    expect(result.current.status).toEqual(DataStatus.Complete);
+  });
+
   it("returns favorite projects and proper status on successful call", async () => {
     const { result, waitForNextUpdate } = renderHook(() =>
       useProjectData({ accessToken: "accessToken", requestType: "favorites" })
@@ -202,5 +218,17 @@ describe("useProjectData hook", () => {
     expect(result.current.projects.map((project) => project.id)).toEqual(
       expected
     );
+  });
+
+  it("returns proper status if unknown requestType is provided", async () => {
+    const { result } = renderHook(() =>
+      useProjectData({
+        accessToken: "accessToken",
+        requestType: "searched" as any,
+      })
+    );
+
+    expect(result.current.projects).toEqual([]);
+    expect(result.current.status).toEqual(DataStatus.ContextRequired);
   });
 });

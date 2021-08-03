@@ -30,8 +30,8 @@ export interface ProjectGridProps {
   /**
    * Access token that requires the `projects:read` scope. */
   accessToken?: string | undefined;
-  /** Type of project to request */
-  requestType?: "favorites" | "recents" | "";
+  /** Type of project to request, "favorite", "recents", "" (empty) or a string starting with "search=" and then the string that will be used to search through project names and numbers */
+  requestType?: "favorites" | "recents" | "" | string; // `search=${string}`
   /** Thumbnail click handler. */
   onThumbnailClick?(project: ProjectFull): void;
   /** String/function that configure Project filtering behavior.
@@ -64,6 +64,8 @@ export interface ProjectGridProps {
     noProjects?: string;
     /** Displayed when the component is mounted but the accessToken is empty. */
     noAuthentication?: string;
+    /** Displayed when the requestType cannot be validated */
+    invalidRequestType?: string;
     /** Generic message displayed if an error occurs while fetching. */
     error?: string;
   };
@@ -94,9 +96,10 @@ export const ProjectGrid = ({
     {
       trialBadge: "Trial",
       inactiveBadge: "Inactive",
-      noIModels: "There are no iModels in this project.",
+      noProjects: "No projects found.",
       noAuthentication: "No access token provided",
       error: "An error occured",
+      invalidRequestType: "Invalid request type",
     },
     stringsOverrides
   );
@@ -110,10 +113,10 @@ export const ProjectGrid = ({
 
   const noResultsText = {
     [DataStatus.Fetching]: "",
-    [DataStatus.Complete]: strings.noIModels,
+    [DataStatus.Complete]: strings.noProjects,
     [DataStatus.FetchFailed]: strings.error,
     [DataStatus.TokenRequired]: strings.noAuthentication,
-    [DataStatus.ContextRequired]: "",
+    [DataStatus.ContextRequired]: strings.invalidRequestType,
   }[fetchStatus ?? DataStatus.Fetching];
 
   React.useEffect(() => {

@@ -16,7 +16,7 @@ import { useProjectFilter } from "./useProjectFilter";
 import { useProjectSort } from "./useProjectSort";
 
 export interface ProjectDataHookOptions {
-  requestType?: "favorites" | "recents" | "";
+  requestType?: "favorites" | "recents" | "" | string; //`search=${string}` |
   accessToken?: string | undefined;
   apiOverrides?: ApiOverrides<ProjectFull[]>;
   filterOptions?: ProjectFilterOptions;
@@ -46,9 +46,20 @@ export const useProjectData = ({
       setProjects([]);
       return;
     }
+    if (
+      !!requestType &&
+      !["favorites", "recents"].includes(requestType) &&
+      !requestType.startsWith("search=")
+    ) {
+      setStatus(DataStatus.ContextRequired);
+      setProjects([]);
+      return;
+    }
     setStatus(DataStatus.Fetching);
     const abortController = new AbortController();
-    const url = `${_getAPIServer(apiOverrides)}/projects/${requestType}`; //[&$skip][&$top]
+    const url = `${_getAPIServer(apiOverrides)}/projects/${
+      (requestType.startsWith("search") ? "?$" : "") + requestType
+    }`; //[&$skip][&$top]
     const options: RequestInit = {
       signal: abortController.signal,
       headers: {
