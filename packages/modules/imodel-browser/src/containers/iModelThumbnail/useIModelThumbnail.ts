@@ -7,10 +7,6 @@ import { useEffect, useState } from "react";
 import { ApiOverrides } from "../../types";
 import { _getAPIServer } from "../../utils/_apiOverrides";
 
-const cache: {
-  [iModelId: string]: string;
-} = {};
-
 /** Convert buffer response to URL format: data:image/png;base64 */
 function convertArrayBufferToUrlBase64PNG(buffer: ArrayBuffer) {
   const byteArray = new Uint8Array(buffer);
@@ -30,7 +26,7 @@ export const useIModelThumbnail = (
   accessToken?: string,
   apiOverrides?: ApiOverrides<string>
 ) => {
-  const [thumbnail, setThumbnail] = useState(cache[iModelId]);
+  const [thumbnail, setThumbnail] = useState<string>();
   useEffect(() => {
     if (apiOverrides?.data) {
       setThumbnail(apiOverrides.data);
@@ -62,7 +58,6 @@ export const useIModelThumbnail = (
         })
         .then((thumbnail: string) => {
           setThumbnail(thumbnail);
-          cache[iModelId] = thumbnail;
         })
         .catch((e) => {
           if (e.name === "AbortError") {

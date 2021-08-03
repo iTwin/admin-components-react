@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/create-imodel-react",
+      "comment": "Update iModels API: property `state` instead of `initialized`",
+      "type": "patch"
+    }
+  ],
+  "packageName": "@itwin/create-imodel-react",
+  "email": "1904889+raplemie@users.noreply.github.com"
+}
