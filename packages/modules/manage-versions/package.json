@@ -1,7 +1,7 @@
 {
   "name": "@itwin/manage-versions-react",
   "description": "Components that allow a user to manage Named Versions and Changesets.",
-  "repository": "https://github.com/iTwin/admin-components-react/tree/main/package/manage-versions",
+  "repository": "https://github.com/iTwin/admin-components-react/tree/main/packages/modules/manage-versions",
   "version": "0.7.0",
   "main": "cjs/index.js",
   "module": "esm/index.js",
