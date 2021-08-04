@@ -2,6 +2,18 @@
   "name": "@itwin/imodel-browser-react",
   "entries": [
     {
+      "version": "0.10.4",
+      "tag": "@itwin/imodel-browser-react_v0.10.4",
+      "date": "Wed, 04 Aug 2021 15:08:37 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Disable iModel thumbnail caching and leave it to the network"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.10.3",
       "tag": "@itwin/imodel-browser_v0.10.3",
       "date": "Tue, 08 Jun 2021 16:27:51 GMT",

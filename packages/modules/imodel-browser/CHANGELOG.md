@@ -1,6 +1,13 @@
-# Change Log - @itwin/imodel-browser
+# Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Tue, 08 Jun 2021 16:27:51 GMT and should not be manually modified.
+This log was last generated on Wed, 04 Aug 2021 15:08:37 GMT and should not be manually modified.
+
+## 0.10.4
+Wed, 04 Aug 2021 15:08:37 GMT
+
+### Patches
+
+- Disable iModel thumbnail caching and leave it to the network
 
 ## 0.10.3
 Tue, 08 Jun 2021 16:27:51 GMT
