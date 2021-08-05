@@ -10,17 +10,20 @@ export const useProjectFilter = (
   projects: ProjectFull[],
   options?: ProjectFilterOptions
 ) => {
+  const filter = options?.toLocaleLowerCase() ?? "";
   return React.useMemo(
     () =>
-      !options
+      !filter
         ? projects
         : projects.filter(
-            typeof options === "function"
-              ? options
-              : (project) =>
-                  (project.displayName ?? "").includes(options) ||
-                  (project.projectNumber ?? "").includes(options)
+            (project) =>
+              (project.displayName?.toLocaleLowerCase() ?? "").includes(
+                filter
+              ) ||
+              (project.projectNumber?.toLocaleLowerCase() ?? "").includes(
+                filter
+              )
           ),
-    [options, projects]
+    [filter, projects]
   );
 };

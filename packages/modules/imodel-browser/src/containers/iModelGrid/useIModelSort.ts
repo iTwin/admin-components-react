@@ -28,8 +28,6 @@ function isSupportedSortType(
 
 const sortEitherEmptyValues = (a: any, b: any) => (!a && !b ? 0 : !a ? 1 : -1);
 const sortBooleanOrEqualValues = (a: any, b: any) => (a === b ? 0 : a ? -1 : 1);
-const sortDateTimeStringValues = (a: string, b: string) =>
-  new Date(a).getTime() - new Date(b).getTime();
 const sortStringValues = (a: string, b: string) => a.localeCompare(b);
 
 export const useIModelSort = (
@@ -58,9 +56,7 @@ export const useIModelSort = (
         if (!a || !b) {
           return sortEitherEmptyValues(a, b);
         }
-        if (sortType === "createdDateTime") {
-          return sortDateTimeStringValues(a, b);
-        }
+        // Look this file history on gitHub for dateTimeStringValuesSorting on "createdDateTime"
         return sortStringValues(a, b);
       }
     );

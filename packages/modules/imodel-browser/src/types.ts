@@ -16,8 +16,8 @@ export interface IModelFull {
   /** "Description of the iModel." */
   description?: string | null;
 
-  /** "Boolean flag indicating when iModel is ready to be used." */
-  initialized?: boolean;
+  /** "Enum flag indicating when iModel is ready to be used." */
+  state?: "initialized" | "notInitialized";
 
   /** "Date when the iModel was created." */
   createdDateTime?: string;
@@ -58,13 +58,10 @@ export interface ApiOverrides<T = never> {
   data?: T;
 }
 
-type FilterOptions<T> = string | ((filterable: T) => boolean);
-
-/** String/function that configure IModel filtering behavior. */
-export type IModelFilterOptions = FilterOptions<IModelFull>;
+type FilterOptions = string;
 
 /** String/function that configures Project filtering behavior. */
-export type ProjectFilterOptions = FilterOptions<ProjectFull>;
+export type ProjectFilterOptions = FilterOptions;
 
 export enum DataStatus {
   Fetching = "fetching",
@@ -74,36 +71,10 @@ export enum DataStatus {
   ContextRequired = "error_contextRequired",
 }
 
-type SortOptions<T, K extends keyof T> =
-  | { sortType: K; descending: boolean }
-  | ((a: T, b: T) => number);
+type SortOptions<T, K extends keyof T> = { sortType: K; descending: boolean };
 
 /** Supported IModel sorting types */
-export type IModelSortOptionsKeys =
-  | "displayName"
-  | "name"
-  | "description"
-  | "initialized"
-  | "createdDateTime";
+export type IModelSortOptionsKeys = "name";
 
 /** Object/function that configure IModel sorting behavior. */
 export type IModelSortOptions = SortOptions<IModelFull, IModelSortOptionsKeys>;
-
-/** Supported Project sorting types */
-export type ProjectSortOptionsKeys =
-  | "displayName"
-  | "projectNumber"
-  | "registrationDateTime"
-  | "industry"
-  | "projectType"
-  | "geographicLocation"
-  | "dataCenterLocation"
-  | "billingCountry"
-  | "status"
-  | "allowExternalTeamMembers";
-
-/** Object/function that configure Project sorting behavior. */
-export type ProjectSortOptions = SortOptions<
-  ProjectFull,
-  ProjectSortOptionsKeys
->;

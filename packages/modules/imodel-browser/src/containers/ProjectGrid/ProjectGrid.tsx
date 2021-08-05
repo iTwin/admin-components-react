@@ -3,6 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from "react";
+import { InView } from "react-intersection-observer";
 
 import { GridStructure } from "../../components/gridStructure/GridStructure";
 import { NoResults } from "../../components/noResults/NoResults";
@@ -11,7 +12,6 @@ import {
   DataStatus,
   ProjectFilterOptions,
   ProjectFull,
-  ProjectSortOptions,
 } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
 import { ContextMenuBuilderItem } from "../../utils/_buildMenuOptions";
@@ -39,15 +39,6 @@ export interface ProjectGridProps {
    * A function allow filtering on anything, is used in a normal array.filter.
    */
   filterOptions?: ProjectFilterOptions;
-  /** Object/function that configure Project sorting behavior.
-   * Object form allow sorting on the provided keys.
-   * Function form allow custom sorting (like sorting on 2 props at a time).
-   */
-  sortOptions?: ProjectSortOptions;
-  /** Renamed to projectActions, use projectActions instead, will be removed in 1.0.
-   * @deprecated
-   * */
-  projectOptions?: ContextMenuBuilderItem<ProjectFull>[];
   /** List of actions to build for each project context menu. */
   projectActions?: ContextMenuBuilderItem<ProjectFull>[];
   /** Function (can be a react hook) that returns state for a project, returned values will be applied as props to the ProjectTile, overrides ProjectGrid provided values */
@@ -82,10 +73,8 @@ export const ProjectGrid = ({
   apiOverrides,
   filterOptions,
   onThumbnailClick,
-  projectOptions,
   projectActions,
   requestType,
-  sortOptions,
   stringsOverrides,
   tileOverrides,
   useIndividualState,
@@ -94,35 +83,26 @@ export const ProjectGrid = ({
     {
       trialBadge: "Trial",
       inactiveBadge: "Inactive",
-      noIModels: "There are no iModels in this project.",
+      noProjects: "No project found.",
       noAuthentication: "No access token provided",
       error: "An error occured",
     },
     stringsOverrides
   );
-  const { projects, status: fetchStatus } = useProjectData({
+  const { projects, status: fetchStatus, fetchMore } = useProjectData({
     requestType,
     accessToken,
     apiOverrides,
     filterOptions,
-    sortOptions,
   });
 
   const noResultsText = {
     [DataStatus.Fetching]: "",
-    [DataStatus.Complete]: strings.noIModels,
+    [DataStatus.Complete]: strings.noProjects,
     [DataStatus.FetchFailed]: strings.error,
     [DataStatus.TokenRequired]: strings.noAuthentication,
     [DataStatus.ContextRequired]: "",
   }[fetchStatus ?? DataStatus.Fetching];
-
-  React.useEffect(() => {
-    if (!!projectOptions) {
-      console.warn(
-        "@itwin/imodel-browser-react: ProjectGrid 'projectOptions' prop is deprecated and will be removed in 1.0, use 'projectActions' prop instead."
-      );
-    }
-  }, [projectOptions]);
 
   return projects.length === 0 && noResultsText ? (
     <NoResults text={noResultsText} />
@@ -135,28 +115,37 @@ export const ProjectGrid = ({
           <IModelGhostTile />
         </>
       ) : (
-        projects?.map((project) => (
-          <ProjectHookedTile
-            gridProps={{
-              accessToken,
-              apiOverrides,
-              filterOptions,
-              onThumbnailClick,
-              projectOptions,
-              requestType,
-              sortOptions,
-              stringsOverrides,
-              tileOverrides,
-              useIndividualState,
-            }}
-            key={project.id}
-            project={project}
-            projectOptions={projectActions ?? projectOptions}
-            onThumbnailClick={onThumbnailClick}
-            useTileState={useIndividualState}
-            {...tileOverrides}
-          />
-        ))
+        <>
+          {projects?.map((project) => (
+            <ProjectHookedTile
+              gridProps={{
+                accessToken,
+                apiOverrides,
+                filterOptions,
+                onThumbnailClick,
+                requestType,
+                stringsOverrides,
+                tileOverrides,
+                useIndividualState,
+              }}
+              key={project.id}
+              project={project}
+              projectOptions={projectActions}
+              onThumbnailClick={onThumbnailClick}
+              useTileState={useIndividualState}
+              {...tileOverrides}
+            />
+          ))}
+          {fetchMore ? (
+            <>
+              <InView onChange={fetchMore}>
+                <IModelGhostTile />
+              </InView>
+              <IModelGhostTile />
+              <IModelGhostTile />
+            </>
+          ) : null}
+        </>
       )}
     </GridStructure>
   );
