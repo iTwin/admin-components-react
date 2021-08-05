@@ -10,4 +10,4 @@ When making changes to the src, run `rushx start` in the dev folder to enable so
 
 # Changelog
 
-See complete CHANGELOG [here](./CHANGELOG.md)
+See complete CHANGELOG [here](https://github.com/iTwin/admin-components-react/blob/main/packages/modules/create-imodel/CHANGELOG.md)
