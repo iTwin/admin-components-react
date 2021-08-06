@@ -31,6 +31,23 @@ describe("useIModelData hook", () => {
     expect(result.current.status).toEqual(DataStatus.Complete);
   });
 
+  it("request the sort order the data and proper status on successful call", async () => {
+    const { result, waitForNextUpdate } = renderHook(() =>
+      useIModelData({
+        projectId: "projectId",
+        accessToken: "accessToken",
+        sortOptions: { sortType: "name", descending: true },
+      })
+    );
+
+    await waitForNextUpdate();
+    expect(result.current.iModels).toContainEqual({
+      id: "fakeId",
+      displayName: "nameDescOrdered",
+    });
+    expect(result.current.status).toEqual(DataStatus.Complete);
+  });
+
   it("returns error status and no data on failure", async () => {
     server.use(
       rest.get("https://api.bentley.com/imodels/", (req, res, ctx) => {
@@ -167,59 +184,5 @@ describe("useIModelData hook", () => {
     expect(result.current.iModels.map((iModel) => iModel.id)).toEqual(
       expectedSortOrder
     );
-  });
-
-  it("apply filtering", async () => {
-    const expected = ["2", "5"];
-    const options = {
-      apiOverrides: {
-        data: [
-          {
-            id: "1",
-            displayName: "d",
-            name: "c",
-            description: "e",
-            initialized: true,
-            createdDateTime: "2020-09-05T12:42:51.593Z",
-          },
-          {
-            id: "2",
-            displayName: "a",
-            name: "d",
-            description: "d",
-            initialized: true,
-            createdDateTime: "2020-09-03T12:42:51.593Z",
-          },
-          {
-            id: "3",
-            displayName: "e",
-            name: "a",
-            description: "c",
-            initialized: false,
-            createdDateTime: "2020-09-04T12:42:51.593Z",
-          },
-          {
-            id: "4",
-            displayName: "b",
-            name: "b",
-            description: "b",
-            initialized: false,
-            createdDateTime: "2020-09-01T12:42:51.593Z",
-          },
-          {
-            id: "5",
-            displayName: "c",
-            name: "d",
-            description: "a",
-            initialized: true,
-            createdDateTime: "2020-09-02T12:42:51.593Z",
-          },
-        ],
-      },
-      filterOptions: "a",
-    };
-    const { result } = renderHook(() => useIModelData(options));
-
-    expect(result.current.iModels.map((iModel) => iModel.id)).toEqual(expected);
   });
 });

@@ -42,41 +42,6 @@ describe("useProjectFilter hook", () => {
     expect(result.current.map(ids)).toEqual(expected);
   });
 
-  it("filter correctly with filter function", () => {
-    const expected = ["3", "4"];
-    const projects: ProjectFull[] = [
-      {
-        id: "1",
-        displayName: "c",
-        status: "Active",
-      },
-      {
-        id: "2",
-        displayName: "a",
-        status: "Active",
-      },
-      {
-        id: "3",
-        displayName: "e",
-        status: "Trial",
-      },
-      {
-        id: "4",
-        displayName: "d",
-        status: "Trial",
-      },
-      {
-        id: "5",
-        displayName: "b",
-        status: "Inactive",
-      },
-    ];
-    // Show only trials.
-    const filterFn = (a: ProjectFull) => a.status === "Trial";
-    const { result } = renderHook(() => useProjectFilter(projects, filterFn));
-    expect(result.current.map(ids)).toEqual(expected);
-  });
-
   it("do not modify input array", () => {
     const expected = ["1", "2", "3", "4", "5"];
     const projects: ProjectFull[] = [

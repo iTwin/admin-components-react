@@ -5,13 +5,13 @@
 import "@bentley/icons-generic-webfont/dist/bentley-icons-generic-webfont.css";
 
 import React from "react";
+import { InView } from "react-intersection-observer";
 
 import { GridStructure } from "../../components/gridStructure/GridStructure";
 import { NoResults } from "../../components/noResults/NoResults";
 import {
   ApiOverrides,
   DataStatus,
-  IModelFilterOptions,
   IModelFull,
   IModelSortOptions,
 } from "../../types";
@@ -27,24 +27,11 @@ export interface IModelGridProps {
   accessToken?: string | undefined;
   /** Project Id to list the iModels from (mutually exclusive to assetId) */
   projectId?: string | undefined;
-  /** Asset Id to list the iModels from (mutually exclusive to projectId) */
-  assetId?: string | undefined;
   /** Thumbnail click handler. */
   onThumbnailClick?(iModel: IModelFull): void;
-  /** String/function that configure IModel filtering behavior.
-   * A string will filter on displayed text only (displayName and description).
-   * A function allow filtering on anything, is used in a normal array.filter.
-   */
-  filterOptions?: IModelFilterOptions;
-  /** Object/function that configure IModel sorting behavior.
-   * Object form allow sorting on the provided keys.
-   * Function form allow custom sorting (like sorting on 2 props at a time).
+  /** Configure IModel sorting behavior.
    */
   sortOptions?: IModelSortOptions;
-  /** Renamed to iModelActions, use iModelActions instead, will be removed in 1.0.
-   * @deprecated
-   * */
-  iModelOptions?: ContextMenuBuilderItem<IModelFull>[];
   /** List of actions to build for each imodel context menu. */
   iModelActions?: ContextMenuBuilderItem<IModelFull>[];
   /** Function (can be a react hook) that returns state for an iModel, returned values will be applied as props to the IModelTile, overrides IModelGrid provided values */
@@ -78,13 +65,10 @@ export interface IModelGridProps {
 export const IModelGrid = ({
   accessToken,
   apiOverrides,
-  assetId,
-  filterOptions,
-  iModelOptions,
   iModelActions,
   onThumbnailClick,
   projectId,
-  sortOptions,
+  sortOptions = { sortType: "name", descending: false },
   stringsOverrides,
   tileOverrides,
   useIndividualState,
@@ -98,11 +82,9 @@ export const IModelGrid = ({
     },
     stringsOverrides
   );
-  const { iModels, status: fetchStatus } = useIModelData({
+  const { iModels, status: fetchStatus, fetchMore } = useIModelData({
     accessToken,
     apiOverrides,
-    assetId,
-    filterOptions,
     projectId,
     sortOptions,
   });
@@ -114,14 +96,6 @@ export const IModelGrid = ({
     [DataStatus.TokenRequired]: strings.noAuthentication,
     [DataStatus.ContextRequired]: strings.noContext,
   }[fetchStatus ?? DataStatus.Fetching];
-
-  React.useEffect(() => {
-    if (!!iModelOptions) {
-      console.warn(
-        "@itwin/imodel-browser-react: IModelGrid 'iModelOptions' prop is deprecated and will be removed in 1.0, use 'iModelActions' prop instead."
-      );
-    }
-  }, [iModelOptions]);
 
   const tileApiOverrides = apiOverrides
     ? { serverEnvironmentPrefix: apiOverrides.serverEnvironmentPrefix }
@@ -137,18 +111,29 @@ export const IModelGrid = ({
           <IModelGhostTile />
         </>
       ) : (
-        iModels?.map((iModel) => (
-          <IModelHookedTile
-            key={iModel.id}
-            iModel={iModel}
-            iModelOptions={iModelActions ?? iModelOptions}
-            accessToken={accessToken}
-            onThumbnailClick={onThumbnailClick}
-            apiOverrides={tileApiOverrides}
-            useTileState={useIndividualState}
-            {...tileOverrides}
-          />
-        ))
+        <>
+          {iModels?.map((iModel) => (
+            <IModelHookedTile
+              key={iModel.id}
+              iModel={iModel}
+              iModelOptions={iModelActions}
+              accessToken={accessToken}
+              onThumbnailClick={onThumbnailClick}
+              apiOverrides={tileApiOverrides}
+              useTileState={useIndividualState}
+              {...tileOverrides}
+            />
+          ))}
+          {fetchMore ? (
+            <>
+              <InView onChange={fetchMore}>
+                <IModelGhostTile />
+              </InView>
+              <IModelGhostTile />
+              <IModelGhostTile />
+            </>
+          ) : null}
+        </>
       )}
     </GridStructure>
   );

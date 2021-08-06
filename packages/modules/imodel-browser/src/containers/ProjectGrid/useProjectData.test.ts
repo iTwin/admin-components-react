@@ -6,7 +6,7 @@ import { renderHook } from "@testing-library/react-hooks";
 import { rest } from "msw";
 
 import { server } from "../../tests/mocks/server";
-import { DataStatus, ProjectSortOptionsKeys } from "../../types";
+import { DataStatus } from "../../types";
 import { useProjectData } from "./useProjectData";
 
 describe("useProjectData hook", () => {
@@ -51,6 +51,18 @@ describe("useProjectData hook", () => {
     expect(result.current.projects).toContainEqual({
       id: "recent1",
       displayName: "recentName1",
+    });
+    expect(result.current.status).toEqual(DataStatus.Complete);
+  });
+  it("returns searched projects and proper status on successful call", async () => {
+    const { result, waitForNextUpdate } = renderHook(() =>
+      useProjectData({ accessToken: "accessToken", filterOptions: "searched" })
+    );
+
+    await waitForNextUpdate();
+    expect(result.current.projects).toContainEqual({
+      id: "mySearched1",
+      displayName: "mySearchedName1",
     });
     expect(result.current.status).toEqual(DataStatus.Complete);
   });
@@ -122,45 +134,6 @@ describe("useProjectData hook", () => {
 
     expect(result.current.projects).toEqual([]);
     expect(result.current.status).toEqual(DataStatus.TokenRequired);
-  });
-
-  it("apply sorting", async () => {
-    const expectedSortOrder = ["2", "4", "5", "1", "3"];
-    const options = {
-      apiOverrides: {
-        data: [
-          {
-            id: "1",
-            displayName: "d",
-          },
-          {
-            id: "2",
-            displayName: "a",
-          },
-          {
-            id: "3",
-            displayName: "e",
-          },
-          {
-            id: "4",
-            displayName: "b",
-          },
-          {
-            id: "5",
-            displayName: "c",
-          },
-        ],
-      },
-      sortOptions: {
-        sortType: "displayName" as ProjectSortOptionsKeys,
-        descending: false,
-      },
-    };
-    const { result } = renderHook(() => useProjectData(options));
-
-    expect(result.current.projects.map((project) => project.id)).toEqual(
-      expectedSortOrder
-    );
   });
 
   it("apply filtering", async () => {

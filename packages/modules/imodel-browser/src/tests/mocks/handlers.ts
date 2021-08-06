@@ -9,25 +9,43 @@ export const handlers = [
     return res(
       ctx.status(200),
       ctx.json({
-        iModels: [
-          {
-            id: "fakeId",
-            displayName: "fakeName",
-          },
-        ],
+        iModels:
+          req.url.searchParams.get("$orderBy") === "name desc"
+            ? [
+                {
+                  id: "fakeId",
+                  displayName: "nameDescOrdered",
+                },
+              ]
+            : [
+                {
+                  id: "fakeId",
+                  displayName: "fakeName",
+                },
+              ],
       })
     );
   }),
   rest.get("https://api.bentley.com/projects/", (req, res, ctx) => {
+    if (req.url.searchParams.get("$search") === "searched") {
+    }
     return res(
       ctx.status(200),
       ctx.json({
-        projects: [
-          {
-            id: "my1",
-            displayName: "myName1",
-          },
-        ],
+        projects:
+          req.url.searchParams.get("$search") === "searched"
+            ? [
+                {
+                  id: "mySearched1",
+                  displayName: "mySearchedName1",
+                },
+              ]
+            : [
+                {
+                  id: "my1",
+                  displayName: "myName1",
+                },
+              ],
       })
     );
   }),

@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/imodel-browser-react",
+      "comment": "BREAKING: IModelGrid only support rest API features to reduce complexity; Now only supports `sortOptions` with `sortType: 'name'` (function or other types no longer available), removed `assetId`, `filterOptions`, `iModelOptions` (previously replaced by `iModelActions`)",
+      "type": "minor"
+    }
+  ],
+  "packageName": "@itwin/imodel-browser-react",
+  "email": "1904889+raplemie@users.noreply.github.com"
+}
