@@ -2,6 +2,30 @@
   "name": "@itwin/imodel-browser-react",
   "entries": [
     {
+      "version": "0.11.0",
+      "tag": "@itwin/imodel-browser-react_v0.11.0",
+      "date": "Fri, 06 Aug 2021 13:03:18 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "iModels API change: property `state` replaces `initialized`\n"
+          },
+          {
+            "comment": "BREAKING: IModelGrid only support rest API features to reduce complexity; Now only supports `sortOptions` with `sortType: 'name'` (function or other types no longer available), removed `assetId`, `filterOptions`, `iModelOptions` (previously replaced by `iModelActions`)"
+          },
+          {
+            "comment": "IModelGrid will now fetch all iModels with infinite scrolling (previously only top 100)"
+          },
+          {
+            "comment": "BREAKING: ProjectGrid only support rest API features to reduce complexity; Now only supports `filterOptions` with a string (function no longer available), removed `sortOptions`, `projectOptions` (previously replaced by `projectActions`)"
+          },
+          {
+            "comment": "ProjectGrid will now fetch all projects with infinite scrolling (previously only top 100)"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.10.4",
       "tag": "@itwin/imodel-browser-react_v0.10.4",
       "date": "Wed, 04 Aug 2021 15:08:37 GMT",

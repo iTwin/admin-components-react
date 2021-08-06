@@ -1,6 +1,13 @@
 # Change Log - @itwin/create-imodel-react
 
-This log was last generated on Fri, 09 Jul 2021 07:47:52 GMT and should not be manually modified.
+This log was last generated on Fri, 06 Aug 2021 13:03:18 GMT and should not be manually modified.
+
+## 0.4.0
+Fri, 06 Aug 2021 13:03:18 GMT
+
+### Minor changes
+
+- iModels API change: property `state` replaces `initialized`
 
 ## 0.3.0
 Fri, 09 Jul 2021 07:47:52 GMT

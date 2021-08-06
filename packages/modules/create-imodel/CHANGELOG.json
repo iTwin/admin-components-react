@@ -2,6 +2,18 @@
   "name": "@itwin/create-imodel-react",
   "entries": [
     {
+      "version": "0.4.0",
+      "tag": "@itwin/create-imodel-react_v0.4.0",
+      "date": "Fri, 06 Aug 2021 13:03:18 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "iModels API change: property `state` replaces `initialized`"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.3.0",
       "tag": "@itwin/create-imodel-react_v0.3.0",
       "date": "Fri, 09 Jul 2021 07:47:52 GMT",

@@ -1,6 +1,18 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Wed, 04 Aug 2021 15:08:37 GMT and should not be manually modified.
+This log was last generated on Fri, 06 Aug 2021 13:03:18 GMT and should not be manually modified.
+
+## 0.11.0
+Fri, 06 Aug 2021 13:03:18 GMT
+
+### Minor changes
+
+- iModels API change: property `state` replaces `initialized`
+
+- BREAKING: IModelGrid only support rest API features to reduce complexity; Now only supports `sortOptions` with `sortType: 'name'` (function or other types no longer available), removed `assetId`, `filterOptions`, `iModelOptions` (previously replaced by `iModelActions`)
+- IModelGrid will now fetch all iModels with infinite scrolling (previously only top 100)
+- BREAKING: ProjectGrid only support rest API features to reduce complexity; Now only supports `filterOptions` with a string (function no longer available), removed `sortOptions`, `projectOptions` (previously replaced by `projectActions`)
+- ProjectGrid will now fetch all projects with infinite scrolling (previously only top 100)
 
 ## 0.10.4
 Wed, 04 Aug 2021 15:08:37 GMT
