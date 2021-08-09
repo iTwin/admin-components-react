@@ -63,6 +63,14 @@ export interface ProjectGridProps {
    * @property `serverEnvironmentPrefix`: Either qa or dev.
    */
   apiOverrides?: ApiOverrides<ProjectFull[]>;
+  /**
+   * Allow final transformation of the iModel array before display
+   * This function MUST be memoized.
+   */
+  postProcessCallback?: (
+    projects: ProjectFull[],
+    fetchStatus: DataStatus | undefined
+  ) => ProjectFull[];
 }
 
 /**
@@ -78,6 +86,7 @@ export const ProjectGrid = ({
   stringsOverrides,
   tileOverrides,
   useIndividualState,
+  postProcessCallback,
 }: ProjectGridProps) => {
   const strings = _mergeStrings(
     {
@@ -89,12 +98,23 @@ export const ProjectGrid = ({
     },
     stringsOverrides
   );
-  const { projects, status: fetchStatus, fetchMore } = useProjectData({
+  const {
+    projects: fetchedProjects,
+    status: fetchStatus,
+    fetchMore,
+  } = useProjectData({
     requestType,
     accessToken,
     apiOverrides,
     filterOptions,
   });
+
+  const projects = React.useMemo(
+    () =>
+      postProcessCallback?.([...fetchedProjects], fetchStatus) ??
+      fetchedProjects,
+    [postProcessCallback, fetchedProjects, fetchStatus]
+  );
 
   const noResultsText = {
     [DataStatus.Fetching]: "",

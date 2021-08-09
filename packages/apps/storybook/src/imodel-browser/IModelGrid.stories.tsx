@@ -3,16 +3,21 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import {
+  DataStatus,
   IModelFull,
   IModelGrid as ExternalComponent,
   IModelGridProps,
   IModelTileProps,
 } from "@itwin/imodel-browser-react";
 import {
+  Body,
   Button,
+  Code,
   DropdownButton,
+  LabeledInput,
   MenuItem,
   TileProps,
+  Title,
 } from "@itwin/itwinui-react";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
@@ -69,7 +74,7 @@ OverrideApiData.args = {
 export const IndividualContextMenu = Template.bind({});
 IndividualContextMenu.args = {
   apiOverrides: { serverEnvironmentPrefix: "qa" },
-  iModelOptions: [
+  iModelActions: [
     {
       children: "displayName contains 'R'",
       visible: (iModel) => iModel.displayName?.includes("R") ?? false,
@@ -218,4 +223,56 @@ export const StatefulPropsOverrides = Template.bind({});
 StatefulPropsOverrides.args = {
   apiOverrides: { serverEnvironmentPrefix: "qa" },
   useIndividualState,
+};
+
+export const WithPostProcessCallback: Story<IModelGridProps> = withProjectIdOverride(
+  withAccessTokenOverride((args) => {
+    const [filter, setFilter] = React.useState("");
+    const filterOrAddStartTile = React.useCallback(
+      (iModels: IModelFull[], status: DataStatus) => {
+        if (status !== DataStatus.Complete) {
+          return iModels;
+        }
+        const filterText = filter.toLocaleLowerCase().trim();
+        if (filterText) {
+          return iModels.filter((iModel) =>
+            iModel.displayName?.toLocaleLowerCase().includes(filterText)
+          );
+        }
+        iModels.unshift({
+          id: "newiModel",
+          displayName: "New iModel",
+          description: "Click on this tile to create a new iModel",
+          thumbnail:
+            "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/add.svg",
+        });
+        return iModels;
+      },
+      [filter]
+    );
+    return (
+      <div>
+        <Title>Description</Title>
+        <Body>
+          Property <Code>postProcessCallback</Code> allows modification of the
+          data that is sent to the grid, here, we either apply a filter, or add
+          a new tile at the start of the list for a 'New iModel' when there is
+          no filter defined.
+        </Body>
+        <LabeledInput
+          label={"Name filter"}
+          onChange={(event) => {
+            const {
+              target: { value },
+            } = event;
+            setFilter(value);
+          }}
+        />
+        <IModelGrid {...args} postProcessCallback={filterOrAddStartTile} />
+      </div>
+    );
+  })
+);
+WithPostProcessCallback.args = {
+  apiOverrides: { serverEnvironmentPrefix: "qa" },
 };

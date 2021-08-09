@@ -3,16 +3,20 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import {
+  DataStatus,
   IndividualProjectStateHook,
+  ProjectFull,
   ProjectGrid as ExternalComponent,
   ProjectGridProps,
 } from "@itwin/imodel-browser-react";
 import {
+  Body,
   Button,
   Code,
   DropdownButton,
   MenuItem,
   TileProps,
+  Title,
 } from "@itwin/itwinui-react";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React, { PropsWithChildren } from "react";
@@ -63,7 +67,7 @@ OverrideApiData.args = {
 export const IndividualContextMenu = Template.bind({});
 IndividualContextMenu.args = {
   apiOverrides: { serverEnvironmentPrefix: "qa" },
-  projectOptions: [
+  projectActions: [
     {
       children: "displayName contains 'R'",
       visible: (project) => project.displayName?.includes("R") ?? false,
@@ -257,4 +261,37 @@ export const StatefulPropsOverrides = Template.bind({});
 StatefulPropsOverrides.args = {
   apiOverrides: { serverEnvironmentPrefix: "qa" },
   useIndividualState,
+};
+
+export const WithPostProcessCallback: Story<ProjectGridProps> = withAccessTokenOverride(
+  (args) => {
+    const addStartTile = React.useCallback(
+      (projects: ProjectFull[], status: DataStatus) => {
+        if (status !== DataStatus.Complete) {
+          return projects;
+        }
+        projects.unshift({
+          id: "newProject",
+          displayName: "New Project",
+          projectNumber: "Click on this tile to create a new Project",
+        });
+        return projects;
+      },
+      []
+    );
+    return (
+      <div>
+        <Title>Description</Title>
+        <Body>
+          Property <Code>postProcessCallback</Code> allows modification of the
+          data that is sent to the grid, here, we add a new tile at the start of
+          the list for a 'New Project'.
+        </Body>
+        <ProjectGrid {...args} postProcessCallback={addStartTile} />
+      </div>
+    );
+  }
+);
+WithPostProcessCallback.args = {
+  apiOverrides: { serverEnvironmentPrefix: "qa" },
 };
