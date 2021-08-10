@@ -64,7 +64,7 @@ export interface ProjectGridProps {
    */
   apiOverrides?: ApiOverrides<ProjectFull[]>;
   /**
-   * Allow final transformation of the iModel array before display
+   * Allow final transformation of the project array before display
    * This function MUST be memoized.
    */
   postProcessCallback?: (
