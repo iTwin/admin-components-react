@@ -7,7 +7,7 @@
     "@bentley/bentleyjs-core": "2.11.0",
     "@bentley/frontend-authorization-client": "2.11.0",
     "@bentley/itwin-client": "2.11.0",
-    "@itwin/create-imodel-react": "^0.4.0",
+    "@itwin/create-imodel-react": "^0.4.1",
     "@itwin/delete-imodel-react": "^0.2.0",
     "@itwin/imodel-browser-react": "~0.12.0",
     "@itwin/itwinui-react": "^1.11.0",
