@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/create-imodel-react",
+      "comment": "Setting Content-Type header for POST and PATCH requests.",
+      "type": "patch"
+    }
+  ],
+  "packageName": "@itwin/create-imodel-react",
+  "email": "36186912+bentleyvk@users.noreply.github.com"
+}
