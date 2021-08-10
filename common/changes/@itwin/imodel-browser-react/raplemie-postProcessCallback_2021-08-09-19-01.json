@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/imodel-browser-react",
+      "comment": "Add `postProcessingCallback` property to `*Grid` components",
+      "type": "minor"
+    }
+  ],
+  "packageName": "@itwin/imodel-browser-react",
+  "email": "1904889+raplemie@users.noreply.github.com"
+}

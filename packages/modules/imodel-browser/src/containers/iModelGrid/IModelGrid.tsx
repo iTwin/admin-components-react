@@ -57,6 +57,14 @@ export interface IModelGridProps {
    * @property `serverEnvironmentPrefix`: Either qa or dev.
    */
   apiOverrides?: ApiOverrides<IModelFull[]>;
+  /**
+   * Allow final transformation of the iModel array before display
+   * This function MUST be memoized.
+   */
+  postProcessCallback?: (
+    iModels: IModelFull[],
+    fetchStatus: DataStatus | undefined
+  ) => IModelFull[];
 }
 
 /**
@@ -72,6 +80,7 @@ export const IModelGrid = ({
   stringsOverrides,
   tileOverrides,
   useIndividualState,
+  postProcessCallback,
 }: IModelGridProps) => {
   const strings = _mergeStrings(
     {
@@ -82,12 +91,21 @@ export const IModelGrid = ({
     },
     stringsOverrides
   );
-  const { iModels, status: fetchStatus, fetchMore } = useIModelData({
+  const {
+    iModels: fetchediModels,
+    status: fetchStatus,
+    fetchMore,
+  } = useIModelData({
     accessToken,
     apiOverrides,
     projectId,
     sortOptions,
   });
+  const iModels = React.useMemo(
+    () =>
+      postProcessCallback?.([...fetchediModels], fetchStatus) ?? fetchediModels,
+    [postProcessCallback, fetchediModels, fetchStatus]
+  );
 
   const noResultsText = {
     [DataStatus.Fetching]: "",
