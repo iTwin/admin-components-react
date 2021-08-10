@@ -1,6 +1,13 @@
 # Change Log - @itwin/create-imodel-react
 
-This log was last generated on Fri, 06 Aug 2021 13:03:18 GMT and should not be manually modified.
+This log was last generated on Tue, 10 Aug 2021 13:32:36 GMT and should not be manually modified.
+
+## 0.4.1
+Tue, 10 Aug 2021 13:32:36 GMT
+
+### Patches
+
+- Setting Content-Type header for POST and PATCH requests.
 
 ## 0.4.0
 Fri, 06 Aug 2021 13:03:18 GMT
