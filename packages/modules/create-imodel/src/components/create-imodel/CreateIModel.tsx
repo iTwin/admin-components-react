@@ -84,6 +84,7 @@ export function CreateIModel(props: CreateIModelProps) {
         headers: {
           Authorization: `${accessToken}`,
           Prefer: "return=representation",
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           projectId,

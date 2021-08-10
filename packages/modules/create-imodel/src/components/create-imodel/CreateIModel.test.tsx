@@ -50,7 +50,11 @@ describe("CreateIModel", () => {
       "https://dev-api.bentley.com/imodels",
       {
         method: "POST",
-        headers: { Authorization: "dd", Prefer: "return=representation" },
+        headers: {
+          Authorization: "dd",
+          Prefer: "return=representation",
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
           projectId: "de47c5ad-5657-42b8-a2bc-f2b8bf84cd4b",
           name: "Some name",
@@ -93,7 +97,11 @@ describe("CreateIModel", () => {
       "https://dev-api.bentley.com/imodels",
       {
         method: "POST",
-        headers: { Authorization: "dd", Prefer: "return=representation" },
+        headers: {
+          Authorization: "dd",
+          Prefer: "return=representation",
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
           projectId: "de47c5ad-5657-42b8-a2bc-f2b8bf84cd4b",
           name: "Some name",
@@ -136,7 +144,11 @@ describe("CreateIModel", () => {
       "https://dev-api.bentley.com/imodels",
       {
         method: "POST",
-        headers: { Authorization: "dd", Prefer: "return=representation" },
+        headers: {
+          Authorization: "dd",
+          Prefer: "return=representation",
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
           projectId: "de47c5ad-5657-42b8-a2bc-f2b8bf84cd4b",
           name: "Some name",

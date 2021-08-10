@@ -89,6 +89,7 @@ export function UpdateIModel(props: UpdateIModelProps) {
         headers: {
           Authorization: `${accessToken}`,
           Prefer: "return=representation",
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           name: imodel.name,
