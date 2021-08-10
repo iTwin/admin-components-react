@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Fri, 06 Aug 2021 13:03:18 GMT and should not be manually modified.
+This log was last generated on Tue, 10 Aug 2021 13:28:56 GMT and should not be manually modified.
+
+## 0.12.0
+Tue, 10 Aug 2021 13:28:56 GMT
+
+### Minor changes
+
+- Add `postProcessingCallback` property to `*Grid` components
 
 ## 0.11.0
 Fri, 06 Aug 2021 13:03:18 GMT

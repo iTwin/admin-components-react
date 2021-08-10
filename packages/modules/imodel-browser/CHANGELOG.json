@@ -2,6 +2,18 @@
   "name": "@itwin/imodel-browser-react",
   "entries": [
     {
+      "version": "0.12.0",
+      "tag": "@itwin/imodel-browser-react_v0.12.0",
+      "date": "Tue, 10 Aug 2021 13:28:56 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Add `postProcessingCallback` property to `*Grid` components"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.11.0",
       "tag": "@itwin/imodel-browser-react_v0.11.0",
       "date": "Fri, 06 Aug 2021 13:03:18 GMT",
