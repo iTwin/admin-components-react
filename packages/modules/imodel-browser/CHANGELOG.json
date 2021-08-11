@@ -2,6 +2,18 @@
   "name": "@itwin/imodel-browser-react",
   "entries": [
     {
+      "version": "0.12.1",
+      "tag": "@itwin/imodel-browser-react_v0.12.1",
+      "date": "Wed, 11 Aug 2021 20:01:30 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Use @itwin/itwinui-icons-react instead of @bentley/icons-generic-webfont"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.12.0",
       "tag": "@itwin/imodel-browser-react_v0.12.0",
       "date": "Tue, 10 Aug 2021 13:28:56 GMT",

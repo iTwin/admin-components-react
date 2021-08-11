@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Tue, 10 Aug 2021 13:28:56 GMT and should not be manually modified.
+This log was last generated on Wed, 11 Aug 2021 20:01:30 GMT and should not be manually modified.
+
+## 0.12.1
+Wed, 11 Aug 2021 20:01:30 GMT
+
+### Patches
+
+- Use @itwin/itwinui-icons-react instead of @bentley/icons-generic-webfont
 
 ## 0.12.0
 Tue, 10 Aug 2021 13:28:56 GMT
