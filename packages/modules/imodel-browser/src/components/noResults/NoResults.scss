@@ -17,8 +17,9 @@
   margin-top: $iui-m;
   margin-bottom: $iui-m;
 
-  > i {
-    font-size: 75px;
+  > svg {
+    height: 75px;
+    fill: currentColor;
   }
 
   > span:first-of-type {
