@@ -3,8 +3,8 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import "./NoResults.scss";
-import "@bentley/icons-generic-webfont/dist/bentley-icons-generic-webfont.css";
 
+import { SvgImodelHollow } from "@itwin/itwinui-icons-react";
 import { Leading } from "@itwin/itwinui-react";
 import classnames from "classnames";
 import React from "react";
@@ -18,7 +18,7 @@ export interface NoResultsProps {
 export const NoResults = ({ text }: NoResultsProps) => {
   return (
     <Leading isMuted={true} className={classnames("iac-no-results")}>
-      <i className="icon icon-imodel-hollow-2" />
+      <SvgImodelHollow />
       <span>{text}</span>
     </Leading>
   );

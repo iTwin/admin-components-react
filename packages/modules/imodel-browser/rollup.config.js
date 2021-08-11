@@ -13,12 +13,9 @@ import * as packageJson from "./package.json";
 
 const rollupConfig = {
   input: "src/index.ts",
-  external: [
-    /@itwin\/itwinui-react(\/.*)?/,
-    /classnames/,
-    /@bentley\/icons-generic-webfont/,
-    /react-intersection-observer/,
-  ],
+  external: Object.keys(packageJson.dependencies).map(
+    (dep) => new RegExp(`${dep}(/.*)?`, "g")
+  ),
   output: [
     {
       file: packageJson.main,
