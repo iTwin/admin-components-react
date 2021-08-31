@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/manage-versions-react",
+      "comment": "Moved `ManageVersionsTabs` to regular exports so it could be used when setting `currentTab`.",
+      "type": "patch"
+    }
+  ],
+  "packageName": "@itwin/manage-versions-react",
+  "email": "36186912+bentleyvk@users.noreply.github.com"
+}
