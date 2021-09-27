@@ -5,7 +5,7 @@
 import { toaster } from "@itwin/itwinui-react";
 import React from "react";
 
-import { BaseIModel, IModelFull } from "../../types";
+import { BaseIModel, iModelExtent, IModelFull } from "../../types";
 import { BaseIModelPage } from "../base-imodel/BaseIModel";
 
 export type UpdateIModelProps = {
@@ -43,11 +43,39 @@ export type UpdateIModelProps = {
     nameTooLong?: string;
     /** Error message when description is too long. */
     descriptionTooLong?: string;
+    /** South West coordinate label. */
+    southWestCoordinate?: string;
+    /** North East coordinate label. */
+    northEastCoordinate?: string;
+    /** Latitude label. */
+    latitude?: string;
+    /** Longitude label. */
+    longitude?: string;
   };
   /** iModel id to update. */
   imodelId: string;
   /** Initial iModel data. */
   initialIModel: BaseIModel;
+  /** Extent component. Recommended to use a map component. If not provided then input fields for extent will be shown.
+   * @example
+   * <CreateIModel
+   *   // ...
+   *   extentComponent={
+   *     <iframe
+   *       title="iModel Extent Map"
+   *       src="https://www.google.com/maps/embed"
+   *       width="100%"
+   *       height="100%"
+   *       frameBorder="0"
+   *       style={{ border: 0 }}
+   *       allowFullScreen={false}
+   *     ></iframe>
+   *   }
+   * />
+   */
+  extentComponent?: React.ReactNode;
+  /** Extent value that should be gotten from the `extentComponent`. */
+  extent?: iModelExtent;
 };
 
 export function UpdateIModel(props: UpdateIModelProps) {
@@ -60,6 +88,8 @@ export function UpdateIModel(props: UpdateIModelProps) {
     stringsOverrides,
     imodelId,
     initialIModel,
+    extentComponent,
+    extent,
   } = props;
   const [isLoading, setIsLoading] = React.useState(false);
 
@@ -77,6 +107,7 @@ export function UpdateIModel(props: UpdateIModelProps) {
     name: string;
     description: string;
     thumbnail?: { src?: ArrayBuffer; type: string };
+    extent?: iModelExtent;
   }) => {
     setIsLoading(true);
     try {
@@ -94,6 +125,7 @@ export function UpdateIModel(props: UpdateIModelProps) {
         body: JSON.stringify({
           name: imodel.name,
           description: imodel.description,
+          extent: imodel.extent,
         }),
       });
       if (!response.ok) {
@@ -144,6 +176,8 @@ export function UpdateIModel(props: UpdateIModelProps) {
         onActionClick={updateiModel}
         onClose={onClose}
         initialIModel={initialIModel}
+        extentComponent={extentComponent}
+        extent={extent}
       />
     </>
   );

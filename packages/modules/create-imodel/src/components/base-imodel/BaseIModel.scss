@@ -2,13 +2,13 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
- @import "~@itwin/itwinui-css/scss/variables";
- 
- .iac-overlay-container { 
+@import "~@itwin/itwinui-css/scss/variables";
+
+.iac-overlay-container {
   position: fixed;
-  z-index: 99999; 
+  z-index: 99999;
   background-color: rgba(0, 0, 0, 0.1);
-  display: flex; 
+  display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
@@ -22,24 +22,55 @@
   margin-bottom: $iui-xl;
   display: flex;
   justify-content: center;
+  margin-top: $iui-m;
+
   > :first-child {
     margin-right: $iui-m;
   }
-  margin-top: $iui-m;
 }
-  
+
+.iac-content-container {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.iac-imodel-properties-container {
+  display: flex;
+  flex-grow: 1;
+
+  > *:last-child {
+    margin-left: $iui-l;
+  }
+}
+
 .iac-inputs-container {
-  justify-content: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  > label {
+  flex-grow: 1;
+
+  .iui-input-container {
     width: 100%;
     max-width: 600px;
   }
-  > * {
+
+  > *:not(:last-child) {
     margin-bottom: $iui-m;
   }
+}
+
+.iac-extent-inputs-container {
+  display: flex;
+
+  > *:first-child {
+    margin-right: $iui-m;
+  }
+}
+
+.iac-extent-container {
+  display: flex;
+  flex-grow: 5;
 }
 
 .iac-imodel-base {

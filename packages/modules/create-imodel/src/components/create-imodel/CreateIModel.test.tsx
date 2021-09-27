@@ -86,10 +86,14 @@ describe("CreateIModel", () => {
       />
     );
 
-    const name = container.querySelector(
-      "input[name=name]"
-    ) as HTMLInputElement;
-    fireEvent.change(name, { target: { value: "Some name" } });
+    const inputs = container.querySelectorAll<HTMLInputElement>(
+      ".iac-inputs-container input"
+    );
+    fireEvent.change(inputs[0], { target: { value: "Some name" } });
+    fireEvent.change(inputs[1], { target: { value: "1" } });
+    fireEvent.change(inputs[2], { target: { value: "2" } });
+    fireEvent.change(inputs[3], { target: { value: "3" } });
+    fireEvent.change(inputs[4], { target: { value: "4" } });
 
     const createButton = getByText("Create");
     await act(async () => createButton.click());
@@ -106,6 +110,10 @@ describe("CreateIModel", () => {
           projectId: "de47c5ad-5657-42b8-a2bc-f2b8bf84cd4b",
           name: "Some name",
           description: "",
+          extent: {
+            northEast: { latitude: 3, longitude: 4 },
+            southWest: { latitude: 1, longitude: 2 },
+          },
         }),
       }
     );

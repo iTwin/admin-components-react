@@ -26,10 +26,23 @@ export interface IModelFull {
 
   /** "Globally Unique Identifier of the asset that iModel belongs to. Only present if iModel belongs to the asset." */
   assetId?: string;
+  /** iModel extent. */
+  extent?: iModelExtent;
 }
 
 export type BaseIModel = {
   name: string;
   description?: string;
   thumbnail?: ArrayBuffer;
+  extent?: iModelExtent;
+};
+
+export type iModelExtent = {
+  southWest: ExtentPoint;
+  northEast: ExtentPoint;
+};
+
+export type ExtentPoint = {
+  latitude: number;
+  longitude: number;
 };
