@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/create-imodel-react",
+      "comment": "Added iModel extent placeholder for user map, if not passed then inputs for coordinates are shown.",
+      "type": "minor"
+    }
+  ],
+  "packageName": "@itwin/create-imodel-react",
+  "email": "36186912+bentleyvk@users.noreply.github.com"
+}
