@@ -2,7 +2,6 @@ dependencies:
   '@babel/core': 7.13.1
   '@bentley/bentleyjs-core': 2.11.0
   '@bentley/frontend-authorization-client': 2.11.0_124fd8799cc8196bebc67d27cf7bf3e3
-  '@bentley/icons-generic-webfont': 1.0.34
   '@bentley/itwin-client': 2.11.0_@bentley+bentleyjs-core@2.11.0
   '@bentley/react-scripts': 4.0.3-dev.0_8f91d2b23d861db64783d0882327b032
   '@itwin/itwinui-css': 0.9.0
@@ -5709,7 +5708,7 @@ packages:
   /autoprefixer/9.8.6:
     dependencies:
       browserslist: 4.16.3
-      caniuse-lite: 1.0.30001192
+      caniuse-lite: 1.0.30001260
       colorette: 1.2.2
       normalize-range: 0.1.2
       num2fraction: 1.2.2
@@ -6484,7 +6483,7 @@ packages:
       integrity: sha512-Z942RysHXmJrhqk88FmKBVq/v5tqmSkDz7p54G/MGyjMnCFFnC79XWNbg+Vta8W6Wb2qtSZTSxIGkJrRpCFEiA==
   /browserslist/4.14.2:
     dependencies:
-      caniuse-lite: 1.0.30001192
+      caniuse-lite: 1.0.30001260
       electron-to-chromium: 1.3.675
       escalade: 3.1.1
       node-releases: 1.1.71
@@ -6496,7 +6495,7 @@ packages:
       integrity: sha512-HI4lPveGKUR0x2StIz+2FXfDk9SfVMrxn6PLh1JeGUwcuoDkdKZebWiyLRJ68iIPDpMI4JLVDf7S7XzslgWOhw==
   /browserslist/4.16.3:
     dependencies:
-      caniuse-lite: 1.0.30001192
+      caniuse-lite: 1.0.30001260
       colorette: 1.2.2
       electron-to-chromium: 1.3.675
       escalade: 3.1.1
@@ -6728,16 +6727,18 @@ packages:
   /caniuse-api/3.0.0:
     dependencies:
       browserslist: 4.16.3
-      caniuse-lite: 1.0.30001192
+      caniuse-lite: 1.0.30001260
       lodash.memoize: 4.1.2
       lodash.uniq: 4.5.0
     dev: false
     resolution:
       integrity: sha512-bsTwuIg/BZZK/vreVTYYbSWoe2F+71P7K5QGEX+pT250DZbfU1MQ5prOKpPR+LL6uWKK3KMwMCAS74QB3Um1uw==
-  /caniuse-lite/1.0.30001192:
+  /caniuse-lite/1.0.30001260:
+    dependencies:
+      nanocolors: 0.1.12
     dev: false
     resolution:
-      integrity: sha512-63OrUnwJj5T1rUmoyqYTdRWBqFFxZFlyZnRRjDR8NSUQFB6A+j/uBORU/SyJ5WzDLg4SPiZH40hQCBNdZ/jmAw==
+      integrity: sha512-Fhjc/k8725ItmrvW5QomzxLeojewxvqiYCKeFcfFEhut28IVLdpHU19dneOmltZQIE5HNbawj1HYD+1f2bM1Dg==
   /capture-exit/2.0.0:
     dependencies:
       rsvp: 4.8.5
@@ -13486,6 +13487,10 @@ packages:
     dev: false
     resolution:
       integrity: sha512-M2ufzIiINKCuDfBSAUr1vWQ+vuVcA9kqx8JJUsbQi6yf1uGRyb7HfpdfUr5qLXf3B/t8dPvcjhKMmlfnP47EzQ==
+  /nanocolors/0.1.12:
+    dev: false
+    resolution:
+      integrity: sha512-2nMHqg1x5PU+unxX7PGY7AuYxl2qDx7PSrTRjizr8sxdd3l/3hBuWWaki62qmtYm2U5i4Z5E7GbjlyDFhs9/EQ==
   /nanoid/3.1.20:
     dev: false
     engines:
@@ -15212,7 +15217,7 @@ packages:
     dependencies:
       autoprefixer: 9.8.6
       browserslist: 4.16.3
-      caniuse-lite: 1.0.30001192
+      caniuse-lite: 1.0.30001260
       css-blank-pseudo: 0.1.4
       css-has-pseudo: 0.10.0
       css-prefers-color-scheme: 3.1.1
@@ -20320,6 +20325,7 @@ packages:
     dependencies:
       '@bentley/icons-generic-webfont': 1.0.34
       '@itwin/itwinui-css': 0.9.0
+      '@itwin/itwinui-icons-react': 1.2.0_react-dom@16.13.1+react@16.13.1
       '@itwin/itwinui-react': 1.11.0_react-dom@16.13.1+react@16.13.1
       '@rollup/plugin-commonjs': 17.1.0_rollup@2.42.4
       '@svgr/rollup': 5.5.0
@@ -20371,7 +20377,7 @@ packages:
     dev: false
     name: '@rush-temp/imodel-browser-react'
     resolution:
-      integrity: sha512-JeMb3fSAS0M00JUhi1nXiy09f8E99HaOmevwRwLEXjHKjkfQSrC+z0D5Y1An/gNeEwCs+vIA5nuSe2ANc8I4kw==
+      integrity: sha512-DgR0W6viKf6f5I4ByDx96O32heCscn3JWWpvlSSPEP23P5JSrTPcW3koXOYmaPMK/hZCuM+ilCKcC54seI3X9A==
       tarball: file:projects/imodel-browser-react.tgz
     version: 0.0.0
   file:projects/manage-versions-react.tgz_babel-eslint@10.1.0:
@@ -20470,7 +20476,7 @@ packages:
       prettier: '*'
       typescript: '*'
     resolution:
-      integrity: sha512-VnGi8mVpmsLhWMMm5vfcJyF6dtTSROW3hiTPFBT4QZXK98FRqySwPYp4HRbTDHKWbjQ3ZITYzlY8WboNa87EpA==
+      integrity: sha512-2FLkebvmxzcaxniOPnlmAirujl9daGFRrBh8WdQ6/FgW5bB0XIaTKs0XqaZ4kW4vVCrlGxT0nIen7XbJJj+ObQ==
       tarball: file:projects/platform-storybook.tgz
     version: 0.0.0
   file:projects/storybook-auth-addon.tgz_node-sass@5.0.0+prettier@2.2.1:
@@ -20518,7 +20524,6 @@ specifiers:
   '@babel/core': ^7.12.10
   '@bentley/bentleyjs-core': 2.11.0
   '@bentley/frontend-authorization-client': 2.11.0
-  '@bentley/icons-generic-webfont': ^1.0.34
   '@bentley/itwin-client': 2.11.0
   '@bentley/react-scripts': 4.0.3-dev.0
   '@itwin/itwinui-css': ^0.9.0
