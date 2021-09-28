@@ -149,14 +149,7 @@ export function BaseIModelPage(props: BaseIModelProps) {
       imodel.name !== initialIModel?.name ||
       imodel.description !== initialIModel?.description ||
       isThumbnailChanged ||
-      imodel.extent?.northEast.latitude !==
-        initialIModel?.extent?.northEast.latitude ||
-      imodel.extent?.northEast.longitude !==
-        initialIModel?.extent?.northEast.longitude ||
-      imodel.extent?.southWest.latitude !==
-        initialIModel?.extent?.southWest.latitude ||
-      imodel.extent?.southWest.longitude !==
-        initialIModel?.extent?.southWest.longitude
+      isExtentChanged()
     );
   };
 
@@ -207,6 +200,20 @@ export function BaseIModelPage(props: BaseIModelProps) {
       return false;
     }
     return isLatitudeValid(point.latitude) && isLongitudeValid(point.longitude);
+  };
+
+  const isExtentChanged = () => {
+    const newExtent = extent ?? imodel.extent;
+    return (
+      newExtent?.northEast.latitude !==
+        initialIModel?.extent?.northEast.latitude ||
+      newExtent?.northEast.longitude !==
+        initialIModel?.extent?.northEast.longitude ||
+      newExtent?.southWest.latitude !==
+        initialIModel?.extent?.southWest.latitude ||
+      newExtent?.southWest.longitude !==
+        initialIModel?.extent?.southWest.longitude
+    );
   };
 
   const PointInput = (label: string, coordinate: keyof iModelExtent) => {
