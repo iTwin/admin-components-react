@@ -9,4 +9,4 @@ export { UpdateIModel } from "./components/update-imodel/UpdateIModel";
 export type { UpdateIModelProps } from "./components/update-imodel/UpdateIModel";
 
 export { IModelFull } from "./types";
-export type { BaseIModel } from "./types";
+export type { BaseIModel, iModelExtent, ExtentPoint } from "./types";

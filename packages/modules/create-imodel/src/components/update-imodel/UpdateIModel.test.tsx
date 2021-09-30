@@ -39,6 +39,10 @@ describe("UpdateIModel", () => {
         initialIModel={{
           name: "Initial name",
           description: "Initial description",
+          extent: {
+            southWest: { latitude: 1, longitude: 2 },
+            northEast: { latitude: 3, longitude: 4 },
+          },
         }}
       />
     );
@@ -62,6 +66,10 @@ describe("UpdateIModel", () => {
         body: JSON.stringify({
           name: "Some other name",
           description: "Initial description",
+          extent: {
+            southWest: { latitude: 1, longitude: 2 },
+            northEast: { latitude: 3, longitude: 4 },
+          },
         }),
       }
     );

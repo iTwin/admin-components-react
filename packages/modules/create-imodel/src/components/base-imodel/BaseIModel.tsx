@@ -13,7 +13,7 @@ import {
 } from "@itwin/itwinui-react";
 import React from "react";
 
-import { BaseIModel } from "../../types";
+import { BaseIModel, ExtentPoint, iModelExtent } from "../../types";
 import { UploadImage } from "../upload-image/UploadImage";
 
 export type BaseIModelProps = {
@@ -24,6 +24,7 @@ export type BaseIModelProps = {
     name: string;
     description: string;
     thumbnail?: { src?: ArrayBuffer; type: string };
+    extent?: iModelExtent;
   }) => void;
   /** Object of string overrides. */
   stringsOverrides?: {
@@ -41,11 +42,39 @@ export type BaseIModelProps = {
     nameTooLong?: string;
     /** Error message when description is too long. */
     descriptionTooLong?: string;
+    /** South West coordinate label. */
+    southWestCoordinate?: string;
+    /** North East coordinate label. */
+    northEastCoordinate?: string;
+    /** Latitude label. */
+    latitude?: string;
+    /** Longitude label. */
+    longitude?: string;
   };
   /** If action is loading. */
   isLoading?: boolean;
   /** Initial iModel state used for update. */
   initialIModel?: BaseIModel;
+  /** Extent component. Recommended to use a map component. If not provided then input fields for extent will be shown.
+   * @example
+   * <CreateIModel
+   *   // ...
+   *   extentComponent={
+   *     <iframe
+   *       title="iModel Extent Map"
+   *       src="https://www.google.com/maps/embed"
+   *       width="100%"
+   *       height="100%"
+   *       frameBorder="0"
+   *       style={{ border: 0 }}
+   *       allowFullScreen={false}
+   *     ></iframe>
+   *   }
+   * />
+   */
+  extentComponent?: React.ReactNode;
+  /** Extent value that should be gotten from the `extentComponent`. */
+  extent?: iModelExtent;
 };
 
 const MAX_LENGTH = 255;
@@ -57,15 +86,19 @@ export function BaseIModelPage(props: BaseIModelProps) {
     initialIModel,
     isLoading = false,
     stringsOverrides,
+    extentComponent,
+    extent,
   } = props;
   const [imodel, setImodel] = React.useState<{
     name: string;
     description: string;
     thumbnail?: { src?: ArrayBuffer; type: string };
+    extent?: iModelExtent;
   }>({
     name: initialIModel?.name ?? "",
     description: initialIModel?.description ?? "",
     thumbnail: { src: initialIModel?.thumbnail, type: "image/png" },
+    extent: initialIModel?.extent,
   });
   const [isThumbnailChanged, setIsThumbnailChanged] = React.useState<boolean>(
     false
@@ -79,6 +112,10 @@ export function BaseIModelPage(props: BaseIModelProps) {
     cancelButton: "Cancel",
     nameTooLong: `The value exceeds allowed ${MAX_LENGTH} characters.`,
     descriptionTooLong: `The value exceeds allowed ${MAX_LENGTH} characters.`,
+    southWestCoordinate: "South West coordinate",
+    northEastCoordinate: "North East coordinate",
+    latitude: "Latitude",
+    longitude: "Longitude",
     ...stringsOverrides,
   };
 
@@ -100,7 +137,10 @@ export function BaseIModelPage(props: BaseIModelProps) {
     return (
       !!imodel.name.length &&
       !isPropertyInvalid(imodel.name) &&
-      !isPropertyInvalid(imodel.description)
+      !isPropertyInvalid(imodel.description) &&
+      (!imodel.extent ||
+        (isPointValid(imodel.extent.northEast) &&
+          isPointValid(imodel.extent.southWest)))
     );
   };
 
@@ -108,7 +148,8 @@ export function BaseIModelPage(props: BaseIModelProps) {
     return (
       imodel.name !== initialIModel?.name ||
       imodel.description !== initialIModel?.description ||
-      isThumbnailChanged
+      isThumbnailChanged ||
+      isExtentChanged()
     );
   };
 
@@ -120,12 +161,111 @@ export function BaseIModelPage(props: BaseIModelProps) {
     }));
   };
 
+  const onCoordinateChange = (
+    point: keyof iModelExtent,
+    coordinate: keyof ExtentPoint,
+    value: string
+  ) => {
+    setImodel((prevState) => {
+      const extent = {
+        northEast: { ...prevState.extent?.northEast } ?? {},
+        southWest: { ...prevState.extent?.southWest } ?? {},
+      };
+      extent[point][coordinate] = value === "" ? undefined : Number(value);
+      return { ...prevState, extent: extent as iModelExtent };
+    });
+  };
+
+  const isLatitudeValid = (latitude?: number) => {
+    if (!latitude) {
+      return true;
+    }
+    return -90 <= latitude && latitude <= 90;
+  };
+
+  const isLongitudeValid = (longitude?: number) => {
+    if (!longitude) {
+      return true;
+    }
+    return -180 <= longitude && longitude <= 180;
+  };
+
+  const isPointValid = (point: ExtentPoint) => {
+    // If both fields empty then it is valid
+    if (point.latitude == null && point.longitude == null) {
+      return true;
+    }
+    // If one of the fields not empty then it is invalid
+    if (point.latitude == null || point.longitude == null) {
+      return false;
+    }
+    return isLatitudeValid(point.latitude) && isLongitudeValid(point.longitude);
+  };
+
+  const isExtentChanged = () => {
+    const newExtent = extent ?? imodel.extent;
+    return (
+      newExtent?.northEast.latitude !==
+        initialIModel?.extent?.northEast.latitude ||
+      newExtent?.northEast.longitude !==
+        initialIModel?.extent?.northEast.longitude ||
+      newExtent?.southWest.latitude !==
+        initialIModel?.extent?.southWest.latitude ||
+      newExtent?.southWest.longitude !==
+        initialIModel?.extent?.southWest.longitude
+    );
+  };
+
+  const PointInput = (label: string, coordinate: keyof iModelExtent) => {
+    return (
+      <div className="iui-input-container">
+        <div className="iui-label">{label}</div>
+        <div className="iac-extent-inputs-container">
+          <LabeledInput
+            label={updatedStrings.latitude}
+            value={imodel.extent?.[coordinate].latitude ?? ""}
+            onChange={(e) =>
+              onCoordinateChange(coordinate, "latitude", e.target.value)
+            }
+            displayStyle="inline"
+            type="number"
+            autoComplete="off"
+            status={
+              isLatitudeValid(imodel.extent?.[coordinate].latitude)
+                ? undefined
+                : "negative"
+            }
+            min={-90}
+            max={90}
+          />
+          <LabeledInput
+            label={updatedStrings.longitude}
+            value={imodel.extent?.[coordinate]?.longitude ?? ""}
+            onChange={(e) =>
+              onCoordinateChange(coordinate, "longitude", e.target.value)
+            }
+            displayStyle="inline"
+            type="number"
+            autoComplete="off"
+            status={
+              isLongitudeValid(imodel.extent?.[coordinate].longitude)
+                ? undefined
+                : "negative"
+            }
+            min={-180}
+            max={180}
+          />
+        </div>
+      </div>
+    );
+  };
+
   return (
     <>
       <div className="iac-imodel-base">
-        <div>
+        <div className="iac-content-container">
           <Title>{updatedStrings.titleString}</Title>
-          <div>
+          <div className="iac-imodel-properties-container">
             <div className="iac-inputs-container">
               <LabeledInput
                 label={updatedStrings.nameString}
@@ -158,11 +298,20 @@ export function BaseIModelPage(props: BaseIModelProps) {
                 }
                 autoComplete="off"
               />
+              {!extentComponent && (
+                <>
+                  {PointInput(updatedStrings.southWestCoordinate, "southWest")}
+                  {PointInput(updatedStrings.northEastCoordinate, "northEast")}
+                </>
+              )}
               <UploadImage
                 onChange={onImageChange}
                 src={imodel.thumbnail?.src}
               />
             </div>
+            {extentComponent && (
+              <div className="iac-extent-container">{extentComponent}</div>
+            )}
           </div>
         </div>
         <div className="iac-button-bar">
@@ -173,6 +322,7 @@ export function BaseIModelPage(props: BaseIModelProps) {
               onActionClick?.({
                 ...imodel,
                 thumbnail: isThumbnailChanged ? imodel.thumbnail : undefined,
+                extent: extent ?? imodel.extent,
               })
             }
           >

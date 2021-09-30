@@ -23,6 +23,10 @@ export default {
   component: CreateIModel,
   excludeStories: ["CreateIModel"],
   argTypes: accessTokenArgTypes,
+  args: {
+    apiOverrides: { serverEnvironmentPrefix: "dev" },
+    projectId: "de47c5ad-5657-42b8-a2bc-f2b8bf84cd4b",
+  },
 } as Meta;
 
 const root = document.getElementById("root") as HTMLElement;
@@ -38,7 +42,23 @@ export const Create: Story<CreateIModelProps> = withAccessTokenOverride(
   }
 );
 
-Create.args = {
-  apiOverrides: { serverEnvironmentPrefix: "dev" },
-  projectId: "de47c5ad-5657-42b8-a2bc-f2b8bf84cd4b",
-};
+export const WithExtentMap: Story<CreateIModelProps> = withAccessTokenOverride(
+  (args) => {
+    return (
+      <CreateIModel
+        {...args}
+        extentComponent={
+          <iframe
+            title="iModel Extent Map"
+            src="https://www.google.com/maps/embed"
+            width="100%"
+            height="100%"
+            frameBorder="0"
+            style={{ border: 0 }}
+            allowFullScreen={false}
+          ></iframe>
+        }
+      />
+    );
+  }
+);
