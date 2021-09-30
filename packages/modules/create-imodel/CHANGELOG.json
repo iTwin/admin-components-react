@@ -2,6 +2,18 @@
   "name": "@itwin/create-imodel-react",
   "entries": [
     {
+      "version": "0.5.0",
+      "tag": "@itwin/create-imodel-react_v0.5.0",
+      "date": "Thu, 30 Sep 2021 07:34:27 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Added iModel extent placeholder for user map, if not passed then inputs for coordinates are shown."
+          }
+        ]
+      }
+    },
+    {
       "version": "0.4.1",
       "tag": "@itwin/create-imodel-react_v0.4.1",
       "date": "Tue, 10 Aug 2021 13:32:36 GMT",

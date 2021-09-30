@@ -2,6 +2,18 @@
   "name": "@itwin/manage-versions-react",
   "entries": [
     {
+      "version": "0.7.1",
+      "tag": "@itwin/manage-versions-react_v0.7.1",
+      "date": "Thu, 30 Sep 2021 07:34:27 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Moved `ManageVersionsTabs` to regular exports so it could be used when setting `currentTab`."
+          }
+        ]
+      }
+    },
+    {
       "version": "0.7.0",
       "tag": "@itwin/manage-versions-react_v0.7.0",
       "date": "Fri, 30 Jul 2021 05:20:04 GMT",

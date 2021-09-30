@@ -1,6 +1,13 @@
 # Change Log - @itwin/create-imodel-react
 
-This log was last generated on Tue, 10 Aug 2021 13:32:36 GMT and should not be manually modified.
+This log was last generated on Thu, 30 Sep 2021 07:34:27 GMT and should not be manually modified.
+
+## 0.5.0
+Thu, 30 Sep 2021 07:34:27 GMT
+
+### Minor changes
+
+- Added iModel extent placeholder for user map, if not passed then inputs for coordinates are shown.
 
 ## 0.4.1
 Tue, 10 Aug 2021 13:32:36 GMT

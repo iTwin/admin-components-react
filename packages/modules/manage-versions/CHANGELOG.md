@@ -1,6 +1,13 @@
 # Change Log - @itwin/manage-versions-react
 
-This log was last generated on Fri, 30 Jul 2021 05:20:04 GMT and should not be manually modified.
+This log was last generated on Thu, 30 Sep 2021 07:34:27 GMT and should not be manually modified.
+
+## 0.7.1
+Thu, 30 Sep 2021 07:34:27 GMT
+
+### Patches
+
+- Moved `ManageVersionsTabs` to regular exports so it could be used when setting `currentTab`.
 
 ## 0.7.0
 Fri, 30 Jul 2021 05:20:04 GMT
