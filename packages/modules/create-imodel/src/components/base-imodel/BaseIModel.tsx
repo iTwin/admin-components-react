@@ -119,6 +119,15 @@ export function BaseIModelPage(props: BaseIModelProps) {
     ...stringsOverrides,
   };
 
+  React.useEffect(() => {
+    if (extent !== undefined) {
+      setImodel((prevState) => ({
+        ...prevState,
+        extent: extent as iModelExtent,
+      }));
+    }
+  }, [extent]);
+
   const onPropChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -203,7 +212,7 @@ export function BaseIModelPage(props: BaseIModelProps) {
   };
 
   const isExtentChanged = () => {
-    const newExtent = extent ?? imodel.extent;
+    const newExtent = imodel.extent;
     return (
       newExtent?.northEast.latitude !==
         initialIModel?.extent?.northEast.latitude ||
@@ -322,7 +331,7 @@ export function BaseIModelPage(props: BaseIModelProps) {
               onActionClick?.({
                 ...imodel,
                 thumbnail: isThumbnailChanged ? imodel.thumbnail : undefined,
-                extent: extent ?? imodel.extent,
+                extent: imodel.extent,
               })
             }
           >
