@@ -212,15 +212,14 @@ export function BaseIModelPage(props: BaseIModelProps) {
   };
 
   const isExtentChanged = () => {
-    const newExtent = imodel.extent;
     return (
-      newExtent?.northEast.latitude !==
+      imodel.extent?.northEast.latitude !==
         initialIModel?.extent?.northEast.latitude ||
-      newExtent?.northEast.longitude !==
+      imodel.extent?.northEast.longitude !==
         initialIModel?.extent?.northEast.longitude ||
-      newExtent?.southWest.latitude !==
+      imodel.extent?.southWest.latitude !==
         initialIModel?.extent?.southWest.latitude ||
-      newExtent?.southWest.longitude !==
+      imodel.extent?.southWest.longitude !==
         initialIModel?.extent?.southWest.longitude
     );
   };
