@@ -24,7 +24,7 @@ export type BaseIModelProps = {
     name: string;
     description: string;
     thumbnail?: { src?: ArrayBuffer; type: string };
-    extent?: iModelExtent;
+    extent?: iModelExtent | null;
   }) => void;
   /** Object of string overrides. */
   stringsOverrides?: {
@@ -74,7 +74,7 @@ export type BaseIModelProps = {
    */
   extentComponent?: React.ReactNode;
   /** Extent value that should be gotten from the `extentComponent`. */
-  extent?: iModelExtent;
+  extent?: iModelExtent | null;
 };
 
 const MAX_LENGTH = 255;
@@ -93,7 +93,7 @@ export function BaseIModelPage(props: BaseIModelProps) {
     name: string;
     description: string;
     thumbnail?: { src?: ArrayBuffer; type: string };
-    extent?: iModelExtent;
+    extent?: iModelExtent | null;
   }>({
     name: initialIModel?.name ?? "",
     description: initialIModel?.description ?? "",

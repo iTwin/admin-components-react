@@ -75,7 +75,7 @@ export type UpdateIModelProps = {
    */
   extentComponent?: React.ReactNode;
   /** Extent value that should be gotten from the `extentComponent`. */
-  extent?: iModelExtent;
+  extent?: iModelExtent | null;
 };
 
 export function UpdateIModel(props: UpdateIModelProps) {
@@ -107,7 +107,7 @@ export function UpdateIModel(props: UpdateIModelProps) {
     name: string;
     description: string;
     thumbnail?: { src?: ArrayBuffer; type: string };
-    extent?: iModelExtent;
+    extent?: iModelExtent | null;
   }) => {
     setIsLoading(true);
     try {

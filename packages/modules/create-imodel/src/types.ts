@@ -27,14 +27,14 @@ export interface IModelFull {
   /** "Globally Unique Identifier of the asset that iModel belongs to. Only present if iModel belongs to the asset." */
   assetId?: string;
   /** iModel extent. */
-  extent?: iModelExtent;
+  extent?: iModelExtent | null;
 }
 
 export type BaseIModel = {
   name: string;
   description?: string;
   thumbnail?: ArrayBuffer;
-  extent?: iModelExtent;
+  extent?: iModelExtent | null;
 };
 
 export type iModelExtent = {

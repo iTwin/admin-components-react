@@ -121,7 +121,7 @@ describe("UpdateIModel", () => {
             northEast: { latitude: 3, longitude: 4 },
           },
         }}
-        extent={(null as unknown) as iModelExtent}
+        extent={null}
       />
     );
     expect(updateButton.closest("button")?.hasAttribute("disabled")).toBe(
