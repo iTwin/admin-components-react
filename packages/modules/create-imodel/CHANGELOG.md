@@ -1,6 +1,13 @@
 # Change Log - @itwin/create-imodel-react
 
-This log was last generated on Thu, 30 Sep 2021 07:34:27 GMT and should not be manually modified.
+This log was last generated on Tue, 25 Jan 2022 07:47:32 GMT and should not be manually modified.
+
+## 0.5.1
+Tue, 25 Jan 2022 07:47:32 GMT
+
+### Patches
+
+- Fix an issue where update imodel button would remain disabled when map extent coordinates were removed.
 
 ## 0.5.0
 Thu, 30 Sep 2021 07:34:27 GMT

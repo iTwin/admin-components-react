@@ -2,6 +2,18 @@
   "name": "@itwin/create-imodel-react",
   "entries": [
     {
+      "version": "0.5.1",
+      "tag": "@itwin/create-imodel-react_v0.5.1",
+      "date": "Tue, 25 Jan 2022 07:47:32 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Fix an issue where update imodel button would remain disabled when map extent coordinates were removed."
+          }
+        ]
+      }
+    },
+    {
       "version": "0.5.0",
       "tag": "@itwin/create-imodel-react_v0.5.0",
       "date": "Thu, 30 Sep 2021 07:34:27 GMT",
