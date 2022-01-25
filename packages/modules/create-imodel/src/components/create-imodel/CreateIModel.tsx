@@ -73,7 +73,7 @@ export type CreateIModelProps = {
    */
   extentComponent?: React.ReactNode;
   /** Extent value that should be gotten from the `extentComponent`. */
-  extent?: iModelExtent;
+  extent?: iModelExtent | null;
 };
 
 export function CreateIModel(props: CreateIModelProps) {
@@ -102,7 +102,7 @@ export function CreateIModel(props: CreateIModelProps) {
     name: string;
     description: string;
     thumbnail?: { src?: ArrayBuffer; type: string };
-    extent?: iModelExtent;
+    extent?: iModelExtent | null;
   }) => {
     setIsLoading(true);
     try {

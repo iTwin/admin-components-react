@@ -24,7 +24,7 @@ export type BaseIModelProps = {
     name: string;
     description: string;
     thumbnail?: { src?: ArrayBuffer; type: string };
-    extent?: iModelExtent;
+    extent?: iModelExtent | null;
   }) => void;
   /** Object of string overrides. */
   stringsOverrides?: {
@@ -74,7 +74,7 @@ export type BaseIModelProps = {
    */
   extentComponent?: React.ReactNode;
   /** Extent value that should be gotten from the `extentComponent`. */
-  extent?: iModelExtent;
+  extent?: iModelExtent | null;
 };
 
 const MAX_LENGTH = 255;
@@ -93,7 +93,7 @@ export function BaseIModelPage(props: BaseIModelProps) {
     name: string;
     description: string;
     thumbnail?: { src?: ArrayBuffer; type: string };
-    extent?: iModelExtent;
+    extent?: iModelExtent | null;
   }>({
     name: initialIModel?.name ?? "",
     description: initialIModel?.description ?? "",
@@ -118,6 +118,15 @@ export function BaseIModelPage(props: BaseIModelProps) {
     longitude: "Longitude",
     ...stringsOverrides,
   };
+
+  React.useEffect(() => {
+    if (extent !== undefined) {
+      setImodel((prevState) => ({
+        ...prevState,
+        extent: extent as iModelExtent,
+      }));
+    }
+  }, [extent]);
 
   const onPropChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -203,15 +212,14 @@ export function BaseIModelPage(props: BaseIModelProps) {
   };
 
   const isExtentChanged = () => {
-    const newExtent = extent ?? imodel.extent;
     return (
-      newExtent?.northEast.latitude !==
+      imodel.extent?.northEast.latitude !==
         initialIModel?.extent?.northEast.latitude ||
-      newExtent?.northEast.longitude !==
+      imodel.extent?.northEast.longitude !==
         initialIModel?.extent?.northEast.longitude ||
-      newExtent?.southWest.latitude !==
+      imodel.extent?.southWest.latitude !==
         initialIModel?.extent?.southWest.latitude ||
-      newExtent?.southWest.longitude !==
+      imodel.extent?.southWest.longitude !==
         initialIModel?.extent?.southWest.longitude
     );
   };
@@ -322,7 +330,7 @@ export function BaseIModelPage(props: BaseIModelProps) {
               onActionClick?.({
                 ...imodel,
                 thumbnail: isThumbnailChanged ? imodel.thumbnail : undefined,
-                extent: extent ?? imodel.extent,
+                extent: imodel.extent,
               })
             }
           >
