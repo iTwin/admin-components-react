@@ -3,7 +3,7 @@
     {
       "packageName": "@itwin/create-imodel-react",
       "comment": "Upgrade to React 17",
-      "type": "major"
+      "type": "patch"
     }
   ],
   "packageName": "@itwin/create-imodel-react",

@@ -3,7 +3,7 @@
     {
       "packageName": "@itwin/manage-versions-react",
       "comment": "Upgrade to React 17",
-      "type": "major"
+      "type": "patch"
     }
   ],
   "packageName": "@itwin/manage-versions-react",
