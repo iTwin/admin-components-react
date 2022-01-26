@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/create-imodel-react",
+      "comment": "Upgrade to React 17",
+      "type": "major"
+    }
+  ],
+  "packageName": "@itwin/create-imodel-react",
+  "email": "6283674+kckst8@users.noreply.github.com"
+}
