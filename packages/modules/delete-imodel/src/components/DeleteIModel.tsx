@@ -77,7 +77,7 @@ export function DeleteIModel(props: DeleteIModelProps) {
         onSuccess?.();
       }
       close();
-    } catch (err) {
+    } catch (err: any) {
       error(err);
       close();
     }

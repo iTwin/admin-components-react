@@ -2,7 +2,7 @@
   "$schema": "https://developer.microsoft.com/json-schemas/rush/v5/rush.schema.json",
   "rushVersion": "5.40.5",
   "pnpmVersion": "5.17.3",
-  "nodeSupportedVersionRange": ">=10.13.0 <13.0.0",
+  "nodeSupportedVersionRange": ">=12.17.0 <17.0.0",
   "projectFolderMinDepth": 2,
   "projectFolderMaxDepth": 3,
   "repository": {
@@ -47,6 +47,6 @@
       "projectFolder": "packages/modules/create-imodel",
       "shouldPublish": true,
       "versionPolicyName": "independentModule"
-    } 
+    }
   ]
 }
