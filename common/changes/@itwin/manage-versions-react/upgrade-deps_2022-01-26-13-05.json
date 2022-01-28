@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/manage-versions-react",
+      "comment": "Upgrade to React 17",
+      "type": "patch"
+    }
+  ],
+  "packageName": "@itwin/manage-versions-react",
+  "email": "6283674+kckst8@users.noreply.github.com"
+}
