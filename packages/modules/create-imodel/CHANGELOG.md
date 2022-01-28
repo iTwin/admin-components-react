@@ -1,6 +1,13 @@
 # Change Log - @itwin/create-imodel-react
 
-This log was last generated on Tue, 25 Jan 2022 07:47:32 GMT and should not be manually modified.
+This log was last generated on Fri, 28 Jan 2022 10:41:27 GMT and should not be manually modified.
+
+## 0.5.2
+Fri, 28 Jan 2022 10:41:27 GMT
+
+### Patches
+
+- Upgrade to React 17
 
 ## 0.5.1
 Tue, 25 Jan 2022 07:47:32 GMT

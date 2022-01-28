@@ -1,6 +1,13 @@
 # Change Log - @itwin/manage-versions-react
 
-This log was last generated on Thu, 30 Sep 2021 07:34:27 GMT and should not be manually modified.
+This log was last generated on Fri, 28 Jan 2022 10:41:27 GMT and should not be manually modified.
+
+## 0.7.2
+Fri, 28 Jan 2022 10:41:27 GMT
+
+### Patches
+
+- Upgrade to React 17
 
 ## 0.7.1
 Thu, 30 Sep 2021 07:34:27 GMT

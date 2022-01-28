@@ -2,6 +2,18 @@
   "name": "@itwin/imodel-browser-react",
   "entries": [
     {
+      "version": "0.12.2",
+      "tag": "@itwin/imodel-browser-react_v0.12.2",
+      "date": "Fri, 28 Jan 2022 10:41:27 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Upgrade to React 17"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.12.1",
       "tag": "@itwin/imodel-browser-react_v0.12.1",
       "date": "Wed, 11 Aug 2021 20:01:30 GMT",

@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Wed, 11 Aug 2021 20:01:30 GMT and should not be manually modified.
+This log was last generated on Fri, 28 Jan 2022 10:41:27 GMT and should not be manually modified.
+
+## 0.12.2
+Fri, 28 Jan 2022 10:41:27 GMT
+
+### Patches
+
+- Upgrade to React 17
 
 ## 0.12.1
 Wed, 11 Aug 2021 20:01:30 GMT
