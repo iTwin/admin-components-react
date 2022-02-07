@@ -6,6 +6,9 @@
 # These owners will be the default owners for everything in
 # the repo, unless a later match takes precedence.
 *       @kckst8 @raplemie
+ 
+# imodel-browser
+packages/modules/imodel-browser/ @raplemie
 
 # delete-imodel
 packages/modules/delete-imodel/ @bentleyvk @veekeys 
