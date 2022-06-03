@@ -2,6 +2,18 @@
   "name": "@itwin/imodel-browser-react",
   "entries": [
     {
+      "version": "0.12.3",
+      "tag": "@itwin/imodel-browser-react_v0.12.3",
+      "date": "Fri, 03 Jun 2022 16:33:25 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Fix trailing ghost cards when using `apiOverrides.data` prop."
+          }
+        ]
+      }
+    },
+    {
       "version": "0.12.2",
       "tag": "@itwin/imodel-browser-react_v0.12.2",
       "date": "Fri, 28 Jan 2022 10:41:27 GMT",

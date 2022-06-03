@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Fri, 28 Jan 2022 10:41:27 GMT and should not be manually modified.
+This log was last generated on Fri, 03 Jun 2022 16:33:25 GMT and should not be manually modified.
+
+## 0.12.3
+Fri, 03 Jun 2022 16:33:25 GMT
+
+### Patches
+
+- Fix trailing ghost cards when using `apiOverrides.data` prop.
 
 ## 0.12.2
 Fri, 28 Jan 2022 10:41:27 GMT
