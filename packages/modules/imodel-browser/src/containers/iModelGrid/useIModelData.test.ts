@@ -85,6 +85,7 @@ describe("useIModelData hook", () => {
 
     expect(result.current.iModels).toEqual([]);
     expect(result.current.status).toEqual(DataStatus.Complete);
+    expect(result.current.fetchMore).toBeUndefined();
     expect(watcher).toHaveBeenCalledTimes(1);
 
     rerender([
@@ -106,6 +107,7 @@ describe("useIModelData hook", () => {
 
     expect(result.current.iModels).toEqual([]);
     expect(result.current.status).toEqual(DataStatus.Complete);
+    expect(result.current.fetchMore).toBeUndefined();
     expect(watcher).toHaveBeenCalledTimes(2);
   });
 

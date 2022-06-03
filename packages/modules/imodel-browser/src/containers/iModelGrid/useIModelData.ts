@@ -62,6 +62,7 @@ export const useIModelData = ({
     if (apiOverrides?.data) {
       setIModels(apiOverrides.data);
       setStatus(DataStatus.Complete);
+      setMorePages(false);
       return;
     }
     if (!accessToken || !projectId) {

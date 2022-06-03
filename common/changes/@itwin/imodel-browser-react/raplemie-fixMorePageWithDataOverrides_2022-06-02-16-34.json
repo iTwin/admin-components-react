@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/imodel-browser-react",
+      "comment": "Fix trailing ghost cards when using `apiOverrides.data` prop.",
+      "type": "patch"
+    }
+  ],
+  "packageName": "@itwin/imodel-browser-react",
+  "email": "1904889+raplemie@users.noreply.github.com"
+}
