@@ -10,3 +10,12 @@ export type { UpdateIModelProps } from "./components/update-imodel/UpdateIModel"
 
 export { IModelFull } from "./types";
 export type { BaseIModel, iModelExtent, ExtentPoint } from "./types";
+
+export { IModelName } from "./components/imodel-name/IModelName";
+export type { IModelNameProps } from "./components/imodel-name/IModelName";
+
+export { IModelDescription } from "./components/imodel-description/IModelDescription";
+export type { IModelDescriptionProps } from "./components/imodel-description/IModelDescription";
+
+export { UploadImage } from "./components/upload-image/UploadImage";
+export type { UploadImageProps } from "./components/upload-image/UploadImage";

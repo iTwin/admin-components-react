@@ -74,6 +74,7 @@ export type CreateIModelProps = {
   extentComponent?: React.ReactNode;
   /** Extent value that should be gotten from the `extentComponent`. */
   extent?: iModelExtent | null;
+  children?: React.ReactNode;
 };
 
 export function CreateIModel(props: CreateIModelProps) {
@@ -173,7 +174,9 @@ export function CreateIModel(props: CreateIModelProps) {
         onClose={onClose}
         extentComponent={extentComponent}
         extent={extent}
-      />
+      >
+        {props.children}
+      </BaseIModelPage>
     </>
   );
 }

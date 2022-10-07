@@ -7,13 +7,15 @@ import "./BaseIModel.scss";
 import {
   Button,
   LabeledInput,
-  LabeledTextarea,
   ProgressRadial,
   Title,
 } from "@itwin/itwinui-react";
 import React from "react";
+import { createContext } from "react";
 
 import { BaseIModel, ExtentPoint, iModelExtent } from "../../types";
+import { IModelDescription } from "../imodel-description/IModelDescription";
+import { IModelName } from "../imodel-name/IModelName";
 import { UploadImage } from "../upload-image/UploadImage";
 
 export type BaseIModelProps = {
@@ -75,9 +77,28 @@ export type BaseIModelProps = {
   extentComponent?: React.ReactNode;
   /** Extent value that should be gotten from the `extentComponent`. */
   extent?: iModelExtent | null;
+  children?: React.ReactNode;
 };
 
 const MAX_LENGTH = 255;
+
+interface ContextProps {
+  props: BaseIModelProps;
+  imodel?: {
+    name: string;
+    description: string;
+    thumbnail?: { src?: ArrayBuffer; type: string };
+    extent?: iModelExtent | null;
+  };
+  onPropChange: (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
+  onImageChange: (src: ArrayBuffer, type: string) => void;
+}
+
+export const BaseiModelContext = createContext<ContextProps | undefined>(
+  undefined
+);
 
 export function BaseIModelPage(props: BaseIModelProps) {
   const {
@@ -100,9 +121,8 @@ export function BaseIModelPage(props: BaseIModelProps) {
     thumbnail: { src: initialIModel?.thumbnail, type: "image/png" },
     extent: initialIModel?.extent,
   });
-  const [isThumbnailChanged, setIsThumbnailChanged] = React.useState<boolean>(
-    false
-  );
+  const [isThumbnailChanged, setIsThumbnailChanged] =
+    React.useState<boolean>(false);
 
   const updatedStrings = {
     titleString: "Create an iModel",
@@ -275,47 +295,29 @@ export function BaseIModelPage(props: BaseIModelProps) {
           <Title>{updatedStrings.titleString}</Title>
           <div className="iac-imodel-properties-container">
             <div className="iac-inputs-container">
-              <LabeledInput
-                label={updatedStrings.nameString}
-                name="name"
-                setFocus
-                required
-                value={imodel.name}
-                onChange={onPropChange}
-                message={
-                  isPropertyInvalid(imodel.name)
-                    ? updatedStrings.nameTooLong
-                    : undefined
-                }
-                status={isPropertyInvalid(imodel.name) ? "negative" : undefined}
-                autoComplete="off"
-              />
-              <LabeledTextarea
-                label={updatedStrings.descriptionString ?? "Description"}
-                name="description"
-                value={imodel.description}
-                onChange={onPropChange}
-                rows={4}
-                message={
-                  isPropertyInvalid(imodel.description)
-                    ? updatedStrings.descriptionTooLong
-                    : undefined
-                }
-                status={
-                  isPropertyInvalid(imodel.description) ? "negative" : undefined
-                }
-                autoComplete="off"
-              />
-              {!extentComponent && (
-                <>
-                  {PointInput(updatedStrings.southWestCoordinate, "southWest")}
-                  {PointInput(updatedStrings.northEastCoordinate, "northEast")}
-                </>
-              )}
-              <UploadImage
-                onChange={onImageChange}
-                src={imodel.thumbnail?.src}
-              />
+              <BaseiModelContext.Provider
+                value={{ props, imodel, onPropChange, onImageChange }}
+              >
+                {props?.children ?? (
+                  <>
+                    <IModelName />
+                    <IModelDescription />
+                    {!extentComponent && (
+                      <>
+                        {PointInput(
+                          updatedStrings.southWestCoordinate,
+                          "southWest"
+                        )}
+                        {PointInput(
+                          updatedStrings.northEastCoordinate,
+                          "northEast"
+                        )}
+                      </>
+                    )}
+                    <UploadImage />
+                  </>
+                )}
+              </BaseiModelContext.Provider>
             </div>
             {extentComponent && (
               <div className="iac-extent-container">{extentComponent}</div>
