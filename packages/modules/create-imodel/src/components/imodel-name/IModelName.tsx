@@ -14,6 +14,7 @@ export type IModelNameProps = {
   nameTooLong?: string;
   /** iModel name. */
   name?: string;
+  /** Callback function when any value is changed. */
   onPropChange?: (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
