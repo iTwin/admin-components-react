@@ -7,6 +7,7 @@ import React from "react";
 
 import { BaseIModel, iModelExtent, IModelFull } from "../../types";
 import { BaseIModelPage } from "../base-imodel/BaseIModel";
+import { IModelContextProvider } from "../context/imodel-context";
 
 export type UpdateIModelProps = {
   /** Bearer access token with scope `imodels:modify`. */
@@ -170,15 +171,17 @@ export function UpdateIModel(props: UpdateIModelProps) {
 
   return (
     <>
-      <BaseIModelPage
-        stringsOverrides={updatedStrings}
-        isLoading={isLoading}
-        onActionClick={updateiModel}
-        onClose={onClose}
-        initialIModel={initialIModel}
-        extentComponent={extentComponent}
-        extent={extent}
-      />
+      <IModelContextProvider>
+        <BaseIModelPage
+          stringsOverrides={updatedStrings}
+          isLoading={isLoading}
+          onActionClick={updateiModel}
+          onClose={onClose}
+          initialIModel={initialIModel}
+          extentComponent={extentComponent}
+          extent={extent}
+        />
+      </IModelContextProvider>
     </>
   );
 }

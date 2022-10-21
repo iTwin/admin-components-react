@@ -5,54 +5,45 @@
 import { LabeledInput } from "@itwin/itwinui-react";
 import React from "react";
 
-import { BaseiModelContext } from "../base-imodel/BaseIModel";
+import { IModelContext } from "../context/imodel-context";
 
 export type IModelNameProps = {
   /** iModel name property. */
   nameString?: string;
   /** Error message when name is too long. */
   nameTooLong?: string;
-  /** iModel name. */
-  name?: string;
-  /** Callback function when any value is changed. */
-  onPropChange?: (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => void;
+  /** Message to be displayed below input field */
+  message?: string;
+  /** Maximum length */
+  maxLength?: number;
 };
 
 export function IModelName(props: IModelNameProps) {
-  const MAX_LENGTH = 255;
+  const MAX_LENGTH = props.maxLength || 255;
 
   const isPropertyInvalid = (value: string) => {
     return value.length > MAX_LENGTH;
   };
 
-  const context = React.useContext(BaseiModelContext);
-
-  const nameString = props.nameString
-    ? props.nameString
-    : context?.props?.stringsOverrides?.nameString;
-
-  const nameTooLong = props.nameTooLong
-    ? props.nameTooLong
-    : context?.props?.stringsOverrides?.nameTooLong;
-
-  const name = props.name ? props.name : context?.imodel?.name;
-
-  const onPropChange = props.onPropChange
-    ? props.onPropChange
-    : context?.onPropChange;
-
+  const context = React.useContext(IModelContext);
   return (
     <LabeledInput
-      label={nameString ?? "Name"}
+      label={props?.nameString ?? "Name"}
       name="name"
       setFocus
       required
-      value={name}
-      onChange={onPropChange}
-      message={isPropertyInvalid(name as string) ? nameTooLong : undefined}
-      status={isPropertyInvalid(name as string) ? "negative" : undefined}
+      value={context?.iModel?.name}
+      onChange={context?.onChange}
+      message={
+        isPropertyInvalid(context?.iModel?.name as string)
+          ? props?.nameTooLong
+          : props?.message
+      }
+      status={
+        isPropertyInvalid(context?.iModel?.name as string)
+          ? "negative"
+          : undefined
+      }
       autoComplete="off"
     />
   );

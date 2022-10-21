@@ -10,10 +10,10 @@ import {
   ProgressRadial,
   Title,
 } from "@itwin/itwinui-react";
-import React from "react";
-import { createContext } from "react";
+import React, { useContext } from "react";
 
 import { BaseIModel, ExtentPoint, iModelExtent } from "../../types";
+import { IModelContext } from "../context/imodel-context";
 import { IModelDescription } from "../imodel-description/IModelDescription";
 import { IModelName } from "../imodel-name/IModelName";
 import { UploadImage } from "../upload-image/UploadImage";
@@ -82,24 +82,6 @@ export type BaseIModelProps = {
 
 const MAX_LENGTH = 255;
 
-interface ContextProps {
-  props: BaseIModelProps;
-  imodel?: {
-    name: string;
-    description: string;
-    thumbnail?: { src?: ArrayBuffer; type: string };
-    extent?: iModelExtent | null;
-  };
-  onPropChange: (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => void;
-  onImageChange: (src: ArrayBuffer, type: string) => void;
-}
-
-export const BaseiModelContext = createContext<ContextProps | undefined>(
-  undefined
-);
-
 export function BaseIModelPage(props: BaseIModelProps) {
   const {
     onClose,
@@ -110,20 +92,12 @@ export function BaseIModelPage(props: BaseIModelProps) {
     extentComponent,
     extent,
   } = props;
-  const [imodel, setImodel] = React.useState<{
-    name: string;
-    description: string;
-    thumbnail?: { src?: ArrayBuffer; type: string };
-    extent?: iModelExtent | null;
-  }>({
-    name: initialIModel?.name ?? "",
-    description: initialIModel?.description ?? "",
-    thumbnail: { src: initialIModel?.thumbnail, type: "image/png" },
-    extent: initialIModel?.extent,
-  });
-  const [isThumbnailChanged, setIsThumbnailChanged] =
-    React.useState<boolean>(false);
 
+  const {
+    iModel: imodel,
+    isThumbnailChanged,
+    setImodel,
+  } = useContext(IModelContext);
   const updatedStrings = {
     titleString: "Create an iModel",
     nameString: "Name",
@@ -148,15 +122,15 @@ export function BaseIModelPage(props: BaseIModelProps) {
     }
   }, [extent]);
 
-  const onPropChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    event.persist();
-    setImodel((prevState) => ({
-      ...prevState,
-      [event.target.name]: event.target.value ?? "",
-    }));
-  };
+  React.useEffect(() => {
+    console.log("initialIModel-", initialIModel);
+    setImodel({
+      name: initialIModel?.name ?? "",
+      description: initialIModel?.description ?? "",
+      thumbnail: { src: initialIModel?.thumbnail, type: "image/png" },
+      extent: initialIModel?.extent,
+    });
+  }, [initialIModel]);
 
   const isPropertyInvalid = (value: string) => {
     return value.length > MAX_LENGTH;
@@ -180,14 +154,6 @@ export function BaseIModelPage(props: BaseIModelProps) {
       isThumbnailChanged ||
       isExtentChanged()
     );
-  };
-
-  const onImageChange = (src: ArrayBuffer, type: string) => {
-    setIsThumbnailChanged(true);
-    setImodel((prevState) => ({
-      ...prevState,
-      thumbnail: { src, type },
-    }));
   };
 
   const onCoordinateChange = (
@@ -287,42 +253,44 @@ export function BaseIModelPage(props: BaseIModelProps) {
       </div>
     );
   };
-
+  console.log("in base imodel-", props);
   return (
     <>
       <div className="iac-imodel-base">
         <div className="iac-content-container">
           <Title>{updatedStrings.titleString}</Title>
-          <div className="iac-imodel-properties-container">
-            <div className="iac-inputs-container">
-              <BaseiModelContext.Provider
-                value={{ props, imodel, onPropChange, onImageChange }}
-              >
-                {props?.children ?? (
-                  <>
-                    <IModelName />
-                    <IModelDescription />
-                    {!extentComponent && (
-                      <>
-                        {PointInput(
-                          updatedStrings.southWestCoordinate,
-                          "southWest"
-                        )}
-                        {PointInput(
-                          updatedStrings.northEastCoordinate,
-                          "northEast"
-                        )}
-                      </>
-                    )}
-                    <UploadImage />
-                  </>
-                )}
-              </BaseiModelContext.Provider>
+          {props?.children ?? (
+            <div className="iac-imodel-properties-container">
+              <div className="iac-inputs-container">
+                <>
+                  <IModelName
+                    nameString={updatedStrings?.nameString}
+                    nameTooLong={updatedStrings?.nameTooLong}
+                  />
+                  <IModelDescription
+                    descriptionString={updatedStrings?.descriptionString}
+                    descriptionTooLong={updatedStrings?.descriptionTooLong}
+                  />
+                  {!extentComponent && (
+                    <>
+                      {PointInput(
+                        updatedStrings.southWestCoordinate,
+                        "southWest"
+                      )}
+                      {PointInput(
+                        updatedStrings.northEastCoordinate,
+                        "northEast"
+                      )}
+                    </>
+                  )}
+                  <UploadImage />
+                </>
+              </div>
+              {extentComponent && (
+                <div className="iac-extent-container">{extentComponent}</div>
+              )}
             </div>
-            {extentComponent && (
-              <div className="iac-extent-container">{extentComponent}</div>
-            )}
-          </div>
+          )}
         </div>
         <div className="iac-button-bar">
           <Button
