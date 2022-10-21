@@ -123,7 +123,6 @@ export function BaseIModelPage(props: BaseIModelProps) {
   }, [extent]);
 
   React.useEffect(() => {
-    console.log("initialIModel-", initialIModel);
     setImodel({
       name: initialIModel?.name ?? "",
       description: initialIModel?.description ?? "",
@@ -253,7 +252,7 @@ export function BaseIModelPage(props: BaseIModelProps) {
       </div>
     );
   };
-  console.log("in base imodel-", props);
+
   return (
     <>
       <div className="iac-imodel-base">
