@@ -18,7 +18,7 @@ export function IModelName(props: IModelNameProps) {
   const context = React.useContext(IModelContext);
   return (
     <LabeledInput
-      label={`${context?.nameString}aa` ?? "Name123"}
+      label={context?.nameString ?? "Name"}
       name="name"
       setFocus
       required
