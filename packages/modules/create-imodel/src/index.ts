@@ -19,3 +19,5 @@ export type { IModelDescriptionProps } from "./components/imodel-description/IMo
 
 export { UploadImage } from "./components/upload-image/UploadImage";
 export type { UploadImageProps } from "./components/upload-image/UploadImage";
+
+export { BaseIModelPage } from "./components/base-imodel/BaseIModel";
