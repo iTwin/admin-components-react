@@ -5,42 +5,32 @@
 import { LabeledInput } from "@itwin/itwinui-react";
 import React from "react";
 
+import { isPropertyInvalid } from "../../utils";
 import { IModelContext } from "../context/imodel-context";
 
 export type IModelNameProps = {
-  /** iModel name property. */
-  nameString?: string;
-  /** Error message when name is too long. */
-  nameTooLong?: string;
   /** Message to be displayed below input field */
   message?: string;
-  /** Maximum length */
-  maxLength?: number;
 };
 
 export function IModelName(props: IModelNameProps) {
-  const MAX_LENGTH = props.maxLength || 255;
-
-  const isPropertyInvalid = (value: string) => {
-    return value.length > MAX_LENGTH;
-  };
-
+  const MAX_LENGTH = 255;
   const context = React.useContext(IModelContext);
   return (
     <LabeledInput
-      label={props?.nameString ?? "Name"}
+      label={`${context?.nameString}aa` ?? "Name123"}
       name="name"
       setFocus
       required
-      value={context?.iModel?.name}
-      onChange={context?.onChange}
+      value={context?.imodel?.name}
+      onChange={context?.onPropChange}
       message={
-        isPropertyInvalid(context?.iModel?.name as string)
-          ? props?.nameTooLong
+        isPropertyInvalid(context.imodel.name as string, MAX_LENGTH)
+          ? context?.nameTooLong
           : props?.message
       }
       status={
-        isPropertyInvalid(context?.iModel?.name as string)
+        isPropertyInvalid(context.imodel.name as string, MAX_LENGTH)
           ? "negative"
           : undefined
       }

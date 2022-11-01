@@ -23,10 +23,6 @@ function convertArrayBufferToUrlBase64PNG(buffer: ArrayBuffer) {
 }
 
 export type UploadImageProps = {
-  /** On image change callback. */
-  onChange?: (src: ArrayBuffer, type: string) => void;
-  /** Image source. */
-  src?: ArrayBuffer;
   /** Object of string overrides. */
   stringsOverrides?: {
     /** Displayed with clickable text. */
@@ -40,11 +36,7 @@ export type UploadImageProps = {
   };
 };
 
-export function UploadImage({
-  onChange,
-  src,
-  stringsOverrides,
-}: UploadImageProps) {
+export function UploadImage({ stringsOverrides }: UploadImageProps) {
   const [imageUrl, setImageUrl] = React.useState<string>("");
   const [rotation, setRotation] = React.useState(0);
 
@@ -58,8 +50,7 @@ export function UploadImage({
   };
 
   const context = React.useContext(IModelContext);
-
-  src = src ?? context?.iModel?.thumbnail?.src;
+  const src = context?.imodel?.thumbnail?.src;
 
   React.useEffect(() => {
     if (!src) {
@@ -91,7 +82,7 @@ export function UploadImage({
       ImageHelper.getOrientation(file, (orientation, fileBytes) => {
         setRotation(ImageHelper.convertRotationToDegrees(orientation));
         setImageUrl(reader.result as string);
-        context?.onImageChange(fileBytes, file.type);
+        context.onImageChange(fileBytes, file.type);
       });
     };
     reader.readAsDataURL(file);

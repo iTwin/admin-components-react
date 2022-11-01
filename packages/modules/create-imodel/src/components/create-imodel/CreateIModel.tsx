@@ -7,7 +7,6 @@ import React from "react";
 
 import { iModelExtent, IModelFull } from "../../types";
 import { BaseIModelPage } from "../base-imodel/BaseIModel";
-import { IModelContextProvider } from "../context/imodel-context";
 
 export type CreateIModelProps = {
   /** Bearer access token with scope `imodels:modify`. */
@@ -168,18 +167,16 @@ export function CreateIModel(props: CreateIModelProps) {
 
   return (
     <>
-      <IModelContextProvider>
-        <BaseIModelPage
-          stringsOverrides={updatedStrings}
-          isLoading={isLoading}
-          onActionClick={createiModel}
-          onClose={onClose}
-          extentComponent={extentComponent}
-          extent={extent}
-        >
-          {props.children}
-        </BaseIModelPage>
-      </IModelContextProvider>
+      <BaseIModelPage
+        stringsOverrides={updatedStrings}
+        isLoading={isLoading}
+        onActionClick={createiModel}
+        onClose={onClose}
+        extentComponent={extentComponent}
+        extent={extent}
+      >
+        {props.children}
+      </BaseIModelPage>
     </>
   );
 }

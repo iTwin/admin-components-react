@@ -13,6 +13,7 @@ import {
 import React, { useContext } from "react";
 
 import { BaseIModel, ExtentPoint, iModelExtent } from "../../types";
+import { isPropertyInvalid } from "../../utils";
 import { IModelContext } from "../context/imodel-context";
 import { IModelDescription } from "../imodel-description/IModelDescription";
 import { IModelName } from "../imodel-name/IModelName";
@@ -93,11 +94,20 @@ export function BaseIModelPage(props: BaseIModelProps) {
     extent,
   } = props;
 
-  const {
-    iModel: imodel,
-    isThumbnailChanged,
-    setImodel,
-  } = useContext(IModelContext);
+  const [imodel, setImodel] = React.useState<{
+    name: string;
+    description: string;
+    thumbnail?: { src?: ArrayBuffer; type: string };
+    extent?: iModelExtent | null;
+  }>({
+    name: initialIModel?.name ?? "",
+    description: initialIModel?.description ?? "",
+    thumbnail: { src: initialIModel?.thumbnail, type: "image/png" },
+    extent: initialIModel?.extent,
+  });
+  const [isThumbnailChanged, setIsThumbnailChanged] =
+    React.useState<boolean>(false);
+
   const updatedStrings = {
     titleString: "Create an iModel",
     nameString: "Name",
@@ -122,24 +132,21 @@ export function BaseIModelPage(props: BaseIModelProps) {
     }
   }, [extent]);
 
-  React.useEffect(() => {
-    setImodel({
-      name: initialIModel?.name ?? "",
-      description: initialIModel?.description ?? "",
-      thumbnail: { src: initialIModel?.thumbnail, type: "image/png" },
-      extent: initialIModel?.extent,
-    });
-  }, [initialIModel]);
-
-  const isPropertyInvalid = (value: string) => {
-    return value.length > MAX_LENGTH;
+  const onPropChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    event.persist();
+    setImodel((prevState) => ({
+      ...prevState,
+      [event.target.name]: event.target.value ?? "",
+    }));
   };
 
   const isDataValid = () => {
     return (
       !!imodel.name.length &&
-      !isPropertyInvalid(imodel.name) &&
-      !isPropertyInvalid(imodel.description) &&
+      !isPropertyInvalid(imodel.name, MAX_LENGTH) &&
+      !isPropertyInvalid(imodel.description, MAX_LENGTH) &&
       (!imodel.extent ||
         (isPointValid(imodel.extent.northEast) &&
           isPointValid(imodel.extent.southWest)))
@@ -153,6 +160,14 @@ export function BaseIModelPage(props: BaseIModelProps) {
       isThumbnailChanged ||
       isExtentChanged()
     );
+  };
+
+  const onImageChange = (src: ArrayBuffer, type: string) => {
+    setIsThumbnailChanged(true);
+    setImodel((prevState) => ({
+      ...prevState,
+      thumbnail: { src, type },
+    }));
   };
 
   const onCoordinateChange = (
@@ -255,21 +270,25 @@ export function BaseIModelPage(props: BaseIModelProps) {
 
   return (
     <>
-      <div className="iac-imodel-base">
-        <div className="iac-content-container">
-          <Title>{updatedStrings.titleString}</Title>
-          {props?.children ?? (
-            <div className="iac-imodel-properties-container">
-              <div className="iac-inputs-container">
-                <>
-                  <IModelName
-                    nameString={updatedStrings?.nameString}
-                    nameTooLong={updatedStrings?.nameTooLong}
-                  />
-                  <IModelDescription
-                    descriptionString={updatedStrings?.descriptionString}
-                    descriptionTooLong={updatedStrings?.descriptionTooLong}
-                  />
+      <IModelContext.Provider
+        value={{
+          imodel,
+          onPropChange,
+          nameString: updatedStrings?.nameString,
+          nameTooLong: updatedStrings?.nameTooLong,
+          descriptionString: updatedStrings?.descriptionString,
+          descriptionTooLong: updatedStrings?.descriptionTooLong,
+          onImageChange,
+        }}
+      >
+        <div className="iac-imodel-base">
+          <div className="iac-content-container">
+            <Title>{updatedStrings.titleString}</Title>
+            {props?.children ?? (
+              <div className="iac-imodel-properties-container">
+                <div className="iac-inputs-container">
+                  <IModelName />
+                  <IModelDescription />
                   {!extentComponent && (
                     <>
                       {PointInput(
@@ -283,32 +302,32 @@ export function BaseIModelPage(props: BaseIModelProps) {
                     </>
                   )}
                   <UploadImage />
-                </>
+                </div>
+                {extentComponent && (
+                  <div className="iac-extent-container">{extentComponent}</div>
+                )}
               </div>
-              {extentComponent && (
-                <div className="iac-extent-container">{extentComponent}</div>
-              )}
-            </div>
-          )}
+            )}
+          </div>
+          <div className="iac-button-bar">
+            <Button
+              styleType="cta"
+              disabled={!isDataChanged() || !isDataValid() || isLoading}
+              onClick={() =>
+                onActionClick?.({
+                  ...imodel,
+                  thumbnail: isThumbnailChanged ? imodel.thumbnail : undefined,
+                  extent: imodel.extent,
+                })
+              }
+            >
+              {updatedStrings.confirmButton}
+            </Button>
+            <Button onClick={onClose}>{updatedStrings.cancelButton}</Button>
+          </div>
+          {isLoading && <OverlaySpinner />}
         </div>
-        <div className="iac-button-bar">
-          <Button
-            styleType="cta"
-            disabled={!isDataChanged() || !isDataValid() || isLoading}
-            onClick={() =>
-              onActionClick?.({
-                ...imodel,
-                thumbnail: isThumbnailChanged ? imodel.thumbnail : undefined,
-                extent: imodel.extent,
-              })
-            }
-          >
-            {updatedStrings.confirmButton}
-          </Button>
-          <Button onClick={onClose}>{updatedStrings.cancelButton}</Button>
-        </div>
-        {isLoading && <OverlaySpinner />}
-      </div>
+      </IModelContext.Provider>
     </>
   );
 }
