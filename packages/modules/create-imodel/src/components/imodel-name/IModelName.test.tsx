@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { render } from "@testing-library/react";
+import { fireEvent, render } from "@testing-library/react";
 import React from "react";
 
 import { IModelContext } from "../context/imodel-context";
@@ -25,6 +25,24 @@ describe("IModelName", () => {
     const name = container.querySelector("input") as HTMLInputElement;
 
     expect(name.value).toEqual("Testing");
+  });
+  it("should call onPropChange when value is changed", async () => {
+    const mockFunc = jest.fn();
+    const { container } = render(
+      <IModelContext.Provider
+        value={{
+          imodel: { name: "Testing", description: "" },
+          onPropChange: mockFunc,
+          onImageChange: jest.fn(),
+        }}
+      >
+        <IModelName />
+      </IModelContext.Provider>
+    );
+
+    const name = container.querySelector("input") as HTMLInputElement;
+    fireEvent.change(name, { target: { value: "new" } });
+    expect(mockFunc).toHaveBeenCalled();
   });
 
   it("should show error when value exceeds the max limit", async () => {

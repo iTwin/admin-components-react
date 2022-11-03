@@ -10,11 +10,11 @@ import {
   ProgressRadial,
   Title,
 } from "@itwin/itwinui-react";
-import React, { useContext } from "react";
+import React from "react";
 
 import { BaseIModel, ExtentPoint, iModelExtent } from "../../types";
 import { isPropertyInvalid } from "../../utils";
-import { IModelContext } from "../context/imodel-context";
+import { IModelContext, iModelProps } from "../context/imodel-context";
 import { IModelDescription } from "../imodel-description/IModelDescription";
 import { IModelName } from "../imodel-name/IModelName";
 import { UploadImage } from "../upload-image/UploadImage";
@@ -94,12 +94,7 @@ export function BaseIModelPage(props: BaseIModelProps) {
     extent,
   } = props;
 
-  const [imodel, setImodel] = React.useState<{
-    name: string;
-    description: string;
-    thumbnail?: { src?: ArrayBuffer; type: string };
-    extent?: iModelExtent | null;
-  }>({
+  const [imodel, setImodel] = React.useState<iModelProps>({
     name: initialIModel?.name ?? "",
     description: initialIModel?.description ?? "",
     thumbnail: { src: initialIModel?.thumbnail, type: "image/png" },

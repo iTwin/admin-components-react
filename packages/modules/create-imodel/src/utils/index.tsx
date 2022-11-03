@@ -5,3 +5,5 @@
 export const isPropertyInvalid = (value: string, maxLength: number) => {
   return value.length > maxLength;
 };
+
+export const maxLength = 255;

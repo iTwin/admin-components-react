@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import React from "react";
 
 import { IModelContext } from "../context/imodel-context";
@@ -10,7 +10,7 @@ import { IModelDescription } from "./IModelDescription";
 
 describe("IModelDescription", () => {
   it("should show text area field", async () => {
-    const { container, getByLabelText } = render(
+    const { container } = render(
       <IModelContext.Provider
         value={{
           imodel: { name: "", description: "Testing" },
@@ -22,9 +22,33 @@ describe("IModelDescription", () => {
       </IModelContext.Provider>
     );
 
-    const description = container.querySelector('[name="description"]');
+    const description = container.querySelector(
+      '[name="description"]'
+    ) as HTMLTextAreaElement;
 
     expect(description).toBeTruthy();
+    expect(description.value).toEqual("Testing");
+  });
+
+  it("should call onPropsChange when value is changed", async () => {
+    const callbackFun = jest.fn();
+    const { container } = render(
+      <IModelContext.Provider
+        value={{
+          imodel: { name: "", description: "Test onchange" },
+          onPropChange: callbackFun,
+          onImageChange: jest.fn(),
+        }}
+      >
+        <IModelDescription />
+      </IModelContext.Provider>
+    );
+
+    const description = container.querySelector(
+      '[name="description"]'
+    ) as HTMLTextAreaElement;
+    fireEvent.change(description, { target: { value: "changed" } });
+    expect(callbackFun).toHaveBeenCalled();
   });
 
   it("should show error when value exceeds the max limit", async () => {

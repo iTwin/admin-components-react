@@ -6,7 +6,7 @@ import React, { createContext, useState } from "react";
 
 import { iModelExtent } from "../../types";
 
-type iModelProps = {
+export type iModelProps = {
   name: string;
   description: string;
   thumbnail?: { src?: ArrayBuffer; type: string };
@@ -23,10 +23,6 @@ type ContextProps = {
   nameTooLong?: string;
   descriptionString?: string;
   descriptionTooLong?: string;
-};
-
-type IModelContextProviderProps = {
-  children: React.ReactNode;
 };
 
 export const IModelContext = createContext<ContextProps>({} as ContextProps);
