@@ -13,7 +13,7 @@ export function IModelDescription() {
     React.useContext(IModelContext);
   return (
     <LabeledTextarea
-      label={`${descriptionString}44` ?? "Description"}
+      label={descriptionString ?? "Description"}
       name="description"
       value={imodel.description}
       onChange={onPropChange}
