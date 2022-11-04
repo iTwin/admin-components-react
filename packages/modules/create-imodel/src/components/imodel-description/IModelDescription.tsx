@@ -19,12 +19,12 @@ export function IModelDescription() {
       onChange={onPropChange}
       rows={4}
       message={
-        isPropertyInvalid(imodel.description as string, MAX_LENGTH)
+        isPropertyInvalid(imodel.description, MAX_LENGTH)
           ? descriptionTooLong
           : undefined
       }
       status={
-        isPropertyInvalid(imodel.description as string, MAX_LENGTH)
+        isPropertyInvalid(imodel.description, MAX_LENGTH)
           ? "negative"
           : undefined
       }

@@ -20,14 +20,10 @@ export function IModelName() {
       value={imodel?.name}
       onChange={onPropChange}
       message={
-        isPropertyInvalid(imodel.name as string, MAX_LENGTH)
-          ? nameTooLong
-          : undefined
+        isPropertyInvalid(imodel.name, MAX_LENGTH) ? nameTooLong : undefined
       }
       status={
-        isPropertyInvalid(imodel.name as string, MAX_LENGTH)
-          ? "negative"
-          : undefined
+        isPropertyInvalid(imodel.name, MAX_LENGTH) ? "negative" : undefined
       }
       autoComplete="off"
     />
