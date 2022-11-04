@@ -25,8 +25,6 @@ function convertArrayBufferToUrlBase64PNG(buffer: ArrayBuffer) {
 export type UploadImageProps = {
   /** On image change callback. */
   onChange?: (src: ArrayBuffer, type: string) => void;
-  /** On image change callback. */
-  onImageChange?: (src: ArrayBuffer, type: string) => void;
   /** Image source. */
   src?: ArrayBuffer;
   /** Object of string overrides. */

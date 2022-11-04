@@ -5,6 +5,9 @@
 import {
   CreateIModel as ExternalComponent,
   CreateIModelProps,
+  IModelDescription,
+  IModelName,
+  UploadImage,
 } from "@itwin/create-imodel-react";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
@@ -62,3 +65,22 @@ export const WithExtentMap: Story<CreateIModelProps> = withAccessTokenOverride(
     );
   }
 );
+
+export const CreateIModelComponents: Story<CreateIModelProps> =
+  withAccessTokenOverride((args) => {
+    return (
+      <>
+        <CreateIModel {...args}>
+          <div style={{ marginBottom: "10px" }}>
+            <IModelDescription />
+          </div>
+          <div style={{ marginBottom: "10px" }}>
+            <IModelName />
+          </div>
+          <div>
+            <UploadImage />
+          </div>
+        </CreateIModel>
+      </>
+    );
+  });

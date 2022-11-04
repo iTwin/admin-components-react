@@ -8,16 +8,21 @@ import React from "react";
 import { IModelContext } from "../context/imodel-context";
 import { IModelName } from "./IModelName";
 
+const mockFunc = jest.fn();
+const contextValue = {
+  imodel: { name: "Testing", description: "" },
+  onPropChange: mockFunc,
+  onImageChange: mockFunc,
+  nameString: "name",
+  nameTooLong: "The value exceeds allowed 255 characters.",
+  descriptionString: "Description",
+  descriptionTooLong: "The value exceeds allowed 255 characters.",
+};
+
 describe("IModelName", () => {
   it("should show input field with value from context API", async () => {
     const { container } = render(
-      <IModelContext.Provider
-        value={{
-          imodel: { name: "Testing", description: "" },
-          onPropChange: jest.fn(),
-          onImageChange: jest.fn(),
-        }}
-      >
+      <IModelContext.Provider value={contextValue}>
         <IModelName />
       </IModelContext.Provider>
     );
@@ -26,16 +31,10 @@ describe("IModelName", () => {
 
     expect(name.value).toEqual("Testing");
   });
+
   it("should call onPropChange when value is changed", async () => {
-    const mockFunc = jest.fn();
     const { container } = render(
-      <IModelContext.Provider
-        value={{
-          imodel: { name: "Testing", description: "" },
-          onPropChange: mockFunc,
-          onImageChange: jest.fn(),
-        }}
-      >
+      <IModelContext.Provider value={contextValue}>
         <IModelName />
       </IModelContext.Provider>
     );
@@ -49,15 +48,14 @@ describe("IModelName", () => {
     const { getByText } = render(
       <IModelContext.Provider
         value={{
-          imodel: { name: new Array(256).join("a"), description: "" },
-          onPropChange: jest.fn(),
-          onImageChange: jest.fn(),
+          ...contextValue,
+          ...{ imodel: { name: new Array(257).join("a"), description: "" } },
         }}
       >
-        <IModelName message="Name too long." />
+        <IModelName />
       </IModelContext.Provider>
     );
 
-    expect(getByText("Name too long.")).toBeTruthy();
+    expect(getByText("The value exceeds allowed 255 characters.")).toBeTruthy();
   });
 });

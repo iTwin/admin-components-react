@@ -8,16 +8,21 @@ import React from "react";
 import { IModelContext } from "../context/imodel-context";
 import { IModelDescription } from "./IModelDescription";
 
+const callbackFun = jest.fn();
+const contextValue = {
+  imodel: { name: "", description: "Testing" },
+  onPropChange: callbackFun,
+  onImageChange: callbackFun,
+  nameString: "name",
+  nameTooLong: "The value exceeds allowed 255 characters.",
+  descriptionString: "Description",
+  descriptionTooLong: "The value exceeds allowed 255 characters.",
+};
+
 describe("IModelDescription", () => {
   it("should show text area field", async () => {
     const { container } = render(
-      <IModelContext.Provider
-        value={{
-          imodel: { name: "", description: "Testing" },
-          onPropChange: jest.fn(),
-          onImageChange: jest.fn(),
-        }}
-      >
+      <IModelContext.Provider value={contextValue}>
         <IModelDescription />
       </IModelContext.Provider>
     );
@@ -31,15 +36,8 @@ describe("IModelDescription", () => {
   });
 
   it("should call onPropsChange when value is changed", async () => {
-    const callbackFun = jest.fn();
     const { container } = render(
-      <IModelContext.Provider
-        value={{
-          imodel: { name: "", description: "Test onchange" },
-          onPropChange: callbackFun,
-          onImageChange: jest.fn(),
-        }}
-      >
+      <IModelContext.Provider value={contextValue}>
         <IModelDescription />
       </IModelContext.Provider>
     );
@@ -55,15 +53,14 @@ describe("IModelDescription", () => {
     const { getByText } = render(
       <IModelContext.Provider
         value={{
-          imodel: { name: "", description: new Array(256).join("a") },
-          onPropChange: jest.fn(),
-          onImageChange: jest.fn(),
+          ...contextValue,
+          ...{ imodel: { name: "", description: new Array(257).join("a") } },
         }}
       >
-        <IModelDescription message="Description too long." />
+        <IModelDescription />
       </IModelContext.Provider>
     );
 
-    expect(getByText("Description too long.")).toBeTruthy();
+    expect(getByText("The value exceeds allowed 255 characters.")).toBeTruthy();
   });
 });

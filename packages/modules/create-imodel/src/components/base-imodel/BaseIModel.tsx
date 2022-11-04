@@ -13,7 +13,7 @@ import {
 import React from "react";
 
 import { BaseIModel, ExtentPoint, iModelExtent } from "../../types";
-import { isPropertyInvalid } from "../../utils";
+import { isPropertyInvalid, MAX_LENGTH } from "../../utils";
 import { IModelContext, iModelProps } from "../context/imodel-context";
 import { IModelDescription } from "../imodel-description/IModelDescription";
 import { IModelName } from "../imodel-name/IModelName";
@@ -80,8 +80,6 @@ export type BaseIModelProps = {
   extent?: iModelExtent | null;
   children?: React.ReactNode;
 };
-
-const MAX_LENGTH = 255;
 
 export function BaseIModelPage(props: BaseIModelProps) {
   const {

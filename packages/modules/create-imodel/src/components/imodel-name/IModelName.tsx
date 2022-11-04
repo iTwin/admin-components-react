@@ -5,7 +5,7 @@
 import { LabeledInput } from "@itwin/itwinui-react";
 import React from "react";
 
-import { isPropertyInvalid, maxLength } from "../../utils";
+import { isPropertyInvalid, MAX_LENGTH } from "../../utils";
 import { IModelContext } from "../context/imodel-context";
 
 export function IModelName() {
@@ -20,12 +20,12 @@ export function IModelName() {
       value={imodel?.name}
       onChange={onPropChange}
       message={
-        isPropertyInvalid(imodel.name as string, maxLength)
+        isPropertyInvalid(imodel.name as string, MAX_LENGTH)
           ? nameTooLong
           : undefined
       }
       status={
-        isPropertyInvalid(imodel.name as string, maxLength)
+        isPropertyInvalid(imodel.name as string, MAX_LENGTH)
           ? "negative"
           : undefined
       }

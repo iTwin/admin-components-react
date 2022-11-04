@@ -19,10 +19,10 @@ type ContextProps = {
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
   onImageChange: (src: ArrayBuffer, type: string) => void;
-  nameString?: string;
-  nameTooLong?: string;
-  descriptionString?: string;
-  descriptionTooLong?: string;
+  nameString: string;
+  nameTooLong: string;
+  descriptionString: string;
+  descriptionTooLong: string;
 };
 
 export const IModelContext = createContext<ContextProps>({} as ContextProps);

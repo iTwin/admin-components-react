@@ -5,7 +5,7 @@
 import { LabeledTextarea } from "@itwin/itwinui-react";
 import React from "react";
 
-import { isPropertyInvalid, maxLength } from "../../utils";
+import { isPropertyInvalid, MAX_LENGTH } from "../../utils";
 import { IModelContext } from "../context/imodel-context";
 
 export function IModelDescription() {
@@ -19,12 +19,12 @@ export function IModelDescription() {
       onChange={onPropChange}
       rows={4}
       message={
-        isPropertyInvalid(imodel.description as string, maxLength)
+        isPropertyInvalid(imodel.description as string, MAX_LENGTH)
           ? descriptionTooLong
           : undefined
       }
       status={
-        isPropertyInvalid(imodel.description as string, maxLength)
+        isPropertyInvalid(imodel.description as string, MAX_LENGTH)
           ? "negative"
           : undefined
       }
