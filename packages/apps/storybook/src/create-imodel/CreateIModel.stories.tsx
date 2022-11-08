@@ -72,19 +72,16 @@ export const CreateIModelCustomized: Story<CreateIModelProps> =
     return (
       <>
         <CreateIModel {...args}>
-          <div style={{ marginBottom: "10px" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
             <IModelName />
-          </div>
-          <div style={{ marginBottom: "10px", maxWidth: "600px" }}>
             <LabeledInput
               label={"Sub title"}
               name="test"
               value={""}
               onChange={() => undefined}
               autoComplete="off"
+              className="iac-input-element"
             />
-          </div>
-          <div style={{ marginBottom: "10px", maxWidth: "600px" }}>
             <LabeledSelect<number>
               label="Select version"
               options={[
@@ -93,12 +90,9 @@ export const CreateIModelCustomized: Story<CreateIModelProps> =
                 { value: 3, label: "Item #3" },
               ]}
               onChange={() => undefined}
+              className="iac-input-element"
             />
-          </div>
-          <div style={{ marginBottom: "10px" }}>
             <IModelDescription />
-          </div>
-          <div>
             <UploadImage />
           </div>
         </CreateIModel>
