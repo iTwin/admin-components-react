@@ -26,7 +26,7 @@ export function IModelName() {
         isPropertyInvalid(imodel.name, MAX_LENGTH) ? "negative" : undefined
       }
       autoComplete="off"
-      className="iui-input-elements"
+      inputClassName="iac-input-element"
     />
   );
 }

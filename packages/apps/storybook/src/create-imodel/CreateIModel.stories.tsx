@@ -75,17 +75,16 @@ export const CreateIModelCustomized: Story<CreateIModelProps> =
           <div style={{ marginBottom: "10px" }}>
             <IModelName />
           </div>
-          <div style={{ marginBottom: "10px" }}>
+          <div style={{ marginBottom: "10px", maxWidth: "600px" }}>
             <LabeledInput
               label={"Sub title"}
               name="test"
               value={""}
               onChange={() => undefined}
               autoComplete="off"
-              className="iui-input-elements"
             />
           </div>
-          <div style={{ marginBottom: "10px" }}>
+          <div style={{ marginBottom: "10px", maxWidth: "600px" }}>
             <LabeledSelect<number>
               label="Select version"
               options={[
@@ -94,7 +93,6 @@ export const CreateIModelCustomized: Story<CreateIModelProps> =
                 { value: 3, label: "Item #3" },
               ]}
               onChange={() => undefined}
-              className="iui-input-elements"
             />
           </div>
           <div style={{ marginBottom: "10px" }}>
