@@ -5,7 +5,11 @@
 import {
   CreateIModel as ExternalComponent,
   CreateIModelProps,
+  IModelDescription,
+  IModelName,
+  UploadImage,
 } from "@itwin/create-imodel-react";
+import { LabeledInput, LabeledSelect } from "@itwin/itwinui-react";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
 
@@ -62,3 +66,36 @@ export const WithExtentMap: Story<CreateIModelProps> = withAccessTokenOverride(
     );
   }
 );
+
+export const CreateIModelCustomized: Story<CreateIModelProps> =
+  withAccessTokenOverride((args) => {
+    return (
+      <>
+        <CreateIModel {...args}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+            <IModelName />
+            <LabeledInput
+              label={"Sub title"}
+              name="test"
+              value={""}
+              onChange={() => undefined}
+              autoComplete="off"
+              className="iac-imodel-input-element"
+            />
+            <LabeledSelect<number>
+              label="Select version"
+              options={[
+                { value: 1, label: "Item #1" },
+                { value: 2, label: "Item #2", disabled: true },
+                { value: 3, label: "Item #3" },
+              ]}
+              onChange={() => undefined}
+              className="iac-imodel-input-element"
+            />
+            <IModelDescription />
+            <UploadImage />
+          </div>
+        </CreateIModel>
+      </>
+    );
+  });

@@ -7,6 +7,7 @@ import "./UploadImage.scss";
 import { FileUpload, FileUploadTemplate, toaster } from "@itwin/itwinui-react";
 import React from "react";
 
+import { IModelContext } from "../context/imodel-context";
 import { ImageHelper } from "./imageHelper";
 
 function convertArrayBufferToUrlBase64PNG(buffer: ArrayBuffer) {
@@ -23,7 +24,7 @@ function convertArrayBufferToUrlBase64PNG(buffer: ArrayBuffer) {
 
 export type UploadImageProps = {
   /** On image change callback. */
-  onChange: (src: ArrayBuffer, type: string) => void;
+  onChange?: (src: ArrayBuffer, type: string) => void;
   /** Image source. */
   src?: ArrayBuffer;
   /** Object of string overrides. */
@@ -40,9 +41,9 @@ export type UploadImageProps = {
 };
 
 export function UploadImage({
-  onChange,
-  src,
   stringsOverrides,
+  onChange,
+  src: srcProp,
 }: UploadImageProps) {
   const [imageUrl, setImageUrl] = React.useState<string>("");
   const [rotation, setRotation] = React.useState(0);
@@ -55,6 +56,9 @@ export function UploadImage({
     imageTooBig: "File is too large. Maximum allowed size is 5MB.",
     ...stringsOverrides,
   };
+
+  const context = React.useContext(IModelContext);
+  const src = srcProp ?? context?.imodel?.thumbnail?.src;
 
   React.useEffect(() => {
     if (!src) {
@@ -86,7 +90,8 @@ export function UploadImage({
       ImageHelper.getOrientation(file, (orientation, fileBytes) => {
         setRotation(ImageHelper.convertRotationToDegrees(orientation));
         setImageUrl(reader.result as string);
-        onChange(fileBytes, file.type);
+        context.onImageChange(fileBytes, file.type);
+        onChange?.(fileBytes, file.type);
       });
     };
     reader.readAsDataURL(file);

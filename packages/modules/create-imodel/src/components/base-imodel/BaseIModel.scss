@@ -50,11 +50,6 @@
   align-items: center;
   flex-grow: 1;
 
-  .iui-input-container {
-    width: 100%;
-    max-width: 600px;
-  }
-
   > *:not(:last-child) {
     margin-bottom: $iui-m;
   }
@@ -79,4 +74,9 @@
   flex-direction: column;
   height: 100%;
   justify-content: space-between;
+}
+
+.iac-imodel-input-element {
+  width: 100%;
+  max-width: 600px;
 }

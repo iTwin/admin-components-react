@@ -7,13 +7,16 @@ import "./BaseIModel.scss";
 import {
   Button,
   LabeledInput,
-  LabeledTextarea,
   ProgressRadial,
   Title,
 } from "@itwin/itwinui-react";
 import React from "react";
 
 import { BaseIModel, ExtentPoint, iModelExtent } from "../../types";
+import { isPropertyInvalid, MAX_LENGTH } from "../../utils";
+import { IModelContext, iModelProps } from "../context/imodel-context";
+import { IModelDescription } from "../imodel-description/IModelDescription";
+import { IModelName } from "../imodel-name/IModelName";
 import { UploadImage } from "../upload-image/UploadImage";
 
 export type BaseIModelProps = {
@@ -75,9 +78,8 @@ export type BaseIModelProps = {
   extentComponent?: React.ReactNode;
   /** Extent value that should be gotten from the `extentComponent`. */
   extent?: iModelExtent | null;
+  children?: React.ReactNode;
 };
-
-const MAX_LENGTH = 255;
 
 export function BaseIModelPage(props: BaseIModelProps) {
   const {
@@ -89,20 +91,15 @@ export function BaseIModelPage(props: BaseIModelProps) {
     extentComponent,
     extent,
   } = props;
-  const [imodel, setImodel] = React.useState<{
-    name: string;
-    description: string;
-    thumbnail?: { src?: ArrayBuffer; type: string };
-    extent?: iModelExtent | null;
-  }>({
+
+  const [imodel, setImodel] = React.useState<iModelProps>({
     name: initialIModel?.name ?? "",
     description: initialIModel?.description ?? "",
     thumbnail: { src: initialIModel?.thumbnail, type: "image/png" },
     extent: initialIModel?.extent,
   });
-  const [isThumbnailChanged, setIsThumbnailChanged] = React.useState<boolean>(
-    false
-  );
+  const [isThumbnailChanged, setIsThumbnailChanged] =
+    React.useState<boolean>(false);
 
   const updatedStrings = {
     titleString: "Create an iModel",
@@ -138,15 +135,11 @@ export function BaseIModelPage(props: BaseIModelProps) {
     }));
   };
 
-  const isPropertyInvalid = (value: string) => {
-    return value.length > MAX_LENGTH;
-  };
-
   const isDataValid = () => {
     return (
       !!imodel.name.length &&
-      !isPropertyInvalid(imodel.name) &&
-      !isPropertyInvalid(imodel.description) &&
+      !isPropertyInvalid(imodel.name, MAX_LENGTH) &&
+      !isPropertyInvalid(imodel.description, MAX_LENGTH) &&
       (!imodel.extent ||
         (isPointValid(imodel.extent.northEast) &&
           isPointValid(imodel.extent.southWest)))
@@ -270,76 +263,64 @@ export function BaseIModelPage(props: BaseIModelProps) {
 
   return (
     <>
-      <div className="iac-imodel-base">
-        <div className="iac-content-container">
-          <Title>{updatedStrings.titleString}</Title>
-          <div className="iac-imodel-properties-container">
-            <div className="iac-inputs-container">
-              <LabeledInput
-                label={updatedStrings.nameString}
-                name="name"
-                setFocus
-                required
-                value={imodel.name}
-                onChange={onPropChange}
-                message={
-                  isPropertyInvalid(imodel.name)
-                    ? updatedStrings.nameTooLong
-                    : undefined
-                }
-                status={isPropertyInvalid(imodel.name) ? "negative" : undefined}
-                autoComplete="off"
-              />
-              <LabeledTextarea
-                label={updatedStrings.descriptionString ?? "Description"}
-                name="description"
-                value={imodel.description}
-                onChange={onPropChange}
-                rows={4}
-                message={
-                  isPropertyInvalid(imodel.description)
-                    ? updatedStrings.descriptionTooLong
-                    : undefined
-                }
-                status={
-                  isPropertyInvalid(imodel.description) ? "negative" : undefined
-                }
-                autoComplete="off"
-              />
-              {!extentComponent && (
-                <>
-                  {PointInput(updatedStrings.southWestCoordinate, "southWest")}
-                  {PointInput(updatedStrings.northEastCoordinate, "northEast")}
-                </>
-              )}
-              <UploadImage
-                onChange={onImageChange}
-                src={imodel.thumbnail?.src}
-              />
-            </div>
-            {extentComponent && (
-              <div className="iac-extent-container">{extentComponent}</div>
+      <IModelContext.Provider
+        value={{
+          imodel,
+          onPropChange,
+          nameString: updatedStrings?.nameString,
+          nameTooLong: updatedStrings?.nameTooLong,
+          descriptionString: updatedStrings?.descriptionString,
+          descriptionTooLong: updatedStrings?.descriptionTooLong,
+          onImageChange,
+        }}
+      >
+        <div className="iac-imodel-base">
+          <div className="iac-content-container">
+            <Title>{updatedStrings.titleString}</Title>
+            {props?.children ?? (
+              <div className="iac-imodel-properties-container">
+                <div className="iac-inputs-container">
+                  <IModelName />
+                  <IModelDescription />
+                  {!extentComponent && (
+                    <>
+                      {PointInput(
+                        updatedStrings.southWestCoordinate,
+                        "southWest"
+                      )}
+                      {PointInput(
+                        updatedStrings.northEastCoordinate,
+                        "northEast"
+                      )}
+                    </>
+                  )}
+                  <UploadImage />
+                </div>
+                {extentComponent && (
+                  <div className="iac-extent-container">{extentComponent}</div>
+                )}
+              </div>
             )}
           </div>
+          <div className="iac-button-bar">
+            <Button
+              styleType="cta"
+              disabled={!isDataChanged() || !isDataValid() || isLoading}
+              onClick={() =>
+                onActionClick?.({
+                  ...imodel,
+                  thumbnail: isThumbnailChanged ? imodel.thumbnail : undefined,
+                  extent: imodel.extent,
+                })
+              }
+            >
+              {updatedStrings.confirmButton}
+            </Button>
+            <Button onClick={onClose}>{updatedStrings.cancelButton}</Button>
+          </div>
+          {isLoading && <OverlaySpinner />}
         </div>
-        <div className="iac-button-bar">
-          <Button
-            styleType="cta"
-            disabled={!isDataChanged() || !isDataValid() || isLoading}
-            onClick={() =>
-              onActionClick?.({
-                ...imodel,
-                thumbnail: isThumbnailChanged ? imodel.thumbnail : undefined,
-                extent: imodel.extent,
-              })
-            }
-          >
-            {updatedStrings.confirmButton}
-          </Button>
-          <Button onClick={onClose}>{updatedStrings.cancelButton}</Button>
-        </div>
-        {isLoading && <OverlaySpinner />}
-      </div>
+      </IModelContext.Provider>
     </>
   );
 }
