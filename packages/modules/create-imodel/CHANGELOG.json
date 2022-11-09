@@ -2,6 +2,18 @@
   "name": "@itwin/create-imodel-react",
   "entries": [
     {
+      "version": "0.6.0",
+      "tag": "@itwin/create-imodel-react_v0.6.0",
+      "date": "Wed, 09 Nov 2022 14:29:20 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Created and exported separate individual components inside create-imodel package, Added story to the storybook"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.5.2",
       "tag": "@itwin/create-imodel-react_v0.5.2",
       "date": "Fri, 28 Jan 2022 10:41:27 GMT",

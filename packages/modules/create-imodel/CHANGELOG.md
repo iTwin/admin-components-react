@@ -1,6 +1,13 @@
 # Change Log - @itwin/create-imodel-react
 
-This log was last generated on Fri, 28 Jan 2022 10:41:27 GMT and should not be manually modified.
+This log was last generated on Wed, 09 Nov 2022 14:29:20 GMT and should not be manually modified.
+
+## 0.6.0
+Wed, 09 Nov 2022 14:29:20 GMT
+
+### Minor changes
+
+- Created and exported separate individual components inside create-imodel package, Added story to the storybook
 
 ## 0.5.2
 Fri, 28 Jan 2022 10:41:27 GMT
