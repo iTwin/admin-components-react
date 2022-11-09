@@ -80,7 +80,7 @@ export const CreateIModelCustomized: Story<CreateIModelProps> =
               value={""}
               onChange={() => undefined}
               autoComplete="off"
-              className="iac-input-element"
+              className="iac-imodel-input-element"
             />
             <LabeledSelect<number>
               label="Select version"
@@ -90,7 +90,7 @@ export const CreateIModelCustomized: Story<CreateIModelProps> =
                 { value: 3, label: "Item #3" },
               ]}
               onChange={() => undefined}
-              className="iac-input-element"
+              className="iac-imodel-input-element"
             />
             <IModelDescription />
             <UploadImage />

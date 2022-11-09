@@ -29,7 +29,7 @@ export function IModelDescription() {
           : undefined
       }
       autoComplete="off"
-      textareaClassName="iac-input-element"
+      textareaClassName="iac-imodel-input-element"
     />
   );
 }
