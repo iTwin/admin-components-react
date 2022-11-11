@@ -2,8 +2,8 @@
   "changes": [
     {
       "packageName": "@itwin/create-imodel-react",
-      "comment": "Seperating button bar component",
-      "type": "patch"
+      "comment": "Separating button bar component",
+      "type": "minor"
     }
   ],
   "packageName": "@itwin/create-imodel-react"
