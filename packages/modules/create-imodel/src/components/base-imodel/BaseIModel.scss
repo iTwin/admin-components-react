@@ -17,18 +17,6 @@
   left: 0;
 }
 
-.iac-button-bar {
-  width: 100%;
-  margin-bottom: $iui-xl;
-  display: flex;
-  justify-content: center;
-  margin-top: $iui-m;
-
-  > :first-child {
-    margin-right: $iui-m;
-  }
-}
-
 .iac-content-container {
   display: flex;
   flex-direction: column;
@@ -79,4 +67,16 @@
 .iac-imodel-input-element {
   width: 100%;
   max-width: 600px;
+}
+
+.iac-create-imodel-fields-section {
+  position: relative;
+  height: 100%;
+}
+
+.iac-button-section {
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  width: 100%;
 }

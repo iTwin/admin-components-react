@@ -3,4 +3,3 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 export { IModelDescription } from "./IModelDescription";
-export type { IModelDescriptionProps } from "./IModelDescription";

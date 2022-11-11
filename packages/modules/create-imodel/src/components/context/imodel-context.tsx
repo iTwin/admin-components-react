@@ -23,6 +23,16 @@ type ContextProps = {
   nameTooLong: string;
   descriptionString: string;
   descriptionTooLong: string;
+  /** Confirm button text */
+  confirmButtonText?: string;
+  /** Cancel button text */
+  cancelButtonText?: string;
+  /** Confirm action callback function */
+  confirmAction: () => void;
+  /** Cancel action callback function */
+  cancelAction?: () => void;
+  /** Is confirm button disabled */
+  isPrimaryButtonDisabled: boolean;
 };
 
 export const IModelContext = createContext<ContextProps>({} as ContextProps);

@@ -17,3 +17,6 @@ export { IModelDescription } from "./components/imodel-description/IModelDescrip
 
 export { UploadImage } from "./components/upload-image/UploadImage";
 export type { UploadImageProps } from "./components/upload-image/UploadImage";
+
+export { ButtonBar } from "./components/button-bar";
+export { ButtonBarProps } from "./components/button-bar";

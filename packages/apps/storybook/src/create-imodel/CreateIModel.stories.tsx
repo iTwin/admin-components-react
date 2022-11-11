@@ -3,6 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import {
+  ButtonBar,
   CreateIModel as ExternalComponent,
   CreateIModelProps,
   IModelDescription,
@@ -94,6 +95,7 @@ export const CreateIModelCustomized: Story<CreateIModelProps> =
             />
             <IModelDescription />
             <UploadImage />
+            <ButtonBar />
           </div>
         </CreateIModel>
       </>

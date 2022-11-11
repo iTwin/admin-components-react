@@ -14,6 +14,7 @@ import React from "react";
 
 import { BaseIModel, ExtentPoint, iModelExtent } from "../../types";
 import { isPropertyInvalid, MAX_LENGTH } from "../../utils";
+import { ButtonBar } from "../button-bar";
 import { IModelContext, iModelProps } from "../context/imodel-context";
 import { IModelDescription } from "../imodel-description/IModelDescription";
 import { IModelName } from "../imodel-name/IModelName";
@@ -272,6 +273,17 @@ export function BaseIModelPage(props: BaseIModelProps) {
           descriptionString: updatedStrings?.descriptionString,
           descriptionTooLong: updatedStrings?.descriptionTooLong,
           onImageChange,
+          confirmButtonText: updatedStrings.confirmButton,
+          cancelButtonText: updatedStrings.cancelButton,
+          confirmAction: () =>
+            onActionClick?.({
+              ...imodel,
+              thumbnail: isThumbnailChanged ? imodel.thumbnail : undefined,
+              extent: imodel.extent,
+            }),
+          cancelAction: onClose,
+          isPrimaryButtonDisabled:
+            !isDataChanged() || !isDataValid() || isLoading,
         }}
       >
         <div className="iac-imodel-base">
@@ -302,22 +314,7 @@ export function BaseIModelPage(props: BaseIModelProps) {
               </div>
             )}
           </div>
-          <div className="iac-button-bar">
-            <Button
-              styleType="cta"
-              disabled={!isDataChanged() || !isDataValid() || isLoading}
-              onClick={() =>
-                onActionClick?.({
-                  ...imodel,
-                  thumbnail: isThumbnailChanged ? imodel.thumbnail : undefined,
-                  extent: imodel.extent,
-                })
-              }
-            >
-              {updatedStrings.confirmButton}
-            </Button>
-            <Button onClick={onClose}>{updatedStrings.cancelButton}</Button>
-          </div>
+          {!props.children && <ButtonBar />}
           {isLoading && <OverlaySpinner />}
         </div>
       </IModelContext.Provider>

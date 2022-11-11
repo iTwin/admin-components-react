@@ -17,6 +17,8 @@ const contextValue = {
   nameTooLong: "The value exceeds allowed 255 characters.",
   descriptionString: "Description",
   descriptionTooLong: "The value exceeds allowed 255 characters.",
+  confirmAction: callbackFun,
+  isPrimaryButtonDisabled: false,
 };
 
 describe("IModelDescription", () => {
