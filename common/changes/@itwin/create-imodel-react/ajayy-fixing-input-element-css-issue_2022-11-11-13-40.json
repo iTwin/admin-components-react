@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/create-imodel-react",
+      "comment": "Input element CSS issue fixed",
+      "type": "patch"
+    }
+  ],
+  "packageName": "@itwin/create-imodel-react"
+}
