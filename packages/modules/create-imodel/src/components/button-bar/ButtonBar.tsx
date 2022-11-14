@@ -11,13 +11,13 @@ import { IModelContext } from "../context/imodel-context";
 
 export type ButtonBarProps = {
   /** Confirm action callback function */
-  confirmAction?: (input: () => void) => void;
+  confirmAction?: (input: () => void | undefined) => void | undefined;
   /** Is confirm button disabled */
   isConfirmDisabled?: boolean;
   /** Is cancel button disabled */
   isCancelDisabled?: boolean;
   /** Button wrapper class */
-  wrapperClass?: string;
+  className?: string;
 };
 
 export function ButtonBar(props: ButtonBarProps) {
@@ -28,7 +28,7 @@ export function ButtonBar(props: ButtonBarProps) {
     cancelAction,
     isPrimaryButtonDisabled,
   } = React.useContext(IModelContext);
-  const customWrapperClass = props.wrapperClass;
+  const customWrapperClass = props.className;
   return (
     <div className={customWrapperClass ?? "iac-button-bar"}>
       <Button

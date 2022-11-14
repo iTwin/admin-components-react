@@ -287,34 +287,42 @@ export function BaseIModelPage(props: BaseIModelProps) {
         }}
       >
         <div className="iac-imodel-base">
-          <div className="iac-content-container">
+          <div>
             <Title>{updatedStrings.titleString}</Title>
+          </div>
+          <div className="iac-content-container">
             {props?.children ?? (
-              <div className="iac-imodel-properties-container">
-                <div className="iac-inputs-container">
-                  <IModelName />
-                  <IModelDescription />
-                  {!extentComponent && (
-                    <>
-                      {PointInput(
-                        updatedStrings.southWestCoordinate,
-                        "southWest"
-                      )}
-                      {PointInput(
-                        updatedStrings.northEastCoordinate,
-                        "northEast"
-                      )}
-                    </>
+              <>
+                <div className="iac-imodel-properties-container">
+                  <div className="iac-inputs-container">
+                    <IModelName />
+                    <IModelDescription />
+                    {!extentComponent && (
+                      <>
+                        {PointInput(
+                          updatedStrings.southWestCoordinate,
+                          "southWest"
+                        )}
+                        {PointInput(
+                          updatedStrings.northEastCoordinate,
+                          "northEast"
+                        )}
+                      </>
+                    )}
+                    <UploadImage />
+                  </div>
+                  {extentComponent && (
+                    <div className="iac-extent-container">
+                      {extentComponent}
+                    </div>
                   )}
-                  <UploadImage />
                 </div>
-                {extentComponent && (
-                  <div className="iac-extent-container">{extentComponent}</div>
-                )}
-              </div>
+                <div>
+                  <ButtonBar />
+                </div>
+              </>
             )}
           </div>
-          {!props.children && <ButtonBar />}
           {isLoading && <OverlaySpinner />}
         </div>
       </IModelContext.Provider>
