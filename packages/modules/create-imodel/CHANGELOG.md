@@ -1,6 +1,13 @@
 # Change Log - @itwin/create-imodel-react
 
-This log was last generated on Wed, 09 Nov 2022 14:29:20 GMT and should not be manually modified.
+This log was last generated on Fri, 11 Nov 2022 15:49:10 GMT and should not be manually modified.
+
+## 0.6.1
+Fri, 11 Nov 2022 15:49:10 GMT
+
+### Patches
+
+- Input element CSS issue fixed
 
 ## 0.6.0
 Wed, 09 Nov 2022 14:29:20 GMT
