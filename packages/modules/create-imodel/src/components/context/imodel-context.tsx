@@ -47,7 +47,7 @@ export const IModelContext = createContext<IModelContextProps>(
 export const useIModelContext = () => {
   const context = useContext(IModelContext);
   if (!context) {
-    throw "IModelContext must be used inside CreateIModel or UpdateImodel components";
+    throw "IModelContext must be used inside CreateIModel or UpdateIModel components";
   }
   return context;
 };
