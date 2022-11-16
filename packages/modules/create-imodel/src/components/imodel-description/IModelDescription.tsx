@@ -6,11 +6,16 @@ import { LabeledTextarea } from "@itwin/itwinui-react";
 import React from "react";
 
 import { isPropertyInvalid, MAX_LENGTH } from "../../utils";
-import { IModelContext } from "../context/imodel-context";
+import {
+  InnerIModelContext,
+  useIModelContext,
+} from "../context/imodel-context";
 
 export function IModelDescription() {
-  const { imodel, descriptionString, onPropChange, descriptionTooLong } =
-    React.useContext(IModelContext);
+  const { descriptionString, descriptionTooLong } =
+    React.useContext(InnerIModelContext);
+  const { imodel, onPropChange } = useIModelContext();
+
   return (
     <LabeledTextarea
       label={descriptionString ?? "Description"}

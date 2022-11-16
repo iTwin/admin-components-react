@@ -6,11 +6,11 @@ import { fireEvent, render } from "@testing-library/react";
 import React from "react";
 
 import { IModelContext, InnerIModelContext } from "../context/imodel-context";
-import { IModelDescription } from "./IModelDescription";
+import { ButtonBar } from "./ButtonBar";
 
 const callbackFun = jest.fn();
 const innerContextValue = {
-  nameString: "Name",
+  nameString: "name",
   nameTooLong: "The value exceeds allowed 255 characters.",
   descriptionString: "Description",
   descriptionTooLong: "The value exceeds allowed 255 characters.",
@@ -22,53 +22,41 @@ const contextValue = {
   imodel: { name: "Testing", description: "Testing" },
   onPropChange: callbackFun,
   onImageChange: callbackFun,
-  nameString: "Name",
-  nameTooLong: "The value exceeds allowed 255 characters.",
-  descriptionString: "Description",
-  descriptionTooLong: "The value exceeds allowed 255 characters.",
   confirmAction: callbackFun,
   isPrimaryButtonDisabled: false,
+  cancelAction: callbackFun,
 };
 
 const renderFunction = (newContextValue = {}) => {
   return (
     <InnerIModelContext.Provider value={innerContextValue}>
       <IModelContext.Provider value={{ ...contextValue, ...newContextValue }}>
-        <IModelDescription />
+        <ButtonBar />
       </IModelContext.Provider>
     </InnerIModelContext.Provider>
   );
 };
 
-describe("IModelDescription", () => {
-  it("should show text area field", async () => {
-    const { container } = render(renderFunction());
+describe("ButtonBar", () => {
+  it("should show buttons with value from context API", async () => {
+    const { getByText } = render(renderFunction());
 
-    const description = container.querySelector(
-      '[name="description"]'
-    ) as HTMLTextAreaElement;
-
-    expect(description).toBeTruthy();
-    expect(description.value).toEqual("Testing");
-  });
-
-  it("should call onPropsChange when value is changed", async () => {
-    const { container } = render(renderFunction());
-
-    const description = container.querySelector(
-      '[name="description"]'
-    ) as HTMLTextAreaElement;
-    fireEvent.change(description, { target: { value: "changed" } });
+    fireEvent.click(getByText(innerContextValue.confirmButtonText));
     expect(callbackFun).toHaveBeenCalled();
   });
 
-  it("should show error when value exceeds the max limit", async () => {
+  it("should disable create button if isPrimaryButtonDisabled context prop is true", async () => {
     const { getByText } = render(
-      renderFunction({
-        imodel: { name: "", description: new Array(257).join("a") },
-      })
+      renderFunction({ isPrimaryButtonDisabled: true })
     );
 
-    expect(getByText("The value exceeds allowed 255 characters.")).toBeTruthy();
+    const buttonConfirm = getByText(
+      innerContextValue.confirmButtonText
+    ) as HTMLInputElement;
+    const buttonCancel = getByText(
+      innerContextValue.cancelButtonText
+    ) as HTMLInputElement;
+    expect(buttonConfirm.closest("button")).toHaveProperty("disabled", true);
+    expect(buttonCancel.closest("button")).toHaveProperty("disabled", false);
   });
 });

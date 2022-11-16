@@ -2,4 +2,12 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-export { IModelName } from "./IModelName";
+@import "~@itwin/itwinui-css/scss/variables";
+.iac-button-bar {
+  width: 100%;
+  margin-bottom: $iui-xl;
+  display: flex;
+  justify-content: center;
+  margin-top: $iui-m;
+  gap: $iui-m;
+}

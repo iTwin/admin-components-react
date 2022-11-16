@@ -17,18 +17,6 @@
   left: 0;
 }
 
-.iac-button-bar {
-  width: 100%;
-  margin-bottom: $iui-xl;
-  display: flex;
-  justify-content: center;
-  margin-top: $iui-m;
-
-  > :first-child {
-    margin-right: $iui-m;
-  }
-}
-
 .iac-content-container {
   display: flex;
   flex-direction: column;

@@ -7,7 +7,7 @@ import "./UploadImage.scss";
 import { FileUpload, FileUploadTemplate, toaster } from "@itwin/itwinui-react";
 import React from "react";
 
-import { IModelContext } from "../context/imodel-context";
+import { useIModelContext } from "../context/imodel-context";
 import { ImageHelper } from "./imageHelper";
 
 function convertArrayBufferToUrlBase64PNG(buffer: ArrayBuffer) {
@@ -57,7 +57,7 @@ export function UploadImage({
     ...stringsOverrides,
   };
 
-  const context = React.useContext(IModelContext);
+  const context = useIModelContext();
   const src = srcProp ?? context?.imodel?.thumbnail?.src;
 
   React.useEffect(() => {

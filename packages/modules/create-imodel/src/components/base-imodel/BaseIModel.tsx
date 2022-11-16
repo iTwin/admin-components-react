@@ -4,17 +4,17 @@
  *--------------------------------------------------------------------------------------------*/
 import "./BaseIModel.scss";
 
-import {
-  Button,
-  LabeledInput,
-  ProgressRadial,
-  Title,
-} from "@itwin/itwinui-react";
+import { LabeledInput, ProgressRadial, Title } from "@itwin/itwinui-react";
 import React from "react";
 
 import { BaseIModel, ExtentPoint, iModelExtent } from "../../types";
 import { isPropertyInvalid, MAX_LENGTH } from "../../utils";
-import { IModelContext, iModelProps } from "../context/imodel-context";
+import { ButtonBar } from "../button-bar";
+import {
+  IModelContext,
+  iModelProps,
+  InnerIModelContext,
+} from "../context/imodel-context";
 import { IModelDescription } from "../imodel-description/IModelDescription";
 import { IModelName } from "../imodel-name/IModelName";
 import { UploadImage } from "../upload-image/UploadImage";
@@ -263,64 +263,67 @@ export function BaseIModelPage(props: BaseIModelProps) {
 
   return (
     <>
-      <IModelContext.Provider
+      <InnerIModelContext.Provider
         value={{
-          imodel,
-          onPropChange,
           nameString: updatedStrings?.nameString,
           nameTooLong: updatedStrings?.nameTooLong,
           descriptionString: updatedStrings?.descriptionString,
           descriptionTooLong: updatedStrings?.descriptionTooLong,
-          onImageChange,
+          confirmButtonText: updatedStrings.confirmButton,
+          cancelButtonText: updatedStrings.cancelButton,
         }}
       >
-        <div className="iac-imodel-base">
-          <div className="iac-content-container">
-            <Title>{updatedStrings.titleString}</Title>
-            {props?.children ?? (
-              <div className="iac-imodel-properties-container">
-                <div className="iac-inputs-container">
-                  <IModelName />
-                  <IModelDescription />
-                  {!extentComponent && (
-                    <>
-                      {PointInput(
-                        updatedStrings.southWestCoordinate,
-                        "southWest"
-                      )}
-                      {PointInput(
-                        updatedStrings.northEastCoordinate,
-                        "northEast"
-                      )}
-                    </>
+        <IModelContext.Provider
+          value={{
+            imodel,
+            onPropChange,
+            onImageChange,
+            confirmAction: () =>
+              onActionClick?.({
+                ...imodel,
+                thumbnail: isThumbnailChanged ? imodel.thumbnail : undefined,
+                extent: imodel.extent,
+              }),
+            cancelAction: onClose,
+            isPrimaryButtonDisabled:
+              !isDataChanged() || !isDataValid() || isLoading,
+          }}
+        >
+          {props.children ?? (
+            <div className="iac-imodel-base">
+              <div className="iac-content-container">
+                <Title>{updatedStrings.titleString}</Title>
+                <div className="iac-imodel-properties-container">
+                  <div className="iac-inputs-container">
+                    <IModelName />
+                    <IModelDescription />
+                    {!extentComponent && (
+                      <>
+                        {PointInput(
+                          updatedStrings.southWestCoordinate,
+                          "southWest"
+                        )}
+                        {PointInput(
+                          updatedStrings.northEastCoordinate,
+                          "northEast"
+                        )}
+                      </>
+                    )}
+                    <UploadImage />
+                  </div>
+                  {extentComponent && (
+                    <div className="iac-extent-container">
+                      {extentComponent}
+                    </div>
                   )}
-                  <UploadImage />
                 </div>
-                {extentComponent && (
-                  <div className="iac-extent-container">{extentComponent}</div>
-                )}
               </div>
-            )}
-          </div>
-          <div className="iac-button-bar">
-            <Button
-              styleType="cta"
-              disabled={!isDataChanged() || !isDataValid() || isLoading}
-              onClick={() =>
-                onActionClick?.({
-                  ...imodel,
-                  thumbnail: isThumbnailChanged ? imodel.thumbnail : undefined,
-                  extent: imodel.extent,
-                })
-              }
-            >
-              {updatedStrings.confirmButton}
-            </Button>
-            <Button onClick={onClose}>{updatedStrings.cancelButton}</Button>
-          </div>
-          {isLoading && <OverlaySpinner />}
-        </div>
-      </IModelContext.Provider>
+              <ButtonBar />
+              {isLoading && <OverlaySpinner />}
+            </div>
+          )}
+        </IModelContext.Provider>
+      </InnerIModelContext.Provider>
     </>
   );
 }

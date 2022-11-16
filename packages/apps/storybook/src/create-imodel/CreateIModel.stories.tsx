@@ -3,6 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import {
+  ButtonBar,
   CreateIModel as ExternalComponent,
   CreateIModelProps,
   IModelDescription,
@@ -72,7 +73,14 @@ export const CreateIModelCustomized: Story<CreateIModelProps> =
     return (
       <>
         <CreateIModel {...args}>
-          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "8px",
+              alignItems: "center",
+            }}
+          >
             <IModelName />
             <LabeledInput
               label={"Sub title"}
@@ -94,6 +102,7 @@ export const CreateIModelCustomized: Story<CreateIModelProps> =
             />
             <IModelDescription />
             <UploadImage />
+            <ButtonBar />
           </div>
         </CreateIModel>
       </>
