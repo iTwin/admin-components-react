@@ -5,15 +5,24 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import React from "react";
 
-import { IModelContext } from "../context/imodel-context";
+import { IModelContext, InnerIModelContext } from "../context/imodel-context";
 import { IModelDescription } from "./IModelDescription";
 
 const callbackFun = jest.fn();
+const innerContextValue = {
+  nameString: "Name",
+  nameTooLong: "The value exceeds allowed 255 characters.",
+  descriptionString: "Description",
+  descriptionTooLong: "The value exceeds allowed 255 characters.",
+  confirmButtonText: "Confirm",
+  cancelButtonText: "Cancel",
+};
+
 const contextValue = {
-  imodel: { name: "", description: "Testing" },
+  imodel: { name: "Testing", description: "Testing" },
   onPropChange: callbackFun,
   onImageChange: callbackFun,
-  nameString: "name",
+  nameString: "Name",
   nameTooLong: "The value exceeds allowed 255 characters.",
   descriptionString: "Description",
   descriptionTooLong: "The value exceeds allowed 255 characters.",
@@ -21,13 +30,19 @@ const contextValue = {
   isPrimaryButtonDisabled: false,
 };
 
-describe("IModelDescription", () => {
-  it("should show text area field", async () => {
-    const { container } = render(
-      <IModelContext.Provider value={contextValue}>
+const renderFunction = (newContextValue = {}) => {
+  return (
+    <InnerIModelContext.Provider value={innerContextValue}>
+      <IModelContext.Provider value={{ ...contextValue, ...newContextValue }}>
         <IModelDescription />
       </IModelContext.Provider>
-    );
+    </InnerIModelContext.Provider>
+  );
+};
+
+describe("IModelDescription", () => {
+  it("should show text area field", async () => {
+    const { container } = render(renderFunction());
 
     const description = container.querySelector(
       '[name="description"]'
@@ -38,11 +53,7 @@ describe("IModelDescription", () => {
   });
 
   it("should call onPropsChange when value is changed", async () => {
-    const { container } = render(
-      <IModelContext.Provider value={contextValue}>
-        <IModelDescription />
-      </IModelContext.Provider>
-    );
+    const { container } = render(renderFunction());
 
     const description = container.querySelector(
       '[name="description"]'
@@ -53,14 +64,9 @@ describe("IModelDescription", () => {
 
   it("should show error when value exceeds the max limit", async () => {
     const { getByText } = render(
-      <IModelContext.Provider
-        value={{
-          ...contextValue,
-          ...{ imodel: { name: "", description: new Array(257).join("a") } },
-        }}
-      >
-        <IModelDescription />
-      </IModelContext.Provider>
+      renderFunction({
+        imodel: { name: "", description: new Array(257).join("a") },
+      })
     );
 
     expect(getByText("The value exceeds allowed 255 characters.")).toBeTruthy();

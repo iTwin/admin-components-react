@@ -4,18 +4,17 @@
  *--------------------------------------------------------------------------------------------*/
 import "./BaseIModel.scss";
 
-import {
-  Button,
-  LabeledInput,
-  ProgressRadial,
-  Title,
-} from "@itwin/itwinui-react";
+import { LabeledInput, ProgressRadial, Title } from "@itwin/itwinui-react";
 import React from "react";
 
 import { BaseIModel, ExtentPoint, iModelExtent } from "../../types";
 import { isPropertyInvalid, MAX_LENGTH } from "../../utils";
 import { ButtonBar } from "../button-bar";
-import { IModelContext, iModelProps } from "../context/imodel-context";
+import {
+  IModelContext,
+  iModelProps,
+  InnerIModelContext,
+} from "../context/imodel-context";
 import { IModelDescription } from "../imodel-description/IModelDescription";
 import { IModelName } from "../imodel-name/IModelName";
 import { UploadImage } from "../upload-image/UploadImage";
@@ -264,35 +263,36 @@ export function BaseIModelPage(props: BaseIModelProps) {
 
   return (
     <>
-      <IModelContext.Provider
+      <InnerIModelContext.Provider
         value={{
-          imodel,
-          onPropChange,
           nameString: updatedStrings?.nameString,
           nameTooLong: updatedStrings?.nameTooLong,
           descriptionString: updatedStrings?.descriptionString,
           descriptionTooLong: updatedStrings?.descriptionTooLong,
-          onImageChange,
           confirmButtonText: updatedStrings.confirmButton,
           cancelButtonText: updatedStrings.cancelButton,
-          confirmAction: () =>
-            onActionClick?.({
-              ...imodel,
-              thumbnail: isThumbnailChanged ? imodel.thumbnail : undefined,
-              extent: imodel.extent,
-            }),
-          cancelAction: onClose,
-          isPrimaryButtonDisabled:
-            !isDataChanged() || !isDataValid() || isLoading,
         }}
       >
-        <div className="iac-imodel-base">
-          <div>
-            <Title>{updatedStrings.titleString}</Title>
-          </div>
-          <div className="iac-content-container">
-            {props?.children ?? (
-              <>
+        <IModelContext.Provider
+          value={{
+            imodel,
+            onPropChange,
+            onImageChange,
+            confirmAction: () =>
+              onActionClick?.({
+                ...imodel,
+                thumbnail: isThumbnailChanged ? imodel.thumbnail : undefined,
+                extent: imodel.extent,
+              }),
+            cancelAction: onClose,
+            isPrimaryButtonDisabled:
+              !isDataChanged() || !isDataValid() || isLoading,
+          }}
+        >
+          {props.children ?? (
+            <div className="iac-imodel-base">
+              <div className="iac-content-container">
+                <Title>{updatedStrings.titleString}</Title>
                 <div className="iac-imodel-properties-container">
                   <div className="iac-inputs-container">
                     <IModelName />
@@ -317,15 +317,13 @@ export function BaseIModelPage(props: BaseIModelProps) {
                     </div>
                   )}
                 </div>
-                <div>
-                  <ButtonBar />
-                </div>
-              </>
-            )}
-          </div>
-          {isLoading && <OverlaySpinner />}
-        </div>
-      </IModelContext.Provider>
+              </div>
+              <ButtonBar />
+              {isLoading && <OverlaySpinner />}
+            </div>
+          )}
+        </IModelContext.Provider>
+      </InnerIModelContext.Provider>
     </>
   );
 }

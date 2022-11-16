@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import React, { createContext, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 
 import { iModelExtent } from "../../types";
 
@@ -13,20 +13,25 @@ export type iModelProps = {
   extent?: iModelExtent | null;
 };
 
-type ContextProps = {
+type InnerIModelContextProps = {
+  nameString: string;
+  nameTooLong: string;
+  descriptionString: string;
+  descriptionTooLong: string;
+  confirmButtonText: string;
+  cancelButtonText: string;
+};
+
+export const InnerIModelContext = createContext<InnerIModelContextProps>(
+  {} as InnerIModelContextProps
+);
+
+type IModelContextProps = {
   imodel: iModelProps;
   onPropChange: (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
   onImageChange: (src: ArrayBuffer, type: string) => void;
-  nameString: string;
-  nameTooLong: string;
-  descriptionString: string;
-  descriptionTooLong: string;
-  /** Confirm button text */
-  confirmButtonText?: string;
-  /** Cancel button text */
-  cancelButtonText?: string;
   /** Confirm action callback function */
   confirmAction: () => void;
   /** Cancel action callback function */
@@ -35,4 +40,14 @@ type ContextProps = {
   isPrimaryButtonDisabled: boolean;
 };
 
-export const IModelContext = createContext<ContextProps>({} as ContextProps);
+export const IModelContext = createContext<IModelContextProps>(
+  {} as IModelContextProps
+);
+
+export const useIModelContext = () => {
+  const context = useContext(IModelContext);
+  if (!context) {
+    throw "IModelContext must be used inside CreateIModel or UpdateImodel components";
+  }
+  return context;
+};

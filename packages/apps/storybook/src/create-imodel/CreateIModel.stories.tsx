@@ -73,7 +73,14 @@ export const CreateIModelCustomized: Story<CreateIModelProps> =
     return (
       <>
         <CreateIModel {...args}>
-          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "8px",
+              alignItems: "center",
+            }}
+          >
             <IModelName />
             <LabeledInput
               label={"Sub title"}

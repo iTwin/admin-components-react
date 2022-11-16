@@ -20,3 +20,5 @@ export type { UploadImageProps } from "./components/upload-image/UploadImage";
 
 export { ButtonBar } from "./components/button-bar";
 export type { ButtonBarProps } from "./components/button-bar";
+
+export { useIModelContext } from "./components/context/imodel-context";

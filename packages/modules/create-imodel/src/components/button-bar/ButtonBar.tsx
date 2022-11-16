@@ -7,44 +7,37 @@ import "./ButtonBar.scss";
 import { Button } from "@itwin/itwinui-react";
 import React from "react";
 
-import { IModelContext } from "../context/imodel-context";
+import {
+  InnerIModelContext,
+  useIModelContext,
+} from "../context/imodel-context";
 
 export type ButtonBarProps = {
-  /** Confirm action callback function */
-  confirmAction?: (input: () => void | undefined) => void | undefined;
-  /** Is confirm button disabled */
-  isConfirmDisabled?: boolean;
-  /** Is cancel button disabled */
-  isCancelDisabled?: boolean;
   /** Button wrapper class */
   className?: string;
+  /** Children to have custom ButtonBar content */
+  children?: React.ReactNode;
 };
 
-export function ButtonBar(props: ButtonBarProps) {
-  const {
-    confirmButtonText,
-    cancelButtonText,
-    confirmAction,
-    cancelAction,
-    isPrimaryButtonDisabled,
-  } = React.useContext(IModelContext);
-  const customWrapperClass = props.className;
+export function ButtonBar({ className, children }: ButtonBarProps) {
+  const { confirmButtonText, cancelButtonText } =
+    React.useContext(InnerIModelContext);
+  const { isPrimaryButtonDisabled, confirmAction, cancelAction } =
+    useIModelContext();
   return (
-    <div className={customWrapperClass ?? "iac-button-bar"}>
-      <Button
-        styleType="cta"
-        disabled={isPrimaryButtonDisabled || props.isConfirmDisabled}
-        onClick={() => {
-          props.confirmAction
-            ? props.confirmAction(confirmAction)
-            : confirmAction();
-        }}
-      >
-        {confirmButtonText}
-      </Button>
-      <Button disabled={props.isCancelDisabled} onClick={cancelAction}>
-        {cancelButtonText}
-      </Button>
+    <div className={`iac-button-bar ${className}`}>
+      {children ?? (
+        <>
+          <Button
+            styleType="cta"
+            disabled={isPrimaryButtonDisabled}
+            onClick={confirmAction}
+          >
+            {confirmButtonText}
+          </Button>
+          <Button onClick={cancelAction}>{cancelButtonText}</Button>
+        </>
+      )}
     </div>
   );
 }

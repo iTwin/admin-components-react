@@ -6,11 +6,15 @@ import { LabeledInput } from "@itwin/itwinui-react";
 import React from "react";
 
 import { isPropertyInvalid, MAX_LENGTH } from "../../utils";
-import { IModelContext } from "../context/imodel-context";
+import {
+  InnerIModelContext,
+  useIModelContext,
+} from "../context/imodel-context";
 
 export function IModelName() {
-  const { nameString, imodel, onPropChange, nameTooLong } =
-    React.useContext(IModelContext);
+  const { nameString, nameTooLong } = React.useContext(InnerIModelContext);
+  const { imodel, onPropChange } = useIModelContext();
+
   return (
     <LabeledInput
       label={nameString ?? "Name"}
