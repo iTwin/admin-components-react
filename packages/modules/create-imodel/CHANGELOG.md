@@ -1,6 +1,13 @@
 # Change Log - @itwin/create-imodel-react
 
-This log was last generated on Fri, 11 Nov 2022 15:49:10 GMT and should not be manually modified.
+This log was last generated on Wed, 16 Nov 2022 14:57:55 GMT and should not be manually modified.
+
+## 0.7.0
+Wed, 16 Nov 2022 14:57:55 GMT
+
+### Minor changes
+
+- Separating button bar component, Button bar component is accepting children, BaseIModel will either render everything inside or the children passed.
 
 ## 0.6.1
 Fri, 11 Nov 2022 15:49:10 GMT
