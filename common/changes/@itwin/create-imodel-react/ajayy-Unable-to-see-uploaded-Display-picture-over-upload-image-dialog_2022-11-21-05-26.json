@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/create-imodel-react",
+      "comment": "Fix an issue with uploaded image not visible in update mode",
+      "type": "patch"
+    }
+  ],
+  "packageName": "@itwin/create-imodel-react"
+}
