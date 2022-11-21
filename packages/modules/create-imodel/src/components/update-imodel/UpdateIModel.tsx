@@ -76,6 +76,7 @@ export type UpdateIModelProps = {
   extentComponent?: React.ReactNode;
   /** Extent value that should be gotten from the `extentComponent`. */
   extent?: iModelExtent | null;
+  children?: React.ReactNode;
 };
 
 export function UpdateIModel(props: UpdateIModelProps) {
@@ -178,7 +179,9 @@ export function UpdateIModel(props: UpdateIModelProps) {
         initialIModel={initialIModel}
         extentComponent={extentComponent}
         extent={extent}
-      />
+      >
+        {props.children}
+      </BaseIModelPage>
     </>
   );
 }
