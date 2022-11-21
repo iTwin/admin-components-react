@@ -125,6 +125,15 @@ export function BaseIModelPage(props: BaseIModelProps) {
     }
   }, [extent]);
 
+  React.useEffect(() => {
+    if (initialIModel?.thumbnail) {
+      setImodel((prevState) => ({
+        ...prevState,
+        thumbnail: { src: initialIModel.thumbnail, type: "image/png" },
+      }));
+    }
+  }, [initialIModel?.thumbnail]);
+
   const onPropChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
