@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/create-imodel-react",
+      "comment": "Update update-imodel to receive and pass children as props",
+      "type": "patch"
+    }
+  ],
+  "packageName": "@itwin/create-imodel-react"
+}
