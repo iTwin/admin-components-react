@@ -2,6 +2,18 @@
   "name": "@itwin/create-imodel-react",
   "entries": [
     {
+      "version": "0.7.1",
+      "tag": "@itwin/create-imodel-react_v0.7.1",
+      "date": "Tue, 22 Nov 2022 10:08:10 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Update update-imodel to receive and pass children as props"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.7.0",
       "tag": "@itwin/create-imodel-react_v0.7.0",
       "date": "Wed, 16 Nov 2022 14:57:55 GMT",
