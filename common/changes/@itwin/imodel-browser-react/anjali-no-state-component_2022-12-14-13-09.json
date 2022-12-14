@@ -3,7 +3,7 @@
     {
       "packageName": "@itwin/imodel-browser-react",
       "comment": "Added new optional property in iModelGrid props to override default no state component",
-      "type": "patch"
+      "type": "minor"
     }
   ],
   "packageName": "@itwin/imodel-browser-react"
