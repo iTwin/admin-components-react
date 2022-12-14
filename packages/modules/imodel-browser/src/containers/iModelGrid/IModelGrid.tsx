@@ -63,6 +63,8 @@ export interface IModelGridProps {
     iModels: IModelFull[],
     fetchStatus: DataStatus | undefined
   ) => IModelFull[];
+  /**Component to show when there is no iModel */
+  emptyStateComponent?: JSX.Element;
 }
 
 /**
@@ -79,6 +81,7 @@ export const IModelGrid = ({
   tileOverrides,
   useIndividualState,
   postProcessCallback,
+  emptyStateComponent,
 }: IModelGridProps) => {
   const strings = _mergeStrings(
     {
@@ -116,43 +119,55 @@ export const IModelGrid = ({
   const tileApiOverrides = apiOverrides
     ? { serverEnvironmentPrefix: apiOverrides.serverEnvironmentPrefix }
     : undefined;
-  return iModels.length === 0 && noResultsText ? (
-    <NoResults text={noResultsText} />
-  ) : (
-    <GridStructure>
-      {fetchStatus === DataStatus.Fetching ? (
-        <>
-          <IModelGhostTile />
-          <IModelGhostTile />
-          <IModelGhostTile />
-        </>
-      ) : (
-        <>
-          {iModels?.map((iModel) => (
-            <IModelHookedTile
-              key={iModel.id}
-              iModel={iModel}
-              iModelOptions={iModelActions}
-              accessToken={accessToken}
-              onThumbnailClick={onThumbnailClick}
-              apiOverrides={tileApiOverrides}
-              useTileState={useIndividualState}
-              {...tileOverrides}
-            />
-          ))}
-          {fetchMore ? (
-            <>
-              <InView onChange={fetchMore}>
+
+  const renderIModelGridStructure = () => {
+    return (
+      <GridStructure>
+        {fetchStatus === DataStatus.Fetching ? (
+          <>
+            <IModelGhostTile />
+            <IModelGhostTile />
+            <IModelGhostTile />
+          </>
+        ) : (
+          <>
+            {iModels?.map((iModel) => (
+              <IModelHookedTile
+                key={iModel.id}
+                iModel={iModel}
+                iModelOptions={iModelActions}
+                accessToken={accessToken}
+                onThumbnailClick={onThumbnailClick}
+                apiOverrides={tileApiOverrides}
+                useTileState={useIndividualState}
+                {...tileOverrides}
+              />
+            ))}
+            {fetchMore ? (
+              <>
+                <InView onChange={fetchMore}>
+                  <IModelGhostTile />
+                </InView>
                 <IModelGhostTile />
-              </InView>
-              <IModelGhostTile />
-              <IModelGhostTile />
-            </>
-          ) : null}
-        </>
-      )}
-    </GridStructure>
-  );
+                <IModelGhostTile />
+              </>
+            ) : null}
+          </>
+        )}
+      </GridStructure>
+    );
+  };
+
+  const renderComponent = () => {
+    if (iModels.length === 0 && noResultsText && emptyStateComponent) {
+      return emptyStateComponent;
+    }
+    if (iModels.length === 0 && noResultsText) {
+      return <NoResults text={noResultsText} />;
+    }
+    return renderIModelGridStructure();
+  };
+  return renderComponent();
 };
 
 type IModelHookedTileProps = IModelTileProps & {
