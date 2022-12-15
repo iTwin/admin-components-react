@@ -64,7 +64,7 @@ export interface IModelGridProps {
     fetchStatus: DataStatus | undefined
   ) => IModelFull[];
   /**Component to show when there is no iModel */
-  emptyStateComponent?: JSX.Element;
+  emptyStateComponent?: React.ReactNode;
 }
 
 /**
@@ -160,7 +160,7 @@ export const IModelGrid = ({
 
   const renderComponent = () => {
     if (iModels.length === 0 && noResultsText && emptyStateComponent) {
-      return emptyStateComponent;
+      return <>{emptyStateComponent}</>;
     }
     if (iModels.length === 0 && noResultsText) {
       return <NoResults text={noResultsText} />;
