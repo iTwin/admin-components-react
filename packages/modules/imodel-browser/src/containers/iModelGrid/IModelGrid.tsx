@@ -159,7 +159,11 @@ export const IModelGrid = ({
   };
 
   const renderComponent = () => {
-    if (iModels.length === 0 && noResultsText && emptyStateComponent) {
+    if (
+      iModels.length === 0 &&
+      noResultsText === strings.noIModels &&
+      emptyStateComponent
+    ) {
       return <>{emptyStateComponent}</>;
     }
     if (iModels.length === 0 && noResultsText) {
