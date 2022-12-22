@@ -280,8 +280,8 @@ export const WithPostProcessCallback: Story<IModelGridProps> =
 WithPostProcessCallback.args = {
   apiOverrides: { serverEnvironmentPrefix: "qa" },
 };
-export const DefaultNoSateComponentOverride = Template.bind({});
-DefaultNoSateComponentOverride.args = {
+export const DefaultNoStateComponentOverride = Template.bind({});
+DefaultNoStateComponentOverride.args = {
   apiOverrides: { serverEnvironmentPrefix: "qa" },
   emptyStateComponent: (
     <div>
