@@ -111,27 +111,30 @@ interface NamedVersionsFetchData {
 }
 
 /** Function used in useIndividualState */
-const buildMenuItems = (
-  close: () => void,
-  setVersion: React.Dispatch<React.SetStateAction<Version | undefined>>
-) => (v: Version) => (
-  <span
-    onClick={(event) => {
-      event.stopPropagation();
-    }}
-  >
-    <MenuItem
-      key={v.id}
-      onClick={() => {
-        close();
-        v.id !== "loading" && setVersion(v);
-      }}
-      className={v.id === "loading" ? "iui-skeleton" : undefined}
-    >
-      {v.displayName}
-    </MenuItem>
-  </span>
-);
+const buildMenuItems =
+  (
+    close: () => void,
+    setVersion: React.Dispatch<React.SetStateAction<Version | undefined>>
+  ) =>
+  (v: Version) =>
+    (
+      <span
+        onClick={(event) => {
+          event.stopPropagation();
+        }}
+      >
+        <MenuItem
+          key={v.id}
+          onClick={() => {
+            close();
+            v.id !== "loading" && setVersion(v);
+          }}
+          className={v.id === "loading" ? "iui-skeleton" : undefined}
+        >
+          {v.displayName}
+        </MenuItem>
+      </span>
+    );
 
 /** Hook used in StatefulPropsOverrides.args, the function itself must be a stable reference as it is a hook. */
 const useIndividualState = (iModel: IModelFull, props: IModelTileProps) => {
@@ -225,54 +228,64 @@ StatefulPropsOverrides.args = {
   useIndividualState,
 };
 
-export const WithPostProcessCallback: Story<IModelGridProps> = withProjectIdOverride(
-  withAccessTokenOverride((args) => {
-    const [filter, setFilter] = React.useState("");
-    const filterOrAddStartTile = React.useCallback(
-      (iModels: IModelFull[], status: DataStatus) => {
-        if (status !== DataStatus.Complete) {
+export const WithPostProcessCallback: Story<IModelGridProps> =
+  withProjectIdOverride(
+    withAccessTokenOverride((args) => {
+      const [filter, setFilter] = React.useState("");
+      const filterOrAddStartTile = React.useCallback(
+        (iModels: IModelFull[], status: DataStatus) => {
+          if (status !== DataStatus.Complete) {
+            return iModels;
+          }
+          const filterText = filter.toLocaleLowerCase().trim();
+          if (filterText) {
+            return iModels.filter((iModel) =>
+              iModel.displayName?.toLocaleLowerCase().includes(filterText)
+            );
+          }
+          iModels.unshift({
+            id: "newiModel",
+            displayName: "New iModel",
+            description: "Click on this tile to create a new iModel",
+            thumbnail:
+              "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/add.svg",
+          });
           return iModels;
-        }
-        const filterText = filter.toLocaleLowerCase().trim();
-        if (filterText) {
-          return iModels.filter((iModel) =>
-            iModel.displayName?.toLocaleLowerCase().includes(filterText)
-          );
-        }
-        iModels.unshift({
-          id: "newiModel",
-          displayName: "New iModel",
-          description: "Click on this tile to create a new iModel",
-          thumbnail:
-            "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/add.svg",
-        });
-        return iModels;
-      },
-      [filter]
-    );
-    return (
-      <div>
-        <Title>Description</Title>
-        <Body>
-          Property <Code>postProcessCallback</Code> allows modification of the
-          data that is sent to the grid, here, we either apply a filter, or add
-          a new tile at the start of the list for a 'New iModel' when there is
-          no filter defined.
-        </Body>
-        <LabeledInput
-          label={"Name filter"}
-          onChange={(event) => {
-            const {
-              target: { value },
-            } = event;
-            setFilter(value);
-          }}
-        />
-        <IModelGrid {...args} postProcessCallback={filterOrAddStartTile} />
-      </div>
-    );
-  })
-);
+        },
+        [filter]
+      );
+      return (
+        <div>
+          <Title>Description</Title>
+          <Body>
+            Property <Code>postProcessCallback</Code> allows modification of the
+            data that is sent to the grid, here, we either apply a filter, or
+            add a new tile at the start of the list for a 'New iModel' when
+            there is no filter defined.
+          </Body>
+          <LabeledInput
+            label={"Name filter"}
+            onChange={(event) => {
+              const {
+                target: { value },
+              } = event;
+              setFilter(value);
+            }}
+          />
+          <IModelGrid {...args} postProcessCallback={filterOrAddStartTile} />
+        </div>
+      );
+    })
+  );
 WithPostProcessCallback.args = {
   apiOverrides: { serverEnvironmentPrefix: "qa" },
+};
+export const DefaultNoStateComponentOverride = Template.bind({});
+DefaultNoStateComponentOverride.args = {
+  apiOverrides: { serverEnvironmentPrefix: "qa" },
+  emptyStateComponent: (
+    <div>
+      <Title>There are no iModels to show.</Title>
+    </div>
+  ),
 };
