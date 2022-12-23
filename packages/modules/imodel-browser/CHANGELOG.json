@@ -2,6 +2,18 @@
   "name": "@itwin/imodel-browser-react",
   "entries": [
     {
+      "version": "0.13.0",
+      "tag": "@itwin/imodel-browser-react_v0.13.0",
+      "date": "Fri, 23 Dec 2022 09:19:54 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Added new optional property in iModelGrid props to override default no state component"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.12.3",
       "tag": "@itwin/imodel-browser-react_v0.12.3",
       "date": "Fri, 03 Jun 2022 16:33:25 GMT",

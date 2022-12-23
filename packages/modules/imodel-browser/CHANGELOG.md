@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Fri, 03 Jun 2022 16:33:25 GMT and should not be manually modified.
+This log was last generated on Fri, 23 Dec 2022 09:19:54 GMT and should not be manually modified.
+
+## 0.13.0
+Fri, 23 Dec 2022 09:19:54 GMT
+
+### Minor changes
+
+- Added new optional property in iModelGrid props to override default no state component
 
 ## 0.12.3
 Fri, 03 Jun 2022 16:33:25 GMT
