@@ -9,6 +9,7 @@ import {
   Button,
   Modal,
   ModalButtonBar,
+  ModalContent,
   ProgressRadial,
   toaster,
 } from "@itwin/itwinui-react";
@@ -111,8 +112,10 @@ export function DeleteIModel(props: DeleteIModelProps) {
           </div>
         }
       >
-        {stringsOverrides?.bodyMessage ??
-          "Deleting this iModel will remove access for all users and all data will no longer be available. Are you sure you want to delete this iModel?"}
+        <ModalContent className="iac-delete-body-message">
+          {stringsOverrides?.bodyMessage ??
+            "Deleting this iModel will remove access for all users and all data will no longer be available. Are you sure you want to delete this iModel?"}
+        </ModalContent>
         <ModalButtonBar>
           <Button styleType="high-visibility" onClick={deleteiModel}>
             {stringsOverrides?.confirmButton ?? "Yes"}
