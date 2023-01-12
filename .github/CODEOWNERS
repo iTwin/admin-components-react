@@ -26,3 +26,8 @@ packages/apps/storybook/src/manage-versions/ @bentleyvk @veekeys
 packages/modules/create-imodel/ @bentleyvk @veekeys
 common/changes/@itwin/create-imodel-react/ @bentleyvk @veekeys
 packages/apps/storybook/src/create-imodel/ @bentleyvk @veekeys
+
+# delete-itwin
+packages/modules/delete-itwin/ @bentleyvk @williamkbentley
+common/changes/@itwin/delete-itwin-react/ @bentleyvk @williamkbentley
+packages/apps/storybook/src/delete-itwin/ @bentleyvk @williamkbentley
