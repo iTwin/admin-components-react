@@ -77,7 +77,7 @@ export const useIModelData = ({
     }
     const abortController = new AbortController();
 
-    const selection = `?projectId=${projectId}`;
+    const selection = `?iTwinId=${projectId}`;
     const sorting = sortType
       ? `&$orderBy=${sortType} ${sortDescending ? "desc" : "asc"}`
       : "";
@@ -91,6 +91,7 @@ export const useIModelData = ({
       headers: {
         Authorization: accessToken,
         Prefer: "return=representation",
+        Accept: "application/vnd.bentley.itwin-platform.v2+json",
       },
     };
     fetch(url, options)
