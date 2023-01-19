@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/delete-itwin-react",
+      "comment": "Added delete iTwin component",
+      "type": "minor"
+    }
+  ],
+  "packageName": "@itwin/delete-itwin-react"
+}
