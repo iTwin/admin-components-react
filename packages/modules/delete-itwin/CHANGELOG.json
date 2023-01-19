@@ -1,0 +1,17 @@
+{
+  "name": "@itwin/delete-itwin-react",
+  "entries": [
+    {
+      "version": "0.2.0",
+      "tag": "@itwin/delete-itwin-react_v0.2.0",
+      "date": "Thu, 19 Jan 2023 15:24:47 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Added delete iTwin component"
+          }
+        ]
+      }
+    }
+  ]
+}
