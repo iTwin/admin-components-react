@@ -9,7 +9,7 @@
     "@bentley/itwin-client": "2.11.0",
     "@itwin/create-imodel-react": "^0.7.1",
     "@itwin/delete-imodel-react": "^0.2.1",
-    "@itwin/delete-itwin-react": "^0.1.0",
+    "@itwin/delete-itwin-react": "^0.2.0",
     "@itwin/imodel-browser-react": "~0.13.0",
     "@itwin/itwinui-react": "^1.11.0",
     "@itwin/manage-versions-react": "~0.7.2",
