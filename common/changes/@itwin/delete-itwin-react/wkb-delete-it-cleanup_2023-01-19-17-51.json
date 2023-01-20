@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/delete-itwin-react",
+      "comment": "Added LICENSE.md",
+      "type": "none"
+    }
+  ],
+  "packageName": "@itwin/delete-itwin-react"
+}
