@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/delete-itwin-react",
+      "comment": "Update @itwin/itwinui-react version",
+      "type": "patch"
+    }
+  ],
+  "packageName": "@itwin/delete-itwin-react"
+}
