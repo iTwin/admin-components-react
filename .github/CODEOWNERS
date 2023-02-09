@@ -6,6 +6,9 @@
 # These owners will be the default owners for everything in
 # the repo, unless a later match takes precedence.
 *       @kckst8 @raplemie
+
+rush.json                       @itwin/oss-admins
+.github/workflows/publish.yml   @itwin/oss-admins
  
 # imodel-browser
 packages/modules/imodel-browser/ @raplemie
@@ -26,3 +29,8 @@ packages/apps/storybook/src/manage-versions/ @bentleyvk @veekeys
 packages/modules/create-imodel/ @bentleyvk @veekeys
 common/changes/@itwin/create-imodel-react/ @bentleyvk @veekeys
 packages/apps/storybook/src/create-imodel/ @bentleyvk @veekeys
+
+# delete-itwin
+packages/modules/delete-itwin/ @bentleyvk @williamkbentley
+common/changes/@itwin/delete-itwin-react/ @bentleyvk @williamkbentley
+packages/apps/storybook/src/delete-itwin/ @bentleyvk @williamkbentley

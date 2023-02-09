@@ -10,6 +10,7 @@ iTwin Administration feature components for the iTwin Platform.
 | @itwin/platform-storybook    | packages/apps/storybook               | Storybook to facilitate development of components                            |
 | @itwin/storybook-auth-addon  | packages/modules/storybook-auth-addon | Addon to storybook to enable OIDC client authentication for stories.         |
 | @itwin/delete-imodel-react   | packages/modules/delete-imodel        | Component to delete an iModel.                                               |
+| @itwin/delete-itwin-react    | packages/modules/delete-itwin         | Component to delete an iTwin.                                                |
 | @itwin/manage-versions-react | packages/modules/manage-versions      | Component to manage Named Versions and Changesets.                           |
 | @itwin/create-imodel-react   | packages/modules/create-imodel        | Components to create or update an iModel.                                    |
 

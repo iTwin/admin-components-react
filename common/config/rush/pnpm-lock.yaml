@@ -6,12 +6,12 @@ dependencies:
   '@bentley/react-scripts': 4.0.3-dev.0_50d7c7cc35d90fd285da64a7b1030eba
   '@itwin/itwinui-css': 0.9.0
   '@itwin/itwinui-icons-react': 1.5.1_react-dom@17.0.2+react@17.0.2
-  '@itwin/itwinui-react': 1.48.1_react-dom@17.0.2+react@17.0.2
   '@rollup/plugin-commonjs': 17.1.0_rollup@2.66.1
   '@rollup/plugin-image': 2.1.1_rollup@2.66.1
   '@rush-temp/admin-components-react-scripts': file:projects/admin-components-react-scripts.tgz
   '@rush-temp/create-imodel-react': file:projects/create-imodel-react.tgz_babel-eslint@10.1.0
   '@rush-temp/delete-imodel-react': file:projects/delete-imodel-react.tgz_babel-eslint@10.1.0
+  '@rush-temp/delete-itwin-react': file:projects/delete-itwin-react.tgz_babel-eslint@10.1.0
   '@rush-temp/imodel-browser-react': file:projects/imodel-browser-react.tgz
   '@rush-temp/manage-versions-react': file:projects/manage-versions-react.tgz_babel-eslint@10.1.0
   '@rush-temp/platform-storybook': file:projects/platform-storybook.tgz_73e57467d4a9a5e376d6b84b6ab4e4b9
@@ -20690,7 +20690,7 @@ packages:
   file:projects/delete-imodel-react.tgz_babel-eslint@10.1.0:
     dependencies:
       '@itwin/itwinui-css': 0.9.0
-      '@itwin/itwinui-icons-react': 1.5.1_react-dom@17.0.2+react@17.0.2
+      '@itwin/itwinui-icons-react': 1.16.0_react-dom@17.0.2+react@17.0.2
       '@itwin/itwinui-react': 1.48.1_react-dom@17.0.2+react@17.0.2
       '@rollup/plugin-commonjs': 17.1.0_rollup@2.66.1
       '@rollup/plugin-image': 2.1.1_rollup@2.66.1
@@ -20735,10 +20735,58 @@ packages:
       integrity: sha512-MP0kkmGhZALT9n0CbrlQMZOFKF4Vr9WqYAx4U1WOt4nZrMAJzH01c7rj8NYv9Yt28YyWj7f5D+HLNVR6rM5WaQ==
       tarball: file:projects/delete-imodel-react.tgz
     version: 0.0.0
+  file:projects/delete-itwin-react.tgz_babel-eslint@10.1.0:
+    dependencies:
+      '@itwin/itwinui-css': 0.9.0
+      '@itwin/itwinui-icons-react': 1.16.0_react-dom@17.0.2+react@17.0.2
+      '@itwin/itwinui-react': 1.48.1_react-dom@17.0.2+react@17.0.2
+      '@rollup/plugin-commonjs': 17.1.0_rollup@2.66.1
+      '@rollup/plugin-image': 2.1.1_rollup@2.66.1
+      '@testing-library/react': 11.2.7_react-dom@17.0.2+react@17.0.2
+      '@types/jest': 26.0.24
+      '@types/node': 14.18.9
+      '@types/react': 17.0.38
+      '@typescript-eslint/eslint-plugin': 4.33.0_959502c0ea240e86d4d2ba8b8c0fee45
+      '@typescript-eslint/parser': 4.33.0_eslint@7.32.0+typescript@4.5.5
+      eslint: 7.32.0
+      eslint-config-airbnb: 0.0.4
+      eslint-config-prettier: 6.15.0_eslint@7.32.0
+      eslint-config-react-app: 6.0.0_e25e4ee17f117f8b79a0b75d11a8ccbb
+      eslint-plugin-flowtype: 5.10.0_eslint@7.32.0
+      eslint-plugin-import: 2.25.4_eslint@7.32.0
+      eslint-plugin-jsx-a11y: 6.5.1_eslint@7.32.0
+      eslint-plugin-prettier: 3.4.1_a90c626bbf8b44e0aad298faeac07fd7
+      eslint-plugin-react: 7.28.0_eslint@7.32.0
+      eslint-plugin-react-hooks: 4.3.0_eslint@7.32.0
+      eslint-plugin-simple-import-sort: 5.0.3_eslint@7.32.0
+      jest: 26.6.3
+      node-sass: 6.0.1
+      postcss: 8.4.5
+      prettier: 2.5.1
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
+      rimraf: 3.0.2
+      rollup: 2.66.1
+      rollup-plugin-peer-deps-external: 2.2.4_rollup@2.66.1
+      rollup-plugin-postcss: 4.0.2_postcss@8.4.5
+      rollup-plugin-terser: 7.0.2_rollup@2.66.1
+      rollup-plugin-typescript2: 0.30.0_rollup@2.66.1+typescript@4.5.5
+      ts-jest: 26.5.6_jest@26.6.3+typescript@4.5.5
+      tslib: 2.3.1
+      typescript: 4.5.5
+    dev: false
+    id: file:projects/delete-itwin-react.tgz
+    name: '@rush-temp/delete-itwin-react'
+    peerDependencies:
+      babel-eslint: '*'
+    resolution:
+      integrity: sha512-+8EZYEsgk660uVVxSN0SgMTF1aF2RjKti1fIrr1IMsKJ3ibpkRe9gYpl+A/cUueQgbh2zy9Ek9/olrO/ha+Ihg==
+      tarball: file:projects/delete-itwin-react.tgz
+    version: 0.0.0
   file:projects/imodel-browser-react.tgz:
     dependencies:
       '@itwin/itwinui-css': 0.9.0
-      '@itwin/itwinui-icons-react': 1.5.1_react-dom@17.0.2+react@17.0.2
+      '@itwin/itwinui-icons-react': 1.16.0_react-dom@17.0.2+react@17.0.2
       '@itwin/itwinui-react': 1.48.1_react-dom@17.0.2+react@17.0.2
       '@rollup/plugin-commonjs': 17.1.0_rollup@2.66.1
       '@svgr/rollup': 5.5.0
@@ -20796,7 +20844,7 @@ packages:
   file:projects/manage-versions-react.tgz_babel-eslint@10.1.0:
     dependencies:
       '@itwin/itwinui-css': 0.9.0
-      '@itwin/itwinui-icons-react': 1.5.1_react-dom@17.0.2+react@17.0.2
+      '@itwin/itwinui-icons-react': 1.16.0_react-dom@17.0.2+react@17.0.2
       '@itwin/itwinui-react': 1.48.1_react-dom@17.0.2+react@17.0.2
       '@rollup/plugin-commonjs': 17.1.0_rollup@2.66.1
       '@testing-library/react': 11.2.7_react-dom@17.0.2+react@17.0.2
@@ -20888,7 +20936,7 @@ packages:
       prettier: '*'
       typescript: '*'
     resolution:
-      integrity: sha512-e6s76Bpwi8NffKF6LGhB6dd8v1Eb+H+o/nAzOh/5Iq/DW3vphFgKGuEPG1pXcGXYpkUoo8U/b4ZF7Ccm6UH5MA==
+      integrity: sha512-v8OeGu1fTXfgC7G+l87vBegQztcBb3K/5rfsfTDZ2j51cpHEz6BJGBRlXSU85dej/cwT3A1icMPFsjzF7qmVqw==
       tarball: file:projects/platform-storybook.tgz
     version: 0.0.0
   file:projects/storybook-auth-addon.tgz_node-sass@6.0.1+prettier@2.5.1:
@@ -20940,12 +20988,12 @@ specifiers:
   '@bentley/react-scripts': 4.0.3-dev.0
   '@itwin/itwinui-css': ^0.9.0
   '@itwin/itwinui-icons-react': ^1.2.0
-  '@itwin/itwinui-react': ^1.35.0
   '@rollup/plugin-commonjs': ~17.1.0
   '@rollup/plugin-image': ^2.0.6
   '@rush-temp/admin-components-react-scripts': file:./projects/admin-components-react-scripts.tgz
   '@rush-temp/create-imodel-react': file:./projects/create-imodel-react.tgz
   '@rush-temp/delete-imodel-react': file:./projects/delete-imodel-react.tgz
+  '@rush-temp/delete-itwin-react': file:./projects/delete-itwin-react.tgz
   '@rush-temp/imodel-browser-react': file:./projects/imodel-browser-react.tgz
   '@rush-temp/manage-versions-react': file:./projects/manage-versions-react.tgz
   '@rush-temp/platform-storybook': file:./projects/platform-storybook.tgz
