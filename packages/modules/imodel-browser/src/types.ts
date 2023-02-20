@@ -38,6 +38,7 @@ export interface ProjectFull {
   displayName?: string;
   projectNumber?: string;
   registrationDateTime?: string;
+  registeredBy?: string;
   industry?: string;
   projectType?: string;
   geographicLocation?: string;
