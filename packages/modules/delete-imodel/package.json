@@ -1,6 +1,6 @@
 {
   "name": "@itwin/delete-imodel-react",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "author": "Bentley Systems, Inc.",
   "license": "MIT",
   "description": "Component to delete the selected iModel.",
