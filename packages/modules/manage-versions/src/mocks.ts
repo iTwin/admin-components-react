@@ -48,6 +48,7 @@ export const MockedChangeset = (
     displayName: `${index}`,
     description: `ch_description${index}`,
     pushDateTime: MOCKED_DATE,
+    synchronizationInfo: { changedFiles: ["test"] },
     _links: {},
     ...props,
   };
