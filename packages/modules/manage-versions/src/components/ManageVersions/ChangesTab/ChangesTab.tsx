@@ -20,6 +20,7 @@ export type ChangesTabProps = {
   loadMoreChanges: () => void;
   onVersionCreated: () => void;
   latestVersion: NamedVersion | undefined;
+  shouldShowChangedFiles?: boolean;
 };
 
 const ChangesTab = (props: ChangesTabProps) => {
@@ -33,10 +34,8 @@ const ChangesTab = (props: ChangesTabProps) => {
 
   const { stringsOverrides } = useConfig();
 
-  const [
-    isCreateVersionModalOpen,
-    setIsCreateVersionModalOpen,
-  ] = React.useState(false);
+  const [isCreateVersionModalOpen, setIsCreateVersionModalOpen] =
+    React.useState(false);
 
   const [currentChangeset, setCurrentChangeset] = React.useState<
     Changeset | undefined
@@ -61,6 +60,19 @@ const ChangesTab = (props: ChangesTabProps) => {
             id: "DESCRIPTION",
             Header: stringsOverrides.description,
             accessor: "description",
+          },
+          {
+            id: "CHANGED_FILES",
+            Header: stringsOverrides.changedFiles,
+            Cell: (props: CellProps<Changeset>) => {
+              const changedFiles =
+                props.row.original.synchronizationInfo.changedFiles;
+              return (
+                <span>
+                  {changedFiles?.length ? changedFiles.join(",") : ""}
+                </span>
+              );
+            },
           },
           {
             id: "PUSH_DATE",
@@ -118,6 +130,14 @@ const ChangesTab = (props: ChangesTabProps) => {
     stringsOverrides.messageNoChanges,
   ]);
 
+  const hiddenColumns = React.useMemo(() => {
+    const hiddenColumns = [];
+    if (!props.shouldShowChangedFiles) {
+      hiddenColumns.push("CHANGED_FILES");
+    }
+    return hiddenColumns;
+  }, [props.shouldShowChangedFiles]);
+
   return (
     <>
       <Table<Changeset>
@@ -130,6 +150,7 @@ const ChangesTab = (props: ChangesTabProps) => {
         emptyTableContent={emptyTableContent}
         onBottomReached={loadMoreChanges}
         className="iac-changes-table"
+        initialState={{ hiddenColumns }}
       />
       {isCreateVersionModalOpen && (
         <CreateVersionModal

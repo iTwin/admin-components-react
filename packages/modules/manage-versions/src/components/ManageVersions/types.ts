@@ -20,6 +20,8 @@ export type ManageVersionsStringOverrides = {
   description: string;
   /** Table column title for time. Default `Time`. */
   time: string;
+  /** Table column title for changed files. Default `Changed Files`. */
+  changedFiles: string;
   /** Title for Named Version create modal. Default `Create a Named Version` */
   createNamedVersion: string;
   /** Default: `Cancel` */
