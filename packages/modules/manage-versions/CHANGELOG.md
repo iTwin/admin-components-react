@@ -1,6 +1,13 @@
 # Change Log - @itwin/manage-versions-react
 
-This log was last generated on Fri, 28 Jan 2022 10:41:27 GMT and should not be manually modified.
+This log was last generated on Tue, 21 Feb 2023 20:11:46 GMT and should not be manually modified.
+
+## 0.7.3
+Tue, 21 Feb 2023 20:11:46 GMT
+
+### Patches
+
+- Update @itwin/itwinui-react version
 
 ## 0.7.2
 Fri, 28 Jan 2022 10:41:27 GMT
