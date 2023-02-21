@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/delete-imodel-react",
+      "comment": "Update @itwin/itwinui-react version and wrap body message text in ModalContent",
+      "type": "patch"
+    }
+  ],
+  "packageName": "@itwin/delete-imodel-react"
+}
