@@ -65,7 +65,7 @@ const ChangesTab = (props: ChangesTabProps) => {
             Header: stringsOverrides.changedFiles,
             Cell: (props: CellProps<Changeset>) => {
               const changedFiles =
-                props.row.original.synchronizationInfo.changedFiles;
+                props.row.original.synchronizationInfo?.changedFiles;
               return changedFiles?.length ? changedFiles.join(", ") : "";
             },
           },
@@ -110,6 +110,7 @@ const ChangesTab = (props: ChangesTabProps) => {
     ];
   }, [
     canCreateVersion,
+    stringsOverrides.changedFiles,
     stringsOverrides.createNamedVersion,
     stringsOverrides.description,
     stringsOverrides.time,
