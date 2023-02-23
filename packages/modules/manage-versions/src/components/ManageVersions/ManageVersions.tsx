@@ -70,8 +70,6 @@ export type ManageVersionsProps = {
   currentTab?: ManageVersionsTabs;
   /** Callback when tabs are switched. */
   onTabChange?: (tab: ManageVersionsTabs) => void;
-  /** flag to show/hide changed files column in changes tab */
-  shouldShowChangedFiles?: boolean;
 };
 
 export enum ManageVersionsTabs {
@@ -92,7 +90,6 @@ export const ManageVersions = (props: ManageVersionsProps) => {
     onViewClick,
     currentTab = ManageVersionsTabs.Versions,
     onTabChange,
-    shouldShowChangedFiles,
   } = props;
 
   const versionClient = React.useMemo(
@@ -246,7 +243,6 @@ export const ManageVersions = (props: ManageVersionsProps) => {
             loadMoreChanges={getChangesets}
             onVersionCreated={onVersionCreated}
             latestVersion={latestVersion}
-            shouldShowChangedFiles={shouldShowChangedFiles}
           />
         )}
       </div>

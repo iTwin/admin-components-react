@@ -20,7 +20,6 @@ export type ChangesTabProps = {
   loadMoreChanges: () => void;
   onVersionCreated: () => void;
   latestVersion: NamedVersion | undefined;
-  shouldShowChangedFiles?: boolean;
 };
 
 const ChangesTab = (props: ChangesTabProps) => {
@@ -67,11 +66,7 @@ const ChangesTab = (props: ChangesTabProps) => {
             Cell: (props: CellProps<Changeset>) => {
               const changedFiles =
                 props.row.original.synchronizationInfo.changedFiles;
-              return (
-                <span>
-                  {changedFiles?.length ? changedFiles.join(",") : ""}
-                </span>
-              );
+              return changedFiles?.length ? changedFiles.join(", ") : "";
             },
           },
           {
@@ -130,14 +125,6 @@ const ChangesTab = (props: ChangesTabProps) => {
     stringsOverrides.messageNoChanges,
   ]);
 
-  const hiddenColumns = React.useMemo(() => {
-    const hiddenColumns = [];
-    if (!props.shouldShowChangedFiles) {
-      hiddenColumns.push("CHANGED_FILES");
-    }
-    return hiddenColumns;
-  }, [props.shouldShowChangedFiles]);
-
   return (
     <>
       <Table<Changeset>
@@ -150,7 +137,6 @@ const ChangesTab = (props: ChangesTabProps) => {
         emptyTableContent={emptyTableContent}
         onBottomReached={loadMoreChanges}
         className="iac-changes-table"
-        initialState={{ hiddenColumns }}
       />
       {isCreateVersionModalOpen && (
         <CreateVersionModal
