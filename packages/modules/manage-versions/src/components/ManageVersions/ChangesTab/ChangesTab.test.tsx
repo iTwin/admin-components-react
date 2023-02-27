@@ -39,15 +39,18 @@ describe("ChangesTab", () => {
 
     rows.forEach((row, index) => {
       const cells = row.querySelectorAll(".iui-cell");
-      expect(cells.length).toBe(4);
+      expect(cells.length).toBe(5);
       expect(cells[0].textContent).toContain(MockedChangeset(index).index);
       expect(cells[1].textContent).toContain(
         MockedChangeset(index).description
       );
       expect(cells[2].textContent).toContain(
+        MockedChangeset(index).synchronizationInfo.changedFiles.join(", ")
+      );
+      expect(cells[3].textContent).toContain(
         new Date(MockedChangeset(index).pushDateTime).toLocaleString()
       );
-      within(cells[3] as HTMLElement).getByTitle(
+      within(cells[4] as HTMLElement).getByTitle(
         defaultStrings.createNamedVersion
       );
     });

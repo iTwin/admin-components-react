@@ -8,6 +8,9 @@ export type Changeset = {
   description: string;
   index: string;
   pushDateTime: string;
+  synchronizationInfo: {
+    changedFiles: string[];
+  };
   _links: {
     namedVersion?: { href: string };
   };

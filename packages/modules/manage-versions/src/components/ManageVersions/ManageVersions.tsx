@@ -24,6 +24,7 @@ export const defaultStrings: ManageVersionsStringOverrides = {
   name: "Name",
   description: "Description",
   time: "Time",
+  changedFiles: "Changed Files",
   createNamedVersion: "Create a Named Version",
   cancel: "Cancel",
   create: "Create",

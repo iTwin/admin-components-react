@@ -33,10 +33,8 @@ const ChangesTab = (props: ChangesTabProps) => {
 
   const { stringsOverrides } = useConfig();
 
-  const [
-    isCreateVersionModalOpen,
-    setIsCreateVersionModalOpen,
-  ] = React.useState(false);
+  const [isCreateVersionModalOpen, setIsCreateVersionModalOpen] =
+    React.useState(false);
 
   const [currentChangeset, setCurrentChangeset] = React.useState<
     Changeset | undefined
@@ -61,6 +59,15 @@ const ChangesTab = (props: ChangesTabProps) => {
             id: "DESCRIPTION",
             Header: stringsOverrides.description,
             accessor: "description",
+          },
+          {
+            id: "CHANGED_FILES",
+            Header: stringsOverrides.changedFiles,
+            Cell: (props: CellProps<Changeset>) => {
+              const changedFiles =
+                props.row.original.synchronizationInfo?.changedFiles;
+              return changedFiles?.length ? changedFiles.join(", ") : "";
+            },
           },
           {
             id: "PUSH_DATE",
@@ -103,6 +110,7 @@ const ChangesTab = (props: ChangesTabProps) => {
     ];
   }, [
     canCreateVersion,
+    stringsOverrides.changedFiles,
     stringsOverrides.createNamedVersion,
     stringsOverrides.description,
     stringsOverrides.time,

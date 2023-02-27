@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/manage-versions-react",
+      "comment": "Added changed files column in changes tab table",
+      "type": "minor"
+    }
+  ],
+  "packageName": "@itwin/manage-versions-react"
+}
