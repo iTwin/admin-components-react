@@ -2,6 +2,18 @@
   "name": "@itwin/manage-versions-react",
   "entries": [
     {
+      "version": "0.8.0",
+      "tag": "@itwin/manage-versions-react_v0.8.0",
+      "date": "Mon, 27 Feb 2023 09:10:34 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Added changed files column in changes tab table"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.7.3",
       "tag": "@itwin/manage-versions-react_v0.7.3",
       "date": "Tue, 21 Feb 2023 20:11:46 GMT",
