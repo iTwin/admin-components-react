@@ -71,6 +71,7 @@ export const useProjectData = ({
     if (data) {
       setProjects(data);
       setStatus(DataStatus.Complete);
+      setMorePages(false);
       return;
     }
     if (!accessToken) {

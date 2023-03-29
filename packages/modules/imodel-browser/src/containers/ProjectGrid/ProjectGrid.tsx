@@ -94,7 +94,7 @@ export const ProjectGrid = ({
       inactiveBadge: "Inactive",
       noProjects: "No project found.",
       noAuthentication: "No access token provided",
-      error: "An error occured",
+      error: "An error occurred",
     },
     stringsOverrides
   );
