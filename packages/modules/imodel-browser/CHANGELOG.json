@@ -2,6 +2,18 @@
   "name": "@itwin/imodel-browser-react",
   "entries": [
     {
+      "version": "0.13.3",
+      "tag": "@itwin/imodel-browser-react_v0.13.3",
+      "date": "Thu, 30 Mar 2023 16:02:00 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "ProjectGrid - Bug fix for loading skeleton when passing data as props"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.13.2",
       "tag": "@itwin/imodel-browser-react_v0.13.2",
       "date": "Tue, 21 Feb 2023 20:11:46 GMT",

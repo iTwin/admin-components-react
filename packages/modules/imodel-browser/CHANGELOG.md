@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Tue, 21 Feb 2023 20:11:46 GMT and should not be manually modified.
+This log was last generated on Thu, 30 Mar 2023 16:02:00 GMT and should not be manually modified.
+
+## 0.13.3
+Thu, 30 Mar 2023 16:02:00 GMT
+
+### Patches
+
+- ProjectGrid - Bug fix for loading skeleton when passing data as props
 
 ## 0.13.2
 Tue, 21 Feb 2023 20:11:46 GMT
