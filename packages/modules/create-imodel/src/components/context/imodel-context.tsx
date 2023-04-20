@@ -40,12 +40,15 @@ type IModelContextProps = {
   isPrimaryButtonDisabled: boolean;
 };
 
-export const IModelContext = createContext<IModelContextProps>(
-  {} as IModelContextProps
+export const IModelContext = createContext<IModelContextProps | undefined>(
+  undefined
 );
 
-export const useIModelContext = () => {
+export const useIModelContext = (allowEmptyContext?: boolean) => {
   const context = useContext(IModelContext);
+  if (allowEmptyContext) {
+    return {} as IModelContextProps;
+  }
   if (!context) {
     throw "IModelContext must be used inside CreateIModel or UpdateIModel components";
   }
