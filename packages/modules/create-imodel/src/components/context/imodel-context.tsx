@@ -47,7 +47,7 @@ export const IModelContext = createContext<IModelContextProps | undefined>(
 export const useIModelContext = (allowEmptyContext?: boolean) => {
   const context = useContext(IModelContext);
   if (allowEmptyContext) {
-    return {} as IModelContextProps;
+    return context ?? {} as IModelContextProps;
   }
   if (!context) {
     throw "IModelContext must be used inside CreateIModel or UpdateIModel components";

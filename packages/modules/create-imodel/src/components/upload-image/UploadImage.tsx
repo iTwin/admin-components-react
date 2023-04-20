@@ -27,8 +27,6 @@ export type UploadImageProps = {
   onChange?: (src: ArrayBuffer, type: string) => void;
   /** Image source. */
   src?: ArrayBuffer;
-  /** Component is being used outside of IModelContext. */
-  standalone?: boolean;
   /** Object of string overrides. */
   stringsOverrides?: {
     /** Displayed with clickable text. */
@@ -46,7 +44,6 @@ export function UploadImage({
   stringsOverrides,
   onChange,
   src: srcProp,
-  standalone,
 }: UploadImageProps) {
   const [imageUrl, setImageUrl] = React.useState<string>("");
   const [rotation, setRotation] = React.useState(0);
@@ -60,7 +57,7 @@ export function UploadImage({
     ...stringsOverrides,
   };
 
-  const context = useIModelContext(standalone);
+  const context = useIModelContext(true);
   const src = srcProp ?? context?.imodel?.thumbnail?.src;
 
   React.useEffect(() => {
