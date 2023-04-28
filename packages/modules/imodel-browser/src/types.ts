@@ -32,6 +32,22 @@ export interface IModelFull {
   thumbnail?: string;
 }
 
+/** Full representation of an iTwin */
+export interface ITwinFull {
+  id: string;
+  class?: ITwinClassType;
+  subClass?: ITwinType;
+  type?: string;
+  number?: string;
+  displayName?: string;
+  dataCenterLocation?: string;
+  status?: ITwinStatus;
+  parentId?: string;
+  iTwinAccountId?: string;
+  createdDateTime?: string;
+  createdBy?: string;
+}
+
 /** Full representation of a Project */
 export interface ProjectFull {
   id: string;
@@ -62,7 +78,7 @@ export interface ApiOverrides<T = never> {
 type FilterOptions = string;
 
 /** String/function that configures Project filtering behavior. */
-export type ProjectFilterOptions = FilterOptions;
+export type ITwinFilterOptions = FilterOptions;
 
 export enum DataStatus {
   Fetching = "fetching",
@@ -79,3 +95,18 @@ export type IModelSortOptionsKeys = "name";
 
 /** Object/function that configure IModel sorting behavior. */
 export type IModelSortOptions = SortOptions<IModelFull, IModelSortOptionsKeys>;
+
+export type ITwinType =
+  | "Project"
+  | "Asset"
+  | "Portfolio"
+  | "Program"
+  | "WorkPackage";
+export type ITwinClassType = "Thing" | "Endeavor";
+export type ITwinStatus =
+  | "Active"
+  | "Inactive"
+  | "Trial"
+  | "active"
+  | "inactive"
+  | "trial";

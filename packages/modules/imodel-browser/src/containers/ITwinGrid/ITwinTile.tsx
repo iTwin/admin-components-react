@@ -2,47 +2,47 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import "./ProjectTile.scss";
+import "./ITwinTile.scss";
 
 import { Badge, Tile, TileProps } from "@itwin/itwinui-react";
 import React from "react";
 
-import ProjectIcon from "../../images/project.svg";
-import { ProjectFull } from "../../types";
+import ITwinIcon from "../../images/itwin.svg";
+import { ITwinFull } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
 import {
   _buildManagedContextMenuOptions,
   ContextMenuBuilderItem,
 } from "../../utils/_buildMenuOptions";
 
-export interface ProjectTileProps {
-  /** Project to display */
-  project: ProjectFull;
-  /** List of options to build for the project context menu */
-  projectOptions?: ContextMenuBuilderItem<ProjectFull>[];
+export interface ITwinTileProps {
+  /** itwin to display */
+  itwin: ITwinFull;
+  /** List of options to build for the itwin context menu */
+  itwinOptions?: ContextMenuBuilderItem<ITwinFull>[];
   /** Function to call on thumbnail click */
-  onThumbnailClick?(project: ProjectFull): void;
+  onThumbnailClick?(itwin: ITwinFull): void;
   /** Strings displayed by the browser */
   stringsOverrides?: {
-    /** Badge text for trial projects */
+    /** Badge text for trial itwins */
     trialBadge?: string;
-    /** Badge text for inactive projects */
+    /** Badge text for inactive itwins */
     inactiveBadge?: string;
   };
-  /** Tile props that will be applied after normal use. (Will override ProjectTile if used) */
+  /** Tile props that will be applied after normal use. (Will override ITwinTile if used) */
   tileProps?: Partial<TileProps>;
 }
 
 /**
- * Representation of a Project
+ * Representation of an ITwin
  */
-export const ProjectTile = ({
-  project,
-  projectOptions,
+export const ITwinTile = ({
+  itwin,
+  itwinOptions,
   onThumbnailClick,
   tileProps,
   stringsOverrides,
-}: ProjectTileProps) => {
+}: ITwinTileProps) => {
   const strings = _mergeStrings(
     {
       trialBadge: "Trial",
@@ -52,29 +52,25 @@ export const ProjectTile = ({
   );
 
   const moreOptions = React.useMemo(
-    () => _buildManagedContextMenuOptions(projectOptions, project),
-    [projectOptions, project]
+    () => _buildManagedContextMenuOptions(itwinOptions, itwin),
+    [itwinOptions, itwin]
   );
   return (
     <Tile
-      key={project?.id}
-      name={<span title={project?.displayName}>{project?.displayName}</span>}
-      description={
-        <span title={project?.projectNumber}>
-          {project?.projectNumber ?? ""}
-        </span>
-      }
+      key={itwin?.id}
+      name={<span title={itwin?.displayName}>{itwin?.displayName}</span>}
+      description={<span title={itwin?.number}>{itwin?.number ?? ""}</span>}
       badge={
-        project?.status &&
-        project.status.toLocaleLowerCase() !== "active" && (
+        itwin?.status &&
+        itwin.status.toLocaleLowerCase() !== "active" && (
           <Badge
             backgroundColor={
-              project.status.toLocaleLowerCase() === "inactive"
+              itwin.status.toLocaleLowerCase() === "inactive"
                 ? "#A47854" /** $iui-color-dataviz-oak */
                 : "#4585A5" /** $iui-color-dataviz-steelblue */
             }
           >
-            {project.status.toLocaleLowerCase() === "inactive"
+            {itwin.status.toLocaleLowerCase() === "inactive"
               ? strings.inactiveBadge
               : strings.trialBadge}
           </Badge>
@@ -83,11 +79,11 @@ export const ProjectTile = ({
       moreOptions={moreOptions}
       thumbnail={
         <span
-          className={"iui-picture iac-project-thumbnail"}
-          onClick={() => onThumbnailClick?.(project)}
+          className={"iui-picture iac-itwin-thumbnail"}
+          onClick={() => onThumbnailClick?.(itwin)}
           style={{ cursor: onThumbnailClick ? "pointer" : "auto" }}
         >
-          <ProjectIcon className={"iac-project-thumbnail"} />
+          <ITwinIcon className={"iac-itwin-thumbnail"} />
         </span>
       }
       {...(tileProps ?? {})}

@@ -4,26 +4,22 @@
  *--------------------------------------------------------------------------------------------*/
 import React from "react";
 
-import { ProjectFilterOptions, ProjectFull } from "../../types";
+import { ITwinFilterOptions, ITwinFull } from "../../types";
 
-export const useProjectFilter = (
-  projects: ProjectFull[],
-  options?: ProjectFilterOptions
+export const useITwinFilter = (
+  itwins: ITwinFull[],
+  options?: ITwinFilterOptions
 ) => {
   const filter = options?.toLocaleLowerCase() ?? "";
   return React.useMemo(
     () =>
       !filter
-        ? projects
-        : projects.filter(
-            (project) =>
-              (project.displayName?.toLocaleLowerCase() ?? "").includes(
-                filter
-              ) ||
-              (project.projectNumber?.toLocaleLowerCase() ?? "").includes(
-                filter
-              )
+        ? itwins
+        : itwins.filter(
+            (itwin) =>
+              (itwin.displayName?.toLocaleLowerCase() ?? "").includes(filter) ||
+              (itwin.number?.toLocaleLowerCase() ?? "").includes(filter)
           ),
-    [filter, projects]
+    [filter, itwins]
   );
 };

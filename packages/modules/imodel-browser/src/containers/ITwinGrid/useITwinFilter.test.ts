@@ -5,46 +5,46 @@
 import { renderHook } from "@testing-library/react-hooks";
 
 import { ids } from "../../tests/helpers";
-import { ProjectFull } from "../../types";
-import { useProjectFilter } from "./useProjectFilter";
+import { ITwinFull } from "../../types";
+import { useITwinFilter } from "./useITwinFilter";
 
-describe("useProjectFilter hook", () => {
+describe("useITwinFilter hook", () => {
   it("filter correctly with a string", () => {
     const expected = ["2", "3"];
-    const projects: ProjectFull[] = [
+    const itwins: ITwinFull[] = [
       {
         id: "1",
         displayName: "NotFound",
-        projectNumber: "NotFound",
+        number: "NotFound",
       },
       {
         id: "2",
         displayName: "StringIsFoundInName",
-        projectNumber: "NotFound",
+        number: "NotFound",
       },
       {
         id: "3",
         displayName: "NotFound",
-        projectNumber: "StringIsFoundInDescription",
+        number: "StringIsFoundInDescription",
       },
       {
         id: "4",
         displayName: "NotHere",
-        projectNumber: "NorHere",
+        number: "NorHere",
       },
       {
         id: "5",
         displayName: "c",
-        projectNumber: "a",
+        number: "a",
       },
     ];
-    const { result } = renderHook(() => useProjectFilter(projects, "Is"));
+    const { result } = renderHook(() => useITwinFilter(itwins, "Is"));
     expect(result.current.map(ids)).toEqual(expected);
   });
 
   it("do not modify input array", () => {
     const expected = ["1", "2", "3", "4", "5"];
-    const projects: ProjectFull[] = [
+    const itwins: ITwinFull[] = [
       {
         id: "1",
         displayName: "c",
@@ -71,14 +71,14 @@ describe("useProjectFilter hook", () => {
         status: "Inactive",
       },
     ];
-    const { result } = renderHook(() => useProjectFilter(projects, "a"));
+    const { result } = renderHook(() => useITwinFilter(itwins, "a"));
 
-    expect(result.current).not.toBe(projects);
-    expect(projects.map(ids)).toEqual(expected);
+    expect(result.current).not.toBe(itwins);
+    expect(itwins.map(ids)).toEqual(expected);
   });
 
   it("return provided array on undefined options", () => {
-    const projects: ProjectFull[] = [
+    const itwins: ITwinFull[] = [
       {
         id: "1",
         displayName: "c",
@@ -105,7 +105,7 @@ describe("useProjectFilter hook", () => {
         status: "Inactive",
       },
     ];
-    const { result } = renderHook(() => useProjectFilter(projects, undefined));
-    expect(result.current).toBe(projects);
+    const { result } = renderHook(() => useITwinFilter(itwins, undefined));
+    expect(result.current).toBe(itwins);
   });
 });
