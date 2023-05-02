@@ -36,7 +36,7 @@ export interface IModelFull {
 export interface ITwinFull {
   id: string;
   class?: ITwinClassType;
-  subClass?: ITwinType;
+  subClass?: ITwinSubClass;
   type?: string;
   number?: string;
   displayName?: string;
@@ -96,7 +96,7 @@ export type IModelSortOptionsKeys = "name";
 /** Object/function that configure IModel sorting behavior. */
 export type IModelSortOptions = SortOptions<IModelFull, IModelSortOptionsKeys>;
 
-export type ITwinType =
+export type ITwinSubClass =
   | "Project"
   | "Asset"
   | "Portfolio"

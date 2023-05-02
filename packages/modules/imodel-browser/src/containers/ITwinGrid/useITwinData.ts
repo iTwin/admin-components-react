@@ -9,14 +9,14 @@ import {
   DataStatus,
   ITwinFilterOptions,
   ITwinFull,
-  ITwinType,
+  ITwinSubClass,
 } from "../../types";
 import { _getAPIServer } from "../../utils/_apiOverrides";
 import { useITwinFilter } from "./useITwinFilter";
 
 export interface ProjectDataHookOptions {
   requestType?: "favorites" | "recents" | "";
-  itwinType?: ITwinType;
+  itwinSubClass?: ITwinSubClass;
   accessToken?: string | undefined;
   apiOverrides?: ApiOverrides<ITwinFull[]>;
   filterOptions?: ITwinFilterOptions;
@@ -26,7 +26,7 @@ const PAGE_SIZE = 100;
 
 export const useITwinData = ({
   requestType = "",
-  itwinType = "Project",
+  itwinSubClass = "Project",
   accessToken,
   apiOverrides,
   filterOptions,
@@ -65,7 +65,7 @@ export const useITwinData = ({
     setProjects([]);
     setPage(0);
     setMorePages(true);
-  }, [accessToken, requestType, itwinType, data, apiOverrides]);
+  }, [accessToken, requestType, itwinSubClass, data, apiOverrides]);
 
   React.useEffect(() => {
     if (!morePages) {
@@ -89,7 +89,7 @@ export const useITwinData = ({
     const endpoint = ["favorites", "recents"].includes(requestType)
       ? requestType
       : "";
-    const subClass = `?subClass=${itwinType}`;
+    const subClass = `?subClass=${itwinSubClass}`;
     const paging = `&$skip=${page * PAGE_SIZE}&$top=${PAGE_SIZE}`;
     const search =
       ["favorites", "recents"].includes(requestType) || !filterOptions
@@ -145,7 +145,7 @@ export const useITwinData = ({
     filterOptions,
     page,
     morePages,
-    itwinType,
+    itwinSubClass,
   ]);
   return {
     itwins: filteredProjects,

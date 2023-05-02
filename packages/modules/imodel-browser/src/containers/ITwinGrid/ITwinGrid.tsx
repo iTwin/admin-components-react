@@ -12,7 +12,7 @@ import {
   DataStatus,
   ITwinFilterOptions,
   ITwinFull,
-  ITwinType,
+  ITwinSubClass,
 } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
 import { ContextMenuBuilderItem } from "../../utils/_buildMenuOptions";
@@ -32,8 +32,8 @@ export interface ITwinGridProps {
   accessToken?: string | undefined;
   /** Type of iTwin to request */
   requestType?: "favorites" | "recents" | "";
-  /** Class of iTwin, defaults to Project */
-  itwinType?: ITwinType;
+  /** Sub class of iTwin, defaults to Project */
+  itwinSubClass?: ITwinSubClass;
   /** Thumbnail click handler. */
   onThumbnailClick?(itwin: ITwinFull): void;
   /** String/function that configure iTwin filtering behavior.
@@ -85,7 +85,7 @@ export const ITwinGrid = ({
   onThumbnailClick,
   itwinActions,
   requestType,
-  itwinType,
+  itwinSubClass,
   stringsOverrides,
   tileOverrides,
   useIndividualState,
@@ -107,7 +107,7 @@ export const ITwinGrid = ({
     fetchMore,
   } = useITwinData({
     requestType,
-    itwinType,
+    itwinSubClass,
     accessToken,
     apiOverrides,
     filterOptions,
