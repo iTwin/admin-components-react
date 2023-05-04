@@ -7,7 +7,7 @@ import "./ITwinTile.scss";
 import { Badge, Tile, TileProps } from "@itwin/itwinui-react";
 import React from "react";
 
-import ITwinIcon from "../../images/iTwin.svg";
+import ITwinIcon from "../../images/itwin.svg";
 import { ITwinFull } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
 import {
