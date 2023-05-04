@@ -104,7 +104,7 @@ export const DeleteITwin = (props: DeleteITwinProps) => {
         style={{ maxWidth: 600 }}
         onClose={close}
         title={
-          <div className="iac-delete-iTwin-dialog-title">
+          <div className="iac-delete-itwin-dialog-title">
             <SvgWarning className="iac-warning-icon" />
             {stringsOverrides?.title ??
               `Delete an iTwin ${
@@ -131,7 +131,7 @@ export const DeleteITwin = (props: DeleteITwinProps) => {
 
 const OverlaySpinner = () => {
   return (
-    <div className="iac-delete-iTwin-overlay-container">
+    <div className="iac-delete-itwin-overlay-container">
       <ProgressRadial indeterminate />
     </div>
   );

@@ -54,12 +54,12 @@ OverrideApiData.args = {
     data: [
       {
         id: "1",
-        displayName: "Provided ITwin",
+        displayName: "Provided iTwin",
         number: "No Network Calls",
       },
       {
         id: "2",
-        displayName: "Useful ITwin",
+        displayName: "Useful iTwin",
         number:
           "Use if the data comes from a different API or needs to be tweaked",
       },

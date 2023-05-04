@@ -24,7 +24,7 @@ describe("DeleteITwin", () => {
     );
 
     const title = document.querySelector(
-      ".iac-delete-iTwin-dialog-title"
+      ".iac-delete-itwin-dialog-title"
     ) as HTMLElement;
     expect(title.textContent).toBe(`Delete an iTwin 'test iTwin'`);
     expect(title.querySelector(".iac-warning-icon")).toBeTruthy();
