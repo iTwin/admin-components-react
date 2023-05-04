@@ -48,25 +48,6 @@ export interface ITwinFull {
   createdBy?: string;
 }
 
-/** Full representation of a Project */
-export interface ProjectFull {
-  id: string;
-  displayName?: string;
-  projectNumber?: string;
-  registrationDateTime?: string;
-  registeredBy?: string;
-  industry?: string;
-  projectType?: string;
-  geographicLocation?: string;
-  latitude?: string;
-  longitude?: string;
-  timeZone?: string;
-  dataCenterLocation?: string;
-  billingCountry?: string;
-  status?: "Active" | "Inactive" | "Trial" | "active" | "inactive" | "trial";
-  allowExternalTeamMembers?: boolean;
-}
-
 /** An object that allow various configuration of the API access */
 export interface ApiOverrides<T = never> {
   /** dev or qa */
