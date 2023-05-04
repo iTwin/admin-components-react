@@ -21,8 +21,8 @@ import { ITwinTile, ITwinTileProps } from "./ITwinTile";
 import { useITwinData } from "./useITwinData";
 
 export type IndividualITwinStateHook = (
-  itwin: ITwinFull,
-  itwinTileProps: ITwinTileProps & {
+  iTwin: ITwinFull,
+  iTwinTileProps: ITwinTileProps & {
     gridProps: ITwinGridProps;
   }
 ) => Partial<ITwinTileProps>;
@@ -33,27 +33,27 @@ export interface ITwinGridProps {
   /** Type of iTwin to request */
   requestType?: "favorites" | "recents" | "";
   /** Sub class of iTwin, defaults to Project */
-  itwinSubClass?: ITwinSubClass;
+  iTwinSubClass?: ITwinSubClass;
   /** Thumbnail click handler. */
-  onThumbnailClick?(itwin: ITwinFull): void;
+  onThumbnailClick?(iTwin: ITwinFull): void;
   /** String/function that configure iTwin filtering behavior.
    * A string will filter on displayed text only ().
    * A function allow filtering on anything, is used in a normal array.filter.
    */
   filterOptions?: ITwinFilterOptions;
   /** List of actions to build for each iTwin context menu. */
-  itwinActions?: ContextMenuBuilderItem<ITwinFull>[];
+  iTwinActions?: ContextMenuBuilderItem<ITwinFull>[];
   /** Function (can be a react hook) that returns state for an iTwin, returned values will be applied as props to the iTwinTile, overrides ITwinGrid provided values */
   useIndividualState?: IndividualITwinStateHook;
   /** Static props to apply over each tile, mainly used for tileProps, overrides ITwinGrid provided values */
   tileOverrides?: Partial<ITwinTileProps>;
   /** Strings displayed by the browser */
   stringsOverrides?: {
-    /** Badge text for trial itwins */
+    /** Badge text for trial iTwins */
     trialBadge?: string;
-    /** Badge text for inactive itwins */
+    /** Badge text for inactive iTwins */
     inactiveBadge?: string;
-    /** Displayed after successful fetch, but no itwins are returned. */
+    /** Displayed after successful fetch, but no iTwins are returned. */
     noItwins?: string;
     /** Displayed when the component is mounted but the accessToken is empty. */
     noAuthentication?: string;
@@ -66,26 +66,26 @@ export interface ITwinGridProps {
    */
   apiOverrides?: ApiOverrides<ITwinFull[]>;
   /**
-   * Allow final transformation of the itwin array before display
+   * Allow final transformation of the iTwin array before display
    * This function MUST be memoized.
    */
   postProcessCallback?: (
-    itwins: ITwinFull[],
+    iTwins: ITwinFull[],
     fetchStatus: DataStatus | undefined
   ) => ITwinFull[];
 }
 
 /**
- * Component that will allow displaying a grid of itwins, given a requestType
+ * Component that will allow displaying a grid of iTwins, given a requestType
  */
 export const ITwinGrid = ({
   accessToken,
   apiOverrides,
   filterOptions,
   onThumbnailClick,
-  itwinActions,
+  iTwinActions,
   requestType,
-  itwinSubClass,
+  iTwinSubClass,
   stringsOverrides,
   tileOverrides,
   useIndividualState,
@@ -95,25 +95,25 @@ export const ITwinGrid = ({
     {
       trialBadge: "Trial",
       inactiveBadge: "Inactive",
-      noITwins: "No itwin found.",
+      noITwins: "No iTwin found.",
       noAuthentication: "No access token provided",
       error: "An error occurred",
     },
     stringsOverrides
   );
   const {
-    itwins: fetchedItwins,
+    iTwins: fetchedItwins,
     status: fetchStatus,
     fetchMore,
   } = useITwinData({
     requestType,
-    itwinSubClass,
+    iTwinSubClass,
     accessToken,
     apiOverrides,
     filterOptions,
   });
 
-  const itwins = React.useMemo(
+  const iTwins = React.useMemo(
     () =>
       postProcessCallback?.([...fetchedItwins], fetchStatus) ?? fetchedItwins,
     [postProcessCallback, fetchedItwins, fetchStatus]
@@ -127,7 +127,7 @@ export const ITwinGrid = ({
     [DataStatus.ContextRequired]: "",
   }[fetchStatus ?? DataStatus.Fetching];
 
-  return itwins.length === 0 && noResultsText ? (
+  return iTwins.length === 0 && noResultsText ? (
     <NoResults text={noResultsText} />
   ) : (
     <GridStructure>
@@ -139,7 +139,7 @@ export const ITwinGrid = ({
         </>
       ) : (
         <>
-          {itwins?.map((itwin) => (
+          {iTwins?.map((iTwin) => (
             <ITwinHookedTile
               gridProps={{
                 accessToken,
@@ -151,9 +151,9 @@ export const ITwinGrid = ({
                 tileOverrides,
                 useIndividualState,
               }}
-              key={itwin.id}
-              itwin={itwin}
-              itwinOptions={itwinActions}
+              key={iTwin.id}
+              iTwin={iTwin}
+              iTwinOptions={iTwinActions}
               onThumbnailClick={onThumbnailClick}
               useTileState={useIndividualState}
               {...tileOverrides}
@@ -180,7 +180,7 @@ type ITwinHookedTileProps = ITwinTileProps & {
 };
 const noOp = () => ({} as Partial<ITwinTileProps>);
 const ITwinHookedTile = (props: ITwinHookedTileProps) => {
-  const { useTileState = noOp, ...itwinTileProps } = props;
+  const { useTileState = noOp, ...iTwinTileProps } = props;
 
   const hookIdentity = React.useRef(useTileState);
 
@@ -190,6 +190,6 @@ const ITwinHookedTile = (props: ITwinHookedTileProps) => {
     );
   }
 
-  const tileState = useTileState(props.itwin, itwinTileProps);
-  return <ITwinTile {...itwinTileProps} {...tileState} />;
+  const tileState = useTileState(props.iTwin, iTwinTileProps);
+  return <ITwinTile {...iTwinTileProps} {...tileState} />;
 };

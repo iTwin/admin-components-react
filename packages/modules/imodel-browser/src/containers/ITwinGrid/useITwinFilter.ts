@@ -7,19 +7,19 @@ import React from "react";
 import { ITwinFilterOptions, ITwinFull } from "../../types";
 
 export const useITwinFilter = (
-  itwins: ITwinFull[],
+  iTwins: ITwinFull[],
   options?: ITwinFilterOptions
 ) => {
   const filter = options?.toLocaleLowerCase() ?? "";
   return React.useMemo(
     () =>
       !filter
-        ? itwins
-        : itwins.filter(
-            (itwin) =>
-              (itwin.displayName?.toLocaleLowerCase() ?? "").includes(filter) ||
-              (itwin.number?.toLocaleLowerCase() ?? "").includes(filter)
+        ? iTwins
+        : iTwins.filter(
+            (iTwin) =>
+              (iTwin.displayName?.toLocaleLowerCase() ?? "").includes(filter) ||
+              (iTwin.number?.toLocaleLowerCase() ?? "").includes(filter)
           ),
-    [filter, itwins]
+    [filter, iTwins]
   );
 };

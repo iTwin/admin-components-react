@@ -18,49 +18,49 @@ describe("useITwinData hook", () => {
   // Clean up after the tests are finished.
   afterAll(() => server.close());
 
-  it("returns all itwins and proper status on successful call", async () => {
+  it("returns all iTwins and proper status on successful call", async () => {
     const { result, waitForNextUpdate } = renderHook(() =>
       useITwinData({ accessToken: "accessToken" })
     );
 
     await waitForNextUpdate();
-    expect(result.current.itwins).toContainEqual({
+    expect(result.current.iTwins).toContainEqual({
       id: "my1",
       displayName: "myName1",
     });
     expect(result.current.status).toEqual(DataStatus.Complete);
   });
-  it("returns favorite itwins and proper status on successful call", async () => {
+  it("returns favorite iTwins and proper status on successful call", async () => {
     const { result, waitForNextUpdate } = renderHook(() =>
       useITwinData({ accessToken: "accessToken", requestType: "favorites" })
     );
 
     await waitForNextUpdate();
-    expect(result.current.itwins).toContainEqual({
+    expect(result.current.iTwins).toContainEqual({
       id: "favorite1",
       displayName: "favoriteName1",
     });
     expect(result.current.status).toEqual(DataStatus.Complete);
   });
-  it("returns recent itwins and proper status on successful call", async () => {
+  it("returns recent iTwins and proper status on successful call", async () => {
     const { result, waitForNextUpdate } = renderHook(() =>
       useITwinData({ accessToken: "accessToken", requestType: "recents" })
     );
 
     await waitForNextUpdate();
-    expect(result.current.itwins).toContainEqual({
+    expect(result.current.iTwins).toContainEqual({
       id: "recent1",
       displayName: "recentName1",
     });
     expect(result.current.status).toEqual(DataStatus.Complete);
   });
-  it("returns searched itwins and proper status on successful call", async () => {
+  it("returns searched iTwins and proper status on successful call", async () => {
     const { result, waitForNextUpdate } = renderHook(() =>
       useITwinData({ accessToken: "accessToken", filterOptions: "searched" })
     );
 
     await waitForNextUpdate();
-    expect(result.current.itwins).toContainEqual({
+    expect(result.current.iTwins).toContainEqual({
       id: "mySearched1",
       displayName: "mySearchedName1",
     });
@@ -79,7 +79,7 @@ describe("useITwinData hook", () => {
     );
 
     await waitForValueToChange(() => result.current.status);
-    expect(result.current.itwins).toEqual([]);
+    expect(result.current.iTwins).toEqual([]);
     expect(result.current.status).toEqual(DataStatus.FetchFailed);
   });
 
@@ -105,7 +105,7 @@ describe("useITwinData hook", () => {
 
     expect(watcher).toHaveBeenCalledTimes(1);
     expect(result.current.status).toEqual(DataStatus.Complete);
-    expect(result.current.itwins).toEqual(fetchData);
+    expect(result.current.iTwins).toEqual(fetchData);
 
     rerender([
       {
@@ -115,7 +115,7 @@ describe("useITwinData hook", () => {
       },
     ]);
 
-    expect(result.current.itwins).toEqual([
+    expect(result.current.iTwins).toEqual([
       { id: "rerenderedId", displayName: "rerenderedDisplayName" },
     ]);
     expect(result.current.status).toEqual(DataStatus.Complete);
@@ -124,7 +124,7 @@ describe("useITwinData hook", () => {
     rerender([{ accessToken: "accessToken" }]);
     await waitForNextUpdate();
 
-    expect(result.current.itwins).toEqual(fetchData);
+    expect(result.current.iTwins).toEqual(fetchData);
     expect(result.current.status).toEqual(DataStatus.Complete);
     expect(watcher).toHaveBeenCalledTimes(2);
   });
@@ -132,7 +132,7 @@ describe("useITwinData hook", () => {
   it("returns proper error if no accessToken is provided without data override", async () => {
     const { result } = renderHook(() => useITwinData({}));
 
-    expect(result.current.itwins).toEqual([]);
+    expect(result.current.iTwins).toEqual([]);
     expect(result.current.status).toEqual(DataStatus.TokenRequired);
   });
 
@@ -172,8 +172,6 @@ describe("useITwinData hook", () => {
     };
     const { result } = renderHook(() => useITwinData(options));
 
-    expect(result.current.itwins.map((project) => project.id)).toEqual(
-      expected
-    );
+    expect(result.current.iTwins.map((iTwin) => iTwin.id)).toEqual(expected);
   });
 });

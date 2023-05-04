@@ -70,24 +70,24 @@ OverrideApiData.args = {
 export const IndividualContextMenu = Template.bind({});
 IndividualContextMenu.args = {
   apiOverrides: { serverEnvironmentPrefix: "qa" },
-  itwinActions: [
+  iTwinActions: [
     {
       children: "displayName contains 'R'",
-      visible: (itwin) => itwin.displayName?.includes("R") ?? false,
+      visible: (iTwin) => iTwin.displayName?.includes("R") ?? false,
       key: "withR",
-      onClick: (itwin) => alert("Contains R" + itwin.displayName),
+      onClick: (iTwin) => alert("Contains R" + iTwin.displayName),
     },
     {
-      children: "Add itwinNumber",
-      visible: (itwin) => !itwin.number,
+      children: "Add iTwinNumber",
+      visible: (iTwin) => !iTwin.number,
       key: "addD",
-      onClick: (itwin) => alert("Add itwinNumber to " + itwin.displayName),
+      onClick: (iTwin) => alert("Add iTwinNumber to " + iTwin.displayName),
     },
     {
-      children: "Edit itwinNumber",
-      visible: (itwin) => !!itwin.number,
+      children: "Edit iTwinNumber",
+      visible: (iTwin) => !!iTwin.number,
       key: "editD",
-      onClick: (itwin) => alert("Edit itwinNumber: " + itwin.number),
+      onClick: (iTwin) => alert("Edit iTwinNumber: " + iTwin.number),
     },
   ],
 };
@@ -153,7 +153,7 @@ const Pager = (props: PropsWithChildren<{ onClick: () => void }>) => (
 );
 
 /** Hook used in StatefulPropsOverrides.args, the function itself must be a stable reference as it is a hook. */
-const useIndividualState: IndividualITwinStateHook = (itwin, props) => {
+const useIndividualState: IndividualITwinStateHook = (iTwin, props) => {
   const [selection, setSelection] = React.useState<IModelMinimal | undefined>();
   const [links, setLinks] = React.useState<
     [string | undefined, string | undefined]
@@ -167,7 +167,7 @@ const useIndividualState: IndividualITwinStateHook = (itwin, props) => {
         props.gridProps.apiOverrides?.serverEnvironmentPrefix
           ? `${props.gridProps.apiOverrides?.serverEnvironmentPrefix}-`
           : ""
-      }api.bentley.com/imodels/?projectId=${itwin.id}&$top=10`
+      }api.bentley.com/imodels/?projectId=${iTwin.id}&$top=10`
     ) => {
       try {
         // Show the skeleton, plus prevent further calls to this function.
@@ -207,7 +207,7 @@ const useIndividualState: IndividualITwinStateHook = (itwin, props) => {
       }
     },
     [
-      itwin.id,
+      iTwin.id,
       props.gridProps.accessToken,
       props.gridProps.apiOverrides?.serverEnvironmentPrefix,
     ]
@@ -270,16 +270,16 @@ StatefulPropsOverrides.args = {
 export const WithPostProcessCallback: Story<ITwinGridProps> =
   withAccessTokenOverride((args) => {
     const addStartTile = React.useCallback(
-      (itwins: ITwinFull[], status: DataStatus | undefined) => {
+      (iTwins: ITwinFull[], status: DataStatus | undefined) => {
         if (status !== DataStatus.Complete) {
-          return itwins;
+          return iTwins;
         }
-        itwins.unshift({
+        iTwins.unshift({
           id: "newProject",
           displayName: "New Project",
           number: "Click on this tile to create a new ITwin",
         });
-        return itwins;
+        return iTwins;
       },
       []
     );

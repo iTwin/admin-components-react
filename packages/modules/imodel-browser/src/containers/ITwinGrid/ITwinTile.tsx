@@ -7,7 +7,7 @@ import "./ITwinTile.scss";
 import { Badge, Tile, TileProps } from "@itwin/itwinui-react";
 import React from "react";
 
-import ITwinIcon from "../../images/itwin.svg";
+import ITwinIcon from "../../images/iTwin.svg";
 import { ITwinFull } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
 import {
@@ -16,17 +16,17 @@ import {
 } from "../../utils/_buildMenuOptions";
 
 export interface ITwinTileProps {
-  /** itwin to display */
-  itwin: ITwinFull;
-  /** List of options to build for the itwin context menu */
-  itwinOptions?: ContextMenuBuilderItem<ITwinFull>[];
+  /** iTwin to display */
+  iTwin: ITwinFull;
+  /** List of options to build for the iTwin context menu */
+  iTwinOptions?: ContextMenuBuilderItem<ITwinFull>[];
   /** Function to call on thumbnail click */
-  onThumbnailClick?(itwin: ITwinFull): void;
+  onThumbnailClick?(iTwin: ITwinFull): void;
   /** Strings displayed by the browser */
   stringsOverrides?: {
-    /** Badge text for trial itwins */
+    /** Badge text for trial iTwins */
     trialBadge?: string;
-    /** Badge text for inactive itwins */
+    /** Badge text for inactive iTwins */
     inactiveBadge?: string;
   };
   /** Tile props that will be applied after normal use. (Will override ITwinTile if used) */
@@ -37,8 +37,8 @@ export interface ITwinTileProps {
  * Representation of an ITwin
  */
 export const ITwinTile = ({
-  itwin,
-  itwinOptions,
+  iTwin,
+  iTwinOptions,
   onThumbnailClick,
   tileProps,
   stringsOverrides,
@@ -52,25 +52,25 @@ export const ITwinTile = ({
   );
 
   const moreOptions = React.useMemo(
-    () => _buildManagedContextMenuOptions(itwinOptions, itwin),
-    [itwinOptions, itwin]
+    () => _buildManagedContextMenuOptions(iTwinOptions, iTwin),
+    [iTwinOptions, iTwin]
   );
   return (
     <Tile
-      key={itwin?.id}
-      name={<span title={itwin?.displayName}>{itwin?.displayName}</span>}
-      description={<span title={itwin?.number}>{itwin?.number ?? ""}</span>}
+      key={iTwin?.id}
+      name={<span title={iTwin?.displayName}>{iTwin?.displayName}</span>}
+      description={<span title={iTwin?.number}>{iTwin?.number ?? ""}</span>}
       badge={
-        itwin?.status &&
-        itwin.status.toLocaleLowerCase() !== "active" && (
+        iTwin?.status &&
+        iTwin.status.toLocaleLowerCase() !== "active" && (
           <Badge
             backgroundColor={
-              itwin.status.toLocaleLowerCase() === "inactive"
+              iTwin.status.toLocaleLowerCase() === "inactive"
                 ? "#A47854" /** $iui-color-dataviz-oak */
                 : "#4585A5" /** $iui-color-dataviz-steelblue */
             }
           >
-            {itwin.status.toLocaleLowerCase() === "inactive"
+            {iTwin.status.toLocaleLowerCase() === "inactive"
               ? strings.inactiveBadge
               : strings.trialBadge}
           </Badge>
@@ -79,11 +79,11 @@ export const ITwinTile = ({
       moreOptions={moreOptions}
       thumbnail={
         <span
-          className={"iui-picture iac-itwin-thumbnail"}
-          onClick={() => onThumbnailClick?.(itwin)}
+          className={"iui-picture iac-iTwin-thumbnail"}
+          onClick={() => onThumbnailClick?.(iTwin)}
           style={{ cursor: onThumbnailClick ? "pointer" : "auto" }}
         >
-          <ITwinIcon className={"iac-itwin-thumbnail"} />
+          <ITwinIcon className={"iac-iTwin-thumbnail"} />
         </span>
       }
       {...(tileProps ?? {})}

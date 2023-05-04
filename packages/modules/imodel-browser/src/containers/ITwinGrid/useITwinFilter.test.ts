@@ -11,7 +11,7 @@ import { useITwinFilter } from "./useITwinFilter";
 describe("useITwinFilter hook", () => {
   it("filter correctly with a string", () => {
     const expected = ["2", "3"];
-    const itwins: ITwinFull[] = [
+    const iTwins: ITwinFull[] = [
       {
         id: "1",
         displayName: "NotFound",
@@ -38,13 +38,13 @@ describe("useITwinFilter hook", () => {
         number: "a",
       },
     ];
-    const { result } = renderHook(() => useITwinFilter(itwins, "Is"));
+    const { result } = renderHook(() => useITwinFilter(iTwins, "Is"));
     expect(result.current.map(ids)).toEqual(expected);
   });
 
   it("do not modify input array", () => {
     const expected = ["1", "2", "3", "4", "5"];
-    const itwins: ITwinFull[] = [
+    const iTwins: ITwinFull[] = [
       {
         id: "1",
         displayName: "c",
@@ -71,14 +71,14 @@ describe("useITwinFilter hook", () => {
         status: "Inactive",
       },
     ];
-    const { result } = renderHook(() => useITwinFilter(itwins, "a"));
+    const { result } = renderHook(() => useITwinFilter(iTwins, "a"));
 
-    expect(result.current).not.toBe(itwins);
-    expect(itwins.map(ids)).toEqual(expected);
+    expect(result.current).not.toBe(iTwins);
+    expect(iTwins.map(ids)).toEqual(expected);
   });
 
   it("return provided array on undefined options", () => {
-    const itwins: ITwinFull[] = [
+    const iTwins: ITwinFull[] = [
       {
         id: "1",
         displayName: "c",
@@ -105,7 +105,7 @@ describe("useITwinFilter hook", () => {
         status: "Inactive",
       },
     ];
-    const { result } = renderHook(() => useITwinFilter(itwins, undefined));
-    expect(result.current).toBe(itwins);
+    const { result } = renderHook(() => useITwinFilter(iTwins, undefined));
+    expect(result.current).toBe(iTwins);
   });
 });

@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 @import "~@itwin/itwinui-css/scss/variables";
 
-.iac-delete-itwin-dialog-title {
+.iac-delete-iTwin-dialog-title {
   display: flex;
   align-items: center;
 
@@ -18,7 +18,7 @@
   }
 }
 
-.iac-delete-itwin-overlay-container {
+.iac-delete-iTwin-overlay-container {
   position: fixed;
   z-index: 99999;
   background-color: rgba(0, 0, 0, 0.1);
