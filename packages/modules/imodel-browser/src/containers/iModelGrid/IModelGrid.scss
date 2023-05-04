@@ -1,0 +1,40 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+.iac-search-toolbar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  .iac-search-toolbar-input {
+    display: flex;
+  }
+  .iac-view-toolbar {
+    padding-left: 8px;
+  }
+}
+
+.iac-iModelCell {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+
+  > * {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+}
+
+.iac-list-structure {
+  margin-top: 16px;
+}
+
+.iac-options-icon {
+  width: 16px;
+  height: 16px;
+  transition: fill 0.2s ease-out;
+  fill: currentColor;
+  cursor: pointer;
+}

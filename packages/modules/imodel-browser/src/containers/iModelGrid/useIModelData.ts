@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import React from "react";
+import React, { useCallback } from "react";
 
 import {
   ApiOverrides,
@@ -18,6 +18,7 @@ export interface IModelDataHookOptions {
   accessToken?: string | undefined;
   sortOptions?: IModelSortOptions;
   apiOverrides?: ApiOverrides<IModelFull[]>;
+  searchText?: string | undefined;
 }
 
 const PAGE_SIZE = 100;
@@ -27,6 +28,7 @@ export const useIModelData = ({
   accessToken,
   sortOptions,
   apiOverrides,
+  searchText,
 }: IModelDataHookOptions) => {
   const sortType = sortOptions?.sortType === "name" ? "name" : undefined; //Only available sort by API at the moment.
   const sortDescending = sortOptions?.descending;
@@ -54,7 +56,19 @@ export const useIModelData = ({
     setIModels([]);
     setPage(0);
     setMorePages(true);
-  }, [accessToken, projectId, apiOverrides?.data, apiOverrides]);
+  }, [accessToken, projectId, apiOverrides?.data, apiOverrides, searchText]);
+
+  const debounce = useCallback(
+    (func: () => Promise<void>, delay = 500) => {
+      let timeout: number | undefined = undefined;
+      clearTimeout(timeout);
+      timeout = searchText
+        ? window.setTimeout(func, delay, searchText)
+        : window.setTimeout(func, 0);
+    },
+    [searchText]
+  );
+
   React.useEffect(() => {
     if (!morePages) {
       return;
@@ -82,10 +96,11 @@ export const useIModelData = ({
       ? `&$orderBy=${sortType} ${sortDescending ? "desc" : "asc"}`
       : "";
     const paging = `&$skip=${page * PAGE_SIZE}&$top=${PAGE_SIZE}`;
+    const searching = searchText?.trim() ? `&name=${searchText}` : "";
 
     const url = `${_getAPIServer(
       apiOverrides
-    )}/imodels/${selection}${sorting}${paging}`;
+    )}/imodels/${selection}${sorting}${paging}${searching}`;
     const options: RequestInit = {
       signal: abortController.signal,
       headers: {
@@ -93,34 +108,36 @@ export const useIModelData = ({
         Prefer: "return=representation",
       },
     };
-    fetch(url, options)
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          return response.text().then((errorText) => {
-            throw new Error(errorText);
-          });
-        }
-      })
-      .then((result: { iModels: IModelFull[] }) => {
-        setStatus(DataStatus.Complete);
-        if (result.iModels.length !== PAGE_SIZE) {
-          setMorePages(false);
-        }
-        setIModels((imodels) =>
-          page === 0 ? result.iModels : [...imodels, ...result.iModels]
-        );
-      })
-      .catch((e) => {
-        if (e.name === "AbortError") {
-          // Aborting because unmounting is not an error, swallow.
-          return;
-        }
-        setIModels([]);
-        setStatus(DataStatus.FetchFailed);
-        console.error(e);
-      });
+    const fetchIModels = () =>
+      fetch(url, options)
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            return response.text().then((errorText) => {
+              throw new Error(errorText);
+            });
+          }
+        })
+        .then((result: { iModels: IModelFull[] }) => {
+          setStatus(DataStatus.Complete);
+          if (result.iModels.length !== PAGE_SIZE) {
+            setMorePages(false);
+          }
+          setIModels((imodels) =>
+            page === 0 ? result.iModels : [...imodels, ...result.iModels]
+          );
+        })
+        .catch((e) => {
+          if (e.name === "AbortError") {
+            // Aborting because unmounting is not an error, swallow.
+            return;
+          }
+          setIModels([]);
+          setStatus(DataStatus.FetchFailed);
+          console.error(e);
+        });
+    debounce(fetchIModels, 500);
     return () => {
       abortController.abort();
     };
@@ -133,6 +150,9 @@ export const useIModelData = ({
     sortType,
     page,
     morePages,
+    searchText,
+    iModels,
+    debounce,
   ]);
   return {
     iModels: sortedIModels,
