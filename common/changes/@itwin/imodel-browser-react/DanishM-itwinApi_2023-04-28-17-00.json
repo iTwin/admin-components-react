@@ -3,7 +3,7 @@
     {
       "packageName": "@itwin/imodel-browser-react",
       "comment": "Upgraded projects api to iTwins api",
-      "type": "major"
+      "type": "none"
     }
   ],
   "packageName": "@itwin/imodel-browser-react"
