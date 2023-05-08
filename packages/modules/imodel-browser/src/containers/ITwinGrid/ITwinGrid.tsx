@@ -54,14 +54,14 @@ export interface ITwinGridProps {
     /** Badge text for inactive iTwins */
     inactiveBadge?: string;
     /** Displayed after successful fetch, but no iTwins are returned. */
-    noItwins?: string;
+    noITwins?: string;
     /** Displayed when the component is mounted but the accessToken is empty. */
     noAuthentication?: string;
     /** Generic message displayed if an error occurs while fetching. */
     error?: string;
   };
   /** Object that configures different overrides for the API.
-   * @property `data`: Array of Itwins used in the grid.
+   * @property `data`: Array of iTwins used in the grid.
    * @property `serverEnvironmentPrefix`: Either qa or dev.
    */
   apiOverrides?: ApiOverrides<ITwinFull[]>;

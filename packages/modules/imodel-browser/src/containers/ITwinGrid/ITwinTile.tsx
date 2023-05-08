@@ -34,7 +34,7 @@ export interface ITwinTileProps {
 }
 
 /**
- * Representation of an ITwin
+ * Representation of an iTwin
  */
 export const ITwinTile = ({
   iTwin,
