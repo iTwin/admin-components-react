@@ -19,9 +19,9 @@
     "clean": "rimraf cjs esm"
   },
   "dependencies": {
-    "@itwin/itwinui-css": "^0.9.0",
+    "@itwin/itwinui-css": "^1.2.0",
     "@itwin/itwinui-icons-react": "^1.2.0",
-    "@itwin/itwinui-react": "^1.35.0"
+    "@itwin/itwinui-react": "^2.2.0"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "~17.1.0",
@@ -45,7 +45,7 @@
     "eslint": "^7.4.0",
     "jest": "^26.0.0",
     "node-sass": "^6.0.0",
-    "postcss": "^8.2.8",
+    "postcss": "8.4.20",
     "prettier": "^2.0.5",
     "react-dom": "^17.0.2",
     "react": "^17.0.2",

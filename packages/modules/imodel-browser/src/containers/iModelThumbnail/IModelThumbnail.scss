@@ -4,10 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 @import "../../index.scss";
 
-.iac-thumbnail {
-  @include themed {
-    // Override because starting with 0.6.0, tile thumbnail background color is too light for
-    // default image provided for iModels (transparent PNG)
-    background-color: t(iui-color-background-2);
-  }
+.iui-tile-thumbnail > .iac-thumbnail {
+  width: 100%;
+  height: calc(var(--iui-size-s)*13);
 }

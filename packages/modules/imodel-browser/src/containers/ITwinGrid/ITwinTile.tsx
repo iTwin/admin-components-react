@@ -66,8 +66,8 @@ export const ITwinTile = ({
           <Badge
             backgroundColor={
               iTwin.status.toLocaleLowerCase() === "inactive"
-                ? "#A47854" /** $iui-color-dataviz-oak */
-                : "#4585A5" /** $iui-color-dataviz-steelblue */
+                ? "#A47854" /** $iui-color-background-oak */
+                : "#4585A5" /** $iui-color-background-steelblue */
             }
           >
             {iTwin.status.toLocaleLowerCase() === "inactive"

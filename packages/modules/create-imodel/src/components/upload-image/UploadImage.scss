@@ -2,7 +2,6 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
- @import "~@itwin/itwinui-css/scss/variables";
 
 .iac-image-container {
   width: 87.5px;
@@ -10,7 +9,8 @@
   overflow: hidden;
   position: relative;
   border: 1px solid #c7ccd1;
-  > img {
+
+  >img {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -28,5 +28,5 @@
 
 .iac-file-upload-image {
   position: absolute;
-  left: $iui-sm;
+  left: var(--iui-size-s);
 }

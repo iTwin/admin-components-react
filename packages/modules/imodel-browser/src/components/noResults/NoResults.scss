@@ -14,15 +14,15 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  margin-top: $iui-m;
-  margin-bottom: $iui-m;
+  margin-top: var(--iui-size-m);
+  margin-bottom: var(--iui-size-m);
 
-  > svg {
+  >svg {
     height: 75px;
     fill: currentColor;
   }
 
-  > span:first-of-type {
-    margin-top: $iui-m;
+  >span:first-of-type {
+    margin-top: var(--iui-size-m);
   }
 }
