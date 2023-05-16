@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/imodel-browser-react",
+      "comment": "iTwinui-react update to 2.x",
+      "type": "none"
+    }
+  ],
+  "packageName": "@itwin/imodel-browser-react"
+}
