@@ -2,22 +2,19 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import {
-  ProjectTile as C,
-  ProjectTileProps,
-} from "@itwin/imodel-browser-react";
+import { ITwinTile as C, ITwinTileProps } from "@itwin/imodel-browser-react";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
 
-export const ProjectTile = (props: ProjectTileProps) => <C {...props} />;
+export const ITwinTile = (props: ITwinTileProps) => <C {...props} />;
 
 export default {
-  title: "imodel-browser/ProjectTile",
-  component: ProjectTile,
-  excludeStories: ["ProjectTile"],
+  title: "imodel-browser/ITwinTile",
+  component: ITwinTile,
+  excludeStories: ["ITwinTile"],
 } as Meta;
 
-const Template: Story<ProjectTileProps> = (args) => <ProjectTile {...args} />;
+const Template: Story<ITwinTileProps> = (args) => <ITwinTile {...args} />;
 
 export const Primary = Template.bind({});
 Primary.args = {};

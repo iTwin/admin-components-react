@@ -7,31 +7,34 @@ import React from "react";
 import {
   ApiOverrides,
   DataStatus,
-  ProjectFilterOptions,
-  ProjectFull,
+  ITwinFilterOptions,
+  ITwinFull,
+  ITwinSubClass,
 } from "../../types";
 import { _getAPIServer } from "../../utils/_apiOverrides";
-import { useProjectFilter } from "./useProjectFilter";
+import { useITwinFilter } from "./useITwinFilter";
 
 export interface ProjectDataHookOptions {
   requestType?: "favorites" | "recents" | "";
+  iTwinSubClass?: ITwinSubClass;
   accessToken?: string | undefined;
-  apiOverrides?: ApiOverrides<ProjectFull[]>;
-  filterOptions?: ProjectFilterOptions;
+  apiOverrides?: ApiOverrides<ITwinFull[]>;
+  filterOptions?: ITwinFilterOptions;
 }
 
 const PAGE_SIZE = 100;
 
-export const useProjectData = ({
+export const useITwinData = ({
   requestType = "",
+  iTwinSubClass = "Project",
   accessToken,
   apiOverrides,
   filterOptions,
 }: ProjectDataHookOptions) => {
   const data = apiOverrides?.data;
-  const [projects, setProjects] = React.useState<ProjectFull[]>([]);
+  const [projects, setProjects] = React.useState<ITwinFull[]>([]);
   const [status, setStatus] = React.useState<DataStatus>();
-  const filteredProjects = useProjectFilter(projects, filterOptions);
+  const filteredProjects = useITwinFilter(projects, filterOptions);
   const [page, setPage] = React.useState(0);
   const [morePages, setMorePages] = React.useState(true);
   const fetchMore = React.useCallback(() => {
@@ -62,7 +65,7 @@ export const useProjectData = ({
     setProjects([]);
     setPage(0);
     setMorePages(true);
-  }, [accessToken, requestType, data, apiOverrides]);
+  }, [accessToken, requestType, iTwinSubClass, data, apiOverrides]);
 
   React.useEffect(() => {
     if (!morePages) {
@@ -86,18 +89,20 @@ export const useProjectData = ({
     const endpoint = ["favorites", "recents"].includes(requestType)
       ? requestType
       : "";
-    const paging = `?$skip=${page * PAGE_SIZE}&$top=${PAGE_SIZE}`;
+    const subClass = `?subClass=${iTwinSubClass}`;
+    const paging = `&$skip=${page * PAGE_SIZE}&$top=${PAGE_SIZE}`;
     const search =
       ["favorites", "recents"].includes(requestType) || !filterOptions
         ? ""
         : `&$search=${filterOptions}`;
     const url = `${_getAPIServer(
       apiOverrides
-    )}/projects/${endpoint}${paging}${search}`;
+    )}/itwins/${endpoint}${subClass}${paging}${search}`;
     const options: RequestInit = {
       signal: abortController.signal,
       headers: {
         Authorization: accessToken,
+        Accept: "application/vnd.bentley.itwin-platform.v1+json",
         Prefer: "return=representation",
       },
     };
@@ -111,13 +116,13 @@ export const useProjectData = ({
           });
         }
       })
-      .then((result: { projects: ProjectFull[] }) => {
+      .then((result: { iTwins: ITwinFull[] }) => {
         setStatus(DataStatus.Complete);
-        if (result.projects.length !== PAGE_SIZE) {
+        if (result.iTwins.length !== PAGE_SIZE) {
           setMorePages(false);
         }
         setProjects((projects) =>
-          page === 0 ? result.projects : [...projects, ...result.projects]
+          page === 0 ? result.iTwins : [...projects, ...result.iTwins]
         );
       })
       .catch((e) => {
@@ -140,9 +145,10 @@ export const useProjectData = ({
     filterOptions,
     page,
     morePages,
+    iTwinSubClass,
   ]);
   return {
-    projects: filteredProjects,
+    iTwins: filteredProjects,
     status,
     fetchMore: morePages ? fetchMore : undefined,
   };
