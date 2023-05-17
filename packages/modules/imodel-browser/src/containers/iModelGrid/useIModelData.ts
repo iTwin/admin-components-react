@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import React, { useCallback } from "react";
+import React from "react";
 
 import {
   ApiOverrides,
@@ -58,17 +58,6 @@ export const useIModelData = ({
     setMorePages(true);
   }, [accessToken, projectId, apiOverrides?.data, apiOverrides, searchText]);
 
-  const debounce = useCallback(
-    (func: () => Promise<void>, delay = 500) => {
-      let timeout: number | undefined = undefined;
-      clearTimeout(timeout);
-      timeout = searchText
-        ? window.setTimeout(func, delay, searchText)
-        : window.setTimeout(func, 0);
-    },
-    [searchText]
-  );
-
   React.useEffect(() => {
     if (!morePages) {
       return;
@@ -108,36 +97,34 @@ export const useIModelData = ({
         Prefer: "return=representation",
       },
     };
-    const fetchIModels = () =>
-      fetch(url, options)
-        .then((response) => {
-          if (response.ok) {
-            return response.json();
-          } else {
-            return response.text().then((errorText) => {
-              throw new Error(errorText);
-            });
-          }
-        })
-        .then((result: { iModels: IModelFull[] }) => {
-          setStatus(DataStatus.Complete);
-          if (result.iModels.length !== PAGE_SIZE) {
-            setMorePages(false);
-          }
-          setIModels((imodels) =>
-            page === 0 ? result.iModels : [...imodels, ...result.iModels]
-          );
-        })
-        .catch((e) => {
-          if (e.name === "AbortError") {
-            // Aborting because unmounting is not an error, swallow.
-            return;
-          }
-          setIModels([]);
-          setStatus(DataStatus.FetchFailed);
-          console.error(e);
-        });
-    debounce(fetchIModels, 500);
+    fetch(url, options)
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          return response.text().then((errorText) => {
+            throw new Error(errorText);
+          });
+        }
+      })
+      .then((result: { iModels: IModelFull[] }) => {
+        setStatus(DataStatus.Complete);
+        if (result.iModels.length !== PAGE_SIZE) {
+          setMorePages(false);
+        }
+        setIModels((imodels) =>
+          page === 0 ? result.iModels : [...imodels, ...result.iModels]
+        );
+      })
+      .catch((e) => {
+        if (e.name === "AbortError") {
+          // Aborting because unmounting is not an error, swallow.
+          return;
+        }
+        setIModels([]);
+        setStatus(DataStatus.FetchFailed);
+        console.error(e);
+      });
     return () => {
       abortController.abort();
     };
@@ -152,7 +139,6 @@ export const useIModelData = ({
     morePages,
     searchText,
     iModels,
-    debounce,
   ]);
   return {
     iModels: sortedIModels,

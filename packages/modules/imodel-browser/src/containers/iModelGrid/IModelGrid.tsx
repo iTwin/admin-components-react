@@ -7,21 +7,18 @@ import "./IModelGrid.scss";
 import {
   SvgClose,
   SvgList,
-  SvgMore,
   SvgSearch,
   SvgThumbnails,
 } from "@itwin/itwinui-icons-react";
 import {
   ButtonGroup,
-  DropdownMenu,
   IconButton,
   LabeledInput,
   Table,
   Tooltip,
 } from "@itwin/itwinui-react";
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import { InView } from "react-intersection-observer";
-import { CellProps } from "react-table";
 
 import { GridStructure } from "../../components/gridStructure/GridStructure";
 import { NoResults } from "../../components/noResults/NoResults";
@@ -33,13 +30,12 @@ import {
   IModelViewType,
 } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
-import {
-  _buildManagedContextMenuOptions,
-  ContextMenuBuilderItem,
-} from "../../utils/_buildMenuOptions";
+import { ContextMenuBuilderItem } from "../../utils/_buildMenuOptions";
+import { debounce } from "../../utils/_debounce";
 import { IModelGhostTile } from "../iModelTiles/IModelGhostTile";
 import { IModelTile, IModelTileProps } from "../iModelTiles/IModelTile";
 import { useIModelData } from "./useIModelData";
+import { useIModelTableConfig } from "./useIModelTableConfig";
 export interface IModelGridProps {
   /**
    * Access token that requires the `imodels:read` scope. */
@@ -62,6 +58,16 @@ export interface IModelGridProps {
   tileOverrides?: Partial<IModelTileProps>;
   /** Strings displayed by the browser */
   stringsOverrides?: {
+    /** Displayed for table name header. */
+    tableColumnName?: string;
+    /** Displayed for table description header. */
+    tableColumnDescription?: string;
+    /** Displayed for table lastModified header. */
+    tableColumnLastModified?: string;
+    /** Displayed on table while loading data. */
+    tableLoadingData?: string;
+    /** Displayed after successful fetch search, but no iModel is returned. */
+    noIModelSearch?: string;
     /** Displayed after successful fetch, but no iModels are returned. */
     noIModels?: string;
     /** Displayed when the component is mounted and there is no project or asset Id. */
@@ -91,6 +97,8 @@ export interface IModelGridProps {
   createIModelButton?: React.ReactNode;
   /** flag to show search toolbar component along with view */
   showSearchToolbar?: boolean;
+  /**iModel view mode */
+  viewMode?: IModelViewType;
 }
 
 /**
@@ -110,13 +118,21 @@ export const IModelGrid = ({
   emptyStateComponent,
   createIModelButton,
   showSearchToolbar,
+  viewMode,
 }: IModelGridProps) => {
   const [searchText, setSearchText] = useState("");
-  const [view, setView] = useState<IModelViewType>("tileView");
+  const [textValue, setTextValue] = useState("");
+
+  const [view, setView] = useState<IModelViewType>(viewMode ?? "tileView");
   const searchRef = React.useRef(null);
   const closeRef = React.useRef(null);
   const strings = _mergeStrings(
     {
+      tableColumnName: "Name",
+      tableColumnDescription: "Description",
+      tableColumnLastModified: "Last Modified",
+      tableLoadingData: "Loading...",
+      noIModelSearch: "There is no such iModel in this project.",
       noIModels: "There are no iModels in this project.",
       noContext: "No context provided",
       noAuthentication: "No access token provided",
@@ -136,9 +152,13 @@ export const IModelGrid = ({
     searchText,
   });
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    setSearchText(event.target.value);
-  };
+  const { columns, onRowClick } = useIModelTableConfig({
+    iModelActions,
+    onThumbnailClick,
+    strings,
+  });
+
+  const handleChange = (value: string) => setTextValue(value);
 
   const iModels = React.useMemo(
     () =>
@@ -159,85 +179,6 @@ export const IModelGrid = ({
     ? { serverEnvironmentPrefix: apiOverrides.serverEnvironmentPrefix }
     : undefined;
 
-  const onRowClick = (_: React.MouseEvent, row: any) => {
-    const iModel = row.original as IModelFull;
-    if (!iModel) {
-      return;
-    }
-    onThumbnailClick?.(iModel);
-  };
-
-  const columns = useMemo(
-    () => [
-      {
-        Header: "Table",
-        columns: [
-          {
-            id: "name",
-            Header: "iModel name",
-            accessor: "name",
-            maxWidth: 350,
-            Cell: (props: CellProps<IModelFull>) => (
-              <div
-                data-tip={props.row.original.name}
-                className="iac-iModelCell"
-              >
-                <span>{props.value}</span>
-              </div>
-            ),
-          },
-          {
-            id: "description",
-            Header: "Description",
-            accessor: "description",
-            disableSortBy: true,
-          },
-          {
-            id: "LastModified",
-            Header: "lastModified",
-            accessor: "createdDateTime",
-            maxWidth: 350,
-            Cell: (props: CellProps<IModelFull>) => {
-              const date = props.data[props.row.index].createdDateTime;
-              return date ? new Date(date).toDateString() : "";
-            },
-          },
-          {
-            id: "options",
-            style: { width: "50px" },
-            disableSortBy: true,
-            maxWidth: 50,
-            Cell: (props: CellProps<IModelFull>) => {
-              const moreOptions = () => {
-                const options = _buildManagedContextMenuOptions(
-                  iModelActions,
-                  props.row.original
-                );
-                return options !== undefined ? options : [];
-              };
-
-              return (
-                <DropdownMenu menuItems={moreOptions}>
-                  <div
-                    className="iac-options-icon"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                    }}
-                  >
-                    <SvgMore />
-                  </div>
-                </DropdownMenu>
-              );
-            },
-          },
-        ],
-      },
-    ],
-    [iModelActions]
-  );
-
-  const data = useMemo(() => fetchediModels, [fetchediModels]);
-
   const renderIModelGridStructure = () => {
     return (
       <>
@@ -251,12 +192,21 @@ export const IModelGrid = ({
                 type="text"
                 id="searchText"
                 name="searchText"
-                onChange={handleChange}
-                value={searchText}
+                onInput={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  handleChange(e.target.value);
+                  debounce(setSearchText(e.target.value), 500);
+                }}
+                value={textValue}
                 iconDisplayStyle="inline"
                 svgIcon={
                   searchText?.trim() ? (
-                    <div ref={closeRef} onClick={() => setSearchText("")}>
+                    <div
+                      ref={closeRef}
+                      onClick={() => {
+                        setTextValue("");
+                        setSearchText("");
+                      }}
+                    >
                       <SvgClose />
                     </div>
                   ) : (
@@ -295,7 +245,7 @@ export const IModelGrid = ({
             ) : (
               <>
                 {searchText && iModels.length === 0 ? (
-                  <div>No Results found for search</div>
+                  <div>{strings.noIModelSearch}</div>
                 ) : (
                   iModels?.map((iModel) => (
                     <IModelHookedTile
@@ -325,9 +275,13 @@ export const IModelGrid = ({
         ) : (
           <Table<{ [P in keyof IModelFull]: IModelFull[P] }>
             columns={columns}
-            data={data}
+            data={iModels}
             onRowClick={onRowClick}
-            emptyTableContent="No data."
+            emptyTableContent={
+              fetchStatus === DataStatus.Fetching
+                ? strings.tableLoadingData
+                : strings.noIModelSearch
+            }
             isSortable
             className="iac-list-structure"
           />
