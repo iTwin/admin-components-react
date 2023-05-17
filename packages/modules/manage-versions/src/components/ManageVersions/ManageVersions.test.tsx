@@ -6,6 +6,7 @@ import {
   fireEvent,
   render,
   screen,
+  waitFor,
   waitForElementToBeRemoved,
 } from "@testing-library/react";
 import React from "react";
@@ -40,6 +41,9 @@ describe("ManageVersions", () => {
   const mockCreateVersion = jest.spyOn(NamedVersionClient.prototype, "create");
   const mockUpdateVersion = jest.spyOn(NamedVersionClient.prototype, "update");
   const mockGetChangesets = jest.spyOn(ChangesetClient.prototype, "get");
+
+  const waitForSelectorToExist = async (selector: string) =>
+    waitFor(() => expect(document.querySelector(selector)).not.toBeNull());
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -186,6 +190,7 @@ describe("ManageVersions", () => {
     expect(createVersionButtons.length).toBe(2);
     createVersionButtons[0].click();
 
+    await waitForSelectorToExist(".iac-additional-info");
     const additionalInfos = document.querySelectorAll(".iac-additional-info");
     expect(additionalInfos.length).toBe(2);
     const latestVersionInfo = additionalInfos[1].querySelectorAll("span");
@@ -241,6 +246,7 @@ describe("ManageVersions", () => {
     expect(updateVersionButtons.length).toBe(3);
     updateVersionButtons[0].click();
 
+    await waitForSelectorToExist("input");
     const nameInput = document.querySelector("input") as HTMLInputElement;
     expect(nameInput).toBeTruthy();
     fireEvent.change(nameInput, { target: { value: "test name" } });
@@ -271,7 +277,7 @@ it("should render with changesets tab opened", async () => {
     container.querySelector(".iui-progress-indicator-radial")
   );
   const changesetRows = container.querySelectorAll(
-    ".iui-table-body.iui-table-row"
+    ".iui-table-body .iui-table-row"
   );
   expect(changesetRows.length).toBe(3);
 

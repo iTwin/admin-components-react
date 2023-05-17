@@ -72,7 +72,7 @@ describe("VersionModal", () => {
     ).toBe(2);
 
     const actionButton = document.querySelector(
-      ".iui-button.iui-high-visibility"
+      "[data-iui-variant=high-visibility]"
     ) as HTMLButtonElement;
     expect(actionButton).toBeTruthy();
     expect(actionButton.disabled).toBe(true);
@@ -82,7 +82,7 @@ describe("VersionModal", () => {
     renderComponent();
 
     const actionButton = document.querySelector(
-      ".iui-button.iui-high-visibility"
+      "[data-iui-variant=high-visibility]"
     ) as HTMLButtonElement;
     expect(actionButton).toBeTruthy();
     expect(actionButton.disabled).toBe(true);
@@ -110,7 +110,7 @@ describe("VersionModal", () => {
     });
 
     const actionButton = document.querySelector(
-      ".iui-button.iui-high-visibility"
+      "[data-iui-variant=high-visibility]"
     ) as HTMLButtonElement;
     expect(actionButton).toBeTruthy();
     expect(actionButton.disabled).toBe(true);
