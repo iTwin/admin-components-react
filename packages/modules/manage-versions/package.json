@@ -11,7 +11,7 @@
   "scripts": {
     "start": "rollup -cw",
     "build": "rollup --silent -c",
-    "test": "jest",
+    "test": "jest --silent",
     "test:watch": "jest --watch",
     "clean": "rimraf cjs esm"
   },
