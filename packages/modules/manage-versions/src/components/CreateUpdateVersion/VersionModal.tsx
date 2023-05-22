@@ -116,7 +116,6 @@ export const VersionModal = (props: VersionModalProps) => {
         <ModalButtonBar>
           <Button
             styleType="high-visibility"
-            data-iui-variant="high-visibility"
             onClick={() => onActionClick(version.name, version.description)}
             disabled={
               !version.name ||
