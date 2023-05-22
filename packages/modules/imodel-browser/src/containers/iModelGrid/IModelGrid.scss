@@ -2,18 +2,6 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-.iac-search-toolbar {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  .iac-search-toolbar-input {
-    display: flex;
-  }
-  .iac-view-toolbar {
-    padding-left: 8px;
-  }
-}
-
 .iac-iModelCell {
   display: flex;
   flex-direction: column;

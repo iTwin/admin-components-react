@@ -4,20 +4,8 @@
  *--------------------------------------------------------------------------------------------*/
 import "./IModelGrid.scss";
 
-import {
-  SvgClose,
-  SvgList,
-  SvgSearch,
-  SvgThumbnails,
-} from "@itwin/itwinui-icons-react";
-import {
-  ButtonGroup,
-  IconButton,
-  LabeledInput,
-  Table,
-  Tooltip,
-} from "@itwin/itwinui-react";
-import React, { useState } from "react";
+import { Table } from "@itwin/itwinui-react";
+import React from "react";
 import { InView } from "react-intersection-observer";
 
 import { GridStructure } from "../../components/gridStructure/GridStructure";
@@ -31,7 +19,6 @@ import {
 } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
 import { ContextMenuBuilderItem } from "../../utils/_buildMenuOptions";
-import { debounce } from "../../utils/_debounce";
 import { IModelGhostTile } from "../iModelTiles/IModelGhostTile";
 import { IModelTile, IModelTileProps } from "../iModelTiles/IModelTile";
 import { useIModelData } from "./useIModelData";
@@ -93,10 +80,8 @@ export interface IModelGridProps {
   ) => IModelFull[];
   /**Component to show when there is no iModel */
   emptyStateComponent?: React.ReactNode;
-  /**  Create IModel Button component */
-  createIModelButton?: React.ReactNode;
-  /** flag to show search toolbar component along with view */
-  showSearchToolbar?: boolean;
+  /**  Search text for IModels */
+  searchText?: string;
   /**iModel view mode */
   viewMode?: IModelViewType;
 }
@@ -116,16 +101,9 @@ export const IModelGrid = ({
   useIndividualState,
   postProcessCallback,
   emptyStateComponent,
-  createIModelButton,
-  showSearchToolbar,
+  searchText,
   viewMode,
 }: IModelGridProps) => {
-  const [searchText, setSearchText] = useState("");
-  const [textValue, setTextValue] = useState("");
-
-  const [view, setView] = useState<IModelViewType>(viewMode ?? "tileView");
-  const searchRef = React.useRef(null);
-  const closeRef = React.useRef(null);
   const strings = _mergeStrings(
     {
       tableColumnName: "Name",
@@ -158,8 +136,6 @@ export const IModelGrid = ({
     strings,
   });
 
-  const handleChange = (value: string) => setTextValue(value);
-
   const iModels = React.useMemo(
     () =>
       postProcessCallback?.([...fetchediModels], fetchStatus, searchText) ??
@@ -182,59 +158,7 @@ export const IModelGrid = ({
   const renderIModelGridStructure = () => {
     return (
       <>
-        {showSearchToolbar && (
-          <div className="iac-search-toolbar">
-            {!!createIModelButton && <div>{createIModelButton}</div>}
-            <div className="iac-search-toolbar-input">
-              <LabeledInput
-                label={""}
-                placeholder="Search..."
-                type="text"
-                id="searchText"
-                name="searchText"
-                onInput={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  handleChange(e.target.value);
-                  debounce(setSearchText(e.target.value), 500);
-                }}
-                value={textValue}
-                iconDisplayStyle="inline"
-                svgIcon={
-                  searchText?.trim() ? (
-                    <div
-                      ref={closeRef}
-                      onClick={() => {
-                        setTextValue("");
-                        setSearchText("");
-                      }}
-                    >
-                      <SvgClose />
-                    </div>
-                  ) : (
-                    <div ref={searchRef}>
-                      <SvgSearch />
-                    </div>
-                  )
-                }
-              />
-              <Tooltip reference={searchRef} content="Search" />
-              <ButtonGroup className="iac-view-toolbar">
-                <IconButton
-                  onClick={() => setView("tileView")}
-                  isActive={view === "tileView"}
-                >
-                  <SvgThumbnails />
-                </IconButton>
-                <IconButton
-                  onClick={() => setView("listView")}
-                  isActive={view === "listView"}
-                >
-                  <SvgList />
-                </IconButton>
-              </ButtonGroup>
-            </div>
-          </div>
-        )}
-        {view === "tileView" ? (
+        {viewMode === "tile" ? (
           <GridStructure>
             {fetchStatus === DataStatus.Fetching ? (
               <>

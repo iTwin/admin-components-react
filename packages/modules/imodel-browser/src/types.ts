@@ -80,4 +80,4 @@ export type IModelSortOptionsKeys = "name";
 /** Object/function that configure IModel sorting behavior. */
 export type IModelSortOptions = SortOptions<IModelFull, IModelSortOptionsKeys>;
 
-export type IModelViewType = "tileView" | "listView";
+export type IModelViewType = "tile" | "cells";
