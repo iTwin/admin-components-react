@@ -116,6 +116,7 @@ export const VersionModal = (props: VersionModalProps) => {
         <ModalButtonBar>
           <Button
             styleType="high-visibility"
+            data-testId="action-button-1"
             onClick={() => onActionClick(version.name, version.description)}
             disabled={
               !version.name ||
@@ -126,7 +127,9 @@ export const VersionModal = (props: VersionModalProps) => {
           >
             {actionName}
           </Button>
-          <Button onClick={onClose}>{stringsOverrides.cancel}</Button>
+          <Button data-testId="action-button-2" onClick={onClose}>
+            {stringsOverrides.cancel}
+          </Button>
         </ModalButtonBar>
         {isLoading && (
           <div className="iui-progress-indicator-overlay">

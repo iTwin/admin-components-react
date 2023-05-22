@@ -71,8 +71,8 @@ describe("VersionModal", () => {
       screen.getAllByText("The value exceeds allowed 255 characters.").length
     ).toBe(2);
 
-    const actionButton = document.querySelector(
-      "[data-iui-variant=high-visibility]"
+    const actionButton = screen.getByTestId(
+      "action-button-1"
     ) as HTMLButtonElement;
     expect(actionButton).toBeTruthy();
     expect(actionButton.disabled).toBe(true);
@@ -81,8 +81,8 @@ describe("VersionModal", () => {
   it("should disable action button when name is missing", () => {
     renderComponent();
 
-    const actionButton = document.querySelector(
-      "[data-iui-variant=high-visibility]"
+    const actionButton = screen.getByTestId(
+      "action-button-1"
     ) as HTMLButtonElement;
     expect(actionButton).toBeTruthy();
     expect(actionButton.disabled).toBe(true);
@@ -109,8 +109,8 @@ describe("VersionModal", () => {
       target: { value: "test description" },
     });
 
-    const actionButton = document.querySelector(
-      "[data-iui-variant=high-visibility]"
+    const actionButton = screen.getByTestId(
+      "action-button-1"
     ) as HTMLButtonElement;
     expect(actionButton).toBeTruthy();
     expect(actionButton.disabled).toBe(true);
