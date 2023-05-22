@@ -25,7 +25,6 @@
     "react-intersection-observer": "^8.31.1"
   },
   "devDependencies": {
-    "@itwin/itwinui-css": "^1.2.0",
     "@rollup/plugin-commonjs": "~17.1.0",
     "@svgr/rollup": "^5.5.0",
     "@testing-library/react-hooks": "^5.1.0",

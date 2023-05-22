@@ -19,7 +19,6 @@
     "clean": "rimraf cjs esm"
   },
   "dependencies": {
-    "@itwin/itwinui-css": "^1.2.0",
     "@itwin/itwinui-icons-react": "^1.2.0",
     "@itwin/itwinui-react": "^2.2.0"
   },
