@@ -61,7 +61,6 @@ export const IModelTile = ({
       moreOptions={moreOptions}
       thumbnail={
         <IModelThumbnail
-          className={"iui-picture"}
           iModelId={iModel?.id}
           accessToken={accessToken}
           onClick={() => onThumbnailClick?.(iModel)}

@@ -2,8 +2,6 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import "./ITwinTile.scss";
-
 import { Badge, Tile, TileProps } from "@itwin/itwinui-react";
 import React from "react";
 
@@ -79,11 +77,10 @@ export const ITwinTile = ({
       moreOptions={moreOptions}
       thumbnail={
         <span
-          className={"iui-picture iac-iTwin-thumbnail"}
           onClick={() => onThumbnailClick?.(iTwin)}
           style={{ cursor: onThumbnailClick ? "pointer" : "auto" }}
         >
-          <ITwinIcon className={"iac-iTwin-thumbnail"} />
+          <ITwinIcon />
         </span>
       }
       {...(tileProps ?? {})}
