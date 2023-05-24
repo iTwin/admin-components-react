@@ -67,7 +67,7 @@ addons.register("project/toolbar", () => {
             ],
           });
           const response = await fetch(
-            "https://qa-api.bentley.com/projects/favorites",
+            "https://qa-api.bentley.com/itwins/favorites?subClass=Project",
             {
               headers: { Authorization: globals.accessToken },
             }
@@ -76,7 +76,7 @@ addons.register("project/toolbar", () => {
             const result = await response.text();
             const projects = JSON.parse(
               result.substring(0, result.indexOf("],")) + "]}"
-            ).projects;
+            ).iTwins;
 
             if (projects.length === 0) {
               projects.push({
@@ -84,7 +84,7 @@ addons.register("project/toolbar", () => {
                   "'Favorite' a project in CONNECT (QA) to show it here, refresh this page to see the results",
               });
             }
-            setState({ projects });
+            setState({ projects: projects });
           }
         } catch (e) {
           console.error("Error", e);
