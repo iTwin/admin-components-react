@@ -3,15 +3,16 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 
-/** Debounce function
+import { IModelFull } from "../types";
+
+/** Lazy loading function for iModels
  * @private
  */
-export const debounce = (func: any, delay = 500) => {
-  let timeout: any;
-  return (value: any) => {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => {
-      func(value);
-    }, delay);
-  };
+
+export const generateData = (
+  start: number,
+  end: number,
+  iModels: IModelFull[]
+) => {
+  return iModels.slice(start, end);
 };

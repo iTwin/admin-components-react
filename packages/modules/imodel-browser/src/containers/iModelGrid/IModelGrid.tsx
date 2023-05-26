@@ -5,7 +5,7 @@
 import "./IModelGrid.scss";
 
 import { Table } from "@itwin/itwinui-react";
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { InView } from "react-intersection-observer";
 
 import { GridStructure } from "../../components/gridStructure/GridStructure";
@@ -19,6 +19,7 @@ import {
 } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
 import { ContextMenuBuilderItem } from "../../utils/_buildMenuOptions";
+import { generateData } from "../../utils/_lazyLoadingIModels";
 import { IModelGhostTile } from "../iModelTiles/IModelGhostTile";
 import { IModelTile, IModelTileProps } from "../iModelTiles/IModelTile";
 import { useIModelData } from "./useIModelData";
@@ -130,18 +131,49 @@ export const IModelGrid = ({
     searchText,
   });
 
-  const { columns, onRowClick } = useIModelTableConfig({
-    iModelActions,
-    onThumbnailClick,
-    strings,
-  });
-
   const iModels = React.useMemo(
     () =>
       postProcessCallback?.([...fetchediModels], fetchStatus, searchText) ??
       fetchediModels,
     [postProcessCallback, fetchediModels, fetchStatus, searchText]
   );
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [initialIModels, setInitialIModels] = useState<IModelFull[]>([]);
+
+  useEffect(() => {
+    setInitialIModels(generateData(0, 10, iModels));
+  }, [iModels]);
+
+  const loadRemainingIModels = useCallback(() => {
+    const remainingIModels = iModels.length - initialIModels.length;
+
+    if (remainingIModels >= 10) {
+      setIsLoading(true);
+      const newData = generateData(
+        initialIModels.length,
+        initialIModels.length + 10,
+        iModels
+      );
+      setInitialIModels((prevData) => [...prevData, ...newData]);
+      setIsLoading(false);
+    } else if (remainingIModels > 0) {
+      setIsLoading(true);
+      const newData = generateData(
+        initialIModels.length,
+        initialIModels.length + remainingIModels,
+        iModels
+      );
+      setInitialIModels((prevData) => [...prevData, ...newData]);
+      setIsLoading(false);
+    }
+  }, [initialIModels, iModels]);
+
+  const { columns, onRowClick } = useIModelTableConfig({
+    iModelActions,
+    onThumbnailClick,
+    strings,
+  });
 
   const noResultsText = {
     [DataStatus.Fetching]: "",
@@ -199,15 +231,19 @@ export const IModelGrid = ({
         ) : (
           <Table<{ [P in keyof IModelFull]: IModelFull[P] }>
             columns={columns}
-            data={iModels}
+            data={initialIModels}
             onRowClick={onRowClick}
             emptyTableContent={
               fetchStatus === DataStatus.Fetching
                 ? strings.tableLoadingData
                 : strings.noIModelSearch
             }
+            isLoading={isLoading}
             isSortable
+            onBottomReached={loadRemainingIModels}
             className="iac-list-structure"
+            autoResetFilters={false}
+            autoResetSortBy={false}
           />
         )}
       </>
