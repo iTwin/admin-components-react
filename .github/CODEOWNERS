@@ -16,21 +16,21 @@ common/changes/@itwin/imodel-browser-react/ @raplemie
 packages/apps/storybook/src/imodel-browser/ @raplemie
 
 # delete-imodel
-packages/modules/delete-imodel/ @bentleyvk @veekeys
-common/changes/@itwin/delete-imodel-react/ @bentleyvk @veekeys
-packages/apps/storybook/src/delete-imodel/ @bentleyvk @veekeys
+packages/modules/delete-imodel/ @veekeys
+common/changes/@itwin/delete-imodel-react/ @veekeys
+packages/apps/storybook/src/delete-imodel/ @veekeys
 
 # manage-versions
-packages/modules/manage-versions/ @bentleyvk @veekeys
-common/changes/@itwin/manage-versions-react/ @bentleyvk @veekeys
-packages/apps/storybook/src/manage-versions/ @bentleyvk @veekeys
+packages/modules/manage-versions/ @veekeys
+common/changes/@itwin/manage-versions-react/ @veekeys
+packages/apps/storybook/src/manage-versions/ @veekeys
 
 # create-imodel
-packages/modules/create-imodel/ @bentleyvk @veekeys
-common/changes/@itwin/create-imodel-react/ @bentleyvk @veekeys
-packages/apps/storybook/src/create-imodel/ @bentleyvk @veekeys
+packages/modules/create-imodel/ @veekeys
+common/changes/@itwin/create-imodel-react/ @veekeys
+packages/apps/storybook/src/create-imodel/ @veekeys
 
 # delete-itwin
-packages/modules/delete-itwin/ @bentleyvk @williamkbentley
-common/changes/@itwin/delete-itwin-react/ @bentleyvk @williamkbentley
-packages/apps/storybook/src/delete-itwin/ @bentleyvk @williamkbentley
+packages/modules/delete-itwin/ @williamkbentley
+common/changes/@itwin/delete-itwin-react/ @williamkbentley
+packages/apps/storybook/src/delete-itwin/ @williamkbentley
