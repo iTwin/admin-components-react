@@ -71,20 +71,20 @@ describe("VersionModal", () => {
       screen.getAllByText("The value exceeds allowed 255 characters.").length
     ).toBe(2);
 
-    const actionButton = screen.getByTestId(
-      "action-button-1"
-    ) as HTMLButtonElement;
-    expect(actionButton).toBeTruthy();
+    const actionButton = screen
+      .getByText("Action")
+      .closest("button") as HTMLButtonElement;
+    expect(actionButton).not.toBeUndefined();
     expect(actionButton.disabled).toBe(true);
   });
 
   it("should disable action button when name is missing", () => {
     renderComponent();
 
-    const actionButton = screen.getByTestId(
-      "action-button-1"
-    ) as HTMLButtonElement;
-    expect(actionButton).toBeTruthy();
+    const actionButton = screen
+      .getByText("Action")
+      .closest("button") as HTMLButtonElement;
+    expect(actionButton).not.toBeUndefined();
     expect(actionButton.disabled).toBe(true);
   });
 
@@ -109,10 +109,10 @@ describe("VersionModal", () => {
       target: { value: "test description" },
     });
 
-    const actionButton = screen.getByTestId(
-      "action-button-1"
-    ) as HTMLButtonElement;
-    expect(actionButton).toBeTruthy();
+    const actionButton = screen
+      .getByText("Action")
+      .closest("button") as HTMLButtonElement;
+    expect(actionButton).not.toBeUndefined();
     expect(actionButton.disabled).toBe(true);
   });
 
