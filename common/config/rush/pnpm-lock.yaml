@@ -4,9 +4,8 @@ dependencies:
   '@bentley/frontend-authorization-client': 2.11.0_124fd8799cc8196bebc67d27cf7bf3e3
   '@bentley/itwin-client': 2.11.0_@bentley+bentleyjs-core@2.11.0
   '@bentley/react-scripts': 4.0.3-dev.0_50d7c7cc35d90fd285da64a7b1030eba
-  '@itwin/itwinui-css': 1.10.3
-  '@itwin/itwinui-icons-react': 1.5.1_react-dom@17.0.2+react@17.0.2
-  '@itwin/itwinui-react': 2.10.1_react-dom@17.0.2+react@17.0.2
+  '@itwin/itwinui-icons-react': 2.2.0_react-dom@17.0.2+react@17.0.2
+  '@itwin/itwinui-react': 2.11.2_react-dom@17.0.2+react@17.0.2
   '@rollup/plugin-commonjs': 17.1.0_rollup@2.66.1
   '@rollup/plugin-image': 2.1.1_rollup@2.66.1
   '@rush-temp/admin-components-react-scripts': file:projects/admin-components-react-scripts.tgz
@@ -2104,7 +2103,11 @@ packages:
     dev: false
     resolution:
       integrity: sha1-lvG3rxI9yn3tp/TgL+ng3snFB8A=
-  /@itwin/itwinui-icons-react/1.16.0_react-dom@17.0.2+react@17.0.2:
+  /@itwin/itwinui-css/1.11.1:
+    dev: false
+    resolution:
+      integrity: sha1-PIcQBGSwMQfVW7Ta+NSVRHUU7ZY=
+  /@itwin/itwinui-icons-react/2.2.0_react-dom@17.0.2+react@17.0.2:
     dependencies:
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
@@ -2113,17 +2116,7 @@ packages:
       react: '>=16.8.6'
       react-dom: '>=16.8.6'
     resolution:
-      integrity: sha1-QIY/cGjZSK4RatI5aYp7roma6UA=
-  /@itwin/itwinui-icons-react/1.5.1_react-dom@17.0.2+react@17.0.2:
-    dependencies:
-      react: 17.0.2
-      react-dom: 17.0.2_react@17.0.2
-    dev: false
-    peerDependencies:
-      react: ^16.8.6 || ^17.0.0
-      react-dom: ^16.8.6 || ^17.0.0
-    resolution:
-      integrity: sha512-QANle8HPvHe7EXR15jVkGKZR4eU0d9P4uBSzxiBxr888iX1f3CXpV04h5Lt2D4TZSPe+A6z6n0nzaIikciBA3g==
+      integrity: sha1-HTBzKmlLX7XBswNyEMflHrQrRYw=
   /@itwin/itwinui-illustrations-react/2.0.1_react-dom@17.0.2+react@17.0.2:
     dependencies:
       react: 17.0.2
@@ -2134,9 +2127,9 @@ packages:
       react-dom: '>=16.8.6'
     resolution:
       integrity: sha1-bhvijqkkwLc+KBb3t70axXhgPNw=
-  /@itwin/itwinui-react/2.10.1_react-dom@17.0.2+react@17.0.2:
+  /@itwin/itwinui-react/2.11.2_react-dom@17.0.2+react@17.0.2:
     dependencies:
-      '@itwin/itwinui-css': 1.10.3
+      '@itwin/itwinui-css': 1.11.1
       '@itwin/itwinui-illustrations-react': 2.0.1_react-dom@17.0.2+react@17.0.2
       '@itwin/itwinui-variables': 2.0.0
       '@tippyjs/react': 4.2.6_react-dom@17.0.2+react@17.0.2
@@ -2152,7 +2145,7 @@ packages:
       react: '>=16.8.6 < 19.0.0'
       react-dom: '>=16.8.6 < 19.0.0'
     resolution:
-      integrity: sha1-0R46rWv/hQbjMG2s7Uu8iqoaC2Y=
+      integrity: sha1-AEm3UbfYglXozUQ+3pdsMQXpLPM=
   /@itwin/itwinui-variables/2.0.0:
     dev: false
     resolution:
@@ -20641,7 +20634,7 @@ packages:
   file:projects/create-imodel-react.tgz_babel-eslint@10.1.0:
     dependencies:
       '@itwin/itwinui-css': 1.10.3
-      '@itwin/itwinui-react': 2.10.1_react-dom@17.0.2+react@17.0.2
+      '@itwin/itwinui-react': 2.11.2_react-dom@17.0.2+react@17.0.2
       '@rollup/plugin-commonjs': 17.1.0_rollup@2.66.1
       '@testing-library/react': 11.2.7_react-dom@17.0.2+react@17.0.2
       '@types/jest': 26.0.24
@@ -20681,14 +20674,14 @@ packages:
     peerDependencies:
       babel-eslint: '*'
     resolution:
-      integrity: sha512-dNS0pOYNvHXHn9id2Og9SQ/ehAo0vAqVEbbiOLlCuXgbK02JD+iMqOt5NvSByYSrGsC1eaZQjN4tP0qOIpRWEQ==
+      integrity: sha512-/tfDRI8sUJzYAJI4L1THfUTRfIqXnKmjY2onuqvcEk7Cm+VENIXcRkuJgov+6cRfjKcmzV5FoL0m4r4fNgyrYQ==
       tarball: file:projects/create-imodel-react.tgz
     version: 0.0.0
   file:projects/delete-imodel-react.tgz_babel-eslint@10.1.0:
     dependencies:
       '@itwin/itwinui-css': 1.10.3
-      '@itwin/itwinui-icons-react': 1.16.0_react-dom@17.0.2+react@17.0.2
-      '@itwin/itwinui-react': 2.10.1_react-dom@17.0.2+react@17.0.2
+      '@itwin/itwinui-icons-react': 2.2.0_react-dom@17.0.2+react@17.0.2
+      '@itwin/itwinui-react': 2.11.2_react-dom@17.0.2+react@17.0.2
       '@rollup/plugin-commonjs': 17.1.0_rollup@2.66.1
       '@rollup/plugin-image': 2.1.1_rollup@2.66.1
       '@testing-library/react': 11.2.7_react-dom@17.0.2+react@17.0.2
@@ -20729,14 +20722,14 @@ packages:
     peerDependencies:
       babel-eslint: '*'
     resolution:
-      integrity: sha512-m2q70W+l9gwP0g3LDocQXJE5uUZJ8a13hJaB6zM3958bGaqifXURLZ0Vda1GvdL0q46Z2HV6GhR6mGTk9jjvmw==
+      integrity: sha512-HA+xs40wAwmQirpdhaqWKP9syTvQ+xuaQ/lpD+44XtNnuTj1yfo30FyU4Nvjuh7WyUNYA8BdjWJTdAsIsT2sKQ==
       tarball: file:projects/delete-imodel-react.tgz
     version: 0.0.0
   file:projects/delete-itwin-react.tgz_babel-eslint@10.1.0:
     dependencies:
       '@itwin/itwinui-css': 1.10.3
-      '@itwin/itwinui-icons-react': 1.16.0_react-dom@17.0.2+react@17.0.2
-      '@itwin/itwinui-react': 2.10.1_react-dom@17.0.2+react@17.0.2
+      '@itwin/itwinui-icons-react': 2.2.0_react-dom@17.0.2+react@17.0.2
+      '@itwin/itwinui-react': 2.11.2_react-dom@17.0.2+react@17.0.2
       '@rollup/plugin-commonjs': 17.1.0_rollup@2.66.1
       '@rollup/plugin-image': 2.1.1_rollup@2.66.1
       '@testing-library/react': 11.2.7_react-dom@17.0.2+react@17.0.2
@@ -20777,14 +20770,14 @@ packages:
     peerDependencies:
       babel-eslint: '*'
     resolution:
-      integrity: sha512-yWZBwdODgPk5+QK6k5jUwqjMJ+lxldvqdppyFthRE/t63DnKhjMD2CWkd1PpKlrF1AiKNJFBs9a4rcVYIyTnGg==
+      integrity: sha512-yNke6n1A2YRyopw0WNksAEvcNXjBWty7KiN8tYRzJYCWca6fudT86ShZwRlbpOa/ju40bywMEAvDJVY8IBOd1Q==
       tarball: file:projects/delete-itwin-react.tgz
     version: 0.0.0
   file:projects/imodel-browser-react.tgz:
     dependencies:
       '@itwin/itwinui-css': 1.10.3
-      '@itwin/itwinui-icons-react': 1.16.0_react-dom@17.0.2+react@17.0.2
-      '@itwin/itwinui-react': 2.10.1_react-dom@17.0.2+react@17.0.2
+      '@itwin/itwinui-icons-react': 2.2.0_react-dom@17.0.2+react@17.0.2
+      '@itwin/itwinui-react': 2.11.2_react-dom@17.0.2+react@17.0.2
       '@rollup/plugin-commonjs': 17.1.0_rollup@2.66.1
       '@svgr/rollup': 5.5.0
       '@testing-library/react': 11.2.7_react-dom@17.0.2+react@17.0.2
@@ -20835,14 +20828,14 @@ packages:
     dev: false
     name: '@rush-temp/imodel-browser-react'
     resolution:
-      integrity: sha512-sMxQveotUerhkArnRCTlis1h3emY2pkHbTfoGjJQb2opTbmiA0jCb8RZKUn1c0SM+EjV+sa4Y9QTQ5y6erByMA==
+      integrity: sha512-D3Mw3D9riCZuFBZoznbnv3JdVt0E3fexzEAw7bBJTiv8TRXuqjlAsQ2LZ4L6wAWbjbroRb16ofebLy6V/2M4sQ==
       tarball: file:projects/imodel-browser-react.tgz
     version: 0.0.0
   file:projects/manage-versions-react.tgz_babel-eslint@10.1.0:
     dependencies:
       '@itwin/itwinui-css': 1.10.3
-      '@itwin/itwinui-icons-react': 1.16.0_react-dom@17.0.2+react@17.0.2
-      '@itwin/itwinui-react': 2.10.1_react-dom@17.0.2+react@17.0.2
+      '@itwin/itwinui-icons-react': 2.2.0_react-dom@17.0.2+react@17.0.2
+      '@itwin/itwinui-react': 2.11.2_react-dom@17.0.2+react@17.0.2
       '@rollup/plugin-commonjs': 17.1.0_rollup@2.66.1
       '@testing-library/react': 11.2.7_react-dom@17.0.2+react@17.0.2
       '@types/classnames': 2.3.1
@@ -20885,7 +20878,7 @@ packages:
     peerDependencies:
       babel-eslint: '*'
     resolution:
-      integrity: sha512-9rZmzLFE/HLNZasLaOFlF+QfpVhXHllj7DbPiicAqZFcYHsErALWzH4YqPC8lkhSTNDjNAR4IIVrpUL6KAFw/g==
+      integrity: sha512-pcRW3fQVw0lO4Yj3KrmAzMHn62Q6K/QLrioo2jC/SkrkYwA7S59JPEFXuXCvG85X70MIfjejGdSdOyBvYDipJg==
       tarball: file:projects/manage-versions-react.tgz
     version: 0.0.0
   file:projects/platform-storybook.tgz_73e57467d4a9a5e376d6b84b6ab4e4b9:
@@ -20894,7 +20887,7 @@ packages:
       '@bentley/bentleyjs-core': 2.11.0
       '@bentley/frontend-authorization-client': 2.11.0_124fd8799cc8196bebc67d27cf7bf3e3
       '@bentley/itwin-client': 2.11.0_@bentley+bentleyjs-core@2.11.0
-      '@itwin/itwinui-react': 2.10.1_react-dom@17.0.2+react@17.0.2
+      '@itwin/itwinui-react': 2.11.2_react-dom@17.0.2+react@17.0.2
       '@storybook/addon-actions': 6.4.14_b3482aaf5744fc7c2aeb7941b0e0a78f
       '@storybook/addon-essentials': 6.4.14_f84b9430047978b24fe647d3d2a7c0df
       '@storybook/addon-links': 6.4.14_react-dom@17.0.2+react@17.0.2
@@ -20933,7 +20926,7 @@ packages:
       prettier: '*'
       typescript: '*'
     resolution:
-      integrity: sha512-upiO5XzL6xe8lbHjsS2qFho8cWa3arP8x0SEdI/ZbOGlv1Te2XcypoxurazuV3juGo1oXMYL4AJlvOOmwdq6yQ==
+      integrity: sha512-sOzIK1ICxvRwDZNMAfpwbwB4LXM/W7I7DRUL+4Y+P09Ag7sRogDEpUcEPrNXMTJyT9YvLTKx3U2D4wCLrY8lAg==
       tarball: file:projects/platform-storybook.tgz
     version: 0.0.0
   file:projects/storybook-auth-addon.tgz_node-sass@6.0.1+prettier@2.5.1:
@@ -20983,9 +20976,8 @@ specifiers:
   '@bentley/frontend-authorization-client': 2.11.0
   '@bentley/itwin-client': 2.11.0
   '@bentley/react-scripts': 4.0.3-dev.0
-  '@itwin/itwinui-css': ^1.2.0
-  '@itwin/itwinui-icons-react': ^1.2.0
-  '@itwin/itwinui-react': ^2.2.0
+  '@itwin/itwinui-icons-react': ^2.2.0
+  '@itwin/itwinui-react': ^2.11.2
   '@rollup/plugin-commonjs': ~17.1.0
   '@rollup/plugin-image': ^2.0.6
   '@rush-temp/admin-components-react-scripts': file:./projects/admin-components-react-scripts.tgz

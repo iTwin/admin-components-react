@@ -20,7 +20,7 @@
     "esm/**/*"
   ],
   "dependencies": {
-    "@itwin/itwinui-icons-react": "^1.2.0",
+    "@itwin/itwinui-icons-react": "^2.2.0",
     "@itwin/itwinui-react": "^2.11.2",
     "classnames": "^2.2.6"
   },
