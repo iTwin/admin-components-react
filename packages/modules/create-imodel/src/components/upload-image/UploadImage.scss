@@ -8,7 +8,6 @@
   height: 75px;
   overflow: hidden;
   position: relative;
-  border: 1px solid #c7ccd1;
 
   >img {
     position: absolute;
@@ -21,7 +20,7 @@
   display: flex;
   width: 100%;
   max-width: 600px;
-  border: 1px solid rgba(var(--iui-color-foreground-body-rgb), var(--iui-opacity-4));
+  border: 1px solid var(--iui-color-border);
   align-items: center;
   box-sizing: border-box;
 }
