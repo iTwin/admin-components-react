@@ -2,6 +2,8 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+import "./CreateIModel.css";
+
 import {
   ButtonBar,
   CreateIModel as ExternalComponent,
@@ -71,16 +73,9 @@ export const WithExtentMap: Story<CreateIModelProps> = withAccessTokenOverride(
 export const CreateIModelCustomized: Story<CreateIModelProps> =
   withAccessTokenOverride((args) => {
     return (
-      <>
+      <div className="iModelCustomized">
         <CreateIModel {...args}>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "8px",
-              alignItems: "center",
-            }}
-          >
+          <div className="container">
             <IModelName />
             <LabeledInput
               label={"Sub title"}
@@ -105,6 +100,6 @@ export const CreateIModelCustomized: Story<CreateIModelProps> =
             <ButtonBar />
           </div>
         </CreateIModel>
-      </>
+      </div>
     );
   });

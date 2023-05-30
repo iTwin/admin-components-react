@@ -12,7 +12,7 @@ import {
 } from "../../utils/_buildMenuOptions";
 import { IModelThumbnail } from "../iModelThumbnail/IModelThumbnail";
 
-export interface IModelTileProps {
+export type IModelTileProps = {
   /** iModel to display */
   iModel: IModelFull;
   /** Access token to display */
@@ -25,7 +25,7 @@ export interface IModelTileProps {
   tileProps?: Partial<TileProps>;
   /** Object that configures different overrides for the API */
   apiOverrides?: ApiOverrides;
-}
+};
 
 /**
  * Representation of an IModel

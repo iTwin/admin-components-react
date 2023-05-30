@@ -13,7 +13,7 @@ import {
   ContextMenuBuilderItem,
 } from "../../utils/_buildMenuOptions";
 
-export interface ITwinTileProps {
+export type ITwinTileProps = {
   /** iTwin to display */
   iTwin: ITwinFull;
   /** List of options to build for the iTwin context menu */
@@ -29,7 +29,7 @@ export interface ITwinTileProps {
   };
   /** Tile props that will be applied after normal use. (Will override ITwinTile if used) */
   tileProps?: Partial<TileProps>;
-}
+};
 
 /**
  * Representation of an iTwin
