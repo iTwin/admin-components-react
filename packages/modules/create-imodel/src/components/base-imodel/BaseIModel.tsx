@@ -4,7 +4,12 @@
  *--------------------------------------------------------------------------------------------*/
 import "./BaseIModel.scss";
 
-import { LabeledInput, ProgressRadial, Title } from "@itwin/itwinui-react";
+import {
+  LabeledInput,
+  ProgressRadial,
+  ThemeProvider,
+  Title,
+} from "@itwin/itwinui-react";
 import React from "react";
 
 import { BaseIModel, ExtentPoint, iModelExtent } from "../../types";
@@ -262,7 +267,7 @@ export function BaseIModelPage(props: BaseIModelProps) {
   };
 
   return (
-    <>
+    <ThemeProvider theme="inherit">
       <InnerIModelContext.Provider
         value={{
           nameString: updatedStrings?.nameString,
@@ -324,7 +329,7 @@ export function BaseIModelPage(props: BaseIModelProps) {
           )}
         </IModelContext.Provider>
       </InnerIModelContext.Provider>
-    </>
+    </ThemeProvider>
   );
 }
 

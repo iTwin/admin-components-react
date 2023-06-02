@@ -27,7 +27,7 @@ export type IndividualITwinStateHook = (
   }
 ) => Partial<ITwinTileProps>;
 
-export type ITwinGridProps = {
+export interface ITwinGridProps {
   /** Access token that requires the `itwins:read` scope. */
   accessToken?: string | undefined;
   /** Type of iTwin to request */
@@ -73,7 +73,7 @@ export type ITwinGridProps = {
     iTwins: ITwinFull[],
     fetchStatus: DataStatus | undefined
   ) => ITwinFull[];
-};
+}
 
 /**
  * Component that will allow displaying a grid of iTwins, given a requestType

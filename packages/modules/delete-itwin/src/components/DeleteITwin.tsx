@@ -10,6 +10,7 @@ import {
   Modal,
   ModalButtonBar,
   ProgressRadial,
+  ThemeProvider,
   toaster,
 } from "@itwin/itwinui-react";
 import React from "react";
@@ -98,7 +99,7 @@ export const DeleteITwin = (props: DeleteITwinProps) => {
   }, [onClose]);
 
   return (
-    <>
+    <ThemeProvider theme="inherit">
       <Modal
         isOpen={isOpen}
         style={{ maxWidth: 600 }}
@@ -125,7 +126,7 @@ export const DeleteITwin = (props: DeleteITwinProps) => {
         </ModalButtonBar>
       </Modal>
       {isLoading && <OverlaySpinner />}
-    </>
+    </ThemeProvider>
   );
 };
 

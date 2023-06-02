@@ -12,7 +12,7 @@ import { useInView } from "react-intersection-observer";
 import { ApiOverrides } from "../../types";
 import { useIModelThumbnail } from "./useIModelThumbnail";
 
-export type IModelThumbnailProps = {
+export interface IModelThumbnailProps {
   className?: string;
   /** Id of the iModel to fetch thumbnail for */
   iModelId: string;
@@ -25,7 +25,7 @@ export type IModelThumbnailProps = {
    * @property serverEnvironmentPrefix Either qa or dev
    */
   apiOverrides?: ApiOverrides<string>;
-};
+}
 
 /** Clickable iModel thumbnail, fetched from the servers */
 export const IModelThumbnail = ({

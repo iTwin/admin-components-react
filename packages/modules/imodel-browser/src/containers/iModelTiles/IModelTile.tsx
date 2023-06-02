@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { Tile, TileProps } from "@itwin/itwinui-react";
+import { ThemeProvider, Tile, TileProps } from "@itwin/itwinui-react";
 import React from "react";
 
 import { ApiOverrides, IModelFull } from "../../types";
@@ -12,7 +12,7 @@ import {
 } from "../../utils/_buildMenuOptions";
 import { IModelThumbnail } from "../iModelThumbnail/IModelThumbnail";
 
-export type IModelTileProps = {
+export interface IModelTileProps {
   /** iModel to display */
   iModel: IModelFull;
   /** Access token to display */
@@ -25,7 +25,7 @@ export type IModelTileProps = {
   tileProps?: Partial<TileProps>;
   /** Object that configures different overrides for the API */
   apiOverrides?: ApiOverrides;
-};
+}
 
 /**
  * Representation of an IModel
@@ -50,24 +50,26 @@ export const IModelTile = ({
         }
       : undefined;
   return (
-    <Tile
-      key={iModel?.id}
-      name={<span title={iModel?.displayName}>{iModel?.displayName}</span>}
-      description={
-        <span title={iModel?.description ?? ""}>
-          {iModel?.description ?? ""}
-        </span>
-      }
-      moreOptions={moreOptions}
-      thumbnail={
-        <IModelThumbnail
-          iModelId={iModel?.id}
-          accessToken={accessToken}
-          onClick={() => onThumbnailClick?.(iModel)}
-          apiOverrides={thumbnailApiOverride}
-        />
-      }
-      {...(tileProps ?? {})}
-    />
+    <ThemeProvider theme="inherit">
+      <Tile
+        key={iModel?.id}
+        name={<span title={iModel?.displayName}>{iModel?.displayName}</span>}
+        description={
+          <span title={iModel?.description ?? ""}>
+            {iModel?.description ?? ""}
+          </span>
+        }
+        moreOptions={moreOptions}
+        thumbnail={
+          <IModelThumbnail
+            iModelId={iModel?.id}
+            accessToken={accessToken}
+            onClick={() => onThumbnailClick?.(iModel)}
+            apiOverrides={thumbnailApiOverride}
+          />
+        }
+        {...(tileProps ?? {})}
+      />
+    </ThemeProvider>
   );
 };

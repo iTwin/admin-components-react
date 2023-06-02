@@ -19,7 +19,7 @@ import { IModelGhostTile } from "../iModelTiles/IModelGhostTile";
 import { IModelTile, IModelTileProps } from "../iModelTiles/IModelTile";
 import { useIModelData } from "./useIModelData";
 
-export type IModelGridProps = {
+export interface IModelGridProps {
   /**
    * Access token that requires the `imodels:read` scope. */
   accessToken?: string | undefined;
@@ -65,7 +65,7 @@ export type IModelGridProps = {
   ) => IModelFull[];
   /**Component to show when there is no iModel */
   emptyStateComponent?: React.ReactNode;
-};
+}
 
 /**
  * Component that will allow displaying a grid of iModels, given a contextId

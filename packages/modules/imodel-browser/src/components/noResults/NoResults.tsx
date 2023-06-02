@@ -9,10 +9,10 @@ import { Leading } from "@itwin/itwinui-react";
 import classnames from "classnames";
 import React from "react";
 
-export type NoResultsProps = {
+export interface NoResultsProps {
   /** Displayed text */
   text: string;
-};
+}
 
 /** Pre-formatted empty result page */
 export const NoResults = ({ text }: NoResultsProps) => {
