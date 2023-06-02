@@ -5,9 +5,10 @@
 
 .iac-image-container {
   width: 87.5px;
-  height: 75px;
+  height: 50px;
   overflow: hidden;
   position: relative;
+  border: 1px solid #c7ccd1;
 
   >img {
     position: absolute;
