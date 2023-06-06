@@ -38,8 +38,9 @@ export const useIModelData = ({
   const [page, setPage] = React.useState(0);
   const [morePages, setMorePages] = React.useState(true);
   const fetchMore = React.useCallback(() => {
-    setPage((page) => page + 1);
-  }, []);
+    setPage(page + 1);
+  }, [page]);
+
   React.useEffect(() => {
     // If sort changes but we already have all the data,
     // let client side sorting do its job, otherwise, refetch from scratch.
@@ -130,15 +131,13 @@ export const useIModelData = ({
     };
   }, [
     accessToken,
-    projectId,
-    apiOverrides?.data,
     apiOverrides,
+    morePages,
+    page,
+    projectId,
+    searchText,
     sortDescending,
     sortType,
-    page,
-    morePages,
-    searchText,
-    iModels,
   ]);
   return {
     iModels: sortedIModels,

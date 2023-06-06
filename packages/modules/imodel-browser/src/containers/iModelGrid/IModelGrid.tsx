@@ -105,6 +105,7 @@ export const IModelGrid = ({
   searchText,
   viewMode,
 }: IModelGridProps) => {
+  const [sort, setSort] = useState<IModelSortOptions | undefined>(sortOptions);
   const strings = _mergeStrings(
     {
       tableColumnName: "Name",
@@ -127,7 +128,7 @@ export const IModelGrid = ({
     accessToken,
     apiOverrides,
     projectId,
-    sortOptions,
+    sortOptions: sort,
     searchText,
   });
 
@@ -137,37 +138,6 @@ export const IModelGrid = ({
       fetchediModels,
     [postProcessCallback, fetchediModels, fetchStatus, searchText]
   );
-
-  const [isLoading, setIsLoading] = useState(false);
-  const [initialIModels, setInitialIModels] = useState<IModelFull[]>([]);
-
-  useEffect(() => {
-    setInitialIModels(generateData(0, 10, iModels));
-  }, [iModels]);
-
-  const loadRemainingIModels = useCallback(() => {
-    const remainingIModels = iModels.length - initialIModels.length;
-
-    if (remainingIModels >= 10) {
-      setIsLoading(true);
-      const newData = generateData(
-        initialIModels.length,
-        initialIModels.length + 10,
-        iModels
-      );
-      setInitialIModels((prevData) => [...prevData, ...newData]);
-      setIsLoading(false);
-    } else if (remainingIModels > 0) {
-      setIsLoading(true);
-      const newData = generateData(
-        initialIModels.length,
-        initialIModels.length + remainingIModels,
-        iModels
-      );
-      setInitialIModels((prevData) => [...prevData, ...newData]);
-      setIsLoading(false);
-    }
-  }, [initialIModels, iModels]);
 
   const { columns, onRowClick } = useIModelTableConfig({
     iModelActions,
@@ -231,16 +201,19 @@ export const IModelGrid = ({
         ) : (
           <Table<{ [P in keyof IModelFull]: IModelFull[P] }>
             columns={columns}
-            data={initialIModels}
+            data={iModels}
             onRowClick={onRowClick}
             emptyTableContent={
               fetchStatus === DataStatus.Fetching
                 ? strings.tableLoadingData
                 : strings.noIModelSearch
             }
-            isLoading={isLoading}
+            isLoading={fetchStatus === DataStatus.Fetching}
             isSortable
-            onBottomReached={loadRemainingIModels}
+            onSort={() =>
+              setSort({ sortType: "name", descending: !sort?.descending })
+            }
+            onBottomReached={fetchMore}
             className="iac-list-structure"
             autoResetFilters={false}
             autoResetSortBy={false}
