@@ -2,9 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import "./ITwinTile.scss";
-
-import { Badge, Tile, TileProps } from "@itwin/itwinui-react";
+import { Badge, ThemeProvider, Tile, TileProps } from "@itwin/itwinui-react";
 import React from "react";
 
 import ITwinIcon from "../../images/itwin.svg";
@@ -56,37 +54,38 @@ export const ITwinTile = ({
     [iTwinOptions, iTwin]
   );
   return (
-    <Tile
-      key={iTwin?.id}
-      name={<span title={iTwin?.displayName}>{iTwin?.displayName}</span>}
-      description={<span title={iTwin?.number}>{iTwin?.number ?? ""}</span>}
-      badge={
-        iTwin?.status &&
-        iTwin.status.toLocaleLowerCase() !== "active" && (
-          <Badge
-            backgroundColor={
-              iTwin.status.toLocaleLowerCase() === "inactive"
-                ? "#A47854" /** $iui-color-dataviz-oak */
-                : "#4585A5" /** $iui-color-dataviz-steelblue */
-            }
+    <ThemeProvider theme="inherit">
+      <Tile
+        key={iTwin?.id}
+        name={<span title={iTwin?.displayName}>{iTwin?.displayName}</span>}
+        description={<span title={iTwin?.number}>{iTwin?.number ?? ""}</span>}
+        badge={
+          iTwin?.status &&
+          iTwin.status.toLocaleLowerCase() !== "active" && (
+            <Badge
+              backgroundColor={
+                iTwin.status.toLocaleLowerCase() === "inactive"
+                  ? "#A47854" /** $iui-color-background-oak */
+                  : "#4585A5" /** $iui-color-background-steelblue */
+              }
+            >
+              {iTwin.status.toLocaleLowerCase() === "inactive"
+                ? strings.inactiveBadge
+                : strings.trialBadge}
+            </Badge>
+          )
+        }
+        moreOptions={moreOptions}
+        thumbnail={
+          <span
+            onClick={() => onThumbnailClick?.(iTwin)}
+            style={{ cursor: onThumbnailClick ? "pointer" : "auto" }}
           >
-            {iTwin.status.toLocaleLowerCase() === "inactive"
-              ? strings.inactiveBadge
-              : strings.trialBadge}
-          </Badge>
-        )
-      }
-      moreOptions={moreOptions}
-      thumbnail={
-        <span
-          className={"iui-picture iac-iTwin-thumbnail"}
-          onClick={() => onThumbnailClick?.(iTwin)}
-          style={{ cursor: onThumbnailClick ? "pointer" : "auto" }}
-        >
-          <ITwinIcon className={"iac-iTwin-thumbnail"} />
-        </span>
-      }
-      {...(tileProps ?? {})}
-    />
+            <ITwinIcon />
+          </span>
+        }
+        {...(tileProps ?? {})}
+      />
+    </ThemeProvider>
   );
 };

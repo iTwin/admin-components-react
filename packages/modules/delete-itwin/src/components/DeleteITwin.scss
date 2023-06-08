@@ -2,19 +2,16 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-@import "~@itwin/itwinui-css/scss/variables";
 
 .iac-delete-itwin-dialog-title {
   display: flex;
   align-items: center;
 
   .iac-warning-icon {
-    width: $iui-m;
-    height: $iui-m;
-    margin-right: $iui-s;
-    @include themed {
-      fill: t(iui-color-foreground-warning);
-    }
+    width: var(--iui-size-m);
+    height: var(--iui-size-m);
+    margin-right: var(--iui-size-xs);
+    fill: var(--iui-color-icon-warning);
   }
 }
 

@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/create-imodel-react",
+      "comment": "iTwinui-react update to 2.x",
+      "type": "major"
+    }
+  ],
+  "packageName": "@itwin/create-imodel-react"
+}

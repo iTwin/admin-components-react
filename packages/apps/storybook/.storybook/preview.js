@@ -12,16 +12,7 @@ const channel = addons.getChannel();
 
 // switch body class for story along with interface theme
 channel.on("DARK_MODE", (isDark) => {
-  document.documentElement.setAttribute(
-    "data-theme",
-    isDark ? "dark" : "light"
-  );
-  document.documentElement.classList.add(
-    `iui-theme-${isDark ? "dark" : "light"}`
-  );
-  document.documentElement.classList.remove(
-    `iui-theme-${!isDark ? "dark" : "light"}`
-  );
+  document.body.dataset.iuiTheme = isDark ? 'dark' : 'light';
 });
 
 export const parameters = {

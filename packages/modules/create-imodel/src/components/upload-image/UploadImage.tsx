@@ -175,6 +175,7 @@ const PreviewImage = (props: PreviewImageProps) => {
             style={{
               transform:
                 "translate(-50%, -50%) rotate(" + imageRotation + "deg)",
+              width: "100%",
               maxHeight: maxHeight ?? !fitHorizontally ? "100%" : undefined,
               maxWidth: maxWidth ?? fitHorizontally ? "100%" : undefined,
             }}
