@@ -162,6 +162,7 @@ const useIndividualState = (iModel: IModelFull, props: IModelTileProps) => {
           headers: {
             Authorization: props.accessToken ?? "",
             Prefer: "return=minimal",
+            Accept: "application/vnd.bentley.itwin-platform.v2+json",
           },
         }
       );

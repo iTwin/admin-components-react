@@ -1,13 +1,13 @@
 /*---------------------------------------------------------------------------------------------
-* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
-* See LICENSE.md in the project root for license terms and full copyright notice.
-*--------------------------------------------------------------------------------------------*/
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
 
 import React from "react";
 
 export interface ProjectAwareComponentProps {
-  /** Project to know about */
-  projectId: string | undefined;
+  /** iTwin to know about */
+  iTwinId: string | undefined;
 }
 export const ProjectAwareComponent = (props: ProjectAwareComponentProps) => {
   return (
@@ -19,7 +19,7 @@ export const ProjectAwareComponent = (props: ProjectAwareComponentProps) => {
         color: "rgb(var(--buic-foreground-body-rgb))",
       }}
     >
-      Selected Id: {props.projectId ?? "No project selected"}
+      Selected Id: {props.iTwinId ?? "No iTwin selected"}
     </div>
   );
 };

@@ -35,6 +35,8 @@ describe("HttpClient", () => {
               url: "https://someApiUrl.com",
               headers: {
                 [HttpHeaderNames.ContentType]: "application/json",
+                [HttpHeaderNames.Accept]:
+                  "application/vnd.bentley.itwin-platform.v2+json",
               },
             },
           }

@@ -62,6 +62,7 @@ describe("UpdateIModel", () => {
         headers: {
           Authorization: "dd",
           Prefer: "return=representation",
+          Accept: "application/vnd.bentley.itwin-platform.v2+json",
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
@@ -135,6 +136,7 @@ describe("UpdateIModel", () => {
         headers: {
           Authorization: "dd",
           Prefer: "return=representation",
+          Accept: "application/vnd.bentley.itwin-platform.v2+json",
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
@@ -186,6 +188,7 @@ describe("UpdateIModel", () => {
         headers: {
           Authorization: "dd",
           Prefer: "return=representation",
+          Accept: "application/vnd.bentley.itwin-platform.v2+json",
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
@@ -195,9 +198,7 @@ describe("UpdateIModel", () => {
       }
     );
     expect(errorMock).toHaveBeenCalledWith(error);
-    expect(
-      toaster.negative
-    ).toHaveBeenCalledWith(
+    expect(toaster.negative).toHaveBeenCalledWith(
       "Could not update an iModel. Please try again later.",
       { hasCloseButton: true }
     );
@@ -236,6 +237,7 @@ describe("UpdateIModel", () => {
         headers: {
           Authorization: "dd",
           Prefer: "return=representation",
+          Accept: "application/vnd.bentley.itwin-platform.v2+json",
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
@@ -245,10 +247,8 @@ describe("UpdateIModel", () => {
       }
     );
     expect(errorMock).toHaveBeenCalledWith(error);
-    expect(
-      toaster.negative
-    ).toHaveBeenCalledWith(
-      "iModel with the same name already exists within the project.",
+    expect(toaster.negative).toHaveBeenCalledWith(
+      "iModel with the same name already exists within the iTwin.",
       { hasCloseButton: true }
     );
   });
