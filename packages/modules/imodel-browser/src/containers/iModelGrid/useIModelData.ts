@@ -18,6 +18,7 @@ export interface IModelDataHookOptions {
   accessToken?: string | undefined;
   sortOptions?: IModelSortOptions;
   apiOverrides?: ApiOverrides<IModelFull[]>;
+  searchText?: string | undefined;
 }
 
 const PAGE_SIZE = 100;
@@ -27,6 +28,7 @@ export const useIModelData = ({
   accessToken,
   sortOptions,
   apiOverrides,
+  searchText,
 }: IModelDataHookOptions) => {
   const sortType = sortOptions?.sortType === "name" ? "name" : undefined; //Only available sort by API at the moment.
   const sortDescending = sortOptions?.descending;
@@ -36,8 +38,9 @@ export const useIModelData = ({
   const [page, setPage] = React.useState(0);
   const [morePages, setMorePages] = React.useState(true);
   const fetchMore = React.useCallback(() => {
-    setPage((page) => page + 1);
-  }, []);
+    setPage(page + 1);
+  }, [page]);
+
   React.useEffect(() => {
     // If sort changes but we already have all the data,
     // let client side sorting do its job, otherwise, refetch from scratch.
@@ -54,7 +57,8 @@ export const useIModelData = ({
     setIModels([]);
     setPage(0);
     setMorePages(true);
-  }, [accessToken, projectId, apiOverrides?.data, apiOverrides]);
+  }, [accessToken, projectId, apiOverrides?.data, apiOverrides, searchText]);
+
   React.useEffect(() => {
     if (!morePages) {
       return;
@@ -82,10 +86,11 @@ export const useIModelData = ({
       ? `&$orderBy=${sortType} ${sortDescending ? "desc" : "asc"}`
       : "";
     const paging = `&$skip=${page * PAGE_SIZE}&$top=${PAGE_SIZE}`;
+    const searching = searchText?.trim() ? `&name=${searchText}` : "";
 
     const url = `${_getAPIServer(
       apiOverrides
-    )}/imodels/${selection}${sorting}${paging}`;
+    )}/imodels/${selection}${sorting}${paging}${searching}`;
     const options: RequestInit = {
       signal: abortController.signal,
       headers: {
@@ -126,13 +131,13 @@ export const useIModelData = ({
     };
   }, [
     accessToken,
-    projectId,
-    apiOverrides?.data,
     apiOverrides,
+    morePages,
+    page,
+    projectId,
+    searchText,
     sortDescending,
     sortType,
-    page,
-    morePages,
   ]);
   return {
     iModels: sortedIModels,
