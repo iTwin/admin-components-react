@@ -21,9 +21,7 @@ export const withAccessTokenOverride: <
   Story({ ...args, accessToken: context.globals.accessToken }, context);
 
 /** HOC that will override the "iTwinId" prop with the Addon iTwinId */
-export const withProjectIdOverride: <
-  T extends { iTwinId?: string | undefined }
->(
+export const withITwinIdOverride: <T extends { iTwinId?: string | undefined }>(
   story: Story<T>
 ) => Story<T> = (Story) => (args, context) =>
   Story({ ...args, iTwinId: args.iTwinId || context.globals.iTwinId }, context);

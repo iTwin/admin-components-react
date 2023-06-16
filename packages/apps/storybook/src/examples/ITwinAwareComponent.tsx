@@ -5,11 +5,11 @@
 
 import React from "react";
 
-export interface ProjectAwareComponentProps {
+export interface ITwinAwareComponentProps {
   /** iTwin to know about */
   iTwinId: string | undefined;
 }
-export const ProjectAwareComponent = (props: ProjectAwareComponentProps) => {
+export const ITwinAwareComponent = (props: ITwinAwareComponentProps) => {
   return (
     <div
       style={{

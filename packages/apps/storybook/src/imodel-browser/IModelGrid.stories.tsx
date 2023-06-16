@@ -25,7 +25,7 @@ import React from "react";
 import {
   accessTokenArgTypes,
   withAccessTokenOverride,
-  withProjectIdOverride,
+  withITwinIdOverride,
 } from "../utils/storyHelp";
 
 export const IModelGrid = (props: IModelGridProps) => (
@@ -39,7 +39,7 @@ export default {
   excludeStories: ["IModelGrid"],
 } as Meta;
 
-const Template: Story<IModelGridProps> = withProjectIdOverride(
+const Template: Story<IModelGridProps> = withITwinIdOverride(
   withAccessTokenOverride((args) => <IModelGrid {...args} />)
 );
 
@@ -230,7 +230,7 @@ StatefulPropsOverrides.args = {
 };
 
 export const WithPostProcessCallback: Story<IModelGridProps> =
-  withProjectIdOverride(
+  withITwinIdOverride(
     withAccessTokenOverride((args) => {
       const [filter, setFilter] = React.useState("");
       const filterOrAddStartTile = React.useCallback(
