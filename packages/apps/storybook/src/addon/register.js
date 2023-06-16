@@ -108,7 +108,7 @@ addons.register("project/toolbar", () => {
         [state.projects, globals.iTwinId, updateGlobals]
       );
 
-      return globals.accessToken ? (
+      return withITwinId && globals.accessToken ? (
         <WithTooltip
           placement="top"
           trigger="hover"
