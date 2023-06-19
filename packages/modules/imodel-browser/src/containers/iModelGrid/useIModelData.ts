@@ -20,7 +20,7 @@ export interface IModelDataHookOptions {
   apiOverrides?: ApiOverrides<IModelFull[]>;
   searchText?: string | undefined;
 }
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 100;
 
 export const useIModelData = ({
   projectId,
