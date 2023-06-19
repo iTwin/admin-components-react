@@ -2,7 +2,7 @@
   "changes": [
     {
       "packageName": "@itwin/create-imodel-react",
-      "comment": "Upgraded iModelsApi to v2",
+      "comment": "Upgraded iModelsApi to v2, replaced projectId prop with iTwinId",
       "type": "none"
     }
   ],

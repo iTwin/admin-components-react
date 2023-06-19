@@ -2,7 +2,7 @@
   "changes": [
     {
       "packageName": "@itwin/imodel-browser-react",
-      "comment": "Upgraded iModelsApi to v2",
+      "comment": "Upgraded iModelsApi to v2, replaced projectId prop with iTwinId. IModelFull interface supports iTwinId instead of projectId",
       "type": "none"
     }
   ],
