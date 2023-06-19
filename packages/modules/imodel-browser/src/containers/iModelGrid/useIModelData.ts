@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import React from "react";
+import React, { useEffect, useMemo } from "react";
 
 import {
   ApiOverrides,
@@ -20,8 +20,7 @@ export interface IModelDataHookOptions {
   apiOverrides?: ApiOverrides<IModelFull[]>;
   searchText?: string | undefined;
 }
-
-const PAGE_SIZE = 100;
+const PAGE_SIZE = 20;
 
 export const useIModelData = ({
   projectId,
@@ -59,6 +58,7 @@ export const useIModelData = ({
     setMorePages(true);
   }, [accessToken, projectId, apiOverrides?.data, apiOverrides, searchText]);
 
+  const abortController = useMemo(() => new AbortController(), []);
   React.useEffect(() => {
     if (!morePages) {
       return;
@@ -79,7 +79,6 @@ export const useIModelData = ({
     if (page === 0) {
       setStatus(DataStatus.Fetching);
     }
-    const abortController = new AbortController();
 
     const selection = `?projectId=${projectId}`;
     const sorting = sortType
@@ -126,12 +125,11 @@ export const useIModelData = ({
         setStatus(DataStatus.FetchFailed);
         console.error(e);
       });
-    return () => {
-      abortController.abort();
-    };
   }, [
+    abortController,
     accessToken,
     apiOverrides,
+    apiOverrides?.data,
     morePages,
     page,
     projectId,
@@ -139,6 +137,12 @@ export const useIModelData = ({
     sortDescending,
     sortType,
   ]);
+
+  useEffect(() => {
+    return () => {
+      abortController.abort();
+    };
+  }, [abortController]);
   return {
     iModels: sortedIModels,
     status,
