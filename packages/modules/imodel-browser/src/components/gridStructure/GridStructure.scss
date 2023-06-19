@@ -1,7 +1,7 @@
 /*---------------------------------------------------------------------------------------------
-* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
-* See LICENSE.md in the project root for license terms and full copyright notice.
-*--------------------------------------------------------------------------------------------*/
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
 @import "../../index.scss";
 $space-for-shadows: 3px;
 
@@ -15,4 +15,8 @@ $space-for-shadows: 3px;
   gap: $responsive-grid-gutter;
   overflow: hidden;
   padding: $space-for-shadows;
+
+  > * {
+    display: inline-flex;
+  }
 }
