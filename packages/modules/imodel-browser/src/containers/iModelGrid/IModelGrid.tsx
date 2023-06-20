@@ -80,7 +80,7 @@ export interface IModelGridProps {
   ) => IModelFull[];
   /**Component to show when there is no iModel */
   emptyStateComponent?: React.ReactNode;
-  /**  Search text for IModels */
+  /**  Exact name of the iModel to display */
   searchText?: string;
   /**iModel view mode */
   viewMode?: IModelViewType;
