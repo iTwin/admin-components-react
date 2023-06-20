@@ -98,7 +98,7 @@ export function UpdateIModel(props: UpdateIModelProps) {
     successMessage: "iModel updated successfully.",
     errorMessage: "Could not update an iModel. Please try again later.",
     errorMessageIModelExists:
-      "iModel with the same name already exists within the project.",
+      "iModel with the same name already exists within the iTwin.",
     titleString: "Update an iModel",
     confirmButton: "Update",
     ...stringsOverrides,
@@ -121,6 +121,7 @@ export function UpdateIModel(props: UpdateIModelProps) {
         headers: {
           Authorization: `${accessToken}`,
           Prefer: "return=representation",
+          Accept: "application/vnd.bentley.itwin-platform.v2+json",
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
@@ -141,6 +142,7 @@ export function UpdateIModel(props: UpdateIModelProps) {
             method: "PUT",
             headers: {
               Authorization: `${accessToken}`,
+              Accept: "application/vnd.bentley.itwin-platform.v2+json",
               "Content-Type": imodel.thumbnail.type,
             },
             body: imodel.thumbnail.src,

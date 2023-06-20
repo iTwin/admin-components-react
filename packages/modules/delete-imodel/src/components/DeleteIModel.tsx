@@ -67,7 +67,13 @@ export function DeleteIModel(props: DeleteIModelProps) {
           apiOverrides?.serverEnvironmentPrefix &&
           `${apiOverrides.serverEnvironmentPrefix}-`
         }api.bentley.com/imodels/${imodelId}`,
-        { method: "DELETE", headers: { Authorization: `${accessToken}` } }
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `${accessToken}`,
+            Accept: "application/vnd.bentley.itwin-platform.v2+json",
+          },
+        }
       );
       if (!response.ok) {
         throw new Error(response.statusText);

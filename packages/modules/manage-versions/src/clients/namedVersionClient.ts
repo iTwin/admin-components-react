@@ -29,7 +29,11 @@ export class NamedVersionClient {
           this._serverEnvironmentPrefix
         )}${UrlBuilder.getQuery(requestOptions)}`,
         {
-          headers: { [HttpHeaderNames.Prefer]: "return=representation" },
+          headers: {
+            [HttpHeaderNames.Prefer]: "return=representation",
+            [HttpHeaderNames.Accept]:
+              "application/vnd.bentley.itwin-platform.v2+json",
+          },
         }
       )
       .then((resp) => resp.namedVersions);

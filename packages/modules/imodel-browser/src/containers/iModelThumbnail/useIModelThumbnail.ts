@@ -38,6 +38,7 @@ export const useIModelThumbnail = (
         signal: abortController.signal,
         headers: {
           Authorization: accessToken,
+          Accept: "application/vnd.bentley.itwin-platform.v2+json",
           Prefer: "return=representation",
         },
       };

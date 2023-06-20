@@ -14,7 +14,7 @@ import { _getAPIServer } from "../../utils/_apiOverrides";
 import { useIModelSort } from "./useIModelSort";
 
 export interface IModelDataHookOptions {
-  projectId?: string | undefined;
+  iTwinId?: string | undefined;
   accessToken?: string | undefined;
   sortOptions?: IModelSortOptions;
   apiOverrides?: ApiOverrides<IModelFull[]>;
@@ -23,7 +23,7 @@ export interface IModelDataHookOptions {
 const PAGE_SIZE = 100;
 
 export const useIModelData = ({
-  projectId,
+  iTwinId,
   accessToken,
   sortOptions,
   apiOverrides,
@@ -54,7 +54,7 @@ export const useIModelData = ({
     setIModels([]);
     setPage(0);
     setMorePages(true);
-  }, [accessToken, projectId, apiOverrides?.data, apiOverrides]);
+  }, [accessToken, iTwinId, apiOverrides?.data, apiOverrides]);
   React.useEffect(() => {
     if (!morePages) {
       return;
@@ -65,7 +65,7 @@ export const useIModelData = ({
       setMorePages(false);
       return;
     }
-    if (!accessToken || !projectId) {
+    if (!accessToken || !iTwinId) {
       setStatus(
         !accessToken ? DataStatus.TokenRequired : DataStatus.ContextRequired
       );
@@ -77,7 +77,7 @@ export const useIModelData = ({
     }
     const abortController = new AbortController();
 
-    const selection = `?projectId=${projectId}`;
+    const selection = `?iTwinId=${iTwinId}`;
     const sorting = sortType
       ? `&$orderBy=${sortType} ${sortDescending ? "desc" : "asc"}`
       : "";
@@ -91,6 +91,7 @@ export const useIModelData = ({
       headers: {
         Authorization: accessToken,
         Prefer: "return=representation",
+        Accept: "application/vnd.bentley.itwin-platform.v2+json",
       },
     };
     fetch(url, options)
@@ -126,7 +127,7 @@ export const useIModelData = ({
     };
   }, [
     accessToken,
-    projectId,
+    iTwinId,
     apiOverrides?.data,
     apiOverrides,
     sortDescending,

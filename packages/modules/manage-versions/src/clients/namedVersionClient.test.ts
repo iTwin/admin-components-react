@@ -20,11 +20,14 @@ describe("NamedVersionClient", () => {
     mockHttpGet.mockResolvedValue({ namedVersions: MockedVersionList() });
 
     await namedVersionClient.get(MOCKED_IMODEL_ID);
-    expect(
-      mockHttpGet
-    ).toHaveBeenCalledWith(
+    expect(mockHttpGet).toHaveBeenCalledWith(
       `https://api.bentley.com/imodels/${MOCKED_IMODEL_ID}/namedversions`,
-      { headers: { Prefer: "return=representation" } }
+      {
+        headers: {
+          Prefer: "return=representation",
+          Accept: "application/vnd.bentley.itwin-platform.v2+json",
+        },
+      }
     );
   });
 
@@ -32,11 +35,14 @@ describe("NamedVersionClient", () => {
     mockHttpGet.mockResolvedValue({ namedVersions: MockedVersionList() });
 
     await namedVersionClient.get(MOCKED_IMODEL_ID, { top: 10, skip: 20 });
-    expect(
-      mockHttpGet
-    ).toHaveBeenCalledWith(
+    expect(mockHttpGet).toHaveBeenCalledWith(
       `https://api.bentley.com/imodels/${MOCKED_IMODEL_ID}/namedversions?$top=10&$skip=20`,
-      { headers: { Prefer: "return=representation" } }
+      {
+        headers: {
+          Prefer: "return=representation",
+          Accept: "application/vnd.bentley.itwin-platform.v2+json",
+        },
+      }
     );
   });
 

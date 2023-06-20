@@ -30,6 +30,8 @@ export class ChangesetClient {
         {
           headers: {
             [HttpHeaderNames.Prefer]: "return=representation",
+            [HttpHeaderNames.Accept]:
+              "application/vnd.bentley.itwin-platform.v2+json",
           },
         }
       )

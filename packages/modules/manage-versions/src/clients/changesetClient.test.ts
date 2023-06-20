@@ -23,6 +23,7 @@ describe("ChangesetClient", () => {
       {
         headers: {
           Prefer: "return=representation",
+          Accept: "application/vnd.bentley.itwin-platform.v2+json",
         },
       }
     );
@@ -37,6 +38,7 @@ describe("ChangesetClient", () => {
       {
         headers: {
           Prefer: "return=representation",
+          Accept: "application/vnd.bentley.itwin-platform.v2+json",
         },
       }
     );

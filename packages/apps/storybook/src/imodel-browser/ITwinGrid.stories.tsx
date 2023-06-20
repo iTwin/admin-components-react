@@ -167,7 +167,7 @@ const useIndividualState: IndividualITwinStateHook = (iTwin, props) => {
         props.gridProps.apiOverrides?.serverEnvironmentPrefix
           ? `${props.gridProps.apiOverrides?.serverEnvironmentPrefix}-`
           : ""
-      }api.bentley.com/imodels/?projectId=${iTwin.id}&$top=10`
+      }api.bentley.com/imodels/?iTwinId=${iTwin.id}&$top=10`
     ) => {
       try {
         // Show the skeleton, plus prevent further calls to this function.
