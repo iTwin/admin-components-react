@@ -159,7 +159,7 @@ export const IModelGrid = ({
   const renderIModelGridStructure = () => {
     return (
       <>
-        {viewMode === "tile" ? (
+        {viewMode !== "cells" ? (
           <GridStructure>
             {fetchStatus === DataStatus.Fetching ? (
               <>
