@@ -33,7 +33,7 @@ describe("CreateIModel", () => {
     const { getByText, container } = render(
       <CreateIModel
         accessToken="dd"
-        projectId="de47c5ad-5657-42b8-a2bc-f2b8bf84cd4b"
+        iTwinId="de47c5ad-5657-42b8-a2bc-f2b8bf84cd4b"
         onSuccess={successMock}
         apiOverrides={{ serverEnvironmentPrefix: "dev" }}
       />
@@ -53,10 +53,11 @@ describe("CreateIModel", () => {
         headers: {
           Authorization: "dd",
           Prefer: "return=representation",
+          Accept: "application/vnd.bentley.itwin-platform.v2+json",
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          projectId: "de47c5ad-5657-42b8-a2bc-f2b8bf84cd4b",
+          iTwinId: "de47c5ad-5657-42b8-a2bc-f2b8bf84cd4b",
           name: "Some name",
           description: "",
         }),
@@ -80,7 +81,7 @@ describe("CreateIModel", () => {
     const { getByText, container } = render(
       <CreateIModel
         accessToken="dd"
-        projectId="de47c5ad-5657-42b8-a2bc-f2b8bf84cd4b"
+        iTwinId="de47c5ad-5657-42b8-a2bc-f2b8bf84cd4b"
         onError={errorMock}
         apiOverrides={{ serverEnvironmentPrefix: "dev" }}
       />
@@ -104,10 +105,11 @@ describe("CreateIModel", () => {
         headers: {
           Authorization: "dd",
           Prefer: "return=representation",
+          Accept: "application/vnd.bentley.itwin-platform.v2+json",
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          projectId: "de47c5ad-5657-42b8-a2bc-f2b8bf84cd4b",
+          iTwinId: "de47c5ad-5657-42b8-a2bc-f2b8bf84cd4b",
           name: "Some name",
           description: "",
           extent: {
@@ -118,9 +120,7 @@ describe("CreateIModel", () => {
       }
     );
     expect(errorMock).toHaveBeenCalledWith(error);
-    expect(
-      toaster.negative
-    ).toHaveBeenCalledWith(
+    expect(toaster.negative).toHaveBeenCalledWith(
       "Could not create an iModel. Please try again later.",
       { hasCloseButton: true }
     );
@@ -135,7 +135,7 @@ describe("CreateIModel", () => {
     const { getByText, container } = render(
       <CreateIModel
         accessToken="dd"
-        projectId="de47c5ad-5657-42b8-a2bc-f2b8bf84cd4b"
+        iTwinId="de47c5ad-5657-42b8-a2bc-f2b8bf84cd4b"
         onError={errorMock}
         apiOverrides={{ serverEnvironmentPrefix: "dev" }}
       />
@@ -155,20 +155,19 @@ describe("CreateIModel", () => {
         headers: {
           Authorization: "dd",
           Prefer: "return=representation",
+          Accept: "application/vnd.bentley.itwin-platform.v2+json",
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          projectId: "de47c5ad-5657-42b8-a2bc-f2b8bf84cd4b",
+          iTwinId: "de47c5ad-5657-42b8-a2bc-f2b8bf84cd4b",
           name: "Some name",
           description: "",
         }),
       }
     );
     expect(errorMock).toHaveBeenCalledWith(error);
-    expect(
-      toaster.negative
-    ).toHaveBeenCalledWith(
-      "iModel with the same name already exists within the project.",
+    expect(toaster.negative).toHaveBeenCalledWith(
+      "iModel with the same name already exists within the iTwin.",
       { hasCloseButton: true }
     );
   });

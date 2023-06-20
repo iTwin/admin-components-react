@@ -110,6 +110,8 @@ export class HttpClient {
   private prepareHeaders(request: HttpRequest): void {
     request.headers = {
       [HttpHeaderNames.Authorization]: this._token,
+      [HttpHeaderNames.Accept]:
+        "application/vnd.bentley.itwin-platform.v2+json",
       [HttpHeaderNames.ContentType]: "application/json",
       ...request.headers,
     };

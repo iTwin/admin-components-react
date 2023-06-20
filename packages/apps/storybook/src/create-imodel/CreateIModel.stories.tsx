@@ -30,7 +30,7 @@ export default {
   argTypes: accessTokenArgTypes,
   args: {
     apiOverrides: { serverEnvironmentPrefix: "dev" },
-    projectId: "de47c5ad-5657-42b8-a2bc-f2b8bf84cd4b",
+    iTwinId: "de47c5ad-5657-42b8-a2bc-f2b8bf84cd4b",
   },
 } as Meta;
 
