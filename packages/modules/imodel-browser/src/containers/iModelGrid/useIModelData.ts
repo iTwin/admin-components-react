@@ -14,7 +14,7 @@ import { _getAPIServer } from "../../utils/_apiOverrides";
 import { useIModelSort } from "./useIModelSort";
 
 export interface IModelDataHookOptions {
-  projectId?: string | undefined;
+  iTwinId?: string | undefined;
   accessToken?: string | undefined;
   sortOptions?: IModelSortOptions;
   apiOverrides?: ApiOverrides<IModelFull[]>;
@@ -23,7 +23,7 @@ export interface IModelDataHookOptions {
 const PAGE_SIZE = 100;
 
 export const useIModelData = ({
-  projectId,
+  iTwinId,
   accessToken,
   sortOptions,
   apiOverrides,
@@ -56,7 +56,7 @@ export const useIModelData = ({
     setIModels([]);
     setPage(0);
     setMorePages(true);
-  }, [accessToken, projectId, apiOverrides?.data, apiOverrides, searchText]);
+  }, [accessToken, iTwinId, apiOverrides?.data, apiOverrides, searchText]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const abortController = useMemo(() => new AbortController(), [searchText]);
@@ -70,7 +70,7 @@ export const useIModelData = ({
       setMorePages(false);
       return;
     }
-    if (!accessToken || !projectId) {
+    if (!accessToken || !iTwinId) {
       setStatus(
         !accessToken ? DataStatus.TokenRequired : DataStatus.ContextRequired
       );
@@ -81,7 +81,7 @@ export const useIModelData = ({
       setStatus(DataStatus.Fetching);
     }
 
-    const selection = `?projectId=${projectId}`;
+    const selection = `?iTwinId=${iTwinId}`;
     const sorting = sortType
       ? `&$orderBy=${sortType} ${sortDescending ? "desc" : "asc"}`
       : "";
@@ -96,6 +96,7 @@ export const useIModelData = ({
       headers: {
         Authorization: accessToken,
         Prefer: "return=representation",
+        Accept: "application/vnd.bentley.itwin-platform.v2+json",
       },
     };
     fetch(url, options)
@@ -133,7 +134,7 @@ export const useIModelData = ({
     apiOverrides?.data,
     morePages,
     page,
-    projectId,
+    iTwinId,
     searchText,
     sortDescending,
     sortType,

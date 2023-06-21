@@ -52,8 +52,8 @@ export type CreateIModelProps = {
     /** Longitude label. */
     longitude?: string;
   };
-  /** ProjectId where to create an iModel. */
-  projectId: string;
+  /** iTwinId where to create an iModel. */
+  iTwinId: string;
   /** Extent component. Recommended to use a map component. If not provided then input fields for extent will be shown.
    * @example
    * <CreateIModel
@@ -85,7 +85,7 @@ export function CreateIModel(props: CreateIModelProps) {
     onError,
     onSuccess,
     stringsOverrides,
-    projectId,
+    iTwinId,
     extentComponent,
     extent,
   } = props;
@@ -95,7 +95,7 @@ export function CreateIModel(props: CreateIModelProps) {
     successMessage: "iModel created successfully.",
     errorMessage: "Could not create an iModel. Please try again later.",
     errorMessageIModelExists:
-      "iModel with the same name already exists within the project.",
+      "iModel with the same name already exists within the iTwin.",
     ...stringsOverrides,
   };
 
@@ -116,10 +116,11 @@ export function CreateIModel(props: CreateIModelProps) {
         headers: {
           Authorization: `${accessToken}`,
           Prefer: "return=representation",
+          Accept: "application/vnd.bentley.itwin-platform.v2+json",
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          projectId,
+          iTwinId,
           name: imodel.name,
           description: imodel.description,
           extent: imodel.extent,
@@ -137,6 +138,7 @@ export function CreateIModel(props: CreateIModelProps) {
             method: "PUT",
             headers: {
               Authorization: `${accessToken}`,
+              Accept: "application/vnd.bentley.itwin-platform.v2+json",
               "Content-Type": imodel.thumbnail.type,
             },
             body: imodel.thumbnail.src,

@@ -27,8 +27,8 @@ export interface IModelGridProps {
   /**
    * Access token that requires the `imodels:read` scope. */
   accessToken?: string | undefined;
-  /** Project Id to list the iModels from (mutually exclusive to assetId) */
-  projectId?: string | undefined;
+  /** ITwin Id to list the iModels from (mutually exclusive to assetId) */
+  iTwinId?: string | undefined;
   /** Thumbnail click handler. */
   onThumbnailClick?(iModel: IModelFull): void;
   /** Configure IModel sorting behavior.
@@ -57,7 +57,7 @@ export interface IModelGridProps {
     noIModelSearch?: string;
     /** Displayed after successful fetch, but no iModels are returned. */
     noIModels?: string;
-    /** Displayed when the component is mounted and there is no project or asset Id. */
+    /** Displayed when the component is mounted and there is no iTwin or asset Id. */
     noContext?: string;
     /** Displayed when the component is mounted but the accessToken is empty. */
     noAuthentication?: string;
@@ -94,7 +94,7 @@ export const IModelGrid = ({
   apiOverrides,
   iModelActions,
   onThumbnailClick,
-  projectId,
+  iTwinId,
   sortOptions = { sortType: "name", descending: false },
   stringsOverrides,
   tileOverrides,
@@ -112,7 +112,7 @@ export const IModelGrid = ({
       tableColumnLastModified: "Last Modified",
       tableLoadingData: "Loading...",
       noIModelSearch: "There is no such iModel in this project.",
-      noIModels: "There are no iModels in this project.",
+      noIModels: "There are no iModels in this iTwin.",
       noContext: "No context provided",
       noAuthentication: "No access token provided",
       error: "An error occured",
@@ -126,7 +126,7 @@ export const IModelGrid = ({
   } = useIModelData({
     accessToken,
     apiOverrides,
-    projectId,
+    iTwinId,
     sortOptions: sort,
     searchText,
   });

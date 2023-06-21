@@ -20,7 +20,7 @@ describe("useIModelData hook", () => {
 
   it("returns the data and proper status on successful call", async () => {
     const { result, waitForNextUpdate } = renderHook(() =>
-      useIModelData({ projectId: "projectId", accessToken: "accessToken" })
+      useIModelData({ iTwinId: "iTwinId", accessToken: "accessToken" })
     );
 
     await waitForNextUpdate();
@@ -34,7 +34,7 @@ describe("useIModelData hook", () => {
   it("request the sort order the data and proper status on successful call", async () => {
     const { result, waitForNextUpdate } = renderHook(() =>
       useIModelData({
-        projectId: "projectId",
+        iTwinId: "iTwinId",
         accessToken: "accessToken",
         sortOptions: { sortType: "name", descending: true },
       })
@@ -56,7 +56,7 @@ describe("useIModelData hook", () => {
     );
 
     const { result, waitForValueToChange } = renderHook(() =>
-      useIModelData({ projectId: "projectId", accessToken: "accessToken" })
+      useIModelData({ iTwinId: "iTwinId", accessToken: "accessToken" })
     );
 
     await waitForValueToChange(() => result.current.status);
@@ -78,7 +78,7 @@ describe("useIModelData hook", () => {
       Parameters<typeof useIModelData>,
       ReturnType<typeof useIModelData>
     >((initialValue) => useIModelData(...initialValue), {
-      initialProps: [{ projectId: "projectId", accessToken: "accessToken" }],
+      initialProps: [{ iTwinId: "iTwinId", accessToken: "accessToken" }],
     });
 
     await waitForNextUpdate();
@@ -102,7 +102,7 @@ describe("useIModelData hook", () => {
     expect(result.current.status).toEqual(DataStatus.Complete);
     expect(watcher).toHaveBeenCalledTimes(1);
 
-    rerender([{ projectId: "projectId", accessToken: "accessToken" }]);
+    rerender([{ iTwinId: "iTwinId", accessToken: "accessToken" }]);
     await waitForNextUpdate();
 
     expect(result.current.iModels).toEqual([]);
@@ -112,9 +112,7 @@ describe("useIModelData hook", () => {
   });
 
   it("returns proper error if no accessToken is provided without data override", async () => {
-    const { result } = renderHook(() =>
-      useIModelData({ projectId: "projectId" })
-    );
+    const { result } = renderHook(() => useIModelData({ iTwinId: "iTwinId" }));
 
     expect(result.current.iModels).toEqual([]);
     expect(result.current.status).toEqual(DataStatus.TokenRequired);

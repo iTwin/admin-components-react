@@ -6,6 +6,7 @@ export enum HttpHeaderNames {
   Authorization = "Authorization",
   ContentType = "Content-Type",
   Prefer = "Prefer",
+  Accept = "Accept",
 }
 
 export type ApimCodes = "NamedVersionExists" | "InsufficientPermissions";

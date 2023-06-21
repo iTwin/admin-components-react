@@ -21,8 +21,8 @@ export interface IModelFull {
   /** "Date when the iModel was created." */
   createdDateTime?: string;
 
-  /** "Globally Unique Identifier of the project that iModel belongs to. Only present if iModel belongs to the project." */
-  projectId?: string;
+  /** "Globally Unique Identifier of the iTwin that iModel belongs to. Only present if iModel belongs to the iTwin." */
+  iTwinId?: string;
 
   /** "Globally Unique Identifier of the asset that iModel belongs to. Only present if iModel belongs to the asset." */
   assetId?: string;
