@@ -2,6 +2,23 @@
   "name": "@itwin/manage-versions-react",
   "entries": [
     {
+      "version": "1.0.0",
+      "tag": "@itwin/manage-versions-react_v1.0.0",
+      "date": "Wed, 21 Jun 2023 16:43:17 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "Upgraded iModelsApi to v2"
+          }
+        ],
+        "major": [
+          {
+            "comment": "iTwinui-react update to 2.x"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.8.0",
       "tag": "@itwin/manage-versions-react_v0.8.0",
       "date": "Mon, 27 Feb 2023 09:10:34 GMT",

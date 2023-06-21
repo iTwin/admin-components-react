@@ -2,6 +2,31 @@
   "name": "@itwin/imodel-browser-react",
   "entries": [
     {
+      "version": "1.0.0",
+      "tag": "@itwin/imodel-browser-react_v1.0.0",
+      "date": "Wed, 21 Jun 2023 16:43:17 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "Upgraded iModelsApi to v2, replaced projectId prop with iTwinId. IModelFull interface supports iTwinId instead of projectId"
+          },
+          {
+            "comment": "iTwinui-react update to 2.x"
+          }
+        ],
+        "major": [
+          {
+            "comment": "Upgraded projects api to iTwins api"
+          }
+        ],
+        "minor": [
+          {
+            "comment": "Added cells view for iModel grid."
+          }
+        ]
+      }
+    },
+    {
       "version": "0.13.3",
       "tag": "@itwin/imodel-browser-react_v0.13.3",
       "date": "Thu, 30 Mar 2023 16:02:00 GMT",

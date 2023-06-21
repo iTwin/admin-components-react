@@ -1,6 +1,13 @@
 # Change Log - @itwin/delete-itwin-react
 
-This log was last generated on Tue, 21 Feb 2023 20:11:46 GMT and should not be manually modified.
+This log was last generated on Wed, 21 Jun 2023 16:43:17 GMT and should not be manually modified.
+
+## 1.0.0
+Wed, 21 Jun 2023 16:43:17 GMT
+
+### Breaking changes
+
+- iTwinui-react update to 2.x
 
 ## 0.2.1
 Tue, 21 Feb 2023 20:11:46 GMT

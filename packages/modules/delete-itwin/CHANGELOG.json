@@ -2,6 +2,18 @@
   "name": "@itwin/delete-itwin-react",
   "entries": [
     {
+      "version": "1.0.0",
+      "tag": "@itwin/delete-itwin-react_v1.0.0",
+      "date": "Wed, 21 Jun 2023 16:43:17 GMT",
+      "comments": {
+        "major": [
+          {
+            "comment": "iTwinui-react update to 2.x"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.2.1",
       "tag": "@itwin/delete-itwin-react_v0.2.1",
       "date": "Tue, 21 Feb 2023 20:11:46 GMT",

@@ -1,6 +1,17 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Thu, 30 Mar 2023 16:02:00 GMT and should not be manually modified.
+This log was last generated on Wed, 21 Jun 2023 16:43:17 GMT and should not be manually modified.
+
+## 1.0.0
+Wed, 21 Jun 2023 16:43:17 GMT
+
+### Breaking changes
+
+- Upgraded projects api to iTwins api
+
+### Minor changes
+
+- Added cells view for iModel grid.
 
 ## 0.13.3
 Thu, 30 Mar 2023 16:02:00 GMT

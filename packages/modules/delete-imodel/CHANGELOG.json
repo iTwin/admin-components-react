@@ -2,6 +2,23 @@
   "name": "@itwin/delete-imodel-react",
   "entries": [
     {
+      "version": "1.0.0",
+      "tag": "@itwin/delete-imodel-react_v1.0.0",
+      "date": "Wed, 21 Jun 2023 16:43:17 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "Upgraded iModelsApi to v2"
+          }
+        ],
+        "major": [
+          {
+            "comment": "iTwinui-react update to 2.x"
+          }
+        ]
+      }
+    },
+    {
       "version": "0.2.2",
       "tag": "@itwin/delete-imodel-react_v0.2.2",
       "date": "Tue, 21 Feb 2023 20:11:46 GMT",
