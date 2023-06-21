@@ -2,10 +2,9 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-@import "~@itwin/itwinui-css/scss/variables";
 
 .iac-versions-table {
-  .iui-table-body .iui-cell {
+  .iui-table-body .iui-table-cell {
     word-break: break-word;
   }
 }

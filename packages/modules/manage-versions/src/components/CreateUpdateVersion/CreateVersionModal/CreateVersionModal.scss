@@ -2,21 +2,18 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-@import "~@itwin/itwinui-css/scss/variables";
 
 .iac-additional-info {
   display: flex;
   justify-content: space-between;
-  padding: $iui-baseline $iui-sm;
-  @include themed {
-    background-color: t(iui-color-background-2);
-  }
+  padding: var(--iui-size-s);
+  background-color: var(--iui-color-background-backdrop);
 
   span {
     flex-shrink: 0;
 
     &:not(:last-child) {
-      margin-right: $iui-m;
+      margin-right: var(--iui-size-m);
     }
   }
 

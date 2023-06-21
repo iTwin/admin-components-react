@@ -12,16 +12,7 @@ const channel = addons.getChannel();
 
 // switch body class for story along with interface theme
 channel.on("DARK_MODE", (isDark) => {
-  document.documentElement.setAttribute(
-    "data-theme",
-    isDark ? "dark" : "light"
-  );
-  document.documentElement.classList.add(
-    `iui-theme-${isDark ? "dark" : "light"}`
-  );
-  document.documentElement.classList.remove(
-    `iui-theme-${!isDark ? "dark" : "light"}`
-  );
+  document.body.dataset.iuiTheme = isDark ? 'dark' : 'light';
 });
 
 export const parameters = {
@@ -37,7 +28,7 @@ export const parameters = {
   },
   authClientConfig: {
     clientId: process.env.STORYBOOK_AUTH_CLIENT_ID,
-    scope: ["imodels:read", "imodels:modify", "projects:read", "itwins:modify"].join(" "),
+    scope: ["imodels:read", "imodels:modify", "itwins:modify", "itwins:read"].join(" "),
     authority: "https://qa-ims.bentley.com",
   },
 };

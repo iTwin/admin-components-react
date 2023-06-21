@@ -23,7 +23,7 @@ addons.register("project/toolbar", () => {
     match: ({ viewMode }) => !!viewMode?.match(/^(story|docs)$/),
     render: () => {
       const [globals, updateGlobals] = useGlobals();
-      const { projectId: withProjectId } = useArgTypes();
+      const { iTwinId: withITwinId } = useArgTypes();
 
       const [state, setState] = useAddonState("project/toolbar", {
         mustLoad: true,
@@ -67,7 +67,7 @@ addons.register("project/toolbar", () => {
             ],
           });
           const response = await fetch(
-            "https://qa-api.bentley.com/projects/favorites",
+            "https://qa-api.bentley.com/itwins/favorites?subClass=Project",
             {
               headers: { Authorization: globals.accessToken },
             }
@@ -76,7 +76,7 @@ addons.register("project/toolbar", () => {
             const result = await response.text();
             const projects = JSON.parse(
               result.substring(0, result.indexOf("],")) + "]}"
-            ).projects;
+            ).iTwins;
 
             if (projects.length === 0) {
               projects.push({
@@ -84,7 +84,7 @@ addons.register("project/toolbar", () => {
                   "'Favorite' a project in CONNECT (QA) to show it here, refresh this page to see the results",
               });
             }
-            setState({ projects });
+            setState({ projects: projects });
           }
         } catch (e) {
           console.error("Error", e);
@@ -99,16 +99,16 @@ addons.register("project/toolbar", () => {
             title: project.displayName,
             onClick: () => {
               updateGlobals({
-                projectId: globals.projectId === project.id ? "" : project.id,
+                iTwinId: globals.iTwinId === project.id ? "" : project.id,
               });
               onHide();
             },
-            active: globals.projectId === project.id,
+            active: globals.iTwinId === project.id,
           })),
-        [state.projects, globals.projectId, updateGlobals]
+        [state.projects, globals.iTwinId, updateGlobals]
       );
 
-      return withProjectId && globals.accessToken ? (
+      return withITwinId && globals.accessToken ? (
         <WithTooltip
           placement="top"
           trigger="hover"
@@ -118,12 +118,12 @@ addons.register("project/toolbar", () => {
           }}
         >
           <IconButton
-            active={globals.projectId}
+            active={globals.iTwinId}
             title={`Favorite projects${
-              globals.projectId ? " (click to unselect)" : ""
+              globals.iTwinId ? " (click to unselect)" : ""
             }`}
             onMouseEnter={() => fetchProjects()}
-            onClick={() => updateGlobals({ projectId: "" })}
+            onClick={() => updateGlobals({ iTwinId: "" })}
           >
             <Icons icon={"book"} />
           </IconButton>

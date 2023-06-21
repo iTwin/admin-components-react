@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/delete-imodel-react",
+      "comment": "Upgraded iModelsApi to v2",
+      "type": "none"
+    }
+  ],
+  "packageName": "@itwin/delete-imodel-react"
+}

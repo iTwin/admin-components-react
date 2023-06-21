@@ -26,13 +26,13 @@ export const handlers = [
       })
     );
   }),
-  rest.get("https://api.bentley.com/projects/", (req, res, ctx) => {
+  rest.get("https://api.bentley.com/itwins/", (req, res, ctx) => {
     if (req.url.searchParams.get("$search") === "searched") {
     }
     return res(
       ctx.status(200),
       ctx.json({
-        projects:
+        iTwins:
           req.url.searchParams.get("$search") === "searched"
             ? [
                 {
@@ -49,11 +49,11 @@ export const handlers = [
       })
     );
   }),
-  rest.get("https://api.bentley.com/projects/favorites", (req, res, ctx) => {
+  rest.get("https://api.bentley.com/itwins/favorites", (req, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json({
-        projects: [
+        iTwins: [
           {
             id: "favorite1",
             displayName: "favoriteName1",
@@ -62,11 +62,11 @@ export const handlers = [
       })
     );
   }),
-  rest.get("https://api.bentley.com/projects/recents", (req, res, ctx) => {
+  rest.get("https://api.bentley.com/itwins/recents", (req, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json({
-        projects: [
+        iTwins: [
           {
             id: "recent1",
             displayName: "recentName1",

@@ -49,7 +49,10 @@ describe("DeleteIModel", () => {
       "https://dev-api.bentley.com/imodels/111",
       {
         method: "DELETE",
-        headers: { Authorization: "dd" },
+        headers: {
+          Authorization: "dd",
+          Accept: "application/vnd.bentley.itwin-platform.v2+json",
+        },
       }
     );
     expect(successMock).toHaveBeenCalled();
@@ -73,7 +76,10 @@ describe("DeleteIModel", () => {
       "https://api.bentley.com/imodels/111",
       {
         method: "DELETE",
-        headers: { Authorization: "dd" },
+        headers: {
+          Authorization: "dd",
+          Accept: "application/vnd.bentley.itwin-platform.v2+json",
+        },
       }
     );
     expect(failureMock).toHaveBeenCalledWith(error);

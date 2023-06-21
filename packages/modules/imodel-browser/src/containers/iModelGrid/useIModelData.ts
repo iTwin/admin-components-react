@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import React from "react";
+import React, { useEffect, useMemo } from "react";
 
 import {
   ApiOverrides,
@@ -14,19 +14,20 @@ import { _getAPIServer } from "../../utils/_apiOverrides";
 import { useIModelSort } from "./useIModelSort";
 
 export interface IModelDataHookOptions {
-  projectId?: string | undefined;
+  iTwinId?: string | undefined;
   accessToken?: string | undefined;
   sortOptions?: IModelSortOptions;
   apiOverrides?: ApiOverrides<IModelFull[]>;
+  searchText?: string | undefined;
 }
-
 const PAGE_SIZE = 100;
 
 export const useIModelData = ({
-  projectId,
+  iTwinId,
   accessToken,
   sortOptions,
   apiOverrides,
+  searchText,
 }: IModelDataHookOptions) => {
   const sortType = sortOptions?.sortType === "name" ? "name" : undefined; //Only available sort by API at the moment.
   const sortDescending = sortOptions?.descending;
@@ -36,8 +37,9 @@ export const useIModelData = ({
   const [page, setPage] = React.useState(0);
   const [morePages, setMorePages] = React.useState(true);
   const fetchMore = React.useCallback(() => {
-    setPage((page) => page + 1);
-  }, []);
+    setPage(page + 1);
+  }, [page]);
+
   React.useEffect(() => {
     // If sort changes but we already have all the data,
     // let client side sorting do its job, otherwise, refetch from scratch.
@@ -54,7 +56,10 @@ export const useIModelData = ({
     setIModels([]);
     setPage(0);
     setMorePages(true);
-  }, [accessToken, projectId, apiOverrides?.data, apiOverrides]);
+  }, [accessToken, iTwinId, apiOverrides?.data, apiOverrides, searchText]);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const abortController = useMemo(() => new AbortController(), [searchText]);
   React.useEffect(() => {
     if (!morePages) {
       return;
@@ -65,7 +70,7 @@ export const useIModelData = ({
       setMorePages(false);
       return;
     }
-    if (!accessToken || !projectId) {
+    if (!accessToken || !iTwinId) {
       setStatus(
         !accessToken ? DataStatus.TokenRequired : DataStatus.ContextRequired
       );
@@ -75,22 +80,23 @@ export const useIModelData = ({
     if (page === 0) {
       setStatus(DataStatus.Fetching);
     }
-    const abortController = new AbortController();
 
-    const selection = `?projectId=${projectId}`;
+    const selection = `?iTwinId=${iTwinId}`;
     const sorting = sortType
       ? `&$orderBy=${sortType} ${sortDescending ? "desc" : "asc"}`
       : "";
     const paging = `&$skip=${page * PAGE_SIZE}&$top=${PAGE_SIZE}`;
+    const searching = searchText?.trim() ? `&name=${searchText}` : "";
 
     const url = `${_getAPIServer(
       apiOverrides
-    )}/imodels/${selection}${sorting}${paging}`;
+    )}/imodels/${selection}${sorting}${paging}${searching}`;
     const options: RequestInit = {
       signal: abortController.signal,
       headers: {
         Authorization: accessToken,
         Prefer: "return=representation",
+        Accept: "application/vnd.bentley.itwin-platform.v2+json",
       },
     };
     fetch(url, options)
@@ -121,19 +127,24 @@ export const useIModelData = ({
         setStatus(DataStatus.FetchFailed);
         console.error(e);
       });
+  }, [
+    abortController,
+    accessToken,
+    apiOverrides,
+    apiOverrides?.data,
+    morePages,
+    page,
+    iTwinId,
+    searchText,
+    sortDescending,
+    sortType,
+  ]);
+
+  useEffect(() => {
     return () => {
       abortController.abort();
     };
-  }, [
-    accessToken,
-    projectId,
-    apiOverrides?.data,
-    apiOverrides,
-    sortDescending,
-    sortType,
-    page,
-    morePages,
-  ]);
+  }, [abortController]);
   return {
     iModels: sortedIModels,
     status,

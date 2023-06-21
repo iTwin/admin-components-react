@@ -20,13 +20,8 @@ export const withAccessTokenOverride: <
 ) => Story<T> = (Story) => (args, context) =>
   Story({ ...args, accessToken: context.globals.accessToken }, context);
 
-/** HOC that will override the "projectId" prop with the Addon projectId */
-export const withProjectIdOverride: <
-  T extends { projectId?: string | undefined }
->(
+/** HOC that will override the "iTwinId" prop with the Addon iTwinId */
+export const withITwinIdOverride: <T extends { iTwinId?: string | undefined }>(
   story: Story<T>
 ) => Story<T> = (Story) => (args, context) =>
-  Story(
-    { ...args, projectId: args.projectId || context.globals.projectId },
-    context
-  );
+  Story({ ...args, iTwinId: args.iTwinId || context.globals.iTwinId }, context);

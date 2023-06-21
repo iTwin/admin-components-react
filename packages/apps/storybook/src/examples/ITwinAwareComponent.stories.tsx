@@ -2,22 +2,26 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import {
-  ProjectTile as C,
-  ProjectTileProps,
-} from "@itwin/imodel-browser-react";
+
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
 
-export const ProjectTile = (props: ProjectTileProps) => <C {...props} />;
+import { withITwinIdOverride } from "../utils/storyHelp";
+import {
+  ITwinAwareComponent,
+  ITwinAwareComponentProps,
+} from "./ITwinAwareComponent";
 
 export default {
-  title: "imodel-browser/ProjectTile",
-  component: ProjectTile,
-  excludeStories: ["ProjectTile"],
+  title: "Example/ITwin Aware",
+  component: ITwinAwareComponent,
 } as Meta;
 
-const Template: Story<ProjectTileProps> = (args) => <ProjectTile {...args} />;
+const Template: Story<ITwinAwareComponentProps> = withITwinIdOverride(
+  (args) => {
+    return <ITwinAwareComponent {...args} />;
+  }
+);
 
 export const Primary = Template.bind({});
 Primary.args = {};

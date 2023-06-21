@@ -4,10 +4,10 @@
  *--------------------------------------------------------------------------------------------*/
 import {
   DataStatus,
-  IndividualProjectStateHook,
-  ProjectFull,
-  ProjectGrid as ExternalComponent,
-  ProjectGridProps,
+  IndividualITwinStateHook,
+  ITwinFull,
+  ITwinGrid as ExternalComponent,
+  ITwinGridProps,
 } from "@itwin/imodel-browser-react";
 import {
   Body,
@@ -26,19 +26,22 @@ import {
   withAccessTokenOverride,
 } from "../utils/storyHelp";
 
-export const ProjectGrid = (props: ProjectGridProps) => (
+export const ITwinGrid = (props: ITwinGridProps) => (
   <ExternalComponent {...props} />
 );
 
+const accessToken = accessTokenArgTypes.accessToken;
 export default {
-  title: "imodel-browser/ProjectGrid",
-  component: ProjectGrid,
-  argTypes: accessTokenArgTypes,
-  excludeStories: ["ProjectGrid"],
+  title: "imodel-browser/ITwinGrid",
+  component: ITwinGrid,
+  argTypes: {
+    accessToken,
+  },
+  excludeStories: ["ITwinGrid"],
 } as Meta;
 
-const Template: Story<ProjectGridProps> = withAccessTokenOverride((args) => (
-  <ProjectGrid {...args} />
+const Template: Story<ITwinGridProps> = withAccessTokenOverride((args) => (
+  <ITwinGrid {...args} />
 ));
 export const Primary = Template.bind({});
 Primary.args = {
@@ -51,13 +54,13 @@ OverrideApiData.args = {
     data: [
       {
         id: "1",
-        displayName: "Provided Project",
-        projectNumber: "No Network Calls",
+        displayName: "Provided iTwin",
+        number: "No Network Calls",
       },
       {
         id: "2",
-        displayName: "Useful project",
-        projectNumber:
+        displayName: "Useful iTwin",
+        number:
           "Use if the data comes from a different API or needs to be tweaked",
       },
     ],
@@ -67,26 +70,24 @@ OverrideApiData.args = {
 export const IndividualContextMenu = Template.bind({});
 IndividualContextMenu.args = {
   apiOverrides: { serverEnvironmentPrefix: "qa" },
-  projectActions: [
+  iTwinActions: [
     {
       children: "displayName contains 'R'",
-      visible: (project) => project.displayName?.includes("R") ?? false,
+      visible: (iTwin) => iTwin.displayName?.includes("R") ?? false,
       key: "withR",
-      onClick: (project) => alert("Contains R" + project.displayName),
+      onClick: (iTwin) => alert("Contains R" + iTwin.displayName),
     },
     {
-      children: "Add projectNumber",
-      visible: (project) => !project.projectNumber,
+      children: "Add iTwinNumber",
+      visible: (iTwin) => !iTwin.number,
       key: "addD",
-      onClick: (project) =>
-        alert("Add projectNumber to " + project.displayName),
+      onClick: (iTwin) => alert("Add iTwinNumber to " + iTwin.displayName),
     },
     {
-      children: "Edit projectNumber",
-      visible: (project) => !!project.projectNumber,
+      children: "Edit iTwinNumber",
+      visible: (iTwin) => !!iTwin.number,
       key: "editD",
-      onClick: (project) =>
-        alert("Edit projectNumber: " + project.projectNumber),
+      onClick: (iTwin) => alert("Edit iTwinNumber: " + iTwin.number),
     },
   ],
 };
@@ -111,27 +112,30 @@ interface IModelsFetchData {
 }
 
 /** Function used in useIndividualState */
-const buildMenuItems = (
-  close: () => void,
-  setVersion: React.Dispatch<React.SetStateAction<IModelMinimal | undefined>>
-) => (v: IModelMinimal) => (
-  <span
-    onClick={(event) => {
-      event.stopPropagation();
-    }}
-  >
-    <MenuItem
-      key={v.id}
-      onClick={() => {
-        close();
-        v.id !== "loading" && setVersion(v);
-      }}
-      className={v.id === "loading" ? "iui-skeleton" : undefined}
-    >
-      {v.displayName}
-    </MenuItem>
-  </span>
-);
+const buildMenuItems =
+  (
+    close: () => void,
+    setVersion: React.Dispatch<React.SetStateAction<IModelMinimal | undefined>>
+  ) =>
+  (v: IModelMinimal) =>
+    (
+      <span
+        onClick={(event) => {
+          event.stopPropagation();
+        }}
+      >
+        <MenuItem
+          key={v.id}
+          onClick={() => {
+            close();
+            v.id !== "loading" && setVersion(v);
+          }}
+          className={v.id === "loading" ? "iui-skeleton" : undefined}
+        >
+          {v.displayName}
+        </MenuItem>
+      </span>
+    );
 
 const Pager = (props: PropsWithChildren<{ onClick: () => void }>) => (
   <span onClick={props.onClick}>
@@ -149,7 +153,7 @@ const Pager = (props: PropsWithChildren<{ onClick: () => void }>) => (
 );
 
 /** Hook used in StatefulPropsOverrides.args, the function itself must be a stable reference as it is a hook. */
-const useIndividualState: IndividualProjectStateHook = (project, props) => {
+const useIndividualState: IndividualITwinStateHook = (iTwin, props) => {
   const [selection, setSelection] = React.useState<IModelMinimal | undefined>();
   const [links, setLinks] = React.useState<
     [string | undefined, string | undefined]
@@ -163,7 +167,7 @@ const useIndividualState: IndividualProjectStateHook = (project, props) => {
         props.gridProps.apiOverrides?.serverEnvironmentPrefix
           ? `${props.gridProps.apiOverrides?.serverEnvironmentPrefix}-`
           : ""
-      }api.bentley.com/imodels/?projectId=${project.id}&$top=10`
+      }api.bentley.com/imodels/?iTwinId=${iTwin.id}&$top=10`
     ) => {
       try {
         // Show the skeleton, plus prevent further calls to this function.
@@ -203,7 +207,7 @@ const useIndividualState: IndividualProjectStateHook = (project, props) => {
       }
     },
     [
-      project.id,
+      iTwin.id,
       props.gridProps.accessToken,
       props.gridProps.apiOverrides?.serverEnvironmentPrefix,
     ]
@@ -263,19 +267,19 @@ StatefulPropsOverrides.args = {
   useIndividualState,
 };
 
-export const WithPostProcessCallback: Story<ProjectGridProps> = withAccessTokenOverride(
-  (args) => {
+export const WithPostProcessCallback: Story<ITwinGridProps> =
+  withAccessTokenOverride((args) => {
     const addStartTile = React.useCallback(
-      (projects: ProjectFull[], status: DataStatus) => {
+      (iTwins: ITwinFull[], status: DataStatus | undefined) => {
         if (status !== DataStatus.Complete) {
-          return projects;
+          return iTwins;
         }
-        projects.unshift({
+        iTwins.unshift({
           id: "newProject",
           displayName: "New Project",
-          projectNumber: "Click on this tile to create a new Project",
+          number: "Click on this tile to create a new ITwin",
         });
-        return projects;
+        return iTwins;
       },
       []
     );
@@ -287,11 +291,10 @@ export const WithPostProcessCallback: Story<ProjectGridProps> = withAccessTokenO
           data that is sent to the grid, here, we add a new tile at the start of
           the list for a 'New Project'.
         </Body>
-        <ProjectGrid {...args} postProcessCallback={addStartTile} />
+        <ITwinGrid {...args} postProcessCallback={addStartTile} />
       </div>
     );
-  }
-);
+  });
 WithPostProcessCallback.args = {
   apiOverrides: { serverEnvironmentPrefix: "qa" },
 };

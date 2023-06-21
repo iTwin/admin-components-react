@@ -6,6 +6,18 @@
   "main": "cjs/index.js",
   "module": "esm/index.js",
   "types": "cjs/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./esm/index.d.ts",
+        "default": "./esm/index.js"
+      },
+      "require": {
+        "types": "./cjs/index.d.ts",
+        "default": "./cjs/index.js"
+      }
+    }
+  },
   "author": "Bentley Systems, Inc.",
   "license": "MIT",
   "scripts": {
@@ -20,12 +32,11 @@
   ],
   "dependencies": {
     "classnames": "^2.2.6",
-    "@itwin/itwinui-icons-react": "^1.2.0",
-    "@itwin/itwinui-react": "^1.35.0",
+    "@itwin/itwinui-icons-react": "^2.2.0",
+    "@itwin/itwinui-react": "^2.11.4",
     "react-intersection-observer": "^8.31.1"
   },
   "devDependencies": {
-    "@itwin/itwinui-css": "^0.9.0",
     "@rollup/plugin-commonjs": "~17.1.0",
     "@svgr/rollup": "^5.5.0",
     "@testing-library/react-hooks": "^5.1.0",
@@ -33,6 +44,7 @@
     "@types/jest": "^26.0.0",
     "@types/react": "^17.0.37",
     "@types/react-dom": "^17.0.0",
+    "@types/react-table": "~7.7.14",
     "@typescript-eslint/eslint-plugin": "^4.20.0",
     "@typescript-eslint/parser": "^4.20.0",
     "babel-eslint": "^10.0.0",
@@ -52,7 +64,7 @@
     "jest": "^26.0.0",
     "msw": "^0.27.1",
     "node-sass": "^6.0.0",
-    "postcss": "^8.2.8",
+    "postcss": "8.4.20",
     "prettier": "^2.0.5",
     "react-dom": "^17.0.2",
     "react-test-renderer": "^17.0.2",

@@ -6,6 +6,7 @@ import {
   fireEvent,
   render,
   screen,
+  waitFor,
   waitForElementToBeRemoved,
 } from "@testing-library/react";
 import React from "react";
@@ -41,6 +42,9 @@ describe("ManageVersions", () => {
   const mockUpdateVersion = jest.spyOn(NamedVersionClient.prototype, "update");
   const mockGetChangesets = jest.spyOn(ChangesetClient.prototype, "get");
 
+  const waitForSelectorToExist = async (selector: string) =>
+    waitFor(() => expect(document.querySelector(selector)).not.toBeNull());
+
   beforeEach(() => {
     jest.clearAllMocks();
     mockGetVersions.mockResolvedValue(MockedVersionList());
@@ -53,11 +57,13 @@ describe("ManageVersions", () => {
     await waitForElementToBeRemoved(() =>
       container.querySelector(".iui-progress-indicator-radial")
     );
-    const versionRows = container.querySelectorAll(".iui-table-body .iui-row");
+    const versionRows = container.querySelectorAll(
+      ".iui-table-body .iui-table-row"
+    );
     expect(versionRows.length).toBe(3);
 
     versionRows.forEach((row, index) => {
-      const cells = row.querySelectorAll(".iui-cell");
+      const cells = row.querySelectorAll(".iui-table-cell");
       expect(cells.length).toBe(4);
       expect(cells[0].textContent).toContain(MockedVersion(index).name);
       expect(cells[1].textContent).toContain(MockedVersion(index).description);
@@ -80,12 +86,12 @@ describe("ManageVersions", () => {
       container.querySelector(".iui-progress-indicator-radial")
     );
     const changesetRows = container.querySelectorAll(
-      ".iui-table-body .iui-row"
+      ".iui-table-body .iui-table-row"
     );
     expect(changesetRows.length).toBe(3);
 
     changesetRows.forEach((row, index) => {
-      const cells = row.querySelectorAll(".iui-cell");
+      const cells = row.querySelectorAll(".iui-table-cell");
       expect(cells.length).toBe(5);
       expect(cells[0].textContent).toContain(MockedChangeset(index).index);
       expect(cells[1].textContent).toContain(
@@ -184,6 +190,7 @@ describe("ManageVersions", () => {
     expect(createVersionButtons.length).toBe(2);
     createVersionButtons[0].click();
 
+    await waitForSelectorToExist(".iac-additional-info");
     const additionalInfos = document.querySelectorAll(".iac-additional-info");
     expect(additionalInfos.length).toBe(2);
     const latestVersionInfo = additionalInfos[1].querySelectorAll("span");
@@ -203,7 +210,7 @@ describe("ManageVersions", () => {
     );
 
     const versionCells = container.querySelectorAll(
-      ".iui-table-body .iui-row:first-child .iui-cell"
+      ".iui-table-body .iui-table-row:first-child .iui-table-cell"
     );
     expect(versionCells.length).toBe(4);
     expect(versionCells[0].textContent).toEqual("test name");
@@ -239,6 +246,7 @@ describe("ManageVersions", () => {
     expect(updateVersionButtons.length).toBe(3);
     updateVersionButtons[0].click();
 
+    await waitForSelectorToExist("input");
     const nameInput = document.querySelector("input") as HTMLInputElement;
     expect(nameInput).toBeTruthy();
     fireEvent.change(nameInput, { target: { value: "test name" } });
@@ -249,7 +257,7 @@ describe("ManageVersions", () => {
     );
 
     const versionCells = container.querySelectorAll(
-      ".iui-table-body .iui-row:first-child .iui-cell"
+      ".iui-table-body .iui-table-row:first-child .iui-table-cell"
     );
     expect(versionCells.length).toBe(4);
     expect(versionCells[0].textContent).toEqual("test name");
@@ -268,11 +276,13 @@ it("should render with changesets tab opened", async () => {
   await waitForElementToBeRemoved(() =>
     container.querySelector(".iui-progress-indicator-radial")
   );
-  const changesetRows = container.querySelectorAll(".iui-table-body .iui-row");
+  const changesetRows = container.querySelectorAll(
+    ".iui-table-body .iui-table-row"
+  );
   expect(changesetRows.length).toBe(3);
 
   changesetRows.forEach((row, index) => {
-    const cells = row.querySelectorAll(".iui-cell");
+    const cells = row.querySelectorAll(".iui-table-cell");
     expect(cells.length).toBe(5);
     expect(cells[0].textContent).toContain(MockedChangeset(index).index);
     expect(cells[1].textContent).toContain(MockedChangeset(index).description);

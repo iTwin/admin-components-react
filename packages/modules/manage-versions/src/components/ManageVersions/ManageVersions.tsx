@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { HorizontalTabs } from "@itwin/itwinui-react";
+import { HorizontalTabs, ThemeProvider } from "@itwin/itwinui-react";
 import React from "react";
 
 import { ChangesetClient } from "../../clients/changesetClient";
@@ -213,39 +213,41 @@ export const ManageVersions = (props: ManageVersionsProps) => {
   );
 
   return (
-    <ConfigProvider
-      accessToken={accessToken}
-      imodelId={imodelId}
-      apiOverrides={apiOverrides}
-      stringsOverrides={stringsOverrides}
-      log={log}
-    >
-      <div>
-        <HorizontalTabs
-          labels={[stringsOverrides.namedVersions, stringsOverrides.changes]}
-          activeIndex={_currentTab}
-          onTabSelected={(index) => changeTab(index)}
-          type="borderless"
-        />
-        {_currentTab === ManageVersionsTabs.Versions && (
-          <VersionsTab
-            versions={versions ?? []}
-            status={versionStatus}
-            onVersionUpdated={refreshVersions}
-            loadMoreVersions={getMoreVersions}
-            onViewClick={onViewClick}
+    <ThemeProvider theme="inherit">
+      <ConfigProvider
+        accessToken={accessToken}
+        imodelId={imodelId}
+        apiOverrides={apiOverrides}
+        stringsOverrides={stringsOverrides}
+        log={log}
+      >
+        <div>
+          <HorizontalTabs
+            labels={[stringsOverrides.namedVersions, stringsOverrides.changes]}
+            activeIndex={_currentTab}
+            onTabSelected={(index) => changeTab(index)}
+            type="borderless"
           />
-        )}
-        {_currentTab === ManageVersionsTabs.Changes && (
-          <ChangesTab
-            changesets={changesets ?? []}
-            status={changesetStatus}
-            loadMoreChanges={getChangesets}
-            onVersionCreated={onVersionCreated}
-            latestVersion={latestVersion}
-          />
-        )}
-      </div>
-    </ConfigProvider>
+          {_currentTab === ManageVersionsTabs.Versions && (
+            <VersionsTab
+              versions={versions ?? []}
+              status={versionStatus}
+              onVersionUpdated={refreshVersions}
+              loadMoreVersions={getMoreVersions}
+              onViewClick={onViewClick}
+            />
+          )}
+          {_currentTab === ManageVersionsTabs.Changes && (
+            <ChangesTab
+              changesets={changesets ?? []}
+              status={changesetStatus}
+              loadMoreChanges={getChangesets}
+              onVersionCreated={onVersionCreated}
+              latestVersion={latestVersion}
+            />
+          )}
+        </div>
+      </ConfigProvider>
+    </ThemeProvider>
   );
 };

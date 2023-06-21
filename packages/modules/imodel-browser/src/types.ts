@@ -22,8 +22,8 @@ export interface IModelFull {
   /** "Date when the iModel was created." */
   createdDateTime?: string;
 
-  /** "Globally Unique Identifier of the project that iModel belongs to. Only present if iModel belongs to the project." */
-  projectId?: string;
+  /** "Globally Unique Identifier of the iTwin that iModel belongs to. Only present if iModel belongs to the iTwin." */
+  iTwinId?: string;
 
   /** "Globally Unique Identifier of the asset that iModel belongs to. Only present if iModel belongs to the asset." */
   assetId?: string;
@@ -32,23 +32,20 @@ export interface IModelFull {
   thumbnail?: string;
 }
 
-/** Full representation of a Project */
-export interface ProjectFull {
+/** Full representation of an iTwin */
+export interface ITwinFull {
   id: string;
+  class?: ITwinClassType;
+  subClass?: ITwinSubClass;
+  type?: string;
+  number?: string;
   displayName?: string;
-  projectNumber?: string;
-  registrationDateTime?: string;
-  registeredBy?: string;
-  industry?: string;
-  projectType?: string;
-  geographicLocation?: string;
-  latitude?: string;
-  longitude?: string;
-  timeZone?: string;
   dataCenterLocation?: string;
-  billingCountry?: string;
-  status?: "Active" | "Inactive" | "Trial" | "active" | "inactive" | "trial";
-  allowExternalTeamMembers?: boolean;
+  status?: ITwinStatus;
+  parentId?: string;
+  iTwinAccountId?: string;
+  createdDateTime?: string;
+  createdBy?: string;
 }
 
 /** An object that allow various configuration of the API access */
@@ -62,7 +59,7 @@ export interface ApiOverrides<T = never> {
 type FilterOptions = string;
 
 /** String/function that configures Project filtering behavior. */
-export type ProjectFilterOptions = FilterOptions;
+export type ITwinFilterOptions = FilterOptions;
 
 export enum DataStatus {
   Fetching = "fetching",
@@ -79,3 +76,19 @@ export type IModelSortOptionsKeys = "name";
 
 /** Object/function that configure IModel sorting behavior. */
 export type IModelSortOptions = SortOptions<IModelFull, IModelSortOptionsKeys>;
+
+export type ITwinSubClass =
+  | "Project"
+  | "Asset"
+  | "Portfolio"
+  | "Program"
+  | "WorkPackage";
+export type ITwinClassType = "Thing" | "Endeavor";
+export type ITwinStatus =
+  | "Active"
+  | "Inactive"
+  | "Trial"
+  | "active"
+  | "inactive"
+  | "trial";
+export type IModelViewType = "tile" | "cells";
