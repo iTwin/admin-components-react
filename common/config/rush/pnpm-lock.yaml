@@ -32,7 +32,6 @@ dependencies:
   '@types/node': 14.18.9
   '@types/react': 17.0.38
   '@types/react-dom': 17.0.11
-  '@types/react-table': 7.7.9
   '@typescript-eslint/eslint-plugin': 4.33.0_959502c0ea240e86d4d2ba8b8c0fee45
   '@typescript-eslint/parser': 4.33.0_eslint@7.32.0+typescript@4.5.5
   babel-eslint: 10.1.0_eslint@7.32.0
@@ -2106,7 +2105,7 @@ packages:
   /@itwin/itwinui-css/1.11.1:
     dev: false
     resolution:
-      integrity: sha1-PIcQBGSwMQfVW7Ta+NSVRHUU7ZY=
+      integrity: sha512-DognbSMegpA4fPwhSC8U75zcpAJw5HKt0lRuMzk+d8nmzzTYR9nhtZm7GbHffXHdSR9kIXMNk3DRU9nds+3eUA==
   /@itwin/itwinui-icons-react/2.2.0_react-dom@17.0.2+react@17.0.2:
     dependencies:
       react: 17.0.2
@@ -2126,14 +2125,14 @@ packages:
       react: '>=16.8.6'
       react-dom: '>=16.8.6'
     resolution:
-      integrity: sha1-bhvijqkkwLc+KBb3t70axXhgPNw=
+      integrity: sha512-uUrr/O3hpL8r0ZSSRExZ68RTxLbR7mlZFytpCLa9qwJqxvdWgTJaZhR3rSOad6HBfqk6KOGlOGz569BuWrD9Lw==
   /@itwin/itwinui-react/2.11.4_react-dom@17.0.2+react@17.0.2:
     dependencies:
       '@itwin/itwinui-css': 1.11.1
       '@itwin/itwinui-illustrations-react': 2.0.1_react-dom@17.0.2+react@17.0.2
       '@itwin/itwinui-variables': 2.0.0
       '@tippyjs/react': 4.2.6_react-dom@17.0.2+react@17.0.2
-      '@types/react-table': 7.7.9
+      '@types/react-table': 7.7.14
       classnames: 2.3.1
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
@@ -2145,11 +2144,11 @@ packages:
       react: '>=16.8.6 < 19.0.0'
       react-dom: '>=16.8.6 < 19.0.0'
     resolution:
-      integrity: sha1-n5O0id+tm38afcq046qbU6CgvGs=
+      integrity: sha512-7DHbh2DlSDw5boGqzE4P3MhgO3A2ugFtn5PU/ZimpnzljjFXAIDWkGTGCxUw7EeswEHNVsTq9WGTyNSDtaFydg==
   /@itwin/itwinui-variables/2.0.0:
     dev: false
     resolution:
-      integrity: sha1-dv+TFjkk2/uBSS0oqkbas+H59OQ=
+      integrity: sha512-fifv56z4pIVNA7KucfFiDdLThOFOLUF7MYY6VQclfF5uju0Jzl3JmnlTbmBiYlOo9oVn3drtHsA356UWIKclNQ==
   /@jest/console/26.6.2:
     dependencies:
       '@jest/types': 26.6.2
@@ -4502,12 +4501,12 @@ packages:
     dev: false
     resolution:
       integrity: sha512-VIOi9i2Oj5XsmWWoB72p3KlZoEbdRAcechJa8Ztebw7bDl2YmR+odxIqhtJGp1q2EozHs02US+gzxJ9nuf56qg==
-  /@types/react-table/7.7.9:
+  /@types/react-table/7.7.14:
     dependencies:
-      '@types/react': 16.9.23
+      '@types/react': 17.0.38
     dev: false
     resolution:
-      integrity: sha512-ejP/J20Zlj9VmuLh73YgYkW2xOSFTW39G43rPH93M4mYWdMmqv66lCCr+axZpkdtlNLGjvMG2CwzT4S6abaeGQ==
+      integrity: sha512-TYrv7onCiakaG1uAu/UpQ9FojNEt/4/ht87EgJQaEGFoWV606ZLWUZAcUHzMxgc3v1mywP1cDyz3qB4ho3hWOw==
   /@types/react-test-renderer/17.0.1:
     dependencies:
       '@types/react': 16.9.23
@@ -20786,6 +20785,7 @@ packages:
       '@types/jest': 26.0.24
       '@types/react': 17.0.38
       '@types/react-dom': 17.0.11
+      '@types/react-table': 7.7.14
       '@typescript-eslint/eslint-plugin': 4.33.0_959502c0ea240e86d4d2ba8b8c0fee45
       '@typescript-eslint/parser': 4.33.0_eslint@7.32.0+typescript@4.5.5
       babel-eslint: 10.1.0_eslint@7.32.0
@@ -20828,7 +20828,7 @@ packages:
     dev: false
     name: '@rush-temp/imodel-browser-react'
     resolution:
-      integrity: sha512-gbld6uCj7AOm3F1GwluyVgSn93bNWdja8zCvnEuGewrEGgOXIp51VxotNnqLyI05b6gGIZxBAghIn8PPySuPtA==
+      integrity: sha512-Ot7x5vnS5Tz8PzsU2mpG3MsTa1/ID5dnO60zs3w1P0sBaCiGHVG0vdUAJ06mZwbuhHm6ARbNM+mdlM9TJYUESA==
       tarball: file:projects/imodel-browser-react.tgz
     version: 0.0.0
   file:projects/manage-versions-react.tgz_babel-eslint@10.1.0:
@@ -20842,7 +20842,7 @@ packages:
       '@types/jest': 26.0.24
       '@types/react': 17.0.38
       '@types/react-dom': 17.0.11
-      '@types/react-table': 7.7.9
+      '@types/react-table': 7.7.14
       '@typescript-eslint/eslint-plugin': 4.33.0_959502c0ea240e86d4d2ba8b8c0fee45
       '@typescript-eslint/parser': 4.33.0_eslint@7.32.0+typescript@4.5.5
       classnames: 2.3.1
@@ -21004,7 +21004,6 @@ specifiers:
   '@types/node': ^14.14.35
   '@types/react': ^17.0.37
   '@types/react-dom': ^17.0.0
-  '@types/react-table': ^7.0.29
   '@typescript-eslint/eslint-plugin': ^4.20.0
   '@typescript-eslint/parser': ^4.20.0
   babel-eslint: ^10.0.0

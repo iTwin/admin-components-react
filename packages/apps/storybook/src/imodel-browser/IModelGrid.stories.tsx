@@ -48,6 +48,12 @@ Primary.args = {
   apiOverrides: { serverEnvironmentPrefix: "qa" },
 };
 
+export const PrimaryCell = Template.bind({});
+PrimaryCell.args = {
+  apiOverrides: { serverEnvironmentPrefix: "qa" },
+  viewMode: "cells",
+};
+
 export const OverrideApiData = Template.bind({});
 OverrideApiData.args = {
   apiOverrides: {

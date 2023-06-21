@@ -2,7 +2,10 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import React from "react";
+import "./IModelGrid.scss";
+
+import { Table, ThemeProvider } from "@itwin/itwinui-react";
+import React, { useState } from "react";
 import { InView } from "react-intersection-observer";
 
 import { GridStructure } from "../../components/gridStructure/GridStructure";
@@ -12,13 +15,14 @@ import {
   DataStatus,
   IModelFull,
   IModelSortOptions,
+  IModelViewType,
 } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
 import { ContextMenuBuilderItem } from "../../utils/_buildMenuOptions";
 import { IModelGhostTile } from "../iModelTiles/IModelGhostTile";
 import { IModelTile, IModelTileProps } from "../iModelTiles/IModelTile";
 import { useIModelData } from "./useIModelData";
-
+import { useIModelTableConfig } from "./useIModelTableConfig";
 export interface IModelGridProps {
   /**
    * Access token that requires the `imodels:read` scope. */
@@ -41,6 +45,16 @@ export interface IModelGridProps {
   tileOverrides?: Partial<IModelTileProps>;
   /** Strings displayed by the browser */
   stringsOverrides?: {
+    /** Displayed for table name header. */
+    tableColumnName?: string;
+    /** Displayed for table description header. */
+    tableColumnDescription?: string;
+    /** Displayed for table lastModified header. */
+    tableColumnLastModified?: string;
+    /** Displayed on table while loading data. */
+    tableLoadingData?: string;
+    /** Displayed after successful fetch search, but no iModel is returned. */
+    noIModelSearch?: string;
     /** Displayed after successful fetch, but no iModels are returned. */
     noIModels?: string;
     /** Displayed when the component is mounted and there is no iTwin or asset Id. */
@@ -61,10 +75,15 @@ export interface IModelGridProps {
    */
   postProcessCallback?: (
     iModels: IModelFull[],
-    fetchStatus: DataStatus | undefined
+    fetchStatus: DataStatus | undefined,
+    searchText: string | undefined
   ) => IModelFull[];
   /**Component to show when there is no iModel */
   emptyStateComponent?: React.ReactNode;
+  /**  Exact name of the iModel to display */
+  searchText?: string;
+  /**iModel view mode */
+  viewMode?: IModelViewType;
 }
 
 /**
@@ -82,9 +101,17 @@ export const IModelGrid = ({
   useIndividualState,
   postProcessCallback,
   emptyStateComponent,
+  searchText,
+  viewMode,
 }: IModelGridProps) => {
+  const [sort, setSort] = useState<IModelSortOptions | undefined>(sortOptions);
   const strings = _mergeStrings(
     {
+      tableColumnName: "Name",
+      tableColumnDescription: "Description",
+      tableColumnLastModified: "Last Modified",
+      tableLoadingData: "Loading...",
+      noIModelSearch: "There is no such iModel in this project.",
       noIModels: "There are no iModels in this iTwin.",
       noContext: "No context provided",
       noAuthentication: "No access token provided",
@@ -100,13 +127,22 @@ export const IModelGrid = ({
     accessToken,
     apiOverrides,
     iTwinId,
-    sortOptions,
+    sortOptions: sort,
+    searchText,
   });
+
   const iModels = React.useMemo(
     () =>
-      postProcessCallback?.([...fetchediModels], fetchStatus) ?? fetchediModels,
-    [postProcessCallback, fetchediModels, fetchStatus]
+      postProcessCallback?.([...fetchediModels], fetchStatus, searchText) ??
+      fetchediModels,
+    [postProcessCallback, fetchediModels, fetchStatus, searchText]
   );
+
+  const { columns, onRowClick } = useIModelTableConfig({
+    iModelActions,
+    onThumbnailClick,
+    strings,
+  });
 
   const noResultsText = {
     [DataStatus.Fetching]: "",
@@ -122,51 +158,82 @@ export const IModelGrid = ({
 
   const renderIModelGridStructure = () => {
     return (
-      <GridStructure>
-        {fetchStatus === DataStatus.Fetching ? (
-          <>
-            <IModelGhostTile />
-            <IModelGhostTile />
-            <IModelGhostTile />
-          </>
-        ) : (
-          <>
-            {iModels?.map((iModel) => (
-              <IModelHookedTile
-                key={iModel.id}
-                iModel={iModel}
-                iModelOptions={iModelActions}
-                accessToken={accessToken}
-                onThumbnailClick={onThumbnailClick}
-                apiOverrides={tileApiOverrides}
-                useTileState={useIndividualState}
-                {...tileOverrides}
-              />
-            ))}
-            {fetchMore ? (
+      <>
+        {viewMode !== "cells" ? (
+          <GridStructure>
+            {fetchStatus === DataStatus.Fetching ? (
               <>
-                <InView onChange={fetchMore}>
-                  <IModelGhostTile />
-                </InView>
+                <IModelGhostTile />
                 <IModelGhostTile />
                 <IModelGhostTile />
               </>
-            ) : null}
-          </>
+            ) : (
+              <>
+                {searchText && iModels.length === 0 ? (
+                  <div>{strings.noIModelSearch}</div>
+                ) : (
+                  iModels?.map((iModel) => (
+                    <IModelHookedTile
+                      key={iModel.id}
+                      iModel={iModel}
+                      iModelOptions={iModelActions}
+                      accessToken={accessToken}
+                      onThumbnailClick={onThumbnailClick}
+                      apiOverrides={tileApiOverrides}
+                      useTileState={useIndividualState}
+                      {...tileOverrides}
+                    />
+                  ))
+                )}
+                {fetchMore ? (
+                  <>
+                    <InView onChange={fetchMore}>
+                      <IModelGhostTile />
+                    </InView>
+                    <IModelGhostTile />
+                    <IModelGhostTile />
+                  </>
+                ) : null}
+              </>
+            )}
+          </GridStructure>
+        ) : (
+          <ThemeProvider>
+            <Table<{ [P in keyof IModelFull]: IModelFull[P] }>
+              columns={columns}
+              data={iModels}
+              onRowClick={onRowClick}
+              emptyTableContent={
+                fetchStatus === DataStatus.Fetching
+                  ? strings.tableLoadingData
+                  : strings.noIModelSearch
+              }
+              isLoading={fetchStatus === DataStatus.Fetching}
+              isSortable
+              onSort={() =>
+                setSort({ sortType: "name", descending: !sort?.descending })
+              }
+              onBottomReached={fetchMore}
+              className="iac-list-structure"
+              autoResetFilters={false}
+              autoResetSortBy={false}
+            />
+          </ThemeProvider>
         )}
-      </GridStructure>
+      </>
     );
   };
 
   const renderComponent = () => {
     if (
+      !searchText &&
       iModels.length === 0 &&
       noResultsText === strings.noIModels &&
       emptyStateComponent
     ) {
       return <>{emptyStateComponent}</>;
     }
-    if (iModels.length === 0 && noResultsText) {
+    if (!searchText && iModels.length === 0 && noResultsText) {
       return <NoResults text={noResultsText} />;
     }
     return renderIModelGridStructure();
