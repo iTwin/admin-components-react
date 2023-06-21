@@ -59,7 +59,7 @@ export const useIModelData = ({
   }, [accessToken, projectId, apiOverrides?.data, apiOverrides, searchText]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const abortController = useMemo(() => new AbortController(), []);
+  const abortController = useMemo(() => new AbortController(), [searchText]);
   React.useEffect(() => {
     if (!morePages) {
       return;
