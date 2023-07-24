@@ -2,6 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+import { ThemeProvider } from "@itwin/itwinui-react";
 import React from "react";
 import { InView } from "react-intersection-observer";
 
@@ -130,47 +131,49 @@ export const ITwinGrid = ({
   return iTwins.length === 0 && noResultsText ? (
     <NoResults text={noResultsText} />
   ) : (
-    <GridStructure>
-      {fetchStatus === DataStatus.Fetching ? (
-        <>
-          <IModelGhostTile />
-          <IModelGhostTile />
-          <IModelGhostTile />
-        </>
-      ) : (
-        <>
-          {iTwins?.map((iTwin) => (
-            <ITwinHookedTile
-              gridProps={{
-                accessToken,
-                apiOverrides,
-                filterOptions,
-                onThumbnailClick,
-                requestType,
-                stringsOverrides,
-                tileOverrides,
-                useIndividualState,
-              }}
-              key={iTwin.id}
-              iTwin={iTwin}
-              iTwinOptions={iTwinActions}
-              onThumbnailClick={onThumbnailClick}
-              useTileState={useIndividualState}
-              {...tileOverrides}
-            />
-          ))}
-          {fetchMore ? (
-            <>
-              <InView onChange={fetchMore}>
+    <ThemeProvider theme="inherit">
+      <GridStructure>
+        {fetchStatus === DataStatus.Fetching ? (
+          <>
+            <IModelGhostTile />
+            <IModelGhostTile />
+            <IModelGhostTile />
+          </>
+        ) : (
+          <>
+            {iTwins?.map((iTwin) => (
+              <ITwinHookedTile
+                gridProps={{
+                  accessToken,
+                  apiOverrides,
+                  filterOptions,
+                  onThumbnailClick,
+                  requestType,
+                  stringsOverrides,
+                  tileOverrides,
+                  useIndividualState,
+                }}
+                key={iTwin.id}
+                iTwin={iTwin}
+                iTwinOptions={iTwinActions}
+                onThumbnailClick={onThumbnailClick}
+                useTileState={useIndividualState}
+                {...tileOverrides}
+              />
+            ))}
+            {fetchMore ? (
+              <>
+                <InView onChange={fetchMore}>
+                  <IModelGhostTile />
+                </InView>
                 <IModelGhostTile />
-              </InView>
-              <IModelGhostTile />
-              <IModelGhostTile />
-            </>
-          ) : null}
-        </>
-      )}
-    </GridStructure>
+                <IModelGhostTile />
+              </>
+            ) : null}
+          </>
+        )}
+      </GridStructure>
+    </ThemeProvider>
   );
 };
 
