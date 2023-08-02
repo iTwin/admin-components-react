@@ -30,6 +30,10 @@
     "cjs/**/*",
     "esm/**/*"
   ],
+  "dependencies": {
+    "classnames": "^2.2.6",
+    "react-intersection-observer": "^8.31.1"
+  },
   "devDependencies": {
     "@rollup/plugin-commonjs": "~17.1.0",
     "@svgr/rollup": "^5.5.0",
@@ -78,8 +82,6 @@
     "typescript": "^4.2.3"
   },
   "peerDependencies": {
-    "classnames": "^2.2.6",
-    "react-intersection-observer": "^8.31.1",
     "@itwin/itwinui-icons-react": "^2.2.0",
     "@itwin/itwinui-react": "^2.11.4",
     "react": "^16.13.0 || ^17.0.2",
