@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Wed, 21 Jun 2023 16:43:17 GMT and should not be manually modified.
+This log was last generated on Wed, 02 Aug 2023 21:41:58 GMT and should not be manually modified.
+
+## 1.0.1
+Wed, 02 Aug 2023 21:41:58 GMT
+
+### Patches
+
+- ThemeProvider fix for Table view
 
 ## 1.0.0
 Wed, 21 Jun 2023 16:43:17 GMT

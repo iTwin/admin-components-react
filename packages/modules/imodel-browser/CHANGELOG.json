@@ -2,6 +2,18 @@
   "name": "@itwin/imodel-browser-react",
   "entries": [
     {
+      "version": "1.0.1",
+      "tag": "@itwin/imodel-browser-react_v1.0.1",
+      "date": "Wed, 02 Aug 2023 21:41:58 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "ThemeProvider fix for Table view"
+          }
+        ]
+      }
+    },
+    {
       "version": "1.0.0",
       "tag": "@itwin/imodel-browser-react_v1.0.0",
       "date": "Wed, 21 Jun 2023 16:43:17 GMT",
