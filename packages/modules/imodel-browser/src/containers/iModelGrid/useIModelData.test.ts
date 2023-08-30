@@ -16,7 +16,10 @@ describe("useIModelData hook", () => {
   // so they don't affect other tests.
   afterEach(() => server.resetHandlers());
   // Clean up after the tests are finished.
-  afterAll(() => server.close());
+  afterAll(() => {
+    server.close();
+    jest.clearAllMocks();
+  });
 
   it("returns the data and proper status on successful call", async () => {
     const { result, waitForNextUpdate } = renderHook(() =>
@@ -183,6 +186,37 @@ describe("useIModelData hook", () => {
 
     expect(result.current.iModels.map((iModel) => iModel.id)).toEqual(
       expectedSortOrder
+    );
+  });
+
+  it("should call correct api when pageSize is provided", async () => {
+    // Arrange
+    const fetchSpy = jest.spyOn(window, "fetch");
+
+    // Act
+    const { result, waitForNextUpdate } = renderHook(() =>
+      useIModelData({
+        iTwinId: "iTwinId",
+        accessToken: "accessToken",
+        pageSize: 5,
+      })
+    );
+    await waitForNextUpdate();
+
+    // Assert
+    const opts = {
+      headers: {
+        Accept: "application/vnd.bentley.itwin-platform.v2+json",
+        Authorization: "accessToken",
+        Prefer: "return=representation",
+      },
+      signal: new AbortController().signal,
+    };
+    expect(result.current.status).toEqual(DataStatus.Complete);
+    expect(result.current.fetchMore).toBeUndefined();
+    expect(fetchSpy).toHaveBeenCalledWith(
+      "https://api.bentley.com/imodels/?iTwinId=iTwinId&$skip=0&$top=5",
+      opts
     );
   });
 });
