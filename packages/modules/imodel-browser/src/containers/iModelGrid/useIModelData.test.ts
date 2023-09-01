@@ -189,7 +189,7 @@ describe("useIModelData hook", () => {
     );
   });
 
-  it("should call correct api when pageSize is provided", async () => {
+  it("should call correct api when maxCount is provided", async () => {
     // Arrange
     const fetchSpy = jest.spyOn(window, "fetch");
 
@@ -198,7 +198,7 @@ describe("useIModelData hook", () => {
       useIModelData({
         iTwinId: "iTwinId",
         accessToken: "accessToken",
-        pageSize: 5,
+        maxCount: 5,
       })
     );
     await waitForNextUpdate();

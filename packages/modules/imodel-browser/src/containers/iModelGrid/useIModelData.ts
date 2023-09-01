@@ -19,7 +19,7 @@ export interface IModelDataHookOptions {
   sortOptions?: IModelSortOptions;
   apiOverrides?: ApiOverrides<IModelFull[]>;
   searchText?: string | undefined;
-  pageSize?: number;
+  maxCount?: number;
 }
 const PAGE_SIZE = 100;
 
@@ -29,7 +29,7 @@ export const useIModelData = ({
   sortOptions,
   apiOverrides,
   searchText,
-  pageSize,
+  maxCount,
 }: IModelDataHookOptions) => {
   const sortType = sortOptions?.sortType === "name" ? "name" : undefined; //Only available sort by API at the moment.
   const sortDescending = sortOptions?.descending;
@@ -64,7 +64,7 @@ export const useIModelData = ({
     apiOverrides?.data,
     apiOverrides,
     searchText,
-    pageSize,
+    maxCount,
   ]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -94,8 +94,8 @@ export const useIModelData = ({
     const sorting = sortType
       ? `&$orderBy=${sortType} ${sortDescending ? "desc" : "asc"}`
       : "";
-    const paging = `&$skip=${page * (pageSize ?? PAGE_SIZE)}&$top=${
-      pageSize ?? PAGE_SIZE
+    const paging = `&$skip=${page * (maxCount ?? PAGE_SIZE)}&$top=${
+      maxCount ?? PAGE_SIZE
     }`;
     const searching = searchText?.trim() ? `&name=${searchText}` : "";
 
@@ -124,7 +124,7 @@ export const useIModelData = ({
         setStatus(DataStatus.Complete);
         if (
           result.iModels.length !== PAGE_SIZE ||
-          result.iModels.length === pageSize
+          result.iModels.length === maxCount
         ) {
           setMorePages(false);
         }
@@ -152,7 +152,7 @@ export const useIModelData = ({
     searchText,
     sortDescending,
     sortType,
-    pageSize,
+    maxCount,
   ]);
 
   useEffect(() => {

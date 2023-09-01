@@ -85,7 +85,7 @@ export interface IModelGridProps {
   /**iModel view mode */
   viewMode?: IModelViewType;
   /** Number of tiles to fetch, default is 100 */
-  pageSize?: number;
+  maxCount?: number;
 }
 
 /**
@@ -105,7 +105,7 @@ export const IModelGrid = ({
   emptyStateComponent,
   searchText,
   viewMode,
-  pageSize,
+  maxCount,
 }: IModelGridProps) => {
   const [sort, setSort] = useState<IModelSortOptions | undefined>(sortOptions);
   const strings = _mergeStrings(
@@ -132,7 +132,7 @@ export const IModelGrid = ({
     iTwinId,
     sortOptions: sort,
     searchText,
-    pageSize,
+    maxCount,
   });
 
   const iModels = React.useMemo(
