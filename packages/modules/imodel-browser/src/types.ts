@@ -91,4 +91,4 @@ export type ITwinStatus =
   | "active"
   | "inactive"
   | "trial";
-export type IModelViewType = "tile" | "cells";
+export type ViewType = "tile" | "cells";
