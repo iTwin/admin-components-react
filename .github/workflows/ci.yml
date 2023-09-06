@@ -24,11 +24,11 @@ jobs:
       - run: |
           set -e
           
-          echo 'Checking Changes...'
-          node common/scripts/install-run-rush.js change -v
-
           echo 'Installing...'
           node common/scripts/install-run-rush.js install
+
+          echo 'Checking Changes...'
+          node common/scripts/install-run-rush.js change -v
 
           echo 'Verifying Dependency Versions...'
           node common/scripts/install-run-rush.js check
