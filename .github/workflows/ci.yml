@@ -24,6 +24,9 @@ jobs:
       - run: |
           set -e
           
+          echo 'Checking Changes...'
+          node common/scripts/install-run-rush.js change -v
+
           echo 'Installing...'
           node common/scripts/install-run-rush.js install
 
