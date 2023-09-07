@@ -84,6 +84,8 @@ export interface IModelGridProps {
   searchText?: string;
   /**iModel view mode */
   viewMode?: ViewType;
+  /** Maximum number of iModels to fetch, default is unlimited */
+  maxCount?: number;
 }
 
 /**
@@ -103,6 +105,7 @@ export const IModelGrid = ({
   emptyStateComponent,
   searchText,
   viewMode,
+  maxCount,
 }: IModelGridProps) => {
   const [sort, setSort] = useState<IModelSortOptions | undefined>(sortOptions);
   const strings = _mergeStrings(
@@ -129,6 +132,7 @@ export const IModelGrid = ({
     iTwinId,
     sortOptions: sort,
     searchText,
+    maxCount,
   });
 
   const iModels = React.useMemo(
