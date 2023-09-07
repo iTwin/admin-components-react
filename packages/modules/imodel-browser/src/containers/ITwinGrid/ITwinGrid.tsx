@@ -2,6 +2,9 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+import "./ITwinGrid.scss";
+
+import { Table, ThemeProvider } from "@itwin/itwinui-react";
 import React from "react";
 import { InView } from "react-intersection-observer";
 
@@ -13,12 +16,14 @@ import {
   ITwinFilterOptions,
   ITwinFull,
   ITwinSubClass,
+  ViewType,
 } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
 import { ContextMenuBuilderItem } from "../../utils/_buildMenuOptions";
 import { IModelGhostTile } from "../iModelTiles/IModelGhostTile";
 import { ITwinTile, ITwinTileProps } from "./ITwinTile";
 import { useITwinData } from "./useITwinData";
+import { useITwinTableConfig } from "./useITwinTableConfig";
 
 export type IndividualITwinStateHook = (
   iTwin: ITwinFull,
@@ -49,6 +54,14 @@ export interface ITwinGridProps {
   tileOverrides?: Partial<ITwinTileProps>;
   /** Strings displayed by the browser */
   stringsOverrides?: {
+    /** Displayed for table name header. */
+    tableColumnName?: string;
+    /** Displayed for table description header. */
+    tableColumnDescription?: string;
+    /** Displayed for table lastModified header. */
+    tableColumnLastModified?: string;
+    /** Displayed on table while loading data. */
+    tableLoadingData?: string;
     /** Badge text for trial iTwins */
     trialBadge?: string;
     /** Badge text for inactive iTwins */
@@ -73,6 +86,8 @@ export interface ITwinGridProps {
     iTwins: ITwinFull[],
     fetchStatus: DataStatus | undefined
   ) => ITwinFull[];
+  /**iTwin view mode */
+  viewMode?: ViewType;
 }
 
 /**
@@ -90,9 +105,14 @@ export const ITwinGrid = ({
   tileOverrides,
   useIndividualState,
   postProcessCallback,
+  viewMode,
 }: ITwinGridProps) => {
   const strings = _mergeStrings(
     {
+      tableColumnName: "iTwin Number",
+      tableColumnDescription: "iTwin Name",
+      tableColumnLastModified: "Last Modified",
+      tableLoadingData: "Loading...",
       trialBadge: "Trial",
       inactiveBadge: "Inactive",
       noITwins: "No iTwin found.",
@@ -119,6 +139,12 @@ export const ITwinGrid = ({
     [postProcessCallback, fetchedItwins, fetchStatus]
   );
 
+  const { columns, onRowClick } = useITwinTableConfig({
+    iTwinActions,
+    onThumbnailClick,
+    strings,
+  });
+
   const noResultsText = {
     [DataStatus.Fetching]: "",
     [DataStatus.Complete]: strings.noITwins,
@@ -127,50 +153,70 @@ export const ITwinGrid = ({
     [DataStatus.ContextRequired]: "",
   }[fetchStatus ?? DataStatus.Fetching];
 
-  return iTwins.length === 0 && noResultsText ? (
-    <NoResults text={noResultsText} />
-  ) : (
-    <GridStructure>
-      {fetchStatus === DataStatus.Fetching ? (
-        <>
-          <IModelGhostTile />
-          <IModelGhostTile />
-          <IModelGhostTile />
-        </>
-      ) : (
-        <>
-          {iTwins?.map((iTwin) => (
-            <ITwinHookedTile
-              gridProps={{
-                accessToken,
-                apiOverrides,
-                filterOptions,
-                onThumbnailClick,
-                requestType,
-                stringsOverrides,
-                tileOverrides,
-                useIndividualState,
-              }}
-              key={iTwin.id}
-              iTwin={iTwin}
-              iTwinOptions={iTwinActions}
-              onThumbnailClick={onThumbnailClick}
-              useTileState={useIndividualState}
-              {...tileOverrides}
-            />
-          ))}
-          {fetchMore ? (
-            <>
-              <InView onChange={fetchMore}>
+  return viewMode !== "cells" ? (
+    iTwins.length === 0 && noResultsText ? (
+      <NoResults text={noResultsText} />
+    ) : (
+      <GridStructure>
+        {fetchStatus === DataStatus.Fetching ? (
+          <>
+            <IModelGhostTile />
+            <IModelGhostTile />
+            <IModelGhostTile />
+          </>
+        ) : (
+          <>
+            {iTwins?.map((iTwin) => (
+              <ITwinHookedTile
+                gridProps={{
+                  accessToken,
+                  apiOverrides,
+                  filterOptions,
+                  onThumbnailClick,
+                  requestType,
+                  stringsOverrides,
+                  tileOverrides,
+                  useIndividualState,
+                }}
+                key={iTwin.id}
+                iTwin={iTwin}
+                iTwinOptions={iTwinActions}
+                onThumbnailClick={onThumbnailClick}
+                useTileState={useIndividualState}
+                {...tileOverrides}
+              />
+            ))}
+            {fetchMore ? (
+              <>
+                <InView onChange={fetchMore}>
+                  <IModelGhostTile />
+                </InView>
                 <IModelGhostTile />
-              </InView>
-              <IModelGhostTile />
-              <IModelGhostTile />
-            </>
-          ) : null}
-        </>
-      )}
-    </GridStructure>
+                <IModelGhostTile />
+              </>
+            ) : null}
+          </>
+        )}
+      </GridStructure>
+    )
+  ) : (
+    <ThemeProvider theme="inherit">
+      <Table<{ [P in keyof ITwinFull]: ITwinFull[P] }>
+        columns={columns}
+        data={iTwins}
+        onRowClick={onRowClick}
+        emptyTableContent={
+          fetchStatus === DataStatus.Fetching
+            ? strings.tableLoadingData
+            : strings.noITwins
+        }
+        isLoading={fetchStatus === DataStatus.Fetching}
+        onBottomReached={fetchMore}
+        className="iac-list-structure"
+        autoResetFilters={false}
+        autoResetSortBy={false}
+      />
+    </ThemeProvider>
   );
 };
 
