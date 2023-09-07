@@ -94,9 +94,14 @@ export const useIModelData = ({
     const sorting = sortType
       ? `&$orderBy=${sortType} ${sortDescending ? "desc" : "asc"}`
       : "";
-    const paging = `&$skip=${page * (maxCount ?? PAGE_SIZE)}&$top=${
-      maxCount ?? PAGE_SIZE
-    }`;
+    const skip = page * PAGE_SIZE;
+    let top;
+    if (maxCount) {
+      top = Math.min(PAGE_SIZE, maxCount - skip);
+    } else {
+      top = PAGE_SIZE;
+    }
+    const paging = `&$skip=${skip}&$top=${top}`;
     const searching = searchText?.trim() ? `&name=${searchText}` : "";
 
     const url = `${_getAPIServer(

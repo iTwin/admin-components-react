@@ -84,7 +84,7 @@ export interface IModelGridProps {
   searchText?: string;
   /**iModel view mode */
   viewMode?: IModelViewType;
-  /** Number of tiles to fetch, default is 100 */
+  /** Maximum number of iModels to fetch, default is unlimited */
   maxCount?: number;
 }
 
