@@ -109,8 +109,8 @@ export const ITwinGrid = ({
 }: ITwinGridProps) => {
   const strings = _mergeStrings(
     {
-      tableColumnName: "ITwin Number",
-      tableColumnDescription: "ITwin Name",
+      tableColumnName: "iTwin Number",
+      tableColumnDescription: "iTwin Name",
       tableColumnLastModified: "Last Modified",
       tableLoadingData: "Loading...",
       trialBadge: "Trial",
