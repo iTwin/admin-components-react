@@ -91,4 +91,6 @@ export type ITwinStatus =
   | "active"
   | "inactive"
   | "trial";
-export type IModelViewType = "tile" | "cells";
+export type ViewType = "tile" | "cells";
+// Remove this IModelViewType with next major release i.e 2.0
+export type IModelViewType = ViewType;

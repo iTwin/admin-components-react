@@ -15,7 +15,7 @@ import {
   DataStatus,
   IModelFull,
   IModelSortOptions,
-  IModelViewType,
+  ViewType,
 } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
 import { ContextMenuBuilderItem } from "../../utils/_buildMenuOptions";
@@ -83,7 +83,7 @@ export interface IModelGridProps {
   /**  Exact name of the iModel to display */
   searchText?: string;
   /**iModel view mode */
-  viewMode?: IModelViewType;
+  viewMode?: ViewType;
   /** Maximum number of iModels to fetch, default is unlimited */
   maxCount?: number;
 }
