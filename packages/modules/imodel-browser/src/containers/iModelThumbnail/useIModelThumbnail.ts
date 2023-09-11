@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { useEffect, useState } from "react";
 
+import defaultIModelThumbnail from "../../images/default-thumbnail.png";
 import { ApiOverrides } from "../../types";
 import { _getAPIServer } from "../../utils/_apiOverrides";
 
@@ -63,6 +64,7 @@ export const useIModelThumbnail = (
         .catch((e) => {
           if (e.name === "AbortError") {
             // Aborting because unmounting is not an error, swallow.
+            setThumbnail(defaultIModelThumbnail);
             return;
           }
           console.error("Thumbnail download error", "Thumbnail Fetch", {
