@@ -52,6 +52,9 @@ export const useIModelThumbnail = (
             return response
               .arrayBuffer()
               .then(convertArrayBufferToUrlBase64PNG);
+          } else if (response.status === 404) {
+            // Handle 404 error by setting the default thumbnail
+            return Promise.resolve(defaultIModelThumbnail);
           } else {
             return response.text().then((errorText) => {
               throw new Error(errorText);
@@ -64,7 +67,6 @@ export const useIModelThumbnail = (
         .catch((e) => {
           if (e.name === "AbortError") {
             // Aborting because unmounting is not an error, swallow.
-            setThumbnail(defaultIModelThumbnail);
             return;
           }
           console.error("Thumbnail download error", "Thumbnail Fetch", {
