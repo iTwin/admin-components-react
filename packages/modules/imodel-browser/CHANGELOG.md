@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Thu, 07 Sep 2023 20:13:33 GMT and should not be manually modified.
+This log was last generated on Thu, 14 Sep 2023 16:51:06 GMT and should not be manually modified.
+
+## 1.1.1
+Thu, 14 Sep 2023 16:51:06 GMT
+
+### Patches
+
+- Adding default iModel thumbnail for iModel grids in case API fails.
 
 ## 1.1.0
 Thu, 07 Sep 2023 20:13:33 GMT
