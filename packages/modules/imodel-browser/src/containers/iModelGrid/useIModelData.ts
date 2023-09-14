@@ -19,6 +19,7 @@ export interface IModelDataHookOptions {
   sortOptions?: IModelSortOptions;
   apiOverrides?: ApiOverrides<IModelFull[]>;
   searchText?: string | undefined;
+  maxCount?: number;
 }
 const PAGE_SIZE = 100;
 
@@ -28,6 +29,7 @@ export const useIModelData = ({
   sortOptions,
   apiOverrides,
   searchText,
+  maxCount,
 }: IModelDataHookOptions) => {
   const sortType = sortOptions?.sortType === "name" ? "name" : undefined; //Only available sort by API at the moment.
   const sortDescending = sortOptions?.descending;
@@ -56,7 +58,14 @@ export const useIModelData = ({
     setIModels([]);
     setPage(0);
     setMorePages(true);
-  }, [accessToken, iTwinId, apiOverrides?.data, apiOverrides, searchText]);
+  }, [
+    accessToken,
+    iTwinId,
+    apiOverrides?.data,
+    apiOverrides,
+    searchText,
+    maxCount,
+  ]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const abortController = useMemo(() => new AbortController(), [searchText]);
@@ -85,7 +94,14 @@ export const useIModelData = ({
     const sorting = sortType
       ? `&$orderBy=${sortType} ${sortDescending ? "desc" : "asc"}`
       : "";
-    const paging = `&$skip=${page * PAGE_SIZE}&$top=${PAGE_SIZE}`;
+    const skip = page * PAGE_SIZE;
+    let top;
+    if (maxCount) {
+      top = Math.min(PAGE_SIZE, maxCount - skip);
+    } else {
+      top = PAGE_SIZE;
+    }
+    const paging = `&$skip=${skip}&$top=${top}`;
     const searching = searchText?.trim() ? `&name=${searchText}` : "";
 
     const url = `${_getAPIServer(
@@ -111,7 +127,10 @@ export const useIModelData = ({
       })
       .then((result: { iModels: IModelFull[] }) => {
         setStatus(DataStatus.Complete);
-        if (result.iModels.length !== PAGE_SIZE) {
+        if (
+          result.iModels.length !== PAGE_SIZE ||
+          result.iModels.length === maxCount
+        ) {
           setMorePages(false);
         }
         setIModels((imodels) =>
@@ -138,6 +157,7 @@ export const useIModelData = ({
     searchText,
     sortDescending,
     sortType,
+    maxCount,
   ]);
 
   useEffect(() => {

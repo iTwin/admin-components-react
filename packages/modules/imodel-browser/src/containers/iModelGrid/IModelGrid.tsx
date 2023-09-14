@@ -15,7 +15,7 @@ import {
   DataStatus,
   IModelFull,
   IModelSortOptions,
-  IModelViewType,
+  ViewType,
 } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
 import { ContextMenuBuilderItem } from "../../utils/_buildMenuOptions";
@@ -83,7 +83,9 @@ export interface IModelGridProps {
   /**  Exact name of the iModel to display */
   searchText?: string;
   /**iModel view mode */
-  viewMode?: IModelViewType;
+  viewMode?: ViewType;
+  /** Maximum number of iModels to fetch, default is unlimited */
+  maxCount?: number;
 }
 
 /**
@@ -103,6 +105,7 @@ export const IModelGrid = ({
   emptyStateComponent,
   searchText,
   viewMode,
+  maxCount,
 }: IModelGridProps) => {
   const [sort, setSort] = useState<IModelSortOptions | undefined>(sortOptions);
   const strings = _mergeStrings(
@@ -129,6 +132,7 @@ export const IModelGrid = ({
     iTwinId,
     sortOptions: sort,
     searchText,
+    maxCount,
   });
 
   const iModels = React.useMemo(
@@ -198,7 +202,7 @@ export const IModelGrid = ({
             )}
           </GridStructure>
         ) : (
-          <ThemeProvider>
+          <ThemeProvider theme="inherit">
             <Table<{ [P in keyof IModelFull]: IModelFull[P] }>
               columns={columns}
               data={iModels}
