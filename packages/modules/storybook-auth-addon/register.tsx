@@ -3,11 +3,15 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 /* eslint-disable react-hooks/rules-of-hooks */
-import { ClientRequestContext } from "@bentley/bentleyjs-core";
-import { BrowserAuthorizationClient } from "@bentley/frontend-authorization-client";
-import addons, { types } from "@storybook/addons";
-import { useAddonState, useGlobals, useParameter } from "@storybook/api";
+import { BrowserAuthorizationClient } from "@itwin/browser-authorization";
 import { IconButton, Icons, Loader, WithTooltip } from "@storybook/components";
+import {
+  addons,
+  types,
+  useAddonState,
+  useGlobals,
+  useParameter,
+} from "@storybook/manager-api";
 import React, { useRef, useState } from "react";
 
 addons.register("auth/toolbar", () => {
@@ -24,8 +28,11 @@ addons.register("auth/toolbar", () => {
         loading: false,
         email: "",
       });
-      const authClientConfig = useParameter("authClientConfig", {});
-      const client = useRef(null);
+      const authClientConfig = useParameter<{
+        clientId: string;
+        scope: string;
+      }>("authClientConfig", {});
+      const client = useRef<BrowserAuthorizationClient | null>(null);
 
       const [buildMissing, setBuildMissing] = useState(false);
       const [clientIdMissing, setClientIdMissing] = useState(false);
@@ -35,7 +42,7 @@ addons.register("auth/toolbar", () => {
           return;
         }
 
-        setState({ loading: true });
+        setState({ loading: true, email: state.email });
         try {
           if (!authClientConfig.clientId) {
             setClientIdMissing(true);
@@ -53,35 +60,42 @@ addons.register("auth/toolbar", () => {
               postSignoutRedirectUri: redirectURI,
               responseType: "code",
             });
-            client.current.onUserStateChanged.addListener((accessToken) => {
+
+            client.current.onAccessTokenChanged.addListener((accessToken) => {
               if (!accessToken) {
                 updateGlobals({ accessToken: "" });
-                setState({ loading: false });
+                setState({ ...state, loading: false });
                 return;
               }
-              let tokenString = accessToken.toTokenString();
+
               let email = "";
               try {
                 email = JSON.parse(
-                  atob(tokenString.split(" ")[1]?.split(".")[1])
+                  atob(accessToken.split(" ")[1]?.split(".")[1])
                 ).email;
               } catch (e) {
                 email = "Email parsing failed";
               }
-              updateGlobals({ accessToken: tokenString });
+
+              updateGlobals({ accessToken: accessToken });
               setState({ loading: false, email });
             });
           }
-          const context = new ClientRequestContext();
+
           if (!globals.accessToken) {
-            await client.current.signInPopup(context);
+            try {
+              await client.current.signInPopup();
+            } catch (error) {
+            } finally {
+              // setState({ loading: false });
+            }
           } else {
-            await client.current.signOutPopup(context).catch(() => {
+            await client.current.signOutPopup().catch(() => {
               // Intentionally a noop, user closing the window is not an issue.
             });
           }
         } catch (e) {
-          setState({ loading: false });
+          setState({ ...state, loading: false });
         }
       };
 

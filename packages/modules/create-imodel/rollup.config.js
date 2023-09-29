@@ -33,7 +33,7 @@ export default {
       use: {
         sass: { outputStyle: "compressed" },
       },
-    }), // scss -> css using node-sass
+    }), // scss -> css using sass
     terser(), // minification
   ],
 };

@@ -10,8 +10,8 @@ import {
   IModelName,
   UploadImage,
 } from "@itwin/create-imodel-react";
-import { LabeledInput, LabeledSelect } from "@itwin/itwinui-react";
-import { Meta, Story } from "@storybook/react/types-6-0";
+// import { LabeledInput,  } from "@itwin/itwinui-react";
+// import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
 
 import {
@@ -32,44 +32,40 @@ export default {
     apiOverrides: { serverEnvironmentPrefix: "dev" },
     iTwinId: "de47c5ad-5657-42b8-a2bc-f2b8bf84cd4b",
   },
-} as Meta;
+};
 
-const root = document.getElementById("root") as HTMLElement;
-root.style.height = "90vh";
+// const root = document.getElementById("root") as HTMLElement;
+// root.style.height = "90vh";
 
-export const Create: Story<CreateIModelProps> = withAccessTokenOverride(
-  (args) => {
-    return (
-      <>
-        <CreateIModel {...args} />
-      </>
-    );
-  }
-);
+export const Create = withAccessTokenOverride((args: any) => {
+  return (
+    <>
+      <CreateIModel {...args} />
+    </>
+  );
+});
 
-export const WithExtentMap: Story<CreateIModelProps> = withAccessTokenOverride(
-  (args) => {
-    return (
-      <CreateIModel
-        {...args}
-        extentComponent={
-          <iframe
-            title="iModel Extent Map"
-            src="https://www.google.com/maps/embed"
-            width="100%"
-            height="100%"
-            frameBorder="0"
-            style={{ border: 0 }}
-            allowFullScreen={false}
-          ></iframe>
-        }
-      />
-    );
-  }
-);
+export const WithExtentMap = withAccessTokenOverride((args: any) => {
+  return (
+    <CreateIModel
+      {...args}
+      extentComponent={
+        <iframe
+          title="iModel Extent Map"
+          src="https://www.google.com/maps/embed"
+          width="100%"
+          height="100%"
+          frameBorder="0"
+          style={{ border: 0 }}
+          allowFullScreen={false}
+        ></iframe>
+      }
+    />
+  );
+});
 
-export const CreateIModelCustomized: Story<CreateIModelProps> =
-  withAccessTokenOverride((args) => {
+export const CreateIModelCustomized: CreateIModelProps =
+  withAccessTokenOverride((args: any) => {
     return (
       <>
         <CreateIModel {...args}>
@@ -82,7 +78,7 @@ export const CreateIModelCustomized: Story<CreateIModelProps> =
             }}
           >
             <IModelName />
-            <LabeledInput
+            {/* <LabeledInput
               label={"Sub title"}
               name="test"
               value={""}
@@ -99,7 +95,7 @@ export const CreateIModelCustomized: Story<CreateIModelProps> =
               ]}
               onChange={() => undefined}
               className="iac-imodel-input-element"
-            />
+            /> */}
             <IModelDescription />
             <UploadImage />
             <ButtonBar />

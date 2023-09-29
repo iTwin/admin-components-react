@@ -3,7 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 /* eslint-disable react-hooks/rules-of-hooks */
-import addons, { types } from "@storybook/addons";
+import { addons, types } from "@storybook/addons";
 import { useAddonState, useArgTypes, useGlobals } from "@storybook/api";
 import {
   IconButton,
@@ -13,6 +13,11 @@ import {
   WithTooltip,
 } from "@storybook/components";
 import React from "react";
+
+type AddonStateProps = {
+  mustLoad: boolean;
+  projects: { displayName: React.ReactNode; id?: string }[];
+};
 
 addons.register("project/toolbar", () => {
   addons.add("project-toolbar-addon/toolbar", {
@@ -25,10 +30,13 @@ addons.register("project/toolbar", () => {
       const [globals, updateGlobals] = useGlobals();
       const { iTwinId: withITwinId } = useArgTypes();
 
-      const [state, setState] = useAddonState("project/toolbar", {
-        mustLoad: true,
-        projects: [],
-      });
+      const [state, setState] = useAddonState<AddonStateProps>(
+        "project/toolbar",
+        {
+          mustLoad: true,
+          projects: [],
+        }
+      );
 
       const fetchProjects = React.useCallback(async () => {
         if (!state.mustLoad || !globals.accessToken) {
@@ -65,6 +73,7 @@ addons.register("project/toolbar", () => {
                 ),
               },
             ],
+            mustLoad: state.mustLoad,
           });
           const response = await fetch(
             "https://qa-api.bentley.com/itwins/favorites?subClass=Project",
@@ -84,7 +93,7 @@ addons.register("project/toolbar", () => {
                   "'Favorite' a project in CONNECT (QA) to show it here, refresh this page to see the results",
               });
             }
-            setState({ projects: projects });
+            setState({ ...state, projects: projects });
           }
         } catch (e) {
           console.error("Error", e);
@@ -93,9 +102,10 @@ addons.register("project/toolbar", () => {
 
       const buildLinks = React.useCallback(
         (onHide) =>
-          state.projects.map((project) => ({
-            key: project.id || project.displayName || "Loading State",
-            id: project.id,
+          state.projects?.map((project) => ({
+            key:
+              project.id || project.displayName?.toString() || "Loading State",
+            id: project.id || "",
             title: project.displayName,
             onClick: () => {
               updateGlobals({
@@ -111,8 +121,9 @@ addons.register("project/toolbar", () => {
       return withITwinId && globals.accessToken ? (
         <WithTooltip
           placement="top"
-          trigger="hover"
-          closeOnClick
+          withArrows
+          trigger="click"
+          closeOnOutsideClick
           tooltip={({ onHide }) => {
             return <TooltipLinkList links={buildLinks(onHide)} />;
           }}

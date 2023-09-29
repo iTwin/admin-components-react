@@ -3,7 +3,6 @@
   "version": "0.0.1",
   "private": true,
   "devDependencies": {
-    "@babel/core": "^7.12.10",
     "@bentley/bentleyjs-core": "2.11.0",
     "@bentley/frontend-authorization-client": "2.11.0",
     "@bentley/itwin-client": "2.11.0",
@@ -14,20 +13,19 @@
     "@itwin/itwinui-react": "^2.11.4",
     "@itwin/manage-versions-react": "~1.0.0",
     "@itwin/storybook-auth-addon": "^0.1.0",
-    "@storybook/addon-actions": "^6.2.5",
-    "@storybook/addon-essentials": "^6.2.5",
-    "@storybook/addon-links": "^6.2.5",
-    "@storybook/addons": "^6.2.5",
-    "@storybook/api": "^6.2.5",
-    "@storybook/core-events": "^6.2.5",
-    "@storybook/react": "^6.2.5",
-    "@storybook/theming": "^6.2.5",
+    "@storybook/addon-actions": "^7.4.0",
+    "@storybook/addon-essentials": "^7.4.0",
+    "@storybook/addon-links": "^7.4.0",
+    "@storybook/addons": "~7.4.1",
+    "@storybook/api": "^7.4.0",
+    "@storybook/core-events": "^7.4.0",
+    "@storybook/react": "^7.4.0",
+    "@storybook/theming": "^7.4.0",
     "@types/react": "^17.0.37",
     "@types/react-dom": "^17.0.0",
     "@typescript-eslint/eslint-plugin": "^4.20.0",
     "@typescript-eslint/parser": "^4.20.0",
     "babel-eslint": "^10.0.0",
-    "babel-loader": "^8.2.2",
     "eslint-config-airbnb": "^0.0.4",
     "eslint-config-prettier": "^6.11.0",
     "eslint-config-react-app": "^6.0.0",
@@ -42,13 +40,22 @@
     "react-dom": "^17.0.2",
     "react": "^17.0.2",
     "rimraf": "^3.0.2",
-    "storybook-dark-mode": "^1.0.7",
-    "webpack": "^5.28.0"
+    "storybook-dark-mode": "^3.0.1",
+    "typescript": "~5.1.6",
+    "webpack": "^5.28.0",
+    "storybook": "~7.4.0",
+    "@storybook/react-vite": "~7.4.0"
   },
   "scripts": {
-    "start": "start-storybook -s ./node_modules/@itwin/storybook-auth-addon/build -p 6006",
+    "start": "storybook dev -p 6006",
     "build": "",
-    "test": "build-storybook -s ./node_modules/@itwin/storybook-auth-addon/build --loglevel error --quiet",
+    "test": "storybook build  --loglevel error --quiet",
     "clean": "rimraf storybook-static"
+  },
+  "dependencies": {
+    "vite": "~4.4.9",
+    "@storybook/preview-api": "~7.4.1",
+    "@storybook/preview": "~7.4.1",
+    "@storybook/components": "~7.4.1"
   }
 }
