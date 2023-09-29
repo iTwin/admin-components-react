@@ -8,7 +8,7 @@ import {
   ManageVersionsProps,
 } from "@itwin/manage-versions-react";
 import { action } from "@storybook/addon-actions";
-import { Meta, Story } from "@storybook/react/types-6-0";
+
 import React from "react";
 
 import {
@@ -32,9 +32,9 @@ export default {
       control: { disable: true },
     },
   },
-} as Meta;
+};
 
-const Template: Story<ManageVersionsProps> = withAccessTokenOverride((args) => (
+const Template = withAccessTokenOverride((args: any) => (
   <ManageVersions {...args} />
 ));
 

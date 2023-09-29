@@ -6,7 +6,7 @@ import {
   UpdateIModel as ExternalComponent,
   UpdateIModelProps,
 } from "@itwin/create-imodel-react";
-import { Meta, Story } from "@storybook/react/types-6-0";
+// import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
 
 import {
@@ -32,20 +32,18 @@ export default {
   component: UpdateIModel,
   excludeStories: ["UpdateIModel"],
   argTypes: accessTokenArgTypes,
-} as Meta;
+};
 
-const root = document.getElementById("root") as HTMLElement;
-root.style.height = "90vh";
+// const root = document.getElementById("root") as HTMLElement;
+// root.style.height = "90vh";
 
-export const Update: Story<UpdateIModelProps> = withAccessTokenOverride(
-  (args) => {
-    return (
-      <>
-        <UpdateIModel {...args} />
-      </>
-    );
-  }
-);
+export const Update = withAccessTokenOverride((args: any) => {
+  return (
+    <>
+      <UpdateIModel {...args} />
+    </>
+  );
+});
 
 Update.args = {
   apiOverrides: { serverEnvironmentPrefix: "dev" },

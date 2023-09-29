@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { Story } from "@storybook/react/types-6-0";
+import { Story } from "@storybook/react-vite"
 
 const ACCESS_TOKEN_DEFAULT_VALUE =
   "In this storybook, this is provided by clicking on the key in the toolbar";

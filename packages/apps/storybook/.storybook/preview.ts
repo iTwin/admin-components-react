@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import addons from "@storybook/addons";
+import { addons } from "@storybook/addons";
 import { themes } from "@storybook/theming";
 
 import { darkTheme, lightTheme } from "./itwinTheme";
@@ -12,7 +12,7 @@ const channel = addons.getChannel();
 
 // switch body class for story along with interface theme
 channel.on("DARK_MODE", (isDark) => {
-  document.body.dataset.iuiTheme = isDark ? 'dark' : 'light';
+  document.body.dataset.iuiTheme = isDark ? "dark" : "light";
 });
 
 export const parameters = {
@@ -28,7 +28,17 @@ export const parameters = {
   },
   authClientConfig: {
     clientId: process.env.STORYBOOK_AUTH_CLIENT_ID,
-    scope: ["imodels:read", "imodels:modify", "itwins:modify", "itwins:read"].join(" "),
+    scope: [
+      "imodels:read",
+      "imodels:modify",
+      "itwins:modify",
+      "itwins:read",
+    ].join(" "),
     authority: "https://qa-ims.bentley.com",
   },
 };
+
+export const globalTypes = {
+  accessToken: ""
+}
+

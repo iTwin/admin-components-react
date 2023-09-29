@@ -3,10 +3,15 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 /* eslint-disable react-hooks/rules-of-hooks */
-import { ClientRequestContext } from "@bentley/bentleyjs-core";
-import { BrowserAuthorizationClient } from "@bentley/frontend-authorization-client";
-import addons, { types } from "@storybook/addons";
-import { useAddonState, useGlobals, useParameter } from "@storybook/api";
+import { BrowserAuthorizationClient } from "@itwin/browser-authorization";
+import {
+  addons,
+  useAddonState,
+  useParameter,
+  types,
+  useGlobals,
+} from "@storybook/manager-api";
+
 import { IconButton, Icons, Loader, WithTooltip } from "@storybook/components";
 import React, { useRef, useState } from "react";
 
@@ -24,18 +29,22 @@ addons.register("auth/toolbar", () => {
         loading: false,
         email: "",
       });
-      const authClientConfig = useParameter("authClientConfig", {});
-      const client = useRef(null);
+      const authClientConfig = useParameter<{
+        clientId: string;
+        scope: string;
+      }>("authClientConfig", {});
+      const client = useRef<BrowserAuthorizationClient | null>(null);
 
       const [buildMissing, setBuildMissing] = useState(false);
       const [clientIdMissing, setClientIdMissing] = useState(false);
 
       const authenticate = async () => {
+        console.log("auth");
         if (state.loading || buildMissing || clientIdMissing) {
           return;
         }
 
-        setState({ loading: true });
+        setState({ loading: true, email: state.email });
         try {
           if (!authClientConfig.clientId) {
             setClientIdMissing(true);
@@ -53,38 +62,54 @@ addons.register("auth/toolbar", () => {
               postSignoutRedirectUri: redirectURI,
               responseType: "code",
             });
-            client.current.onUserStateChanged.addListener((accessToken) => {
+
+            client.current.onAccessTokenChanged.addListener((accessToken) => {
+              console.log("ON CHANGE");
+              console.log(accessToken);
               if (!accessToken) {
-                updateGlobals({ accessToken: "" });
-                setState({ loading: false });
+                console.log("no access token");
+                updateGlobals({ ["accessToken"]: "" });
+                setState({ ...state, loading: false });
                 return;
               }
-              let tokenString = accessToken.toTokenString();
+
               let email = "";
               try {
                 email = JSON.parse(
-                  atob(tokenString.split(" ")[1]?.split(".")[1])
+                  atob(accessToken.split(" ")[1]?.split(".")[1])
                 ).email;
               } catch (e) {
                 email = "Email parsing failed";
               }
-              updateGlobals({ accessToken: tokenString });
+              console.log("SHOULD BE SETTING ACCE");
+              updateGlobals({ accessToken: accessToken });
+
+              console.log(globals);
               setState({ loading: false, email });
             });
           }
-          const context = new ClientRequestContext();
+
           if (!globals.accessToken) {
-            await client.current.signInPopup(context);
+            console.log("before signin pop");
+            try {
+              await client.current.signInPopup();
+              console.log("after signin pop");
+            } catch (error) {
+            } finally {
+              // setState({ loading: false });
+            }
           } else {
-            await client.current.signOutPopup(context).catch(() => {
+            await client.current.signOutPopup().catch(() => {
               // Intentionally a noop, user closing the window is not an issue.
             });
           }
         } catch (e) {
-          setState({ loading: false });
+          console.log("ERROR");
+          console.log(e);
+          setState({ ...state, loading: false });
         }
       };
-
+      console.log(globals);
       return (
         <WithTooltip
           placement="bottom"

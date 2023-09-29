@@ -1,3 +1,3 @@
-import { BrowserAuthorizationCallbackHandler } from "@bentley/frontend-authorization-client";
+import { BrowserAuthorizationClient } from "@itwin/browser-authorization";
 
-BrowserAuthorizationCallbackHandler.handleSigninCallback(window.location.toString()).catch(console.log);
+BrowserAuthorizationClient.handleSignInCallback().catch(console.log);
