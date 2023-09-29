@@ -1,3 +1,7 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
 import { StorybookConfig } from "@storybook/react-vite"
 const config: StorybookConfig = {
   framework: {
@@ -10,7 +14,7 @@ const config: StorybookConfig = {
     "@storybook/addon-links",
     "@storybook/addon-essentials",
     "@itwin/storybook-auth-addon",
-    "../src/addon/register.js",
+    "../src/addon/register.tsx",
   ],
   viteFinal: (config, options) => {
     const oldDefine = config.define

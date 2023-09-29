@@ -121,7 +121,8 @@ addons.register("project/toolbar", () => {
       return withITwinId && globals.accessToken ? (
         <WithTooltip
           placement="top"
-          trigger="hover"
+          withArrows
+          trigger="click"
           closeOnOutsideClick
           tooltip={({ onHide }) => {
             return <TooltipLinkList links={buildLinks(onHide)} />;

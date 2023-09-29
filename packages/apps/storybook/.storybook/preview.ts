@@ -39,6 +39,7 @@ export const parameters = {
 };
 
 export const globalTypes = {
-  accessToken: ""
+  accessToken: "",
+  iTwinId: ""
 }
 

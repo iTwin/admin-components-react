@@ -4,15 +4,14 @@
  *--------------------------------------------------------------------------------------------*/
 /* eslint-disable react-hooks/rules-of-hooks */
 import { BrowserAuthorizationClient } from "@itwin/browser-authorization";
+import { IconButton, Icons, Loader, WithTooltip } from "@storybook/components";
 import {
   addons,
-  useAddonState,
-  useParameter,
   types,
+  useAddonState,
   useGlobals,
+  useParameter,
 } from "@storybook/manager-api";
-
-import { IconButton, Icons, Loader, WithTooltip } from "@storybook/components";
 import React, { useRef, useState } from "react";
 
 addons.register("auth/toolbar", () => {
@@ -39,7 +38,6 @@ addons.register("auth/toolbar", () => {
       const [clientIdMissing, setClientIdMissing] = useState(false);
 
       const authenticate = async () => {
-        console.log("auth");
         if (state.loading || buildMissing || clientIdMissing) {
           return;
         }
@@ -64,11 +62,8 @@ addons.register("auth/toolbar", () => {
             });
 
             client.current.onAccessTokenChanged.addListener((accessToken) => {
-              console.log("ON CHANGE");
-              console.log(accessToken);
               if (!accessToken) {
-                console.log("no access token");
-                updateGlobals({ ["accessToken"]: "" });
+                updateGlobals({ accessToken: "" });
                 setState({ ...state, loading: false });
                 return;
               }
@@ -81,19 +76,15 @@ addons.register("auth/toolbar", () => {
               } catch (e) {
                 email = "Email parsing failed";
               }
-              console.log("SHOULD BE SETTING ACCE");
-              updateGlobals({ accessToken: accessToken });
 
-              console.log(globals);
+              updateGlobals({ accessToken: accessToken });
               setState({ loading: false, email });
             });
           }
 
           if (!globals.accessToken) {
-            console.log("before signin pop");
             try {
               await client.current.signInPopup();
-              console.log("after signin pop");
             } catch (error) {
             } finally {
               // setState({ loading: false });
@@ -104,12 +95,10 @@ addons.register("auth/toolbar", () => {
             });
           }
         } catch (e) {
-          console.log("ERROR");
-          console.log(e);
           setState({ ...state, loading: false });
         }
       };
-      console.log(globals);
+
       return (
         <WithTooltip
           placement="bottom"
