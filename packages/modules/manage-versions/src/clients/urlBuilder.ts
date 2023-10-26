@@ -39,4 +39,13 @@ export class UrlBuilder {
       serverEnvironmentPrefix
     )}/imodels/${imodelId}/changesets`;
   }
+
+  public static buildGetUsersUrl(
+    imodelId: string,
+    serverEnvironmentPrefix?: string
+  ) {
+    return `${this.getBaseUrl(
+      serverEnvironmentPrefix
+    )}/imodels/${imodelId}/users`;
+  }
 }

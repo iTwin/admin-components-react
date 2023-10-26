@@ -112,6 +112,18 @@ export const ManageVersions = (props: ManageVersionsProps) => {
   );
 
   const [_currentTab, setCurrentTab] = React.useState(currentTab);
+
+  const usersRef = React.useRef<{ [key: string]: any }>({});
+
+  const getUsers = React.useCallback(async () => {
+    const users = await changesetClient.getUsers(imodelId);
+    const userMapData = users.reduce((acc, user) => {
+      acc[user.id] = user.givenName + " " + user.surname;
+      return acc;
+    }, {} as { [key: string]: string });
+    usersRef.current = userMapData;
+  }, []);
+
   React.useEffect(() => {
     setCurrentTab(currentTab);
   }, [currentTab]);
@@ -138,13 +150,22 @@ export const ManageVersions = (props: ManageVersionsProps) => {
     (skip?: number) => {
       setVersionStatus(RequestStatus.InProgress);
       versionClient
-        .get(imodelId, { top: NAMED_VERSION_TOP, skip })
+        .get(imodelId, {
+          top: NAMED_VERSION_TOP,
+          skip,
+        })
         .then((newVersions) => {
           setVersionStatus(RequestStatus.Finished);
-          setVersions((oldVersions) => [
-            ...(oldVersions ?? []),
-            ...newVersions,
-          ]);
+          // Map creator to NamedVersion
+          const mappedNewVersions = newVersions.map((newVersion) => {
+            const creator =
+              newVersion._links.creator.href.match(/\/users\/([^/]+)$/);
+            return {
+              ...newVersion,
+              createdBy: creator ? usersRef.current[creator[1]] : "",
+            };
+          });
+          setVersions([...(mappedNewVersions ?? [])]);
         })
         .catch(() => setVersionStatus(RequestStatus.Failed));
     },
@@ -165,10 +186,18 @@ export const ManageVersions = (props: ManageVersionsProps) => {
   }, [getVersions]);
 
   React.useEffect(() => {
-    if (versionStatus === RequestStatus.NotStarted) {
-      getVersions();
-    }
-  }, [getVersions, versionStatus]);
+    const loadUsers = async () => {
+      await getUsers();
+    };
+
+    loadUsers()
+      .then(() => {
+        if (versionStatus === RequestStatus.NotStarted) {
+          getVersions();
+        }
+      })
+      .catch(() => setVersionStatus(RequestStatus.Failed));
+  }, [getUsers, getVersions, versionStatus]);
 
   const getChangesets = React.useCallback(() => {
     if (changesets && changesets.length % CHANGESET_TOP !== 0) {
@@ -177,10 +206,20 @@ export const ManageVersions = (props: ManageVersionsProps) => {
 
     setChangesetStatus(RequestStatus.InProgress);
     changesetClient
-      .get(imodelId, { top: CHANGESET_TOP, skip: changesets?.length })
+      .get(imodelId, {
+        top: CHANGESET_TOP,
+        skip: changesets?.length,
+      })
       .then((newChangesets) => {
         setChangesetStatus(RequestStatus.Finished);
-        setChangesets([...(changesets ?? []), ...newChangesets]);
+        // Map creator to changesets
+        const mappedNewChangesets = newChangesets.map((changeSet) => {
+          return {
+            ...changeSet,
+            createdBy: usersRef.current[changeSet.creatorId],
+          };
+        });
+        setChangesets([...(changesets ?? []), ...mappedNewChangesets]);
       })
       .catch(() => setChangesetStatus(RequestStatus.Failed));
   }, [changesetClient, changesets, imodelId]);

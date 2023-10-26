@@ -40,15 +40,16 @@ describe("VersionsTab", () => {
 
     rows.forEach((row, index) => {
       const cells = row.querySelectorAll(".iui-table-cell");
-      expect(cells.length).toBe(5);
+      expect(cells.length).toBe(6);
       expect(cells[0].textContent).toContain(MockedVersion(index).name);
       expect(cells[1].textContent).toContain(MockedVersion(index).description);
-      expect(cells[2].textContent).toContain(
-        new Date(MockedVersion(index).createdDateTime).toLocaleString()
-      );
+      expect(cells[2].textContent).toContain(MockedVersion(index).createdBy);
       expect(cells[3].textContent).toContain(defaultStrings.view);
       fireEvent.click(cells[3].querySelector(".iui-anchor") as HTMLElement);
-      within(cells[4] as HTMLElement).getByTitle(
+      expect(cells[4].textContent).toContain(
+        new Date(MockedVersion(index).createdDateTime).toLocaleString()
+      );
+      within(cells[5] as HTMLElement).getByTitle(
         defaultStrings.updateNamedVersion
       );
     });

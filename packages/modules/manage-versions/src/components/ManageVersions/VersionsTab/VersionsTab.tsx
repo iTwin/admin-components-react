@@ -23,23 +23,16 @@ export type VersionsTabProps = {
 };
 
 const VersionsTab = (props: VersionsTabProps) => {
-  const {
-    versions,
-    status,
-    onVersionUpdated,
-    loadMoreVersions,
-    onViewClick,
-  } = props;
+  const { versions, status, onVersionUpdated, loadMoreVersions, onViewClick } =
+    props;
 
   const { stringsOverrides } = useConfig();
 
   const [currentVersion, setCurrentVersion] = React.useState<
     NamedVersion | undefined
   >(undefined);
-  const [
-    isUpdateVersionModalOpen,
-    setIsUpdateVersionModalOpen,
-  ] = React.useState(false);
+  const [isUpdateVersionModalOpen, setIsUpdateVersionModalOpen] =
+    React.useState(false);
 
   const columns = React.useMemo(() => {
     const tableColumns = [
@@ -55,6 +48,15 @@ const VersionsTab = (props: VersionsTabProps) => {
             id: "DESCRIPTION",
             Header: stringsOverrides.description,
             accessor: "description",
+          },
+          {
+            id: "CREATOR",
+            Header: "User",
+            accessor: "createdBy",
+            maxWidth: 220,
+            Cell: (props: CellProps<NamedVersion>) => {
+              return <span>{props.row.original.createdBy}</span>;
+            },
           },
           {
             id: "CREATED_DATE",

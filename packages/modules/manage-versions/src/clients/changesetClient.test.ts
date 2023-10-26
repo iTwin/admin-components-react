@@ -43,4 +43,19 @@ describe("ChangesetClient", () => {
       }
     );
   });
+
+  it("should have correct url on getUsers", async () => {
+    mockHttpGet.mockResolvedValue({ changesets: MockedChangesetList() });
+
+    await changesetClient.getUsers(MOCKED_IMODEL_ID);
+    expect(mockHttpGet).toHaveBeenCalledWith(
+      `https://api.bentley.com/imodels/${MOCKED_IMODEL_ID}/users`,
+      {
+        headers: {
+          Prefer: "return=representation",
+          Accept: "application/vnd.bentley.itwin-platform.v2+json",
+        },
+      }
+    );
+  });
 });

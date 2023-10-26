@@ -14,4 +14,6 @@ export type Changeset = {
   _links: {
     namedVersion?: { href: string };
   };
+  creatorId: string;
+  createdBy: string;
 };

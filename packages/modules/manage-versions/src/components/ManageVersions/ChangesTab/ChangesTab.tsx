@@ -61,6 +61,15 @@ const ChangesTab = (props: ChangesTabProps) => {
             accessor: "description",
           },
           {
+            id: "CREATOR",
+            Header: "User",
+            accessor: "createdBy",
+            maxWidth: 220,
+            Cell: (props: CellProps<Changeset>) => {
+              return <span>{props.row.original.createdBy}</span>;
+            },
+          },
+          {
             id: "CHANGED_FILES",
             Header: stringsOverrides.changedFiles,
             Cell: (props: CellProps<Changeset>) => {
