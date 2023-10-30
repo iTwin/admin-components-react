@@ -23,12 +23,12 @@ export interface ChangesetInfoPanelProps {
   onClose: () => void;
 }
 
-export const ChangeSetInformationPanel: FC<ChangesetInfoPanelProps> = ({
+export const ChangesetInformationPanel: FC<ChangesetInfoPanelProps> = ({
   isOpen,
   changeset,
   onClose,
 }) => {
-  const files: string[] = changeset.synchronizationInfo
+  const files: string[] = changeset.synchronizationInfo?.changedFiles
     ? changeset.synchronizationInfo.changedFiles
     : ["N/A"];
 
@@ -80,7 +80,7 @@ export const ChangeSetInformationPanel: FC<ChangesetInfoPanelProps> = ({
           </Text>
           <div className="iac-info-panel-container">
             {renderProperty("Created By: ", changeset.createdBy ?? "")}
-            {renderProperty("Date created: ", createdDateTime ?? "")}
+            {renderProperty("Date Created: ", createdDateTime ?? "")}
             {renderProperty(
               "Application: ",
               changeset.application.name ?? "N/A"

@@ -15,7 +15,7 @@ import { CellProps } from "react-table";
 import { useConfig } from "../../../common/configContext";
 import { Changeset, NamedVersion } from "../../../models";
 import { CreateVersionModal } from "../../CreateUpdateVersion/CreateVersionModal/CreateVersionModal";
-import { ChangeSetInformationPanel } from "../../InformationPanel/ChangesetInformationPanel";
+import { ChangesetInformationPanel } from "../../InformationPanel/ChangesetInformationPanel";
 import { RequestStatus } from "../types";
 
 export type ChangesTabProps = {
@@ -190,7 +190,7 @@ const ChangesTab = (props: ChangesTabProps) => {
         />
       )}
       {isInfoPanelOpen && (
-        <ChangeSetInformationPanel
+        <ChangesetInformationPanel
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           changeset={currentChangeset!}
           isOpen={isInfoPanelOpen}

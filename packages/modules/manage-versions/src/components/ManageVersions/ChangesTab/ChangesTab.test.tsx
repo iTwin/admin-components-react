@@ -54,6 +54,9 @@ describe("ChangesTab", () => {
       within(cells[5] as HTMLElement).getByTitle(
         defaultStrings.createNamedVersion
       );
+      within(cells[6] as HTMLElement).getByTitle(
+        defaultStrings.informationPanel
+      );
     });
   });
 
@@ -94,16 +97,16 @@ describe("ChangesTab", () => {
     expect(createVersionicon).toBeFalsy();
   });
 
-  it("should show information panel icon for the changeset", () => {
+  it("should show information panel icon for each changeset row", () => {
     renderComponent({
-      changesets: [
-        MockedChangeset(1, {
-          _links: { namedVersion: { href: "https://test.url" } },
-        }),
-      ],
+      changesets: MockedChangesetList(),
     });
+    const rowgroup = screen.getAllByRole("rowgroup")[0];
+    const infoIcons = within(rowgroup).queryAllByTitle(
+      defaultStrings.informationPanel
+    );
+    const rows = within(rowgroup).queryAllByRole("row");
 
-    const infoPanelIcon = screen.queryByTitle(defaultStrings.informationPanel);
-    expect(infoPanelIcon).toBeTruthy();
+    expect(infoIcons.length).toBe(rows.length);
   });
 });

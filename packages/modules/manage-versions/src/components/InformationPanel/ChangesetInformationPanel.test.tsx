@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import React from "react";
 
 import { ConfigProvider } from "../../common/configContext";
@@ -10,7 +10,7 @@ import { MOCKED_CONFIG_PROPS, MockedChangeset } from "../../mocks";
 import { dateTimeFormatOptions, getLocale } from "../../models/utils";
 import {
   ChangesetInfoPanelProps,
-  ChangeSetInformationPanel,
+  ChangesetInformationPanel,
 } from "./ChangesetInformationPanel";
 
 const mockedCreatedDateTime = new Intl.DateTimeFormat(
@@ -27,7 +27,7 @@ const renderComponent = (initialProps?: Partial<ChangesetInfoPanelProps>) => {
   };
   return render(
     <ConfigProvider {...MOCKED_CONFIG_PROPS}>
-      <ChangeSetInformationPanel {...props} />
+      <ChangesetInformationPanel {...props} />
     </ConfigProvider>
   );
 };
@@ -37,7 +37,7 @@ describe("ChangesetInformationPanel test", () => {
     const { container } = renderComponent();
     const expectedValues = [
       { property: "Created By: ", value: MockedChangeset().createdBy },
-      { property: "Date created: ", value: mockedCreatedDateTime },
+      { property: "Date Created: ", value: mockedCreatedDateTime },
       { property: "Application: ", value: MockedChangeset().application.name },
       {
         property: "Changed Files: ",
@@ -69,5 +69,11 @@ describe("ChangesetInformationPanel test", () => {
     });
 
     expect(changeset_desc.textContent).toBe(MockedChangeset().description);
+  });
+
+  it("should have close icon in the panel header", () => {
+    renderComponent();
+    const closeButton = screen.getByTitle("Close");
+    expect(closeButton).toBeTruthy();
   });
 });
