@@ -39,7 +39,7 @@ describe("ChangesTab", () => {
 
     rows.forEach((row, index) => {
       const cells = row.querySelectorAll(".iui-table-cell");
-      expect(cells.length).toBe(6);
+      expect(cells.length).toBe(7);
       expect(cells[0].textContent).toContain(MockedChangeset(index).index);
       expect(cells[1].textContent).toContain(
         MockedChangeset(index).description
@@ -92,5 +92,18 @@ describe("ChangesTab", () => {
       defaultStrings.createNamedVersion
     );
     expect(createVersionicon).toBeFalsy();
+  });
+
+  it("should show information panel icon for the changeset", () => {
+    renderComponent({
+      changesets: [
+        MockedChangeset(1, {
+          _links: { namedVersion: { href: "https://test.url" } },
+        }),
+      ],
+    });
+
+    const infoPanelIcon = screen.queryByTitle(defaultStrings.informationPanel);
+    expect(infoPanelIcon).toBeTruthy();
   });
 });

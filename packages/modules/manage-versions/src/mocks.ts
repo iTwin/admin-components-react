@@ -56,6 +56,7 @@ export const MockedChangeset = (
     _links: {},
     creatorId: `creator${index}`,
     createdBy: `user${index}`,
+    application: { id: `app-${index}`, name: `test-app-${index}` },
     ...props,
   };
 };

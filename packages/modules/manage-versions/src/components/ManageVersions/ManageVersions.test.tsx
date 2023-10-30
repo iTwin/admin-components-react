@@ -95,7 +95,7 @@ describe("ManageVersions", () => {
 
     changesetRows.forEach((row, index) => {
       const cells = row.querySelectorAll(".iui-table-cell");
-      expect(cells.length).toBe(6);
+      expect(cells.length).toBe(7);
       expect(cells[0].textContent).toContain(MockedChangeset(index).index);
       expect(cells[1].textContent).toContain(
         MockedChangeset(index).description
@@ -278,7 +278,7 @@ it("should render with changesets tab opened", async () => {
 
   changesetRows.forEach((row, index) => {
     const cells = row.querySelectorAll(".iui-table-cell");
-    expect(cells.length).toBe(6);
+    expect(cells.length).toBe(7);
     expect(cells[0].textContent).toContain(MockedChangeset(index).index);
     expect(cells[1].textContent).toContain(MockedChangeset(index).description);
     expect(cells[3].textContent).toContain(

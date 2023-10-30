@@ -4,7 +4,10 @@
  *--------------------------------------------------------------------------------------------*/
 import "./ChangesTab.scss";
 
-import { SvgNamedVersionAdd } from "@itwin/itwinui-icons-react";
+import {
+  SvgInfoCircular,
+  SvgNamedVersionAdd,
+} from "@itwin/itwinui-icons-react";
 import { IconButton, Table } from "@itwin/itwinui-react";
 import React from "react";
 import { CellProps } from "react-table";
@@ -12,6 +15,7 @@ import { CellProps } from "react-table";
 import { useConfig } from "../../../common/configContext";
 import { Changeset, NamedVersion } from "../../../models";
 import { CreateVersionModal } from "../../CreateUpdateVersion/CreateVersionModal/CreateVersionModal";
+import { ChangeSetInformationPanel } from "../../InformationPanel/ChangesetInformationPanel";
 import { RequestStatus } from "../types";
 
 export type ChangesTabProps = {
@@ -40,9 +44,16 @@ const ChangesTab = (props: ChangesTabProps) => {
     Changeset | undefined
   >(undefined);
 
+  const [isInfoPanelOpen, setIsInfoPanelOpen] = React.useState(false);
+
   const canCreateVersion = React.useCallback((changeset: Changeset) => {
     return !changeset._links.namedVersion;
   }, []);
+
+  const handleInfoPanelOpen = (changeSet: Changeset) => {
+    setCurrentChangeset(changeSet);
+    setIsInfoPanelOpen(true);
+  };
 
   const columns = React.useMemo(() => {
     return [
@@ -62,7 +73,7 @@ const ChangesTab = (props: ChangesTabProps) => {
           },
           {
             id: "CREATOR",
-            Header: "User",
+            Header: stringsOverrides.user,
             accessor: "createdBy",
             maxWidth: 220,
             Cell: (props: CellProps<Changeset>) => {
@@ -114,6 +125,22 @@ const ChangesTab = (props: ChangesTabProps) => {
               );
             },
           },
+          {
+            id: "info-panel",
+            width: 62,
+            Cell: (props: CellProps<Changeset>) => {
+              const changeset = props.data[props.row.index];
+              return (
+                <IconButton
+                  title={stringsOverrides.informationPanel}
+                  styleType="borderless"
+                  onClick={() => handleInfoPanelOpen(changeset)}
+                >
+                  <SvgInfoCircular />
+                </IconButton>
+              );
+            },
+          },
         ],
       },
     ];
@@ -123,6 +150,8 @@ const ChangesTab = (props: ChangesTabProps) => {
     stringsOverrides.createNamedVersion,
     stringsOverrides.description,
     stringsOverrides.time,
+    stringsOverrides.user,
+    stringsOverrides.informationPanel,
   ]);
 
   const emptyTableContent = React.useMemo(() => {
@@ -158,6 +187,14 @@ const ChangesTab = (props: ChangesTabProps) => {
           }}
           onClose={() => setIsCreateVersionModalOpen(false)}
           latestVersion={latestVersion}
+        />
+      )}
+      {isInfoPanelOpen && (
+        <ChangeSetInformationPanel
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          changeset={currentChangeset!}
+          isOpen={isInfoPanelOpen}
+          onClose={() => setIsInfoPanelOpen(false)}
         />
       )}
     </>

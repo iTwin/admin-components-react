@@ -58,6 +58,10 @@ export type ManageVersionsStringOverrides = {
   messageCouldNotUpdateVersion: string;
   /** Default `The value exceeds allowed {{length}} characters.` - `{{length}}` - max length */
   messageValueTooLong: string;
+  /** Default: `User` */
+  user: string;
+  /** Default: `Information Panel` */
+  informationPanel: string;
 };
 
 export type LogFunc = (
