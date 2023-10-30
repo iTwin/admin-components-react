@@ -2,7 +2,7 @@
   "changes": [
     {
       "packageName": "@itwin/manage-versions-react",
-      "comment": "Added user column to Named versions and Changeset tables",
+      "comment": "Added information panel for changeset",
       "type": "minor"
     }
   ],
