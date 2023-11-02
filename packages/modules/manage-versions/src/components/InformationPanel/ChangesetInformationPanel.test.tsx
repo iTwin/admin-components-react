@@ -8,6 +8,7 @@ import React from "react";
 import { ConfigProvider } from "../../common/configContext";
 import { MOCKED_CONFIG_PROPS, MockedChangeset } from "../../mocks";
 import { dateTimeFormatOptions, getLocale } from "../../models/utils";
+import { defaultStrings } from "../ManageVersions/ManageVersions";
 import {
   ChangesetInfoPanelProps,
   ChangesetInformationPanel,
@@ -21,8 +22,8 @@ const mockedCreatedDateTime = new Intl.DateTimeFormat(
 const renderComponent = (initialProps?: Partial<ChangesetInfoPanelProps>) => {
   const props: ChangesetInfoPanelProps = {
     changeset: MockedChangeset(),
-    isOpen: true,
     onClose: jest.fn(),
+    stringOverrides: defaultStrings.informationPanelStringOverrides,
     ...initialProps,
   };
   return render(
@@ -46,7 +47,7 @@ describe("ChangesetInformationPanel test", () => {
     ];
 
     const changeset_desc = container.querySelector(
-      ".iac-info-panel-description"
+      ".iac-info-panel-container"
     ) as Element;
 
     const info_panel_details = container.querySelectorAll(
@@ -73,7 +74,7 @@ describe("ChangesetInformationPanel test", () => {
 
   it("should have close icon in the panel header", () => {
     renderComponent();
-    const closeButton = screen.getByTitle("Close");
+    const closeButton = screen.getByLabelText("Close");
     expect(closeButton).toBeTruthy();
   });
 });

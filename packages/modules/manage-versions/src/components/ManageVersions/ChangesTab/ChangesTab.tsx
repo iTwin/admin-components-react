@@ -8,7 +8,7 @@ import {
   SvgInfoCircular,
   SvgNamedVersionAdd,
 } from "@itwin/itwinui-icons-react";
-import { IconButton, Table } from "@itwin/itwinui-react";
+import { ButtonGroup, IconButton, Table, Text } from "@itwin/itwinui-react";
 import React from "react";
 import { CellProps } from "react-table";
 
@@ -24,6 +24,7 @@ export type ChangesTabProps = {
   loadMoreChanges: () => void;
   onVersionCreated: () => void;
   latestVersion: NamedVersion | undefined;
+  isLoadingColumn: boolean;
 };
 
 const ChangesTab = (props: ChangesTabProps) => {
@@ -33,6 +34,7 @@ const ChangesTab = (props: ChangesTabProps) => {
     loadMoreChanges,
     onVersionCreated,
     latestVersion,
+    isLoadingColumn,
   } = props;
 
   const { stringsOverrides } = useConfig();
@@ -77,7 +79,11 @@ const ChangesTab = (props: ChangesTabProps) => {
             accessor: "createdBy",
             maxWidth: 220,
             Cell: (props: CellProps<Changeset>) => {
-              return <span>{props.row.original.createdBy}</span>;
+              return isLoadingColumn ? (
+                <Text isSkeleton={true}>Fake user cell</Text>
+              ) : (
+                <Text>{props.row.original.createdBy}</Text>
+              );
             },
           },
           {
@@ -104,12 +110,15 @@ const ChangesTab = (props: ChangesTabProps) => {
           },
           {
             id: "changes-table-actions",
-            width: 62,
+            width: 100,
             Cell: (props: CellProps<Changeset>) => {
               const changeset = props.data[props.row.index];
+              const className = canCreateVersion(changeset)
+                ? ""
+                : "iac-create-version-icon-hidden";
               return (
                 <>
-                  {canCreateVersion(changeset) && (
+                  <ButtonGroup className="iac-changes-tab-actions-btn-group">
                     <IconButton
                       onClick={() => {
                         setCurrentChangeset(changeset);
@@ -117,27 +126,19 @@ const ChangesTab = (props: ChangesTabProps) => {
                       }}
                       title={stringsOverrides.createNamedVersion}
                       styleType="borderless"
+                      className={className}
                     >
                       <SvgNamedVersionAdd />
                     </IconButton>
-                  )}
+                    <IconButton
+                      title={stringsOverrides.informationPanel}
+                      styleType="borderless"
+                      onClick={() => handleInfoPanelOpen(changeset)}
+                    >
+                      <SvgInfoCircular />
+                    </IconButton>
+                  </ButtonGroup>
                 </>
-              );
-            },
-          },
-          {
-            id: "info-panel",
-            width: 62,
-            Cell: (props: CellProps<Changeset>) => {
-              const changeset = props.data[props.row.index];
-              return (
-                <IconButton
-                  title={stringsOverrides.informationPanel}
-                  styleType="borderless"
-                  onClick={() => handleInfoPanelOpen(changeset)}
-                >
-                  <SvgInfoCircular />
-                </IconButton>
               );
             },
           },
@@ -145,13 +146,14 @@ const ChangesTab = (props: ChangesTabProps) => {
       },
     ];
   }, [
-    canCreateVersion,
-    stringsOverrides.changedFiles,
-    stringsOverrides.createNamedVersion,
     stringsOverrides.description,
-    stringsOverrides.time,
     stringsOverrides.user,
+    stringsOverrides.changedFiles,
+    stringsOverrides.time,
+    stringsOverrides.createNamedVersion,
     stringsOverrides.informationPanel,
+    canCreateVersion,
+    isLoadingColumn,
   ]);
 
   const emptyTableContent = React.useMemo(() => {
@@ -189,12 +191,11 @@ const ChangesTab = (props: ChangesTabProps) => {
           latestVersion={latestVersion}
         />
       )}
-      {isInfoPanelOpen && (
+      {isInfoPanelOpen && currentChangeset && (
         <ChangesetInformationPanel
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          changeset={currentChangeset!}
-          isOpen={isInfoPanelOpen}
+          changeset={currentChangeset}
           onClose={() => setIsInfoPanelOpen(false)}
+          stringOverrides={stringsOverrides.informationPanelStringOverrides}
         />
       )}
     </>

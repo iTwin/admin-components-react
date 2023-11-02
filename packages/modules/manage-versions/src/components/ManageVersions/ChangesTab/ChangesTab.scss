@@ -7,4 +7,19 @@
   .iui-table-body .iui-table-cell {
     word-break: break-word;
   }
+
+  .iac-create-version-icon-hidden {
+    visibility: hidden;
+  }
+
+  .iac-changes-tab-actions-btn-group {
+    div {
+      width: 25px;
+    }
+    &:hover {
+      Button {
+        background-color: inherit;
+      }
+    }
+  }
 }

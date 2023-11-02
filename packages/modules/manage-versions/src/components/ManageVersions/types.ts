@@ -62,6 +62,8 @@ export type ManageVersionsStringOverrides = {
   user: string;
   /** Default: `Information Panel` */
   informationPanel: string;
+  /** string overrides for text within Information panel` */
+  informationPanelStringOverrides: informationPanelStringOverrides;
 };
 
 export type LogFunc = (
@@ -70,3 +72,20 @@ export type LogFunc = (
 ) => void;
 
 export type ApiOverrides = { serverEnvironmentPrefix?: "dev" | "qa" | "" };
+
+export type informationPanelStringOverrides = {
+  /** title. Default `Change #`. */
+  title: string;
+  /** Label for property createdBy. Default `Created By`. */
+  createdBy: string;
+  /** Label for property pushDateTime. Default `Date Created`. */
+  createdDate: string;
+  /** Label for property application name. Default `Application`. */
+  application: string;
+  /** Label for connection attributes. Default `Connection Attributes`. */
+  connectionAttributes: string;
+  /** Label for property changedFiles. Default `Changed Files`. */
+  changedFiles: string;
+  /** Default text for no-value. Default `N/A`. */
+  noValue: string;
+};

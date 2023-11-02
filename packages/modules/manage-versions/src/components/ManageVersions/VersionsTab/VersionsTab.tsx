@@ -5,7 +5,7 @@
 import "./VersionsTab.scss";
 
 import { SvgEdit } from "@itwin/itwinui-icons-react";
-import { IconButton, Table } from "@itwin/itwinui-react";
+import { IconButton, Table, Text } from "@itwin/itwinui-react";
 import React from "react";
 import { CellProps } from "react-table";
 
@@ -19,12 +19,19 @@ export type VersionsTabProps = {
   status: RequestStatus;
   onVersionUpdated: () => void;
   loadMoreVersions: () => void;
+  isLoadingColumn: boolean;
   onViewClick?: (version: NamedVersion) => void;
 };
 
 const VersionsTab = (props: VersionsTabProps) => {
-  const { versions, status, onVersionUpdated, loadMoreVersions, onViewClick } =
-    props;
+  const {
+    versions,
+    status,
+    onVersionUpdated,
+    loadMoreVersions,
+    onViewClick,
+    isLoadingColumn,
+  } = props;
 
   const { stringsOverrides } = useConfig();
 
@@ -51,11 +58,15 @@ const VersionsTab = (props: VersionsTabProps) => {
           },
           {
             id: "CREATOR",
-            Header: "User",
+            Header: stringsOverrides.user,
             accessor: "createdBy",
             maxWidth: 220,
             Cell: (props: CellProps<NamedVersion>) => {
-              return <span>{props.row.original.createdBy}</span>;
+              return isLoadingColumn ? (
+                <Text isSkeleton={true}>Fake user cell</Text>
+              ) : (
+                <Text>{props.row.original.createdBy}</Text>
+              );
             },
           },
           {
@@ -114,12 +125,14 @@ const VersionsTab = (props: VersionsTabProps) => {
     }
     return tableColumns;
   }, [
-    onViewClick,
-    stringsOverrides.description,
     stringsOverrides.name,
+    stringsOverrides.description,
+    stringsOverrides.user,
     stringsOverrides.time,
     stringsOverrides.updateNamedVersion,
     stringsOverrides.view,
+    onViewClick,
+    isLoadingColumn,
   ]);
 
   const emptyTableContent = React.useMemo(() => {

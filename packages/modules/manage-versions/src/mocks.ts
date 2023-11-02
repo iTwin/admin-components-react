@@ -30,10 +30,10 @@ export const MockedVersion = (
         href: "https://someChangesetUrl.com",
       },
       creator: {
-        href: "https://testCreatorUrl.com",
+        href: `https://testCreatorUrl.com/<ProjectId>/users/creatorId`,
       },
     },
-    createdBy: "test-user",
+    createdBy: "Test User",
     ...props,
   };
 };
@@ -54,8 +54,8 @@ export const MockedChangeset = (
     pushDateTime: MOCKED_DATE,
     synchronizationInfo: { changedFiles: [`test-file-${index}.dgn`] },
     _links: {},
-    creatorId: `creator${index}`,
-    createdBy: `user${index}`,
+    creatorId: "creatorId",
+    createdBy: "Test User",
     application: { id: `app-${index}`, name: `test-app-${index}` },
     ...props,
   };
@@ -68,16 +68,18 @@ export const MockedChangesetList = (count = 3) => {
 export const MockedUsers = () => {
   return [
     {
-      id: "11111",
+      id: "creatorId",
       givenName: "Test",
       surname: "User",
       email: "test.user@mock.com",
+      displayName: "Test User",
     },
     {
-      id: "22222",
+      id: "creatorId2",
       givenName: "Test",
       surname: "User2",
       email: "test.user2@mock.com",
+      displayName: "Test User2",
     },
   ];
 };

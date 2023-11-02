@@ -8,6 +8,7 @@ import {
   screen,
   waitFor,
   waitForElementToBeRemoved,
+  within,
 } from "@testing-library/react";
 import React from "react";
 
@@ -70,8 +71,12 @@ describe("ManageVersions", () => {
       expect(cells.length).toBe(5);
       expect(cells[0].textContent).toContain(MockedVersion(index).name);
       expect(cells[1].textContent).toContain(MockedVersion(index).description);
+      expect(cells[2].textContent).toContain(MockedVersion(index).createdBy);
       expect(cells[3].textContent).toContain(
         new Date(MockedVersion(index).createdDateTime).toLocaleString()
+      );
+      within(cells[4] as HTMLElement).getByTitle(
+        defaultStrings.updateNamedVersion
       );
     });
     expect(mockGetVersions).toHaveBeenCalledWith(MOCKED_IMODEL_ID, {
@@ -95,16 +100,27 @@ describe("ManageVersions", () => {
 
     changesetRows.forEach((row, index) => {
       const cells = row.querySelectorAll(".iui-table-cell");
-      expect(cells.length).toBe(7);
+      expect(cells.length).toBe(6);
       expect(cells[0].textContent).toContain(MockedChangeset(index).index);
       expect(cells[1].textContent).toContain(
         MockedChangeset(index).description
       );
+      expect(cells[2].textContent).toContain(MockedChangeset(index).createdBy);
       expect(cells[3].textContent).toContain(
         MockedChangeset(index).synchronizationInfo.changedFiles.join(", ")
       );
       expect(cells[4].textContent).toContain(
         new Date(MockedChangeset(index).pushDateTime).toLocaleString()
+      );
+      const actionButtons = (cells[5] as HTMLElement).querySelectorAll(
+        '[type="button"]'
+      );
+      expect(actionButtons.length).toBe(2);
+      within(cells[5] as HTMLElement).getByTitle(
+        defaultStrings.createNamedVersion
+      );
+      within(cells[5] as HTMLElement).getByTitle(
+        defaultStrings.informationPanel
       );
     });
     expect(mockGetChangesets).toHaveBeenCalledWith(MOCKED_IMODEL_ID, {
@@ -185,7 +201,7 @@ describe("ManageVersions", () => {
     const createVersionButtons = screen.getAllByTitle(
       defaultStrings.createNamedVersion
     );
-    expect(createVersionButtons.length).toBe(2);
+    expect(createVersionButtons.length).toBe(3);
     createVersionButtons[0].click();
 
     await waitForSelectorToExist(".iac-additional-info");
@@ -257,7 +273,13 @@ describe("ManageVersions", () => {
     expect(versionCells.length).toBe(5);
     expect(versionCells[0].textContent).toEqual(MockedVersion(0).name);
     expect(versionCells[1].textContent).toEqual(MockedVersion(0).description);
-
+    expect(versionCells[2].textContent).toEqual(MockedVersion(0).createdBy);
+    expect(versionCells[3].textContent).toEqual(
+      new Date(MockedVersion(0).createdDateTime).toLocaleString()
+    );
+    within(versionCells[4] as HTMLElement).getByTitle(
+      defaultStrings.updateNamedVersion
+    );
     expect(mockGetVersions).toHaveBeenCalledTimes(1);
     expect(mockUpdateVersion).toHaveBeenCalled();
   });
@@ -278,15 +300,24 @@ it("should render with changesets tab opened", async () => {
 
   changesetRows.forEach((row, index) => {
     const cells = row.querySelectorAll(".iui-table-cell");
-    expect(cells.length).toBe(7);
+    expect(cells.length).toBe(6);
     expect(cells[0].textContent).toContain(MockedChangeset(index).index);
     expect(cells[1].textContent).toContain(MockedChangeset(index).description);
+    expect(cells[2].textContent).toContain(MockedChangeset(index).createdBy);
     expect(cells[3].textContent).toContain(
       MockedChangeset(index).synchronizationInfo.changedFiles.join(", ")
     );
     expect(cells[4].textContent).toContain(
       new Date(MockedChangeset(index).pushDateTime).toLocaleString()
     );
+    const actionButtons = (cells[5] as HTMLElement).querySelectorAll(
+      '[type="button"]'
+    );
+    expect(actionButtons.length).toBe(2);
+    within(cells[5] as HTMLElement).getByTitle(
+      defaultStrings.createNamedVersion
+    );
+    within(cells[5] as HTMLElement).getByTitle(defaultStrings.informationPanel);
   });
 });
 

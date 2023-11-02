@@ -51,6 +51,15 @@ export const defaultStrings: ManageVersionsStringOverrides = {
   messageCouldNotUpdateVersion:
     "Could not update a Named Version. Please try again later.",
   messageValueTooLong: "The value exceeds allowed {{length}} characters.",
+  informationPanelStringOverrides: {
+    title: "Change #",
+    createdBy: "Created By",
+    createdDate: "Date Created",
+    application: "Application",
+    connectionAttributes: "Connection Attributes",
+    changedFiles: "Changed Files",
+    noValue: "N/A",
+  },
 };
 
 export type ManageVersionsProps = {
@@ -115,12 +124,17 @@ export const ManageVersions = (props: ManageVersionsProps) => {
 
   const [_currentTab, setCurrentTab] = React.useState(currentTab);
 
-  const usersRef = React.useRef<{ [key: string]: any }>({});
+  const usersRef = React.useRef<{ [key: string]: string } | undefined>(
+    undefined
+  );
 
   const getUsers = React.useCallback(async () => {
     const users = await changesetClient.getUsers(imodelId);
     const userMapData = users.reduce((acc, user) => {
-      acc[user.id] = user.givenName + " " + user.surname;
+      const userFullName = [user.givenName, user.surname].filter(Boolean);
+      acc[user.id] = userFullName.length
+        ? userFullName.join(" ")
+        : user.displayName;
       return acc;
     }, {} as { [key: string]: string });
     usersRef.current = userMapData;
@@ -139,6 +153,8 @@ export const ManageVersions = (props: ManageVersionsProps) => {
   const [changesetStatus, setChangesetStatus] = React.useState(
     RequestStatus.NotStarted
   );
+  const [shouldUpdateProperties, setShouldUpdateProperties] =
+    React.useState<boolean>(false);
 
   const changeTab = React.useCallback(
     (tab: ManageVersionsTabs) => {
@@ -158,16 +174,10 @@ export const ManageVersions = (props: ManageVersionsProps) => {
         })
         .then((newVersions) => {
           setVersionStatus(RequestStatus.Finished);
-          // Map creator to NamedVersion
-          const mappedNewVersions = newVersions.map((newVersion) => {
-            const creator =
-              newVersion._links.creator.href.match(/\/users\/([^/]+)$/);
-            return {
-              ...newVersion,
-              createdBy: creator ? usersRef.current[creator[1]] : "",
-            };
-          });
-          setVersions([...(mappedNewVersions ?? [])]);
+          setVersions((oldVersions) => [
+            ...(oldVersions ?? []),
+            ...newVersions,
+          ]);
         })
         .catch(() => setVersionStatus(RequestStatus.Failed));
     },
@@ -187,19 +197,59 @@ export const ManageVersions = (props: ManageVersionsProps) => {
     getVersions();
   }, [getVersions]);
 
+  const updateProperties = React.useCallback(() => {
+    if (versions) {
+      setVersions((prevVersions) =>
+        (prevVersions ?? []).map((newVersion) => {
+          const creatorId = newVersion._links.creator.href.substring(
+            newVersion._links.creator.href.lastIndexOf("/") + 1
+          );
+          return {
+            ...newVersion,
+            createdBy: usersRef.current ? usersRef.current[creatorId] : "",
+          };
+        })
+      );
+    }
+    if (changesets) {
+      setChangesets((prevChangesets) =>
+        (prevChangesets ?? []).map((changeSet) => ({
+          ...changeSet,
+          createdBy: usersRef.current
+            ? usersRef.current[changeSet.creatorId]
+            : "",
+        }))
+      );
+    }
+  }, [changesets, versions]);
+
+  React.useEffect(() => {
+    if (versionStatus === RequestStatus.NotStarted) {
+      getVersions();
+    }
+  }, [getVersions, versionStatus]);
+
   React.useEffect(() => {
     const loadUsers = async () => {
       await getUsers();
     };
+    if (!usersRef.current) {
+      loadUsers()
+        .then(() => {
+          setShouldUpdateProperties(true);
+        })
+        .catch(() => {
+          setShouldUpdateProperties(false);
+        });
+    }
+  }, [getUsers]);
 
-    loadUsers()
-      .then(() => {
-        if (versionStatus === RequestStatus.NotStarted) {
-          getVersions();
-        }
-      })
-      .catch(() => setVersionStatus(RequestStatus.Failed));
-  }, [getUsers, getVersions, versionStatus]);
+  React.useEffect(() => {
+    if (shouldUpdateProperties) {
+      updateProperties();
+      setShouldUpdateProperties(false);
+    }
+  }, [shouldUpdateProperties, updateProperties]);
 
   const getChangesets = React.useCallback(() => {
     if (changesets && changesets.length % CHANGESET_TOP !== 0) {
@@ -214,14 +264,8 @@ export const ManageVersions = (props: ManageVersionsProps) => {
       })
       .then((newChangesets) => {
         setChangesetStatus(RequestStatus.Finished);
-        // Map creator to changesets
-        const mappedNewChangesets = newChangesets.map((changeSet) => {
-          return {
-            ...changeSet,
-            createdBy: usersRef.current[changeSet.creatorId],
-          };
-        });
-        setChangesets([...(changesets ?? []), ...mappedNewChangesets]);
+        setChangesets([...(changesets ?? []), ...newChangesets]);
+        setShouldUpdateProperties(true);
       })
       .catch(() => setChangesetStatus(RequestStatus.Failed));
   }, [changesetClient, changesets, imodelId]);
@@ -276,6 +320,7 @@ export const ManageVersions = (props: ManageVersionsProps) => {
               onVersionUpdated={refreshVersions}
               loadMoreVersions={getMoreVersions}
               onViewClick={onViewClick}
+              isLoadingColumn={!usersRef.current}
             />
           )}
           {_currentTab === ManageVersionsTabs.Changes && (
@@ -285,6 +330,7 @@ export const ManageVersions = (props: ManageVersionsProps) => {
               loadMoreChanges={getChangesets}
               onVersionCreated={onVersionCreated}
               latestVersion={latestVersion}
+              isLoadingColumn={!usersRef.current}
             />
           )}
         </div>

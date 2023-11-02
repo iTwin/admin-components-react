@@ -6,14 +6,12 @@
   width: 400px;
   min-width: 400px;
   .iac-info-panel-body {
-    padding: var(--iui-size-m);
     .iac-info-panel-container {
-      border-top: 1px solid var(--iui-color-background-backdrop);
       padding: var(--iui-size-xs);
-    }
 
-    .iac-info-panel-description {
-      padding: var(--iui-size-xs);
+      & + div {
+        border-top: 1px solid var(--iui-color-border-subtle);
+      }
     }
     .iac-info-panel-details {
       padding: var(--iui-size-xs);
@@ -25,11 +23,6 @@
         flex: 2;
         min-width: 50%;
       }
-    }
-
-    .iac-info-panel-connection,
-    .iac-info-panel-description {
-      font-size: var(--iui-font-size-2);
     }
 
     .iac-info-panel-property {
