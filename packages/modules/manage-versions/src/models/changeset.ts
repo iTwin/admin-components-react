@@ -6,7 +6,7 @@ export type Changeset = {
   id: string;
   displayName: string;
   description: string;
-  index: string;
+  index: number;
   pushDateTime: string;
   synchronizationInfo: {
     changedFiles: string[];

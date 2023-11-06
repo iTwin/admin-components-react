@@ -2,6 +2,8 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+import { Changeset } from "./changeset";
+
 export type NamedVersion = {
   id: string;
   displayName: string;
@@ -13,4 +15,10 @@ export type NamedVersion = {
       href: string;
     };
   };
+  changesetIndex: number;
+};
+
+export type VersionTableData = {
+  version: NamedVersion;
+  subRows: Changeset[];
 };

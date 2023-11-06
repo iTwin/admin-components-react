@@ -30,6 +30,7 @@ export const MockedVersion = (
         href: "https://someChangesetUrl.com",
       },
     },
+    changesetIndex: index,
     ...props,
   };
 };
@@ -44,7 +45,7 @@ export const MockedChangeset = (
 ): Changeset => {
   return {
     id: `ch${index}`,
-    index: `${index}`,
+    index: index,
     displayName: `${index}`,
     description: `ch_description${index}`,
     pushDateTime: MOCKED_DATE,
@@ -55,5 +56,18 @@ export const MockedChangeset = (
 };
 
 export const MockedChangesetList = (count = 3) => {
-  return [...new Array(count)].map((_, index) => MockedChangeset(index));
+  return [...new Array(count)].map((_, index) => MockedChangeset(index + 1));
+};
+
+export const MockedVersionTableData = () => {
+  return [
+    {
+      version: MockedVersion(),
+      subRows: MockedChangesetList(),
+    },
+    {
+      version: MockedVersion(2),
+      subRows: MockedChangesetList(),
+    },
+  ];
 };

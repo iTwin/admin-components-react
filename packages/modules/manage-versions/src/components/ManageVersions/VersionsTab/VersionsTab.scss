@@ -7,4 +7,8 @@
   .iui-table-body .iui-table-cell {
     word-break: break-word;
   }
+
+  .iui-table-header .iui-table-row > div:first-child {
+    padding-left: 50px;
+  }
 }

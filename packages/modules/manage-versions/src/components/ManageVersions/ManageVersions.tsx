@@ -8,7 +8,7 @@ import React from "react";
 import { ChangesetClient } from "../../clients/changesetClient";
 import { NamedVersionClient } from "../../clients/namedVersionClient";
 import { ConfigProvider } from "../../common/configContext";
-import { Changeset, NamedVersion } from "../../models";
+import { Changeset, NamedVersion, VersionTableData } from "../../models";
 import ChangesTab from "./ChangesTab/ChangesTab";
 import {
   ApiOverrides,
@@ -126,6 +126,11 @@ export const ManageVersions = (props: ManageVersionsProps) => {
     RequestStatus.NotStarted
   );
 
+  const [versionsTableData, setVersionsTableData] =
+    React.useState<VersionTableData[]>();
+  const [shouldUpdateProperties, setShouldUpdateProperties] =
+    React.useState<boolean>(false);
+
   const changeTab = React.useCallback(
     (tab: ManageVersionsTabs) => {
       setCurrentTab(tab);
@@ -140,11 +145,11 @@ export const ManageVersions = (props: ManageVersionsProps) => {
       versionClient
         .get(imodelId, { top: NAMED_VERSION_TOP, skip })
         .then((newVersions) => {
-          setVersionStatus(RequestStatus.Finished);
           setVersions((oldVersions) => [
             ...(oldVersions ?? []),
             ...newVersions,
           ]);
+          setShouldUpdateProperties(true);
         })
         .catch(() => setVersionStatus(RequestStatus.Failed));
     },
@@ -164,11 +169,35 @@ export const ManageVersions = (props: ManageVersionsProps) => {
     getVersions();
   }, [getVersions]);
 
-  React.useEffect(() => {
-    if (versionStatus === RequestStatus.NotStarted) {
-      getVersions();
+  const getRelatedChangesets = React.useCallback(() => {
+    if (changesets) {
+      setVersionStatus(RequestStatus.InProgress);
+      // Update versionsTableData
+      const tableData = (versions ?? []).map((version) => {
+        const relatedChangesets: Changeset[] = [];
+
+        for (const change of changesets) {
+          if (
+            (change.index === version.changesetIndex &&
+              change._links.namedVersion !== null) ||
+            (change.index < version.changesetIndex &&
+              change._links.namedVersion === null)
+          ) {
+            relatedChangesets.push(change);
+          } else if (
+            change.index < version.changesetIndex &&
+            change._links.namedVersion !== null
+          ) {
+            break;
+          }
+        }
+        return { version: version, subRows: relatedChangesets ?? [] };
+      });
+
+      setVersionsTableData(tableData);
+      setVersionStatus(RequestStatus.Finished);
     }
-  }, [getVersions, versionStatus]);
+  }, [changesets, versions]);
 
   const getChangesets = React.useCallback(() => {
     if (changesets && changesets.length % CHANGESET_TOP !== 0) {
@@ -177,19 +206,38 @@ export const ManageVersions = (props: ManageVersionsProps) => {
 
     setChangesetStatus(RequestStatus.InProgress);
     changesetClient
-      .get(imodelId, { top: CHANGESET_TOP, skip: changesets?.length })
+      .get(imodelId, {
+        top: CHANGESET_TOP,
+        skip: changesets?.length,
+      })
       .then((newChangesets) => {
         setChangesetStatus(RequestStatus.Finished);
         setChangesets([...(changesets ?? []), ...newChangesets]);
+        setShouldUpdateProperties(true);
       })
       .catch(() => setChangesetStatus(RequestStatus.Failed));
   }, [changesetClient, changesets, imodelId]);
+
+  React.useEffect(() => {
+    if (versionStatus === RequestStatus.NotStarted) {
+      getVersions();
+      getChangesets();
+    }
+  }, [getChangesets, getVersions, versionStatus]);
+
+  React.useEffect(() => {
+    if (shouldUpdateProperties) {
+      getRelatedChangesets();
+      setShouldUpdateProperties(false);
+    }
+  }, [shouldUpdateProperties, getRelatedChangesets]);
 
   React.useEffect(() => {
     if (
       _currentTab === ManageVersionsTabs.Changes &&
       changesetStatus === RequestStatus.NotStarted
     ) {
+      setChangesets(undefined);
       getChangesets();
     }
   }, [changesetStatus, _currentTab, getChangesets]);
@@ -197,7 +245,7 @@ export const ManageVersions = (props: ManageVersionsProps) => {
   const onVersionCreated = React.useCallback(() => {
     changeTab(ManageVersionsTabs.Versions);
     refreshVersions();
-    setChangesets(undefined);
+    setVersionsTableData(undefined);
     setChangesetStatus(RequestStatus.NotStarted);
   }, [changeTab, refreshVersions]);
 
@@ -230,11 +278,11 @@ export const ManageVersions = (props: ManageVersionsProps) => {
           />
           {_currentTab === ManageVersionsTabs.Versions && (
             <VersionsTab
-              versions={versions ?? []}
               status={versionStatus}
               onVersionUpdated={refreshVersions}
               loadMoreVersions={getMoreVersions}
               onViewClick={onViewClick}
+              tableData={versionsTableData ?? []}
             />
           )}
           {_currentTab === ManageVersionsTabs.Changes && (
