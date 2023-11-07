@@ -149,6 +149,7 @@ export const ManageVersions = (props: ManageVersionsProps) => {
             ...(oldVersions ?? []),
             ...newVersions,
           ]);
+          getChangesets();
           setShouldUpdateProperties(true);
         })
         .catch(() => setVersionStatus(RequestStatus.Failed));
@@ -166,6 +167,8 @@ export const ManageVersions = (props: ManageVersionsProps) => {
 
   const refreshVersions = React.useCallback(() => {
     setVersions(undefined);
+    setVersionsTableData(undefined);
+    setChangesets(undefined);
     getVersions();
   }, [getVersions]);
 
@@ -245,7 +248,6 @@ export const ManageVersions = (props: ManageVersionsProps) => {
   const onVersionCreated = React.useCallback(() => {
     changeTab(ManageVersionsTabs.Versions);
     refreshVersions();
-    setVersionsTableData(undefined);
     setChangesetStatus(RequestStatus.NotStarted);
   }, [changeTab, refreshVersions]);
 

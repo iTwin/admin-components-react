@@ -120,7 +120,8 @@ describe("ManageVersions", () => {
     screen.getByText(defaultStrings.changes).click();
 
     expect(mockGetVersions).toHaveBeenCalledTimes(1);
-    expect(mockGetChangesets).toHaveBeenCalledTimes(1);
+    //query data twice as now showing included changesets in named version table
+    expect(mockGetChangesets).toHaveBeenCalledTimes(2);
   });
 
   it("should show error message in versions table when failed to fetch versions", async () => {
@@ -181,7 +182,7 @@ describe("ManageVersions", () => {
     const createVersionButtons = screen.getAllByTitle(
       defaultStrings.createNamedVersion
     );
-    expect(createVersionButtons.length).toBe(2);
+    expect(createVersionButtons.length).toBe(1);
     createVersionButtons[0].click();
 
     await waitForSelectorToExist(".iac-additional-info");
@@ -214,11 +215,8 @@ describe("ManageVersions", () => {
     expect(mockCreateVersion).toHaveBeenCalled();
 
     screen.getByText(defaultStrings.changes).click();
-    await waitForElementToBeRemoved(() =>
-      container.querySelector(".iui-progress-indicator-radial")
-    );
 
-    expect(mockGetChangesets).toHaveBeenCalledTimes(2);
+    expect(mockGetChangesets).toHaveBeenCalledTimes(3);
   });
 
   it("should update version", async () => {
