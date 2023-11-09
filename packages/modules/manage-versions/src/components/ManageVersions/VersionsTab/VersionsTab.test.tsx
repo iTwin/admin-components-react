@@ -44,11 +44,12 @@ describe("VersionsTab", () => {
       expect(cells[0].textContent).toContain(MockedVersion(index).name);
       expect(cells[1].textContent).toContain(MockedVersion(index).description);
       expect(cells[2].textContent).toContain(MockedVersion(index).createdBy);
-      expect(cells[3].textContent).toContain(defaultStrings.view);
-      fireEvent.click(cells[3].querySelector(".iui-anchor") as HTMLElement);
-      expect(cells[4].textContent).toContain(
+      expect(cells[3].textContent).toContain(
         new Date(MockedVersion(index).createdDateTime).toLocaleString()
       );
+      expect(cells[4].textContent).toContain(defaultStrings.view);
+      fireEvent.click(cells[4].querySelector(".iui-anchor") as HTMLElement);
+
       within(cells[5] as HTMLElement).getByTitle(
         defaultStrings.updateNamedVersion
       );

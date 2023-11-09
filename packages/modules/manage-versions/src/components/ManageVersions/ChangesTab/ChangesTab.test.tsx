@@ -22,7 +22,6 @@ const renderComponent = (initialProps?: Partial<ChangesTabProps>) => {
     loadMoreChanges: jest.fn(),
     latestVersion: undefined,
     onVersionCreated: jest.fn(),
-    isLoadingColumn: false,
     ...initialProps,
   };
   return render(

@@ -18,3 +18,7 @@ export const dateTimeFormatOptions: Intl.DateTimeFormatOptions = {
 export function getLocale(): string[] {
   return [...navigator.languages];
 }
+
+export const localeDateWithTimeFormat = (date: Date) => {
+  return date.toLocaleDateString(getLocale(), dateTimeFormatOptions);
+};

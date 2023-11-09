@@ -13,7 +13,7 @@ import {
 import React from "react";
 
 import { Changeset } from "../../models/changeset";
-import { dateTimeFormatOptions, getLocale } from "../../models/utils";
+import { localeDateWithTimeFormat } from "../../models/utils";
 import { informationPanelStringOverrides } from "../ManageVersions/types";
 
 export interface ChangesetInfoPanelProps {
@@ -28,10 +28,8 @@ export const ChangesetInformationPanel = (props: ChangesetInfoPanelProps) => {
     ? changeset.synchronizationInfo.changedFiles
     : [stringOverrides.noValue];
 
-  const createdDateTime = new Date(changeset.pushDateTime);
-  const formattedDate = createdDateTime.toLocaleDateString(
-    getLocale(),
-    dateTimeFormatOptions
+  const createdDateTime = localeDateWithTimeFormat(
+    new Date(changeset.pushDateTime)
   );
 
   const renderProperty = (property: string, value: string | undefined) => {
@@ -60,7 +58,7 @@ export const ChangesetInformationPanel = (props: ChangesetInfoPanelProps) => {
               stringOverrides.createdBy,
               changeset.createdBy ?? ""
             )}
-            {renderProperty(stringOverrides.createdDate, formattedDate ?? "")}
+            {renderProperty(stringOverrides.createdDate, createdDateTime ?? "")}
             {renderProperty(
               stringOverrides.application,
               changeset.application.name ?? stringOverrides.noValue

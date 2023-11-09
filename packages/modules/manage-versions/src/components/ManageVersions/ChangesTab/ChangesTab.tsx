@@ -24,7 +24,6 @@ export type ChangesTabProps = {
   loadMoreChanges: () => void;
   onVersionCreated: () => void;
   latestVersion: NamedVersion | undefined;
-  isLoadingColumn: boolean;
 };
 
 const ChangesTab = (props: ChangesTabProps) => {
@@ -34,7 +33,6 @@ const ChangesTab = (props: ChangesTabProps) => {
     loadMoreChanges,
     onVersionCreated,
     latestVersion,
-    isLoadingColumn,
   } = props;
 
   const { stringsOverrides } = useConfig();
@@ -79,10 +77,10 @@ const ChangesTab = (props: ChangesTabProps) => {
             accessor: "createdBy",
             maxWidth: 220,
             Cell: (props: CellProps<Changeset>) => {
-              return isLoadingColumn ? (
-                <Text isSkeleton={true}>Fake user cell</Text>
-              ) : (
+              return props.row.original.createdBy !== "" ? (
                 <Text>{props.row.original.createdBy}</Text>
+              ) : (
+                <Text isSkeleton={true}>Loading user info</Text>
               );
             },
           },
@@ -153,7 +151,6 @@ const ChangesTab = (props: ChangesTabProps) => {
     stringsOverrides.createNamedVersion,
     stringsOverrides.informationPanel,
     canCreateVersion,
-    isLoadingColumn,
   ]);
 
   const emptyTableContent = React.useMemo(() => {

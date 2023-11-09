@@ -19,20 +19,12 @@ export type VersionsTabProps = {
   status: RequestStatus;
   onVersionUpdated: () => void;
   loadMoreVersions: () => void;
-  isLoadingColumn: boolean;
   onViewClick?: (version: NamedVersion) => void;
 };
 
 const VersionsTab = (props: VersionsTabProps) => {
-  const {
-    versions,
-    status,
-    onVersionUpdated,
-    loadMoreVersions,
-    onViewClick,
-    isLoadingColumn,
-  } = props;
-
+  const { versions, status, onVersionUpdated, loadMoreVersions, onViewClick } =
+    props;
   const { stringsOverrides } = useConfig();
 
   const [currentVersion, setCurrentVersion] = React.useState<
@@ -62,10 +54,10 @@ const VersionsTab = (props: VersionsTabProps) => {
             accessor: "createdBy",
             maxWidth: 220,
             Cell: (props: CellProps<NamedVersion>) => {
-              return isLoadingColumn ? (
-                <Text isSkeleton={true}>Fake user cell</Text>
-              ) : (
+              return props.row.original.createdBy !== "" ? (
                 <Text>{props.row.original.createdBy}</Text>
+              ) : (
+                <Text isSkeleton={true}>Loading user info</Text>
               );
             },
           },
@@ -108,7 +100,7 @@ const VersionsTab = (props: VersionsTabProps) => {
       },
     ];
     if (onViewClick) {
-      tableColumns[0].columns.splice(3, 0, {
+      tableColumns[0].columns.splice(4, 0, {
         id: "versions-table-view",
         width: 100,
         Cell: (props: CellProps<NamedVersion>) => {
@@ -132,7 +124,6 @@ const VersionsTab = (props: VersionsTabProps) => {
     stringsOverrides.updateNamedVersion,
     stringsOverrides.view,
     onViewClick,
-    isLoadingColumn,
   ]);
 
   const emptyTableContent = React.useMemo(() => {

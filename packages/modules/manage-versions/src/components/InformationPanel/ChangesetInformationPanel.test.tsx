@@ -7,17 +7,16 @@ import React from "react";
 
 import { ConfigProvider } from "../../common/configContext";
 import { MOCKED_CONFIG_PROPS, MockedChangeset } from "../../mocks";
-import { dateTimeFormatOptions, getLocale } from "../../models/utils";
+import { localeDateWithTimeFormat } from "../../models/utils";
 import { defaultStrings } from "../ManageVersions/ManageVersions";
 import {
   ChangesetInfoPanelProps,
   ChangesetInformationPanel,
 } from "./ChangesetInformationPanel";
 
-const mockedCreatedDateTime = new Intl.DateTimeFormat(
-  getLocale(),
-  dateTimeFormatOptions
-).format(new Date(MockedChangeset().pushDateTime));
+const mockedCreatedDateTime = localeDateWithTimeFormat(
+  new Date(MockedChangeset().pushDateTime)
+);
 
 const renderComponent = (initialProps?: Partial<ChangesetInfoPanelProps>) => {
   const props: ChangesetInfoPanelProps = {

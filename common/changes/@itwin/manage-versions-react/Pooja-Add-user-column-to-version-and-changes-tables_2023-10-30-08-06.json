@@ -3,7 +3,7 @@
     {
       "packageName": "@itwin/manage-versions-react",
       "comment": "Added information panel for changeset",
-      "type": "minor"
+      "type": "major"
     }
   ],
   "packageName": "@itwin/manage-versions-react"
