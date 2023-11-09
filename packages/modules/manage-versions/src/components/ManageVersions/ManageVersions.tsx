@@ -128,8 +128,7 @@ export const ManageVersions = (props: ManageVersionsProps) => {
 
   const [versionsTableData, setVersionsTableData] =
     React.useState<VersionTableData[]>();
-  const [shouldUpdateProperties, setShouldUpdateProperties] =
-    React.useState<boolean>(false);
+  const [mapChangesets, setMapChangesets] = React.useState<boolean>(false);
 
   const changeTab = React.useCallback(
     (tab: ManageVersionsTabs) => {
@@ -150,7 +149,7 @@ export const ManageVersions = (props: ManageVersionsProps) => {
             ...newVersions,
           ]);
           getChangesets();
-          setShouldUpdateProperties(true);
+          setMapChangesets(true);
         })
         .catch(() => setVersionStatus(RequestStatus.Failed));
     },
@@ -172,7 +171,7 @@ export const ManageVersions = (props: ManageVersionsProps) => {
     getVersions();
   }, [getVersions]);
 
-  const getRelatedChangesets = React.useCallback(() => {
+  const mapChangesetsToNamedVersions = React.useCallback(() => {
     if (changesets) {
       setVersionStatus(RequestStatus.InProgress);
       // Update versionsTableData
@@ -216,10 +215,12 @@ export const ManageVersions = (props: ManageVersionsProps) => {
       .then((newChangesets) => {
         setChangesetStatus(RequestStatus.Finished);
         setChangesets([...(changesets ?? []), ...newChangesets]);
-        setShouldUpdateProperties(true);
+        if (_currentTab === ManageVersionsTabs.Versions) {
+          setMapChangesets(true);
+        }
       })
       .catch(() => setChangesetStatus(RequestStatus.Failed));
-  }, [changesetClient, changesets, imodelId]);
+  }, [changesets, changesetClient, imodelId, _currentTab]);
 
   React.useEffect(() => {
     if (versionStatus === RequestStatus.NotStarted) {
@@ -229,11 +230,11 @@ export const ManageVersions = (props: ManageVersionsProps) => {
   }, [getChangesets, getVersions, versionStatus]);
 
   React.useEffect(() => {
-    if (shouldUpdateProperties) {
-      getRelatedChangesets();
-      setShouldUpdateProperties(false);
+    if (mapChangesets) {
+      mapChangesetsToNamedVersions();
+      setMapChangesets(false);
     }
-  }, [shouldUpdateProperties, getRelatedChangesets]);
+  }, [mapChangesets, mapChangesetsToNamedVersions]);
 
   React.useEffect(() => {
     if (
