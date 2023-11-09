@@ -3,7 +3,7 @@
     {
       "packageName": "@itwin/manage-versions-react",
       "comment": "Added user column to Named versions and Changeset tables",
-      "type": "major"
+      "type": "minor"
     }
   ],
   "packageName": "@itwin/manage-versions-react"
