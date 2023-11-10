@@ -13,11 +13,6 @@
   }
 
   .iac-changes-tab-actions {
-    justify-content: center;
     gap: var(--iui-size-2xs);
-    button {
-      min-width: var(--iui-size-2xs);
-      width: var(--iui-size-2xs);
-    }
   }
 }

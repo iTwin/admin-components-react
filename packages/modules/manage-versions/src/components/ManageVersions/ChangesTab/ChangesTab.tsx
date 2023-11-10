@@ -8,7 +8,7 @@ import {
   SvgInfoCircular,
   SvgNamedVersionAdd,
 } from "@itwin/itwinui-icons-react";
-import { ButtonGroup, IconButton, Table, Text } from "@itwin/itwinui-react";
+import { IconButton, Table, Text } from "@itwin/itwinui-react";
 import React from "react";
 import { CellProps } from "react-table";
 
@@ -125,6 +125,7 @@ const ChangesTab = (props: ChangesTabProps) => {
                     title={stringsOverrides.createNamedVersion}
                     styleType="borderless"
                     className={className}
+                    size="small"
                   >
                     <SvgNamedVersionAdd />
                   </IconButton>
@@ -132,6 +133,7 @@ const ChangesTab = (props: ChangesTabProps) => {
                     title={stringsOverrides.informationPanel}
                     styleType="borderless"
                     onClick={() => handleInfoPanelOpen(changeset)}
+                    size="small"
                   >
                     <SvgInfoCircular />
                   </IconButton>
