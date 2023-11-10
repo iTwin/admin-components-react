@@ -73,7 +73,7 @@ const ChangesTab = (props: ChangesTabProps) => {
           },
           {
             id: "CREATOR",
-            Header: stringsOverrides.user,
+            Header: stringsOverrides.user ?? "User",
             accessor: "createdBy",
             maxWidth: 220,
             Cell: (props: CellProps<Changeset>) => {
@@ -130,7 +130,9 @@ const ChangesTab = (props: ChangesTabProps) => {
                     <SvgNamedVersionAdd />
                   </IconButton>
                   <IconButton
-                    title={stringsOverrides.informationPanel}
+                    title={
+                      stringsOverrides.informationPanel ?? "Information Panel"
+                    }
                     styleType="borderless"
                     onClick={() => handleInfoPanelOpen(changeset)}
                     size="small"

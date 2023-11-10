@@ -54,9 +54,7 @@ describe("ChangesTab", () => {
       within(cells[5] as HTMLElement).getByTitle(
         defaultStrings.createNamedVersion
       );
-      within(cells[5] as HTMLElement).getByTitle(
-        defaultStrings.informationPanel
-      );
+      within(cells[5] as HTMLElement).getByTitle("Information Panel");
     });
   });
 
@@ -103,9 +101,7 @@ describe("ChangesTab", () => {
       changesets: MockedChangesetList(),
     });
     const rowgroup = screen.getAllByRole("rowgroup")[0];
-    const infoIcons = within(rowgroup).queryAllByTitle(
-      defaultStrings.informationPanel
-    );
+    const infoIcons = within(rowgroup).queryAllByTitle("Information Panel");
     const rows = within(rowgroup).queryAllByRole("row");
 
     expect(infoIcons.length).toBe(rows.length);

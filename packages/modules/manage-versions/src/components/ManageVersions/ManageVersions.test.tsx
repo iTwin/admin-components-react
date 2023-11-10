@@ -119,9 +119,7 @@ describe("ManageVersions", () => {
       within(cells[5] as HTMLElement).getByTitle(
         defaultStrings.createNamedVersion
       );
-      within(cells[5] as HTMLElement).getByTitle(
-        defaultStrings.informationPanel
-      );
+      within(cells[5] as HTMLElement).getByTitle("Information Panel");
     });
     expect(mockGetChangesets).toHaveBeenCalledWith(MOCKED_IMODEL_ID, {
       top: 100,
@@ -317,7 +315,7 @@ it("should render with changesets tab opened", async () => {
     within(cells[5] as HTMLElement).getByTitle(
       defaultStrings.createNamedVersion
     );
-    within(cells[5] as HTMLElement).getByTitle(defaultStrings.informationPanel);
+    within(cells[5] as HTMLElement).getByTitle("Information Panel");
   });
 });
 

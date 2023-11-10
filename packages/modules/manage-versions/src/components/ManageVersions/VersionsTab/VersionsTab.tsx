@@ -50,7 +50,7 @@ const VersionsTab = (props: VersionsTabProps) => {
           },
           {
             id: "CREATOR",
-            Header: stringsOverrides.user,
+            Header: stringsOverrides.user ?? "User",
             accessor: "createdBy",
             maxWidth: 220,
             Cell: (props: CellProps<NamedVersion>) => {
