@@ -1,5 +1,6 @@
 dependencies:
   '@babel/core': 7.23.3
+  '@babel/plugin-proposal-private-property-in-object': 7.21.11_@babel+core@7.23.3
   '@bentley/bentleyjs-core': 2.11.0
   '@bentley/frontend-authorization-client': 2.11.0_124fd8799cc8196bebc67d27cf7bf3e3
   '@bentley/itwin-client': 2.11.0_@bentley+bentleyjs-core@2.11.0
@@ -16,7 +17,7 @@ dependencies:
   '@rush-temp/imodel-browser-react': file:projects/imodel-browser-react.tgz
   '@rush-temp/manage-versions-react': file:projects/manage-versions-react.tgz_babel-eslint@10.1.0
   '@rush-temp/platform-storybook': file:projects/platform-storybook.tgz_prettier@2.8.8+typescript@4.9.5
-  '@rush-temp/storybook-auth-addon': file:projects/storybook-auth-addon.tgz_node-sass@6.0.1+prettier@2.8.8
+  '@rush-temp/storybook-auth-addon': file:projects/storybook-auth-addon.tgz_a82965f21a7f7cfb4dbba7006b201784
   '@storybook/addon-actions': 6.5.16_react-dom@17.0.2+react@17.0.2
   '@storybook/addon-essentials': 6.5.16_d7a2f7f85e4698b9fd3798aaef3808e5
   '@storybook/addon-links': 6.5.16_react-dom@17.0.2+react@17.0.2
@@ -21140,8 +21141,9 @@ packages:
       integrity: sha512-VdUKndSA5ss39gNyxR+vUJT394tkE7yuH6mOIez9hKtmcnJLAnnppO+xFkqorrrqeFnBElwv+CWvncK1ZIRLhg==
       tarball: file:projects/platform-storybook.tgz
     version: 0.0.0
-  file:projects/storybook-auth-addon.tgz_node-sass@6.0.1+prettier@2.8.8:
+  file:projects/storybook-auth-addon.tgz_a82965f21a7f7cfb4dbba7006b201784:
     dependencies:
+      '@babel/plugin-proposal-private-property-in-object': 7.21.11_@babel+core@7.23.3
       '@bentley/bentleyjs-core': 2.11.0
       '@bentley/frontend-authorization-client': 2.11.0_124fd8799cc8196bebc67d27cf7bf3e3
       '@bentley/itwin-client': 2.11.0_@bentley+bentleyjs-core@2.11.0
@@ -21174,14 +21176,16 @@ packages:
     id: file:projects/storybook-auth-addon.tgz
     name: '@rush-temp/storybook-auth-addon'
     peerDependencies:
+      '@babel/core': '*'
       node-sass: '*'
       prettier: '*'
     resolution:
-      integrity: sha512-vznAnQJZatoBq3g38pQviWL8qfbDh7P32iW2kyKtpHDcTRYt7HERSC/AFovMfLtp2TYyHliLk6OXMiTOVFm8CQ==
+      integrity: sha512-dPqXu84roZHk42XqHHxCfhJ3WNceOIvnCl6CKFvo8PT1JMkU7syv5twLbimNcLO+7GlvgFn5uFfkEjMXR49iIA==
       tarball: file:projects/storybook-auth-addon.tgz
     version: 0.0.0
 specifiers:
   '@babel/core': ^7.12.10
+  '@babel/plugin-proposal-private-property-in-object': ^7.14.5
   '@bentley/bentleyjs-core': 2.11.0
   '@bentley/frontend-authorization-client': 2.11.0
   '@bentley/itwin-client': 2.11.0
