@@ -28,6 +28,12 @@
       "versionPolicyName": "independentModule"
     },
     {
+      "packageName": "@itwin/imodel-browser-react",
+      "projectFolder": "packages/modules/imodel-browser",
+      "shouldPublish": true,
+      "versionPolicyName": "independentModule"
+    },
+    {
       "packageName": "@itwin/manage-versions-react",
       "projectFolder": "packages/modules/manage-versions",
       "shouldPublish": true,

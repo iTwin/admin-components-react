@@ -35,6 +35,7 @@ dependencies:
   '@typescript-eslint/parser': 4.33.0_eslint@7.32.0+typescript@4.9.5
   babel-eslint: 10.1.0_eslint@7.32.0
   babel-loader: 8.3.0_8d9fd6ebbdf323464e360929a56a208f
+  browserslist: 4.22.1
   classnames: 2.3.2
   eslint: 7.32.0
   eslint-config-airbnb: 0.0.4
@@ -20848,6 +20849,7 @@ specifiers:
   '@typescript-eslint/parser': ^4.20.0
   babel-eslint: ^10.0.0
   babel-loader: ^8.2.2
+  browserslist: ^4.20.4
   classnames: ^2.2.6
   eslint: ^7.4.0
   eslint-config-airbnb: ^0.0.4

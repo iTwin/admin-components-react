@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - master
+      - main
   pull_request:
     branches: [ main ]
 
@@ -29,6 +29,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: |
           set -e
+          export BROWSERSLIST_IGNORE_OLD_DATA=1
 
           echo 'Installing...'
           node common/scripts/install-run-rush.js install
