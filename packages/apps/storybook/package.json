@@ -10,7 +10,7 @@
     "@itwin/create-imodel-react": "^1.0.0",
     "@itwin/delete-imodel-react": "^1.0.0",
     "@itwin/delete-itwin-react": "^1.0.0",
-    "@itwin/imodel-browser-react": "~1.0.1",
+    "@itwin/imodel-browser-react": "~1.1.1",
     "@itwin/itwinui-react": "^2.11.4",
     "@itwin/manage-versions-react": "~1.0.0",
     "@itwin/storybook-auth-addon": "^0.1.0",

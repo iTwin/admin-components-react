@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { useEffect, useState } from "react";
 
+import defaultIModelThumbnail from "../../images/default-thumbnail.png";
 import { ApiOverrides } from "../../types";
 import { _getAPIServer } from "../../utils/_apiOverrides";
 
@@ -51,6 +52,9 @@ export const useIModelThumbnail = (
             return response
               .arrayBuffer()
               .then(convertArrayBufferToUrlBase64PNG);
+          } else if (response.status === 404) {
+            // Handle 404 error by setting the default thumbnail
+            return Promise.resolve(defaultIModelThumbnail);
           } else {
             return response.text().then((errorText) => {
               throw new Error(errorText);

@@ -8,6 +8,7 @@ dependencies:
   '@itwin/itwinui-react': 2.11.4_react-dom@17.0.2+react@17.0.2
   '@rollup/plugin-commonjs': 17.1.0_rollup@2.66.1
   '@rollup/plugin-image': 2.1.1_rollup@2.66.1
+  '@rollup/plugin-url': 8.0.1_rollup@2.66.1
   '@rush-temp/admin-components-react-scripts': file:projects/admin-components-react-scripts.tgz
   '@rush-temp/create-imodel-react': file:projects/create-imodel-react.tgz_babel-eslint@10.1.0
   '@rush-temp/delete-imodel-react': file:projects/delete-imodel-react.tgz_babel-eslint@10.1.0
@@ -32,6 +33,7 @@ dependencies:
   '@types/node': 14.18.9
   '@types/react': 17.0.38
   '@types/react-dom': 17.0.11
+  '@types/react-table': 7.7.14
   '@typescript-eslint/eslint-plugin': 4.33.0_959502c0ea240e86d4d2ba8b8c0fee45
   '@typescript-eslint/parser': 4.33.0_eslint@7.32.0+typescript@4.5.5
   babel-eslint: 10.1.0_eslint@7.32.0
@@ -2581,6 +2583,22 @@ packages:
       rollup: ^1.20.0 || ^2.0.0
     resolution:
       integrity: sha512-IGcu+cydlUMZ5En85jxHH4qj2hta/11BHq95iHEyb2sbgiN0eCdzvUcHw5gt9pBL5lTi4JDYJ1acCoMGpTvEZg==
+  /@rollup/plugin-url/8.0.1_rollup@2.66.1:
+    dependencies:
+      '@rollup/pluginutils': 5.0.4_rollup@2.66.1
+      make-dir: 3.1.0
+      mime: 3.0.0
+      rollup: 2.66.1
+    dev: false
+    engines:
+      node: '>=14.0.0'
+    peerDependencies:
+      rollup: ^1.20.0||^2.0.0||^3.0.0
+    peerDependenciesMeta:
+      rollup:
+        optional: true
+    resolution:
+      integrity: sha512-8ajztphXb5e19dk3Iwjtm2eSYJR8jFQubZ8pJ1GG2MBMM7/qUedLnZAN+Vt4jqbcT/m27jfjIBocvrzV0giNRw==
   /@rollup/pluginutils/3.1.0_rollup@1.32.1:
     dependencies:
       '@types/estree': 0.0.39
@@ -2616,6 +2634,22 @@ packages:
       node: '>= 8.0.0'
     resolution:
       integrity: sha512-ROn4qvkxP9SyPeHaf7uQC/GPFY6L/OWy9+bd9AwcjOAWQwxRscoEyAUD8qCY5o5iL4jqQwoLk2kaTKJPb/HwzQ==
+  /@rollup/pluginutils/5.0.4_rollup@2.66.1:
+    dependencies:
+      '@types/estree': 1.0.1
+      estree-walker: 2.0.2
+      picomatch: 2.3.1
+      rollup: 2.66.1
+    dev: false
+    engines:
+      node: '>=14.0.0'
+    peerDependencies:
+      rollup: ^1.20.0||^2.0.0||^3.0.0
+    peerDependenciesMeta:
+      rollup:
+        optional: true
+    resolution:
+      integrity: sha512-0KJnIoRI8A+a1dqOYLxH8vBf8bphDmty5QvIm2hqm7oFCFYKCAZWWd2hXgMibaPsNDhI0AtpYfQZJG47pt/k4g==
   /@sinonjs/commons/1.8.3:
     dependencies:
       type-detect: 4.0.8
@@ -4349,6 +4383,10 @@ packages:
     dev: false
     resolution:
       integrity: sha512-C6N5s2ZFtuZRj54k2/zyRhNDjJwwcViAM3Nbm8zjBpbqAdZ00mr0CFxvSKeO8Y/e03WVFLpQMdHYVfUd6SB+Hw==
+  /@types/estree/1.0.1:
+    dev: false
+    resolution:
+      integrity: sha512-LG4opVs2ANWZ1TJoKc937iMmNstM/d0ae1vNbnBvBhqCSezgVUOzcLCqbI5elV8Vy6WKwKjaqR+zO9VKirBBCA==
   /@types/glob/7.2.0:
     dependencies:
       '@types/minimatch': 3.0.5
@@ -13345,6 +13383,13 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-USPkMeET31rOMiarsBNIHZKLGgvKc/LrjofAnBlOttf5ajRvqiRA8QsenbcooctK6d6Ts6aqZXBA+XbkKthiQg==
+  /mime/3.0.0:
+    dev: false
+    engines:
+      node: '>=10.0.0'
+    hasBin: true
+    resolution:
+      integrity: sha512-jSCU7/VB1loIWBZe14aEYHU/+1UMEHoaO7qxCOVJOw9GgH72VAWppxNcjU+x9a2k3GSIBXNKxXQFqRvvZ7vr3A==
   /mimic-fn/2.1.0:
     dev: false
     engines:
@@ -20778,6 +20823,7 @@ packages:
       '@itwin/itwinui-icons-react': 2.2.0_react-dom@17.0.2+react@17.0.2
       '@itwin/itwinui-react': 2.11.4_react-dom@17.0.2+react@17.0.2
       '@rollup/plugin-commonjs': 17.1.0_rollup@2.66.1
+      '@rollup/plugin-url': 8.0.1_rollup@2.66.1
       '@svgr/rollup': 5.5.0
       '@testing-library/react': 11.2.7_react-dom@17.0.2+react@17.0.2
       '@testing-library/react-hooks': 5.1.3_fc2bb8a5b006d3f25c5f84ea777e678d
@@ -20828,7 +20874,7 @@ packages:
     dev: false
     name: '@rush-temp/imodel-browser-react'
     resolution:
-      integrity: sha512-Ot7x5vnS5Tz8PzsU2mpG3MsTa1/ID5dnO60zs3w1P0sBaCiGHVG0vdUAJ06mZwbuhHm6ARbNM+mdlM9TJYUESA==
+      integrity: sha512-AXtIYkHD3AEa5cwcPFMrDAjkM4ulvwQ3NEAw9HjGvOx3aBPMtHBNQe7FGXvUBs13T4Mm+XSb8C2VlltIT7TTew==
       tarball: file:projects/imodel-browser-react.tgz
     version: 0.0.0
   file:projects/manage-versions-react.tgz_babel-eslint@10.1.0:
@@ -20878,7 +20924,7 @@ packages:
     peerDependencies:
       babel-eslint: '*'
     resolution:
-      integrity: sha512-Q2osImXor1STAG/8mCq2a/3fD4HEjDs0t0YxnKhzOg5ZpFkKEToRmzQ/AaZst+5bC0c8r57mzFdk/egSwUdJiA==
+      integrity: sha512-8cuABPKTCFw1AdGLXdicO2M9Iq5IQS2wiCmEr7ABN9m+WzfBro5P0ZydeYu0Yoi+GdiHLVitQBtRto0Lgud81w==
       tarball: file:projects/manage-versions-react.tgz
     version: 0.0.0
   file:projects/platform-storybook.tgz_73e57467d4a9a5e376d6b84b6ab4e4b9:
@@ -20926,7 +20972,7 @@ packages:
       prettier: '*'
       typescript: '*'
     resolution:
-      integrity: sha512-vM/yxDtJ5/eBkgr80iHuNsZ4xFXDSqdkgZL6+gJJHes7rGtMbgdBZm4RGUnIWDkMgQJROtVgaVMFwYuqNJzLsg==
+      integrity: sha512-lNudMkh2tbixDBHNwwxEuNeZd7x4Y6t/Xf/4RL5SYCARSOBBC2vS52ct4kRkXV5DoJI6QMqfpUjeL1SzwVx6Pw==
       tarball: file:projects/platform-storybook.tgz
     version: 0.0.0
   file:projects/storybook-auth-addon.tgz_node-sass@6.0.1+prettier@2.5.1:
@@ -20980,6 +21026,7 @@ specifiers:
   '@itwin/itwinui-react': ^2.11.4
   '@rollup/plugin-commonjs': ~17.1.0
   '@rollup/plugin-image': ^2.0.6
+  '@rollup/plugin-url': ^8.0.1
   '@rush-temp/admin-components-react-scripts': file:./projects/admin-components-react-scripts.tgz
   '@rush-temp/create-imodel-react': file:./projects/create-imodel-react.tgz
   '@rush-temp/delete-imodel-react': file:./projects/delete-imodel-react.tgz
@@ -21004,6 +21051,7 @@ specifiers:
   '@types/node': ^14.14.35
   '@types/react': ^17.0.37
   '@types/react-dom': ^17.0.0
+  '@types/react-table': ~7.7.14
   '@typescript-eslint/eslint-plugin': ^4.20.0
   '@typescript-eslint/parser': ^4.20.0
   babel-eslint: ^10.0.0
