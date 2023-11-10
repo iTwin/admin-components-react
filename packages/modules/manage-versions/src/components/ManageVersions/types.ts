@@ -63,7 +63,7 @@ export type ManageVersionsStringOverrides = {
   /** Default: `Information Panel` */
   informationPanel?: string;
   /** string overrides for text within Information panel` */
-  informationPanelStringOverrides?: informationPanelStringOverrides;
+  informationPanelStringOverrides?: InformationPanelStringOverrides;
 };
 
 export type LogFunc = (
@@ -73,7 +73,7 @@ export type LogFunc = (
 
 export type ApiOverrides = { serverEnvironmentPrefix?: "dev" | "qa" | "" };
 
-export type informationPanelStringOverrides = {
+export type InformationPanelStringOverrides = {
   /** title. Default `Change #`. */
   title: string;
   /** Label for property createdBy. Default `Created By`. */

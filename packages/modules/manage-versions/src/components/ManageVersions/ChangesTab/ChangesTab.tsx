@@ -109,6 +109,7 @@ const ChangesTab = (props: ChangesTabProps) => {
           {
             id: "changes-table-actions",
             width: 100,
+            cellClassName: "iac-changes-tab-actions",
             Cell: (props: CellProps<Changeset>) => {
               const changeset = props.data[props.row.index];
               const className = canCreateVersion(changeset)
@@ -116,26 +117,24 @@ const ChangesTab = (props: ChangesTabProps) => {
                 : "iac-create-version-icon-hidden";
               return (
                 <>
-                  <ButtonGroup className="iac-changes-tab-actions-btn-group">
-                    <IconButton
-                      onClick={() => {
-                        setCurrentChangeset(changeset);
-                        setIsCreateVersionModalOpen(true);
-                      }}
-                      title={stringsOverrides.createNamedVersion}
-                      styleType="borderless"
-                      className={className}
-                    >
-                      <SvgNamedVersionAdd />
-                    </IconButton>
-                    <IconButton
-                      title={stringsOverrides.informationPanel}
-                      styleType="borderless"
-                      onClick={() => handleInfoPanelOpen(changeset)}
-                    >
-                      <SvgInfoCircular />
-                    </IconButton>
-                  </ButtonGroup>
+                  <IconButton
+                    onClick={() => {
+                      setCurrentChangeset(changeset);
+                      setIsCreateVersionModalOpen(true);
+                    }}
+                    title={stringsOverrides.createNamedVersion}
+                    styleType="borderless"
+                    className={className}
+                  >
+                    <SvgNamedVersionAdd />
+                  </IconButton>
+                  <IconButton
+                    title={stringsOverrides.informationPanel}
+                    styleType="borderless"
+                    onClick={() => handleInfoPanelOpen(changeset)}
+                  >
+                    <SvgInfoCircular />
+                  </IconButton>
                 </>
               );
             },

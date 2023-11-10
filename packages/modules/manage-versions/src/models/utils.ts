@@ -1,3 +1,5 @@
+import { InformationPanelStringOverrides } from "../components/ManageVersions/types";
+
 /*---------------------------------------------------------------------------------------------
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
@@ -21,4 +23,14 @@ export function getLocale(): string[] {
 
 export const localeDateWithTimeFormat = (date: Date) => {
   return date.toLocaleDateString(getLocale(), dateTimeFormatOptions);
+};
+
+export const informationPanelDefaultStrings: InformationPanelStringOverrides = {
+  title: "Change #",
+  createdBy: "Created By",
+  createdDate: "Date Created",
+  application: "Application",
+  connectionAttributes: "Connection Attributes",
+  changedFiles: "Changed Files",
+  noValue: "N/A",
 };

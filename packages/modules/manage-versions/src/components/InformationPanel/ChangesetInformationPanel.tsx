@@ -13,17 +13,24 @@ import {
 import React from "react";
 
 import { Changeset } from "../../models/changeset";
-import { localeDateWithTimeFormat } from "../../models/utils";
-import { informationPanelStringOverrides } from "../ManageVersions/types";
+import {
+  informationPanelDefaultStrings,
+  localeDateWithTimeFormat,
+} from "../../models/utils";
+import { InformationPanelStringOverrides } from "../ManageVersions/types";
 
 export interface ChangesetInfoPanelProps {
   changeset: Changeset;
   onClose: (e: React.MouseEvent<Element, MouseEvent>) => void;
-  stringOverrides: informationPanelStringOverrides;
+  stringOverrides?: InformationPanelStringOverrides;
 }
 
 export const ChangesetInformationPanel = (props: ChangesetInfoPanelProps) => {
-  const { changeset, onClose, stringOverrides } = props;
+  const {
+    changeset,
+    onClose,
+    stringOverrides = informationPanelDefaultStrings,
+  } = props;
   const files: string[] = changeset.synchronizationInfo?.changedFiles
     ? changeset.synchronizationInfo.changedFiles
     : [stringOverrides.noValue];

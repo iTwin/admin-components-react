@@ -8,7 +8,11 @@ import React from "react";
 import { ChangesetClient } from "../../clients/changesetClient";
 import { NamedVersionClient } from "../../clients/namedVersionClient";
 import { ConfigProvider } from "../../common/configContext";
-import { Changeset, NamedVersion } from "../../models";
+import {
+  Changeset,
+  informationPanelDefaultStrings,
+  NamedVersion,
+} from "../../models";
 import ChangesTab from "./ChangesTab/ChangesTab";
 import {
   ApiOverrides,
@@ -51,15 +55,7 @@ export const defaultStrings: ManageVersionsStringOverrides = {
   messageCouldNotUpdateVersion:
     "Could not update a Named Version. Please try again later.",
   messageValueTooLong: "The value exceeds allowed {{length}} characters.",
-  informationPanelStringOverrides: {
-    title: "Change #",
-    createdBy: "Created By",
-    createdDate: "Date Created",
-    application: "Application",
-    connectionAttributes: "Connection Attributes",
-    changedFiles: "Changed Files",
-    noValue: "N/A",
-  },
+  informationPanelStringOverrides: informationPanelDefaultStrings,
 };
 
 export type ManageVersionsProps = {

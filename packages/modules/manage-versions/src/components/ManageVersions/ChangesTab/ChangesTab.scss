@@ -12,14 +12,12 @@
     visibility: hidden;
   }
 
-  .iac-changes-tab-actions-btn-group {
-    div {
-      width: 25px;
-    }
-    &:hover {
-      button {
-        background-color: inherit;
-      }
+  .iac-changes-tab-actions {
+    justify-content: center;
+    gap: var(--iui-size-2xs);
+    button {
+      min-width: var(--iui-size-2xs);
+      width: var(--iui-size-2xs);
     }
   }
 }
