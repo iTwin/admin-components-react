@@ -2,19 +2,10 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-export type Changeset = {
+export type User = {
   id: string;
+  email: string;
+  givenName: string;
+  surname: string;
   displayName: string;
-  description: string;
-  index: number;
-  pushDateTime: string;
-  synchronizationInfo: {
-    changedFiles: string[];
-  };
-  _links: {
-    namedVersion?: { href: string };
-  };
-  creatorId: string;
-  createdBy: string;
-  application: { id: string; name: string };
 };

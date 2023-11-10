@@ -29,7 +29,11 @@ export const MockedVersion = (
       changeSet: {
         href: "https://someChangesetUrl.com",
       },
+      creator: {
+        href: `https://testCreatorUrl.com/<ProjectId>/users/creatorId`,
+      },
     },
+    createdBy: "Test User",
     changesetIndex: index,
     ...props,
   };
@@ -51,6 +55,9 @@ export const MockedChangeset = (
     pushDateTime: MOCKED_DATE,
     synchronizationInfo: { changedFiles: [`test-file-${index}.dgn`] },
     _links: {},
+    creatorId: "creatorId",
+    createdBy: "Test User",
+    application: { id: `app-${index}`, name: `test-app-${index}` },
     ...props,
   };
 };
@@ -68,6 +75,25 @@ export const MockedVersionTableData = () => {
     {
       version: MockedVersion(2),
       subRows: MockedChangesetList(),
+    },
+  ];
+};
+
+export const MockedUsers = () => {
+  return [
+    {
+      id: "creatorId",
+      givenName: "Test",
+      surname: "User",
+      email: "test.user@mock.com",
+      displayName: "Test User",
+    },
+    {
+      id: "creatorId2",
+      givenName: "Test",
+      surname: "User2",
+      email: "test.user2@mock.com",
+      displayName: "Test User2",
     },
   ];
 };

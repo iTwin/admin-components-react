@@ -42,17 +42,19 @@ describe("VersionsTab", () => {
 
     rows.forEach((row, index) => {
       const cells = row.querySelectorAll(".iui-table-cell");
-      expect(cells.length).toBe(5);
+      expect(cells.length).toBe(6);
       expect(cells[0].textContent).toContain(MockedVersion(index + 1).name);
       expect(cells[1].textContent).toContain(
         MockedVersion(index + 1).description
       );
-      expect(cells[2].textContent).toContain(
+      expect(cells[2].textContent).toContain(MockedVersion(index).createdBy);
+      expect(cells[3].textContent).toContain(
         new Date(MockedVersion(index + 1).createdDateTime).toLocaleString()
       );
-      expect(cells[3].textContent).toContain(defaultStrings.view);
-      fireEvent.click(cells[3].querySelector(".iui-anchor") as HTMLElement);
-      within(cells[4] as HTMLElement).getByTitle(
+      expect(cells[4].textContent).toContain(defaultStrings.view);
+      fireEvent.click(cells[4].querySelector(".iui-anchor") as HTMLElement);
+
+      within(cells[5] as HTMLElement).getByTitle(
         defaultStrings.updateNamedVersion
       );
     });
@@ -103,19 +105,22 @@ describe("VersionsTab", () => {
 
     rowsOnExpand.forEach((row, index) => {
       const cells = row.querySelectorAll('[role="cell"]');
-      expect(cells.length).toBe(5);
+      expect(cells.length).toBe(6);
       if (index === 0) {
         expect(cells[0].textContent).toContain(MockedVersion(index + 1).name);
         expect(cells[1].textContent).toContain(
           MockedVersion(index + 1).description
         );
         expect(cells[2].textContent).toContain(
+          MockedVersion(index + 1).createdBy
+        );
+        expect(cells[3].textContent).toContain(
           new Date(MockedVersion(index + 1).createdDateTime).toLocaleString()
         );
-        expect(cells[3].textContent).toContain(defaultStrings.view);
-        fireEvent.click(cells[3].querySelector(".iui-anchor") as HTMLElement);
+        expect(cells[4].textContent).toContain(defaultStrings.view);
+        fireEvent.click(cells[4].querySelector(".iui-anchor") as HTMLElement);
         const updateNamedVersionButton = within(
-          cells[4] as HTMLElement
+          cells[5] as HTMLElement
         ).queryByTitle(defaultStrings.updateNamedVersion);
 
         expect(updateNamedVersionButton).toBeTruthy();
@@ -127,11 +132,14 @@ describe("VersionsTab", () => {
           MockedChangeset(index).description
         );
         expect(cells[2].textContent).toContain(
+          MockedChangeset(index).createdBy
+        );
+        expect(cells[3].textContent).toContain(
           new Date(MockedChangeset(index).pushDateTime).toLocaleString()
         );
-        expect(cells[3].textContent).not.toContain(defaultStrings.view);
+        expect(cells[4].textContent).not.toContain(defaultStrings.view);
         const updateNamedVersionButton = within(
-          cells[4] as HTMLElement
+          cells[5] as HTMLElement
         ).queryByTitle(defaultStrings.updateNamedVersion);
 
         expect(updateNamedVersionButton).toBeFalsy();

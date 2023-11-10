@@ -68,6 +68,23 @@ const VersionsTab = (props: VersionsTabProps) => {
             },
           },
           {
+            id: "CREATOR",
+            Header: stringsOverrides.user ?? "User",
+            accessor: "createdBy",
+            maxWidth: 220,
+            Cell: (props: CellProps<VersionTableData | Changeset>) => {
+              const createdBy =
+                "version" in props.row.original
+                  ? props.row.original.version.createdBy
+                  : props.row.original.createdBy;
+              return createdBy !== "" ? (
+                <Text>{createdBy}</Text>
+              ) : (
+                <Text isSkeleton={true}>Loading user info</Text>
+              );
+            },
+          },
+          {
             id: "CREATED_DATE",
             Header: stringsOverrides.time,
             accessor: "createdDateTime",
@@ -112,7 +129,7 @@ const VersionsTab = (props: VersionsTabProps) => {
       },
     ];
     if (onViewClick) {
-      tableColumns[0].columns.splice(3, 0, {
+      tableColumns[0].columns.splice(4, 0, {
         id: "versions-table-view",
         width: 100,
         Cell: (props: CellProps<VersionTableData>) => {
@@ -131,12 +148,13 @@ const VersionsTab = (props: VersionsTabProps) => {
     }
     return tableColumns;
   }, [
-    onViewClick,
-    stringsOverrides.description,
     stringsOverrides.name,
+    stringsOverrides.description,
+    stringsOverrides.user,
     stringsOverrides.time,
     stringsOverrides.updateNamedVersion,
     stringsOverrides.view,
+    onViewClick,
   ]);
 
   const emptyTableContent = React.useMemo(() => {

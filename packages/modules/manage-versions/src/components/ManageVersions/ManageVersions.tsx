@@ -8,7 +8,12 @@ import React from "react";
 import { ChangesetClient } from "../../clients/changesetClient";
 import { NamedVersionClient } from "../../clients/namedVersionClient";
 import { ConfigProvider } from "../../common/configContext";
-import { Changeset, NamedVersion, VersionTableData } from "../../models";
+import {
+  Changeset,
+  informationPanelDefaultStrings,
+  NamedVersion,
+  VersionTableData,
+} from "../../models";
 import ChangesTab from "./ChangesTab/ChangesTab";
 import {
   ApiOverrides,
@@ -26,6 +31,8 @@ export const defaultStrings: ManageVersionsStringOverrides = {
   time: "Time",
   changedFiles: "Changed Files",
   createNamedVersion: "Create a Named Version",
+  user: "User",
+  informationPanel: "Information Panel",
   cancel: "Cancel",
   create: "Create",
   updateNamedVersion: "Update a Named Version",
@@ -49,6 +56,7 @@ export const defaultStrings: ManageVersionsStringOverrides = {
   messageCouldNotUpdateVersion:
     "Could not update a Named Version. Please try again later.",
   messageValueTooLong: "The value exceeds allowed {{length}} characters.",
+  informationPanelStringOverrides: informationPanelDefaultStrings,
 };
 
 export type ManageVersionsProps = {
@@ -112,6 +120,23 @@ export const ManageVersions = (props: ManageVersionsProps) => {
   );
 
   const [_currentTab, setCurrentTab] = React.useState(currentTab);
+
+  const usersRef = React.useRef<{ [key: string]: string } | undefined>(
+    undefined
+  );
+
+  const getUsers = React.useCallback(async () => {
+    const users = await changesetClient.getUsers(imodelId);
+    const userMapData = users.reduce((acc, user) => {
+      const userFullName = [user.givenName, user.surname].filter(Boolean);
+      acc[user.id] = userFullName.length
+        ? userFullName.join(" ")
+        : user.displayName;
+      return acc;
+    }, {} as { [key: string]: string });
+    usersRef.current = userMapData;
+  }, []);
+
   React.useEffect(() => {
     setCurrentTab(currentTab);
   }, [currentTab]);
@@ -142,7 +167,10 @@ export const ManageVersions = (props: ManageVersionsProps) => {
     (skip?: number) => {
       setVersionStatus(RequestStatus.InProgress);
       versionClient
-        .get(imodelId, { top: NAMED_VERSION_TOP, skip })
+        .get(imodelId, {
+          top: NAMED_VERSION_TOP,
+          skip,
+        })
         .then((newVersions) => {
           setVersions((oldVersions) => [
             ...(oldVersions ?? []),
@@ -171,11 +199,41 @@ export const ManageVersions = (props: ManageVersionsProps) => {
     getVersions();
   }, [getVersions]);
 
+  const updateNamedVersionsProperties = (versionsToUpdate: NamedVersion[]) => {
+    if (!versionsToUpdate.length) {
+      return;
+    }
+    const updatedNamedVersion = versionsToUpdate.map((newVersion) => {
+      const creatorId = newVersion._links.creator.href.substring(
+        newVersion._links.creator.href.lastIndexOf("/") + 1
+      );
+      return {
+        ...newVersion,
+        createdBy: usersRef.current?.[creatorId] ?? "",
+      };
+    });
+    setVersions(updatedNamedVersion);
+    return updatedNamedVersion;
+  };
+
+  const updateChangesetsProperties = (changesetsToUpdate: Changeset[]) => {
+    if (!changesetsToUpdate.length) {
+      return;
+    }
+    const updatedChangeset = changesetsToUpdate.map((changeSet) => ({
+      ...changeSet,
+      createdBy: usersRef.current?.[changeSet.creatorId] ?? "",
+    }));
+    setChangesets(updatedChangeset);
+  };
+
   const mapChangesetsToNamedVersions = React.useCallback(() => {
     if (changesets) {
       setVersionStatus(RequestStatus.InProgress);
+
+      const updatedNamedVersion = updateNamedVersionsProperties(versions ?? []);
       // Update versionsTableData
-      const tableData = (versions ?? []).map((version) => {
+      const tableData = (updatedNamedVersion ?? []).map((version) => {
         const relatedChangesets: Changeset[] = [];
 
         for (const change of changesets) {
@@ -201,6 +259,22 @@ export const ManageVersions = (props: ManageVersionsProps) => {
     }
   }, [changesets, versions]);
 
+  React.useEffect(() => {
+    const loadUsers = async () => {
+      await getUsers();
+    };
+    if (!usersRef.current) {
+      loadUsers()
+        .then(() => {
+          updateNamedVersionsProperties(versions ?? []);
+          updateChangesetsProperties(changesets ?? []);
+        })
+        .catch(() => {
+          console.error("unable to fetch users data");
+        });
+    }
+  }, [changesets, getUsers, versions]);
+
   const getChangesets = React.useCallback(() => {
     if (changesets && changesets.length % CHANGESET_TOP !== 0) {
       return;
@@ -215,6 +289,7 @@ export const ManageVersions = (props: ManageVersionsProps) => {
       .then((newChangesets) => {
         setChangesetStatus(RequestStatus.Finished);
         setChangesets([...(changesets ?? []), ...newChangesets]);
+        updateChangesetsProperties(newChangesets);
         if (_currentTab === ManageVersionsTabs.Versions) {
           setMapChangesets(true);
         }
