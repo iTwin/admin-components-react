@@ -37,8 +37,7 @@ jobs:
           node common/scripts/install-run-rush.js check
 
           echo 'Checking Changes...'
-          node common/scripts/install-run-rush.js -d change -v
-          echo $?
+          node common/scripts/install-run-rush.js change -v
 
           echo 'Building...'
           node common/scripts/install-run-rush.js rebuild
