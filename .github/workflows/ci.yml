@@ -27,15 +27,15 @@ jobs:
           echo 'Installing...'
           node common/scripts/install-run-rush.js install
 
+          echo 'Verifying Dependency Versions...'
+          node common/scripts/install-run-rush.js check
+
           echo 'Checking Changes...'
-          node common/scripts/install-run-rush.js change -v
+          node common/scripts/install-run-rush.js -d change -v
           echo $?
 
           exit 1
 
-          echo 'Verifying Dependency Versions...'
-          node common/scripts/install-run-rush.js check
-             
           echo 'Building...'
           node common/scripts/install-run-rush.js rebuild
                
