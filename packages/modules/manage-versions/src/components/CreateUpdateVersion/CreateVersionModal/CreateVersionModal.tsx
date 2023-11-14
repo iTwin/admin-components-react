@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import "./CreateVersionModal.scss";
 
-import { toaster } from "@itwin/itwinui-react";
+import { useToaster } from "@itwin/itwinui-react";
 import React from "react";
 
 import { NamedVersionClient } from "../../../clients/namedVersionClient";
@@ -20,15 +20,11 @@ export type CreateVersionModalProps = {
 };
 
 export const CreateVersionModal = (props: CreateVersionModalProps) => {
+  const toaster = useToaster();
   const { latestVersion, changeset, onClose, onCreate } = props;
 
-  const {
-    accessToken,
-    imodelId,
-    apiOverrides,
-    stringsOverrides,
-    log,
-  } = useConfig();
+  const { accessToken, imodelId, apiOverrides, stringsOverrides, log } =
+    useConfig();
 
   const [isLoading, setIsLoading] = React.useState(false);
 

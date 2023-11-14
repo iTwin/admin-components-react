@@ -12,7 +12,7 @@ import {
   ModalContent,
   ProgressRadial,
   ThemeProvider,
-  toaster,
+  useToaster,
 } from "@itwin/itwinui-react";
 import React from "react";
 
@@ -47,6 +47,7 @@ export type DeleteIModelProps = {
 };
 
 export function DeleteIModel(props: DeleteIModelProps) {
+  const toaster = useToaster();
   const {
     imodel: { id: imodelId, name: imodelName },
     accessToken,

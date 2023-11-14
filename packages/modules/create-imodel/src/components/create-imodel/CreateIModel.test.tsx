@@ -2,13 +2,14 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { toaster } from "@itwin/itwinui-react";
+import { useToaster } from "@itwin/itwinui-react";
 import { act, fireEvent, render } from "@testing-library/react";
 import React from "react";
 
 import { CreateIModel } from "./CreateIModel";
 
 describe("CreateIModel", () => {
+  const toaster = useToaster();
   const mockedimodel = { iModel: { id: "dd", name: "name" } };
   const fetchMock = jest.fn(() =>
     Promise.resolve({

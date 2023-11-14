@@ -7,8 +7,8 @@ import "./BaseIModel.scss";
 import {
   LabeledInput,
   ProgressRadial,
+  Text,
   ThemeProvider,
-  Title,
 } from "@itwin/itwinui-react";
 import React from "react";
 
@@ -297,7 +297,7 @@ export function BaseIModelPage(props: BaseIModelProps) {
           {props.children ?? (
             <div className="iac-imodel-base">
               <div className="iac-content-container">
-                <Title>{updatedStrings.titleString}</Title>
+                <Text variant="title">{updatedStrings.titleString}</Text>
                 <div className="iac-imodel-properties-container">
                   <div className="iac-inputs-container">
                     <IModelName />

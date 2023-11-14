@@ -5,7 +5,7 @@
 import "./NoResults.scss";
 
 import { SvgImodelHollow } from "@itwin/itwinui-icons-react";
-import { Leading } from "@itwin/itwinui-react";
+import { Text } from "@itwin/itwinui-react";
 import classnames from "classnames";
 import React from "react";
 
@@ -17,9 +17,13 @@ export interface NoResultsProps {
 /** Pre-formatted empty result page */
 export const NoResults = ({ text }: NoResultsProps) => {
   return (
-    <Leading isMuted={true} className={classnames("iac-no-results")}>
+    <Text
+      variant="leading"
+      isMuted={true}
+      className={classnames("iac-no-results")}
+    >
       <SvgImodelHollow />
       <span>{text}</span>
-    </Leading>
+    </Text>
   );
 };

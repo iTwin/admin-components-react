@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { toaster } from "@itwin/itwinui-react";
+import { useToaster } from "@itwin/itwinui-react";
 import {
   fireEvent,
   render,
@@ -39,6 +39,7 @@ const renderComponent = (initialProps?: Partial<UpdateVersionModalProps>) => {
 };
 
 describe("UpdateVersionModal", () => {
+  const toaster = useToaster();
   const mockUpdateVersion = jest.spyOn(NamedVersionClient.prototype, "update");
   const mockPositiveToast = jest.spyOn(toaster, "positive");
   const mockNegativeToast = jest.spyOn(toaster, "negative");
@@ -81,9 +82,7 @@ describe("UpdateVersionModal", () => {
     );
     expect(onUpdate).toHaveBeenCalled();
     expect(mockCloseAllToast).toHaveBeenCalled();
-    expect(
-      mockPositiveToast
-    ).toHaveBeenCalledWith(
+    expect(mockPositiveToast).toHaveBeenCalledWith(
       'Named Version "test name" was successfully updated.',
       { hasCloseButton: true }
     );

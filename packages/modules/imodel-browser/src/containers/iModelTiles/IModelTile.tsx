@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { ThemeProvider, Tile, TileProps } from "@itwin/itwinui-react";
+import { ThemeProvider, Tile } from "@itwin/itwinui-react";
 import React from "react";
 
 import { ApiOverrides, IModelFull } from "../../types";
@@ -11,6 +11,8 @@ import {
   ContextMenuBuilderItem,
 } from "../../utils/_buildMenuOptions";
 import { IModelThumbnail } from "../iModelThumbnail/IModelThumbnail";
+
+type TileProps = React.ComponentPropsWithoutRef<typeof Tile>;
 
 export interface IModelTileProps {
   /** iModel to display */
