@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/create-imodel-react",
+      "comment": "Update postcss dev dependency",
+      "type": "none"
+    }
+  ],
+  "packageName": "@itwin/create-imodel-react"
+}
