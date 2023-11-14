@@ -84,7 +84,7 @@
   },
   "peerDependencies": {
     "@itwin/itwinui-icons-react": "^2.2.0",
-    "@itwin/itwinui-react": "^2.11.4",
+    "@itwin/itwinui-react": "^3.0.4",
     "react": "^16.13.0 || ^17.0.2",
     "react-dom": "^16.13.0 || ^17.0.2"
   }
