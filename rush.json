@@ -2,7 +2,7 @@
   "$schema": "https://developer.microsoft.com/json-schemas/rush/v5/rush.schema.json",
   "rushVersion": "5.79.0",
   "pnpmVersion": "5.17.3",
-  "nodeSupportedVersionRange": ">=12.17.0 <17.0.0",
+  "nodeSupportedVersionRange": ">=12.17.0 <21.0.0",
   "projectFolderMinDepth": 2,
   "projectFolderMaxDepth": 3,
   "repository": {
@@ -10,25 +10,10 @@
   },
   "projects": [
     {
-      "packageName": "@itwin/admin-components-react-scripts",
-      "projectFolder": "common/scripts",
-      "shouldPublish": false
-    },
-    {
-      "packageName": "@itwin/imodel-browser-react",
-      "projectFolder": "packages/modules/imodel-browser",
+      "packageName": "@itwin/create-imodel-react",
+      "projectFolder": "packages/modules/create-imodel",
       "shouldPublish": true,
       "versionPolicyName": "independentModule"
-    },
-    {
-      "packageName": "@itwin/platform-storybook",
-      "projectFolder": "packages/apps/storybook",
-      "shouldPublish": false
-    },
-    {
-      "packageName": "@itwin/storybook-auth-addon",
-      "projectFolder": "packages/modules/storybook-auth-addon",
-      "shouldPublish": false
     },
     {
       "packageName": "@itwin/delete-imodel-react",
@@ -43,16 +28,31 @@
       "versionPolicyName": "independentModule"
     },
     {
+      "packageName": "@itwin/imodel-browser-react",
+      "projectFolder": "packages/modules/imodel-browser",
+      "shouldPublish": true,
+      "versionPolicyName": "independentModule"
+    },
+    {
       "packageName": "@itwin/manage-versions-react",
       "projectFolder": "packages/modules/manage-versions",
       "shouldPublish": true,
       "versionPolicyName": "independentModule"
     },
     {
-      "packageName": "@itwin/create-imodel-react",
-      "projectFolder": "packages/modules/create-imodel",
-      "shouldPublish": true,
-      "versionPolicyName": "independentModule"
+      "packageName": "@itwin/admin-components-react-scripts",
+      "projectFolder": "common/scripts",
+      "shouldPublish": false
+    },
+    {
+      "packageName": "@itwin/platform-storybook",
+      "projectFolder": "packages/apps/storybook",
+      "shouldPublish": false
+    },
+    {
+      "packageName": "@itwin/storybook-auth-addon",
+      "projectFolder": "packages/modules/storybook-auth-addon",
+      "shouldPublish": false
     }
   ]
 }
