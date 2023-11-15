@@ -2,6 +2,8 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+import "@itwin/itwinui-react/styles.css";
+
 import {
   ButtonBar,
   CreateIModel as ExternalComponent,
@@ -10,7 +12,11 @@ import {
   IModelName,
   UploadImage,
 } from "@itwin/create-imodel-react";
-import { LabeledInput, LabeledSelect } from "@itwin/itwinui-react";
+import {
+  LabeledInput,
+  LabeledSelect,
+  ThemeProvider,
+} from "@itwin/itwinui-react";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
 
@@ -20,7 +26,9 @@ import {
 } from "../utils/storyHelp";
 
 export const CreateIModel = (props: CreateIModelProps) => (
-  <ExternalComponent {...props} />
+  <ThemeProvider>
+    <ExternalComponent {...props} />
+  </ThemeProvider>
 );
 
 export default {

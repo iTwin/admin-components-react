@@ -9,6 +9,14 @@ module.exports = {
   addons: [
     "storybook-dark-mode/register",
     "@storybook/addon-links",
+  reactOptions: { fastRefresh: true },
+  framework: '@storybook/react-webpack5',
+  core: {
+    builder: 'webpack5',
+  },
+  features: {
+    babelModeV7: true,
+  },
     "@storybook/addon-essentials",
     "@itwin/storybook-auth-addon",
     "../src/addon/register.js",
@@ -20,13 +28,6 @@ module.exports = {
 
     config.resolve.mainFields = ["module", "main"];
     // Add the Babel loader rule
-    config.module.rules.push({
-      test: /\.(js|jsx|ts|tsx)$/,
-      exclude: /node_modules/,
-      use: {
-        loader: 'babel-loader',
-      },
-    });
 
     // Return the altered config
     return config;

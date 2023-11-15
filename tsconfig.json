@@ -1,16 +1,8 @@
 {
     "compilerOptions": {
-        "target": "es2017",
-        "lib": [
-            // Required for async iterators/generators:
-            "esnext.asynciterable",
-            // These are the defaults for "target": "es2017", but they have to be explicitly specified if we want to add anything to "lib":
-            "es2017",
-            "dom",
-            "dom.iterable",
-            "scripthost"
-        ],
-        "module": "commonjs",
+        "target": "es2020",
+        "lib": ["dom", "dom.iterable", "esnext"],
+        "module": "ES2020",
         "skipLibCheck": true,
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,

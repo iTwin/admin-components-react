@@ -78,7 +78,6 @@ export type CreateIModelProps = {
 };
 
 export function CreateIModel(props: CreateIModelProps) {
-  const toaster = useToaster();
   const {
     accessToken,
     apiOverrides = { serverEnvironmentPrefix: "" },
@@ -91,6 +90,7 @@ export function CreateIModel(props: CreateIModelProps) {
     extent,
   } = props;
   const [isLoading, setIsLoading] = React.useState(false);
+  const toaster = useToaster();
 
   const updatedStrings = {
     successMessage: "iModel created successfully.",

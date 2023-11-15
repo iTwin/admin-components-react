@@ -5,6 +5,8 @@
   "devDependencies": {
     "@babel/core": "^7.12.10",
     "@bentley/bentleyjs-core": "2.11.0",
+    "@storybook/builder-webpack5": "6.4.14",
+    "@storybook/manager-webpack5": "6.4.14",
     "@bentley/frontend-authorization-client": "2.11.0",
     "@bentley/itwin-client": "2.11.0",
     "@itwin/create-imodel-react": "^1.0.0",
@@ -27,7 +29,7 @@
     "@typescript-eslint/eslint-plugin": "^4.20.0",
     "@typescript-eslint/parser": "^4.20.0",
     "babel-eslint": "^10.0.0",
-    "babel-loader": "^8.2.2",
+    "babel-loader": "^8.2.5",
     "eslint-config-airbnb": "^0.0.4",
     "eslint-config-prettier": "^6.11.0",
     "eslint-config-react-app": "^6.0.0",
