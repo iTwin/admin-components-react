@@ -19,7 +19,6 @@ export function IModelName() {
     <LabeledInput
       label={nameString ?? "Name"}
       name="name"
-      setFocus
       required
       value={imodel?.name}
       onChange={onPropChange}

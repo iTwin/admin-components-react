@@ -92,7 +92,6 @@ export const VersionModal = (props: VersionModalProps) => {
                 )
           }
           required
-          setFocus
           autoComplete="off"
         />
         <LabeledTextarea

@@ -1,3 +1,7 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
 const path = require("path");
 
 module.exports = {
@@ -15,6 +19,14 @@ module.exports = {
     // 'PRODUCTION' is used when building the static version of storybook.
 
     config.resolve.mainFields = ["module", "main"];
+    // Add the Babel loader rule
+    config.module.rules.push({
+      test: /\.(js|jsx|ts|tsx)$/,
+      exclude: /node_modules/,
+      use: {
+        loader: 'babel-loader',
+      },
+    });
 
     // Return the altered config
     return config;

@@ -13,7 +13,7 @@ import {
   ContextMenuBuilderItem,
 } from "../../utils/_buildMenuOptions";
 
-type TileProps = React.ComponentPropsWithoutRef<typeof Tile>;
+export type TileProps = React.ComponentPropsWithoutRef<typeof Tile>;
 
 export interface ITwinTileProps {
   /** iTwin to display */
