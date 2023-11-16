@@ -81,7 +81,10 @@ export const ITwinTile = ({
         thumbnail={
           <span
             onClick={() => onThumbnailClick?.(iTwin)}
-            style={{ cursor: onThumbnailClick ? "pointer" : "auto" }}
+            style={{
+              cursor: onThumbnailClick ? "pointer" : "auto",
+              width: "100%",
+            }}
           >
             <ITwinIcon />
           </span>

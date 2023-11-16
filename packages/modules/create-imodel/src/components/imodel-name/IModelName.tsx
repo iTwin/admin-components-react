@@ -29,6 +29,7 @@ export function IModelName() {
         isPropertyInvalid(imodel.name, MAX_LENGTH) ? "negative" : undefined
       }
       autoComplete="off"
+      wrapperProps={{ className: "iac-model-wrapper-element" }}
       className="iac-imodel-input-element"
     />
   );

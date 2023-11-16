@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import "@itwin/itwinui-react/styles.css";
+import "./CreateIModel.css";
 
 import {
   ButtonBar,
@@ -26,9 +26,7 @@ import {
 } from "../utils/storyHelp";
 
 export const CreateIModel = (props: CreateIModelProps) => (
-  <ThemeProvider>
-    <ExternalComponent {...props} />
-  </ThemeProvider>
+  <ExternalComponent {...props} />
 );
 
 export default {
@@ -48,9 +46,9 @@ root.style.height = "90vh";
 export const Create: Story<CreateIModelProps> = withAccessTokenOverride(
   (args) => {
     return (
-      <>
+      <ThemeProvider>
         <CreateIModel {...args} />
-      </>
+      </ThemeProvider>
     );
   }
 );
@@ -58,20 +56,22 @@ export const Create: Story<CreateIModelProps> = withAccessTokenOverride(
 export const WithExtentMap: Story<CreateIModelProps> = withAccessTokenOverride(
   (args) => {
     return (
-      <CreateIModel
-        {...args}
-        extentComponent={
-          <iframe
-            title="iModel Extent Map"
-            src="https://www.google.com/maps/embed"
-            width="100%"
-            height="100%"
-            frameBorder="0"
-            style={{ border: 0 }}
-            allowFullScreen={false}
-          ></iframe>
-        }
-      />
+      <ThemeProvider>
+        <CreateIModel
+          {...args}
+          extentComponent={
+            <iframe
+              title="iModel Extent Map"
+              src="https://www.google.com/maps/embed"
+              width="100%"
+              height="100%"
+              frameBorder="0"
+              style={{ border: 0 }}
+              allowFullScreen={false}
+            ></iframe>
+          }
+        />
+      </ThemeProvider>
     );
   }
 );
@@ -79,7 +79,7 @@ export const WithExtentMap: Story<CreateIModelProps> = withAccessTokenOverride(
 export const CreateIModelCustomized: Story<CreateIModelProps> =
   withAccessTokenOverride((args) => {
     return (
-      <>
+      <ThemeProvider>
         <CreateIModel {...args}>
           <div
             style={{
@@ -96,9 +96,10 @@ export const CreateIModelCustomized: Story<CreateIModelProps> =
               value={""}
               onChange={() => undefined}
               autoComplete="off"
+              wrapperProps={{ className: "iac-model-wrapper-element" }}
               className="iac-imodel-input-element"
             />
-            <LabeledSelect<number>
+            <LabeledSelect
               label="Select version"
               options={[
                 { value: 1, label: "Item #1" },
@@ -106,6 +107,7 @@ export const CreateIModelCustomized: Story<CreateIModelProps> =
                 { value: 3, label: "Item #3" },
               ]}
               onChange={() => undefined}
+              wrapperProps={{ className: "iac-model-wrapper-element" }}
               className="iac-imodel-input-element"
             />
             <IModelDescription />
@@ -113,6 +115,6 @@ export const CreateIModelCustomized: Story<CreateIModelProps> =
             <ButtonBar />
           </div>
         </CreateIModel>
-      </>
+      </ThemeProvider>
     );
   });

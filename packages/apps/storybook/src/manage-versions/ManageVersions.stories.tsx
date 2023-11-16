@@ -3,6 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 
+import { ThemeProvider } from "@itwin/itwinui-react";
 import {
   ManageVersions as ExternalComponent,
   ManageVersionsProps,
@@ -35,7 +36,9 @@ export default {
 } as Meta;
 
 const Template: Story<ManageVersionsProps> = withAccessTokenOverride((args) => (
-  <ManageVersions {...args} />
+  <ThemeProvider>
+    <ManageVersions {...args} />
+  </ThemeProvider>
 ));
 
 export const Primary = Template.bind({});

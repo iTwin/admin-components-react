@@ -7,6 +7,7 @@ import {
   IModelThumbnail as ExternalComponent,
   IModelThumbnailProps,
 } from "@itwin/imodel-browser-react";
+import { ThemeProvider } from "@itwin/itwinui-react";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
 
@@ -38,7 +39,9 @@ export default {
 
 // 5. Use the created component in the story template, the props documentation will appear "normal"
 const Template: Story<IModelThumbnailProps> = (args) => (
-  <IModelThumbnail {...args} />
+  <ThemeProvider>
+    <IModelThumbnail {...args} />
+  </ThemeProvider>
 );
 
 export const Primary = Template.bind({});

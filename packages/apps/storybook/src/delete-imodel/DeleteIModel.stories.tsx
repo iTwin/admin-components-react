@@ -6,7 +6,7 @@ import {
   DeleteIModel as ExternalComponent,
   DeleteIModelProps,
 } from "@itwin/delete-imodel-react";
-import { Button } from "@itwin/itwinui-react";
+import { Button, ThemeProvider } from "@itwin/itwinui-react";
 import { useState } from "@storybook/addons";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
@@ -17,7 +17,9 @@ import {
 } from "../utils/storyHelp";
 
 export const DeleteIModel = (props: DeleteIModelProps) => (
-  <ExternalComponent {...props} />
+  <ThemeProvider>
+    <ExternalComponent {...props} />
+  </ThemeProvider>
 );
 
 export default {
@@ -32,7 +34,7 @@ export const Primary: Story<DeleteIModelProps> = withAccessTokenOverride(
     const [showDialog, setShowDialog] = useState(false);
 
     return (
-      <>
+      <ThemeProvider>
         <Button onClick={() => setShowDialog(true)}>Delete an iModel</Button>
         {showDialog && (
           <DeleteIModel
@@ -43,7 +45,7 @@ export const Primary: Story<DeleteIModelProps> = withAccessTokenOverride(
             }}
           />
         )}
-      </>
+      </ThemeProvider>
     );
   }
 );

@@ -6,7 +6,7 @@ import {
   DeleteITwin as ExternalComponent,
   DeleteITwinProps,
 } from "@itwin/delete-itwin-react";
-import { Button } from "@itwin/itwinui-react";
+import { Button, ThemeProvider } from "@itwin/itwinui-react";
 import { useState } from "@storybook/addons";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
@@ -32,7 +32,7 @@ export const Primary: Story<DeleteITwinProps> = withAccessTokenOverride(
     const [showDialog, setShowDialog] = useState(false);
 
     return (
-      <>
+      <ThemeProvider>
         <Button onClick={() => setShowDialog(true)}>Delete an iTwin</Button>
         {showDialog && (
           <DeleteITwin
@@ -43,7 +43,7 @@ export const Primary: Story<DeleteITwinProps> = withAccessTokenOverride(
             }}
           />
         )}
-      </>
+      </ThemeProvider>
     );
   }
 );

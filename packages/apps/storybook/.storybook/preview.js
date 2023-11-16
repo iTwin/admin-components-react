@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import addons from "@storybook/addons";
 import { themes } from "@storybook/theming";
+import "@itwin/itwinui-react/styles.css";
 
 import { darkTheme, lightTheme } from "./itwinTheme";
 

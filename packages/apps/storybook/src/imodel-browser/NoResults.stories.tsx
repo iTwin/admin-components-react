@@ -6,6 +6,7 @@ import {
   NoResults as ExternalComponent,
   NoResultsProps,
 } from "@itwin/imodel-browser-react";
+import { ThemeProvider } from "@itwin/itwinui-react";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
 
@@ -19,7 +20,11 @@ export default {
   excludeStories: ["NoResults"],
 } as Meta;
 
-const Template: Story<NoResultsProps> = (args) => <NoResults {...args} />;
+const Template: Story<NoResultsProps> = (args) => (
+  <ThemeProvider>
+    <NoResults {...args} />
+  </ThemeProvider>
+);
 
 export const Primary = Template.bind({});
 Primary.args = {};

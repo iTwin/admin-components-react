@@ -3,6 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { IModelGhostTile } from "@itwin/imodel-browser-react";
+import { ThemeProvider } from "@itwin/itwinui-react";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
 
@@ -14,7 +15,11 @@ export default {
   },
 } as Meta;
 
-const Template: Story = (args) => <IModelGhostTile {...args} />;
+const Template: Story = (args) => (
+  <ThemeProvider>
+    <IModelGhostTile {...args} />
+  </ThemeProvider>
+);
 
 export const Primary = Template.bind({});
 Primary.args = {};
