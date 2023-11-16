@@ -161,8 +161,13 @@ describe("ManageVersions", () => {
   it("should create new version", async () => {
     const latestVersion = {
       ...MockedVersion(2),
-      createdDateTime: "2019-09-08T18:30:00.000Z",
+      createdDateTime: "9999-01-01",
     };
+    mockGetVersions.mockResolvedValueOnce([
+      MockedVersion(1),
+      latestVersion,
+      MockedVersion(3),
+    ]);
     mockGetVersions.mockResolvedValueOnce([
       MockedVersion(4, { name: "test name", description: "test description" }),
       ...MockedVersionList(),
@@ -225,8 +230,8 @@ describe("ManageVersions", () => {
       ".iui-table-body .iui-table-row:first-child .iui-table-cell"
     );
     expect(versionCells.length).toBe(5);
-    expect(versionCells[0].textContent).toEqual(MockedVersion(0).name);
-    expect(versionCells[1].textContent).toEqual(MockedVersion(0).description);
+    expect(versionCells[0].textContent).toEqual("test name");
+    expect(versionCells[1].textContent).toEqual("test description");
 
     expect(mockGetVersions).toHaveBeenCalledTimes(2);
     expect(mockCreateVersion).toHaveBeenCalled();
