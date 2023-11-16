@@ -5,7 +5,7 @@
 import "./VersionsTab.scss";
 
 import { SvgEdit } from "@itwin/itwinui-icons-react";
-import { IconButton, Table } from "@itwin/itwinui-react";
+import { IconButton, Table, Text } from "@itwin/itwinui-react";
 import React from "react";
 import { CellProps } from "react-table";
 
@@ -23,23 +23,15 @@ export type VersionsTabProps = {
 };
 
 const VersionsTab = (props: VersionsTabProps) => {
-  const {
-    versions,
-    status,
-    onVersionUpdated,
-    loadMoreVersions,
-    onViewClick,
-  } = props;
-
+  const { versions, status, onVersionUpdated, loadMoreVersions, onViewClick } =
+    props;
   const { stringsOverrides } = useConfig();
 
   const [currentVersion, setCurrentVersion] = React.useState<
     NamedVersion | undefined
   >(undefined);
-  const [
-    isUpdateVersionModalOpen,
-    setIsUpdateVersionModalOpen,
-  ] = React.useState(false);
+  const [isUpdateVersionModalOpen, setIsUpdateVersionModalOpen] =
+    React.useState(false);
 
   const columns = React.useMemo(() => {
     const tableColumns = [
@@ -55,6 +47,19 @@ const VersionsTab = (props: VersionsTabProps) => {
             id: "DESCRIPTION",
             Header: stringsOverrides.description,
             accessor: "description",
+          },
+          {
+            id: "CREATOR",
+            Header: stringsOverrides.user ?? "User",
+            accessor: "createdBy",
+            maxWidth: 220,
+            Cell: (props: CellProps<NamedVersion>) => {
+              return props.row.original.createdBy !== "" ? (
+                <Text>{props.row.original.createdBy}</Text>
+              ) : (
+                <Text isSkeleton={true}>Loading user info</Text>
+              );
+            },
           },
           {
             id: "CREATED_DATE",
@@ -95,7 +100,7 @@ const VersionsTab = (props: VersionsTabProps) => {
       },
     ];
     if (onViewClick) {
-      tableColumns[0].columns.splice(3, 0, {
+      tableColumns[0].columns.splice(4, 0, {
         id: "versions-table-view",
         width: 100,
         Cell: (props: CellProps<NamedVersion>) => {
@@ -112,12 +117,13 @@ const VersionsTab = (props: VersionsTabProps) => {
     }
     return tableColumns;
   }, [
-    onViewClick,
-    stringsOverrides.description,
     stringsOverrides.name,
+    stringsOverrides.description,
+    stringsOverrides.user,
     stringsOverrides.time,
     stringsOverrides.updateNamedVersion,
     stringsOverrides.view,
+    onViewClick,
   ]);
 
   const emptyTableContent = React.useMemo(() => {

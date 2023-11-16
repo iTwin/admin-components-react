@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import React from "react";
 
 import { ConfigProvider } from "../../../common/configContext";
@@ -39,20 +39,22 @@ describe("ChangesTab", () => {
 
     rows.forEach((row, index) => {
       const cells = row.querySelectorAll(".iui-table-cell");
-      expect(cells.length).toBe(5);
+      expect(cells.length).toBe(6);
       expect(cells[0].textContent).toContain(MockedChangeset(index).index);
       expect(cells[1].textContent).toContain(
         MockedChangeset(index).description
       );
-      expect(cells[2].textContent).toContain(
+      expect(cells[2].textContent).toContain(MockedChangeset(index).createdBy);
+      expect(cells[3].textContent).toContain(
         MockedChangeset(index).synchronizationInfo.changedFiles.join(", ")
       );
-      expect(cells[3].textContent).toContain(
+      expect(cells[4].textContent).toContain(
         new Date(MockedChangeset(index).pushDateTime).toLocaleString()
       );
-      within(cells[4] as HTMLElement).getByTitle(
+      within(cells[5] as HTMLElement).getByTitle(
         defaultStrings.createNamedVersion
       );
+      within(cells[5] as HTMLElement).getByTitle("Information Panel");
     });
   });
 
@@ -77,7 +79,7 @@ describe("ChangesTab", () => {
   });
 
   it("should not show create version icon when changeset already has a version", () => {
-    const { container } = renderComponent({
+    const { container, queryByTitle } = renderComponent({
       changesets: [
         MockedChangeset(1, {
           _links: { namedVersion: { href: "https://test.url" } },
@@ -87,9 +89,25 @@ describe("ChangesTab", () => {
     const rows = container.querySelectorAll(".iui-table-body .iui-table-row");
     expect(rows.length).toBe(1);
 
-    const createVersionicon = screen.queryByTitle(
-      defaultStrings.createNamedVersion
+    const createVersionIcon = queryByTitle(defaultStrings.createNamedVersion);
+    const classAttribute = (createVersionIcon as HTMLElement).getAttribute(
+      "class"
     );
-    expect(createVersionicon).toBeFalsy();
+    expect(classAttribute).toContain("iac-create-version-icon-hidden");
+  });
+
+  it("should show information panel icon for each changeset row", () => {
+    const { container } = renderComponent({
+      changesets: MockedChangesetList(),
+    });
+    const rowgroup = screen.getAllByRole("rowgroup")[0];
+    const infoIcons = within(rowgroup).queryAllByTitle("Information Panel");
+    const rows = within(rowgroup).queryAllByRole("row");
+
+    expect(infoIcons.length).toBe(rows.length);
+    //should open information panel
+    fireEvent.click(infoIcons[0]);
+    const panel = container.querySelector(".iac-info-panel");
+    expect(panel).toBeTruthy();
   });
 });

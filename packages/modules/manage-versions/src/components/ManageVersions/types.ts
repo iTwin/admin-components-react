@@ -58,6 +58,12 @@ export type ManageVersionsStringOverrides = {
   messageCouldNotUpdateVersion: string;
   /** Default `The value exceeds allowed {{length}} characters.` - `{{length}}` - max length */
   messageValueTooLong: string;
+  /** Default: `User` */
+  user?: string;
+  /** Default: `Information Panel` */
+  informationPanel?: string;
+  /** string overrides for text within Information panel` */
+  informationPanelStringOverrides?: InformationPanelStringOverrides;
 };
 
 export type LogFunc = (
@@ -66,3 +72,20 @@ export type LogFunc = (
 ) => void;
 
 export type ApiOverrides = { serverEnvironmentPrefix?: "dev" | "qa" | "" };
+
+export type InformationPanelStringOverrides = {
+  /** title. Default `Change #`. */
+  title: string;
+  /** Label for property createdBy. Default `Created By`. */
+  createdBy: string;
+  /** Label for property pushDateTime. Default `Date Created`. */
+  createdDate: string;
+  /** Label for property application name. Default `Application`. */
+  application: string;
+  /** Label for connection attributes. Default `Connection Attributes`. */
+  connectionAttributes: string;
+  /** Label for property changedFiles. Default `Changed Files`. */
+  changedFiles: string;
+  /** Default text for no-value. Default `N/A`. */
+  noValue: string;
+};

@@ -8,6 +8,7 @@ import {
   screen,
   waitFor,
   waitForElementToBeRemoved,
+  within,
 } from "@testing-library/react";
 import React from "react";
 
@@ -17,6 +18,7 @@ import {
   MOCKED_IMODEL_ID,
   MockedChangeset,
   MockedChangesetList,
+  MockedUsers,
   MockedVersion,
   MockedVersionList,
 } from "../../mocks";
@@ -41,6 +43,7 @@ describe("ManageVersions", () => {
   const mockCreateVersion = jest.spyOn(NamedVersionClient.prototype, "create");
   const mockUpdateVersion = jest.spyOn(NamedVersionClient.prototype, "update");
   const mockGetChangesets = jest.spyOn(ChangesetClient.prototype, "get");
+  const mockGetUsers = jest.spyOn(ChangesetClient.prototype, "getUsers");
 
   const waitForSelectorToExist = async (selector: string) =>
     waitFor(() => expect(document.querySelector(selector)).not.toBeNull());
@@ -49,6 +52,7 @@ describe("ManageVersions", () => {
     jest.clearAllMocks();
     mockGetVersions.mockResolvedValue(MockedVersionList());
     mockGetChangesets.mockResolvedValue(MockedChangesetList());
+    mockGetUsers.mockResolvedValue(MockedUsers());
   });
 
   it("should show versions table with data", async () => {
@@ -64,11 +68,15 @@ describe("ManageVersions", () => {
 
     versionRows.forEach((row, index) => {
       const cells = row.querySelectorAll(".iui-table-cell");
-      expect(cells.length).toBe(4);
+      expect(cells.length).toBe(5);
       expect(cells[0].textContent).toContain(MockedVersion(index).name);
       expect(cells[1].textContent).toContain(MockedVersion(index).description);
-      expect(cells[2].textContent).toContain(
+      expect(cells[2].textContent).toContain(MockedVersion(index).createdBy);
+      expect(cells[3].textContent).toContain(
         new Date(MockedVersion(index).createdDateTime).toLocaleString()
+      );
+      within(cells[4] as HTMLElement).getByTitle(
+        defaultStrings.updateNamedVersion
       );
     });
     expect(mockGetVersions).toHaveBeenCalledWith(MOCKED_IMODEL_ID, {
@@ -92,17 +100,26 @@ describe("ManageVersions", () => {
 
     changesetRows.forEach((row, index) => {
       const cells = row.querySelectorAll(".iui-table-cell");
-      expect(cells.length).toBe(5);
+      expect(cells.length).toBe(6);
       expect(cells[0].textContent).toContain(MockedChangeset(index).index);
       expect(cells[1].textContent).toContain(
         MockedChangeset(index).description
       );
-      expect(cells[2].textContent).toContain(
+      expect(cells[2].textContent).toContain(MockedChangeset(index).createdBy);
+      expect(cells[3].textContent).toContain(
         MockedChangeset(index).synchronizationInfo.changedFiles.join(", ")
       );
-      expect(cells[3].textContent).toContain(
+      expect(cells[4].textContent).toContain(
         new Date(MockedChangeset(index).pushDateTime).toLocaleString()
       );
+      const actionButtons = (cells[5] as HTMLElement).querySelectorAll(
+        '[type="button"]'
+      );
+      expect(actionButtons.length).toBe(2);
+      within(cells[5] as HTMLElement).getByTitle(
+        defaultStrings.createNamedVersion
+      );
+      within(cells[5] as HTMLElement).getByTitle("Information Panel");
     });
     expect(mockGetChangesets).toHaveBeenCalledWith(MOCKED_IMODEL_ID, {
       top: 100,
@@ -187,7 +204,7 @@ describe("ManageVersions", () => {
     const createVersionButtons = screen.getAllByTitle(
       defaultStrings.createNamedVersion
     );
-    expect(createVersionButtons.length).toBe(2);
+    expect(createVersionButtons.length).toBe(3);
     createVersionButtons[0].click();
 
     await waitForSelectorToExist(".iac-additional-info");
@@ -212,7 +229,7 @@ describe("ManageVersions", () => {
     const versionCells = container.querySelectorAll(
       ".iui-table-body .iui-table-row:first-child .iui-table-cell"
     );
-    expect(versionCells.length).toBe(4);
+    expect(versionCells.length).toBe(5);
     expect(versionCells[0].textContent).toEqual("test name");
     expect(versionCells[1].textContent).toEqual("test description");
 
@@ -252,18 +269,21 @@ describe("ManageVersions", () => {
     fireEvent.change(nameInput, { target: { value: "test name" } });
 
     screen.getByText("Update").click();
-    await waitForElementToBeRemoved(() =>
-      document.querySelector(".iui-progress-indicator-overlay")
-    );
 
     const versionCells = container.querySelectorAll(
       ".iui-table-body .iui-table-row:first-child .iui-table-cell"
     );
-    expect(versionCells.length).toBe(4);
-    expect(versionCells[0].textContent).toEqual("test name");
-    expect(versionCells[1].textContent).toEqual("test description");
-
-    expect(mockGetVersions).toHaveBeenCalledTimes(2);
+    expect(versionCells.length).toBe(5);
+    expect(versionCells[0].textContent).toEqual(MockedVersion(0).name);
+    expect(versionCells[1].textContent).toEqual(MockedVersion(0).description);
+    expect(versionCells[2].textContent).toEqual(MockedVersion(0).createdBy);
+    expect(versionCells[3].textContent).toEqual(
+      new Date(MockedVersion(0).createdDateTime).toLocaleString()
+    );
+    within(versionCells[4] as HTMLElement).getByTitle(
+      defaultStrings.updateNamedVersion
+    );
+    expect(mockGetVersions).toHaveBeenCalledTimes(1);
     expect(mockUpdateVersion).toHaveBeenCalled();
   });
 });
@@ -283,15 +303,24 @@ it("should render with changesets tab opened", async () => {
 
   changesetRows.forEach((row, index) => {
     const cells = row.querySelectorAll(".iui-table-cell");
-    expect(cells.length).toBe(5);
+    expect(cells.length).toBe(6);
     expect(cells[0].textContent).toContain(MockedChangeset(index).index);
     expect(cells[1].textContent).toContain(MockedChangeset(index).description);
-    expect(cells[2].textContent).toContain(
+    expect(cells[2].textContent).toContain(MockedChangeset(index).createdBy);
+    expect(cells[3].textContent).toContain(
       MockedChangeset(index).synchronizationInfo.changedFiles.join(", ")
     );
-    expect(cells[3].textContent).toContain(
+    expect(cells[4].textContent).toContain(
       new Date(MockedChangeset(index).pushDateTime).toLocaleString()
     );
+    const actionButtons = (cells[5] as HTMLElement).querySelectorAll(
+      '[type="button"]'
+    );
+    expect(actionButtons.length).toBe(2);
+    within(cells[5] as HTMLElement).getByTitle(
+      defaultStrings.createNamedVersion
+    );
+    within(cells[5] as HTMLElement).getByTitle("Information Panel");
   });
 });
 
