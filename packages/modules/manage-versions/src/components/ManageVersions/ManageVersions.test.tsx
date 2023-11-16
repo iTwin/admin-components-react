@@ -4,7 +4,6 @@
  *--------------------------------------------------------------------------------------------*/
 import {
   fireEvent,
-  queryByText,
   render,
   screen,
   waitFor,
@@ -163,8 +162,13 @@ describe("ManageVersions", () => {
   it("should create new version", async () => {
     const latestVersion = {
       ...MockedVersion(2),
-      createdDateTime: "2019-09-08T18:30:00.000Z",
+      createdDateTime: "9999-01-01",
     };
+    mockGetVersions.mockResolvedValueOnce([
+      MockedVersion(1),
+      latestVersion,
+      MockedVersion(3),
+    ]);
     mockGetVersions.mockResolvedValueOnce([
       MockedVersion(4, { name: "test name", description: "test description" }),
       ...MockedVersionList(),
