@@ -1,6 +1,14 @@
 # Change Log - @itwin/manage-versions-react
 
-This log was last generated on Wed, 21 Jun 2023 16:43:17 GMT and should not be manually modified.
+This log was last generated on Thu, 16 Nov 2023 11:52:43 GMT and should not be manually modified.
+
+## 1.1.0
+Thu, 16 Nov 2023 11:52:43 GMT
+
+### Minor changes
+
+- Added user column to Named versions and Changeset tables
+- Added information panel for changeset
 
 ## 1.0.0
 Wed, 21 Jun 2023 16:43:17 GMT
