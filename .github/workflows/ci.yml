@@ -4,6 +4,10 @@
 name: Admin Components React CI
 
 on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
   pull_request:
     branches: [ main ]
 
@@ -13,25 +17,32 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [12.x]
+        node-version: [12.x, 14.x]
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
       - run: |
           set -e
-          
+          export BROWSERSLIST_IGNORE_OLD_DATA=1
+
           echo 'Installing...'
           node common/scripts/install-run-rush.js install
 
           echo 'Verifying Dependency Versions...'
           node common/scripts/install-run-rush.js check
-             
+
+          echo 'Checking Changes...'
+          node common/scripts/install-run-rush.js change -v
+
           echo 'Building...'
           node common/scripts/install-run-rush.js rebuild
-               
+
           echo 'Testing...'
           node common/scripts/install-run-rush.js test --verbose
+

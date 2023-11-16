@@ -13,6 +13,7 @@
     "@bentley/frontend-authorization-client": "2.11.0",
     "@bentley/itwin-client": "2.11.0",
     "@bentley/react-scripts": "4.0.3-dev.0",
+    "@babel/plugin-proposal-private-property-in-object": "^7.14.5",
     "@types/react": "^17.0.37",
     "@types/react-dom": "^17.0.0",
     "@typescript-eslint/eslint-plugin": "^4.20.0",
