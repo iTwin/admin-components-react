@@ -24,6 +24,19 @@ import {
   UpdateVersionModalProps,
 } from "./UpdateVersionModal";
 
+jest.mock("@itwin/itwinui-react", () => {
+  const actual = jest.requireActual("@itwin/itwinui-react");
+
+  return {
+    ...actual,
+    useToaster: jest.fn().mockReturnValue({
+      positive: jest.fn(),
+      negative: jest.fn(),
+      closeAll: jest.fn(),
+    }),
+  };
+});
+
 const renderComponent = (initialProps?: Partial<UpdateVersionModalProps>) => {
   const props = {
     onClose: jest.fn(),

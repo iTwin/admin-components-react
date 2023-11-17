@@ -8,8 +8,19 @@ import React from "react";
 
 import { CreateIModel } from "./CreateIModel";
 
+jest.mock("@itwin/itwinui-react", () => {
+  const actual = jest.requireActual("@itwin/itwinui-react");
+
+  return {
+    ...actual,
+    useToaster: jest.fn().mockReturnValue({
+      positive: jest.fn(),
+      negative: jest.fn(),
+    }),
+  };
+});
+
 describe("CreateIModel", () => {
-  const toaster = useToaster();
   const mockedimodel = { iModel: { id: "dd", name: "name" } };
   const fetchMock = jest.fn(() =>
     Promise.resolve({
@@ -29,7 +40,7 @@ describe("CreateIModel", () => {
 
   it("should create an iModel", async () => {
     const successMock = jest.fn();
-    toaster.positive = jest.fn();
+    const toaster = useToaster();
 
     const { getByText, container } = render(
       <CreateIModel
@@ -77,7 +88,7 @@ describe("CreateIModel", () => {
     const errorMock = jest.fn();
     const error = new Error("Fail");
     fetchMock.mockImplementationOnce(() => Promise.reject(error));
-    toaster.negative = jest.fn();
+    const toaster = useToaster();
 
     const { getByText, container } = render(
       <CreateIModel
@@ -131,7 +142,7 @@ describe("CreateIModel", () => {
     const errorMock = jest.fn();
     const error = { error: { code: "iModelExists" } };
     fetchMock.mockImplementationOnce(() => Promise.reject(error));
-    toaster.negative = jest.fn();
+    const toaster = useToaster();
 
     const { getByText, container } = render(
       <CreateIModel

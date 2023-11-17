@@ -73,8 +73,8 @@ export type ManageVersionsProps = {
 };
 
 export enum ManageVersionsTabs {
-  Versions = 0,
-  Changes = 1,
+  Versions = "NamedVersion",
+  Changes = "Changes",
 }
 
 const NAMED_VERSION_TOP = 100;
@@ -222,31 +222,42 @@ export const ManageVersions = (props: ManageVersionsProps) => {
         log={log}
       >
         <div>
-          <Tabs
+          <Tabs.Wrapper
             orientation="horizontal"
-            labels={[stringsOverrides.namedVersions, stringsOverrides.changes]}
-            onTabSelected={(index) => changeTab(index)}
-            activeIndex={_currentTab}
             type="borderless"
-          />
-          {_currentTab === ManageVersionsTabs.Versions && (
-            <VersionsTab
-              versions={versions ?? []}
-              status={versionStatus}
-              onVersionUpdated={refreshVersions}
-              loadMoreVersions={getMoreVersions}
-              onViewClick={onViewClick}
-            />
-          )}
-          {_currentTab === ManageVersionsTabs.Changes && (
-            <ChangesTab
-              changesets={changesets ?? []}
-              status={changesetStatus}
-              loadMoreChanges={getChangesets}
-              onVersionCreated={onVersionCreated}
-              latestVersion={latestVersion}
-            />
-          )}
+            onValueChange={(value) => changeTab(value as ManageVersionsTabs)}
+          >
+            <Tabs.TabList>
+              <Tabs.Tab
+                value={ManageVersionsTabs.Versions}
+                label={stringsOverrides.namedVersions}
+              />
+              <Tabs.Tab
+                value={ManageVersionsTabs.Changes}
+                label={stringsOverrides.changes}
+              />
+            </Tabs.TabList>
+
+            <Tabs.Panel value={ManageVersionsTabs.Versions}>
+              <VersionsTab
+                versions={versions ?? []}
+                status={versionStatus}
+                onVersionUpdated={refreshVersions}
+                loadMoreVersions={getMoreVersions}
+                onViewClick={onViewClick}
+              />
+            </Tabs.Panel>
+
+            <Tabs.Panel value={ManageVersionsTabs.Changes}>
+              <ChangesTab
+                changesets={changesets ?? []}
+                status={changesetStatus}
+                loadMoreChanges={getChangesets}
+                onVersionCreated={onVersionCreated}
+                latestVersion={latestVersion}
+              />
+            </Tabs.Panel>
+          </Tabs.Wrapper>
         </div>
       </ConfigProvider>
     </ThemeProvider>

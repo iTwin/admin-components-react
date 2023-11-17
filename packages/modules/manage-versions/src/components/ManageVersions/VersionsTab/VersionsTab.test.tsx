@@ -35,11 +35,13 @@ describe("VersionsTab", () => {
   it("should show data in versions table", () => {
     const onViewClick = jest.fn();
     const { container } = renderComponent({ onViewClick });
-    const rows = container.querySelectorAll(".iui-table-body .iui-table-row");
+    const rows = container.querySelectorAll(
+      "._iui3-table-body ._iui3-table-row"
+    );
     expect(rows.length).toBe(3);
 
     rows.forEach((row, index) => {
-      const cells = row.querySelectorAll(".iui-table-cell");
+      const cells = row.querySelectorAll("._iui3-table-cell");
       expect(cells.length).toBe(5);
       expect(cells[0].textContent).toContain(MockedVersion(index).name);
       expect(cells[1].textContent).toContain(MockedVersion(index).description);
@@ -58,7 +60,9 @@ describe("VersionsTab", () => {
 
   it("should not show view column and name should not be clickable when onViewClick is not provided", () => {
     const { container } = renderComponent({ onViewClick: undefined });
-    const rows = container.querySelectorAll(".iui-table-body .iui-table-row");
+    const rows = container.querySelectorAll(
+      "._iui3-table-body ._iui3-table-row"
+    );
     expect(rows.length).toBe(3);
     expect(screen.queryAllByText(defaultStrings.view).length).toBe(0);
   });
@@ -79,7 +83,7 @@ describe("VersionsTab", () => {
       status: RequestStatus.InProgress,
     });
     expect(
-      container.querySelector(".iui-progress-indicator-radial")
+      container.querySelector("._iui3-progress-indicator-radial")
     ).toBeTruthy();
   });
 });
