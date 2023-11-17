@@ -40,18 +40,16 @@ describe("ChangesTab", () => {
     rows.forEach((row, index) => {
       const cells = row.querySelectorAll(".iui-table-cell");
       expect(cells.length).toBe(6);
-      expect(cells[0].textContent).toContain(MockedChangeset(index + 1).index);
+      expect(cells[0].textContent).toContain(MockedChangeset(index).index);
       expect(cells[1].textContent).toContain(
-        MockedChangeset(index + 1).description
+        MockedChangeset(index).description
       );
-      expect(cells[2].textContent).toContain(
-        MockedChangeset(index + 1).createdBy
-      );
+      expect(cells[2].textContent).toContain(MockedChangeset(index).createdBy);
       expect(cells[3].textContent).toContain(
-        MockedChangeset(index + 1).synchronizationInfo.changedFiles.join(", ")
+        MockedChangeset(index).synchronizationInfo.changedFiles.join(", ")
       );
       expect(cells[4].textContent).toContain(
-        new Date(MockedChangeset(index + 1).pushDateTime).toLocaleString()
+        new Date(MockedChangeset(index).pushDateTime).toLocaleString()
       );
       within(cells[5] as HTMLElement).getByTitle(
         defaultStrings.createNamedVersion

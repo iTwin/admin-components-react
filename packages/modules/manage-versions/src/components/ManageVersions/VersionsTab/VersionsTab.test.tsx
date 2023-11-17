@@ -9,7 +9,6 @@ import { ConfigProvider } from "../../../common/configContext";
 import {
   MOCKED_CONFIG_PROPS,
   MockedChangeset,
-  MockedChangesetList,
   MockedVersion,
   MockedVersionTableData,
 } from "../../../mocks";
@@ -38,18 +37,16 @@ describe("VersionsTab", () => {
     const onViewClick = jest.fn();
     const { container } = renderComponent({ onViewClick });
     const rows = container.querySelectorAll(".iui-table-body .iui-table-row");
-    expect(rows.length).toBe(2);
+    expect(rows.length).toBe(1);
 
     rows.forEach((row, index) => {
       const cells = row.querySelectorAll(".iui-table-cell");
       expect(cells.length).toBe(6);
-      expect(cells[0].textContent).toContain(MockedVersion(index + 1).name);
-      expect(cells[1].textContent).toContain(
-        MockedVersion(index + 1).description
-      );
-      expect(cells[2].textContent).toContain(MockedVersion(index).createdBy);
+      expect(cells[0].textContent).toContain(MockedVersion().name);
+      expect(cells[1].textContent).toContain(MockedVersion().description);
+      expect(cells[2].textContent).toContain(MockedVersion().createdBy);
       expect(cells[3].textContent).toContain(
-        new Date(MockedVersion(index + 1).createdDateTime).toLocaleString()
+        new Date(MockedVersion().createdDateTime).toLocaleString()
       );
       expect(cells[4].textContent).toContain(defaultStrings.view);
       fireEvent.click(cells[4].querySelector(".iui-anchor") as HTMLElement);
@@ -58,13 +55,13 @@ describe("VersionsTab", () => {
         defaultStrings.updateNamedVersion
       );
     });
-    expect(onViewClick).toHaveBeenCalledTimes(2);
+    expect(onViewClick).toHaveBeenCalledTimes(1);
   });
 
   it("should not show view column and name should not be clickable when onViewClick is not provided", () => {
     const { container } = renderComponent({ onViewClick: undefined });
     const rows = container.querySelectorAll(".iui-table-body .iui-table-row");
-    expect(rows.length).toBe(2);
+    expect(rows.length).toBe(1);
     expect(screen.queryAllByText(defaultStrings.view).length).toBe(0);
   });
 
@@ -90,7 +87,7 @@ describe("VersionsTab", () => {
 
   it("should show included changesets on expand", () => {
     const { container } = renderComponent({
-      tableData: [{ version: MockedVersion(), subRows: MockedChangesetList() }],
+      tableData: [{ version: MockedVersion(), subRows: [MockedChangeset(1)] }],
     });
     // check on expand changeset data must be there
     const rowgroup = container.querySelector('[role="rowgroup"]') as Element;
@@ -101,21 +98,17 @@ describe("VersionsTab", () => {
       cell.querySelector(".iui-table-row-expander") as HTMLElement
     );
     const rowsOnExpand = rowgroup.querySelectorAll('[role="row"]');
-    expect(rowsOnExpand.length).toBe(4);
+    expect(rowsOnExpand.length).toBe(2);
 
     rowsOnExpand.forEach((row, index) => {
       const cells = row.querySelectorAll('[role="cell"]');
       expect(cells.length).toBe(6);
       if (index === 0) {
-        expect(cells[0].textContent).toContain(MockedVersion(index + 1).name);
-        expect(cells[1].textContent).toContain(
-          MockedVersion(index + 1).description
-        );
-        expect(cells[2].textContent).toContain(
-          MockedVersion(index + 1).createdBy
-        );
+        expect(cells[0].textContent).toContain(MockedVersion().name);
+        expect(cells[1].textContent).toContain(MockedVersion().description);
+        expect(cells[2].textContent).toContain(MockedVersion().createdBy);
         expect(cells[3].textContent).toContain(
-          new Date(MockedVersion(index + 1).createdDateTime).toLocaleString()
+          new Date(MockedVersion().createdDateTime).toLocaleString()
         );
         expect(cells[4].textContent).toContain(defaultStrings.view);
         fireEvent.click(cells[4].querySelector(".iui-anchor") as HTMLElement);

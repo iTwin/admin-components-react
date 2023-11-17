@@ -63,18 +63,14 @@ export const MockedChangeset = (
 };
 
 export const MockedChangesetList = (count = 3) => {
-  return [...new Array(count)].map((_, index) => MockedChangeset(index + 1));
+  return [...new Array(count)].map((_, index) => MockedChangeset(index));
 };
 
 export const MockedVersionTableData = () => {
   return [
     {
       version: MockedVersion(),
-      subRows: MockedChangesetList(),
-    },
-    {
-      version: MockedVersion(2),
-      subRows: MockedChangesetList(),
+      subRows: [MockedChangeset(1)],
     },
   ];
 };
