@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/delete-itwin-react",
+      "comment": "Updated itwinui-react to 3.x",
+      "type": "major"
+    }
+  ],
+  "packageName": "@itwin/delete-itwin-react"
+}
