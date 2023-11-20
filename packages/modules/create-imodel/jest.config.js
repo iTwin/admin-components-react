@@ -12,5 +12,6 @@ module.exports = {
       "<rootDir>/src/tests/mocks/fileMock.js",
     "\\.(css|less|scss|sass)$": "<rootDir>/src/tests/mocks/styleMock.js",
   },
+  testEnvironment: "jsdom",
   verbose: true,
 };

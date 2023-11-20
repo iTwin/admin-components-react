@@ -10,5 +10,6 @@ module.exports = {
   moduleNameMapper: {
     "\\.(css|less|scss|sass)$": "<rootDir>/src/tests/mocks/styleMock.js",
   },
+  testEnvironment: "jsdom",
   verbose: true,
 };
