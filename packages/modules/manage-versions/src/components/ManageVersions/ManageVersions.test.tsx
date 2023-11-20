@@ -285,9 +285,6 @@ describe("ManageVersions", () => {
     fireEvent.change(nameInput, { target: { value: "test name" } });
 
     screen.getByText("Update").click();
-    // await waitForElementToBeRemoved(() =>
-    //   document.querySelector(".iac-version-modal")
-    // );
 
     const versionCells = container.querySelectorAll(
       ".iac-versions-table ._iui3-table-body ._iui3-table-row:first-child ._iui3-table-cell"
