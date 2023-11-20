@@ -7,4 +7,12 @@
   .iui-table-body .iui-table-cell {
     word-break: break-word;
   }
+
+  .iac-create-version-icon-hidden {
+    visibility: hidden;
+  }
+
+  .iac-changes-tab-actions {
+    gap: var(--iui-size-2xs);
+  }
 }

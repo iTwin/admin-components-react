@@ -12,5 +12,9 @@ export type NamedVersion = {
     changeSet: {
       href: string;
     };
+    creator: {
+      href: string;
+    };
   };
+  createdBy: string;
 };

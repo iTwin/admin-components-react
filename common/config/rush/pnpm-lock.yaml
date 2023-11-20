@@ -1,5 +1,6 @@
 dependencies:
   '@babel/core': 7.16.12
+  '@babel/plugin-proposal-private-property-in-object': 7.16.7_@babel+core@7.16.12
   '@bentley/bentleyjs-core': 2.11.0
   '@bentley/frontend-authorization-client': 2.11.0_124fd8799cc8196bebc67d27cf7bf3e3
   '@bentley/itwin-client': 2.11.0_@bentley+bentleyjs-core@2.11.0
@@ -16,7 +17,7 @@ dependencies:
   '@rush-temp/imodel-browser-react': file:projects/imodel-browser-react.tgz
   '@rush-temp/manage-versions-react': file:projects/manage-versions-react.tgz_babel-eslint@10.1.0
   '@rush-temp/platform-storybook': file:projects/platform-storybook.tgz_73e57467d4a9a5e376d6b84b6ab4e4b9
-  '@rush-temp/storybook-auth-addon': file:projects/storybook-auth-addon.tgz_node-sass@6.0.1+prettier@2.5.1
+  '@rush-temp/storybook-auth-addon': file:projects/storybook-auth-addon.tgz_110876528afba41097ae80a17cf73c4b
   '@storybook/addon-actions': 6.4.14_b3482aaf5744fc7c2aeb7941b0e0a78f
   '@storybook/addon-essentials': 6.4.14_fd1541f844b50692ba79e448cac93b50
   '@storybook/addon-links': 6.4.14_react-dom@17.0.2+react@17.0.2
@@ -40,6 +41,7 @@ dependencies:
   '@typescript-eslint/parser': 4.33.0_eslint@7.32.0+typescript@4.5.5
   babel-eslint: 10.1.0_eslint@7.32.0
   babel-loader: 8.3.0_e748cba1f5e972defd8ae51292b4033f
+  browserslist: 4.21.5
   classnames: 2.3.1
   eslint: 7.32.0
   eslint-config-airbnb: 0.0.4
@@ -700,6 +702,7 @@ packages:
       '@babel/helper-create-class-features-plugin': 7.16.10_@babel+core@7.16.12
       '@babel/helper-plugin-utils': 7.16.7
       '@babel/plugin-syntax-private-property-in-object': 7.14.5_@babel+core@7.16.12
+    deprecated: This proposal has been merged to the ECMAScript standard and thus this plugin is no longer maintained. Please use @babel/plugin-transform-private-property-in-object instead.
     dev: false
     engines:
       node: '>=6.9.0'
@@ -21413,11 +21416,12 @@ packages:
       prettier: '*'
       typescript: '*'
     resolution:
-      integrity: sha512-NTEgkcCea+yjZYl+i8toaeiizjcf5UdZzqvO89uacHUFc36vQLATKQJQkD00JkatbPZysDqrXCa9WjM5O15PUw==
+      integrity: sha512-r0TB9EIapak3whE7p4EGFD66f4CBOfPpHHqd887iT1nSHSBqiay8VrPIA3F0PrBrY/mh7SzhhrniOk2WZOTiBg==
       tarball: file:projects/platform-storybook.tgz
     version: 0.0.0
-  file:projects/storybook-auth-addon.tgz_node-sass@6.0.1+prettier@2.5.1:
+  file:projects/storybook-auth-addon.tgz_110876528afba41097ae80a17cf73c4b:
     dependencies:
+      '@babel/plugin-proposal-private-property-in-object': 7.16.7_@babel+core@7.16.12
       '@bentley/bentleyjs-core': 2.11.0
       '@bentley/frontend-authorization-client': 2.11.0_124fd8799cc8196bebc67d27cf7bf3e3
       '@bentley/itwin-client': 2.11.0_@bentley+bentleyjs-core@2.11.0
@@ -21450,15 +21454,17 @@ packages:
     id: file:projects/storybook-auth-addon.tgz
     name: '@rush-temp/storybook-auth-addon'
     peerDependencies:
+      '@babel/core': '*'
       node-sass: '*'
       prettier: '*'
     resolution:
-      integrity: sha512-vznAnQJZatoBq3g38pQviWL8qfbDh7P32iW2kyKtpHDcTRYt7HERSC/AFovMfLtp2TYyHliLk6OXMiTOVFm8CQ==
+      integrity: sha512-dPqXu84roZHk42XqHHxCfhJ3WNceOIvnCl6CKFvo8PT1JMkU7syv5twLbimNcLO+7GlvgFn5uFfkEjMXR49iIA==
       tarball: file:projects/storybook-auth-addon.tgz
     version: 0.0.0
 registry: ''
 specifiers:
   '@babel/core': ^7.12.10
+  '@babel/plugin-proposal-private-property-in-object': ^7.14.5
   '@bentley/bentleyjs-core': 2.11.0
   '@bentley/frontend-authorization-client': 2.11.0
   '@bentley/itwin-client': 2.11.0
@@ -21499,6 +21505,7 @@ specifiers:
   '@typescript-eslint/parser': ^4.20.0
   babel-eslint: ^10.0.0
   babel-loader: ^8.2.5
+  browserslist: ^4.20.4
   classnames: ^2.2.6
   eslint: ^7.4.0
   eslint-config-airbnb: ^0.0.4
