@@ -138,8 +138,7 @@ describe("ManageVersions", () => {
     screen.getByText(defaultStrings.changes).click();
 
     expect(mockGetVersions).toHaveBeenCalledTimes(1);
-    //query data twice as now showing included changesets in named version table
-    expect(mockGetChangesets).toHaveBeenCalledTimes(2);
+    expect(mockGetChangesets).toHaveBeenCalledTimes(1);
   });
 
   it("should show error message in versions table when failed to fetch versions", async () => {
@@ -234,7 +233,7 @@ describe("ManageVersions", () => {
 
     screen.getByText(defaultStrings.changes).click();
 
-    expect(mockGetChangesets).toHaveBeenCalledTimes(3);
+    expect(mockGetChangesets).toHaveBeenCalledTimes(2);
   });
 
   it("should update version", async () => {

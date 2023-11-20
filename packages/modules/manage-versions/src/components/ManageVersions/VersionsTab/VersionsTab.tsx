@@ -20,11 +20,24 @@ export type VersionsTabProps = {
   loadMoreVersions: () => void;
   onViewClick?: (version: NamedVersion) => void;
   tableData: VersionTableData[];
+  subRowsLoaded: boolean;
+};
+
+const isNamedVersion = (
+  obj: VersionTableData | Changeset
+): obj is VersionTableData => {
+  return "version" in obj;
 };
 
 const VersionsTab = (props: VersionsTabProps) => {
-  const { status, onVersionUpdated, loadMoreVersions, onViewClick, tableData } =
-    props;
+  const {
+    status,
+    onVersionUpdated,
+    loadMoreVersions,
+    onViewClick,
+    tableData,
+    subRowsLoaded,
+  } = props;
 
   const { stringsOverrides } = useConfig();
 
@@ -33,6 +46,42 @@ const VersionsTab = (props: VersionsTabProps) => {
   >(undefined);
   const [isUpdateVersionModalOpen, setIsUpdateVersionModalOpen] =
     React.useState(false);
+
+  const renderDateColumn = React.useMemo(
+    () => (row: VersionTableData | Changeset) => {
+      if (isNamedVersion(row)) {
+        return (
+          <Text>
+            {new Date((row.version as any)["createdDateTime"]).toLocaleString()}
+          </Text>
+        );
+      } else if (subRowsLoaded) {
+        return (
+          <Text>{new Date((row as any)["pushDateTime"]).toLocaleString()}</Text>
+        );
+      }
+      return <Text isSkeleton={true}>Loading Date</Text>;
+    },
+    [subRowsLoaded]
+  );
+
+  const generateCellContent = React.useMemo(
+    () => (row: VersionTableData | Changeset, columnAccessor: string) => {
+      if (
+        columnAccessor === "createdDateTime" ||
+        columnAccessor === "pushDateTime"
+      ) {
+        return renderDateColumn(row);
+      }
+      if (isNamedVersion(row)) {
+        return <Text>{(row.version as any)[columnAccessor]}</Text>;
+      } else if (subRowsLoaded) {
+        return <Text>{(row as any)[columnAccessor]}</Text>;
+      }
+      return <Text isSkeleton={true}>Loading {columnAccessor}</Text>;
+    },
+    [subRowsLoaded]
+  );
 
   const columns = React.useMemo(() => {
     const tableColumns = [
@@ -44,13 +93,10 @@ const VersionsTab = (props: VersionsTabProps) => {
             Header: stringsOverrides.name,
             accessor: "name",
             Cell: (props: CellProps<VersionTableData | Changeset>) => {
-              return (
-                <Text>
-                  {"version" in props.row.original
-                    ? props.row.original.version.name
-                    : props.row.original.displayName}
-                </Text>
-              );
+              const columnAccessor = isNamedVersion(props.row.original)
+                ? "name"
+                : "displayName";
+              return generateCellContent(props.row.original, columnAccessor);
             },
           },
           {
@@ -58,13 +104,7 @@ const VersionsTab = (props: VersionsTabProps) => {
             Header: stringsOverrides.description,
             accessor: "description",
             Cell: (props: CellProps<VersionTableData | Changeset>) => {
-              return (
-                <Text>
-                  {"version" in props.row.original
-                    ? props.row.original.version.description
-                    : props.row.original.description}
-                </Text>
-              );
+              return generateCellContent(props.row.original, "description");
             },
           },
           {
@@ -73,10 +113,9 @@ const VersionsTab = (props: VersionsTabProps) => {
             accessor: "createdBy",
             maxWidth: 220,
             Cell: (props: CellProps<VersionTableData | Changeset>) => {
-              const createdBy =
-                "version" in props.row.original
-                  ? props.row.original.version.createdBy
-                  : props.row.original.createdBy;
+              const createdBy = isNamedVersion(props.row.original)
+                ? props.row.original.version.createdBy
+                : props.row.original.createdBy;
               return createdBy !== "" ? (
                 <Text>{createdBy}</Text>
               ) : (
@@ -90,15 +129,10 @@ const VersionsTab = (props: VersionsTabProps) => {
             accessor: "createdDateTime",
             maxWidth: 220,
             Cell: (props: CellProps<VersionTableData | Changeset>) => {
-              return (
-                <span>
-                  {new Date(
-                    "version" in props.row.original
-                      ? props.row.original.version.createdDateTime
-                      : props.row.original.pushDateTime
-                  ).toLocaleString()}
-                </span>
-              );
+              const columnAccessor = isNamedVersion(props.row.original)
+                ? "createdDateTime"
+                : "pushDateTime";
+              return generateCellContent(props.row.original, columnAccessor);
             },
           },
           {
@@ -107,7 +141,7 @@ const VersionsTab = (props: VersionsTabProps) => {
             Cell: (props: CellProps<VersionTableData>) => {
               return (
                 <>
-                  {"version" in props.row.original ? (
+                  {isNamedVersion(props.row.original) ? (
                     <IconButton
                       onClick={() => {
                         setCurrentVersion(props.row.original.version);
@@ -133,7 +167,7 @@ const VersionsTab = (props: VersionsTabProps) => {
         id: "versions-table-view",
         width: 100,
         Cell: (props: CellProps<VersionTableData>) => {
-          return "version" in props.row.original ? (
+          return isNamedVersion(props.row.original) ? (
             <span
               className="iui-anchor"
               onClick={() => onViewClick(props.row.original.version)}
@@ -155,6 +189,7 @@ const VersionsTab = (props: VersionsTabProps) => {
     stringsOverrides.updateNamedVersion,
     stringsOverrides.view,
     onViewClick,
+    generateCellContent,
   ]);
 
   const emptyTableContent = React.useMemo(() => {

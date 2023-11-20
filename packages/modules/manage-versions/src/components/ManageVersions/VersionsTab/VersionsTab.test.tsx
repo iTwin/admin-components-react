@@ -23,6 +23,7 @@ const renderComponent = (initialProps?: Partial<VersionsTabProps>) => {
     loadMoreVersions: jest.fn(),
     onViewClick: jest.fn(),
     tableData: MockedVersionTableData(),
+    subRowsLoaded: true,
     ...initialProps,
   };
   return render(
