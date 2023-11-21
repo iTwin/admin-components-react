@@ -72,7 +72,7 @@ dependencies:
   rollup-plugin-peer-deps-external: 2.2.4_rollup@2.66.1
   rollup-plugin-postcss: 4.0.2_postcss@8.4.31
   rollup-plugin-terser: 7.0.2_rollup@2.66.1
-  rollup-plugin-typescript2: 0.30.0_rollup@2.66.1+typescript@4.5.5
+  rollup-plugin-typescript2: 0.36.0_rollup@2.66.1+typescript@4.5.5
   storybook-dark-mode: 1.0.8_d23168255276adfcec7a642367c3549e
   stylelint: 13.13.1
   stylelint-config-prettier: 8.0.2_stylelint@13.13.1
@@ -80,7 +80,7 @@ dependencies:
   stylelint-prettier: 1.2.0_prettier@2.5.1+stylelint@13.13.1
   stylelint-scss: 3.21.0_stylelint@13.13.1
   ts-jest: 27.1.5_6d42ff4328abfbe9264bcb98299a06c4
-  tslib: 2.3.1
+  tslib: 2.6.2
   typescript: 4.5.5
   webpack: 5.67.0
 lockfileVersion: 5.2
@@ -10468,6 +10468,16 @@ packages:
     dev: false
     resolution:
       integrity: sha512-UvSPKyhMn6LEd/WpUaV9C9t3zATuqoqfWc3QdPhPLb58prN9tqYPlPWi8Krxi44loBoUzlobqZ3+8tGpxxSzwA==
+  /fs-extra/10.1.0:
+    dependencies:
+      graceful-fs: 4.2.9
+      jsonfile: 6.1.0
+      universalify: 2.0.0
+    dev: false
+    engines:
+      node: '>=12'
+    resolution:
+      integrity: sha512-oRXApq54ETRj4eMiFzGnHWGy+zo5raudjuxN0b8H7s/RU2oW0Wvsx9O0ACRN/kRq9E8Vu/ReskGB5o3ji+FzHQ==
   /fs-extra/3.0.1:
     dependencies:
       graceful-fs: 4.2.9
@@ -18191,13 +18201,6 @@ packages:
     dev: false
     resolution:
       integrity: sha512-rArEXAgsBG4UgRGcynxWIWKFvh/XZCcS8UJdHhwy91zwAvCZIbcs+vAbflgBnNjYMs/i/i+/Ux6IZhML1yPvxg==
-  /resolve/1.20.0:
-    dependencies:
-      is-core-module: 2.8.1
-      path-parse: 1.0.7
-    dev: false
-    resolution:
-      integrity: sha512-wENBPt4ySzg4ybFQW2TT1zMQucPK95HSh/nq2CFTZVOGut2+pQvSsgtda4d26YrYcr067wjbmzOG8byDPBX63A==
   /resolve/1.22.0:
     dependencies:
       is-core-module: 2.8.1
@@ -18370,21 +18373,21 @@ packages:
       rollup: ^2.0.0
     resolution:
       integrity: sha512-w3iIaU4OxcF52UUXiZNsNeuXIMDvFrr+ZXK6bFZ0Q60qyVfq4uLptoS4bbq3paG3x216eQllFZX7zt6TIImguQ==
-  /rollup-plugin-typescript2/0.30.0_rollup@2.66.1+typescript@4.5.5:
+  /rollup-plugin-typescript2/0.36.0_rollup@2.66.1+typescript@4.5.5:
     dependencies:
       '@rollup/pluginutils': 4.1.2
       find-cache-dir: 3.3.2
-      fs-extra: 8.1.0
-      resolve: 1.20.0
+      fs-extra: 10.1.0
       rollup: 2.66.1
-      tslib: 2.1.0
+      semver: 7.5.4
+      tslib: 2.6.2
       typescript: 4.5.5
     dev: false
     peerDependencies:
       rollup: '>=1.26.3'
       typescript: '>=2.4.0'
     resolution:
-      integrity: sha512-NUFszIQyhgDdhRS9ya/VEmsnpTe+GERDMmFo0Y+kf8ds51Xy57nPNGglJY+W6x1vcouA7Au7nsTgsLFj2I0PxQ==
+      integrity: sha512-NB2CSQDxSe9+Oe2ahZbf+B4bh7pHwjV5L+RSYpCu7Q5ROuN94F9b6ioWwKfz3ueL3KTtmX4o2MUH2cgHDIEUsw==
   /rollup-pluginutils/2.8.2:
     dependencies:
       estree-walker: 0.6.1
@@ -18658,6 +18661,15 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-PoeGJYh8HK4BTO/a9Tf6ZG3veo/A7ZVsYrSA6J8ny9nb3B1VrpkuN+z9OE5wfE5p6H4LchYZsegiQgbJD94ZFQ==
+  /semver/7.5.4:
+    dependencies:
+      lru-cache: 6.0.0
+    dev: false
+    engines:
+      node: '>=10'
+    hasBin: true
+    resolution:
+      integrity: sha512-1bCSESV6Pv+i21Hvpxp3Dx+pSD8lIPt8uVjRrxAUt/nbswYc+tK6Y2btiULjd4+fnq15PX+nqQDC7Oft7WkwcA==
   /send/0.17.2:
     dependencies:
       debug: 2.6.9
@@ -20399,10 +20411,6 @@ packages:
     dev: false
     resolution:
       integrity: sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==
-  /tslib/2.1.0:
-    dev: false
-    resolution:
-      integrity: sha512-hcVC3wYEziELGGmEEXue7D75zbwIIVUMWAVbHItGPx0ziyXxrOMQx4rQEVEV45Ut/1IotuEvwqPopzIOkDMf0A==
   /tslib/2.3.1:
     dev: false
     resolution:
@@ -21877,7 +21885,7 @@ packages:
       rollup-plugin-peer-deps-external: 2.2.4_rollup@2.66.1
       rollup-plugin-postcss: 4.0.2_postcss@8.4.31
       rollup-plugin-terser: 7.0.2_rollup@2.66.1
-      rollup-plugin-typescript2: 0.30.0_rollup@2.66.1+typescript@4.5.5
+      rollup-plugin-typescript2: 0.36.0_rollup@2.66.1+typescript@4.5.5
       ts-jest: 27.1.5_6d42ff4328abfbe9264bcb98299a06c4
       tslib: 2.6.2
       typescript: 4.5.5
@@ -21888,7 +21896,7 @@ packages:
       '@babel/core': '*'
       babel-eslint: '*'
     resolution:
-      integrity: sha512-3EZKJhst9qO4eh5OkIinY8h0/vC5masI8MRFihCqKzfxkbjdHcniQIGeUaQbOvy9q+LB5VBP5qxxAJKU+de02Q==
+      integrity: sha512-IRqnN2/fdQx2oWAsAUgbucsj9GLaANE6qPKAhZVzX0T3/pr+o5LSlpubRIC9Xzyz1CDk3c7wy0h9d6IenUTYww==
       tarball: file:projects/create-imodel-react.tgz
     version: 0.0.0
   file:projects/delete-imodel-react.tgz_68a63a95a6e595d1b14a84412c0f59df:
@@ -21925,7 +21933,7 @@ packages:
       rollup-plugin-peer-deps-external: 2.2.4_rollup@2.66.1
       rollup-plugin-postcss: 4.0.2_postcss@8.4.31
       rollup-plugin-terser: 7.0.2_rollup@2.66.1
-      rollup-plugin-typescript2: 0.30.0_rollup@2.66.1+typescript@4.5.5
+      rollup-plugin-typescript2: 0.36.0_rollup@2.66.1+typescript@4.5.5
       ts-jest: 27.1.5_6d42ff4328abfbe9264bcb98299a06c4
       tslib: 2.6.2
       typescript: 4.5.5
@@ -21936,7 +21944,7 @@ packages:
       '@babel/core': '*'
       babel-eslint: '*'
     resolution:
-      integrity: sha512-uWgHqLZavFGumZ7psQrEgAcxnUiMIh4a1EaE+JMK+jxnXS5H6VtTn3g041NiwCxaD7dM2Y/QX3jvrIcfoK2bbg==
+      integrity: sha512-d4g4nWyuU3uczcBAILrgZMXbnPxc65BZCwjSy2AbOsFdDsgX5MWm3CzLtzobibdMWeU6mwT56X4PsoDaiOvjAw==
       tarball: file:projects/delete-imodel-react.tgz
     version: 0.0.0
   file:projects/delete-itwin-react.tgz_68a63a95a6e595d1b14a84412c0f59df:
@@ -21973,7 +21981,7 @@ packages:
       rollup-plugin-peer-deps-external: 2.2.4_rollup@2.66.1
       rollup-plugin-postcss: 4.0.2_postcss@8.4.31
       rollup-plugin-terser: 7.0.2_rollup@2.66.1
-      rollup-plugin-typescript2: 0.30.0_rollup@2.66.1+typescript@4.5.5
+      rollup-plugin-typescript2: 0.36.0_rollup@2.66.1+typescript@4.5.5
       ts-jest: 27.1.5_6d42ff4328abfbe9264bcb98299a06c4
       tslib: 2.6.2
       typescript: 4.5.5
@@ -21984,7 +21992,7 @@ packages:
       '@babel/core': '*'
       babel-eslint: '*'
     resolution:
-      integrity: sha512-a3PA0pa1+bBMe67qVtmwrRC58zJqPcXuDsmuTDWsI7CGZWpe657bTTiAok+ysBn27JYNL4fI+dzAdhs3YxJaaQ==
+      integrity: sha512-sNR1E9kGcAZPUfJhfLz08GJAk35xz7eXPFXiOdYAhHAMi1elisBZ/Wf/Bp9n5Y8bTP0h2JkPKRFkXeNgpoEsBw==
       tarball: file:projects/delete-itwin-react.tgz
     version: 0.0.0
   file:projects/imodel-browser-react.tgz_@babel+core@7.16.12:
@@ -22030,7 +22038,7 @@ packages:
       rollup: 2.66.1
       rollup-plugin-peer-deps-external: 2.2.4_rollup@2.66.1
       rollup-plugin-postcss: 4.0.2_postcss@8.4.31
-      rollup-plugin-typescript2: 0.30.0_rollup@2.66.1+typescript@4.5.5
+      rollup-plugin-typescript2: 0.36.0_rollup@2.66.1+typescript@4.5.5
       stylelint: 13.13.1
       stylelint-config-prettier: 8.0.2_stylelint@13.13.1
       stylelint-config-sass-guidelines: 7.1.0_stylelint@13.13.1
@@ -22045,7 +22053,7 @@ packages:
     peerDependencies:
       '@babel/core': '*'
     resolution:
-      integrity: sha512-wmXfga9NVw+Y9F3GEZ0OzcfY1hexvX+YNKEt5w64Bg3NMyr9pQ+FIlrGEo/uABPJ6CrL3RqPQ142odkp3I7ovA==
+      integrity: sha512-P7flT6Guk0Y2yWOTsyKWjhrSiLKYvCdz2MdhTvd4faY200RrGcTR78en783stYhZRrVf37GTUtozgUexKmJJIA==
       tarball: file:projects/imodel-browser-react.tgz
     version: 0.0.0
   file:projects/manage-versions-react.tgz_68a63a95a6e595d1b14a84412c0f59df:
@@ -22083,7 +22091,7 @@ packages:
       rollup-plugin-peer-deps-external: 2.2.4_rollup@2.66.1
       rollup-plugin-postcss: 4.0.2_postcss@8.4.31
       rollup-plugin-terser: 7.0.2_rollup@2.66.1
-      rollup-plugin-typescript2: 0.30.0_rollup@2.66.1+typescript@4.5.5
+      rollup-plugin-typescript2: 0.36.0_rollup@2.66.1+typescript@4.5.5
       ts-jest: 27.1.5_6d42ff4328abfbe9264bcb98299a06c4
       tslib: 2.6.2
       typescript: 4.5.5
@@ -22094,7 +22102,7 @@ packages:
       '@babel/core': '*'
       babel-eslint: '*'
     resolution:
-      integrity: sha512-Y/Cu7aLjbwz7z6n2ZleFvvRLKmF0md1gkMmVHmH6o5MsblvQFqgbyw5Usiu6p+Np1l3PHEirfLFExKLXoYEciA==
+      integrity: sha512-9cgjHfVmNVbsX+BwHHZSNM7jf34l1cS+MALkdLKIjGRobBjbBDk8EzEGIGv1YXio9DEZZVaL9ZFSKOAFOTmM2g==
       tarball: file:projects/manage-versions-react.tgz
     version: 0.0.0
   file:projects/platform-storybook.tgz_73e57467d4a9a5e376d6b84b6ab4e4b9:
@@ -22264,7 +22272,7 @@ specifiers:
   rollup-plugin-peer-deps-external: ^2.2.4
   rollup-plugin-postcss: ^4.0.0
   rollup-plugin-terser: ^7.0.2
-  rollup-plugin-typescript2: ^0.30.0
+  rollup-plugin-typescript2: ^0.36.0
   storybook-dark-mode: ^1.0.7
   stylelint: ^13.6.1
   stylelint-config-prettier: ^8.0.2
@@ -22272,6 +22280,6 @@ specifiers:
   stylelint-prettier: ^1.1.2
   stylelint-scss: ^3.18.0
   ts-jest: ^27.1.4
-  tslib: ^2.1.0
+  tslib: ^2.6.2
   typescript: ^4.2.3
   webpack: ^5.28.0
