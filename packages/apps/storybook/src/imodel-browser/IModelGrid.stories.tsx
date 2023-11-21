@@ -16,7 +16,6 @@ import {
   LabeledInput,
   MenuItem,
   Text,
-  ThemeProvider,
   Tile,
 } from "@itwin/itwinui-react";
 import { Meta, Story } from "@storybook/react/types-6-0";
@@ -264,27 +263,25 @@ export const WithPostProcessCallback: Story<IModelGridProps> =
         [filter]
       );
       return (
-        <ThemeProvider>
-          <div>
-            <Text variant="title">Description</Text>
-            <Text as="p" variant="body">
-              Property <Code>postProcessCallback</Code> allows modification of
-              the data that is sent to the grid, here, we either apply a filter,
-              or add a new tile at the start of the list for a 'New iModel' when
-              there is no filter defined.
-            </Text>
-            <LabeledInput
-              label={"Name filter"}
-              onChange={(event) => {
-                const {
-                  target: { value },
-                } = event;
-                setFilter(value);
-              }}
-            />
-            <IModelGrid {...args} postProcessCallback={filterOrAddStartTile} />
-          </div>
-        </ThemeProvider>
+        <div>
+          <Text variant="title">Description</Text>
+          <Text as="p" variant="body">
+            Property <Code>postProcessCallback</Code> allows modification of the
+            data that is sent to the grid, here, we either apply a filter, or
+            add a new tile at the start of the list for a 'New iModel' when
+            there is no filter defined.
+          </Text>
+          <LabeledInput
+            label={"Name filter"}
+            onChange={(event) => {
+              const {
+                target: { value },
+              } = event;
+              setFilter(value);
+            }}
+          />
+          <IModelGrid {...args} postProcessCallback={filterOrAddStartTile} />
+        </div>
       );
     })
   );

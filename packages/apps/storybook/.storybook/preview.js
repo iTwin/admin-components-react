@@ -2,6 +2,8 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+import React from "react";
+import { ThemeProvider } from "@itwin/itwinui-react";
 import addons from "@storybook/addons";
 import { themes } from "@storybook/theming";
 import "@itwin/itwinui-react/styles.css";
@@ -10,11 +12,6 @@ import { darkTheme, lightTheme } from "./itwinTheme";
 
 // get an instance to the communication channel for the manager and preview
 const channel = addons.getChannel();
-
-// switch body class for story along with interface theme
-channel.on("DARK_MODE", (isDark) => {
-  document.body.dataset.iuiTheme = isDark ? 'dark' : 'light';
-});
 
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
@@ -33,3 +30,15 @@ export const parameters = {
     authority: "https://qa-ims.bentley.com",
   },
 };
+
+export const decorators = [
+  (Story) => {
+    const [dark, setDark] = React.useState(false)
+    
+    React.useEffect(() => {
+      channel.on("DARK_MODE", setDark);
+    }, []);
+
+    return <ThemeProvider theme={dark ? "dark" : "light"} ><Story /></ThemeProvider>
+  },
+];

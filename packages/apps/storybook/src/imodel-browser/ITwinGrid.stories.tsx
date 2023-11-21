@@ -15,7 +15,6 @@ import {
   DropdownButton,
   MenuItem,
   Text,
-  ThemeProvider,
   Tile,
 } from "@itwin/itwinui-react";
 import { Meta, Story } from "@storybook/react/types-6-0";
@@ -43,9 +42,7 @@ export default {
 } as Meta;
 
 const Template: Story<ITwinGridProps> = withAccessTokenOverride((args) => (
-  <ThemeProvider>
-    <ITwinGrid {...args} />
-  </ThemeProvider>
+  <ITwinGrid {...args} />
 ));
 export const Primary = Template.bind({});
 Primary.args = {
@@ -288,17 +285,15 @@ export const WithPostProcessCallback: Story<ITwinGridProps> =
       []
     );
     return (
-      <ThemeProvider>
-        <div>
-          <Text variant="title">Description</Text>
-          <Text as="p" variant="body">
-            Property <Code>postProcessCallback</Code> allows modification of the
-            data that is sent to the grid, here, we add a new tile at the start
-            of the list for a 'New Project'.
-          </Text>
-          <ITwinGrid {...args} postProcessCallback={addStartTile} />
-        </div>
-      </ThemeProvider>
+      <div>
+        <Text variant="title">Description</Text>
+        <Text as="p" variant="body">
+          Property <Code>postProcessCallback</Code> allows modification of the
+          data that is sent to the grid, here, we add a new tile at the start of
+          the list for a 'New Project'.
+        </Text>
+        <ITwinGrid {...args} postProcessCallback={addStartTile} />
+      </div>
     );
   });
 WithPostProcessCallback.args = {

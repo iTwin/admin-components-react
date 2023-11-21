@@ -6,7 +6,6 @@ import {
   UpdateIModel as ExternalComponent,
   UpdateIModelProps,
 } from "@itwin/create-imodel-react";
-import { ThemeProvider } from "@itwin/itwinui-react";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
 
@@ -40,11 +39,7 @@ root.style.height = "90vh";
 
 export const Update: Story<UpdateIModelProps> = withAccessTokenOverride(
   (args) => {
-    return (
-      <ThemeProvider>
-        <UpdateIModel {...args} />
-      </ThemeProvider>
-    );
+    return <UpdateIModel {...args} />;
   }
 );
 
