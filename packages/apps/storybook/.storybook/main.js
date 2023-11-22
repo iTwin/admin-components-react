@@ -14,7 +14,6 @@ module.exports = {
     "../src/addon/register.js",
   ],
   reactOptions: { fastRefresh: true },
-  framework: '@storybook/react-webpack5',
   core: {
     builder: 'webpack5',
   },
