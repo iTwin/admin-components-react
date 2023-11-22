@@ -17,6 +17,7 @@ export function IModelName() {
 
   return (
     <LabeledInput
+      ref={(inputRef) => inputRef?.focus()}
       label={nameString ?? "Name"}
       name="name"
       required
