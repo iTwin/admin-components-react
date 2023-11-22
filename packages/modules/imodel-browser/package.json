@@ -62,7 +62,7 @@
     "jest": "^27.5.1",
     "jest-fetch-mock": "^3.0.3",
     "msw": "^0.27.1",
-    "node-sass": "^6.0.0",
+    "sass": "^1.69.5",
     "postcss": "8.4.31",
     "prettier": "^2.0.5",
     "react": "^17.0.2",

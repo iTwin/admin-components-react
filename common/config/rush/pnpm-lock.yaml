@@ -4,7 +4,7 @@ dependencies:
   '@bentley/bentleyjs-core': 2.11.0
   '@bentley/frontend-authorization-client': 2.11.0_124fd8799cc8196bebc67d27cf7bf3e3
   '@bentley/itwin-client': 2.11.0_@bentley+bentleyjs-core@2.11.0
-  '@bentley/react-scripts': 5.0.7_7a053c934ba42026e8f0ec7b79b31e6b
+  '@bentley/react-scripts': 5.0.7_5261384b97a50dbd6b715f52d91cad02
   '@itwin/itwinui-icons-react': 2.2.0_react-dom@17.0.2+react@17.0.2
   '@itwin/itwinui-react': 3.0.4_react-dom@17.0.2+react@17.0.2
   '@rollup/plugin-commonjs': 17.1.0_rollup@2.66.1
@@ -17,7 +17,7 @@ dependencies:
   '@rush-temp/imodel-browser-react': file:projects/imodel-browser-react.tgz_@babel+core@7.16.12
   '@rush-temp/manage-versions-react': file:projects/manage-versions-react.tgz_@babel+core@7.16.12
   '@rush-temp/platform-storybook': file:projects/platform-storybook.tgz_5c3431ea070b13d470e65a7117c808ae
-  '@rush-temp/storybook-auth-addon': file:projects/storybook-auth-addon.tgz_2fc616c350a2b1ed8d9b0fa27a87a991
+  '@rush-temp/storybook-auth-addon': file:projects/storybook-auth-addon.tgz_29458941c4090da50b2d2ecd87cc6778
   '@storybook/addon-actions': 6.4.14_b3482aaf5744fc7c2aeb7941b0e0a78f
   '@storybook/addon-essentials': 6.4.14_67470f7a0ec250b321956a89a6872c55
   '@storybook/addon-links': 6.4.14_react-dom@17.0.2+react@17.0.2
@@ -60,7 +60,6 @@ dependencies:
   lint-staged: 10.5.4
   msw: 0.27.2
   mv: 2.1.1
-  node-sass: 6.0.1
   postcss: 8.4.31
   prettier: 2.5.1
   react: 17.0.2
@@ -73,6 +72,7 @@ dependencies:
   rollup-plugin-postcss: 4.0.2_postcss@8.4.31
   rollup-plugin-terser: 7.0.2_rollup@2.66.1
   rollup-plugin-typescript2: 0.36.0_rollup@2.66.1+typescript@4.5.5
+  sass: 1.69.5
   storybook-dark-mode: 1.0.8_d23168255276adfcec7a642367c3549e
   stylelint: 13.13.1
   stylelint-config-prettier: 8.0.2_stylelint@13.13.1
@@ -3991,7 +3991,7 @@ packages:
       '@bentley/bentleyjs-core': ^2.11.0
     resolution:
       integrity: sha512-xvosnyh4oFdoKvEoa5FpVwqsiyb197abvIQR5PVNy+p1IDFOUnwGTMZVJf14Sfm064/mkYMlI+Oai+/oFJBKvw==
-  /@bentley/react-scripts/5.0.7_7a053c934ba42026e8f0ec7b79b31e6b:
+  /@bentley/react-scripts/5.0.7_5261384b97a50dbd6b715f52d91cad02:
     dependencies:
       '@babel/core': 7.23.3
       '@itwin/core-webpack-tools': 3.7.17_webpack@5.67.0
@@ -4036,7 +4036,7 @@ packages:
       resolve: 1.22.0
       resolve-url-loader: 4.0.0
       sass: 1.49.0
-      sass-loader: 12.6.0_1af268559c914e784e863ef7c4596f87
+      sass-loader: 12.6.0_sass@1.49.0+webpack@5.67.0
       semver: 7.5.4
       source-map-loader: 3.0.2_webpack@5.67.0
       style-loader: 3.3.3_webpack@5.67.0
@@ -4057,7 +4057,6 @@ packages:
       fsevents: 2.3.2
     peerDependencies:
       '@types/jest': '*'
-      node-sass: '*'
       react: '>= 16'
       typescript: ^3.2.1 || ^4
     peerDependenciesMeta:
@@ -20454,11 +20453,10 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-VFWDAHOe6mRuT4mZRd4eKE+d8Uedrk6Xnh7Sh9b4NGufQLQjOrvf/MQoOdx+0s92L89FeyUUNfU597j/3uNpag==
-  /sass-loader/12.6.0_1af268559c914e784e863ef7c4596f87:
+  /sass-loader/12.6.0_sass@1.49.0+webpack@5.67.0:
     dependencies:
       klona: 2.0.5
       neo-async: 2.6.2
-      node-sass: 6.0.1
       sass: 1.49.0
       webpack: 5.67.0
     dev: false
@@ -20492,6 +20490,17 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-TVwVdNDj6p6b4QymJtNtRS2YtLJ/CqZriGg0eIAbAKMlN8Xy6kbv33FsEZSF7FufFFM705SQviHjjThfaQ4VNw==
+  /sass/1.69.5:
+    dependencies:
+      chokidar: 3.5.3
+      immutable: 4.0.0
+      source-map-js: 1.0.2
+    dev: false
+    engines:
+      node: '>=14.0.0'
+    hasBin: true
+    resolution:
+      integrity: sha512-qg2+UCJibLr2LCVOt3OlPhr/dqVHWOa9XtZf2OjbLs/T4VPSJ00udtgJxH3neXZm+QqX8B+3cU7RaLqp1iVfcQ==
   /sax/1.2.4:
     dev: false
     resolution:
@@ -23926,6 +23935,7 @@ packages:
       rollup-plugin-postcss: 4.0.2_postcss@8.4.31
       rollup-plugin-terser: 7.0.2_rollup@2.66.1
       rollup-plugin-typescript2: 0.36.0_rollup@2.66.1+typescript@4.5.5
+      sass: 1.69.5
       ts-jest: 27.1.5_6d42ff4328abfbe9264bcb98299a06c4
       tslib: 2.6.2
       typescript: 4.5.5
@@ -23935,7 +23945,7 @@ packages:
     peerDependencies:
       '@babel/core': '*'
     resolution:
-      integrity: sha512-DdnV0sVJT1zX50ZCw5lr16eCf+j2k6UXEgEfOGiyGIDXiHQafoGtGkX8qEa+G1XlbkU1vrUXwIYjdjujYEtajg==
+      integrity: sha512-Gt11MwEA02T/CUXNqxAQDF+wL57ewtv3ce/63/3hdOlNsogFReM8PzTiWC9EJJErz8TD1cee0QjXpnbTNxZpbg==
       tarball: file:projects/create-imodel-react.tgz
     version: 0.0.0
   file:projects/delete-imodel-react.tgz_@babel+core@7.16.12:
@@ -23973,6 +23983,7 @@ packages:
       rollup-plugin-postcss: 4.0.2_postcss@8.4.31
       rollup-plugin-terser: 7.0.2_rollup@2.66.1
       rollup-plugin-typescript2: 0.36.0_rollup@2.66.1+typescript@4.5.5
+      sass: 1.69.5
       ts-jest: 27.1.5_6d42ff4328abfbe9264bcb98299a06c4
       tslib: 2.6.2
       typescript: 4.5.5
@@ -23982,7 +23993,7 @@ packages:
     peerDependencies:
       '@babel/core': '*'
     resolution:
-      integrity: sha512-8+K660JYdyrE/KXd+WsTlc0SEKytdcd+jRH6F6f0loXJ2QyXSXMngSuQ/hfHIaM+Thp7ioIB+ui7zDVRyZd76g==
+      integrity: sha512-q29ZMfizsDnsJ7OQRurl+sCuz4UqHul56JM+s/ntTXuL8LAFtj59nEx5aBRSZD/yleomR0lv/kiLZ4b4lo4O7g==
       tarball: file:projects/delete-imodel-react.tgz
     version: 0.0.0
   file:projects/delete-itwin-react.tgz_@babel+core@7.16.12:
@@ -24020,6 +24031,7 @@ packages:
       rollup-plugin-postcss: 4.0.2_postcss@8.4.31
       rollup-plugin-terser: 7.0.2_rollup@2.66.1
       rollup-plugin-typescript2: 0.36.0_rollup@2.66.1+typescript@4.5.5
+      sass: 1.69.5
       ts-jest: 27.1.5_6d42ff4328abfbe9264bcb98299a06c4
       tslib: 2.6.2
       typescript: 4.5.5
@@ -24029,7 +24041,7 @@ packages:
     peerDependencies:
       '@babel/core': '*'
     resolution:
-      integrity: sha512-A/iojbicQw+D3LV6U5CjZvCsnVPRziQM10exbGAADN23qxbqBg8NqyDG9bFP0Pp9BIyNQgUpAmJR19haXjaf2g==
+      integrity: sha512-XXWlzgjk34eDvrRcQd5nSiQf+vryFjM3LYD5svqzhNhDclc5vx16CoxUsQC7V92c5QFAaS7tLqkJgw+1weIATQ==
       tarball: file:projects/delete-itwin-react.tgz
     version: 0.0.0
   file:projects/imodel-browser-react.tgz_@babel+core@7.16.12:
@@ -24076,6 +24088,7 @@ packages:
       rollup-plugin-peer-deps-external: 2.2.4_rollup@2.66.1
       rollup-plugin-postcss: 4.0.2_postcss@8.4.31
       rollup-plugin-typescript2: 0.36.0_rollup@2.66.1+typescript@4.5.5
+      sass: 1.69.5
       stylelint: 13.13.1
       stylelint-config-prettier: 8.0.2_stylelint@13.13.1
       stylelint-config-sass-guidelines: 7.1.0_stylelint@13.13.1
@@ -24090,7 +24103,7 @@ packages:
     peerDependencies:
       '@babel/core': '*'
     resolution:
-      integrity: sha512-/A3yXat9G566fam0BXtvCPfa2Ty9e5nG4dK0Mi/KtwRgjz5g4HKNK4yIajib+iM1gPvGCpuy3eDEvWRcLnLk7w==
+      integrity: sha512-+i2zVkaKc+nmcfCz41f1muLUPP1Np9bGMoaYNrD6oJ6216XUYqM+e4atpWXKKATbFbLNf6wHd460xVqJNQJuhQ==
       tarball: file:projects/imodel-browser-react.tgz
     version: 0.0.0
   file:projects/manage-versions-react.tgz_@babel+core@7.16.12:
@@ -24129,6 +24142,7 @@ packages:
       rollup-plugin-postcss: 4.0.2_postcss@8.4.31
       rollup-plugin-terser: 7.0.2_rollup@2.66.1
       rollup-plugin-typescript2: 0.36.0_rollup@2.66.1+typescript@4.5.5
+      sass: 1.69.5
       ts-jest: 27.1.5_6d42ff4328abfbe9264bcb98299a06c4
       tslib: 2.6.2
       typescript: 4.5.5
@@ -24138,7 +24152,7 @@ packages:
     peerDependencies:
       '@babel/core': '*'
     resolution:
-      integrity: sha512-SufuRFGcYmjtbQGx6FGXZBnZjnU1oHyMY/W+53D1W8TAjSXjFTQPD/KBC6FCLE9Hkpf2xnHWy04uxuO4uVcjOA==
+      integrity: sha512-fYCpL/AcDYsSZwNpnorW7axEnNvTV4ok/8kqDdw52ldQLya8wuBPXNuLnbFv5/nKwrHDm185/K+RzVCItvYGLA==
       tarball: file:projects/manage-versions-react.tgz
     version: 0.0.0
   file:projects/platform-storybook.tgz_5c3431ea070b13d470e65a7117c808ae:
@@ -24192,13 +24206,13 @@ packages:
       integrity: sha512-p2cL0uhEJHnGDP/CwBwlRNtlVoLbBhhULMKk7JoQRp1/NxarVdygBQQvWUhqPjJFKNBQLE+NjNchChv+Q0dLLw==
       tarball: file:projects/platform-storybook.tgz
     version: 0.0.0
-  file:projects/storybook-auth-addon.tgz_2fc616c350a2b1ed8d9b0fa27a87a991:
+  file:projects/storybook-auth-addon.tgz_29458941c4090da50b2d2ecd87cc6778:
     dependencies:
       '@babel/plugin-proposal-private-property-in-object': 7.16.7_@babel+core@7.16.12
       '@bentley/bentleyjs-core': 2.11.0
       '@bentley/frontend-authorization-client': 2.11.0_124fd8799cc8196bebc67d27cf7bf3e3
       '@bentley/itwin-client': 2.11.0_@bentley+bentleyjs-core@2.11.0
-      '@bentley/react-scripts': 5.0.7_7a053c934ba42026e8f0ec7b79b31e6b
+      '@bentley/react-scripts': 5.0.7_5261384b97a50dbd6b715f52d91cad02
       '@storybook/addons': 6.4.14_react-dom@17.0.2+react@17.0.2
       '@storybook/api': 6.4.14_react-dom@17.0.2+react@17.0.2
       '@storybook/components': 6.4.14_b3482aaf5744fc7c2aeb7941b0e0a78f
@@ -24230,7 +24244,6 @@ packages:
       '@babel/core': '*'
       '@types/jest': '*'
       jest: '*'
-      node-sass: '*'
       prettier: '*'
     resolution:
       integrity: sha512-2yO36KHyEnz11Np9q0Thr43+SZqwhxrmh4B6KmiwYPu21l8qVjG2skehoDi2seOSrWC7RdgOy4spaF6JrgVfuQ==
@@ -24299,7 +24312,6 @@ specifiers:
   lint-staged: ^10.2.11
   msw: ^0.27.1
   mv: ^2.1.1
-  node-sass: ^6.0.0
   postcss: 8.4.31
   prettier: ^2.0.5
   react: ^17.0.2
@@ -24312,6 +24324,7 @@ specifiers:
   rollup-plugin-postcss: ^4.0.0
   rollup-plugin-terser: ^7.0.2
   rollup-plugin-typescript2: ^0.36.0
+  sass: ^1.69.5
   storybook-dark-mode: ^1.0.7
   stylelint: ^13.6.1
   stylelint-config-prettier: ^8.0.2
