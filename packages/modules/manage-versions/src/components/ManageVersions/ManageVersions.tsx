@@ -88,6 +88,19 @@ export enum ManageVersionsTabs {
 const NAMED_VERSION_TOP = 100;
 const CHANGESET_TOP = 100;
 
+const initialChangeset: Changeset = {
+  id: "",
+  index: 0,
+  displayName: "",
+  description: "",
+  pushDateTime: "",
+  synchronizationInfo: { changedFiles: [] },
+  _links: {},
+  creatorId: "",
+  createdBy: "",
+  application: { id: "", name: "" },
+};
+
 export const ManageVersions = (props: ManageVersionsProps) => {
   const {
     accessToken,
@@ -154,19 +167,6 @@ export const ManageVersions = (props: ManageVersionsProps) => {
   const [versionsTableData, setVersionsTableData] =
     React.useState<VersionTableData[]>();
   const [subRowsLoaded, setSubRowsLoaded] = React.useState<boolean>(false);
-
-  const initialChangeset: Changeset = {
-    id: "",
-    index: 0,
-    displayName: "",
-    description: "",
-    pushDateTime: "",
-    synchronizationInfo: { changedFiles: [] },
-    _links: {},
-    creatorId: "",
-    createdBy: "",
-    application: { id: "", name: "" },
-  };
 
   const changeTab = React.useCallback(
     (tab: ManageVersionsTabs) => {
