@@ -101,6 +101,49 @@ const initialChangeset: Changeset = {
   application: { id: "", name: "" },
 };
 
+const initializeVersionTableData = (
+  versions: NamedVersion[],
+  versionTableData?: VersionTableData[]
+): VersionTableData[] => {
+  return (versions ?? []).map((version, index) => {
+    const existingData = versionTableData?.[index];
+    const defaultSubRows = existingData?.subRows ?? [initialChangeset];
+    const subRowsLoaded = existingData?.subRowsLoaded ?? false;
+    return { version, subRows: defaultSubRows, subRowsLoaded };
+  });
+};
+
+const updateNamedVersionsProperties = (
+  versionsToUpdate: NamedVersion[],
+  users: { [key: string]: string } | undefined
+) => {
+  if (!versionsToUpdate.length) {
+    return;
+  }
+  return versionsToUpdate.map((newVersion) => {
+    const creatorId = newVersion._links.creator.href.substring(
+      newVersion._links.creator.href.lastIndexOf("/") + 1
+    );
+    return {
+      ...newVersion,
+      createdBy: users?.[creatorId] ?? "",
+    };
+  });
+};
+
+const updateChangesetsProperties = (
+  changesetsToUpdate: Changeset[],
+  users: { [key: string]: string } | undefined
+) => {
+  if (!changesetsToUpdate.length) {
+    return;
+  }
+  return changesetsToUpdate.map((changeSet) => ({
+    ...changeSet,
+    createdBy: users?.[changeSet.creatorId] ?? "",
+  }));
+};
+
 export const ManageVersions = (props: ManageVersionsProps) => {
   const {
     accessToken,
@@ -137,7 +180,7 @@ export const ManageVersions = (props: ManageVersionsProps) => {
   const usersRef = React.useRef<{ [key: string]: string } | undefined>(
     undefined
   );
-  const shouldPerformVersionMapping = React.useRef<boolean>(false);
+
   const getUsers = React.useCallback(async () => {
     const users = await changesetClient.getUsers(imodelId);
     const userMapData = users.reduce((acc, user) => {
@@ -148,13 +191,14 @@ export const ManageVersions = (props: ManageVersionsProps) => {
       return acc;
     }, {} as { [key: string]: string });
     usersRef.current = userMapData;
-  }, []);
+  }, [changesetClient, imodelId]);
 
   React.useEffect(() => {
     setCurrentTab(currentTab);
   }, [currentTab]);
 
-  const [versions, setVersions] = React.useState<NamedVersion[]>();
+  const [versionsTableData, setVersionsTableData] =
+    React.useState<VersionTableData[]>();
   const [versionStatus, setVersionStatus] = React.useState(
     RequestStatus.NotStarted
   );
@@ -163,10 +207,6 @@ export const ManageVersions = (props: ManageVersionsProps) => {
   const [changesetStatus, setChangesetStatus] = React.useState(
     RequestStatus.NotStarted
   );
-
-  const [versionsTableData, setVersionsTableData] =
-    React.useState<VersionTableData[]>();
-  const [subRowsLoaded, setSubRowsLoaded] = React.useState<boolean>(false);
 
   const changeTab = React.useCallback(
     (tab: ManageVersionsTabs) => {
@@ -185,11 +225,13 @@ export const ManageVersions = (props: ManageVersionsProps) => {
           skip,
         })
         .then((newVersions) => {
-          setVersions((oldVersions) => [
-            ...(oldVersions ?? []),
-            ...newVersions,
+          const updateVersions = updateNamedVersionsProperties(
+            newVersions,
+            usersRef.current
+          );
+          setVersionsTableData((oldVersions) => [
+            ...initializeVersionTableData(updateVersions ?? [], oldVersions),
           ]);
-          shouldPerformVersionMapping.current = true;
           setVersionStatus(RequestStatus.Finished);
         })
         .catch(() => setVersionStatus(RequestStatus.Failed));
@@ -198,96 +240,15 @@ export const ManageVersions = (props: ManageVersionsProps) => {
   );
 
   const getMoreVersions = React.useCallback(() => {
-    if (versions && versions.length % NAMED_VERSION_TOP !== 0) {
+    if (
+      versionsTableData &&
+      versionsTableData.length % NAMED_VERSION_TOP !== 0
+    ) {
       return;
     }
 
-    getVersions(versions?.length);
-  }, [getVersions, versions]);
-
-  const refreshVersions = React.useCallback(() => {
-    setVersions(undefined);
-    setVersionsTableData(undefined);
-    setChangesets(undefined);
-    getVersions();
-    getChangesets();
-  }, [getVersions]);
-
-  const updateNamedVersionsProperties = (versionsToUpdate: NamedVersion[]) => {
-    if (!versionsToUpdate.length) {
-      return;
-    }
-    const updatedNamedVersion = versionsToUpdate.map((newVersion) => {
-      const creatorId = newVersion._links.creator.href.substring(
-        newVersion._links.creator.href.lastIndexOf("/") + 1
-      );
-      return {
-        ...newVersion,
-        createdBy: usersRef.current?.[creatorId] ?? "",
-      };
-    });
-    setVersions(updatedNamedVersion);
-    return updatedNamedVersion;
-  };
-
-  const updateChangesetsProperties = (changesetsToUpdate: Changeset[]) => {
-    if (!changesetsToUpdate.length) {
-      return;
-    }
-    const updatedChangeset = changesetsToUpdate.map((changeSet) => ({
-      ...changeSet,
-      createdBy: usersRef.current?.[changeSet.creatorId] ?? "",
-    }));
-    setChangesets(updatedChangeset);
-    shouldPerformVersionMapping.current = true;
-  };
-
-  const mapChangesetsToNamedVersions = React.useCallback(() => {
-    const updatedNamedVersion = updateNamedVersionsProperties(versions ?? []);
-    // Update versionsTableData
-    const tableData = (updatedNamedVersion ?? []).map((version) => {
-      const relatedChangesets: Changeset[] = [];
-      if (changesets) {
-        for (const change of changesets) {
-          if (
-            (change.index === version.changesetIndex &&
-              change._links.namedVersion !== null) ||
-            (change.index < version.changesetIndex &&
-              change._links.namedVersion === null)
-          ) {
-            relatedChangesets.push(change);
-          } else if (
-            change.index < version.changesetIndex &&
-            change._links.namedVersion !== null
-          ) {
-            break;
-          }
-        }
-        setSubRowsLoaded(true);
-        return { version: version, subRows: relatedChangesets };
-      }
-      setSubRowsLoaded(false);
-      return { version: version, subRows: [initialChangeset] };
-    });
-
-    setVersionsTableData(tableData);
-  }, [changesets, versions]);
-
-  React.useEffect(() => {
-    const loadUsers = async () => {
-      await getUsers();
-    };
-    if (!usersRef.current) {
-      loadUsers()
-        .then(() => {
-          updateNamedVersionsProperties(versions ?? []);
-          updateChangesetsProperties(changesets ?? []);
-        })
-        .catch(() => {
-          console.error("unable to fetch users data");
-        });
-    }
-  }, [changesets, getUsers, versions]);
+    getVersions(versionsTableData?.length);
+  }, [getVersions, versionsTableData]);
 
   const getChangesets = React.useCallback(() => {
     if (changesets && changesets.length % CHANGESET_TOP !== 0) {
@@ -301,26 +262,58 @@ export const ManageVersions = (props: ManageVersionsProps) => {
         skip: changesets?.length,
       })
       .then((newChangesets) => {
-        setChangesets([...(changesets ?? []), ...newChangesets]);
-        updateChangesetsProperties(newChangesets);
+        setChangesets([
+          ...(changesets ?? []),
+          ...(updateChangesetsProperties(newChangesets, usersRef.current) ??
+            []),
+        ]);
         setChangesetStatus(RequestStatus.Finished);
       })
       .catch(() => setChangesetStatus(RequestStatus.Failed));
   }, [changesets, changesetClient, imodelId]);
 
+  const refreshVersions = React.useCallback(() => {
+    getVersions();
+  }, [getVersions]);
+
+  React.useEffect(() => {
+    const loadUsers = async () => {
+      await getUsers();
+    };
+    if (!usersRef.current) {
+      loadUsers()
+        .then(() => {
+          const updatedVersionsTableData = versionsTableData?.map((td) => {
+            const updatedVersion = updateNamedVersionsProperties(
+              [td.version] ?? [],
+              usersRef.current
+            );
+            return {
+              ...td,
+              version: updatedVersion ? updatedVersion[0] : td.version,
+            };
+          });
+          setVersionsTableData(updatedVersionsTableData);
+          setChangesets((prevChangesets) => [
+            ...(updateChangesetsProperties(
+              changesets ?? [],
+              usersRef.current
+            ) ??
+              prevChangesets ??
+              []),
+          ]);
+        })
+        .catch(() => {
+          console.error("Unable to fetch users data");
+        });
+    }
+  }, [changesets, getUsers, versionsTableData]);
+
   React.useEffect(() => {
     if (versionStatus === RequestStatus.NotStarted) {
       getVersions();
-      getChangesets();
     }
-  }, [getChangesets, getVersions, versionStatus]);
-
-  React.useEffect(() => {
-    if (shouldPerformVersionMapping.current) {
-      mapChangesetsToNamedVersions();
-      shouldPerformVersionMapping.current = false;
-    }
-  }, [shouldPerformVersionMapping.current]);
+  }, [getVersions, versionStatus]);
 
   React.useEffect(() => {
     if (
@@ -334,19 +327,33 @@ export const ManageVersions = (props: ManageVersionsProps) => {
   const onVersionCreated = React.useCallback(() => {
     changeTab(ManageVersionsTabs.Versions);
     refreshVersions();
+    setChangesets(undefined);
     setChangesetStatus(RequestStatus.NotStarted);
   }, [changeTab, refreshVersions]);
 
   const latestVersion = React.useMemo(
     () =>
-      [...(versions ?? [])].sort((v1, v2) =>
-        new Date(v1.createdDateTime).valueOf() <
-        new Date(v2.createdDateTime).valueOf()
+      [...(versionsTableData ?? [])].sort((v1, v2) =>
+        new Date(v1.version.createdDateTime).valueOf() <
+        new Date(v2.version.createdDateTime).valueOf()
           ? 1
           : -1
       )[0],
-    [versions]
+    [versionsTableData]
   );
+
+  const setRelatedChangesets = (versionId: string, changesets: Changeset[]) => {
+    const updateChangesets =
+      updateChangesetsProperties(changesets, usersRef.current) ?? [];
+    setVersionsTableData((prevVersionsTableData) => {
+      const updatedVersions = prevVersionsTableData?.map((version) =>
+        version.version.id === versionId
+          ? { ...version, subRows: updateChangesets, subRowsLoaded: true }
+          : version
+      );
+      return updatedVersions ?? prevVersionsTableData;
+    });
+  };
 
   return (
     <ThemeProvider theme="inherit">
@@ -371,7 +378,8 @@ export const ManageVersions = (props: ManageVersionsProps) => {
               loadMoreVersions={getMoreVersions}
               onViewClick={onViewClick}
               tableData={versionsTableData ?? []}
-              subRowsLoaded={subRowsLoaded}
+              changesetClient={changesetClient}
+              setRelatedChangesets={setRelatedChangesets}
             />
           )}
           {_currentTab === ManageVersionsTabs.Changes && (
@@ -380,7 +388,7 @@ export const ManageVersions = (props: ManageVersionsProps) => {
               status={changesetStatus}
               loadMoreChanges={getChangesets}
               onVersionCreated={onVersionCreated}
-              latestVersion={latestVersion}
+              latestVersion={latestVersion?.version}
             />
           )}
         </div>

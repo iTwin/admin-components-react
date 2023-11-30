@@ -195,6 +195,9 @@ describe("ManageVersions", () => {
     );
 
     screen.getByText(defaultStrings.changes).click();
+    await waitForElementToBeRemoved(() =>
+      container.querySelector(".iui-progress-indicator-radial")
+    );
 
     const createVersionButtons = screen.getAllByTitle(
       defaultStrings.createNamedVersion

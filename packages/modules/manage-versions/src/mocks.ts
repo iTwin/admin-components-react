@@ -71,6 +71,7 @@ export const MockedVersionTableData = () => {
     {
       version: MockedVersion(),
       subRows: [MockedChangeset(1)],
+      subRowsLoaded: false,
     },
   ];
 };

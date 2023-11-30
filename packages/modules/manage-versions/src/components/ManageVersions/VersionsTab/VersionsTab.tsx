@@ -9,6 +9,7 @@ import { IconButton, Table, Text } from "@itwin/itwinui-react";
 import React from "react";
 import { CellProps } from "react-table";
 
+import { ChangesetClient } from "../../../clients/changesetClient";
 import { useConfig } from "../../../common/configContext";
 import { Changeset, NamedVersion, VersionTableData } from "../../../models";
 import { UpdateVersionModal } from "../../CreateUpdateVersion/UpdateVersionModal/UpdateVersionModal";
@@ -20,7 +21,8 @@ export type VersionsTabProps = {
   loadMoreVersions: () => void;
   onViewClick?: (version: NamedVersion) => void;
   tableData: VersionTableData[];
-  subRowsLoaded: boolean;
+  changesetClient: ChangesetClient;
+  setRelatedChangesets: (versionId: string, changesets: Changeset[]) => void;
 };
 
 const isNamedVersion = (
@@ -36,10 +38,11 @@ const VersionsTab = (props: VersionsTabProps) => {
     loadMoreVersions,
     onViewClick,
     tableData,
-    subRowsLoaded,
+    changesetClient,
+    setRelatedChangesets,
   } = props;
 
-  const { stringsOverrides } = useConfig();
+  const { stringsOverrides, imodelId } = useConfig();
 
   const [currentVersion, setCurrentVersion] = React.useState<
     NamedVersion | undefined
@@ -47,40 +50,61 @@ const VersionsTab = (props: VersionsTabProps) => {
   const [isUpdateVersionModalOpen, setIsUpdateVersionModalOpen] =
     React.useState(false);
 
+  async function fetchIncludedChangesets(lastIndex: number) {
+    try {
+      return await changesetClient.get(imodelId, {
+        top: 10,
+        lastIndex: lastIndex,
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
   const renderDateColumn = React.useMemo(
     () => (row: VersionTableData | Changeset) => {
       if (isNamedVersion(row)) {
         return (
           <Text>
-            {new Date((row.version as any)["createdDateTime"]).toLocaleString()}
+            {new Date(row.version["createdDateTime"]).toLocaleString()}
           </Text>
         );
-      } else if (subRowsLoaded) {
-        return (
-          <Text>{new Date((row as any)["pushDateTime"]).toLocaleString()}</Text>
+      } else {
+        const content = row["pushDateTime"];
+        return content !== "" ? (
+          <Text>{new Date(row["pushDateTime"]).toLocaleString()}</Text>
+        ) : (
+          <Text isSkeleton={true}>Loading Date</Text>
         );
       }
-      return <Text isSkeleton={true}>Loading Date</Text>;
     },
-    [subRowsLoaded]
+    []
   );
 
   const generateCellContent = React.useMemo(
-    () => (row: VersionTableData | Changeset, columnAccessor: string) => {
-      if (
-        columnAccessor === "createdDateTime" ||
-        columnAccessor === "pushDateTime"
-      ) {
-        return renderDateColumn(row);
-      }
-      if (isNamedVersion(row)) {
-        return <Text>{(row.version as any)[columnAccessor]}</Text>;
-      } else if (subRowsLoaded) {
-        return <Text>{(row as any)[columnAccessor]}</Text>;
-      }
-      return <Text isSkeleton={true}>Loading {columnAccessor}</Text>;
-    },
-    [subRowsLoaded]
+    () =>
+      (
+        row: VersionTableData | Changeset,
+        columnAccessor: keyof NamedVersion | keyof Changeset
+      ) => {
+        if (["createdDateTime", "pushDateTime"].includes(columnAccessor)) {
+          return renderDateColumn(row);
+        }
+
+        if (isNamedVersion(row)) {
+          return (
+            <Text>{row.version[columnAccessor as keyof NamedVersion]}</Text>
+          );
+        } else {
+          const cellContent = row[columnAccessor as keyof Changeset];
+          return cellContent !== "" ? (
+            <Text>{cellContent}</Text>
+          ) : (
+            <Text isSkeleton={true}>Loading</Text>
+          );
+        }
+      },
+    [renderDateColumn]
   );
 
   const columns = React.useMemo(() => {
@@ -202,6 +226,38 @@ const VersionsTab = (props: VersionsTabProps) => {
     stringsOverrides.messageNoNamedVersions,
   ]);
 
+  const onExpandRow = (row?: VersionTableData[]) => {
+    row?.forEach((r) => {
+      if (!r.subRowsLoaded) {
+        fetchIncludedChangesets(r.version.changesetIndex)
+          .then((changesets) => {
+            const relatedChangesets: Changeset[] = [];
+            if (changesets !== undefined) {
+              for (const change of changesets) {
+                if (
+                  (change.index === r.version.changesetIndex &&
+                    change._links.namedVersion !== null) ||
+                  (change.index < r.version.changesetIndex &&
+                    change._links.namedVersion === null)
+                ) {
+                  relatedChangesets.push(change);
+                } else if (
+                  change.index < r.version.changesetIndex &&
+                  change._links.namedVersion !== null
+                ) {
+                  break;
+                }
+              }
+            }
+            setRelatedChangesets(r.version.id ?? "", relatedChangesets);
+          })
+          .catch(() => {
+            console.error("Failed to get Changesets");
+          });
+      }
+    });
+  };
+
   return (
     <>
       <Table<VersionTableData>
@@ -214,6 +270,8 @@ const VersionsTab = (props: VersionsTabProps) => {
         emptyTableContent={emptyTableContent}
         onBottomReached={loadMoreVersions}
         className="iac-versions-table"
+        onExpand={onExpandRow}
+        autoResetExpanded={false}
       />
       {isUpdateVersionModalOpen && (
         <UpdateVersionModal

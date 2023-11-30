@@ -5,6 +5,7 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import React from "react";
 
+import { ChangesetClient } from "../../../clients/changesetClient";
 import { ConfigProvider } from "../../../common/configContext";
 import {
   MOCKED_CONFIG_PROPS,
@@ -23,7 +24,8 @@ const renderComponent = (initialProps?: Partial<VersionsTabProps>) => {
     loadMoreVersions: jest.fn(),
     onViewClick: jest.fn(),
     tableData: MockedVersionTableData(),
-    subRowsLoaded: true,
+    changesetClient: new ChangesetClient("token"),
+    setRelatedChangesets: jest.fn(),
     ...initialProps,
   };
   return render(
@@ -88,7 +90,13 @@ describe("VersionsTab", () => {
 
   it("should show included changesets on expand", () => {
     const { container } = renderComponent({
-      tableData: [{ version: MockedVersion(), subRows: [MockedChangeset(1)] }],
+      tableData: [
+        {
+          version: MockedVersion(),
+          subRows: [MockedChangeset(1)],
+          subRowsLoaded: true,
+        },
+      ],
     });
     // check on expand changeset data must be there
     const rowgroup = container.querySelector('[role="rowgroup"]') as Element;

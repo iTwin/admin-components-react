@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { Changeset } from "./changeset";
 
-export type NamedVersion = {
+export type NamedVersionBackend = {
   id: string;
   displayName: string;
   name: string;
@@ -18,11 +18,15 @@ export type NamedVersion = {
       href: string;
     };
   };
-  createdBy: string;
   changesetIndex: number;
+};
+
+export type NamedVersion = NamedVersionBackend & {
+  createdBy: string;
 };
 
 export type VersionTableData = {
   version: NamedVersion;
   subRows: Changeset[];
+  subRowsLoaded: boolean;
 };
