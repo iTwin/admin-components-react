@@ -7,10 +7,13 @@ export class UrlBuilder {
     skip?: number;
     top?: number;
     orderBy?: string;
+    lastIndex?: number;
   }) => {
     const query = Object.entries(params)
       .filter(([key, value]) => !!value)
-      .map(([key, value]) => `$${key}=${value}`)
+      .map(([key, value]) =>
+        key === "lastIndex" ? `${key}=${value}` : `$${key}=${value}`
+      )
       .join("&");
     return query ? `?${query}` : "";
   };

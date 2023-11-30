@@ -5,4 +5,5 @@
 export type RequestOptions = {
   skip?: number;
   top?: number;
+  lastIndex?: number;
 };

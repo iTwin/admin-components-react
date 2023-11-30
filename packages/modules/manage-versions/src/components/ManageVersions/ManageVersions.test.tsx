@@ -71,6 +71,7 @@ describe("ManageVersions", () => {
       expect(cells.length).toBe(5);
       expect(cells[0].textContent).toContain(MockedVersion(index).name);
       expect(cells[1].textContent).toContain(MockedVersion(index).description);
+
       expect(cells[2].textContent).toContain(MockedVersion(index).createdBy);
       expect(cells[3].textContent).toContain(
         new Date(MockedVersion(index).createdDateTime).toLocaleString()
@@ -135,9 +136,6 @@ describe("ManageVersions", () => {
     );
 
     screen.getByText(defaultStrings.changes).click();
-    await waitForElementToBeRemoved(() =>
-      container.querySelector(".iui-progress-indicator-radial")
-    );
 
     expect(mockGetVersions).toHaveBeenCalledTimes(1);
     expect(mockGetChangesets).toHaveBeenCalledTimes(1);
@@ -237,9 +235,6 @@ describe("ManageVersions", () => {
     expect(mockCreateVersion).toHaveBeenCalled();
 
     screen.getByText(defaultStrings.changes).click();
-    await waitForElementToBeRemoved(() =>
-      container.querySelector(".iui-progress-indicator-radial")
-    );
 
     expect(mockGetChangesets).toHaveBeenCalledTimes(2);
   });

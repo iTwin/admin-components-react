@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/manage-versions-react",
+      "comment": "Show included changesets in Named versions table on expand rows",
+      "type": "minor"
+    }
+  ],
+  "packageName": "@itwin/manage-versions-react"
+}
