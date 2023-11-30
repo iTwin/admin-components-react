@@ -35,7 +35,6 @@ export function IModelDescription() {
       }
       autoComplete="off"
       wrapperProps={{ className: "iac-model-wrapper-element" }}
-      className="iac-imodel-input-element"
     />
   );
 }
