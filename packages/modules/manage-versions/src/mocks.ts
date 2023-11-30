@@ -34,6 +34,7 @@ export const MockedVersion = (
       },
     },
     createdBy: "Test User",
+    changesetIndex: index,
     ...props,
   };
 };
@@ -48,7 +49,7 @@ export const MockedChangeset = (
 ): Changeset => {
   return {
     id: `ch${index}`,
-    index: `${index}`,
+    index: index,
     displayName: `${index}`,
     description: `ch_description${index}`,
     pushDateTime: MOCKED_DATE,
@@ -63,6 +64,16 @@ export const MockedChangeset = (
 
 export const MockedChangesetList = (count = 3) => {
   return [...new Array(count)].map((_, index) => MockedChangeset(index));
+};
+
+export const MockedVersionTableData = () => {
+  return [
+    {
+      version: MockedVersion(),
+      subRows: [MockedChangeset(1)],
+      subRowsLoaded: false,
+    },
+  ];
 };
 
 export const MockedUsers = () => {

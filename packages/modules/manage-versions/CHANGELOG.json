@@ -2,6 +2,18 @@
   "name": "@itwin/manage-versions-react",
   "entries": [
     {
+      "version": "1.2.0",
+      "tag": "@itwin/manage-versions-react_v1.2.0",
+      "date": "Thu, 30 Nov 2023 12:17:00 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Show included changesets in Named versions table on expand rows"
+          }
+        ]
+      }
+    },
+    {
       "version": "1.1.0",
       "tag": "@itwin/manage-versions-react_v1.1.0",
       "date": "Thu, 16 Nov 2023 11:52:43 GMT",

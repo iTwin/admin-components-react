@@ -73,6 +73,7 @@ describe("ManageVersions", () => {
       expect(cells.length).toBe(5);
       expect(cells[0].textContent).toContain(MockedVersion(index).name);
       expect(cells[1].textContent).toContain(MockedVersion(index).description);
+
       expect(cells[2].textContent).toContain(MockedVersion(index).createdBy);
       expect(cells[3].textContent).toContain(
         new Date(MockedVersion(index).createdDateTime).toLocaleString()
@@ -105,7 +106,9 @@ describe("ManageVersions", () => {
     changesetRows.forEach((row, index) => {
       const cells = row.querySelectorAll("._iui3-table-cell");
       expect(cells.length).toBe(6);
-      expect(cells[0].textContent).toContain(MockedChangeset(index).index);
+      expect(cells[0].textContent).toContain(
+        MockedChangeset(index).index.toString()
+      );
       expect(cells[1].textContent).toContain(
         MockedChangeset(index).description
       );
@@ -322,7 +325,9 @@ it("should render with changesets tab opened", async () => {
   changesetRows.forEach((row, index) => {
     const cells = row.querySelectorAll("._iui3-table-cell");
     expect(cells.length).toBe(6);
-    expect(cells[0].textContent).toContain(MockedChangeset(index).index);
+    expect(cells[0].textContent).toContain(
+      MockedChangeset(index).index.toString()
+    );
     expect(cells[1].textContent).toContain(MockedChangeset(index).description);
     expect(cells[2].textContent).toContain(MockedChangeset(index).createdBy);
     expect(cells[3].textContent).toContain(
