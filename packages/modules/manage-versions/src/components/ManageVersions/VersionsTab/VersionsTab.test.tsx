@@ -39,11 +39,13 @@ describe("VersionsTab", () => {
   it("should show data in versions table", () => {
     const onViewClick = jest.fn();
     const { container } = renderComponent({ onViewClick });
-    const rows = container.querySelectorAll(".iui-table-body .iui-table-row");
+    const rows = container.querySelectorAll(
+      "div[role='rowgroup'] > div[role='row']"
+    );
     expect(rows.length).toBe(1);
 
     rows.forEach((row, index) => {
-      const cells = row.querySelectorAll(".iui-table-cell");
+      const cells = row.querySelectorAll("div[role='cell']");
       expect(cells.length).toBe(6);
       expect(cells[0].textContent).toContain(MockedVersion().name);
       expect(cells[1].textContent).toContain(MockedVersion().description);
@@ -52,7 +54,8 @@ describe("VersionsTab", () => {
         new Date(MockedVersion().createdDateTime).toLocaleString()
       );
       expect(cells[4].textContent).toContain(defaultStrings.view);
-      fireEvent.click(cells[4].querySelector(".iui-anchor") as HTMLElement);
+      const viewSpan = screen.getByText("View");
+      fireEvent.click(viewSpan);
 
       within(cells[5] as HTMLElement).getByTitle(
         defaultStrings.updateNamedVersion
@@ -63,7 +66,9 @@ describe("VersionsTab", () => {
 
   it("should not show view column and name should not be clickable when onViewClick is not provided", () => {
     const { container } = renderComponent({ onViewClick: undefined });
-    const rows = container.querySelectorAll(".iui-table-body .iui-table-row");
+    const rows = container.querySelectorAll(
+      "[role='rowgroup'] > div[role='row']"
+    );
     expect(rows.length).toBe(1);
     expect(screen.queryAllByText(defaultStrings.view).length).toBe(0);
   });
@@ -104,7 +109,9 @@ describe("VersionsTab", () => {
     const cell = container.querySelector('[role="cell"]') as Element;
     expect(rowElements.length).toBe(1);
     fireEvent.click(
-      cell.querySelector(".iui-table-row-expander") as HTMLElement
+      cell.querySelector(
+        "div[role='row'] > div[role='cell'] > button[type='button']:first-child"
+      ) as HTMLElement
     );
     const rowsOnExpand = rowgroup.querySelectorAll('[role="row"]');
     expect(rowsOnExpand.length).toBe(2);
@@ -120,7 +127,8 @@ describe("VersionsTab", () => {
           new Date(MockedVersion().createdDateTime).toLocaleString()
         );
         expect(cells[4].textContent).toContain(defaultStrings.view);
-        fireEvent.click(cells[4].querySelector(".iui-anchor") as HTMLElement);
+        const viewSpan = screen.getByText("View");
+        fireEvent.click(viewSpan);
         const updateNamedVersionButton = within(
           cells[5] as HTMLElement
         ).queryByTitle(defaultStrings.updateNamedVersion);
