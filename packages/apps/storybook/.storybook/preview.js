@@ -39,6 +39,6 @@ export const decorators = [
       channel.on("DARK_MODE", setDark);
     }, []);
 
-    return <ThemeProvider theme={dark ? "dark" : "light"} ><Story /></ThemeProvider>
+    return <ThemeProvider style={{ background: "transparent" }} theme={dark ? "dark" : "light"} ><Story /></ThemeProvider>
   },
 ];

@@ -49,6 +49,7 @@ export const IModelThumbnail = ({
       className={classNames("iac-thumbnail", className)}
       style={{
         cursor: onClick ? "pointer" : "auto",
+        width: "100%",
       }}
       id="base64image"
       src={thumbnail ?? ""}

@@ -5,6 +5,7 @@
 import "./BaseIModel.scss";
 
 import {
+  Label,
   LabeledInput,
   ProgressRadial,
   Text,
@@ -225,7 +226,7 @@ export function BaseIModelPage(props: BaseIModelProps) {
   const PointInput = (label: string, coordinate: keyof iModelExtent) => {
     return (
       <div className="iui-input-container">
-        <div className="iui-label">{label}</div>
+        <Label>{label}</Label>
         <div className="iac-extent-inputs-container">
           <LabeledInput
             label={updatedStrings.latitude}
