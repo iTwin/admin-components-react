@@ -83,10 +83,11 @@ export const useIModelTableConfig = ({
             disableSortBy: true,
             maxWidth: 50,
             Cell: (props: CellProps<IModelFull>) => {
-              const moreOptions = () => {
+              const moreOptions = (close: () => void) => {
                 const options = _buildManagedContextMenuOptions(
                   iModelActions,
-                  props.row.original
+                  props.row.original,
+                  close
                 );
                 return options !== undefined ? options : [];
               };
