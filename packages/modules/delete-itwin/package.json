@@ -1,6 +1,6 @@
 {
   "name": "@itwin/delete-itwin-react",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": "Bentley Systems, Inc.",
   "license": "MIT",
   "description": "Component to delete the selected iTwin.",
