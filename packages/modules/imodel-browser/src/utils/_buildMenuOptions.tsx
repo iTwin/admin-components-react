@@ -9,7 +9,7 @@ export interface ContextMenuBuilderItem<T = any>
   extends Omit<MenuItemProps, "onClick" | "value"> {
   key: string;
   visible?: boolean | ((value: T) => boolean);
-  onClick?: (value: T, closeMenu?: () => void) => void | undefined;
+  onClick?: ((value?: unknown) => void) | undefined;
 }
 
 /** Build MenuItem array for the value for each provided options
@@ -28,7 +28,10 @@ export const _buildManagedContextMenuOptions: <T>(
       return (
         <MenuItem
           {...contextMenuProps}
-          onClick={() => onClick?.(value, closeMenu)}
+          onClick={() => {
+            closeMenu?.();
+            onClick?.(value);
+          }}
           key={key}
           value={value}
         />
