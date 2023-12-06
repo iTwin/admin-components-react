@@ -81,8 +81,8 @@ export type ManageVersionsProps = {
 };
 
 export enum ManageVersionsTabs {
-  Versions = "NamedVersion",
-  Changes = "Changes",
+  Versions = 0,
+  Changes = 1,
 }
 
 const NAMED_VERSION_TOP = 100;
@@ -368,20 +368,20 @@ export const ManageVersions = (props: ManageVersionsProps) => {
           <Tabs.Wrapper
             orientation="horizontal"
             type="borderless"
-            onValueChange={(value) => changeTab(value as ManageVersionsTabs)}
+            onValueChange={(value) => changeTab(Number(value))}
           >
             <Tabs.TabList>
               <Tabs.Tab
-                value={ManageVersionsTabs.Versions}
+                value={ManageVersionsTabs.Versions.toString()}
                 label={stringsOverrides.namedVersions}
               />
               <Tabs.Tab
-                value={ManageVersionsTabs.Changes}
+                value={ManageVersionsTabs.Changes.toString()}
                 label={stringsOverrides.changes}
               />
             </Tabs.TabList>
 
-            <Tabs.Panel value={ManageVersionsTabs.Versions}>
+            <Tabs.Panel value={ManageVersionsTabs.Versions.toString()}>
               <VersionsTab
                 status={versionStatus}
                 onVersionUpdated={refreshVersions}
@@ -393,7 +393,7 @@ export const ManageVersions = (props: ManageVersionsProps) => {
               />
             </Tabs.Panel>
 
-            <Tabs.Panel value={ManageVersionsTabs.Changes}>
+            <Tabs.Panel value={ManageVersionsTabs.Changes.toString()}>
               <ChangesTab
                 changesets={changesets ?? []}
                 status={changesetStatus}

@@ -3,7 +3,7 @@
     {
       "packageName": "@itwin/create-imodel-react",
       "comment": "Updated itwinui-react to 3.x",
-      "type": "major"
+      "type": "minor"
     }
   ],
   "packageName": "@itwin/create-imodel-react"

@@ -3,7 +3,7 @@
     {
       "packageName": "@itwin/manage-versions-react",
       "comment": "Updated itwinui-react to 3.x",
-      "type": "major"
+      "type": "minor"
     }
   ],
   "packageName": "@itwin/manage-versions-react"

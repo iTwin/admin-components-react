@@ -3,7 +3,7 @@
     {
       "packageName": "@itwin/delete-itwin-react",
       "comment": "Updated itwinui-react to 3.x",
-      "type": "major"
+      "type": "minor"
     }
   ],
   "packageName": "@itwin/delete-itwin-react"
