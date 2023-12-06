@@ -4,7 +4,6 @@
  *--------------------------------------------------------------------------------------------*/
 import { BrowserAuthorizationCallbackHandler } from "@bentley/frontend-authorization-client";
 
-// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
 BrowserAuthorizationCallbackHandler.handleSigninCallback(
   window.location.toString()
 ).catch(console.log);
