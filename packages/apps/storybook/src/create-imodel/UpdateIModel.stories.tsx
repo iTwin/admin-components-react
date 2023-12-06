@@ -39,11 +39,7 @@ root.style.height = "90vh";
 
 export const Update: Story<UpdateIModelProps> = withAccessTokenOverride(
   (args) => {
-    return (
-      <>
-        <UpdateIModel {...args} />
-      </>
-    );
+    return <UpdateIModel {...args} />;
   }
 );
 

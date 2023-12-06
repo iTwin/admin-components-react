@@ -2,6 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+
 import {
   ButtonBar,
   CreateIModel as ExternalComponent,
@@ -39,11 +40,7 @@ root.style.height = "90vh";
 
 export const Create: Story<CreateIModelProps> = withAccessTokenOverride(
   (args) => {
-    return (
-      <>
-        <CreateIModel {...args} />
-      </>
-    );
+    return <CreateIModel {...args} />;
   }
 );
 
@@ -71,40 +68,38 @@ export const WithExtentMap: Story<CreateIModelProps> = withAccessTokenOverride(
 export const CreateIModelCustomized: Story<CreateIModelProps> =
   withAccessTokenOverride((args) => {
     return (
-      <>
-        <CreateIModel {...args}>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "8px",
-              alignItems: "center",
-            }}
-          >
-            <IModelName />
-            <LabeledInput
-              label={"Sub title"}
-              name="test"
-              value={""}
-              onChange={() => undefined}
-              autoComplete="off"
-              className="iac-imodel-input-element"
-            />
-            <LabeledSelect<number>
-              label="Select version"
-              options={[
-                { value: 1, label: "Item #1" },
-                { value: 2, label: "Item #2", disabled: true },
-                { value: 3, label: "Item #3" },
-              ]}
-              onChange={() => undefined}
-              className="iac-imodel-input-element"
-            />
-            <IModelDescription />
-            <UploadImage />
-            <ButtonBar />
-          </div>
-        </CreateIModel>
-      </>
+      <CreateIModel {...args}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "8px",
+            alignItems: "center",
+          }}
+        >
+          <IModelName />
+          <LabeledInput
+            label={"Sub title"}
+            name="test"
+            value={""}
+            onChange={() => undefined}
+            autoComplete="off"
+            wrapperProps={{ className: "iac-model-wrapper-element" }}
+          />
+          <LabeledSelect
+            label="Select version"
+            options={[
+              { value: 1, label: "Item #1" },
+              { value: 2, label: "Item #2", disabled: true },
+              { value: 3, label: "Item #3" },
+            ]}
+            onChange={() => undefined}
+            wrapperProps={{ className: "iac-model-wrapper-element" }}
+          />
+          <IModelDescription />
+          <UploadImage />
+          <ButtonBar />
+        </div>
+      </CreateIModel>
     );
   });

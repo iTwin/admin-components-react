@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import "./IModelThumbnail.scss";
 
-import { Body } from "@itwin/itwinui-react";
+import { Text } from "@itwin/itwinui-react";
 import classNames from "classnames";
 import React from "react";
 import { useInView } from "react-intersection-observer";
@@ -49,6 +49,7 @@ export const IModelThumbnail = ({
       className={classNames("iac-thumbnail", className)}
       style={{
         cursor: onClick ? "pointer" : "auto",
+        width: "100%",
       }}
       id="base64image"
       src={thumbnail ?? ""}
@@ -56,10 +57,12 @@ export const IModelThumbnail = ({
       onClick={() => onClick?.(iModelId)}
     />
   ) : (
-    <Body
+    <Text
+      as="p"
+      variant="body"
       ref={ref}
       isSkeleton={true}
       style={{ height: "100%", width: "100%", margin: 0 }}
-    ></Body>
+    ></Text>
   );
 };
