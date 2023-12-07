@@ -2,6 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+import { toaster } from "@itwin/itwinui-react";
 import {
   fireEvent,
   render,
@@ -44,6 +45,7 @@ describe("ManageVersions", () => {
   const mockUpdateVersion = jest.spyOn(NamedVersionClient.prototype, "update");
   const mockGetChangesets = jest.spyOn(ChangesetClient.prototype, "get");
   const mockGetUsers = jest.spyOn(ChangesetClient.prototype, "getUsers");
+  const mockPositiveToast = jest.spyOn(toaster, "positive");
 
   const waitForSelectorToExist = async (selector: string) =>
     waitFor(() => expect(document.querySelector(selector)).not.toBeNull());
@@ -69,12 +71,13 @@ describe("ManageVersions", () => {
     versionRows.forEach((row, index) => {
       const cells = row.querySelectorAll(".iui-table-cell");
       expect(cells.length).toBe(5);
-      expect(cells[0].textContent).toContain(MockedVersion(index).name);
-      expect(cells[1].textContent).toContain(MockedVersion(index).description);
+      const mockedVersion = MockedVersion(versionRows.length - 1 - index);
+      expect(cells[0].textContent).toContain(mockedVersion.name);
+      expect(cells[1].textContent).toContain(mockedVersion.description);
 
-      expect(cells[2].textContent).toContain(MockedVersion(index).createdBy);
+      expect(cells[2].textContent).toContain(mockedVersion.createdBy);
       expect(cells[3].textContent).toContain(
-        new Date(MockedVersion(index).createdDateTime).toLocaleString()
+        new Date(mockedVersion.createdDateTime).toLocaleString()
       );
       within(cells[4] as HTMLElement).getByTitle(
         defaultStrings.updateNamedVersion
@@ -260,17 +263,38 @@ describe("ManageVersions", () => {
 
     await waitForSelectorToExist("input");
     const nameInput = document.querySelector("input") as HTMLInputElement;
+    const descriptionInput = document.querySelector(
+      "textarea[name='description']"
+    ) as HTMLTextAreaElement;
     expect(nameInput).toBeTruthy();
     fireEvent.change(nameInput, { target: { value: "test name" } });
-
+    fireEvent.change(descriptionInput, {
+      target: { value: "test description" },
+    });
     screen.getByText("Update").click();
 
+    await waitForElementToBeRemoved(() =>
+      document.querySelector(".iui-progress-indicator-overlay")
+    );
+
+    expect(mockUpdateVersion).toHaveBeenCalledWith(
+      MOCKED_IMODEL_ID,
+      MockedVersion(2).id,
+      {
+        name: "test name",
+        description: "test description",
+      }
+    );
     const versionCells = container.querySelectorAll(
       ".iui-table-body .iui-table-row:first-child .iui-table-cell"
     );
+    expect(mockPositiveToast).toHaveBeenCalledWith(
+      'Named Version "test name" was successfully updated.',
+      { hasCloseButton: true }
+    );
     expect(versionCells.length).toBe(5);
-    expect(versionCells[0].textContent).toEqual(MockedVersion(0).name);
-    expect(versionCells[1].textContent).toEqual(MockedVersion(0).description);
+    expect(versionCells[0].textContent).toEqual("test name");
+    expect(versionCells[1].textContent).toEqual("test description");
     expect(versionCells[2].textContent).toEqual(MockedVersion(0).createdBy);
     expect(versionCells[3].textContent).toEqual(
       new Date(MockedVersion(0).createdDateTime).toLocaleString()
@@ -278,7 +302,7 @@ describe("ManageVersions", () => {
     within(versionCells[4] as HTMLElement).getByTitle(
       defaultStrings.updateNamedVersion
     );
-    expect(mockGetVersions).toHaveBeenCalledTimes(1);
+    expect(mockGetVersions).toHaveBeenCalledTimes(2);
     expect(mockUpdateVersion).toHaveBeenCalled();
   });
 });
