@@ -2,8 +2,10 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { MenuItem, MenuItemProps } from "@itwin/itwinui-react";
+import { MenuItem } from "@itwin/itwinui-react";
 import React from "react";
+
+type MenuItemProps = React.ComponentPropsWithoutRef<typeof MenuItem>;
 
 export interface ContextMenuBuilderItem<T = any>
   extends Omit<MenuItemProps, "onClick" | "value"> {

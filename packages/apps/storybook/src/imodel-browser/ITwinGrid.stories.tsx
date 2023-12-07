@@ -10,13 +10,12 @@ import {
   ITwinGridProps,
 } from "@itwin/imodel-browser-react";
 import {
-  Body,
   Button,
   Code,
   DropdownButton,
   MenuItem,
-  TileProps,
-  Title,
+  Text,
+  Tile,
 } from "@itwin/itwinui-react";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React, { PropsWithChildren } from "react";
@@ -25,6 +24,8 @@ import {
   accessTokenArgTypes,
   withAccessTokenOverride,
 } from "../utils/storyHelp";
+
+type TileProps = React.ComponentPropsWithoutRef<typeof Tile>;
 
 export const ITwinGrid = (props: ITwinGridProps) => (
   <ExternalComponent {...props} />
@@ -285,12 +286,12 @@ export const WithPostProcessCallback: Story<ITwinGridProps> =
     );
     return (
       <div>
-        <Title>Description</Title>
-        <Body>
+        <Text variant="title">Description</Text>
+        <Text as="p" variant="body">
           Property <Code>postProcessCallback</Code> allows modification of the
           data that is sent to the grid, here, we add a new tile at the start of
           the list for a 'New Project'.
-        </Body>
+        </Text>
         <ITwinGrid {...args} postProcessCallback={addStartTile} />
       </div>
     );

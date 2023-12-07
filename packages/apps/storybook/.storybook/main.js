@@ -1,3 +1,7 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
 const path = require("path");
 
 module.exports = {
@@ -9,6 +13,13 @@ module.exports = {
     "@itwin/storybook-auth-addon",
     "../src/addon/register.js",
   ],
+  reactOptions: { fastRefresh: true },
+  core: {
+    builder: 'webpack5',
+  },
+  features: {
+    babelModeV7: true,
+  },
   webpackFinal: async (config, { configType }) => {
     // `configType` has a value of 'DEVELOPMENT' or 'PRODUCTION'
     // You can change the configuration based on that.

@@ -2,6 +2,18 @@
   "name": "@itwin/manage-versions-react",
   "entries": [
     {
+      "version": "1.3.0",
+      "tag": "@itwin/manage-versions-react_v1.3.0",
+      "date": "Wed, 06 Dec 2023 19:34:14 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Updated itwinui-react to 3.x"
+          }
+        ]
+      }
+    },
+    {
       "version": "1.2.0",
       "tag": "@itwin/manage-versions-react_v1.2.0",
       "date": "Thu, 30 Nov 2023 12:17:00 GMT",

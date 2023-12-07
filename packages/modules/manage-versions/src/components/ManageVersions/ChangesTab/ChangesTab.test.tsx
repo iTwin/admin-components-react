@@ -34,13 +34,17 @@ const renderComponent = (initialProps?: Partial<ChangesTabProps>) => {
 describe("ChangesTab", () => {
   it("should show data in versions table", () => {
     const { container } = renderComponent();
-    const rows = container.querySelectorAll(".iui-table-body .iui-table-row");
+    const rows = container.querySelectorAll(
+      "._iui3-table-body ._iui3-table-row"
+    );
     expect(rows.length).toBe(3);
 
     rows.forEach((row, index) => {
-      const cells = row.querySelectorAll(".iui-table-cell");
+      const cells = row.querySelectorAll("._iui3-table-cell");
       expect(cells.length).toBe(6);
-      expect(cells[0].textContent).toContain(MockedChangeset(index).index);
+      expect(cells[0].textContent).toContain(
+        MockedChangeset(index).index.toString()
+      );
       expect(cells[1].textContent).toContain(
         MockedChangeset(index).description
       );
@@ -74,7 +78,7 @@ describe("ChangesTab", () => {
       status: RequestStatus.InProgress,
     });
     expect(
-      container.querySelector(".iui-progress-indicator-radial")
+      container.querySelector("._iui3-progress-indicator-radial")
     ).toBeTruthy();
   });
 
@@ -86,7 +90,9 @@ describe("ChangesTab", () => {
         }),
       ],
     });
-    const rows = container.querySelectorAll(".iui-table-body .iui-table-row");
+    const rows = container.querySelectorAll(
+      "._iui3-table-body ._iui3-table-row"
+    );
     expect(rows.length).toBe(1);
 
     const createVersionIcon = queryByTitle(defaultStrings.createNamedVersion);

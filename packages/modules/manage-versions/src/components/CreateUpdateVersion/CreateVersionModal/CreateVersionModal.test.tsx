@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { toaster } from "@itwin/itwinui-react";
+import { useToaster } from "@itwin/itwinui-react";
 import {
   fireEvent,
   render,
@@ -25,6 +25,19 @@ import {
   CreateVersionModalProps,
 } from "./CreateVersionModal";
 
+jest.mock("@itwin/itwinui-react", () => {
+  const actual = jest.requireActual("@itwin/itwinui-react");
+
+  return {
+    ...actual,
+    useToaster: jest.fn().mockReturnValue({
+      positive: jest.fn(),
+      negative: jest.fn(),
+      closeAll: jest.fn(),
+    }),
+  };
+});
+
 const renderComponent = (initialProps?: Partial<CreateVersionModalProps>) => {
   const props = {
     onClose: jest.fn(),
@@ -41,6 +54,7 @@ const renderComponent = (initialProps?: Partial<CreateVersionModalProps>) => {
 };
 
 describe("CreateVersionModal", () => {
+  const toaster = useToaster();
   const mockCreateVersion = jest.spyOn(NamedVersionClient.prototype, "create");
   const mockPositiveToast = jest.spyOn(toaster, "positive");
   const mockNegativeToast = jest.spyOn(toaster, "negative");
@@ -101,9 +115,7 @@ describe("CreateVersionModal", () => {
     });
     expect(onCreate).toHaveBeenCalled();
     expect(mockCloseAllToast).toHaveBeenCalled();
-    expect(
-      mockPositiveToast
-    ).toHaveBeenCalledWith(
+    expect(mockPositiveToast).toHaveBeenCalledWith(
       'Named Version "test name" was successfully created.',
       { hasCloseButton: true }
     );
