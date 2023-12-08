@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "comment": "Fix useToaster wrapping issue.",
+      "type": "patch",
+      "packageName": "@itwin/imodel-browser-react"
+    }
+  ],
+  "packageName": "@itwin/imodel-browser-react",
+  "email": "1904889+raplemie@users.noreply.github.com"
+}

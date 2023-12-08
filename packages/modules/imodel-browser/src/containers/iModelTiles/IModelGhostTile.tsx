@@ -10,7 +10,7 @@ import React from "react";
  */
 export const IModelGhostTile = () => {
   return (
-    <ThemeProvider theme="inherit">
+    <ThemeProvider>
       <Tile.Wrapper>
         <Tile.ThumbnailArea>
           <Text

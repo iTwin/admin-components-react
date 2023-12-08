@@ -202,7 +202,7 @@ export const IModelGrid = ({
             )}
           </GridStructure>
         ) : (
-          <ThemeProvider theme="inherit">
+          <ThemeProvider>
             <Table<{ [P in keyof IModelFull]: IModelFull[P] }>
               columns={columns}
               data={iModels}

@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "comment": "Fix useToaster wrapping issue.",
+      "type": "patch",
+      "packageName": "@itwin/delete-itwin-react"
+    }
+  ],
+  "packageName": "@itwin/delete-itwin-react",
+  "email": "1904889+raplemie@users.noreply.github.com"
+}

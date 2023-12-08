@@ -5,6 +5,7 @@
 import "./BaseIModel.scss";
 
 import {
+  InputGrid,
   Label,
   LabeledInput,
   ProgressRadial,
@@ -225,7 +226,7 @@ export function BaseIModelPage(props: BaseIModelProps) {
 
   const PointInput = (label: string, coordinate: keyof iModelExtent) => {
     return (
-      <div className="iui-input-container">
+      <InputGrid>
         <Label>{label}</Label>
         <div className="iac-extent-inputs-container">
           <LabeledInput
@@ -263,12 +264,12 @@ export function BaseIModelPage(props: BaseIModelProps) {
             max={180}
           />
         </div>
-      </div>
+      </InputGrid>
     );
   };
 
   return (
-    <ThemeProvider theme="inherit">
+    <ThemeProvider>
       <InnerIModelContext.Provider
         value={{
           nameString: updatedStrings?.nameString,

@@ -46,6 +46,14 @@ export type DeleteITwinProps = {
 };
 
 export const DeleteITwin = (props: DeleteITwinProps) => {
+  return (
+    <ThemeProvider>
+      <ThemeWrappedDeleteITwin {...props} />
+    </ThemeProvider>
+  );
+};
+
+function ThemeWrappedDeleteITwin(props: DeleteITwinProps) {
   const toaster = useToaster();
   const {
     iTwin,
@@ -100,7 +108,7 @@ export const DeleteITwin = (props: DeleteITwinProps) => {
   }, [onClose]);
 
   return (
-    <ThemeProvider theme="inherit">
+    <>
       <Modal
         isOpen={isOpen}
         style={{ maxWidth: 600 }}
@@ -127,9 +135,9 @@ export const DeleteITwin = (props: DeleteITwinProps) => {
         </ModalButtonBar>
       </Modal>
       {isLoading && <OverlaySpinner />}
-    </ThemeProvider>
+    </>
   );
-};
+}
 
 const OverlaySpinner = () => {
   return (

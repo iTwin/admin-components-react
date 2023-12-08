@@ -54,7 +54,7 @@ export const IModelTile = ({
         }
       : undefined;
   return (
-    <ThemeProvider theme="inherit">
+    <ThemeProvider>
       <Tile
         key={iModel?.id}
         name={<span title={iModel?.displayName}>{iModel?.displayName}</span>}

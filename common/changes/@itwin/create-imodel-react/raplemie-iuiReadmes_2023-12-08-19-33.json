@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "comment": "Fix useToaster wrapping issue.",
+      "type": "patch",
+      "packageName": "@itwin/create-imodel-react"
+    }
+  ],
+  "packageName": "@itwin/create-imodel-react",
+  "email": "1904889+raplemie@users.noreply.github.com"
+}
