@@ -11,7 +11,12 @@ import { CellProps } from "react-table";
 
 import { ChangesetClient } from "../../../clients/changesetClient";
 import { useConfig } from "../../../common/configContext";
-import { Changeset, NamedVersion, VersionTableData } from "../../../models";
+import {
+  Changeset,
+  localeDateWithTimeFormat,
+  NamedVersion,
+  VersionTableData,
+} from "../../../models";
 import { UpdateVersionModal } from "../../CreateUpdateVersion/UpdateVersionModal/UpdateVersionModal";
 import { RequestStatus } from "../types";
 
@@ -66,13 +71,13 @@ const VersionsTab = (props: VersionsTabProps) => {
       if (isNamedVersion(row)) {
         return (
           <Text>
-            {new Date(row.version["createdDateTime"]).toLocaleString()}
+            {localeDateWithTimeFormat(new Date(row.version["createdDateTime"]))}
           </Text>
         );
       } else {
         const content = row["pushDateTime"];
         return content !== "" ? (
-          <Text>{new Date(row["pushDateTime"]).toLocaleString()}</Text>
+          <Text>{localeDateWithTimeFormat(new Date(row["pushDateTime"]))}</Text>
         ) : (
           <Text isSkeleton={true}>Loading Date</Text>
         );

@@ -34,11 +34,13 @@ const renderComponent = (initialProps?: Partial<ChangesTabProps>) => {
 describe("ChangesTab", () => {
   it("should show data in versions table", () => {
     const { container } = renderComponent();
-    const rows = container.querySelectorAll(".iui-table-body .iui-table-row");
+    const rows = container.querySelectorAll(
+      "div[role='rowgroup'] > div[role='row']"
+    );
     expect(rows.length).toBe(3);
 
     rows.forEach((row, index) => {
-      const cells = row.querySelectorAll(".iui-table-cell");
+      const cells = row.querySelectorAll("div[role='cell']");
       expect(cells.length).toBe(6);
       expect(cells[0].textContent).toContain(MockedChangeset(index).index);
       expect(cells[1].textContent).toContain(
@@ -49,7 +51,7 @@ describe("ChangesTab", () => {
         MockedChangeset(index).synchronizationInfo.changedFiles.join(", ")
       );
       expect(cells[4].textContent).toContain(
-        new Date(MockedChangeset(index).pushDateTime).toLocaleString()
+        MockedChangeset(index).pushDateTime
       );
       within(cells[5] as HTMLElement).getByTitle(
         defaultStrings.createNamedVersion
@@ -86,7 +88,9 @@ describe("ChangesTab", () => {
         }),
       ],
     });
-    const rows = container.querySelectorAll(".iui-table-body .iui-table-row");
+    const rows = container.querySelectorAll(
+      "div[role='rowgroup'] > div[role='row']"
+    );
     expect(rows.length).toBe(1);
 
     const createVersionIcon = queryByTitle(defaultStrings.createNamedVersion);

@@ -50,9 +50,7 @@ describe("VersionsTab", () => {
       expect(cells[0].textContent).toContain(MockedVersion().name);
       expect(cells[1].textContent).toContain(MockedVersion().description);
       expect(cells[2].textContent).toContain(MockedVersion().createdBy);
-      expect(cells[3].textContent).toContain(
-        new Date(MockedVersion().createdDateTime).toLocaleString()
-      );
+      expect(cells[3].textContent).toContain(MockedVersion().createdDateTime);
       expect(cells[4].textContent).toContain(defaultStrings.view);
       const viewSpan = screen.getByText("View");
       fireEvent.click(viewSpan);
@@ -123,9 +121,7 @@ describe("VersionsTab", () => {
         expect(cells[0].textContent).toContain(MockedVersion().name);
         expect(cells[1].textContent).toContain(MockedVersion().description);
         expect(cells[2].textContent).toContain(MockedVersion().createdBy);
-        expect(cells[3].textContent).toContain(
-          new Date(MockedVersion().createdDateTime).toLocaleString()
-        );
+        expect(cells[3].textContent).toContain(MockedVersion().createdDateTime);
         expect(cells[4].textContent).toContain(defaultStrings.view);
         const viewSpan = screen.getByText("View");
         fireEvent.click(viewSpan);
@@ -145,7 +141,7 @@ describe("VersionsTab", () => {
           MockedChangeset(index).createdBy
         );
         expect(cells[3].textContent).toContain(
-          new Date(MockedChangeset(index).pushDateTime).toLocaleString()
+          MockedChangeset(index).pushDateTime
         );
         expect(cells[4].textContent).not.toContain(defaultStrings.view);
         const updateNamedVersionButton = within(
