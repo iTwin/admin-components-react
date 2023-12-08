@@ -2,7 +2,7 @@
   "changes": [
     {
       "packageName": "@itwin/manage-versions-react",
-      "comment": "Fixes named version order in table + reload subrows on create version",
+      "comment": "Fixes named version order and date format in table + reload subrows on create version",
       "type": "patch"
     }
   ],
