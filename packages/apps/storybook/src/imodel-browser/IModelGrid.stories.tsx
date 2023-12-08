@@ -10,14 +10,13 @@ import {
   IModelTileProps,
 } from "@itwin/imodel-browser-react";
 import {
-  Body,
   Button,
   Code,
   DropdownButton,
   LabeledInput,
   MenuItem,
-  TileProps,
-  Title,
+  Text,
+  Tile,
 } from "@itwin/itwinui-react";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
@@ -27,6 +26,8 @@ import {
   withAccessTokenOverride,
   withITwinIdOverride,
 } from "../utils/storyHelp";
+
+type TileProps = React.ComponentPropsWithoutRef<typeof Tile>;
 
 export const IModelGrid = (props: IModelGridProps) => (
   <ExternalComponent {...props} />
@@ -263,13 +264,13 @@ export const WithPostProcessCallback: Story<IModelGridProps> =
       );
       return (
         <div>
-          <Title>Description</Title>
-          <Body>
+          <Text variant="title">Description</Text>
+          <Text as="p" variant="body">
             Property <Code>postProcessCallback</Code> allows modification of the
             data that is sent to the grid, here, we either apply a filter, or
             add a new tile at the start of the list for a 'New iModel' when
             there is no filter defined.
-          </Body>
+          </Text>
           <LabeledInput
             label={"Name filter"}
             onChange={(event) => {
@@ -292,7 +293,7 @@ DefaultNoStateComponentOverride.args = {
   apiOverrides: { serverEnvironmentPrefix: "qa" },
   emptyStateComponent: (
     <div>
-      <Title>There are no iModels to show.</Title>
+      <Text variant="title">There are no iModels to show.</Text>
     </div>
   ),
 };

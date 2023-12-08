@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { Badge, ThemeProvider, Tile, TileProps } from "@itwin/itwinui-react";
+import { Badge, ThemeProvider, Tile } from "@itwin/itwinui-react";
 import React from "react";
 
 import ITwinIcon from "../../images/itwin.svg";
@@ -12,6 +12,8 @@ import {
   _buildManagedContextMenuOptions,
   ContextMenuBuilderItem,
 } from "../../utils/_buildMenuOptions";
+
+export type TileProps = React.ComponentPropsWithoutRef<typeof Tile>;
 
 export interface ITwinTileProps {
   /** iTwin to display */
@@ -77,12 +79,10 @@ export const ITwinTile = ({
         }
         moreOptions={moreOptions}
         thumbnail={
-          <span
+          <ITwinIcon
             onClick={() => onThumbnailClick?.(iTwin)}
             style={{ cursor: onThumbnailClick ? "pointer" : "auto" }}
-          >
-            <ITwinIcon />
-          </span>
+          />
         }
         {...(tileProps ?? {})}
       />

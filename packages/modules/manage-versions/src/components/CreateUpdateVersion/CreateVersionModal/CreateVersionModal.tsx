@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import "./CreateVersionModal.scss";
 
-import { toaster } from "@itwin/itwinui-react";
+import { Label, useToaster } from "@itwin/itwinui-react";
 import React from "react";
 
 import { NamedVersionClient } from "../../../clients/namedVersionClient";
@@ -20,15 +20,11 @@ export type CreateVersionModalProps = {
 };
 
 export const CreateVersionModal = (props: CreateVersionModalProps) => {
+  const toaster = useToaster();
   const { latestVersion, changeset, onClose, onCreate } = props;
 
-  const {
-    accessToken,
-    imodelId,
-    apiOverrides,
-    stringsOverrides,
-    log,
-  } = useConfig();
+  const { accessToken, imodelId, apiOverrides, stringsOverrides, log } =
+    useConfig();
 
   const [isLoading, setIsLoading] = React.useState(false);
 
@@ -85,7 +81,7 @@ export const CreateVersionModal = (props: CreateVersionModalProps) => {
       onActionClick={onCreateClick}
     >
       <div className="iui-input-container">
-        <div className="iui-label">Latest included change</div>
+        <Label>Latest included change</Label>
         <div className="iac-additional-info">
           <span>#{changeset.index}</span>
           <span>{new Date(changeset.pushDateTime).toLocaleString()}</span>
@@ -93,7 +89,7 @@ export const CreateVersionModal = (props: CreateVersionModalProps) => {
       </div>
       {latestVersion && (
         <div className="iui-input-container">
-          <div className="iui-label">Latest Named Version</div>
+          <Label>Latest Named Version</Label>
           <div className="iac-additional-info">
             <span className="iac-cell-ellipsis">{latestVersion.name}</span>
             <span>
