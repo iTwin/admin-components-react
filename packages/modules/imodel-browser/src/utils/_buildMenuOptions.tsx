@@ -19,12 +19,24 @@ export interface ContextMenuBuilderItem<T = any>
  */
 export const _buildManagedContextMenuOptions: <T>(
   options: ContextMenuBuilderItem<T>[] | undefined,
-  value: T
-) => JSX.Element[] | undefined = (options, value) =>
-  options
+  value: T,
+  closeMenu?: () => void
+) => JSX.Element[] | undefined = (options, value, closeMenu) => {
+  return options
     ?.filter?.(({ visible }) => {
       return typeof visible === "function" ? visible(value) : visible ?? true;
     })
-    .map(({ key, visible, ...contextMenuProps }) => {
-      return <MenuItem {...contextMenuProps} key={key} value={value} />;
+    .map(({ key, visible, onClick, ...contextMenuProps }) => {
+      return (
+        <MenuItem
+          {...contextMenuProps}
+          onClick={() => {
+            closeMenu?.();
+            onClick?.(value);
+          }}
+          key={key}
+          value={value}
+        />
+      );
     });
+};
