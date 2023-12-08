@@ -2,6 +2,18 @@
   "name": "@itwin/imodel-browser-react",
   "entries": [
     {
+      "version": "1.2.1",
+      "tag": "@itwin/imodel-browser-react_v1.2.1",
+      "date": "Fri, 08 Dec 2023 15:10:09 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Implement menu option close functionality"
+          }
+        ]
+      }
+    },
+    {
       "version": "1.2.0",
       "tag": "@itwin/imodel-browser-react_v1.2.0",
       "date": "Wed, 06 Dec 2023 19:34:14 GMT",

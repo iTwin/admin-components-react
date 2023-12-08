@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Wed, 06 Dec 2023 19:34:14 GMT and should not be manually modified.
+This log was last generated on Fri, 08 Dec 2023 15:10:09 GMT and should not be manually modified.
+
+## 1.2.1
+Fri, 08 Dec 2023 15:10:09 GMT
+
+### Patches
+
+- Implement menu option close functionality
 
 ## 1.2.0
 Wed, 06 Dec 2023 19:34:14 GMT
