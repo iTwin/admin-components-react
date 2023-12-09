@@ -399,15 +399,17 @@ export const ManageVersions = (props: ManageVersionsProps) => {
             </Tabs.TabList>
 
             <Tabs.Panel value={ManageVersionsTabs.Versions.toString()}>
-              <VersionsTab
-                status={versionStatus}
-                onVersionUpdated={refreshVersions}
-                loadMoreVersions={getMoreVersions}
-                onViewClick={onViewClick}
-                tableData={versionsTableData ?? []}
-                changesetClient={changesetClient}
-                setRelatedChangesets={setRelatedChangesets}
-              />
+              {_currentTab === ManageVersionsTabs.Versions && (
+                <VersionsTab
+                  status={versionStatus}
+                  onVersionUpdated={refreshVersions}
+                  loadMoreVersions={getMoreVersions}
+                  onViewClick={onViewClick}
+                  tableData={versionsTableData ?? []}
+                  changesetClient={changesetClient}
+                  setRelatedChangesets={setRelatedChangesets}
+                />
+              )}
             </Tabs.Panel>
 
             <Tabs.Panel value={ManageVersionsTabs.Changes.toString()}>
