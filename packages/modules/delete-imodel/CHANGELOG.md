@@ -1,6 +1,13 @@
 # Change Log - @itwin/delete-imodel-react
 
-This log was last generated on Wed, 21 Jun 2023 16:43:17 GMT and should not be manually modified.
+This log was last generated on Wed, 06 Dec 2023 19:34:14 GMT and should not be manually modified.
+
+## 1.1.0
+Wed, 06 Dec 2023 19:34:14 GMT
+
+### Minor changes
+
+- Updated itwinui-react to 3.x
 
 ## 1.0.0
 Wed, 21 Jun 2023 16:43:17 GMT

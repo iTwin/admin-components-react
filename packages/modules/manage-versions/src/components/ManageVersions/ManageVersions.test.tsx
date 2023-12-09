@@ -44,6 +44,10 @@ describe("ManageVersions", () => {
   const mockUpdateVersion = jest.spyOn(NamedVersionClient.prototype, "update");
   const mockGetChangesets = jest.spyOn(ChangesetClient.prototype, "get");
   const mockGetUsers = jest.spyOn(ChangesetClient.prototype, "getUsers");
+  const mockScrollTo = jest.fn();
+  Object.defineProperty(HTMLElement.prototype, "scrollTo", {
+    value: mockScrollTo,
+  });
 
   const waitForSelectorToExist = async (selector: string) =>
     waitFor(() => expect(document.querySelector(selector)).not.toBeNull());
@@ -59,10 +63,12 @@ describe("ManageVersions", () => {
     const { container } = renderComponent();
 
     await waitForElementToBeRemoved(() =>
-      container.querySelector(".iui-progress-indicator-radial")
+      container.querySelector(
+        ".iac-versions-table ._iui3-progress-indicator-radial"
+      )
     );
     const versionRows = container.querySelectorAll(
-      ".iui-table-body .iui-table-row"
+      ".iac-versions-table ._iui3-table-body ._iui3-table-row"
     );
     expect(versionRows.length).toBe(3);
 
@@ -91,17 +97,21 @@ describe("ManageVersions", () => {
     screen.getByText(defaultStrings.changes).click();
 
     await waitForElementToBeRemoved(() =>
-      container.querySelector(".iui-progress-indicator-radial")
+      container.querySelector(
+        ".iac-changes-table ._iui3-progress-indicator-radial"
+      )
     );
     const changesetRows = container.querySelectorAll(
-      "div[role='rowgroup'] > div[role='row']"
+      ".iac-changes-table div[role='rowgroup'] > div[role='row']"
     );
     expect(changesetRows.length).toBe(3);
 
     changesetRows.forEach((row, index) => {
       const cells = row.querySelectorAll("div[role='cell']");
       expect(cells.length).toBe(6);
-      expect(cells[0].textContent).toContain(MockedChangeset(index).index);
+      expect(cells[0].textContent).toContain(
+        MockedChangeset(index).index.toString()
+      );
       expect(cells[1].textContent).toContain(
         MockedChangeset(index).description
       );
@@ -131,10 +141,17 @@ describe("ManageVersions", () => {
     const { container } = renderComponent();
 
     await waitForElementToBeRemoved(() =>
-      container.querySelector(".iui-progress-indicator-radial")
+      container.querySelector(
+        ".iac-versions-table ._iui3-progress-indicator-radial"
+      )
     );
 
     screen.getByText(defaultStrings.changes).click();
+    await waitForElementToBeRemoved(() =>
+      container.querySelector(
+        ".iac-changes-table ._iui3-progress-indicator-radial"
+      )
+    );
 
     expect(mockGetVersions).toHaveBeenCalledTimes(1);
     expect(mockGetChangesets).toHaveBeenCalledTimes(1);
@@ -190,12 +207,16 @@ describe("ManageVersions", () => {
     const { container } = renderComponent();
 
     await waitForElementToBeRemoved(() =>
-      container.querySelector(".iui-progress-indicator-radial")
+      container.querySelector(
+        ".iac-versions-table ._iui3-progress-indicator-radial"
+      )
     );
 
     screen.getByText(defaultStrings.changes).click();
     await waitForElementToBeRemoved(() =>
-      container.querySelector(".iui-progress-indicator-radial")
+      container.querySelector(
+        ".iac-changes-table ._iui3-progress-indicator-radial"
+      )
     );
 
     const createVersionButtons = screen.getAllByTitle(
@@ -220,7 +241,7 @@ describe("ManageVersions", () => {
 
     screen.getByText("Create").click();
     await waitForElementToBeRemoved(() =>
-      document.querySelector(".iui-progress-indicator-overlay")
+      document.querySelector(".iac-version-modal")
     );
 
     const versionCells = container.querySelectorAll(
@@ -234,6 +255,11 @@ describe("ManageVersions", () => {
     expect(mockCreateVersion).toHaveBeenCalled();
 
     screen.getByText(defaultStrings.changes).click();
+    await waitForElementToBeRemoved(() =>
+      document.querySelector(
+        ".iac-changes-table ._iui3-progress-indicator-radial"
+      )
+    );
 
     expect(mockGetChangesets).toHaveBeenCalledTimes(2);
   });
@@ -248,7 +274,9 @@ describe("ManageVersions", () => {
     const { container } = renderComponent();
 
     await waitForElementToBeRemoved(() =>
-      container.querySelector(".iui-progress-indicator-radial")
+      container.querySelector(
+        ".iac-versions-table ._iui3-progress-indicator-radial"
+      )
     );
 
     const updateVersionButtons = screen.getAllByTitle(
@@ -305,7 +333,9 @@ it("should render with changesets tab opened", async () => {
   });
 
   await waitForElementToBeRemoved(() =>
-    container.querySelector(".iui-progress-indicator-radial")
+    container.querySelector(
+      ".iac-changes-table ._iui3-progress-indicator-radial"
+    )
   );
   const changesetRows = container.querySelectorAll(
     "div[role='rowgroup'] > div[role='row']"
@@ -315,7 +345,9 @@ it("should render with changesets tab opened", async () => {
   changesetRows.forEach((row, index) => {
     const cells = row.querySelectorAll("div[role='cell']");
     expect(cells.length).toBe(6);
-    expect(cells[0].textContent).toContain(MockedChangeset(index).index);
+    expect(cells[0].textContent).toContain(
+      MockedChangeset(index).index.toString()
+    );
     expect(cells[1].textContent).toContain(MockedChangeset(index).description);
     expect(cells[2].textContent).toContain(MockedChangeset(index).createdBy);
     expect(cells[3].textContent).toContain(
@@ -339,7 +371,9 @@ it("should trigger onTabChange", async () => {
 
   screen.getByText(defaultStrings.changes).click();
   await waitForElementToBeRemoved(() =>
-    container.querySelector(".iui-progress-indicator-radial")
+    container.querySelector(
+      ".iac-changes-table ._iui3-progress-indicator-radial"
+    )
   );
   expect(onTabChange).toHaveBeenCalledWith(ManageVersionsTabs.Changes);
 

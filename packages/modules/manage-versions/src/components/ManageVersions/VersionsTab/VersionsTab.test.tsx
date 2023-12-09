@@ -87,7 +87,7 @@ describe("VersionsTab", () => {
       status: RequestStatus.InProgress,
     });
     expect(
-      container.querySelector(".iui-progress-indicator-radial")
+      container.querySelector("._iui3-progress-indicator-radial")
     ).toBeTruthy();
   });
 

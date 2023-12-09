@@ -5,10 +5,11 @@
 import "./BaseIModel.scss";
 
 import {
+  Label,
   LabeledInput,
   ProgressRadial,
+  Text,
   ThemeProvider,
-  Title,
 } from "@itwin/itwinui-react";
 import React from "react";
 
@@ -225,7 +226,7 @@ export function BaseIModelPage(props: BaseIModelProps) {
   const PointInput = (label: string, coordinate: keyof iModelExtent) => {
     return (
       <div className="iui-input-container">
-        <div className="iui-label">{label}</div>
+        <Label>{label}</Label>
         <div className="iac-extent-inputs-container">
           <LabeledInput
             label={updatedStrings.latitude}
@@ -297,7 +298,7 @@ export function BaseIModelPage(props: BaseIModelProps) {
           {props.children ?? (
             <div className="iac-imodel-base">
               <div className="iac-content-container">
-                <Title>{updatedStrings.titleString}</Title>
+                <Text variant="title">{updatedStrings.titleString}</Text>
                 <div className="iac-imodel-properties-container">
                   <div className="iac-inputs-container">
                     <IModelName />

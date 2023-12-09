@@ -11,6 +11,7 @@ module.exports = {
     "[/\\\\]node_modules[/\\\\](?!@bentley/ui).+\\.(js|jsx|ts|tsx)$",
     "^.+\\.module\\.(css|sass|scss)$",
   ],
+  testEnvironment: "jsdom",
   moduleNameMapper: {
     "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga|svg?.+)$":
       "<rootDir>/src/tests/mocks/fileMock.ts",

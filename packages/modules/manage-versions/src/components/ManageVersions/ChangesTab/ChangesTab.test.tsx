@@ -42,7 +42,9 @@ describe("ChangesTab", () => {
     rows.forEach((row, index) => {
       const cells = row.querySelectorAll("div[role='cell']");
       expect(cells.length).toBe(6);
-      expect(cells[0].textContent).toContain(MockedChangeset(index).index);
+      expect(cells[0].textContent).toContain(
+        MockedChangeset(index).index.toString()
+      );
       expect(cells[1].textContent).toContain(
         MockedChangeset(index).description
       );
@@ -76,7 +78,7 @@ describe("ChangesTab", () => {
       status: RequestStatus.InProgress,
     });
     expect(
-      container.querySelector(".iui-progress-indicator-radial")
+      container.querySelector("._iui3-progress-indicator-radial")
     ).toBeTruthy();
   });
 

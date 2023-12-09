@@ -5,7 +5,7 @@
 import "./VersionsTab.scss";
 
 import { SvgEdit } from "@itwin/itwinui-icons-react";
-import { IconButton, Table, Text } from "@itwin/itwinui-react";
+import { Anchor, IconButton, Table, Text } from "@itwin/itwinui-react";
 import React from "react";
 import { CellProps } from "react-table";
 
@@ -197,12 +197,12 @@ const VersionsTab = (props: VersionsTabProps) => {
         width: 100,
         Cell: (props: CellProps<VersionTableData>) => {
           return isNamedVersion(props.row.original) ? (
-            <span
+            <Anchor
               className="iui-anchor"
               onClick={() => onViewClick(props.row.original.version)}
             >
               {stringsOverrides.view}
-            </span>
+            </Anchor>
           ) : (
             <></>
           );

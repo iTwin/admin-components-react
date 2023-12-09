@@ -8,6 +8,5 @@ export * from "./containers/iModelTiles/IModelGhostTile";
 export * from "./containers/iModelThumbnail/IModelThumbnail";
 export * from "./components/noResults/NoResults";
 export * from "./types";
-export { TileProps } from "@itwin/itwinui-react";
 export * from "./containers/ITwinGrid/ITwinGrid";
 export * from "./containers/ITwinGrid/ITwinTile";
