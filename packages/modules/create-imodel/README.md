@@ -9,22 +9,13 @@ Contains components to create or update an iModel.
 Starting with 1.1.0, the components in this package uses iTwinUI V3.
 
 The styles must be imported separately in the consuming application at the root of the application.
+If these styles are not imported, none of the component will be styled as iTwinUI V3 do not fallback on iTwinUI V2 styles. So this step is mandatory.
 
 ```tsx
 import "@itwin/itwinui-react/styles.css";
 ```
 
-Importing styles is straightforward if the application migrates to v3 first. However if the application is using an older version of iTwinUI, then you might need to use npm aliases to install `npm:@itwin/itwinui-react@3` under a different name and import `styles.css` from the aliased package.
-
-```tsx
-npm install itwinui-react-v3@npm:@itwin/itwinui-react@3
-```
-
-```tsx
-import 'itwinui-react-v3/styles.css';
-```
-
-If these styles are not imported, none of the component will be styled as iTwinUI V3 do not fallback on iTwinUI V2 styles. So this step is mandatory.
+Please refer to <https://github.com/iTwin/iTwinUI/wiki/iTwinUI-react-v3-migration-guide#styles>, __1322__/_Application using an older version?_  for more details if your application is using iTwinUI V2.
 
 ## Development
 
