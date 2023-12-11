@@ -269,69 +269,65 @@ export function BaseIModelPage(props: BaseIModelProps) {
   };
 
   return (
-    <ThemeProvider>
-      <InnerIModelContext.Provider
+    <InnerIModelContext.Provider
+      value={{
+        nameString: updatedStrings?.nameString,
+        nameTooLong: updatedStrings?.nameTooLong,
+        descriptionString: updatedStrings?.descriptionString,
+        descriptionTooLong: updatedStrings?.descriptionTooLong,
+        confirmButtonText: updatedStrings.confirmButton,
+        cancelButtonText: updatedStrings.cancelButton,
+      }}
+    >
+      <IModelContext.Provider
         value={{
-          nameString: updatedStrings?.nameString,
-          nameTooLong: updatedStrings?.nameTooLong,
-          descriptionString: updatedStrings?.descriptionString,
-          descriptionTooLong: updatedStrings?.descriptionTooLong,
-          confirmButtonText: updatedStrings.confirmButton,
-          cancelButtonText: updatedStrings.cancelButton,
+          imodel,
+          onPropChange,
+          onImageChange,
+          confirmAction: () =>
+            onActionClick?.({
+              ...imodel,
+              thumbnail: isThumbnailChanged ? imodel.thumbnail : undefined,
+              extent: imodel.extent,
+            }),
+          cancelAction: onClose,
+          isPrimaryButtonDisabled:
+            !isDataChanged() || !isDataValid() || isLoading,
         }}
       >
-        <IModelContext.Provider
-          value={{
-            imodel,
-            onPropChange,
-            onImageChange,
-            confirmAction: () =>
-              onActionClick?.({
-                ...imodel,
-                thumbnail: isThumbnailChanged ? imodel.thumbnail : undefined,
-                extent: imodel.extent,
-              }),
-            cancelAction: onClose,
-            isPrimaryButtonDisabled:
-              !isDataChanged() || !isDataValid() || isLoading,
-          }}
-        >
-          {props.children ?? (
-            <div className="iac-imodel-base">
-              <div className="iac-content-container">
-                <Text variant="title">{updatedStrings.titleString}</Text>
-                <div className="iac-imodel-properties-container">
-                  <div className="iac-inputs-container">
-                    <IModelName />
-                    <IModelDescription />
-                    {!extentComponent && (
-                      <>
-                        {PointInput(
-                          updatedStrings.southWestCoordinate,
-                          "southWest"
-                        )}
-                        {PointInput(
-                          updatedStrings.northEastCoordinate,
-                          "northEast"
-                        )}
-                      </>
-                    )}
-                    <UploadImage />
-                  </div>
-                  {extentComponent && (
-                    <div className="iac-extent-container">
-                      {extentComponent}
-                    </div>
+        {props.children ?? (
+          <div className="iac-imodel-base">
+            <div className="iac-content-container">
+              <Text variant="title">{updatedStrings.titleString}</Text>
+              <div className="iac-imodel-properties-container">
+                <div className="iac-inputs-container">
+                  <IModelName />
+                  <IModelDescription />
+                  {!extentComponent && (
+                    <>
+                      {PointInput(
+                        updatedStrings.southWestCoordinate,
+                        "southWest"
+                      )}
+                      {PointInput(
+                        updatedStrings.northEastCoordinate,
+                        "northEast"
+                      )}
+                    </>
                   )}
+                  <UploadImage />
                 </div>
+                {extentComponent && (
+                  <div className="iac-extent-container">{extentComponent}</div>
+                )}
               </div>
-              <ButtonBar />
-              {isLoading && <OverlaySpinner />}
             </div>
-          )}
-        </IModelContext.Provider>
-      </InnerIModelContext.Provider>
-    </ThemeProvider>
+            <ButtonBar />
+            {isLoading && <OverlaySpinner />}
+          </div>
+        )}
+      </IModelContext.Provider>
+    </InnerIModelContext.Provider>
   );
 }
 
