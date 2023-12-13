@@ -40,7 +40,9 @@ describe("ChangesTab", () => {
     rows.forEach((row, index) => {
       const cells = row.querySelectorAll(".iui-table-cell");
       expect(cells.length).toBe(6);
-      expect(cells[0].textContent).toContain(MockedChangeset(index).index);
+      expect(cells[0].textContent).toContain(
+        MockedChangeset(index).index.toString()
+      );
       expect(cells[1].textContent).toContain(
         MockedChangeset(index).description
       );
