@@ -7,7 +7,6 @@ import "./UploadImage.scss";
 import {
   FileUpload,
   FileUploadTemplate,
-  ThemeProvider,
   useToaster,
 } from "@itwin/itwinui-react";
 import React from "react";
@@ -45,15 +44,7 @@ export type UploadImageProps = {
   };
 };
 
-export function UploadImage(props: UploadImageProps) {
-  return (
-    <ThemeProvider>
-      <ThemeWrappedUploadImage {...props} />
-    </ThemeProvider>
-  );
-}
-
-function ThemeWrappedUploadImage({
+export function UploadImage({
   stringsOverrides,
   onChange,
   src: srcProp,
