@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { Tabs, ThemeProvider } from "@itwin/itwinui-react";
+import { Tab, Tabs, ThemeProvider } from "@itwin/itwinui-react";
 import React from "react";
 
 import { ChangesetClient } from "../../clients/changesetClient";
@@ -371,6 +371,33 @@ export const ManageVersions = (props: ManageVersionsProps) => {
     });
   };
 
+  const renderTabContent = (): JSX.Element | null => {
+    if (_currentTab === ManageVersionsTabs.Versions) {
+      return (
+        <VersionsTab
+          status={versionStatus}
+          onVersionUpdated={refreshVersions}
+          loadMoreVersions={getMoreVersions}
+          onViewClick={onViewClick}
+          tableData={versionsTableData ?? []}
+          changesetClient={changesetClient}
+          setRelatedChangesets={setRelatedChangesets}
+        />
+      );
+    } else if (_currentTab === ManageVersionsTabs.Changes) {
+      return (
+        <ChangesTab
+          changesets={changesets ?? []}
+          status={changesetStatus}
+          loadMoreChanges={getChangesets}
+          onVersionCreated={onVersionCreated}
+          latestVersion={latestVersion?.version}
+        />
+      );
+    }
+    return null;
+  };
+
   return (
     <ThemeProvider theme="inherit">
       <ConfigProvider
@@ -380,49 +407,23 @@ export const ManageVersions = (props: ManageVersionsProps) => {
         stringsOverrides={stringsOverrides}
         log={log}
       >
-        <div>
-          <Tabs.Wrapper
-            orientation="horizontal"
-            type="borderless"
-            onValueChange={(value) => changeTab(Number(value))}
-            value={_currentTab.toString()}
-          >
-            <Tabs.TabList>
-              <Tabs.Tab
-                value={ManageVersionsTabs.Versions.toString()}
-                label={stringsOverrides.namedVersions}
-              />
-              <Tabs.Tab
-                value={ManageVersionsTabs.Changes.toString()}
-                label={stringsOverrides.changes}
-              />
-            </Tabs.TabList>
-
-            <Tabs.Panel value={ManageVersionsTabs.Versions.toString()}>
-              {_currentTab === ManageVersionsTabs.Versions && (
-                <VersionsTab
-                  status={versionStatus}
-                  onVersionUpdated={refreshVersions}
-                  loadMoreVersions={getMoreVersions}
-                  onViewClick={onViewClick}
-                  tableData={versionsTableData ?? []}
-                  changesetClient={changesetClient}
-                  setRelatedChangesets={setRelatedChangesets}
-                />
-              )}
-            </Tabs.Panel>
-
-            <Tabs.Panel value={ManageVersionsTabs.Changes.toString()}>
-              <ChangesTab
-                changesets={changesets ?? []}
-                status={changesetStatus}
-                loadMoreChanges={getChangesets}
-                onVersionCreated={onVersionCreated}
-                latestVersion={latestVersion?.version}
-              />
-            </Tabs.Panel>
-          </Tabs.Wrapper>
-        </div>
+        <Tabs
+          labels={[
+            <Tab
+              key={ManageVersionsTabs.Versions}
+              label={stringsOverrides.namedVersions}
+            />,
+            <Tab
+              key={ManageVersionsTabs.Changes}
+              label={stringsOverrides.changes}
+            />,
+          ]}
+          onTabSelected={(index) => changeTab(index)}
+          type="borderless"
+          activeIndex={_currentTab}
+        >
+          {renderTabContent()}
+        </Tabs>
       </ConfigProvider>
     </ThemeProvider>
   );
