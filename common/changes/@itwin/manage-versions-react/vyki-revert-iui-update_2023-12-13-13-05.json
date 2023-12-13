@@ -3,7 +3,7 @@
     {
       "packageName": "@itwin/manage-versions-react",
       "comment": "Revert iTwinUI v3",
-      "type": "none"
+      "type": "patch"
     }
   ],
   "packageName": "@itwin/manage-versions-react"
