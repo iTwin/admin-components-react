@@ -6,7 +6,7 @@ import React from "react";
 import { ThemeProvider } from "@itwin/itwinui-react";
 import addons from "@storybook/addons";
 import { themes } from "@storybook/theming";
-import "@itwin/itwinui-react/styles.css";
+import "itwinui-react-v3/styles.css";
 
 import { darkTheme, lightTheme } from "./itwinTheme";
 

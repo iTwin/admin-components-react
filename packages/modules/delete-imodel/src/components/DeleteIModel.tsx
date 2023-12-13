@@ -47,6 +47,14 @@ export type DeleteIModelProps = {
 };
 
 export function DeleteIModel(props: DeleteIModelProps) {
+  return (
+    <ThemeProvider>
+      <ThemeWrappedDeleteIModel {...props} />
+    </ThemeProvider>
+  );
+}
+
+function ThemeWrappedDeleteIModel(props: DeleteIModelProps) {
   const toaster = useToaster();
   const {
     imodel: { id: imodelId, name: imodelName },
@@ -107,7 +115,7 @@ export function DeleteIModel(props: DeleteIModelProps) {
   }, [onClose]);
 
   return (
-    <ThemeProvider theme="inherit">
+    <>
       <Modal
         isOpen={isOpen}
         style={{ maxWidth: 600 }}
@@ -134,7 +142,7 @@ export function DeleteIModel(props: DeleteIModelProps) {
         </ModalButtonBar>
       </Modal>
       {isLoading && <OverlaySpinner />}
-    </ThemeProvider>
+    </>
   );
 }
 

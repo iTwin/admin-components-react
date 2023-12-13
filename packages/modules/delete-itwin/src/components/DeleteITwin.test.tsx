@@ -7,18 +7,6 @@ import React from "react";
 
 import { DeleteITwin } from "./DeleteITwin";
 
-jest.mock("@itwin/itwinui-react", () => {
-  const actual = jest.requireActual("@itwin/itwinui-react");
-
-  return {
-    ...actual,
-    useToaster: jest.fn().mockReturnValue({
-      positive: jest.fn(),
-      negative: jest.fn(),
-    }),
-  };
-});
-
 describe("DeleteITwin", () => {
   const fetchMock = jest.fn(() => Promise.resolve({ ok: true } as Response));
   global.fetch = fetchMock;

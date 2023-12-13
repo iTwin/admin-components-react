@@ -56,7 +56,7 @@ export const ITwinTile = ({
     [iTwinOptions, iTwin]
   );
   return (
-    <ThemeProvider theme="inherit">
+    <ThemeProvider>
       <Tile
         key={iTwin?.id}
         name={<span title={iTwin?.displayName}>{iTwin?.displayName}</span>}

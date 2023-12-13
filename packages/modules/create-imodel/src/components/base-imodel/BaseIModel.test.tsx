@@ -2,6 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+import { ThemeProvider } from "@itwin/itwinui-react";
 import { fireEvent, render } from "@testing-library/react";
 import React from "react";
 
@@ -17,7 +18,9 @@ describe("BaseIModel", () => {
     const closeMock = jest.fn();
 
     const { container, getByText } = render(
-      <BaseIModelPage onActionClick={actionMock} onClose={closeMock} />
+      <ThemeProvider>
+        <BaseIModelPage onActionClick={actionMock} onClose={closeMock} />
+      </ThemeProvider>
     );
 
     getByText("Create an iModel");
@@ -50,7 +53,9 @@ describe("BaseIModel", () => {
 
   it("should show base page with custom extent component", () => {
     const { container, getByText, queryByText } = render(
-      <BaseIModelPage extentComponent={<div className="test-extent-map" />} />
+      <ThemeProvider>
+        <BaseIModelPage extentComponent={<div className="test-extent-map" />} />
+      </ThemeProvider>
     );
 
     getByText("Create an iModel");
@@ -77,13 +82,21 @@ describe("BaseIModel", () => {
   });
 
   it("should show overlay spinner", () => {
-    const { container } = render(<BaseIModelPage isLoading />);
+    const { container } = render(
+      <ThemeProvider>
+        <BaseIModelPage isLoading />
+      </ThemeProvider>
+    );
 
     expect(container.querySelector(".iac-overlay-container")).toBeTruthy();
   });
 
   it("should show error message for too long string", async () => {
-    const { container, getByText } = render(<BaseIModelPage />);
+    const { container, getByText } = render(
+      <ThemeProvider>
+        <BaseIModelPage />
+      </ThemeProvider>
+    );
 
     const name = container.querySelector(
       ".iac-inputs-container input"
@@ -98,16 +111,18 @@ describe("BaseIModel", () => {
 
   it("should show base page with filled values", () => {
     const { container } = render(
-      <BaseIModelPage
-        initialIModel={{
-          name: "Some name",
-          description: "Some description",
-          extent: {
-            southWest: { latitude: 1, longitude: 2 },
-            northEast: { latitude: 3, longitude: 4 },
-          },
-        }}
-      />
+      <ThemeProvider>
+        <BaseIModelPage
+          initialIModel={{
+            name: "Some name",
+            description: "Some description",
+            extent: {
+              southWest: { latitude: 1, longitude: 2 },
+              northEast: { latitude: 3, longitude: 4 },
+            },
+          }}
+        />
+      </ThemeProvider>
     );
 
     const inputs = container.querySelectorAll<HTMLInputElement>(

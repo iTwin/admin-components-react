@@ -200,7 +200,7 @@ export const ITwinGrid = ({
       </GridStructure>
     )
   ) : (
-    <ThemeProvider theme="inherit">
+    <ThemeProvider>
       <Table<{ [P in keyof ITwinFull]: ITwinFull[P] }>
         columns={columns}
         data={iTwins}

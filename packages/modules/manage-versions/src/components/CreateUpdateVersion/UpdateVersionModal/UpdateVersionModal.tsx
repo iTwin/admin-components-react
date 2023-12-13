@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { useToaster } from "@itwin/itwinui-react";
+import { ThemeProvider, useToaster } from "@itwin/itwinui-react";
 import React from "react";
 
 import { NamedVersionClient } from "../../../clients/namedVersionClient";
@@ -17,6 +17,14 @@ export type UpdateVersionModalProps = {
 };
 
 export const UpdateVersionModal = (props: UpdateVersionModalProps) => {
+  return (
+    <ThemeProvider>
+      <ThemeWrappedUpdateVersionModal {...props} />
+    </ThemeProvider>
+  );
+};
+
+function ThemeWrappedUpdateVersionModal(props: UpdateVersionModalProps) {
   const toaster = useToaster();
   const { version, onClose, onUpdate } = props;
 
@@ -79,4 +87,4 @@ export const UpdateVersionModal = (props: UpdateVersionModalProps) => {
       onActionClick={onUpdateClick}
     />
   );
-};
+}

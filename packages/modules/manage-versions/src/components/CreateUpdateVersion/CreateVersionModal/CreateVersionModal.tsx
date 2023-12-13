@@ -4,7 +4,12 @@
  *--------------------------------------------------------------------------------------------*/
 import "./CreateVersionModal.scss";
 
-import { Label, useToaster } from "@itwin/itwinui-react";
+import {
+  InputGrid,
+  Label,
+  ThemeProvider,
+  useToaster,
+} from "@itwin/itwinui-react";
 import React from "react";
 
 import { NamedVersionClient } from "../../../clients/namedVersionClient";
@@ -20,6 +25,14 @@ export type CreateVersionModalProps = {
 };
 
 export const CreateVersionModal = (props: CreateVersionModalProps) => {
+  return (
+    <ThemeProvider>
+      <ThemeWrappedCreateVersionModal {...props} />
+    </ThemeProvider>
+  );
+};
+
+function ThemeWrappedCreateVersionModal(props: CreateVersionModalProps) {
   const toaster = useToaster();
   const { latestVersion, changeset, onClose, onCreate } = props;
 
@@ -80,15 +93,15 @@ export const CreateVersionModal = (props: CreateVersionModalProps) => {
       onClose={onClose}
       onActionClick={onCreateClick}
     >
-      <div className="iui-input-container">
+      <InputGrid>
         <Label>Latest included change</Label>
         <div className="iac-additional-info">
           <span>#{changeset.index}</span>
           <span>{new Date(changeset.pushDateTime).toLocaleString()}</span>
         </div>
-      </div>
+      </InputGrid>
       {latestVersion && (
-        <div className="iui-input-container">
+        <InputGrid>
           <Label>Latest Named Version</Label>
           <div className="iac-additional-info">
             <span className="iac-cell-ellipsis">{latestVersion.name}</span>
@@ -96,8 +109,8 @@ export const CreateVersionModal = (props: CreateVersionModalProps) => {
               {new Date(latestVersion.createdDateTime).toLocaleString()}
             </span>
           </div>
-        </div>
+        </InputGrid>
       )}
     </VersionModal>
   );
-};
+}

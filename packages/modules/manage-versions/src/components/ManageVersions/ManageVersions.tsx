@@ -356,7 +356,7 @@ export const ManageVersions = (props: ManageVersionsProps) => {
   };
 
   return (
-    <ThemeProvider theme="inherit">
+    <ThemeProvider>
       <ConfigProvider
         accessToken={accessToken}
         imodelId={imodelId}

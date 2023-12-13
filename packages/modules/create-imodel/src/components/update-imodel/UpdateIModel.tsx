@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { useToaster } from "@itwin/itwinui-react";
+import { ThemeProvider, useToaster } from "@itwin/itwinui-react";
 import React from "react";
 
 import { BaseIModel, iModelExtent, IModelFull } from "../../types";
@@ -80,6 +80,14 @@ export type UpdateIModelProps = {
 };
 
 export function UpdateIModel(props: UpdateIModelProps) {
+  return (
+    <ThemeProvider>
+      <ThemeWrappedUpdateIModel {...props} />
+    </ThemeProvider>
+  );
+}
+
+function ThemeWrappedUpdateIModel(props: UpdateIModelProps) {
   const toaster = useToaster();
   const {
     accessToken,
