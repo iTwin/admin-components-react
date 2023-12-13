@@ -4,11 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import "./UploadImage.scss";
 
-import {
-  FileUpload,
-  FileUploadTemplate,
-  useToaster,
-} from "@itwin/itwinui-react";
+import { FileUpload, FileUploadTemplate, toaster } from "@itwin/itwinui-react";
 import React from "react";
 
 import { useIModelContext } from "../context/imodel-context";
@@ -49,7 +45,6 @@ export function UploadImage({
   onChange,
   src: srcProp,
 }: UploadImageProps) {
-  const toaster = useToaster();
   const [imageUrl, setImageUrl] = React.useState<string>("");
   const [rotation, setRotation] = React.useState(0);
 

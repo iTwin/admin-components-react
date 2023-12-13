@@ -2,23 +2,12 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { useToaster } from "@itwin/itwinui-react";
+import { toaster } from "@itwin/itwinui-react";
 import { act, fireEvent, render } from "@testing-library/react";
 import React from "react";
 
+import { iModelExtent } from "../..";
 import { UpdateIModel } from "./UpdateIModel";
-
-jest.mock("@itwin/itwinui-react", () => {
-  const actual = jest.requireActual("@itwin/itwinui-react");
-
-  return {
-    ...actual,
-    useToaster: jest.fn().mockReturnValue({
-      positive: jest.fn(),
-      negative: jest.fn(),
-    }),
-  };
-});
 
 describe("UpdateIModel", () => {
   const mockedimodel = { iModel: { id: "dd", name: "name" } };
@@ -40,7 +29,7 @@ describe("UpdateIModel", () => {
 
   it("should update an iModel", async () => {
     const successMock = jest.fn();
-    const toaster = useToaster();
+    toaster.positive = jest.fn();
 
     const { getByText, container } = render(
       <UpdateIModel
@@ -97,7 +86,7 @@ describe("UpdateIModel", () => {
 
   it("should enable update when extent is removed", async () => {
     const successMock = jest.fn();
-    const toaster = useToaster();
+    toaster.positive = jest.fn();
 
     const { getByText, rerender } = render(
       <UpdateIModel
@@ -117,9 +106,7 @@ describe("UpdateIModel", () => {
     );
 
     const updateButton = getByText("Update");
-    expect(updateButton.closest("button")?.hasAttribute("aria-disabled")).toBe(
-      true
-    );
+    expect(updateButton.closest("button")?.hasAttribute("disabled")).toBe(true);
 
     rerender(
       <UpdateIModel
@@ -172,7 +159,7 @@ describe("UpdateIModel", () => {
     const errorMock = jest.fn();
     const error = new Error("Fail");
     fetchMock.mockImplementationOnce(() => Promise.reject(error));
-    const toaster = useToaster();
+    toaster.negative = jest.fn();
 
     const { getByText, container } = render(
       <UpdateIModel
@@ -221,7 +208,7 @@ describe("UpdateIModel", () => {
     const errorMock = jest.fn();
     const error = { error: { code: "iModelExists" } };
     fetchMock.mockImplementationOnce(() => Promise.reject(error));
-    const toaster = useToaster();
+    toaster.negative = jest.fn();
 
     const { getByText, container } = render(
       <UpdateIModel

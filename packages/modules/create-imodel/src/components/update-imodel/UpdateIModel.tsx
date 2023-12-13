@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { useToaster } from "@itwin/itwinui-react";
+import { toaster } from "@itwin/itwinui-react";
 import React from "react";
 
 import { BaseIModel, iModelExtent, IModelFull } from "../../types";
@@ -80,7 +80,6 @@ export type UpdateIModelProps = {
 };
 
 export function UpdateIModel(props: UpdateIModelProps) {
-  const toaster = useToaster();
   const {
     accessToken,
     apiOverrides = { serverEnvironmentPrefix: "" },

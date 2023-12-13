@@ -2,23 +2,11 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { useToaster } from "@itwin/itwinui-react";
+import { toaster } from "@itwin/itwinui-react";
 import { act, fireEvent, render } from "@testing-library/react";
 import React from "react";
 
 import { CreateIModel } from "./CreateIModel";
-
-jest.mock("@itwin/itwinui-react", () => {
-  const actual = jest.requireActual("@itwin/itwinui-react");
-
-  return {
-    ...actual,
-    useToaster: jest.fn().mockReturnValue({
-      positive: jest.fn(),
-      negative: jest.fn(),
-    }),
-  };
-});
 
 describe("CreateIModel", () => {
   const mockedimodel = { iModel: { id: "dd", name: "name" } };
@@ -40,7 +28,7 @@ describe("CreateIModel", () => {
 
   it("should create an iModel", async () => {
     const successMock = jest.fn();
-    const toaster = useToaster();
+    toaster.positive = jest.fn();
 
     const { getByText, container } = render(
       <CreateIModel
@@ -88,7 +76,7 @@ describe("CreateIModel", () => {
     const errorMock = jest.fn();
     const error = new Error("Fail");
     fetchMock.mockImplementationOnce(() => Promise.reject(error));
-    const toaster = useToaster();
+    toaster.negative = jest.fn();
 
     const { getByText, container } = render(
       <CreateIModel
@@ -142,7 +130,7 @@ describe("CreateIModel", () => {
     const errorMock = jest.fn();
     const error = { error: { code: "iModelExists" } };
     fetchMock.mockImplementationOnce(() => Promise.reject(error));
-    const toaster = useToaster();
+    toaster.negative = jest.fn();
 
     const { getByText, container } = render(
       <CreateIModel

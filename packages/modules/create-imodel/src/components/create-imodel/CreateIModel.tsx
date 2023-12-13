@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { useToaster } from "@itwin/itwinui-react";
+import { toaster } from "@itwin/itwinui-react";
 import React from "react";
 
 import { iModelExtent, IModelFull } from "../../types";
@@ -90,7 +90,6 @@ export function CreateIModel(props: CreateIModelProps) {
     extent,
   } = props;
   const [isLoading, setIsLoading] = React.useState(false);
-  const toaster = useToaster();
 
   const updatedStrings = {
     successMessage: "iModel created successfully.",

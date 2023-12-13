@@ -11,7 +11,7 @@ import {
   ModalButtonBar,
   ProgressRadial,
   ThemeProvider,
-  useToaster,
+  toaster,
 } from "@itwin/itwinui-react";
 import React from "react";
 
@@ -46,7 +46,6 @@ export type DeleteITwinProps = {
 };
 
 export const DeleteITwin = (props: DeleteITwinProps) => {
-  const toaster = useToaster();
   const {
     iTwin,
     accessToken,

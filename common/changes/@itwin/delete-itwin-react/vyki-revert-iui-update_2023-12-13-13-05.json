@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/delete-itwin-react",
+      "comment": "Revert iTwinUI v3",
+      "type": "patch"
+    }
+  ],
+  "packageName": "@itwin/delete-itwin-react"
+}
