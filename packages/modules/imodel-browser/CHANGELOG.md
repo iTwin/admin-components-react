@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Fri, 08 Dec 2023 15:10:09 GMT and should not be manually modified.
+This log was last generated on Thu, 14 Dec 2023 17:57:25 GMT and should not be manually modified.
+
+## 1.2.2
+Thu, 14 Dec 2023 17:57:25 GMT
+
+### Patches
+
+- Revert iTwinUI v3
 
 ## 1.2.1
 Fri, 08 Dec 2023 15:10:09 GMT
