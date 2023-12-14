@@ -56,11 +56,7 @@ describe("ButtonBar", () => {
     const buttonCancel = getByText(
       innerContextValue.cancelButtonText
     ) as HTMLInputElement;
-    expect(buttonConfirm.closest("button")?.getAttribute("aria-disabled")).toBe(
-      "true"
-    );
-    expect(buttonCancel.closest("button")?.getAttribute("aria-disabled")).toBe(
-      null
-    );
+    expect(buttonConfirm.closest("button")?.disabled).toBe(true);
+    expect(buttonCancel.closest("button")?.disabled).toBe(false);
   });
 });

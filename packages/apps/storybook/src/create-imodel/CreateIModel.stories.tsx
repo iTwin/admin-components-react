@@ -84,7 +84,7 @@ export const CreateIModelCustomized: Story<CreateIModelProps> =
             value={""}
             onChange={() => undefined}
             autoComplete="off"
-            wrapperProps={{ className: "iac-model-wrapper-element" }}
+            className="iac-model-wrapper-element"
           />
           <LabeledSelect
             label="Select version"
@@ -94,7 +94,7 @@ export const CreateIModelCustomized: Story<CreateIModelProps> =
               { value: 3, label: "Item #3" },
             ]}
             onChange={() => undefined}
-            wrapperProps={{ className: "iac-model-wrapper-element" }}
+            className="iac-model-wrapper-element"
           />
           <IModelDescription />
           <UploadImage />

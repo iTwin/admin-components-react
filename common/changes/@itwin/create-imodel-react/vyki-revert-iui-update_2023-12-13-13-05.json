@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/create-imodel-react",
+      "comment": "Revert iTwinUI v3",
+      "type": "patch"
+    }
+  ],
+  "packageName": "@itwin/create-imodel-react"
+}

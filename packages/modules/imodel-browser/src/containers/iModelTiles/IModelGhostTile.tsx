@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { Text, ThemeProvider, Tile } from "@itwin/itwinui-react";
+import { ThemeProvider, Tile } from "@itwin/itwinui-react";
 import React from "react";
 
 /**
@@ -11,29 +11,28 @@ import React from "react";
 export const IModelGhostTile = () => {
   return (
     <ThemeProvider theme="inherit">
-      <Tile.Wrapper>
-        <Tile.ThumbnailArea>
-          <Text
-            isSkeleton={true}
-            style={{
-              borderRadius: "0",
-            }}
-          ></Text>
-        </Tile.ThumbnailArea>
-        <Tile.Name>
-          <Text isSkeleton={true} style={{ width: "180px", margin: 0 }}>
+      <Tile
+        name={
+          <span
+            className={"iui-skeleton"}
+            style={{ width: "180px", margin: 0 }}
+          >
             <br />
-          </Text>
-        </Tile.Name>
-        <Tile.ContentArea>
-          <Tile.Description>
-            <Text isSkeleton={true} style={{ width: "100%" }}>
-              <br />
-              <br />
-            </Text>
-          </Tile.Description>
-        </Tile.ContentArea>
-      </Tile.Wrapper>
+          </span>
+        }
+        description={
+          <span className={"iui-skeleton"} style={{ width: "100%" }}>
+            <br />
+            <br />
+          </span>
+        }
+        thumbnail={
+          <span
+            className={"iui-skeleton"}
+            style={{ height: "100%", width: "100%", margin: 0 }}
+          ></span>
+        }
+      />
     </ThemeProvider>
   );
 };
