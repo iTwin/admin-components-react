@@ -13,7 +13,11 @@ import React from "react";
 import { CellProps } from "react-table";
 
 import { useConfig } from "../../../common/configContext";
-import { Changeset, NamedVersion } from "../../../models";
+import {
+  Changeset,
+  localeDateWithTimeFormat,
+  NamedVersion,
+} from "../../../models";
 import { CreateVersionModal } from "../../CreateUpdateVersion/CreateVersionModal/CreateVersionModal";
 import { ChangesetInformationPanel } from "../../InformationPanel/ChangesetInformationPanel";
 import { RequestStatus } from "../types";
@@ -101,7 +105,9 @@ const ChangesTab = (props: ChangesTabProps) => {
             Cell: (props: CellProps<Changeset>) => {
               return (
                 <span>
-                  {new Date(props.row.original.pushDateTime).toLocaleString()}
+                  {localeDateWithTimeFormat(
+                    new Date(props.row.original.pushDateTime)
+                  )}
                 </span>
               );
             },

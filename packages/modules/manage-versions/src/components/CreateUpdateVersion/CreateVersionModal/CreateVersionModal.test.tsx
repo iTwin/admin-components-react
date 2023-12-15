@@ -19,7 +19,11 @@ import {
   MockedChangeset,
   MockedVersion,
 } from "../../../mocks";
-import { ApimCodes, ApimError } from "../../../models";
+import {
+  ApimCodes,
+  ApimError,
+  localeDateWithTimeFormat,
+} from "../../../models";
 import {
   CreateVersionModal,
   CreateVersionModalProps,
@@ -74,14 +78,14 @@ describe("CreateVersionModal", () => {
     expect(changesetInfo.length).toBe(2);
     expect(changesetInfo[0].textContent).toEqual(`#${MockedChangeset().index}`);
     expect(changesetInfo[1].textContent).toEqual(
-      new Date(MockedChangeset().pushDateTime).toLocaleString()
+      localeDateWithTimeFormat(new Date(MockedChangeset().pushDateTime))
     );
 
     const latestVersionInfo = additionalInfos[1].querySelectorAll("span");
     expect(latestVersionInfo.length).toBe(2);
     expect(latestVersionInfo[0].textContent).toEqual(MockedVersion().name);
     expect(latestVersionInfo[1].textContent).toEqual(
-      new Date(MockedVersion().createdDateTime).toLocaleString()
+      localeDateWithTimeFormat(new Date(MockedVersion().createdDateTime))
     );
   });
 
