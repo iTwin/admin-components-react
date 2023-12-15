@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { Tab, Tabs, ThemeProvider } from "@itwin/itwinui-react";
+import { HorizontalTabs, ThemeProvider } from "@itwin/itwinui-react";
 import React from "react";
 
 import { ChangesetClient } from "../../clients/changesetClient";
@@ -407,23 +407,34 @@ export const ManageVersions = (props: ManageVersionsProps) => {
         stringsOverrides={stringsOverrides}
         log={log}
       >
-        <Tabs
-          labels={[
-            <Tab
-              key={ManageVersionsTabs.Versions}
-              label={stringsOverrides.namedVersions}
-            />,
-            <Tab
-              key={ManageVersionsTabs.Changes}
-              label={stringsOverrides.changes}
-            />,
-          ]}
-          onTabSelected={(index) => changeTab(index)}
-          type="borderless"
-          activeIndex={_currentTab}
-        >
-          {renderTabContent()}
-        </Tabs>
+        <div>
+          <HorizontalTabs
+            labels={[stringsOverrides.namedVersions, stringsOverrides.changes]}
+            activeIndex={_currentTab}
+            onTabSelected={(index) => changeTab(index)}
+            type="borderless"
+          />
+          {_currentTab === ManageVersionsTabs.Versions && (
+            <VersionsTab
+              status={versionStatus}
+              onVersionUpdated={refreshVersions}
+              loadMoreVersions={getMoreVersions}
+              onViewClick={onViewClick}
+              tableData={versionsTableData ?? []}
+              changesetClient={changesetClient}
+              setRelatedChangesets={setRelatedChangesets}
+            />
+          )}
+          {_currentTab === ManageVersionsTabs.Changes && (
+            <ChangesTab
+              changesets={changesets ?? []}
+              status={changesetStatus}
+              loadMoreChanges={getChangesets}
+              onVersionCreated={onVersionCreated}
+              latestVersion={latestVersion?.version}
+            />
+          )}
+        </div>
       </ConfigProvider>
     </ThemeProvider>
   );

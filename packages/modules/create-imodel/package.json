@@ -1,6 +1,6 @@
 {
   "name": "@itwin/create-imodel-react",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Components to create or update an iModel.",
   "repository": "https://github.com/iTwin/admin-components-react/tree/main/packages/modules/create-imodel",
   "author": "Bentley Systems, Inc.",
@@ -31,7 +31,7 @@
     "clean": "rimraf cjs esm"
   },
   "dependencies": {
-    "@itwin/itwinui-react": "^3.0.4"
+    "@itwin/itwinui-react": "^2.12.18"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "~17.1.0",

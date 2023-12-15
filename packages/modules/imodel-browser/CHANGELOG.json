@@ -2,6 +2,18 @@
   "name": "@itwin/imodel-browser-react",
   "entries": [
     {
+      "version": "1.2.2",
+      "tag": "@itwin/imodel-browser-react_v1.2.2",
+      "date": "Thu, 14 Dec 2023 17:57:25 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Revert iTwinUI v3"
+          }
+        ]
+      }
+    },
+    {
       "version": "1.2.1",
       "tag": "@itwin/imodel-browser-react_v1.2.1",
       "date": "Fri, 08 Dec 2023 15:10:09 GMT",

@@ -1,6 +1,6 @@
 {
   "name": "@itwin/delete-imodel-react",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "author": "Bentley Systems, Inc.",
   "license": "MIT",
   "description": "Component to delete the selected iModel.",
@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "@itwin/itwinui-icons-react": "^2.2.0",
-    "@itwin/itwinui-react": "^3.0.4"
+    "@itwin/itwinui-react": "^2.12.18"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "~17.1.0",

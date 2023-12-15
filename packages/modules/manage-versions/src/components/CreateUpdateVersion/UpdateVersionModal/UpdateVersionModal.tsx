@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { useToaster } from "@itwin/itwinui-react";
+import { toaster } from "@itwin/itwinui-react";
 import React from "react";
 
 import { NamedVersionClient } from "../../../clients/namedVersionClient";
@@ -17,7 +17,6 @@ export type UpdateVersionModalProps = {
 };
 
 export const UpdateVersionModal = (props: UpdateVersionModalProps) => {
-  const toaster = useToaster();
   const { version, onClose, onUpdate } = props;
 
   const { accessToken, imodelId, apiOverrides, stringsOverrides, log } =

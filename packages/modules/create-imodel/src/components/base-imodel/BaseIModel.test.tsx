@@ -37,7 +37,7 @@ describe("BaseIModel", () => {
     const confirmButton = container.querySelector(
       ".iac-button-bar button:first-child"
     ) as HTMLButtonElement;
-    expect(confirmButton.getAttribute("aria-disabled")).toBe("true");
+    expect(confirmButton.disabled).toBe(true);
     expect(confirmButton.textContent).toBe("Create");
     confirmButton.click();
     expect(actionMock).not.toHaveBeenCalled();
@@ -70,7 +70,7 @@ describe("BaseIModel", () => {
     const confirmButton = container.querySelector(
       ".iac-button-bar button:first-child"
     ) as HTMLButtonElement;
-    expect(confirmButton.getAttribute("aria-disabled")).toBe("true");
+    expect(confirmButton.disabled).toBe(true);
     expect(confirmButton.textContent).toBe("Create");
 
     expect(container.querySelector(".test-extent-map")).toBeTruthy();
@@ -93,7 +93,7 @@ describe("BaseIModel", () => {
     const confirmButton = container.querySelector(
       ".iac-button-bar button:first-child"
     ) as HTMLButtonElement;
-    expect(confirmButton.getAttribute("aria-disabled")).toBe("true");
+    expect(confirmButton.disabled).toBe(true);
   });
 
   it("should show base page with filled values", () => {

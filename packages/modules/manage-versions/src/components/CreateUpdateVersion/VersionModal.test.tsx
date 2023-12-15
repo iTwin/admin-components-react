@@ -75,7 +75,7 @@ describe("VersionModal", () => {
       .getByText("Action")
       .closest("button") as HTMLButtonElement;
     expect(actionButton).not.toBeUndefined();
-    expect(actionButton.getAttribute("aria-disabled")).toBe("true");
+    expect(actionButton.disabled).toBe(true);
   });
 
   it("should disable action button when name is missing", () => {
@@ -85,7 +85,7 @@ describe("VersionModal", () => {
       .getByText("Action")
       .closest("button") as HTMLButtonElement;
     expect(actionButton).not.toBeUndefined();
-    expect(actionButton.getAttribute("aria-disabled")).toBe("true");
+    expect(actionButton.disabled).toBe(true);
   });
 
   it("should disable action button when data is the same as before", () => {
@@ -113,7 +113,7 @@ describe("VersionModal", () => {
       .getByText("Action")
       .closest("button") as HTMLButtonElement;
     expect(actionButton).not.toBeUndefined();
-    expect(actionButton.getAttribute("aria-disabled")).toBe("true");
+    expect(actionButton.disabled).toBe(true);
   });
 
   it("should trigger onClose", () => {

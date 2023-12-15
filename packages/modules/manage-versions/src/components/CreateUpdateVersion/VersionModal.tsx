@@ -82,7 +82,7 @@ export const VersionModal = (props: VersionModalProps) => {
         className="iac-version-modal"
       >
         <LabeledInput
-          ref={focusName}
+          setFocus
           name="name"
           label={stringsOverrides.name}
           onChange={onChange}
