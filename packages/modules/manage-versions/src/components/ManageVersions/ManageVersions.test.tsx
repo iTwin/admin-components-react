@@ -22,6 +22,7 @@ import {
   MockedVersion,
   MockedVersionList,
 } from "../../mocks";
+import { localeDateWithTimeFormat } from "../../models/utils";
 import {
   defaultStrings,
   ManageVersions,
@@ -217,7 +218,7 @@ describe("ManageVersions", () => {
     expect(latestVersionInfo.length).toBe(2);
     expect(latestVersionInfo[0].textContent).toEqual(latestVersion.name);
     expect(latestVersionInfo[1].textContent).toEqual(
-      new Date(latestVersion.createdDateTime).toLocaleString()
+      localeDateWithTimeFormat(new Date(latestVersion.createdDateTime))
     );
 
     const nameInput = document.querySelector("input") as HTMLInputElement;
