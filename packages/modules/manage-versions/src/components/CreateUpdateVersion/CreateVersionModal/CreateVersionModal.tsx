@@ -9,7 +9,13 @@ import React from "react";
 
 import { NamedVersionClient } from "../../../clients/namedVersionClient";
 import { useConfig } from "../../../common/configContext";
-import { ApimCodes, ApimError, Changeset, NamedVersion } from "../../../models";
+import {
+  ApimCodes,
+  ApimError,
+  Changeset,
+  localeDateWithTimeFormat,
+  NamedVersion,
+} from "../../../models";
 import { VersionModal } from "../VersionModal";
 
 export type CreateVersionModalProps = {
@@ -83,7 +89,9 @@ export const CreateVersionModal = (props: CreateVersionModalProps) => {
         <div className="iui-label">Latest included change</div>
         <div className="iac-additional-info">
           <span>#{changeset.index}</span>
-          <span>{new Date(changeset.pushDateTime).toLocaleString()}</span>
+          <span>
+            {localeDateWithTimeFormat(new Date(changeset.pushDateTime))}
+          </span>
         </div>
       </div>
       {latestVersion && (
@@ -92,7 +100,9 @@ export const CreateVersionModal = (props: CreateVersionModalProps) => {
           <div className="iac-additional-info">
             <span className="iac-cell-ellipsis">{latestVersion.name}</span>
             <span>
-              {new Date(latestVersion.createdDateTime).toLocaleString()}
+              {localeDateWithTimeFormat(
+                new Date(latestVersion.createdDateTime)
+              )}
             </span>
           </div>
         </div>

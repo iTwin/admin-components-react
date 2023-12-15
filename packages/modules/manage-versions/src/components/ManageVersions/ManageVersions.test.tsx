@@ -22,6 +22,7 @@ import {
   MockedVersion,
   MockedVersionList,
 } from "../../mocks";
+import { localeDateWithTimeFormat } from "../../models/utils";
 import {
   defaultStrings,
   ManageVersions,
@@ -44,6 +45,10 @@ describe("ManageVersions", () => {
   const mockUpdateVersion = jest.spyOn(NamedVersionClient.prototype, "update");
   const mockGetChangesets = jest.spyOn(ChangesetClient.prototype, "get");
   const mockGetUsers = jest.spyOn(ChangesetClient.prototype, "getUsers");
+  const mockScrollTo = jest.fn();
+  Object.defineProperty(HTMLElement.prototype, "scrollTo", {
+    value: mockScrollTo,
+  });
 
   const waitForSelectorToExist = async (selector: string) =>
     waitFor(() => expect(document.querySelector(selector)).not.toBeNull());
@@ -67,15 +72,14 @@ describe("ManageVersions", () => {
     expect(versionRows.length).toBe(3);
 
     versionRows.forEach((row, index) => {
-      const cells = row.querySelectorAll(".iui-table-cell");
+      const cells = row.querySelectorAll("div[role='cell']");
       expect(cells.length).toBe(5);
-      expect(cells[0].textContent).toContain(MockedVersion(index).name);
-      expect(cells[1].textContent).toContain(MockedVersion(index).description);
+      const mockedVersion = MockedVersion(versionRows.length - 1 - index);
+      expect(cells[0].textContent).toContain(mockedVersion.name);
+      expect(cells[1].textContent).toContain(mockedVersion.description);
 
-      expect(cells[2].textContent).toContain(MockedVersion(index).createdBy);
-      expect(cells[3].textContent).toContain(
-        new Date(MockedVersion(index).createdDateTime).toLocaleString()
-      );
+      expect(cells[2].textContent).toContain(mockedVersion.createdBy);
+      expect(cells[3].textContent).toContain(mockedVersion.createdDateTime);
       within(cells[4] as HTMLElement).getByTitle(
         defaultStrings.updateNamedVersion
       );
@@ -95,12 +99,12 @@ describe("ManageVersions", () => {
       container.querySelector(".iui-progress-indicator-radial")
     );
     const changesetRows = container.querySelectorAll(
-      ".iui-table-body .iui-table-row"
+      ".iac-changes-table div[role='rowgroup'] > div[role='row']"
     );
     expect(changesetRows.length).toBe(3);
 
     changesetRows.forEach((row, index) => {
-      const cells = row.querySelectorAll(".iui-table-cell");
+      const cells = row.querySelectorAll("div[role='cell']");
       expect(cells.length).toBe(6);
       expect(cells[0].textContent).toContain(
         MockedChangeset(index).index.toString()
@@ -113,7 +117,7 @@ describe("ManageVersions", () => {
         MockedChangeset(index).synchronizationInfo.changedFiles.join(", ")
       );
       expect(cells[4].textContent).toContain(
-        new Date(MockedChangeset(index).pushDateTime).toLocaleString()
+        MockedChangeset(index).pushDateTime
       );
       const actionButtons = (cells[5] as HTMLElement).querySelectorAll(
         '[type="button"]'
@@ -214,7 +218,7 @@ describe("ManageVersions", () => {
     expect(latestVersionInfo.length).toBe(2);
     expect(latestVersionInfo[0].textContent).toEqual(latestVersion.name);
     expect(latestVersionInfo[1].textContent).toEqual(
-      new Date(latestVersion.createdDateTime).toLocaleString()
+      localeDateWithTimeFormat(new Date(latestVersion.createdDateTime))
     );
 
     const nameInput = document.querySelector("input") as HTMLInputElement;
@@ -227,7 +231,7 @@ describe("ManageVersions", () => {
     );
 
     const versionCells = container.querySelectorAll(
-      ".iui-table-body .iui-table-row:first-child .iui-table-cell"
+      "div[role='rowgroup'] > div[role='row']:first-child div[role='cell']"
     );
     expect(versionCells.length).toBe(5);
     expect(versionCells[0].textContent).toEqual("test name");
@@ -262,25 +266,42 @@ describe("ManageVersions", () => {
 
     await waitForSelectorToExist("input");
     const nameInput = document.querySelector("input") as HTMLInputElement;
+    const descriptionInput = document.querySelector(
+      "textarea[name='description']"
+    ) as HTMLTextAreaElement;
     expect(nameInput).toBeTruthy();
     fireEvent.change(nameInput, { target: { value: "test name" } });
-
+    fireEvent.change(descriptionInput, {
+      target: { value: "test description" },
+    });
     screen.getByText("Update").click();
 
+    await waitForElementToBeRemoved(() =>
+      document.querySelector(".iui-progress-indicator-overlay")
+    );
+
+    expect(mockUpdateVersion).toHaveBeenCalledWith(
+      MOCKED_IMODEL_ID,
+      MockedVersion(2).id,
+      {
+        name: "test name",
+        description: "test description",
+      }
+    );
     const versionCells = container.querySelectorAll(
-      ".iui-table-body .iui-table-row:first-child .iui-table-cell"
+      "div[role='rowgroup'] > div[role='row']:first-child div[role='cell']"
     );
     expect(versionCells.length).toBe(5);
-    expect(versionCells[0].textContent).toEqual(MockedVersion(0).name);
-    expect(versionCells[1].textContent).toEqual(MockedVersion(0).description);
+    expect(versionCells[0].textContent).toEqual("test name");
+    expect(versionCells[1].textContent).toEqual("test description");
     expect(versionCells[2].textContent).toEqual(MockedVersion(0).createdBy);
     expect(versionCells[3].textContent).toEqual(
-      new Date(MockedVersion(0).createdDateTime).toLocaleString()
+      MockedVersion(0).createdDateTime
     );
     within(versionCells[4] as HTMLElement).getByTitle(
       defaultStrings.updateNamedVersion
     );
-    expect(mockGetVersions).toHaveBeenCalledTimes(1);
+    expect(mockGetVersions).toHaveBeenCalledTimes(2);
     expect(mockUpdateVersion).toHaveBeenCalled();
   });
 });
@@ -294,12 +315,12 @@ it("should render with changesets tab opened", async () => {
     container.querySelector(".iui-progress-indicator-radial")
   );
   const changesetRows = container.querySelectorAll(
-    ".iui-table-body .iui-table-row"
+    "div[role='rowgroup'] > div[role='row']"
   );
   expect(changesetRows.length).toBe(3);
 
   changesetRows.forEach((row, index) => {
-    const cells = row.querySelectorAll(".iui-table-cell");
+    const cells = row.querySelectorAll("div[role='cell']");
     expect(cells.length).toBe(6);
     expect(cells[0].textContent).toContain(
       MockedChangeset(index).index.toString()
@@ -309,9 +330,7 @@ it("should render with changesets tab opened", async () => {
     expect(cells[3].textContent).toContain(
       MockedChangeset(index).synchronizationInfo.changedFiles.join(", ")
     );
-    expect(cells[4].textContent).toContain(
-      new Date(MockedChangeset(index).pushDateTime).toLocaleString()
-    );
+    expect(cells[4].textContent).toContain(MockedChangeset(index).pushDateTime);
     const actionButtons = (cells[5] as HTMLElement).querySelectorAll(
       '[type="button"]'
     );

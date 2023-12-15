@@ -103,12 +103,17 @@ const initialChangeset: Changeset = {
 
 const initializeVersionTableData = (
   versions: NamedVersion[],
-  versionTableData?: VersionTableData[]
+  versionTableData?: VersionTableData[],
+  reloadSubrows?: boolean
 ): VersionTableData[] => {
   return (versions ?? []).map((version, index) => {
     const existingData = versionTableData?.[index];
-    const defaultSubRows = existingData?.subRows ?? [initialChangeset];
-    const subRowsLoaded = existingData?.subRowsLoaded ?? false;
+    const defaultSubRows = reloadSubrows
+      ? [initialChangeset]
+      : existingData?.subRows ?? [initialChangeset];
+    const subRowsLoaded = reloadSubrows
+      ? false
+      : existingData?.subRowsLoaded ?? false;
     return { version, subRows: defaultSubRows, subRowsLoaded };
   });
 };
@@ -217,7 +222,7 @@ export const ManageVersions = (props: ManageVersionsProps) => {
   );
 
   const getVersions = React.useCallback(
-    (skip?: number) => {
+    (skip?: number, reloadSubrows?: boolean) => {
       setVersionStatus(RequestStatus.InProgress);
       versionClient
         .get(imodelId, {
@@ -225,12 +230,17 @@ export const ManageVersions = (props: ManageVersionsProps) => {
           skip,
         })
         .then((newVersions) => {
+          newVersions.sort((v1, v2) => v2.changesetIndex - v1.changesetIndex);
           const updateVersions = updateNamedVersionsProperties(
             newVersions,
             usersRef.current
           );
           setVersionsTableData((oldVersions) => [
-            ...initializeVersionTableData(updateVersions ?? [], oldVersions),
+            ...initializeVersionTableData(
+              updateVersions ?? [],
+              oldVersions,
+              reloadSubrows
+            ),
           ]);
           setVersionStatus(RequestStatus.Finished);
         })
@@ -272,9 +282,12 @@ export const ManageVersions = (props: ManageVersionsProps) => {
       .catch(() => setChangesetStatus(RequestStatus.Failed));
   }, [changesets, changesetClient, imodelId]);
 
-  const refreshVersions = React.useCallback(() => {
-    getVersions();
-  }, [getVersions]);
+  const refreshVersions = React.useCallback(
+    (reloadSubrows?: boolean) => {
+      getVersions(undefined, reloadSubrows);
+    },
+    [getVersions]
+  );
 
   React.useEffect(() => {
     const loadUsers = async () => {
@@ -310,10 +323,13 @@ export const ManageVersions = (props: ManageVersionsProps) => {
   }, [changesets, getUsers, versionsTableData]);
 
   React.useEffect(() => {
-    if (versionStatus === RequestStatus.NotStarted) {
+    if (
+      _currentTab === ManageVersionsTabs.Versions &&
+      versionStatus === RequestStatus.NotStarted
+    ) {
       getVersions();
     }
-  }, [getVersions, versionStatus]);
+  }, [_currentTab, getVersions, versionStatus]);
 
   React.useEffect(() => {
     if (
@@ -326,7 +342,7 @@ export const ManageVersions = (props: ManageVersionsProps) => {
 
   const onVersionCreated = React.useCallback(() => {
     changeTab(ManageVersionsTabs.Versions);
-    refreshVersions();
+    refreshVersions(true);
     setChangesets(undefined);
     setChangesetStatus(RequestStatus.NotStarted);
   }, [changeTab, refreshVersions]);

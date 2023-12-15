@@ -4,9 +4,11 @@
  *--------------------------------------------------------------------------------------------*/
 import { ConfigProviderProps } from "./common/configContext";
 import { defaultStrings } from "./components/ManageVersions/ManageVersions";
-import { Changeset, NamedVersion } from "./models";
+import { Changeset, localeDateWithTimeFormat, NamedVersion } from "./models";
 
-export const MOCKED_DATE = new Date(2019, 8, 9).toISOString();
+export const MOCKED_DATE = localeDateWithTimeFormat(
+  new Date("2023-12-07T06:14:54.1870000Z")
+);
 export const MOCKED_IMODEL_ID = "80abe4ef-e2cc-4ade-8fad-14546af23fbd";
 
 export const MOCKED_CONFIG_PROPS = {
