@@ -1,6 +1,13 @@
 # Change Log - @itwin/manage-versions-react
 
-This log was last generated on Thu, 14 Dec 2023 17:57:25 GMT and should not be manually modified.
+This log was last generated on Fri, 15 Dec 2023 07:20:17 GMT and should not be manually modified.
+
+## 1.3.2
+Fri, 15 Dec 2023 07:20:17 GMT
+
+### Patches
+
+- Fixes named version order and date format in table + reload subrows on create version
 
 ## 1.3.1
 Thu, 14 Dec 2023 17:57:25 GMT
