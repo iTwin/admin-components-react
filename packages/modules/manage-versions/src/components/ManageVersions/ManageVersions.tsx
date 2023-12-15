@@ -371,33 +371,6 @@ export const ManageVersions = (props: ManageVersionsProps) => {
     });
   };
 
-  const renderTabContent = (): JSX.Element | null => {
-    if (_currentTab === ManageVersionsTabs.Versions) {
-      return (
-        <VersionsTab
-          status={versionStatus}
-          onVersionUpdated={refreshVersions}
-          loadMoreVersions={getMoreVersions}
-          onViewClick={onViewClick}
-          tableData={versionsTableData ?? []}
-          changesetClient={changesetClient}
-          setRelatedChangesets={setRelatedChangesets}
-        />
-      );
-    } else if (_currentTab === ManageVersionsTabs.Changes) {
-      return (
-        <ChangesTab
-          changesets={changesets ?? []}
-          status={changesetStatus}
-          loadMoreChanges={getChangesets}
-          onVersionCreated={onVersionCreated}
-          latestVersion={latestVersion?.version}
-        />
-      );
-    }
-    return null;
-  };
-
   return (
     <ThemeProvider theme="inherit">
       <ConfigProvider

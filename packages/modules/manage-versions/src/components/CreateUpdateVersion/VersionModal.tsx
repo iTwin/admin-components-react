@@ -69,10 +69,6 @@ export const VersionModal = (props: VersionModalProps) => {
     return value.length <= MAX_LENGTH;
   };
 
-  const focusName = React.useCallback((inputRef: HTMLInputElement | null) => {
-    inputRef?.focus();
-  }, []);
-
   return (
     <>
       <Modal
