@@ -35,12 +35,12 @@ describe("ChangesTab", () => {
   it("should show data in versions table", () => {
     const { container } = renderComponent();
     const rows = container.querySelectorAll(
-      "._iui3-table-body ._iui3-table-row"
+      "div[role='rowgroup'] > div[role='row']"
     );
     expect(rows.length).toBe(3);
 
     rows.forEach((row, index) => {
-      const cells = row.querySelectorAll("._iui3-table-cell");
+      const cells = row.querySelectorAll("div[role='cell']");
       expect(cells.length).toBe(6);
       expect(cells[0].textContent).toContain(
         MockedChangeset(index).index.toString()
@@ -53,7 +53,7 @@ describe("ChangesTab", () => {
         MockedChangeset(index).synchronizationInfo.changedFiles.join(", ")
       );
       expect(cells[4].textContent).toContain(
-        new Date(MockedChangeset(index).pushDateTime).toLocaleString()
+        MockedChangeset(index).pushDateTime
       );
       within(cells[5] as HTMLElement).getByTitle(
         defaultStrings.createNamedVersion
@@ -91,7 +91,7 @@ describe("ChangesTab", () => {
       ],
     });
     const rows = container.querySelectorAll(
-      "._iui3-table-body ._iui3-table-row"
+      "div[role='rowgroup'] > div[role='row']"
     );
     expect(rows.length).toBe(1);
 
