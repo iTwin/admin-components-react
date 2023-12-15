@@ -71,7 +71,7 @@ describe("CreateVersionModal", () => {
     expect(latestVersionInfo.length).toBe(2);
     expect(latestVersionInfo[0].textContent).toEqual(MockedVersion().name);
     expect(latestVersionInfo[1].textContent).toEqual(
-      new Date(MockedVersion().createdDateTime).toLocaleString()
+      localeDateWithTimeFormat(new Date(MockedVersion().createdDateTime))
     );
   });
 
