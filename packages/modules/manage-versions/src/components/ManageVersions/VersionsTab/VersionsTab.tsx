@@ -4,9 +4,9 @@
  *--------------------------------------------------------------------------------------------*/
 import "./VersionsTab.scss";
 
-import { SvgEdit } from "@itwin/itwinui-icons-react";
-import { IconButton, Table, Text } from "@itwin/itwinui-react";
-import React from "react";
+import { SvgDownload, SvgEdit } from "@itwin/itwinui-icons-react";
+import { Table, Text, toaster } from "@itwin/itwinui-react";
+import React, { useCallback, useState } from "react";
 import { CellProps } from "react-table";
 
 import { ChangesetClient } from "../../../clients/changesetClient";
@@ -17,6 +17,7 @@ import {
   NamedVersion,
   VersionTableData,
 } from "../../../models";
+import { ContextMenu, MenuAction } from "../../contextMenu/ContextMenu";
 import { UpdateVersionModal } from "../../CreateUpdateVersion/UpdateVersionModal/UpdateVersionModal";
 import { RequestStatus } from "../types";
 
@@ -66,6 +67,49 @@ const VersionsTab = (props: VersionsTabProps) => {
     }
   }
 
+  const [openMenuId, setOpenMenuId] = useState(null);
+
+  const toggleContextMenu = useCallback((rowId) => {
+    setOpenMenuId((currentOpenMenuId) =>
+      currentOpenMenuId === rowId ? null : rowId
+    );
+  }, []);
+
+  const closeContextMenu = () => {
+    setOpenMenuId(null);
+  };
+
+  const onDownloadClick = useCallback(
+    async (changesetIndex: number) => {
+      toaster.closeAll();
+      try {
+        const checkpointInfo = await changesetClient.getChangesetCheckpoint(
+          imodelId,
+          changesetIndex
+        );
+        const downloadUrl = checkpointInfo._links.download.href;
+        window.open(downloadUrl, "_blank");
+        toaster.positive(stringsOverrides.messageDownloadedFileSuccessfully, {
+          hasCloseButton: true,
+        });
+      } catch (error) {
+        toaster.negative(
+          stringsOverrides.messageCouldNotDownloadedFileSuccessfully,
+          {
+            hasCloseButton: true,
+          }
+        );
+        console.error("Download failed:", error);
+      }
+    },
+    [
+      changesetClient,
+      imodelId,
+      stringsOverrides.messageCouldNotDownloadedFileSuccessfully,
+      stringsOverrides.messageDownloadedFileSuccessfully,
+    ]
+  );
+
   const renderDateColumn = React.useMemo(
     () => (row: VersionTableData | Changeset) => {
       if (isNamedVersion(row)) {
@@ -110,6 +154,39 @@ const VersionsTab = (props: VersionsTabProps) => {
         }
       },
     [renderDateColumn]
+  );
+
+  const getToolbarActions = useCallback(
+    (props: CellProps<VersionTableData>) => {
+      const mainToolbarActions: MenuAction[] = [
+        {
+          title: stringsOverrides.updateNamedVersion,
+          label: stringsOverrides.updateNamedVersion,
+          icon: <SvgEdit />,
+          disabled: false,
+          onClick: () => {
+            setCurrentVersion(props.row.original.version);
+            setIsUpdateVersionModalOpen(true);
+          },
+        },
+        {
+          title: stringsOverrides.download,
+          label: stringsOverrides.download,
+          icon: <SvgDownload />,
+          disabled: false,
+          onClick: async () => {
+            const { changesetIndex } = props.row.original.version;
+            await onDownloadClick(changesetIndex);
+          },
+        },
+      ];
+      return mainToolbarActions;
+    },
+    [
+      onDownloadClick,
+      stringsOverrides.download,
+      stringsOverrides.updateNamedVersion,
+    ]
   );
 
   const columns = React.useMemo(() => {
@@ -171,16 +248,13 @@ const VersionsTab = (props: VersionsTabProps) => {
               return (
                 <>
                   {isNamedVersion(props.row.original) ? (
-                    <IconButton
-                      onClick={() => {
-                        setCurrentVersion(props.row.original.version);
-                        setIsUpdateVersionModalOpen(true);
-                      }}
-                      title={stringsOverrides.updateNamedVersion}
-                      styleType="borderless"
-                    >
-                      <SvgEdit />
-                    </IconButton>
+                    <ContextMenu
+                      menuActions={getToolbarActions(props)}
+                      isMenuOpen={openMenuId === props.row.original.version.id}
+                      toggleMenu={toggleContextMenu}
+                      rowId={props.row.original.version.id}
+                      onClose={closeContextMenu}
+                    />
                   ) : (
                     <></>
                   )}
@@ -215,10 +289,12 @@ const VersionsTab = (props: VersionsTabProps) => {
     stringsOverrides.description,
     stringsOverrides.user,
     stringsOverrides.time,
-    stringsOverrides.updateNamedVersion,
     stringsOverrides.view,
     onViewClick,
     generateCellContent,
+    getToolbarActions,
+    openMenuId,
+    toggleContextMenu,
   ]);
 
   const emptyTableContent = React.useMemo(() => {
