@@ -3,7 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { LogFunc } from "../components/ManageVersions/types";
-import { Changeset, HttpHeaderNames, User } from "../models";
+import { Changeset, Checkpoint, HttpHeaderNames, User } from "../models";
 import { RequestOptions } from "../models/requestOptions";
 import { HttpClient } from "./httpClient";
 import { UrlBuilder } from "./urlBuilder";
@@ -54,5 +54,25 @@ export class ChangesetClient {
         }
       )
       .then((resp) => resp.users);
+  }
+
+  public async getChangesetCheckpoint(
+    imodelId: string,
+    changesetIndex: number,
+    requestOptions: RequestOptions = {}
+  ): Promise<Checkpoint> {
+    const url = `${UrlBuilder.buildChangesetUrl(
+      imodelId,
+      this._serverEnvironmentPrefix
+    )}/${changesetIndex}/checkpoint${UrlBuilder.getQuery(requestOptions)}`;
+
+    return this._http
+      .get(url, {
+        headers: {
+          [HttpHeaderNames.Accept]:
+            "application/vnd.bentley.itwin-platform.v2+json",
+        },
+      })
+      .then((resp) => resp.checkpoint);
   }
 }

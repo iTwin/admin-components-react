@@ -54,10 +54,13 @@ describe("VersionsTab", () => {
       expect(cells[4].textContent).toContain(defaultStrings.view);
       const viewSpan = screen.getByText("View");
       fireEvent.click(viewSpan);
-
-      within(cells[5] as HTMLElement).getByTitle(
-        defaultStrings.updateNamedVersion
-      );
+      const actionButton = within(cells[5] as HTMLElement).getByTitle("More");
+      expect(actionButton).toBeTruthy();
+      fireEvent.click(actionButton);
+      const updateAction = screen.getByText(defaultStrings.updateNamedVersion);
+      const downloadAction = screen.getByText(defaultStrings.download);
+      expect(updateAction).toBeTruthy();
+      expect(downloadAction).toBeTruthy();
     });
     expect(onViewClick).toHaveBeenCalledTimes(1);
   });
@@ -125,11 +128,17 @@ describe("VersionsTab", () => {
         expect(cells[4].textContent).toContain(defaultStrings.view);
         const viewSpan = screen.getByText("View");
         fireEvent.click(viewSpan);
-        const updateNamedVersionButton = within(
-          cells[5] as HTMLElement
-        ).queryByTitle(defaultStrings.updateNamedVersion);
-
-        expect(updateNamedVersionButton).toBeTruthy();
+        const actionsCell = cells[cells.length - 1];
+        const actionButton = within(actionsCell as HTMLElement).getByTitle(
+          "More"
+        );
+        fireEvent.click(actionButton);
+        const updateAction = screen.getByText(
+          defaultStrings.updateNamedVersion
+        );
+        if (updateAction) {
+          expect(updateAction).toBeTruthy();
+        }
       } else {
         expect(cells[0].textContent).toContain(
           MockedChangeset(index).displayName
@@ -144,11 +153,8 @@ describe("VersionsTab", () => {
           MockedChangeset(index).pushDateTime
         );
         expect(cells[4].textContent).not.toContain(defaultStrings.view);
-        const updateNamedVersionButton = within(
-          cells[5] as HTMLElement
-        ).queryByTitle(defaultStrings.updateNamedVersion);
-
-        expect(updateNamedVersionButton).toBeFalsy();
+        const actionsCell = cells[cells.length - 1];
+        expect(actionsCell.children.length).toBe(0);
       }
     });
   });

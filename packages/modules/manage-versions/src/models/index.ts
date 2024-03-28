@@ -7,3 +7,4 @@ export * from "./changeset";
 export * from "./namedVersion";
 export * from "./user";
 export * from "./utils";
+export * from "./checkpoint";
