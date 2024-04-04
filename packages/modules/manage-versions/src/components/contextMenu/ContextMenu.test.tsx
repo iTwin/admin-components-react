@@ -6,11 +6,11 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import React from "react";
 
+import { ConfigProvider } from "../../common/configContext";
+import { MOCKED_CONFIG_PROPS } from "../../mocks";
 import { ContextMenu, ContextMenuProps } from "./ContextMenu";
 
 describe("ContextMenu", () => {
-  const mockToggleMenu = jest.fn();
-  const mockOnClose = jest.fn();
   const mockActionClick = jest.fn();
 
   const defaultProps: ContextMenuProps = {
@@ -22,10 +22,6 @@ describe("ContextMenu", () => {
         label: "Perform Action 1",
       },
     ],
-    isMenuOpen: false,
-    toggleMenu: mockToggleMenu,
-    rowId: "row1",
-    onClose: mockOnClose,
   };
 
   beforeEach(() => {
@@ -33,24 +29,13 @@ describe("ContextMenu", () => {
   });
 
   it("should render with provided menu actions", () => {
-    render(<ContextMenu {...defaultProps} />);
-    fireEvent.click(screen.getByTitle("More"));
+    render(
+      <ConfigProvider {...MOCKED_CONFIG_PROPS}>
+        <ContextMenu {...defaultProps} />
+      </ConfigProvider>
+    );
+    fireEvent.click(screen.getByText("More"));
     expect(screen.queryByText("Perform Action 1")).not.toBeNull();
-  });
-
-  it("should toggle menu visibility on button click", () => {
-    render(<ContextMenu {...defaultProps} />);
-    const button = screen.getByTitle("More");
-    fireEvent.click(button);
-    expect(mockToggleMenu).toHaveBeenCalledWith("row1");
-  });
-
-  it("should call action onClick and closes menu when a menu item is clicked", () => {
-    render(<ContextMenu {...{ ...defaultProps, isMenuOpen: true }} />);
-    const menuItem = screen.getByTitle("Action 1");
-    fireEvent.click(menuItem);
-    expect(mockActionClick).toHaveBeenCalledTimes(1);
-    expect(mockOnClose).toHaveBeenCalledTimes(1);
   });
 
   it("does not trigger onClick for disabled menu actions", () => {
@@ -63,8 +48,12 @@ describe("ContextMenu", () => {
         },
       ],
     };
-    render(<ContextMenu {...disabledActionProps} />);
-    fireEvent.click(screen.getByTitle("More"));
+    render(
+      <ConfigProvider {...MOCKED_CONFIG_PROPS}>
+        <ContextMenu {...disabledActionProps} />
+      </ConfigProvider>
+    );
+    fireEvent.click(screen.getByText("More"));
     const menuItem = screen.getByTitle("Action 1");
     fireEvent.click(menuItem);
     expect(mockActionClick).not.toHaveBeenCalled();

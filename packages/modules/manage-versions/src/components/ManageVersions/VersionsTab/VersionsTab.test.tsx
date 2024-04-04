@@ -54,13 +54,15 @@ describe("VersionsTab", () => {
       expect(cells[4].textContent).toContain(defaultStrings.view);
       const viewSpan = screen.getByText("View");
       fireEvent.click(viewSpan);
-      const actionButton = within(cells[5] as HTMLElement).getByTitle("More");
+      const actionButton = within(cells[5] as HTMLElement).getByText("More");
       expect(actionButton).toBeTruthy();
       fireEvent.click(actionButton);
       const updateAction = screen.getByText(defaultStrings.updateNamedVersion);
-      const downloadAction = screen.getByText(defaultStrings.download);
+      if (defaultStrings.download) {
+        const downloadAction = screen.getByText(defaultStrings.download);
+        expect(downloadAction).toBeTruthy();
+      }
       expect(updateAction).toBeTruthy();
-      expect(downloadAction).toBeTruthy();
     });
     expect(onViewClick).toHaveBeenCalledTimes(1);
   });
@@ -129,7 +131,7 @@ describe("VersionsTab", () => {
         const viewSpan = screen.getByText("View");
         fireEvent.click(viewSpan);
         const actionsCell = cells[cells.length - 1];
-        const actionButton = within(actionsCell as HTMLElement).getByTitle(
+        const actionButton = within(actionsCell as HTMLElement).getByText(
           "More"
         );
         fireEvent.click(actionButton);

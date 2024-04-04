@@ -81,7 +81,7 @@ describe("ManageVersions", () => {
       expect(cells[2].textContent).toContain(mockedVersion.createdBy);
       expect(cells[3].textContent).toContain(mockedVersion.createdDateTime);
       const actionsCell = cells[4] as HTMLElement;
-      const button = (actionsCell as HTMLElement).querySelector("button");
+      const button = within(actionsCell as HTMLElement).getByText("More");
       expect(button).toBeTruthy();
     });
     expect(mockGetVersions).toHaveBeenCalledWith(MOCKED_IMODEL_ID, {
@@ -258,12 +258,12 @@ describe("ManageVersions", () => {
       container.querySelector(".iui-progress-indicator-radial")
     );
     const versionRows = container.querySelectorAll(
-      ".iui-table-body .iui-table-row"
+      "div[role='rowgroup'] > div[role='row']"
     );
     const firstRowCells = versionRows[0].querySelectorAll("div[role='cell']");
     expect(firstRowCells.length).toBe(5);
     const actionsCell = firstRowCells[4] as HTMLElement;
-    const button = within(actionsCell as HTMLElement).getByTitle("More");
+    const button = within(actionsCell as HTMLElement).getByText("More");
     expect(button).toBeTruthy();
     button.click();
     const updateAction = screen.getByText(defaultStrings.updateNamedVersion);
@@ -304,7 +304,7 @@ describe("ManageVersions", () => {
       MockedVersion(0).createdDateTime
     );
     const actionButton = firstRowCells[4] as HTMLElement;
-    const updateButton = within(actionButton as HTMLElement).getByTitle("More");
+    const updateButton = within(actionButton as HTMLElement).getByText("More");
     expect(updateButton).toBeTruthy();
     expect(mockGetVersions).toHaveBeenCalledTimes(2);
     expect(mockUpdateVersion).toHaveBeenCalled();

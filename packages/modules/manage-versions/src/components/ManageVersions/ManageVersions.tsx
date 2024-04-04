@@ -38,6 +38,7 @@ export const defaultStrings: ManageVersionsStringOverrides = {
   updateNamedVersion: "Update a Named Version",
   update: "Update",
   download: "Download",
+  More: "More",
   view: "View",
   messageFailedGetNamedVersions:
     "Could not get Named Versions. Please try again later.",

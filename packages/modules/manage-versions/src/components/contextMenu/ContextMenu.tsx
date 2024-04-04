@@ -5,7 +5,9 @@
 
 import { SvgMore } from "@itwin/itwinui-icons-react";
 import { DropdownMenu, IconButton, MenuItem } from "@itwin/itwinui-react";
-import React from "react";
+import React, { useCallback } from "react";
+
+import { useConfig } from "../../common/configContext";
 
 export type MenuAction = {
   icon?: JSX.Element;
@@ -17,47 +19,39 @@ export type MenuAction = {
 
 export interface ContextMenuProps {
   menuActions: MenuAction[];
-  isMenuOpen: boolean;
-  toggleMenu: (rowId: string) => void;
-  rowId: string;
-  onClose: () => void;
 }
 
-export const ContextMenu = ({
-  menuActions,
-  isMenuOpen,
-  toggleMenu,
-  rowId,
-  onClose,
-}: ContextMenuProps) => {
+export const ContextMenu = ({ menuActions }: ContextMenuProps) => {
+  const { stringsOverrides } = useConfig();
+
+  const menuItems = useCallback(
+    (close: () => void) => {
+      return menuActions.map((action, index) => (
+        <MenuItem
+          icon={action.icon}
+          key={index}
+          onClick={() => {
+            close();
+            action.onClick();
+          }}
+          title={action.title}
+          disabled={action.disabled}
+        >
+          {action.label}
+        </MenuItem>
+      ));
+    },
+    [menuActions]
+  );
+
   return (
-    <DropdownMenu
-      onClickOutside={onClose}
-      menuItems={() =>
-        menuActions.map((action, index) => (
-          <MenuItem
-            {...action}
-            key={index}
-            onClick={() => {
-              onClose();
-              action.onClick();
-            }}
-            title={action.title}
-            disabled={action.disabled}
-          >
-            {action.label}
-          </MenuItem>
-        ))
-      }
-      className="bnt-named-version-context-menu"
-      visible={isMenuOpen}
-    >
+    <DropdownMenu menuItems={menuItems}>
       <IconButton
-        onClick={() => toggleMenu(rowId)}
+        onClick={(e) => e.stopPropagation()}
         styleType="borderless"
         size="small"
         role="button"
-        title="More"
+        label={stringsOverrides.More}
       >
         <SvgMore />
       </IconButton>

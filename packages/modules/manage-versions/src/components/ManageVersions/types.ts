@@ -33,7 +33,9 @@ export type ManageVersionsStringOverrides = {
   /** Default: `Update` */
   update: string;
   /** Default: `Download` */
-  download: string;
+  download?: string;
+  /** Label for Named Version context menu` Default `More` */
+  More?: string;
   /** Default: `View` */
   view: string;
   /** Error message when failed to fetch Named Versions. Default `Could not get Named Versions. Please try again later.`. */
