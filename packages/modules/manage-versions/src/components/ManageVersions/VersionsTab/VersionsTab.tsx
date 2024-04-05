@@ -77,7 +77,7 @@ const VersionsTab = (props: VersionsTabProps) => {
         );
         const downloadUrl = checkpointInfo._links.download.href;
         window.open(downloadUrl, "_blank", "noopener,noreferrer");
-        toaster.positive(stringsOverrides.messageDownloadedFileSuccessfully, {
+        toaster.informational(stringsOverrides.messageFileDownloadInProgress, {
           hasCloseButton: true,
         });
       } catch (error) {
@@ -93,7 +93,7 @@ const VersionsTab = (props: VersionsTabProps) => {
       changesetClient,
       imodelId,
       stringsOverrides.messageCouldNotDownloadedFileSuccessfully,
-      stringsOverrides.messageDownloadedFileSuccessfully,
+      stringsOverrides.messageFileDownloadInProgress,
     ]
   );
 

@@ -53,7 +53,7 @@ export const defaultStrings: ManageVersionsStringOverrides = {
   messageCouldNotCreateVersion:
     "Could not create a Named Version. Please try again later.",
   messageVersionUpdated: 'Named Version "{{name}}" was successfully updated.',
-  messageDownloadedFileSuccessfully: "File was successfully downloaded.",
+  messageFileDownloadInProgress: "File download in progress...",
   messageCouldNotDownloadedFileSuccessfully: "Unable to download file.",
   messageInsufficientPermissionsToUpdateVersion:
     "You do not have the required permissions to update a Named Version.",

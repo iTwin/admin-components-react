@@ -57,9 +57,9 @@ export type ManageVersionsStringOverrides = {
   /** Default `Named Version "{{name}}" was successfully updated.` - `{{name}}` - Named Version name */
   messageVersionUpdated: string;
   /** Default `File was successfully downloaded.`. */
-  messageDownloadedFileSuccessfully: string;
+  messageFileDownloadInProgress?: string;
   /** Default `Unable to download file.`. */
-  messageCouldNotDownloadedFileSuccessfully: string;
+  messageCouldNotDownloadedFileSuccessfully?: string;
   /** Default `You do not have the required permissions to update a Named Version.` */
   messageInsufficientPermissionsToUpdateVersion: string;
   /** Default `Could not update a Named Version. Please try again later.` */
