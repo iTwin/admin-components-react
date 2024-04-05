@@ -79,6 +79,7 @@ const VersionsTab = (props: VersionsTabProps) => {
         window.open(downloadUrl, "_blank", "noopener,noreferrer");
         toaster.informational(stringsOverrides.messageFileDownloadInProgress, {
           hasCloseButton: true,
+          duration: 2000,
         });
       } catch (error) {
         toaster.negative(
