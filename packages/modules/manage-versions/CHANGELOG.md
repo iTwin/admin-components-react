@@ -1,6 +1,13 @@
 # Change Log - @itwin/manage-versions-react
 
-This log was last generated on Fri, 15 Dec 2023 07:20:17 GMT and should not be manually modified.
+This log was last generated on Mon, 08 Apr 2024 07:43:29 GMT and should not be manually modified.
+
+## 1.4.0
+Mon, 08 Apr 2024 07:43:29 GMT
+
+### Minor changes
+
+- Adding Download action on Named version table to download the associated files of a Named Version from the UI. Hence, Added changeset checkpoint API to download file. Also, added context menu to provide quick access to multiple actions.
 
 ## 1.3.2
 Fri, 15 Dec 2023 07:20:17 GMT
