@@ -56,7 +56,7 @@ export type ManageVersionsStringOverrides = {
   messageCouldNotCreateVersion: string;
   /** Default `Named Version "{{name}}" was successfully updated.` - `{{name}}` - Named Version name */
   messageVersionUpdated: string;
-  /** Default `File was successfully downloaded.`. */
+  /** Default `Downloading file...`. */
   messageFileDownloadInProgress?: string;
   /** Default `Unable to download file.`. */
   messageCouldNotDownloadedFileSuccessfully?: string;
