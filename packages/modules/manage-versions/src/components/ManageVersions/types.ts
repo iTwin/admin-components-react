@@ -32,6 +32,10 @@ export type ManageVersionsStringOverrides = {
   updateNamedVersion: string;
   /** Default: `Update` */
   update: string;
+  /** Default: `Download` */
+  download?: string;
+  /** Label for Named Version context menu` Default `More` */
+  More?: string;
   /** Default: `View` */
   view: string;
   /** Error message when failed to fetch Named Versions. Default `Could not get Named Versions. Please try again later.`. */
@@ -52,6 +56,10 @@ export type ManageVersionsStringOverrides = {
   messageCouldNotCreateVersion: string;
   /** Default `Named Version "{{name}}" was successfully updated.` - `{{name}}` - Named Version name */
   messageVersionUpdated: string;
+  /** Default `Downloading file...`. */
+  messageFileDownloadInProgress?: string;
+  /** Default `Unable to download file.`. */
+  messageCouldNotDownloadedFileSuccessfully?: string;
   /** Default `You do not have the required permissions to update a Named Version.` */
   messageInsufficientPermissionsToUpdateVersion: string;
   /** Default `Could not update a Named Version. Please try again later.` */

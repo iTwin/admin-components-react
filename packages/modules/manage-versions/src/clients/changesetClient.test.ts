@@ -58,4 +58,40 @@ describe("ChangesetClient", () => {
       }
     );
   });
+
+  it("should have the correct url and resolve with the checkpoint data on getChangesetCheckpoint", async () => {
+    const changesetIndex = 5;
+    const mockCheckpoint = {
+      changesetIndex: changesetIndex,
+      changesetId: "mockChangesetId",
+      state: "available",
+      containerAccessInfo: {
+        account: "mockAccount",
+        container: "mockContainer",
+        sas: "mockSasToken",
+        dbName: "mockDbName",
+      },
+      _links: {
+        download: {
+          href: "http://download-link",
+        },
+      },
+    };
+
+    mockHttpGet.mockResolvedValue({ checkpoint: mockCheckpoint });
+
+    const checkpoint = await changesetClient.getChangesetCheckpoint(
+      MOCKED_IMODEL_ID,
+      changesetIndex
+    );
+    expect(mockHttpGet).toHaveBeenCalledWith(
+      `https://api.bentley.com/imodels/${MOCKED_IMODEL_ID}/changesets/${changesetIndex}/checkpoint`,
+      {
+        headers: {
+          Accept: "application/vnd.bentley.itwin-platform.v2+json",
+        },
+      }
+    );
+    expect(checkpoint).toEqual(mockCheckpoint);
+  });
 });

@@ -80,9 +80,9 @@ describe("ManageVersions", () => {
 
       expect(cells[2].textContent).toContain(mockedVersion.createdBy);
       expect(cells[3].textContent).toContain(mockedVersion.createdDateTime);
-      within(cells[4] as HTMLElement).getByTitle(
-        defaultStrings.updateNamedVersion
-      );
+      const actionsCell = cells[4] as HTMLElement;
+      const button = within(actionsCell as HTMLElement).getByText("More");
+      expect(button).toBeTruthy();
     });
     expect(mockGetVersions).toHaveBeenCalledWith(MOCKED_IMODEL_ID, {
       top: 100,
@@ -257,12 +257,17 @@ describe("ManageVersions", () => {
     await waitForElementToBeRemoved(() =>
       container.querySelector(".iui-progress-indicator-radial")
     );
-
-    const updateVersionButtons = screen.getAllByTitle(
-      defaultStrings.updateNamedVersion
+    const versionRows = container.querySelectorAll(
+      "div[role='rowgroup'] > div[role='row']"
     );
-    expect(updateVersionButtons.length).toBe(3);
-    updateVersionButtons[0].click();
+    const firstRowCells = versionRows[0].querySelectorAll("div[role='cell']");
+    expect(firstRowCells.length).toBe(5);
+    const actionsCell = firstRowCells[4] as HTMLElement;
+    const button = within(actionsCell as HTMLElement).getByText("More");
+    expect(button).toBeTruthy();
+    button.click();
+    const updateAction = screen.getByText(defaultStrings.updateNamedVersion);
+    updateAction.click();
 
     await waitForSelectorToExist("input");
     const nameInput = document.querySelector("input") as HTMLInputElement;
@@ -298,9 +303,9 @@ describe("ManageVersions", () => {
     expect(versionCells[3].textContent).toEqual(
       MockedVersion(0).createdDateTime
     );
-    within(versionCells[4] as HTMLElement).getByTitle(
-      defaultStrings.updateNamedVersion
-    );
+    const actionButton = firstRowCells[4] as HTMLElement;
+    const updateButton = within(actionButton as HTMLElement).getByText("More");
+    expect(updateButton).toBeTruthy();
     expect(mockGetVersions).toHaveBeenCalledTimes(2);
     expect(mockUpdateVersion).toHaveBeenCalled();
   });
