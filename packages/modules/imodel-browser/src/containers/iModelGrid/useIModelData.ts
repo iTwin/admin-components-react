@@ -102,7 +102,7 @@ export const useIModelData = ({
       top = PAGE_SIZE;
     }
     const paging = `&$skip=${skip}&$top=${top}`;
-    const searching = searchText?.trim() ? `&name=${searchText}` : "";
+    const searching = searchText?.trim() ? `&$search=${searchText}` : "";
 
     const url = `${_getAPIServer(
       apiOverrides
