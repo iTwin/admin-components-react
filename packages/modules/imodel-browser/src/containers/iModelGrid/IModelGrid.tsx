@@ -10,6 +10,7 @@ import { InView } from "react-intersection-observer";
 
 import { GridStructure } from "../../components/gridStructure/GridStructure";
 import { NoResults } from "../../components/noResults/NoResults";
+import { NoSearchResults } from "../../components/noSearchResults/NoSearchResults";
 import {
   ApiOverrides,
   DataStatus,
@@ -55,6 +56,8 @@ export interface IModelGridProps {
     tableLoadingData?: string;
     /** Displayed after successful fetch search, but no iModel is returned. */
     noIModelSearch?: string;
+    /** Displayed after successful fetch search, but no iModel is returned, along with noIModelSearch text. */
+    noIModelSearchSubtext?: string;
     /** Displayed after successful fetch, but no iModels are returned. */
     noIModels?: string;
     /** Displayed when the component is mounted and there is no iTwin or asset Id. */
@@ -114,7 +117,9 @@ export const IModelGrid = ({
       tableColumnDescription: "Description",
       tableColumnLastModified: "Last Modified",
       tableLoadingData: "Loading...",
-      noIModelSearch: "There is no such iModel in this project.",
+      noIModelSearch: "No results found",
+      noIModelSearchSubtext:
+        "Try adjusting your search by using fewer or more general terms.",
       noIModels: "There are no iModels in this iTwin.",
       noContext: "No context provided",
       noAuthentication: "No access token provided",
@@ -173,22 +178,18 @@ export const IModelGrid = ({
               </>
             ) : (
               <>
-                {searchText && iModels.length === 0 ? (
-                  <div>{strings.noIModelSearch}</div>
-                ) : (
-                  iModels?.map((iModel) => (
-                    <IModelHookedTile
-                      key={iModel.id}
-                      iModel={iModel}
-                      iModelOptions={iModelActions}
-                      accessToken={accessToken}
-                      onThumbnailClick={onThumbnailClick}
-                      apiOverrides={tileApiOverrides}
-                      useTileState={useIndividualState}
-                      {...tileOverrides}
-                    />
-                  ))
-                )}
+                {iModels?.map((iModel) => (
+                  <IModelHookedTile
+                    key={iModel.id}
+                    iModel={iModel}
+                    iModelOptions={iModelActions}
+                    accessToken={accessToken}
+                    onThumbnailClick={onThumbnailClick}
+                    apiOverrides={tileApiOverrides}
+                    useTileState={useIndividualState}
+                    {...tileOverrides}
+                  />
+                ))}
                 {fetchMore ? (
                   <>
                     <InView onChange={fetchMore}>
@@ -239,6 +240,14 @@ export const IModelGrid = ({
     }
     if (!searchText && iModels.length === 0 && noResultsText) {
       return <NoResults text={noResultsText} />;
+    }
+    if (searchText && iModels.length === 0) {
+      return (
+        <NoSearchResults
+          text={strings.noIModelSearch}
+          subtext={strings.noIModelSearchSubtext}
+        />
+      );
     }
     return renderIModelGridStructure();
   };
