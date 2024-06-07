@@ -10,7 +10,6 @@ import { InView } from "react-intersection-observer";
 
 import { GridStructure } from "../../components/gridStructure/GridStructure";
 import { NoResults } from "../../components/noResults/NoResults";
-import { NoSearchResults } from "../../components/noSearchResults/NoSearchResults";
 import {
   ApiOverrides,
   DataStatus,
@@ -243,9 +242,10 @@ export const IModelGrid = ({
     }
     if (searchText && iModels.length === 0) {
       return (
-        <NoSearchResults
+        <NoResults
           text={strings.noIModelSearch}
           subtext={strings.noIModelSearchSubtext}
+          isSearchResult={true}
         />
       );
     }

@@ -17,13 +17,37 @@
   margin-top: var(--iui-size-m);
   margin-bottom: var(--iui-size-m);
 
-  >svg {
+  > svg {
     height: 75px;
     fill: currentColor;
     width: 100%;
   }
 
-  >span:first-of-type {
+  > span:first-of-type {
     margin-top: var(--iui-size-m);
+  }
+}
+
+.iac-no-search-results-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  .iac-no-search-results {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--iui-size-2xs);
+
+    > svg {
+      height: var(--iui-size-2xl);
+      width: var(--iui-size-2xl);
+      fill: var(--iui-color-icon-muted);
+      margin-bottom: var(--iui-size-2xs);
+    }
+
+    .iui-text-leading {
+      font-weight: var(--iui-font-weight-semibold);
+    }
   }
 }
