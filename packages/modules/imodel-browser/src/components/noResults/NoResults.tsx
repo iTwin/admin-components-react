@@ -21,28 +21,13 @@ export const NoResults = ({
   subtext,
   isSearchResult = false,
 }: NoResultsProps) => {
-  const renderNoresultsComponent = () => {
-    return (
-      <Text variant="leading" isMuted={true} className={"iac-no-results"}>
-        <SvgImodelHollow />
-        <span>{text}</span>
-      </Text>
-    );
-  };
-
-  const renderNoSearchResultsComponent = () => {
-    return (
-      <div className="iac-no-search-results-container">
-        <div className="iac-no-search-results">
-          <SvgSearch />
-          <Text variant="leading">{text}</Text>
-          {subtext && <Text>{subtext}</Text>}
-        </div>
+  return (
+    <div className="iac-no-results-container">
+      <div className="iac-no-results">
+        {isSearchResult ? <SvgSearch /> : <SvgImodelHollow />}
+        <Text variant="leading">{text}</Text>
+        {subtext && <Text>{subtext}</Text>}
       </div>
-    );
-  };
-
-  return isSearchResult
-    ? renderNoSearchResultsComponent()
-    : renderNoresultsComponent();
+    </div>
+  );
 };

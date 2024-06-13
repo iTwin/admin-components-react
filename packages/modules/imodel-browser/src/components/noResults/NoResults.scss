@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 @import "../../index.scss";
 
-.iac-no-results {
+.iac-no-results-container {
   position: absolute;
   left: 50%;
   top: 40%;
@@ -17,23 +17,7 @@
   margin-top: var(--iui-size-m);
   margin-bottom: var(--iui-size-m);
 
-  > svg {
-    height: 75px;
-    fill: currentColor;
-    width: 100%;
-  }
-
-  > span:first-of-type {
-    margin-top: var(--iui-size-m);
-  }
-}
-
-.iac-no-search-results-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 100%;
-  .iac-no-search-results {
+  .iac-no-results {
     display: flex;
     flex-direction: column;
     align-items: center;
