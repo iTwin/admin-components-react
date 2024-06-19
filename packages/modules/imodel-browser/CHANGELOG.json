@@ -2,6 +2,23 @@
   "name": "@itwin/imodel-browser-react",
   "entries": [
     {
+      "version": "1.3.0",
+      "tag": "@itwin/imodel-browser-react_v1.3.0",
+      "date": "Wed, 19 Jun 2024 14:36:27 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Updated no search results UI for IModelGrid component"
+          }
+        ],
+        "patch": [
+          {
+            "comment": "Adding `Search` parameter to get iModels instead of `Name`. `Search` allows user to search without need to put the exact iModel name."
+          }
+        ]
+      }
+    },
+    {
       "version": "1.2.2",
       "tag": "@itwin/imodel-browser-react_v1.2.2",
       "date": "Thu, 14 Dec 2023 17:57:25 GMT",

@@ -1,6 +1,17 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Thu, 14 Dec 2023 17:57:25 GMT and should not be manually modified.
+This log was last generated on Wed, 19 Jun 2024 14:36:27 GMT and should not be manually modified.
+
+## 1.3.0
+Wed, 19 Jun 2024 14:36:27 GMT
+
+### Minor changes
+
+- Updated no search results UI for IModelGrid component
+
+### Patches
+
+- Adding `Search` parameter to get iModels instead of `Name`. `Search` allows user to search without need to put the exact iModel name.
 
 ## 1.2.2
 Thu, 14 Dec 2023 17:57:25 GMT
