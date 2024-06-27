@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Wed, 19 Jun 2024 14:36:27 GMT and should not be manually modified.
+This log was last generated on Thu, 27 Jun 2024 13:24:37 GMT and should not be manually modified.
+
+## 1.3.1
+Thu, 27 Jun 2024 13:24:37 GMT
+
+### Patches
+
+- Added a check to ensure that no search result UI is not prematurely shown while data is still being fetched.
 
 ## 1.3.0
 Wed, 19 Jun 2024 14:36:27 GMT
