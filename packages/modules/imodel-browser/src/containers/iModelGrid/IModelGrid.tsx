@@ -240,7 +240,11 @@ export const IModelGrid = ({
     if (!searchText && iModels.length === 0 && noResultsText) {
       return <NoResults text={noResultsText} />;
     }
-    if (searchText && iModels.length === 0) {
+    if (
+      searchText &&
+      iModels.length === 0 &&
+      fetchStatus !== DataStatus.Fetching
+    ) {
       return (
         <NoResults
           text={strings.noIModelSearch}
