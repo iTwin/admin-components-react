@@ -129,13 +129,12 @@ const VersionsTab = (props: VersionsTabProps) => {
         }
 
         if (isNamedVersion(row)) {
-          return (
-            <Text>{row.version[columnAccessor as keyof NamedVersion]}</Text>
-          );
+          const cellContent = row.version[columnAccessor as keyof NamedVersion];
+          return <Text>{cellContent as React.ReactNode}</Text>;
         } else {
           const cellContent = row[columnAccessor as keyof Changeset];
           return cellContent !== "" ? (
-            <Text>{cellContent}</Text>
+            <Text>{cellContent as React.ReactNode}</Text>
           ) : (
             <Text isSkeleton={true}>Loading</Text>
           );
