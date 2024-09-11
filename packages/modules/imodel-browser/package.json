@@ -43,8 +43,8 @@
     "@testing-library/react": "^11.1.0",
     "@testing-library/react-hooks": "^5.1.0",
     "@types/jest": "^27.5.1",
-    "@types/react": "^17.0.37",
-    "@types/react-dom": "^17.0.0",
+    "@types/react": "^18.3.5",
+    "@types/react-dom": "^18.3.0",
     "@types/react-table": "~7.7.14",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
@@ -67,9 +67,9 @@
     "sass": "^1.69.5",
     "postcss": "8.4.31",
     "prettier": "^2.0.5",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-test-renderer": "^17.0.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-test-renderer": "^18.3.1",
     "rimraf": "^3.0.2",
     "rollup": "^2.42.4",
     "rollup-plugin-peer-deps-external": "^2.2.4",
@@ -85,7 +85,7 @@
     "typescript": "^4.2.3"
   },
   "peerDependencies": {
-    "react": "^16.13.0 || ^17.0.2",
-    "react-dom": "^16.13.0 || ^17.0.2"
+    "react": "^17.0.2 || 18.3.1",
+    "react-dom": "^17.0.2 || 18.3.1"
   }
 }
