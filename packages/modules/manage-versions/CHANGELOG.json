@@ -2,6 +2,18 @@
   "name": "@itwin/manage-versions-react",
   "entries": [
     {
+      "version": "2.0.0",
+      "tag": "@itwin/manage-versions-react_v2.0.0",
+      "date": "Wed, 11 Sep 2024 12:52:00 GMT",
+      "comments": {
+        "major": [
+          {
+            "comment": "Added support for react 18 and removed support for react 16"
+          }
+        ]
+      }
+    },
+    {
       "version": "1.4.0",
       "tag": "@itwin/manage-versions-react_v1.4.0",
       "date": "Mon, 08 Apr 2024 07:43:29 GMT",

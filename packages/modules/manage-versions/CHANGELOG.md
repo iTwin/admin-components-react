@@ -1,6 +1,13 @@
 # Change Log - @itwin/manage-versions-react
 
-This log was last generated on Mon, 08 Apr 2024 07:43:29 GMT and should not be manually modified.
+This log was last generated on Wed, 11 Sep 2024 12:52:00 GMT and should not be manually modified.
+
+## 2.0.0
+Wed, 11 Sep 2024 12:52:00 GMT
+
+### Breaking changes
+
+- Added support for react 18 and removed support for react 16
 
 ## 1.4.0
 Mon, 08 Apr 2024 07:43:29 GMT
