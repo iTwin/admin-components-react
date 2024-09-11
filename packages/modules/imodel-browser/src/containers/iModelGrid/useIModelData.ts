@@ -67,8 +67,6 @@ export const useIModelData = ({
     maxCount,
   ]);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const abortController = useMemo(() => new AbortController(), [searchText]);
   React.useEffect(() => {
     if (!morePages) {
       return;
@@ -104,6 +102,7 @@ export const useIModelData = ({
     const paging = `&$skip=${skip}&$top=${top}`;
     const searching = searchText?.trim() ? `&$search=${searchText}` : "";
 
+    const abortController = new AbortController();
     const url = `${_getAPIServer(
       apiOverrides
     )}/imodels/${selection}${sorting}${paging}${searching}`;
@@ -146,8 +145,11 @@ export const useIModelData = ({
         setStatus(DataStatus.FetchFailed);
         console.error(e);
       });
+
+    return () => {
+      abortController.abort();
+    };
   }, [
-    abortController,
     accessToken,
     apiOverrides,
     apiOverrides?.data,
@@ -160,11 +162,6 @@ export const useIModelData = ({
     maxCount,
   ]);
 
-  useEffect(() => {
-    return () => {
-      abortController.abort();
-    };
-  }, [abortController]);
   return {
     iModels: sortedIModels,
     status,

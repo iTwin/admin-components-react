@@ -4,9 +4,9 @@
   "private": true,
   "homepage": ".",
   "dependencies": {
-    "@storybook/addons": "^6.2.5",
-    "@storybook/api": "^6.2.5",
-    "@storybook/components": "^6.2.5"
+    "@storybook/addons": "^6.5.16",
+    "@storybook/api": "^6.5.16",
+    "@storybook/components": "^6.5.16"
   },
   "devDependencies": {
     "@bentley/bentleyjs-core": "2.11.0",
@@ -14,8 +14,8 @@
     "@bentley/itwin-client": "2.11.0",
     "@bentley/react-scripts": "5.0.7",
     "@babel/plugin-proposal-private-property-in-object": "^7.14.5",
-    "@types/react": "^17.0.37",
-    "@types/react-dom": "^17.0.0",
+    "@types/react": "^18.3.5",
+    "@types/react-dom": "^18.3.0",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
     "babel-eslint": "^10.0.0",
@@ -31,8 +31,8 @@
     "eslint-plugin-simple-import-sort": "^5.0.3",
     "eslint": "^8.3.0",
     "mv": "^2.1.1",
-    "react-dom": "^17.0.2",
-    "react": "^17.0.2",
+    "react-dom": "^18.3.1",
+    "react": "^18.3.1",
     "rimraf": "^3.0.2",
     "typescript": "^4.2.3"
   },

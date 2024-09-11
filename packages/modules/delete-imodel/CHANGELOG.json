@@ -2,6 +2,18 @@
   "name": "@itwin/delete-imodel-react",
   "entries": [
     {
+      "version": "2.0.0",
+      "tag": "@itwin/delete-imodel-react_v2.0.0",
+      "date": "Wed, 11 Sep 2024 12:52:00 GMT",
+      "comments": {
+        "major": [
+          {
+            "comment": "Added support for react 18 and removed support for react 16"
+          }
+        ]
+      }
+    },
+    {
       "version": "1.1.1",
       "tag": "@itwin/delete-imodel-react_v1.1.1",
       "date": "Thu, 14 Dec 2023 17:57:25 GMT",

@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Thu, 27 Jun 2024 13:24:37 GMT and should not be manually modified.
+This log was last generated on Wed, 11 Sep 2024 12:52:00 GMT and should not be manually modified.
+
+## 2.0.0
+Wed, 11 Sep 2024 12:52:00 GMT
+
+### Breaking changes
+
+- Added support for react 18 and removed support for react 16
 
 ## 1.3.1
 Thu, 27 Jun 2024 13:24:37 GMT

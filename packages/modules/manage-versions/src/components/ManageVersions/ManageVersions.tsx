@@ -310,7 +310,9 @@ export const ManageVersions = (props: ManageVersionsProps) => {
               version: updatedVersion ? updatedVersion[0] : td.version,
             };
           });
-          setVersionsTableData(updatedVersionsTableData);
+          if (updatedVersionsTableData) {
+            setVersionsTableData(updatedVersionsTableData);
+          }
           setChangesets((prevChangesets) => [
             ...(updateChangesetsProperties(
               changesets ?? [],
