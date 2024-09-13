@@ -15,7 +15,7 @@ import { useIModelSort } from "./useIModelSort";
 
 export interface IModelDataHookOptions {
   iTwinId?: string | undefined;
-  accessToken?: string | undefined;
+  accessToken?: string | (() => Promise<string>) | undefined;
   sortOptions?: IModelSortOptions;
   apiOverrides?: ApiOverrides<IModelFull[]>;
   searchText?: string | undefined;
@@ -106,45 +106,47 @@ export const useIModelData = ({
     const url = `${_getAPIServer(
       apiOverrides
     )}/imodels/${selection}${sorting}${paging}${searching}`;
-    const options: RequestInit = {
-      signal: abortController.signal,
-      headers: {
-        Authorization: accessToken,
-        Prefer: "return=representation",
-        Accept: "application/vnd.bentley.itwin-platform.v2+json",
-      },
-    };
-    fetch(url, options)
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          return response.text().then((errorText) => {
+
+    const makeFetchRequest = async () => {
+      const options: RequestInit = {
+        signal: abortController.signal,
+        headers: {
+          Authorization:
+            typeof accessToken === "function"
+              ? await accessToken()
+              : accessToken,
+          Prefer: "return=representation",
+          Accept: "application/vnd.bentley.itwin-platform.v2+json",
+        },
+      };
+
+      const response = await fetch(url, options);
+      const result: { iModels: IModelFull[] } = response.ok
+        ? await response.json()
+        : await response.text().then((errorText) => {
             throw new Error(errorText);
           });
-        }
-      })
-      .then((result: { iModels: IModelFull[] }) => {
-        setStatus(DataStatus.Complete);
-        if (
-          result.iModels.length !== PAGE_SIZE ||
-          result.iModels.length === maxCount
-        ) {
-          setMorePages(false);
-        }
-        setIModels((imodels) =>
-          page === 0 ? result.iModels : [...imodels, ...result.iModels]
-        );
-      })
-      .catch((e) => {
-        if (e.name === "AbortError") {
-          // Aborting because unmounting is not an error, swallow.
-          return;
-        }
-        setIModels([]);
-        setStatus(DataStatus.FetchFailed);
-        console.error(e);
-      });
+      setStatus(DataStatus.Complete);
+      if (
+        result.iModels.length !== PAGE_SIZE ||
+        result.iModels.length === maxCount
+      ) {
+        setMorePages(false);
+      }
+      setIModels((imodels) =>
+        page === 0 ? result.iModels : [...imodels, ...result.iModels]
+      );
+    };
+
+    makeFetchRequest().catch((e) => {
+      if (e.name === "AbortError") {
+        // Aborting because unmounting is not an error, swallow.
+        return;
+      }
+      setIModels([]);
+      setStatus(DataStatus.FetchFailed);
+      console.error(e);
+    });
 
     return () => {
       abortController.abort();

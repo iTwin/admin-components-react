@@ -17,7 +17,7 @@ import { useITwinFilter } from "./useITwinFilter";
 export interface ProjectDataHookOptions {
   requestType?: "favorites" | "recents" | "";
   iTwinSubClass?: ITwinSubClass;
-  accessToken?: string | undefined;
+  accessToken?: string | (() => Promise<string>) | undefined;
   apiOverrides?: ApiOverrides<ITwinFull[]>;
   filterOptions?: ITwinFilterOptions;
 }
@@ -98,42 +98,44 @@ export const useITwinData = ({
     const url = `${_getAPIServer(
       apiOverrides
     )}/itwins/${endpoint}${subClass}${paging}${search}`;
-    const options: RequestInit = {
-      signal: abortController.signal,
-      headers: {
-        Authorization: accessToken,
-        Accept: "application/vnd.bentley.itwin-platform.v1+json",
-        Prefer: "return=representation",
-      },
-    };
-    fetch(url, options)
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          return response.text().then((errorText) => {
+
+    const makeFetchRequest = async () => {
+      const options: RequestInit = {
+        signal: abortController.signal,
+        headers: {
+          Authorization:
+            typeof accessToken === "function"
+              ? await accessToken()
+              : accessToken,
+          Accept: "application/vnd.bentley.itwin-platform.v1+json",
+          Prefer: "return=representation",
+        },
+      };
+
+      const response = await fetch(url, options);
+      const result: { iTwins: ITwinFull[] } = response.ok
+        ? await response.json()
+        : await response.text().then((errorText) => {
             throw new Error(errorText);
           });
-        }
-      })
-      .then((result: { iTwins: ITwinFull[] }) => {
-        setStatus(DataStatus.Complete);
-        if (result.iTwins.length !== PAGE_SIZE) {
-          setMorePages(false);
-        }
-        setProjects((projects) =>
-          page === 0 ? result.iTwins : [...projects, ...result.iTwins]
-        );
-      })
-      .catch((e) => {
-        if (e.name === "AbortError") {
-          // Aborting because unmounting is not an error, swallow.
-          return;
-        }
-        setProjects([]);
-        setStatus(DataStatus.FetchFailed);
-        console.error(e);
-      });
+      setStatus(DataStatus.Complete);
+      if (result.iTwins.length !== PAGE_SIZE) {
+        setMorePages(false);
+      }
+      setProjects((projects) =>
+        page === 0 ? result.iTwins : [...projects, ...result.iTwins]
+      );
+    };
+
+    makeFetchRequest().catch((e) => {
+      if (e.name === "AbortError") {
+        // Aborting because unmounting is not an error, swallow.
+        return;
+      }
+      setProjects([]);
+      setStatus(DataStatus.FetchFailed);
+      console.error(e);
+    });
     return () => {
       abortController.abort();
     };

@@ -182,7 +182,7 @@ const useIndividualState: IndividualITwinStateHook = (iTwin, props) => {
         // Start the fetch
         const response = await fetch(url, {
           headers: {
-            Authorization: props.gridProps.accessToken ?? "",
+            Authorization: (props.gridProps.accessToken as string) ?? "",
             Prefer: "return=minimal",
           },
         });

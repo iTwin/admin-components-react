@@ -18,7 +18,7 @@ export interface IModelTileProps {
   /** iModel to display */
   iModel: IModelFull;
   /** Access token to display */
-  accessToken?: string;
+  accessToken?: string | (() => Promise<string>) | undefined;
   /** List of options to build for the imodel context menu */
   iModelOptions?: ContextMenuBuilderItem<IModelFull>[];
   /** Function to call on thumbnail click */
