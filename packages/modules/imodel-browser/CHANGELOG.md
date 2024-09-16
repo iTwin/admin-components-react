@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Wed, 11 Sep 2024 12:52:00 GMT and should not be manually modified.
+This log was last generated on Mon, 16 Sep 2024 18:48:30 GMT and should not be manually modified.
+
+## 2.0.1
+Mon, 16 Sep 2024 18:48:30 GMT
+
+### Patches
+
+- ITwinGrid and IModelGrid 'accessToken' prop accepts a function so the token can renew.
 
 ## 2.0.0
 Wed, 11 Sep 2024 12:52:00 GMT
