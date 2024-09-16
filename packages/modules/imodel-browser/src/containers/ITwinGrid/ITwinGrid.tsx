@@ -33,8 +33,8 @@ export type IndividualITwinStateHook = (
 ) => Partial<ITwinTileProps>;
 
 export interface ITwinGridProps {
-  /** Access token that requires the `itwins:read` scope. */
-  accessToken?: string | undefined;
+  /** Access token that requires the `itwins:read` scope. Provide a function that returns the token to prevent the token from expiring. */
+  accessToken?: string | (() => Promise<string>) | undefined;
   /** Type of iTwin to request */
   requestType?: "favorites" | "recents" | "";
   /** Sub class of iTwin, defaults to Project */

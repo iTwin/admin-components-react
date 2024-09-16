@@ -25,8 +25,8 @@ import { useIModelData } from "./useIModelData";
 import { useIModelTableConfig } from "./useIModelTableConfig";
 export interface IModelGridProps {
   /**
-   * Access token that requires the `imodels:read` scope. */
-  accessToken?: string | undefined;
+   * Access token that requires the `imodels:read` scope. Provide a function that returns the token to prevent the token from expiring. */
+  accessToken?: string | (() => Promise<string>) | undefined;
   /** ITwin Id to list the iModels from (mutually exclusive to assetId) */
   iTwinId?: string | undefined;
   /** Thumbnail click handler. */

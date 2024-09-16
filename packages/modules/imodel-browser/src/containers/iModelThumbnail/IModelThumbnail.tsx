@@ -19,7 +19,7 @@ export interface IModelThumbnailProps {
   /** Triggered on the image click, controls pointer */
   onClick?(iModelId: string): void;
   /* Access token that requires the `imodels:read` scope. */
-  accessToken?: string;
+  accessToken?: string | (() => Promise<string>) | undefined;
   /** Object that configures different overrides for the API
    * @property data thumbnail URL
    * @property serverEnvironmentPrefix Either qa or dev

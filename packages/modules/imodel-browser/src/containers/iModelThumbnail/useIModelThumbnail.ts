@@ -24,7 +24,7 @@ function convertArrayBufferToUrlBase64PNG(buffer: ArrayBuffer) {
 /** Use cached thumbnail or upload thumbnail from server */
 export const useIModelThumbnail = (
   iModelId: string,
-  accessToken?: string,
+  accessToken?: string | (() => Promise<string>) | undefined,
   apiOverrides?: ApiOverrides<string>
 ) => {
   const [thumbnail, setThumbnail] = useState<string>();
@@ -35,45 +35,43 @@ export const useIModelThumbnail = (
     }
     const abortController = new AbortController();
     if (!thumbnail && accessToken && iModelId) {
-      const options: RequestInit = {
-        signal: abortController.signal,
-        headers: {
-          Authorization: accessToken,
-          Accept: "application/vnd.bentley.itwin-platform.v2+json",
-          Prefer: "return=representation",
-        },
-      };
-      fetch(
-        `${_getAPIServer(apiOverrides)}/imodels/${iModelId}/thumbnail`,
-        options
-      )
-        .then((response) => {
-          if (response.ok) {
-            return response
-              .arrayBuffer()
-              .then(convertArrayBufferToUrlBase64PNG);
-          } else if (response.status === 404) {
-            // Handle 404 error by setting the default thumbnail
-            return Promise.resolve(defaultIModelThumbnail);
-          } else {
-            return response.text().then((errorText) => {
+      const makeFetchRequest = async () => {
+        const options: RequestInit = {
+          signal: abortController.signal,
+          headers: {
+            Authorization:
+              typeof accessToken === "function"
+                ? await accessToken()
+                : accessToken,
+            Accept: "application/vnd.bentley.itwin-platform.v2+json",
+            Prefer: "return=representation",
+          },
+        };
+
+        const response = await fetch(
+          `${_getAPIServer(apiOverrides)}/imodels/${iModelId}/thumbnail`,
+          options
+        );
+        const thumbnail: string = response.ok
+          ? await response.arrayBuffer().then(convertArrayBufferToUrlBase64PNG)
+          : response.status === 404
+          ? defaultIModelThumbnail
+          : await response.text().then((errorText) => {
               throw new Error(errorText);
             });
-          }
-        })
-        .then((thumbnail: string) => {
-          setThumbnail(thumbnail);
-        })
-        .catch((e) => {
-          if (e.name === "AbortError") {
-            // Aborting because unmounting is not an error, swallow.
-            return;
-          }
-          console.error("Thumbnail download error", "Thumbnail Fetch", {
-            iModelId,
-            e,
-          });
+        setThumbnail(thumbnail);
+      };
+
+      makeFetchRequest().catch((e) => {
+        if (e.name === "AbortError") {
+          // Aborting because unmounting is not an error, swallow.
+          return;
+        }
+        console.error("Thumbnail download error", "Thumbnail Fetch", {
+          iModelId,
+          e,
         });
+      });
     }
     return () => {
       abortController.abort();

@@ -14,7 +14,7 @@ export const accessTokenArgTypes = {
 
 /** HOC that will override the "accessToken" prop with the Addon token */
 export const withAccessTokenOverride: <
-  T extends { accessToken?: string | undefined }
+  T extends { accessToken?: string | (() => Promise<string>) }
 >(
   story: Story<T>
 ) => Story<T> = (Story) => (args, context) =>
