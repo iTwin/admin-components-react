@@ -5,7 +5,7 @@
 import "./IModelGrid.scss";
 
 import { Table, ThemeProvider } from "@itwin/itwinui-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { InView } from "react-intersection-observer";
 
 import { GridStructure } from "../../components/gridStructure/GridStructure";
@@ -109,7 +109,12 @@ export const IModelGrid = ({
   viewMode,
   maxCount,
 }: IModelGridProps) => {
-  const [sort, setSort] = useState<IModelSortOptions | undefined>(sortOptions);
+  const [sort, setSort] = useState<IModelSortOptions>(sortOptions);
+
+  useEffect(() => {
+    setSort({ sortType: "name", descending: sortOptions.descending });
+  }, [sortOptions.descending]);
+
   const strings = _mergeStrings(
     {
       tableColumnName: "Name",
@@ -122,7 +127,7 @@ export const IModelGrid = ({
       noIModels: "There are no iModels in this iTwin.",
       noContext: "No context provided",
       noAuthentication: "No access token provided",
-      error: "An error occured",
+      error: "An error occurred",
     },
     stringsOverrides
   );
@@ -215,7 +220,7 @@ export const IModelGrid = ({
               isLoading={fetchStatus === DataStatus.Fetching}
               isSortable
               onSort={() =>
-                setSort({ sortType: "name", descending: !sort?.descending })
+                setSort({ sortType: "name", descending: !sort.descending })
               }
               onBottomReached={fetchMore}
               className="iac-list-structure"
