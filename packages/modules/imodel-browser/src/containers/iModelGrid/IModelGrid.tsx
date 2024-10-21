@@ -109,12 +109,6 @@ export const IModelGrid = ({
   viewMode,
   maxCount,
 }: IModelGridProps) => {
-  const [sort, setSort] = useState<IModelSortOptions>(sortOptions);
-
-  useEffect(() => {
-    setSort({ sortType: "name", descending: sortOptions.descending });
-  }, [sortOptions.descending]);
-
   const strings = _mergeStrings(
     {
       tableColumnName: "Name",
@@ -139,7 +133,7 @@ export const IModelGrid = ({
     accessToken,
     apiOverrides,
     iTwinId,
-    sortOptions: sort,
+    sortOptions,
     searchText,
     maxCount,
   });
@@ -219,9 +213,6 @@ export const IModelGrid = ({
               }
               isLoading={fetchStatus === DataStatus.Fetching}
               isSortable
-              onSort={() =>
-                setSort({ sortType: "name", descending: !sort.descending })
-              }
               onBottomReached={fetchMore}
               className="iac-list-structure"
               autoResetFilters={false}
