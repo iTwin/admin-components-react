@@ -5,7 +5,7 @@
 import "./IModelGrid.scss";
 
 import { Table, ThemeProvider } from "@itwin/itwinui-react";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { InView } from "react-intersection-observer";
 
 import { GridStructure } from "../../components/gridStructure/GridStructure";
