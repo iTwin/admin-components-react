@@ -109,6 +109,15 @@ export const IModelGrid = ({
   viewMode,
   maxCount,
 }: IModelGridProps) => {
+  const [sort, setSort] = React.useState<IModelSortOptions>(sortOptions);
+  const [isSortOnTable, setIsSortOnTable] = React.useState(false);
+
+  React.useEffect(() => {
+    if (!isSortOnTable) {
+      setSort({ sortType: "name", descending: sortOptions.descending });
+    }
+  }, [isSortOnTable, sortOptions.descending]);
+
   const strings = _mergeStrings(
     {
       tableColumnName: "Name",
@@ -133,7 +142,7 @@ export const IModelGrid = ({
     accessToken,
     apiOverrides,
     iTwinId,
-    sortOptions,
+    sortOptions: sort,
     searchText,
     maxCount,
   });
@@ -213,6 +222,15 @@ export const IModelGrid = ({
               }
               isLoading={fetchStatus === DataStatus.Fetching}
               isSortable
+              onSort={(state) => {
+                const columnSort = state.sortBy.find((s) => s.id === "name");
+                setIsSortOnTable(columnSort?.desc !== undefined);
+                setSort({
+                  sortType: "name",
+                  descending: columnSort?.desc ?? sortOptions.descending,
+                });
+              }}
+              manualSortBy
               onBottomReached={fetchMore}
               className="iac-list-structure"
               autoResetFilters={false}
