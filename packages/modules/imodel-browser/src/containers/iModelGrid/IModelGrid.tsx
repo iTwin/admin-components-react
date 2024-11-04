@@ -137,6 +137,7 @@ export const IModelGrid = ({
     sortOptions: sort,
     searchText,
     maxCount,
+    viewMode,
   });
 
   const iModels = React.useMemo(
