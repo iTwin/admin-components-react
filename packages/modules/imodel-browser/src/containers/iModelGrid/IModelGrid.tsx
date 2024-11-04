@@ -114,9 +114,12 @@ export const IModelGrid = ({
 
   React.useEffect(() => {
     if (!isSortOnTable) {
-      setSort({ sortType: "name", descending: sortOptions.descending });
+      setSort({
+        sortType: sortOptions.sortType,
+        descending: sortOptions.descending,
+      });
     }
-  }, [isSortOnTable, sortOptions.descending]);
+  }, [isSortOnTable, sortOptions.descending, sortOptions.sortType]);
 
   const strings = _mergeStrings(
     {
@@ -224,11 +227,20 @@ export const IModelGrid = ({
               isLoading={fetchStatus === DataStatus.Fetching}
               isSortable
               onSort={(state) => {
-                const columnSort = state.sortBy.find((s) => s.id === "name");
-                setIsSortOnTable(columnSort?.desc !== undefined);
+                const sortBy =
+                  state.sortBy.length > 0 ? state.sortBy[0] : undefined;
+                debugger;
+                setIsSortOnTable(sortBy?.id !== undefined);
+                if (
+                  !sortBy ||
+                  sortBy.desc === undefined ||
+                  (sortBy.id !== "name" && sortBy.id !== "createdDateTime")
+                ) {
+                  return;
+                }
                 setSort({
-                  sortType: "name",
-                  descending: columnSort?.desc ?? sortOptions.descending,
+                  sortType: sortBy.id,
+                  descending: sortBy.desc,
                 });
               }}
               manualSortBy
