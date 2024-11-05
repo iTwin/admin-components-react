@@ -229,7 +229,6 @@ export const IModelGrid = ({
               onSort={(state) => {
                 const sortBy =
                   state.sortBy.length > 0 ? state.sortBy[0] : undefined;
-                debugger;
                 setIsSortOnTable(sortBy?.id !== undefined);
                 if (
                   !sortBy ||
