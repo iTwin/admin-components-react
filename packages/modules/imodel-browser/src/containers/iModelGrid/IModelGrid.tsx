@@ -5,7 +5,7 @@
 import "./IModelGrid.scss";
 
 import { Table, ThemeProvider } from "@itwin/itwinui-react";
-import React, { useState } from "react";
+import React from "react";
 import { InView } from "react-intersection-observer";
 
 import { GridStructure } from "../../components/gridStructure/GridStructure";
@@ -109,7 +109,18 @@ export const IModelGrid = ({
   viewMode,
   maxCount,
 }: IModelGridProps) => {
-  const [sort, setSort] = useState<IModelSortOptions | undefined>(sortOptions);
+  const [sort, setSort] = React.useState<IModelSortOptions>(sortOptions);
+  const [isSortOnTable, setIsSortOnTable] = React.useState(false);
+
+  React.useEffect(() => {
+    if (!isSortOnTable) {
+      setSort({
+        sortType: sortOptions.sortType,
+        descending: sortOptions.descending,
+      });
+    }
+  }, [isSortOnTable, sortOptions.descending, sortOptions.sortType]);
+
   const strings = _mergeStrings(
     {
       tableColumnName: "Name",
@@ -122,7 +133,7 @@ export const IModelGrid = ({
       noIModels: "There are no iModels in this iTwin.",
       noContext: "No context provided",
       noAuthentication: "No access token provided",
-      error: "An error occured",
+      error: "An error occurred",
     },
     stringsOverrides
   );
@@ -215,9 +226,23 @@ export const IModelGrid = ({
               }
               isLoading={fetchStatus === DataStatus.Fetching}
               isSortable
-              onSort={() =>
-                setSort({ sortType: "name", descending: !sort?.descending })
-              }
+              onSort={(state) => {
+                const sortBy =
+                  state.sortBy.length > 0 ? state.sortBy[0] : undefined;
+                setIsSortOnTable(sortBy?.id !== undefined);
+                if (
+                  !sortBy ||
+                  sortBy.desc === undefined ||
+                  (sortBy.id !== "name" && sortBy.id !== "createdDateTime")
+                ) {
+                  return;
+                }
+                setSort({
+                  sortType: sortBy.id,
+                  descending: sortBy.desc,
+                });
+              }}
+              manualSortBy
               onBottomReached={fetchMore}
               className="iac-list-structure"
               autoResetFilters={false}

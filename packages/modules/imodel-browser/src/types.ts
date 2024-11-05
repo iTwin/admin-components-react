@@ -72,7 +72,7 @@ export enum DataStatus {
 type SortOptions<T, K extends keyof T> = { sortType: K; descending: boolean };
 
 /** Supported IModel sorting types */
-export type IModelSortOptionsKeys = "name";
+export type IModelSortOptionsKeys = "name" | "createdDateTime";
 
 /** Object/function that configure IModel sorting behavior. */
 export type IModelSortOptions = SortOptions<IModelFull, IModelSortOptionsKeys>;

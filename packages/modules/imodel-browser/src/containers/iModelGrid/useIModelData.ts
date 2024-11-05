@@ -34,7 +34,10 @@ export const useIModelData = ({
   maxCount,
   viewMode,
 }: IModelDataHookOptions) => {
-  const sortType = sortOptions?.sortType === "name" ? "name" : undefined; //Only available sort by API at the moment.
+  const sortType =
+    sortOptions && ["name", "createdDateTime"].includes(sortOptions.sortType)
+      ? sortOptions.sortType
+      : undefined; //Only available sort by API at the moment.
   const sortDescending = sortOptions?.descending;
   const [iModels, setIModels] = React.useState<IModelFull[]>([]);
   const sortedIModels = useIModelSort(iModels, sortOptions);

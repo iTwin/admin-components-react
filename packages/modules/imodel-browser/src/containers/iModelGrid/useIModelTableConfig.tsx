@@ -68,7 +68,7 @@ export const useIModelTableConfig = ({
             disableSortBy: true,
           },
           {
-            id: "LastModified",
+            id: "createdDateTime",
             Header: strings.tableColumnLastModified,
             accessor: "createdDateTime",
             maxWidth: 350,
