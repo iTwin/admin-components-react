@@ -8,11 +8,12 @@ import { IModelFull, IModelSortOptionsKeys } from "../../types";
 import { useIModelSort } from "./useIModelSort";
 
 describe("useIModelSort hook", () => {
-  it.each(["name"] as IModelSortOptionsKeys[])(
+  it.each(["name", "createdDateTime"] as IModelSortOptionsKeys[])(
     "sorts correctly with %s",
     (sortType) => {
       const expectedSortOrder = {
         name: ["3", "4", "1", "2", "5"],
+        createdDateTime: ["4", "5", "2", "3", "1"],
       }[sortType];
       const iModels: IModelFull[] = [
         {
