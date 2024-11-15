@@ -114,12 +114,20 @@ export const IModelGrid = ({
 
   React.useEffect(() => {
     if (!isSortOnTable) {
-      setSort({
-        sortType: sortOptions.sortType,
-        descending: sortOptions.descending,
-      });
+      const defaultTableSort: IModelSortOptions = {
+        sortType: "name",
+        descending: false,
+      };
+      setSort(
+        viewMode === "cells"
+          ? defaultTableSort
+          : {
+              sortType: sortOptions.sortType,
+              descending: sortOptions.descending,
+            }
+      );
     }
-  }, [isSortOnTable, sortOptions.descending, sortOptions.sortType]);
+  }, [isSortOnTable, sortOptions.descending, sortOptions.sortType, viewMode]);
 
   const strings = _mergeStrings(
     {
