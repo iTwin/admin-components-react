@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/imodel-browser-react",
+      "comment": "Fix sorting in iModel grid",
+      "type": "patch"
+    }
+  ],
+  "packageName": "@itwin/imodel-browser-react"
+}
