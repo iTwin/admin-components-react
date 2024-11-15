@@ -2,6 +2,18 @@
   "name": "@itwin/imodel-browser-react",
   "entries": [
     {
+      "version": "2.0.3",
+      "tag": "@itwin/imodel-browser-react_v2.0.3",
+      "date": "Fri, 15 Nov 2024 16:36:26 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Fix sorting in iModel grid"
+          }
+        ]
+      }
+    },
+    {
       "version": "2.0.2",
       "tag": "@itwin/imodel-browser-react_v2.0.2",
       "date": "Mon, 04 Nov 2024 21:47:34 GMT",
