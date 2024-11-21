@@ -25,12 +25,7 @@ export const parameters = {
   },
   authClientConfig: {
     clientId: process.env.STORYBOOK_AUTH_CLIENT_ID,
-    scope: [
-      "imodels:read",
-      "imodels:modify",
-      "itwins:modify",
-      "itwins:read",
-    ].join(" "),
+    scope: "itwin-platform",
     authority: "https://qa-ims.bentley.com",
   },
 };
