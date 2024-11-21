@@ -2,6 +2,18 @@
   "name": "@itwin/imodel-browser-react",
   "entries": [
     {
+      "version": "2.1.0",
+      "tag": "@itwin/imodel-browser-react_v2.1.0",
+      "date": "Thu, 21 Nov 2024 22:19:39 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Add favorites functionality to ITwinGrid and ITwinTile components"
+          }
+        ]
+      }
+    },
+    {
       "version": "2.0.3",
       "tag": "@itwin/imodel-browser-react_v2.0.3",
       "date": "Fri, 15 Nov 2024 16:36:26 GMT",

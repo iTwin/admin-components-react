@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Fri, 15 Nov 2024 16:36:26 GMT and should not be manually modified.
+This log was last generated on Thu, 21 Nov 2024 22:19:39 GMT and should not be manually modified.
+
+## 2.1.0
+Thu, 21 Nov 2024 22:19:39 GMT
+
+### Minor changes
+
+- Add favorites functionality to ITwinGrid and ITwinTile components
 
 ## 2.0.3
 Fri, 15 Nov 2024 16:36:26 GMT
