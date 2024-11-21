@@ -23,6 +23,7 @@ import { ContextMenuBuilderItem } from "../../utils/_buildMenuOptions";
 import { IModelGhostTile } from "../iModelTiles/IModelGhostTile";
 import { ITwinTile, ITwinTileProps } from "./ITwinTile";
 import { useITwinData } from "./useITwinData";
+import { useITwinFavorites } from "./useITwinFavorites";
 import { useITwinTableConfig } from "./useITwinTableConfig";
 
 export type IndividualITwinStateHook = (
@@ -107,6 +108,9 @@ export const ITwinGrid = ({
   postProcessCallback,
   viewMode,
 }: ITwinGridProps) => {
+  const { iTwinFavorites, addITwinToFavorites, removeITwinFromFavorites } =
+    useITwinFavorites(accessToken, apiOverrides);
+
   const strings = _mergeStrings(
     {
       tableColumnName: "iTwin Number",
@@ -183,6 +187,9 @@ export const ITwinGrid = ({
                 iTwinOptions={iTwinActions}
                 onThumbnailClick={onThumbnailClick}
                 useTileState={useIndividualState}
+                isFavorite={iTwinFavorites.has(iTwin.id)}
+                addToFavorites={addITwinToFavorites}
+                removeFromFavorites={removeITwinFromFavorites}
                 {...tileOverrides}
               />
             ))}

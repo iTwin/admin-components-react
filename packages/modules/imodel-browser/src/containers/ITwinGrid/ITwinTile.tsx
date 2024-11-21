@@ -2,7 +2,8 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { Badge, ThemeProvider, Tile } from "@itwin/itwinui-react";
+import { SvgStar, SvgStarHollow } from "@itwin/itwinui-icons-react";
+import { Badge, IconButton, ThemeProvider, Tile } from "@itwin/itwinui-react";
 import React from "react";
 
 import ITwinIcon from "../../images/itwin.svg";
@@ -31,6 +32,12 @@ export interface ITwinTileProps {
   };
   /** Tile props that will be applied after normal use. (Will override ITwinTile if used) */
   tileProps?: Partial<TileProps>;
+  /**  Indicates whether the iTwin is marked as a favorite */
+  isFavorite?: boolean;
+  /**  Function to add the iTwin to favorites  */
+  addToFavorites?(iTwinId: string): Promise<void>;
+  /**  Function to remove the iTwin from favorites  */
+  removeFromFavorites?(iTwinId: string): Promise<void>;
 }
 
 /**
@@ -42,6 +49,9 @@ export const ITwinTile = ({
   onThumbnailClick,
   tileProps,
   stringsOverrides,
+  isFavorite,
+  addToFavorites,
+  removeFromFavorites,
 }: ITwinTileProps) => {
   const strings = _mergeStrings(
     {
@@ -85,6 +95,27 @@ export const ITwinTile = ({
           >
             <ITwinIcon />
           </span>
+        }
+        rightIcon={
+          isFavorite ? (
+            <IconButton
+              onClick={async () => {
+                await removeFromFavorites?.(iTwin.id);
+              }}
+              styleType="borderless"
+            >
+              <SvgStar />
+            </IconButton>
+          ) : (
+            <IconButton
+              onClick={async () => {
+                await addToFavorites?.(iTwin.id);
+              }}
+              styleType="borderless"
+            >
+              <SvgStarHollow />
+            </IconButton>
+          )
         }
         {...(tileProps ?? {})}
       />
