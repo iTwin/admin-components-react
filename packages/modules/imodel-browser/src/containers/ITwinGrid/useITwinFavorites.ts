@@ -41,18 +41,24 @@ export const useITwinFavorites = (
         return;
       }
       const url = `${_getAPIServer(apiOverrides)}/itwins/favorites/${iTwinId}`;
-      await fetch(url, {
-        method: "POST",
-        headers: {
-          authorization:
-            typeof accessToken === "function"
-              ? await accessToken()
-              : accessToken,
-          Accept: "application/vnd.bentley.itwin-platform.v1+json",
-        },
-      });
-
-      setITwinFavorites((prev) => new Set([...prev, iTwinId]));
+      try {
+        const result = await fetch(url, {
+          method: "POST",
+          headers: {
+            authorization:
+              typeof accessToken === "function"
+                ? await accessToken()
+                : accessToken,
+            Accept: "application/vnd.bentley.itwin-platform.v1+json",
+          },
+        });
+        if (!result || result.status !== 200) {
+          throw new Error(`Failed to add iTwin ${iTwinId} to favorites`);
+        }
+        setITwinFavorites((prev) => new Set([...prev, iTwinId]));
+      } catch (error) {
+        console.error(error);
+      }
     },
     [accessToken, apiOverrides]
   );
@@ -68,22 +74,30 @@ export const useITwinFavorites = (
         return;
       }
       const url = `${_getAPIServer(apiOverrides)}/itwins/favorites/${iTwinId}`;
-      await fetch(url, {
-        method: "DELETE",
-        headers: {
-          authorization:
-            typeof accessToken === "function"
-              ? await accessToken()
-              : accessToken,
-          Accept: "application/vnd.bentley.itwin-platform.v1+json",
-        },
-      });
+      try {
+        const result = await fetch(url, {
+          method: "DELETE",
+          headers: {
+            authorization:
+              typeof accessToken === "function"
+                ? await accessToken()
+                : accessToken,
+            Accept: "application/vnd.bentley.itwin-platform.v1+json",
+          },
+        });
 
-      setITwinFavorites((prev) => {
-        const newFavorites = new Set(prev);
-        newFavorites.delete(iTwinId);
-        return newFavorites;
-      });
+        if (!result || result.status !== 200) {
+          throw new Error(`Failed to remove iTwin ${iTwinId} to favorites`);
+        }
+
+        setITwinFavorites((prev) => {
+          const newFavorites = new Set(prev);
+          newFavorites.delete(iTwinId);
+          return newFavorites;
+        });
+      } catch (error) {
+        console.error(error);
+      }
     },
     [accessToken, apiOverrides]
   );
@@ -142,10 +156,7 @@ export const useITwinFavorites = (
         const favorites = await getITwinFavorites(abortSignal);
         setITwinFavorites(new Set(favorites.map((favorite) => favorite.id)));
       } catch (error) {
-        if (
-          error === HOOK_ABORT_ERROR ||
-          (error instanceof Error && error.name === "AbortError")
-        ) {
+        if (error === HOOK_ABORT_ERROR) {
           return;
         }
         console.error(error);
