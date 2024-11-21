@@ -97,25 +97,16 @@ export const ITwinTile = ({
           </span>
         }
         rightIcon={
-          isFavorite ? (
-            <IconButton
-              onClick={async () => {
-                await removeFromFavorites?.(iTwin.id);
-              }}
-              styleType="borderless"
-            >
-              <SvgStar />
-            </IconButton>
-          ) : (
-            <IconButton
-              onClick={async () => {
-                await addToFavorites?.(iTwin.id);
-              }}
-              styleType="borderless"
-            >
-              <SvgStarHollow />
-            </IconButton>
-          )
+          <IconButton
+            onClick={async () => {
+              isFavorite
+                ? await removeFromFavorites?.(iTwin.id)
+                : await addToFavorites?.(iTwin.id);
+            }}
+            styleType="borderless"
+          >
+            {isFavorite ? <SvgStar /> : <SvgStarHollow />}
+          </IconButton>
         }
         {...(tileProps ?? {})}
       />
