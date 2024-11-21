@@ -35,48 +35,58 @@ export const useITwinFavorites = (
    * @param {string} iTwinId - The ID of the iTwin to add to favorites.
    * @returns {Promise<void>}
    */
-  async function addITwinToFavorites(iTwinId: string): Promise<void> {
-    if (!accessToken || !iTwinId || iTwinId === "") {
-      return;
-    }
-    const url = `${_getAPIServer(apiOverrides)}/itwins/favorites/${iTwinId}`;
-    await fetch(url, {
-      method: "POST",
-      headers: {
-        authorization:
-          typeof accessToken === "function" ? await accessToken() : accessToken,
-        Accept: "application/vnd.bentley.itwin-platform.v1+json",
-      },
-    });
+  const addITwinToFavorites = useCallback(
+    async (iTwinId: string): Promise<void> => {
+      if (!accessToken || !iTwinId || iTwinId === "") {
+        return;
+      }
+      const url = `${_getAPIServer(apiOverrides)}/itwins/favorites/${iTwinId}`;
+      await fetch(url, {
+        method: "POST",
+        headers: {
+          authorization:
+            typeof accessToken === "function"
+              ? await accessToken()
+              : accessToken,
+          Accept: "application/vnd.bentley.itwin-platform.v1+json",
+        },
+      });
 
-    setITwinFavorites((prev) => new Set([...prev, iTwinId]));
-  }
+      setITwinFavorites((prev) => new Set([...prev, iTwinId]));
+    },
+    [accessToken, apiOverrides]
+  );
 
   /**
    * Removes an iTwin from the favorites.
    * @param {string} iTwinId - The ID of the iTwin to remove from favorites.
    * @returns {Promise<void>}
    */
-  async function removeITwinFromFavorites(iTwinId: string): Promise<void> {
-    if (!accessToken || !iTwinId || iTwinId === "") {
-      return;
-    }
-    const url = `${_getAPIServer(apiOverrides)}/itwins/favorites/${iTwinId}`;
-    await fetch(url, {
-      method: "DELETE",
-      headers: {
-        authorization:
-          typeof accessToken === "function" ? await accessToken() : accessToken,
-        Accept: "application/vnd.bentley.itwin-platform.v1+json",
-      },
-    });
+  const removeITwinFromFavorites = useCallback(
+    async (iTwinId: string): Promise<void> => {
+      if (!accessToken || !iTwinId || iTwinId === "") {
+        return;
+      }
+      const url = `${_getAPIServer(apiOverrides)}/itwins/favorites/${iTwinId}`;
+      await fetch(url, {
+        method: "DELETE",
+        headers: {
+          authorization:
+            typeof accessToken === "function"
+              ? await accessToken()
+              : accessToken,
+          Accept: "application/vnd.bentley.itwin-platform.v1+json",
+        },
+      });
 
-    setITwinFavorites((prev) => {
-      const newFavorites = new Set(prev);
-      newFavorites.delete(iTwinId);
-      return newFavorites;
-    });
-  }
+      setITwinFavorites((prev) => {
+        const newFavorites = new Set(prev);
+        newFavorites.delete(iTwinId);
+        return newFavorites;
+      });
+    },
+    [accessToken, apiOverrides]
+  );
 
   /**
    * Fetches iTwin favorites from the API.
