@@ -2,13 +2,14 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import React, { useEffect, useMemo } from "react";
+import React from "react";
 
 import {
   ApiOverrides,
   DataStatus,
   IModelFull,
   IModelSortOptions,
+  ViewType,
 } from "../../types";
 import { _getAPIServer } from "../../utils/_apiOverrides";
 import { useIModelSort } from "./useIModelSort";
@@ -20,6 +21,7 @@ export interface IModelDataHookOptions {
   apiOverrides?: ApiOverrides<IModelFull[]>;
   searchText?: string | undefined;
   maxCount?: number;
+  viewMode?: ViewType;
 }
 const PAGE_SIZE = 100;
 
@@ -30,8 +32,12 @@ export const useIModelData = ({
   apiOverrides,
   searchText,
   maxCount,
+  viewMode,
 }: IModelDataHookOptions) => {
-  const sortType = sortOptions?.sortType === "name" ? "name" : undefined; //Only available sort by API at the moment.
+  const sortType =
+    sortOptions && ["name", "createdDateTime"].includes(sortOptions.sortType)
+      ? sortOptions.sortType
+      : undefined; //Only available sort by API at the moment.
   const sortDescending = sortOptions?.descending;
   const [iModels, setIModels] = React.useState<IModelFull[]>([]);
   const sortedIModels = useIModelSort(iModels, sortOptions);
@@ -39,8 +45,9 @@ export const useIModelData = ({
   const [page, setPage] = React.useState(0);
   const [morePages, setMorePages] = React.useState(true);
   const fetchMore = React.useCallback(() => {
-    setPage(page + 1);
-  }, [page]);
+    viewMode === "cells" && setStatus(DataStatus.Fetching);
+    status !== DataStatus.Fetching && setPage((page) => page + 1);
+  }, [status, viewMode]);
 
   React.useEffect(() => {
     // If sort changes but we already have all the data,
@@ -103,9 +110,10 @@ export const useIModelData = ({
     const searching = searchText?.trim() ? `&$search=${searchText}` : "";
 
     const abortController = new AbortController();
-    const url = `${_getAPIServer(
-      apiOverrides
-    )}/imodels/${selection}${sorting}${paging}${searching}`;
+    const url = `${_getAPIServer({
+      data: apiOverrides?.data,
+      serverEnvironmentPrefix: apiOverrides?.serverEnvironmentPrefix,
+    })}/imodels/${selection}${sorting}${paging}${searching}`;
 
     const makeFetchRequest = async () => {
       const options: RequestInit = {
@@ -153,7 +161,7 @@ export const useIModelData = ({
     };
   }, [
     accessToken,
-    apiOverrides,
+    apiOverrides?.serverEnvironmentPrefix,
     apiOverrides?.data,
     morePages,
     page,

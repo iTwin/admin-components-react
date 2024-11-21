@@ -1,6 +1,20 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Mon, 16 Sep 2024 18:48:30 GMT and should not be manually modified.
+This log was last generated on Fri, 15 Nov 2024 16:36:26 GMT and should not be manually modified.
+
+## 2.0.3
+Fri, 15 Nov 2024 16:36:26 GMT
+
+### Patches
+
+- Fix sorting in iModel grid
+
+## 2.0.2
+Mon, 04 Nov 2024 21:47:34 GMT
+
+### Patches
+
+- fix list not loading extra content when reaching the bottom
 
 ## 2.0.1
 Mon, 16 Sep 2024 18:48:30 GMT
