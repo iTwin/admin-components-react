@@ -158,7 +158,10 @@ export const useITwinFavorites = (
         const favorites = await getITwinFavorites(abortSignal);
         setITwinFavorites(new Set(favorites.map((favorite) => favorite.id)));
       } catch (error) {
-        if (error === HOOK_ABORT_ERROR) {
+        if (
+          error === HOOK_ABORT_ERROR ||
+          (error instanceof Error && error.name === "AbortError")
+        ) {
           return;
         }
         console.error(error);
