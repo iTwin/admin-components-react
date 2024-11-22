@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { renderHook } from "@testing-library/react-hooks";
+import { act } from "react";
 
 import { useITwinFavorites } from "./useITwinFavorites";
 
@@ -62,18 +63,18 @@ describe("useITwinFavorites", () => {
   });
 
   test("should add and remove an iTwin from favorites", async () => {
-    const { result, waitForNextUpdate } = renderHook(() =>
-      useITwinFavorites(accessToken)
-    );
+    const { result } = renderHook(() => useITwinFavorites(accessToken));
     const iTwinId = "test-itwin-id";
-    window.fetch = mockFetch({});
-
-    await result.current.addITwinToFavorites(iTwinId);
-    await waitForNextUpdate();
+    await act(async () => {
+      window.fetch = mockFetch({});
+      await result.current.addITwinToFavorites(iTwinId);
+    });
     expect(result.current.iTwinFavorites.has(iTwinId)).toBe(true);
 
-    await result.current.removeITwinFromFavorites(iTwinId);
-    await waitForNextUpdate();
+    await act(async () => {
+      window.fetch = mockFetch({});
+      await result.current.removeITwinFromFavorites(iTwinId);
+    });
     expect(result.current.iTwinFavorites.has(iTwinId)).toBe(false);
   });
 });
