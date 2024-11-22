@@ -2,7 +2,7 @@
   "changes": [
     {
       "packageName": "@itwin/imodel-browser-react",
-      "comment": "Fix bug in itwin favorites",
+      "comment": "Fix bug in itwin favorites and add favorites to iTwinGrid table view",
       "type": "none"
     }
   ],
