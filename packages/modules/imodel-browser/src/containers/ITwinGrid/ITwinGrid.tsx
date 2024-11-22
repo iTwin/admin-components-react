@@ -33,6 +33,29 @@ export type IndividualITwinStateHook = (
   }
 ) => Partial<ITwinTileProps>;
 
+export interface ITwinGridStrings {
+  /** Displayed for table favorites header. */
+  tableColumnFavorites: string;
+  /** Displayed for table name header. */
+  tableColumnName: string;
+  /** Displayed for table description header. */
+  tableColumnDescription: string;
+  /** Displayed for table lastModified header. */
+  tableColumnLastModified: string;
+  /** Displayed on table while loading data. */
+  tableLoadingData: string;
+  /** Badge text for trial iTwins */
+  trialBadge: string;
+  /** Badge text for inactive iTwins */
+  inactiveBadge: string;
+  /** Displayed after successful fetch, but no iTwins are returned. */
+  noITwins: string;
+  /** Displayed when the component is mounted but the accessToken is empty. */
+  noAuthentication: string;
+  /** Generic message displayed if an error occurs while fetching. */
+  error: string;
+}
+
 export interface ITwinGridProps {
   /** Access token that requires the `itwins:read` scope. Provide a function that returns the token to prevent the token from expiring. */
   accessToken?: string | (() => Promise<string>) | undefined;
@@ -54,26 +77,7 @@ export interface ITwinGridProps {
   /** Static props to apply over each tile, mainly used for tileProps, overrides ITwinGrid provided values */
   tileOverrides?: Partial<ITwinTileProps>;
   /** Strings displayed by the browser */
-  stringsOverrides?: {
-    /** Displayed for table name header. */
-    tableColumnName?: string;
-    /** Displayed for table description header. */
-    tableColumnDescription?: string;
-    /** Displayed for table lastModified header. */
-    tableColumnLastModified?: string;
-    /** Displayed on table while loading data. */
-    tableLoadingData?: string;
-    /** Badge text for trial iTwins */
-    trialBadge?: string;
-    /** Badge text for inactive iTwins */
-    inactiveBadge?: string;
-    /** Displayed after successful fetch, but no iTwins are returned. */
-    noITwins?: string;
-    /** Displayed when the component is mounted but the accessToken is empty. */
-    noAuthentication?: string;
-    /** Generic message displayed if an error occurs while fetching. */
-    error?: string;
-  };
+  stringsOverrides?: Partial<ITwinGridStrings>;
   /** Object that configures different overrides for the API.
    * @property `data`: Array of iTwins used in the grid.
    * @property `serverEnvironmentPrefix`: Either qa or dev.
@@ -113,6 +117,7 @@ export const ITwinGrid = ({
 
   const strings = _mergeStrings(
     {
+      tableColumnFavorites: "",
       tableColumnName: "iTwin Number",
       tableColumnDescription: "iTwin Name",
       tableColumnLastModified: "Last Modified",
@@ -147,6 +152,9 @@ export const ITwinGrid = ({
     iTwinActions,
     onThumbnailClick,
     strings,
+    iTwinFavorites,
+    addITwinToFavorites,
+    removeITwinFromFavorites,
   });
 
   const noResultsText = {
