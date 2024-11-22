@@ -136,7 +136,7 @@ export const useITwinFavorites = (
           `Failed to fetch iTwin favorites from ${url}.\nNo response.`
         );
       }
-      if (result.status !== 200 && result.status !== 204) {
+      if (result.status !== 200) {
         throw new Error(
           `Failed to fetch iTwin favorites from ${url}.\nStatus: ${result.status}`
         );
