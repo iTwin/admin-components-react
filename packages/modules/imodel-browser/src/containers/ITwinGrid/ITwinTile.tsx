@@ -98,6 +98,7 @@ export const ITwinTile = ({
         }
         rightIcon={
           <IconButton
+            label={isFavorite ? "Remove from favorites" : "Add to favorites"}
             onClick={async () => {
               isFavorite
                 ? await removeFromFavorites?.(iTwin.id)
