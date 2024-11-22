@@ -52,9 +52,11 @@ export const useITwinFavorites = (
             Accept: "application/vnd.bentley.itwin-platform.v1+json",
           },
         });
-        if (!result || result.status !== 200) {
+
+        if (!result || (result.status !== 200 && result.status !== 204)) {
           throw new Error(`Failed to add iTwin ${iTwinId} to favorites`);
         }
+
         setITwinFavorites((prev) => new Set([...prev, iTwinId]));
       } catch (error) {
         console.error(error);
@@ -86,7 +88,7 @@ export const useITwinFavorites = (
           },
         });
 
-        if (!result || result.status !== 200) {
+        if (!result || (result.status !== 200 && result.status !== 204)) {
           throw new Error(`Failed to remove iTwin ${iTwinId} to favorites`);
         }
 
@@ -134,7 +136,7 @@ export const useITwinFavorites = (
           `Failed to fetch iTwin favorites from ${url}.\nNo response.`
         );
       }
-      if (result.status !== 200) {
+      if (result.status !== 200 && result.status !== 204) {
         throw new Error(
           `Failed to fetch iTwin favorites from ${url}.\nStatus: ${result.status}`
         );
