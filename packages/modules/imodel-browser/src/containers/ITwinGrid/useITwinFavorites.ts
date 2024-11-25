@@ -19,6 +19,8 @@ const HOOK_ABORT_ERROR =
  * - {Set<string>} iTwinFavorites - A set of iTwin IDs that are marked as favorites.
  * - {function} addITwinToFavorites - A function to add an iTwin to favorites.
  * - {function} removeITwinFromFavorites - A function to remove an iTwin from favorites.
+ * - {boolean} useCache - A boolean indicating whether to use the cache.
+ * - {function} setUseCache - A function to set the useCache value.
  */
 export const useITwinFavorites = (
   accessToken: string | (() => Promise<string>) | undefined,
@@ -27,8 +29,11 @@ export const useITwinFavorites = (
   iTwinFavorites: Set<string>;
   addITwinToFavorites: (iTwinId: string) => Promise<void>;
   removeITwinFromFavorites: (iTwinId: string) => Promise<void>;
+  useCache: boolean;
+  setUseCache: (value: boolean) => void;
 } => {
   const [iTwinFavorites, setITwinFavorites] = useState(new Set<string>());
+  const [useCache, setUseCache] = useState(true);
 
   /**
    * Adds an iTwin to the favorites.
@@ -58,6 +63,7 @@ export const useITwinFavorites = (
         }
 
         setITwinFavorites((prev) => new Set([...prev, iTwinId]));
+        setUseCache(false);
       } catch (error) {
         console.error(error);
       }
@@ -97,6 +103,7 @@ export const useITwinFavorites = (
           newFavorites.delete(iTwinId);
           return newFavorites;
         });
+        setUseCache(false);
       } catch (error) {
         console.error(error);
       }
@@ -120,6 +127,7 @@ export const useITwinFavorites = (
       )}/itwins/favorites?subClass=Project`;
       const result = await fetch(url, {
         headers: {
+          "Cache-Control": "no-cache",
           authorization:
             typeof accessToken === "function"
               ? await accessToken()
@@ -174,7 +182,13 @@ export const useITwinFavorites = (
     };
   }, [getITwinFavorites]);
 
-  return { iTwinFavorites, addITwinToFavorites, removeITwinFromFavorites };
+  return {
+    iTwinFavorites,
+    addITwinToFavorites,
+    removeITwinFromFavorites,
+    useCache,
+    setUseCache,
+  };
 };
 
 /** Response from https://developer.bentley.com/apis/iTwins/operations/get-my-favorite-itwins/ */

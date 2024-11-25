@@ -112,8 +112,13 @@ export const ITwinGrid = ({
   postProcessCallback,
   viewMode,
 }: ITwinGridProps) => {
-  const { iTwinFavorites, addITwinToFavorites, removeITwinFromFavorites } =
-    useITwinFavorites(accessToken, apiOverrides);
+  const {
+    iTwinFavorites,
+    addITwinToFavorites,
+    removeITwinFromFavorites,
+    useCache,
+    setUseCache,
+  } = useITwinFavorites(accessToken, apiOverrides);
 
   const strings = _mergeStrings(
     {
@@ -140,6 +145,8 @@ export const ITwinGrid = ({
     accessToken,
     apiOverrides,
     filterOptions,
+    useCache,
+    setUseCache,
   });
 
   const iTwins = React.useMemo(
