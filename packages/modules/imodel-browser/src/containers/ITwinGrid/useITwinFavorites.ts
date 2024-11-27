@@ -19,8 +19,8 @@ const HOOK_ABORT_ERROR =
  * - {Set<string>} iTwinFavorites - A set of iTwin IDs that are marked as favorites.
  * - {function} addITwinToFavorites - A function to add an iTwin to favorites.
  * - {function} removeITwinFromFavorites - A function to remove an iTwin from favorites.
- * - {boolean} useCache - A boolean indicating whether to use the cache.
- * - {function} setUseCache - A function to set the useCache value.
+ * - {boolean} shouldRefetchFavorites - A boolean indicating whether to refetch favorites when switching to the favorites tab.
+ * - {function} resetShouldRefetchFavorites - A function to reset shouldRefetchFavorites back to false.
  */
 export const useITwinFavorites = (
   accessToken: string | (() => Promise<string>) | undefined,
@@ -29,11 +29,11 @@ export const useITwinFavorites = (
   iTwinFavorites: Set<string>;
   addITwinToFavorites: (iTwinId: string) => Promise<void>;
   removeITwinFromFavorites: (iTwinId: string) => Promise<void>;
-  useCache: boolean;
-  setUseCache: (value: boolean) => void;
+  shouldRefetchFavorites: boolean;
+  resetShouldRefetchFavorites: () => void;
 } => {
   const [iTwinFavorites, setITwinFavorites] = useState(new Set<string>());
-  const [useCache, setUseCache] = useState(true);
+  const [shouldRefetchFavorites, setShouldRefetchFavorites] = useState(false);
 
   /**
    * Adds an iTwin to the favorites.
@@ -63,7 +63,7 @@ export const useITwinFavorites = (
         }
 
         setITwinFavorites((prev) => new Set([...prev, iTwinId]));
-        setUseCache(false);
+        setShouldRefetchFavorites(true);
       } catch (error) {
         console.error(error);
       }
@@ -103,7 +103,7 @@ export const useITwinFavorites = (
           newFavorites.delete(iTwinId);
           return newFavorites;
         });
-        setUseCache(false);
+        setShouldRefetchFavorites(true);
       } catch (error) {
         console.error(error);
       }
@@ -127,7 +127,7 @@ export const useITwinFavorites = (
       )}/itwins/favorites?subClass=Project`;
       const result = await fetch(url, {
         headers: {
-          "Cache-Control": "no-cache",
+          "Cache-Control": shouldRefetchFavorites ? "no-cache" : "",
           authorization:
             typeof accessToken === "function"
               ? await accessToken()
@@ -152,8 +152,12 @@ export const useITwinFavorites = (
       const response: ITwinFavoritesResponse = await result.json();
       return response.iTwins;
     },
-    [accessToken, apiOverrides]
+    [accessToken, apiOverrides, shouldRefetchFavorites]
   );
+
+  const resetShouldRefetchFavorites = useCallback(() => {
+    setShouldRefetchFavorites(false);
+  }, []);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -186,8 +190,8 @@ export const useITwinFavorites = (
     iTwinFavorites,
     addITwinToFavorites,
     removeITwinFromFavorites,
-    useCache,
-    setUseCache,
+    shouldRefetchFavorites,
+    resetShouldRefetchFavorites,
   };
 };
 
