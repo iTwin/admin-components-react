@@ -3,7 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { SvgMore } from "@itwin/itwinui-icons-react";
-import { DropdownMenu } from "@itwin/itwinui-react";
+import { DropdownMenu, IconButton } from "@itwin/itwinui-react";
 import React from "react";
 import { useMemo } from "react";
 import { CellProps } from "react-table";
@@ -79,9 +79,8 @@ export const useIModelTableConfig = ({
           },
           {
             id: "options",
-            style: { width: "50px" },
             disableSortBy: true,
-            maxWidth: 50,
+            maxWidth: 65,
             Cell: (props: CellProps<IModelFull>) => {
               const moreOptions = (close: () => void) => {
                 const options = _buildManagedContextMenuOptions(
@@ -92,18 +91,20 @@ export const useIModelTableConfig = ({
                 return options !== undefined ? options : [];
               };
 
-              return (
+              return iModelActions && iModelActions.length > 0 ? (
                 <DropdownMenu menuItems={moreOptions}>
-                  <div
+                  <IconButton
+                    styleType="borderless"
+                    aria-label="More options"
                     className="iac-options-icon"
                     onClick={(e) => {
                       e.stopPropagation();
                     }}
                   >
                     <SvgMore />
-                  </div>
+                  </IconButton>
                 </DropdownMenu>
-              );
+              ) : null;
             },
           },
         ],
