@@ -54,6 +54,10 @@ export interface ITwinGridStrings {
   noAuthentication: string;
   /** Generic message displayed if an error occurs while fetching. */
   error: string;
+  /** Accessible text for the hollow star icon to add the iTwin to favorites */
+  addToFavorites: string;
+  /** Accessible text for the full star icon to remove the iTwin from favorites */
+  removeFromFavorites: string;
 }
 
 export interface ITwinGridProps {
@@ -132,6 +136,8 @@ export const ITwinGrid = ({
       noITwins: "No iTwin found.",
       noAuthentication: "No access token provided",
       error: "An error occurred",
+      addToFavorites: "Add to favorites",
+      removeFromFavorites: "Remove from favorites",
     },
     stringsOverrides
   );

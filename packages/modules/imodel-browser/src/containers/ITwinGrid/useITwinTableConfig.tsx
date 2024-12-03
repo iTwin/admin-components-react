@@ -55,8 +55,10 @@ export const useITwinTableConfig = ({
               return (
                 <IconButton
                   styleType="borderless"
-                  label={
-                    isFavorite ? "Remove from favorites" : "Add to favorites"
+                  aria-label={
+                    isFavorite
+                      ? strings.addToFavorites
+                      : strings.removeFromFavorites
                   }
                   onClick={async (e) => {
                     e.stopPropagation();
