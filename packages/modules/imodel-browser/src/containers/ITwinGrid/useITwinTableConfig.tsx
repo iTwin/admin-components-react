@@ -101,30 +101,32 @@ export const useITwinTableConfig = ({
           },
           {
             id: "options",
-            style: { width: "50px" },
             disableSortBy: true,
-            maxWidth: 50,
+            maxWidth: 65,
             Cell: (props: CellProps<ITwinFull>) => {
-              const moreOptions = () => {
+              const moreOptions = (close: () => void) => {
                 const options = _buildManagedContextMenuOptions(
                   iTwinActions,
-                  props.row.original
+                  props.row.original,
+                  close
                 );
                 return options !== undefined ? options : [];
               };
 
-              return (
+              return iTwinActions && iTwinActions.length > 0 ? (
                 <DropdownMenu menuItems={moreOptions}>
-                  <div
+                  <IconButton
+                    styleType="borderless"
+                    aria-label="More options"
                     className="iac-options-icon"
                     onClick={(e) => {
                       e.stopPropagation();
                     }}
                   >
                     <SvgMore />
-                  </div>
+                  </IconButton>
                 </DropdownMenu>
-              );
+              ) : null;
             },
           },
         ],
