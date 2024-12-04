@@ -190,11 +190,11 @@ const useIndividualState: IndividualITwinStateHook = (iTwin, props) => {
           const data: IModelsFetchData = await response.json();
           setIModels(data.iModels);
           setLinks([
-            data._links.prev.href !== data._links.self.href
-              ? data._links.prev.href
+            data._links.prev?.href !== data._links.self.href
+              ? data._links.prev?.href
               : undefined,
-            data._links.next.href !== data._links.self.href
-              ? data._links.next.href
+            data._links.next?.href !== data._links.self.href
+              ? data._links.next?.href
               : undefined,
           ]);
           if (data.iModels.length === 0) {
