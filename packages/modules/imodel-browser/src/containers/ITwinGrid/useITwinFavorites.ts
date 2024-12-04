@@ -202,10 +202,10 @@ interface ITwinFavoritesResponse {
     self: {
       href: string;
     };
-    prev: {
+    prev?: {
       href: string;
     };
-    next: {
+    next?: {
       href: string;
     };
   };
