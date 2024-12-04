@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Thu, 21 Nov 2024 22:19:39 GMT and should not be manually modified.
+This log was last generated on Wed, 04 Dec 2024 19:08:30 GMT and should not be manually modified.
+
+## 2.1.1
+Wed, 04 Dec 2024 19:08:30 GMT
+
+### Patches
+
+- Fix iTwin favorites and hide actions dropdown in iTwin/iModel browser when no actions defined
 
 ## 2.1.0
 Thu, 21 Nov 2024 22:19:39 GMT

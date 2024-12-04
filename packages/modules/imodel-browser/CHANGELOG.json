@@ -2,6 +2,26 @@
   "name": "@itwin/imodel-browser-react",
   "entries": [
     {
+      "version": "2.1.1",
+      "tag": "@itwin/imodel-browser-react_v2.1.1",
+      "date": "Wed, 04 Dec 2024 19:08:30 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Fix iTwin favorites and hide actions dropdown in iTwin/iModel browser when no actions defined"
+          }
+        ],
+        "none": [
+          {
+            "comment": "Fix bug in itwin favorites and add favorites to iTwinGrid table view"
+          },
+          {
+            "comment": "Hide itwin/imodel actions dropdown when there are no actions defined"
+          }
+        ]
+      }
+    },
+    {
       "version": "2.1.0",
       "tag": "@itwin/imodel-browser-react_v2.1.0",
       "date": "Thu, 21 Nov 2024 22:19:39 GMT",
