@@ -29,6 +29,12 @@ export interface ITwinTileProps {
     trialBadge?: string;
     /** Badge text for inactive iTwins */
     inactiveBadge?: string;
+    /** Accessible text for the hollow star icon to add the iTwin to favorites */
+    addToFavorites?: string;
+    /** Accessible text for the full star icon to remove the iTwin from favorites */
+    removeFromFavorites?: string;
+    /** Accessible text for the thumbnail icon to navigate to the iTwin */
+    navigateToITwin?: string;
   };
   /** Tile props that will be applied after normal use. (Will override ITwinTile if used) */
   tileProps?: Partial<TileProps>;
@@ -57,6 +63,9 @@ export const ITwinTile = ({
     {
       trialBadge: "Trial",
       inactiveBadge: "Inactive",
+      addToFavorites: "Add to favorites",
+      removeFromFavorites: "Remove from favorites",
+      navigateToITwin: "Navigate to iTwin",
     },
     stringsOverrides
   );
@@ -89,15 +98,19 @@ export const ITwinTile = ({
         }
         moreOptions={moreOptions}
         thumbnail={
-          <span
+          <div
+            aria-label={onThumbnailClick ? strings.navigateToITwin : ""}
             onClick={() => onThumbnailClick?.(iTwin)}
             style={{ cursor: onThumbnailClick ? "pointer" : "auto" }}
           >
             <ITwinIcon />
-          </span>
+          </div>
         }
         rightIcon={
           <IconButton
+            aria-label={
+              isFavorite ? strings.removeFromFavorites : strings.addToFavorites
+            }
             onClick={async () => {
               isFavorite
                 ? await removeFromFavorites?.(iTwin.id)

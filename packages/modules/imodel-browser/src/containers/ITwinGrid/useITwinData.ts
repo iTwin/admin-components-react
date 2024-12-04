@@ -20,6 +20,8 @@ export interface ProjectDataHookOptions {
   accessToken?: string | (() => Promise<string>) | undefined;
   apiOverrides?: ApiOverrides<ITwinFull[]>;
   filterOptions?: ITwinFilterOptions;
+  shouldRefetchFavorites?: boolean;
+  resetShouldRefetchFavorites?: () => void;
 }
 
 const PAGE_SIZE = 100;
@@ -30,6 +32,8 @@ export const useITwinData = ({
   accessToken,
   apiOverrides,
   filterOptions,
+  shouldRefetchFavorites,
+  resetShouldRefetchFavorites,
 }: ProjectDataHookOptions) => {
   const data = apiOverrides?.data;
   const [projects, setProjects] = React.useState<ITwinFull[]>([]);
@@ -103,6 +107,10 @@ export const useITwinData = ({
       const options: RequestInit = {
         signal: abortController.signal,
         headers: {
+          "Cache-Control":
+            requestType === "favorites" && shouldRefetchFavorites
+              ? "no-cache"
+              : "",
           Authorization:
             typeof accessToken === "function"
               ? await accessToken()
@@ -119,6 +127,7 @@ export const useITwinData = ({
             throw new Error(errorText);
           });
       setStatus(DataStatus.Complete);
+      requestType === "favorites" && resetShouldRefetchFavorites?.();
       if (result.iTwins.length !== PAGE_SIZE) {
         setMorePages(false);
       }
@@ -148,6 +157,8 @@ export const useITwinData = ({
     page,
     morePages,
     iTwinSubClass,
+    shouldRefetchFavorites,
+    resetShouldRefetchFavorites,
   ]);
   return {
     iTwins: filteredProjects,

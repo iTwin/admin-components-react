@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { SvgMore } from "@itwin/itwinui-icons-react";
+import { SvgMore, SvgStar, SvgStarHollow } from "@itwin/itwinui-icons-react";
 import { DropdownMenu, IconButton } from "@itwin/itwinui-react";
 import React from "react";
 import { useMemo } from "react";
@@ -13,24 +13,24 @@ import {
   _buildManagedContextMenuOptions,
   ContextMenuBuilderItem,
 } from "../../utils/_buildMenuOptions";
+import { ITwinGridStrings } from "./ITwinGrid";
 
 export interface useITwinTableConfigProps {
   iTwinActions: ContextMenuBuilderItem<ITwinFull>[] | undefined;
   onThumbnailClick: ((iTwin: ITwinFull) => void) | undefined;
-  strings: {
-    tableColumnName: string;
-    tableColumnDescription: string;
-    tableColumnLastModified: string;
-    noITwins: string;
-    noAuthentication: string;
-    error: string;
-  };
+  strings: ITwinGridStrings;
+  iTwinFavorites: Set<string>;
+  addITwinToFavorites: (iTwinId: string) => Promise<void>;
+  removeITwinFromFavorites: (iTwinId: string) => Promise<void>;
 }
 
 export const useITwinTableConfig = ({
   iTwinActions,
   onThumbnailClick,
   strings,
+  iTwinFavorites,
+  addITwinToFavorites,
+  removeITwinFromFavorites,
 }: useITwinTableConfigProps) => {
   const onRowClick = (_: React.MouseEvent, row: any) => {
     const iTwin = row.original as ITwinFull;
@@ -45,6 +45,33 @@ export const useITwinTableConfig = ({
       {
         Header: "Table",
         columns: [
+          {
+            id: "Favorite",
+            Header: strings.tableColumnFavorites,
+            accessor: "id",
+            width: 70,
+            Cell: (props: CellProps<ITwinFull>) => {
+              const isFavorite = iTwinFavorites.has(props.value);
+              return (
+                <IconButton
+                  styleType="borderless"
+                  aria-label={
+                    isFavorite
+                      ? strings.addToFavorites
+                      : strings.removeFromFavorites
+                  }
+                  onClick={async (e) => {
+                    e.stopPropagation();
+                    isFavorite
+                      ? await removeITwinFromFavorites(props.value)
+                      : await addITwinToFavorites(props.value);
+                  }}
+                >
+                  {isFavorite ? <SvgStar /> : <SvgStarHollow />}
+                </IconButton>
+              );
+            },
+          },
           {
             id: "ITwinNumber",
             Header: strings.tableColumnName,
@@ -108,8 +135,12 @@ export const useITwinTableConfig = ({
       },
     ],
     [
+      addITwinToFavorites,
       iTwinActions,
+      iTwinFavorites,
+      removeITwinFromFavorites,
       strings.tableColumnDescription,
+      strings.tableColumnFavorites,
       strings.tableColumnLastModified,
       strings.tableColumnName,
     ]

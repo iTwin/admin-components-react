@@ -19,6 +19,8 @@ const HOOK_ABORT_ERROR =
  * - {Set<string>} iTwinFavorites - A set of iTwin IDs that are marked as favorites.
  * - {function} addITwinToFavorites - A function to add an iTwin to favorites.
  * - {function} removeITwinFromFavorites - A function to remove an iTwin from favorites.
+ * - {boolean} shouldRefetchFavorites - A boolean indicating whether to refetch favorites when switching to the favorites tab.
+ * - {function} resetShouldRefetchFavorites - A function to reset shouldRefetchFavorites back to false.
  */
 export const useITwinFavorites = (
   accessToken: string | (() => Promise<string>) | undefined,
@@ -27,8 +29,11 @@ export const useITwinFavorites = (
   iTwinFavorites: Set<string>;
   addITwinToFavorites: (iTwinId: string) => Promise<void>;
   removeITwinFromFavorites: (iTwinId: string) => Promise<void>;
+  shouldRefetchFavorites: boolean;
+  resetShouldRefetchFavorites: () => void;
 } => {
   const [iTwinFavorites, setITwinFavorites] = useState(new Set<string>());
+  const [shouldRefetchFavorites, setShouldRefetchFavorites] = useState(false);
 
   /**
    * Adds an iTwin to the favorites.
@@ -52,10 +57,13 @@ export const useITwinFavorites = (
             Accept: "application/vnd.bentley.itwin-platform.v1+json",
           },
         });
-        if (!result || result.status !== 200) {
+
+        if (!result || (result.status !== 200 && result.status !== 204)) {
           throw new Error(`Failed to add iTwin ${iTwinId} to favorites`);
         }
+
         setITwinFavorites((prev) => new Set([...prev, iTwinId]));
+        setShouldRefetchFavorites(true);
       } catch (error) {
         console.error(error);
       }
@@ -86,7 +94,7 @@ export const useITwinFavorites = (
           },
         });
 
-        if (!result || result.status !== 200) {
+        if (!result || (result.status !== 200 && result.status !== 204)) {
           throw new Error(`Failed to remove iTwin ${iTwinId} to favorites`);
         }
 
@@ -95,6 +103,7 @@ export const useITwinFavorites = (
           newFavorites.delete(iTwinId);
           return newFavorites;
         });
+        setShouldRefetchFavorites(true);
       } catch (error) {
         console.error(error);
       }
@@ -118,6 +127,7 @@ export const useITwinFavorites = (
       )}/itwins/favorites?subClass=Project`;
       const result = await fetch(url, {
         headers: {
+          "Cache-Control": shouldRefetchFavorites ? "no-cache" : "",
           authorization:
             typeof accessToken === "function"
               ? await accessToken()
@@ -142,8 +152,12 @@ export const useITwinFavorites = (
       const response: ITwinFavoritesResponse = await result.json();
       return response.iTwins;
     },
-    [accessToken, apiOverrides]
+    [accessToken, apiOverrides, shouldRefetchFavorites]
   );
+
+  const resetShouldRefetchFavorites = useCallback(() => {
+    setShouldRefetchFavorites(false);
+  }, []);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -156,7 +170,10 @@ export const useITwinFavorites = (
         const favorites = await getITwinFavorites(abortSignal);
         setITwinFavorites(new Set(favorites.map((favorite) => favorite.id)));
       } catch (error) {
-        if (error === HOOK_ABORT_ERROR) {
+        if (
+          error === HOOK_ABORT_ERROR ||
+          (error instanceof Error && error.name === "AbortError")
+        ) {
           return;
         }
         console.error(error);
@@ -169,7 +186,13 @@ export const useITwinFavorites = (
     };
   }, [getITwinFavorites]);
 
-  return { iTwinFavorites, addITwinToFavorites, removeITwinFromFavorites };
+  return {
+    iTwinFavorites,
+    addITwinToFavorites,
+    removeITwinFromFavorites,
+    shouldRefetchFavorites,
+    resetShouldRefetchFavorites,
+  };
 };
 
 /** Response from https://developer.bentley.com/apis/iTwins/operations/get-my-favorite-itwins/ */
