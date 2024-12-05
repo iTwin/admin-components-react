@@ -122,7 +122,7 @@ export const ITwinGrid = ({
     removeITwinFromFavorites,
     shouldRefetchFavorites,
     resetShouldRefetchFavorites,
-  } = useITwinFavorites(accessToken, apiOverrides);
+  } = useITwinFavorites(accessToken, apiOverrides?.serverEnvironmentPrefix);
 
   const strings = _mergeStrings(
     {
