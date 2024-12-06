@@ -49,7 +49,9 @@ export const useIModelThumbnail = (
         };
 
         const response = await fetch(
-          `${_getAPIServer(apiOverrides)}/imodels/${iModelId}/thumbnail`,
+          `${_getAPIServer(
+            apiOverrides?.serverEnvironmentPrefix
+          )}/imodels/${iModelId}/thumbnail`,
           options
         );
         const thumbnail: string = response.ok
@@ -76,6 +78,12 @@ export const useIModelThumbnail = (
     return () => {
       abortController.abort();
     };
-  }, [accessToken, iModelId, thumbnail, apiOverrides?.data, apiOverrides]);
+  }, [
+    accessToken,
+    iModelId,
+    thumbnail,
+    apiOverrides?.data,
+    apiOverrides?.serverEnvironmentPrefix,
+  ]);
   return thumbnail;
 };

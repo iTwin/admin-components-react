@@ -5,7 +5,6 @@
 
 import { useCallback, useEffect, useState } from "react";
 
-import { ApiOverrides, ITwinFull } from "../../types";
 import { _getAPIServer } from "../../utils/_apiOverrides";
 
 const HOOK_ABORT_ERROR =
@@ -24,7 +23,7 @@ const HOOK_ABORT_ERROR =
  */
 export const useITwinFavorites = (
   accessToken: string | (() => Promise<string>) | undefined,
-  apiOverrides?: ApiOverrides<ITwinFull[]>
+  serverEnvironmentPrefix?: "dev" | "qa" | ""
 ): {
   iTwinFavorites: Set<string>;
   addITwinToFavorites: (iTwinId: string) => Promise<void>;
@@ -45,7 +44,9 @@ export const useITwinFavorites = (
       if (!accessToken || !iTwinId || iTwinId === "") {
         return;
       }
-      const url = `${_getAPIServer(apiOverrides)}/itwins/favorites/${iTwinId}`;
+      const url = `${_getAPIServer(
+        serverEnvironmentPrefix
+      )}/itwins/favorites/${iTwinId}`;
       try {
         const result = await fetch(url, {
           method: "POST",
@@ -68,7 +69,7 @@ export const useITwinFavorites = (
         console.error(error);
       }
     },
-    [accessToken, apiOverrides]
+    [accessToken, serverEnvironmentPrefix]
   );
 
   /**
@@ -81,7 +82,9 @@ export const useITwinFavorites = (
       if (!accessToken || !iTwinId || iTwinId === "") {
         return;
       }
-      const url = `${_getAPIServer(apiOverrides)}/itwins/favorites/${iTwinId}`;
+      const url = `${_getAPIServer(
+        serverEnvironmentPrefix
+      )}/itwins/favorites/${iTwinId}`;
       try {
         const result = await fetch(url, {
           method: "DELETE",
@@ -108,7 +111,7 @@ export const useITwinFavorites = (
         console.error(error);
       }
     },
-    [accessToken, apiOverrides]
+    [accessToken, serverEnvironmentPrefix]
   );
 
   /**
@@ -123,7 +126,7 @@ export const useITwinFavorites = (
         return [];
       }
       const url = `${_getAPIServer(
-        apiOverrides
+        serverEnvironmentPrefix
       )}/itwins/favorites?subClass=Project`;
       const result = await fetch(url, {
         headers: {
@@ -152,7 +155,7 @@ export const useITwinFavorites = (
       const response: ITwinFavoritesResponse = await result.json();
       return response.iTwins;
     },
-    [accessToken, apiOverrides, shouldRefetchFavorites]
+    [accessToken, serverEnvironmentPrefix, shouldRefetchFavorites]
   );
 
   const resetShouldRefetchFavorites = useCallback(() => {

@@ -139,6 +139,8 @@ export const useITwinTableConfig = ({
       iTwinActions,
       iTwinFavorites,
       removeITwinFromFavorites,
+      strings.addToFavorites,
+      strings.removeFromFavorites,
       strings.tableColumnDescription,
       strings.tableColumnFavorites,
       strings.tableColumnLastModified,

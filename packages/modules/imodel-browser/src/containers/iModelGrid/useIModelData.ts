@@ -69,7 +69,7 @@ export const useIModelData = ({
     accessToken,
     iTwinId,
     apiOverrides?.data,
-    apiOverrides,
+    apiOverrides?.serverEnvironmentPrefix,
     searchText,
     maxCount,
   ]);
@@ -110,10 +110,9 @@ export const useIModelData = ({
     const searching = searchText?.trim() ? `&$search=${searchText}` : "";
 
     const abortController = new AbortController();
-    const url = `${_getAPIServer({
-      data: apiOverrides?.data,
-      serverEnvironmentPrefix: apiOverrides?.serverEnvironmentPrefix,
-    })}/imodels/${selection}${sorting}${paging}${searching}`;
+    const url = `${_getAPIServer(
+      apiOverrides?.serverEnvironmentPrefix
+    )}/imodels/${selection}${sorting}${paging}${searching}`;
 
     const makeFetchRequest = async () => {
       const options: RequestInit = {
