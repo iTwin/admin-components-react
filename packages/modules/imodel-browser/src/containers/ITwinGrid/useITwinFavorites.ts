@@ -185,7 +185,7 @@ export const useITwinFavorites = (
     void fetchITwinFavorites(controller.signal);
 
     return () => {
-      controller.abort();
+      controller.abort(HOOK_ABORT_ERROR);
     };
   }, [getITwinFavorites]);
 
