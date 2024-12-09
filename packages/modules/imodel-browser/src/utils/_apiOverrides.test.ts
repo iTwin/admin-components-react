@@ -6,17 +6,17 @@ import { _getAPIServer, _mergeStrings } from "./_apiOverrides";
 
 describe("apiOverrides", () => {
   describe("getAPIServer", () => {
-    it("returns https://api.bentley.com with no serverEnvironmentPrefix", () => {
-      const result = _getAPIServer({});
+    it("returns https://api.bentley.com with empty serverEnvironmentPrefix", () => {
+      const result = _getAPIServer("");
 
       expect(result).toEqual("https://api.bentley.com");
     });
     it("returns https://[prefix]-api.bentley.com when provided with [prefix]", () => {
-      const result = _getAPIServer({ serverEnvironmentPrefix: "qa" });
+      const result = _getAPIServer("qa");
 
       expect(result).toEqual("https://qa-api.bentley.com");
     });
-    it("handles undefined overrdies", () => {
+    it("handles undefined overrides", () => {
       const result = _getAPIServer(undefined);
 
       expect(result).toEqual("https://api.bentley.com");

@@ -36,6 +36,7 @@ export const useITwinData = ({
   resetShouldRefetchFavorites,
 }: ProjectDataHookOptions) => {
   const data = apiOverrides?.data;
+  const serverEnvironmentPrefix = apiOverrides?.serverEnvironmentPrefix;
   const [projects, setProjects] = React.useState<ITwinFull[]>([]);
   const [status, setStatus] = React.useState<DataStatus>();
   const filteredProjects = useITwinFilter(projects, filterOptions);
@@ -69,7 +70,7 @@ export const useITwinData = ({
     setProjects([]);
     setPage(0);
     setMorePages(true);
-  }, [accessToken, requestType, iTwinSubClass, data, apiOverrides]);
+  }, [accessToken, requestType, iTwinSubClass, data, serverEnvironmentPrefix]);
 
   React.useEffect(() => {
     if (!morePages) {
@@ -100,7 +101,7 @@ export const useITwinData = ({
         ? ""
         : `&$search=${filterOptions}`;
     const url = `${_getAPIServer(
-      apiOverrides
+      serverEnvironmentPrefix
     )}/itwins/${endpoint}${subClass}${paging}${search}`;
 
     const makeFetchRequest = async () => {
@@ -152,7 +153,7 @@ export const useITwinData = ({
     accessToken,
     requestType,
     data,
-    apiOverrides,
+    serverEnvironmentPrefix,
     filterOptions,
     page,
     morePages,

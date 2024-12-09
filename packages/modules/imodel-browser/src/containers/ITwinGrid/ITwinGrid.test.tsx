@@ -55,4 +55,43 @@ describe("ITwinGrid", () => {
     expect(wrapper.getByRole("table")).toBeDefined();
     expect(wrapper.getAllByRole("row").length).toEqual(3); // First row is header
   });
+
+  it("should not refetch iTwins favorites when component rerenders", async () => {
+    // Arrange
+    const fetchMore = jest.fn();
+    jest.spyOn(useITwinData, "useITwinData").mockReturnValue({
+      iTwins: [],
+      status: DataStatus.Complete,
+      fetchMore,
+    });
+    // Act
+    const signal = new AbortController().signal;
+    const wrapper = render(
+      <ITwinGrid
+        accessToken="accessToken"
+        apiOverrides={{ serverEnvironmentPrefix: "qa" }}
+        viewMode="cells"
+      />
+    );
+    wrapper.rerender(
+      <ITwinGrid
+        accessToken="accessToken"
+        apiOverrides={{ serverEnvironmentPrefix: "qa" }}
+        viewMode="tile"
+      />
+    );
+
+    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(fetch).toHaveBeenCalledWith(
+      "https://qa-api.bentley.com/itwins/favorites?subClass=Project",
+      {
+        headers: {
+          Accept: "application/vnd.bentley.itwin-platform.v1+json",
+          "Cache-Control": "",
+          authorization: "accessToken",
+        },
+        signal: signal,
+      }
+    );
+  });
 });
