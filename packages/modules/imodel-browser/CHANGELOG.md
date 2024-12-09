@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Wed, 04 Dec 2024 19:08:30 GMT and should not be manually modified.
+This log was last generated on Mon, 09 Dec 2024 19:40:38 GMT and should not be manually modified.
+
+## 2.1.2
+Mon, 09 Dec 2024 19:40:38 GMT
+
+### Patches
+
+- Avoid unnecessary refetchs to API
 
 ## 2.1.1
 Wed, 04 Dec 2024 19:08:30 GMT
