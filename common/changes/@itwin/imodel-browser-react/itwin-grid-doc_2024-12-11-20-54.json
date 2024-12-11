@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/imodel-browser-react",
+      "comment": "Update access token docs for iTwinGrid and iModelGrid",
+      "type": "none"
+    }
+  ],
+  "packageName": "@itwin/imodel-browser-react"
+}
