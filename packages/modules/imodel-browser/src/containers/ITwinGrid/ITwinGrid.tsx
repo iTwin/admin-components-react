@@ -61,7 +61,7 @@ export interface ITwinGridStrings {
 }
 
 export interface ITwinGridProps {
-  /** Access token that requires the `itwins:read` scope. Must be memoized. Provide a function that returns the token to prevent the token from expiring. */
+  /** Access token that requires the `itwins:read` scope. Provide a function that returns the token to prevent the token from expiring. Function must be memoized. */
   accessToken?: string | (() => Promise<string>) | undefined;
   /** Type of iTwin to request */
   requestType?: "favorites" | "recents" | "";
