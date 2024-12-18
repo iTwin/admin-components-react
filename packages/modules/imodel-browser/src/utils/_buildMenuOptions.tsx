@@ -11,7 +11,7 @@ export interface ContextMenuBuilderItem<T = any>
   extends Omit<MenuItemProps, "onClick" | "value"> {
   key: string;
   visible?: boolean | ((value: T) => boolean);
-  onClick?: ((value: T, forceRefresh?: () => void) => void) | undefined;
+  onClick?: ((value?: T, forceRefresh?: () => void) => void) | undefined;
 }
 
 /** Build MenuItem array for the value for each provided options
