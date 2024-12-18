@@ -123,6 +123,7 @@ export const ITwinGrid = ({
     shouldRefetchFavorites,
     resetShouldRefetchFavorites,
   } = useITwinFavorites(accessToken, apiOverrides?.serverEnvironmentPrefix);
+  const [isStale, setIsStale] = React.useState(false);
 
   const strings = _mergeStrings(
     {
@@ -153,6 +154,8 @@ export const ITwinGrid = ({
     filterOptions,
     shouldRefetchFavorites,
     resetShouldRefetchFavorites,
+    isStaleData: isStale,
+    resetStaleData: React.useCallback(() => setIsStale(false), []),
   });
 
   const iTwins = React.useMemo(
@@ -161,6 +164,10 @@ export const ITwinGrid = ({
     [postProcessCallback, fetchedItwins, fetchStatus]
   );
 
+  const forceRefresh = React.useCallback(() => {
+    setIsStale(true);
+  }, []);
+
   const { columns, onRowClick } = useITwinTableConfig({
     iTwinActions,
     onThumbnailClick,
@@ -168,6 +175,7 @@ export const ITwinGrid = ({
     iTwinFavorites,
     addITwinToFavorites,
     removeITwinFromFavorites,
+    forceRefresh,
   });
 
   const noResultsText = {
@@ -211,6 +219,7 @@ export const ITwinGrid = ({
                 isFavorite={iTwinFavorites.has(iTwin.id)}
                 addToFavorites={addITwinToFavorites}
                 removeFromFavorites={removeITwinFromFavorites}
+                forceRefresh={forceRefresh}
                 {...tileOverrides}
               />
             ))}

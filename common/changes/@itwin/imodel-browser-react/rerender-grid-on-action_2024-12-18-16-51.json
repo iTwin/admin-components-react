@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/imodel-browser-react",
+      "comment": "provide option to refresh the grid after an itwin/imodel action",
+      "type": "minor"
+    }
+  ],
+  "packageName": "@itwin/imodel-browser-react"
+}

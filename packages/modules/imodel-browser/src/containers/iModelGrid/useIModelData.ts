@@ -22,6 +22,8 @@ export interface IModelDataHookOptions {
   searchText?: string | undefined;
   maxCount?: number;
   viewMode?: ViewType;
+  isStaleData?: boolean;
+  resetStaleData?: () => void;
 }
 const PAGE_SIZE = 100;
 
@@ -33,6 +35,8 @@ export const useIModelData = ({
   searchText,
   maxCount,
   viewMode,
+  isStaleData,
+  resetStaleData,
 }: IModelDataHookOptions) => {
   const sortType =
     sortOptions && ["name", "createdDateTime"].includes(sortOptions.sortType)
@@ -44,10 +48,21 @@ export const useIModelData = ({
   const [status, setStatus] = React.useState<DataStatus>();
   const [page, setPage] = React.useState(0);
   const [morePages, setMorePages] = React.useState(true);
+
   const fetchMore = React.useCallback(() => {
     viewMode === "cells" && setStatus(DataStatus.Fetching);
     status !== DataStatus.Fetching && setPage((page) => page + 1);
   }, [status, viewMode]);
+
+  React.useEffect(() => {
+    if (isStaleData) {
+      setStatus(DataStatus.Fetching);
+      setIModels([]);
+      setPage(0);
+      setMorePages(true);
+      resetStaleData?.();
+    }
+  }, [isStaleData, resetStaleData]);
 
   React.useEffect(() => {
     // If sort changes but we already have all the data,
@@ -59,6 +74,7 @@ export const useIModelData = ({
       setMorePages(true);
     }
   }, [sortType, sortDescending, morePages]);
+
   React.useEffect(() => {
     // If any of the dependencies change, always restart the fetch from scratch.
     setStatus(DataStatus.Fetching);

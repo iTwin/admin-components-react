@@ -216,7 +216,7 @@ const useIndividualState = (iModel: IModelFull, props: IModelTileProps) => {
     }),
     [fetchVersionsList, selection?.displayName, versions]
   );
-  // Override the thumbnailClick so it recieves the selected version too.
+  // Override the thumbnailClick so it receives the selected version too.
   // Not great typewise, but it is an example of what someone could do if it was really needed.
   const onThumbnailClick = React.useCallback(
     (iModel: IModelFull) => {
@@ -241,7 +241,7 @@ export const WithPostProcessCallback: Story<IModelGridProps> =
     withAccessTokenOverride((args) => {
       const [filter, setFilter] = React.useState("");
       const filterOrAddStartTile = React.useCallback(
-        (iModels: IModelFull[], status: DataStatus) => {
+        (iModels: IModelFull[], status?: DataStatus) => {
           if (status !== DataStatus.Complete) {
             return iModels;
           }
