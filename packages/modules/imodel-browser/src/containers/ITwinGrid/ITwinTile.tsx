@@ -44,6 +44,8 @@ export interface ITwinTileProps {
   addToFavorites?(iTwinId: string): Promise<void>;
   /**  Function to remove the iTwin from favorites  */
   removeFromFavorites?(iTwinId: string): Promise<void>;
+  /** Function to force a refetch of the iTwins */
+  forceRefresh: () => void;
 }
 
 /**
@@ -58,6 +60,7 @@ export const ITwinTile = ({
   isFavorite,
   addToFavorites,
   removeFromFavorites,
+  forceRefresh,
 }: ITwinTileProps) => {
   const strings = _mergeStrings(
     {

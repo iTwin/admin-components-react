@@ -22,6 +22,8 @@ export interface ProjectDataHookOptions {
   filterOptions?: ITwinFilterOptions;
   shouldRefetchFavorites?: boolean;
   resetShouldRefetchFavorites?: () => void;
+  isStaleData?: boolean;
+  resetStaleData?: () => void;
 }
 
 const PAGE_SIZE = 100;
@@ -34,6 +36,8 @@ export const useITwinData = ({
   filterOptions,
   shouldRefetchFavorites,
   resetShouldRefetchFavorites,
+  isStaleData,
+  resetStaleData,
 }: ProjectDataHookOptions) => {
   const data = apiOverrides?.data;
   const serverEnvironmentPrefix = apiOverrides?.serverEnvironmentPrefix;
@@ -42,6 +46,17 @@ export const useITwinData = ({
   const filteredProjects = useITwinFilter(projects, filterOptions);
   const [page, setPage] = React.useState(0);
   const [morePages, setMorePages] = React.useState(true);
+
+  React.useEffect(() => {
+    if (isStaleData) {
+      setStatus(DataStatus.Fetching);
+      setProjects([]);
+      setPage(0);
+      setMorePages(true);
+      resetStaleData?.();
+    }
+  }, [isStaleData, resetStaleData]);
+
   const fetchMore = React.useCallback(() => {
     setPage((page) => page + 1);
   }, []);

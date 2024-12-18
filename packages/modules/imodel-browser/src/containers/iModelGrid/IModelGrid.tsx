@@ -111,6 +111,7 @@ export const IModelGrid = ({
 }: IModelGridProps) => {
   const [sort, setSort] = React.useState<IModelSortOptions>(sortOptions);
   const [isSortOnTable, setIsSortOnTable] = React.useState(false);
+  const [isStale, setIsStale] = React.useState(false);
 
   React.useEffect(() => {
     if (!isSortOnTable) {
@@ -157,6 +158,8 @@ export const IModelGrid = ({
     searchText,
     maxCount,
     viewMode,
+    isStaleData: isStale,
+    resetStaleData: React.useCallback(() => setIsStale(false), []),
   });
 
   const iModels = React.useMemo(
@@ -165,11 +168,15 @@ export const IModelGrid = ({
       fetchediModels,
     [postProcessCallback, fetchediModels, fetchStatus, searchText]
   );
+  const forceRefresh = React.useCallback(() => {
+    setIsStale(true);
+  }, []);
 
   const { columns, onRowClick } = useIModelTableConfig({
     iModelActions,
     onThumbnailClick,
     strings,
+    forceRefresh,
   });
 
   const noResultsText = {
@@ -206,6 +213,7 @@ export const IModelGrid = ({
                     onThumbnailClick={onThumbnailClick}
                     apiOverrides={tileApiOverrides}
                     useTileState={useIndividualState}
+                    forceRefresh={forceRefresh}
                     {...tileOverrides}
                   />
                 ))}
