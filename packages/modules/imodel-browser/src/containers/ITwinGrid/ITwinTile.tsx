@@ -45,7 +45,7 @@ export interface ITwinTileProps {
   /**  Function to remove the iTwin from favorites  */
   removeFromFavorites?(iTwinId: string): Promise<void>;
   /** Function to force a refetch of the iTwins */
-  forceRefresh: () => void;
+  forceRefresh?: () => void;
 }
 
 /**
@@ -74,8 +74,14 @@ export const ITwinTile = ({
   );
 
   const moreOptions = React.useMemo(
-    () => _buildManagedContextMenuOptions(iTwinOptions, iTwin),
-    [iTwinOptions, iTwin]
+    () =>
+      _buildManagedContextMenuOptions(
+        iTwinOptions,
+        iTwin,
+        undefined,
+        forceRefresh
+      ),
+    [iTwinOptions, iTwin, forceRefresh]
   );
   return (
     <ThemeProvider theme="inherit">

@@ -28,7 +28,7 @@ export interface IModelTileProps {
   /** Object that configures different overrides for the API */
   apiOverrides?: ApiOverrides;
   /** Function to force a refetch of the iModels */
-  forceRefresh: () => void;
+  forceRefresh?: () => void;
 }
 
 /**
