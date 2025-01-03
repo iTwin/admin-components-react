@@ -21,7 +21,7 @@ export interface IModelDataHookOptions {
   apiOverrides?: ApiOverrides<IModelFull[]>;
   searchText?: string | undefined;
   maxCount?: number;
-  viewMode?: ViewType; // @deprecated No longer used. Should be removed in 3.0.
+  viewMode?: ViewType /** @deprecated in 2.1 It is no longer used as it has no effect on the data fetching. */;
 }
 const PAGE_SIZE = 100;
 
