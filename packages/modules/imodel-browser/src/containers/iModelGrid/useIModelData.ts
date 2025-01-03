@@ -225,7 +225,7 @@ const createFetchIModelsFn = (
     serverEnvironmentPrefix
   )}/imodels/${selection}${sorting}${paging}${searching}`;
 
-  const makeFetchRequest = async () => {
+  const doFetchRequest = async () => {
     const options: RequestInit = {
       signal: abortController.signal,
       headers: {
@@ -253,6 +253,6 @@ const createFetchIModelsFn = (
 
   return {
     abortController,
-    fetchIModels: makeFetchRequest,
+    fetchIModels: doFetchRequest,
   };
 };
