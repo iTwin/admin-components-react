@@ -22,7 +22,7 @@ export interface useITwinTableConfigProps {
   iTwinFavorites: Set<string>;
   addITwinToFavorites: (iTwinId: string) => Promise<void>;
   removeITwinFromFavorites: (iTwinId: string) => Promise<void>;
-  forceRefresh: () => void;
+  refetchITwins: () => void;
 }
 
 export const useITwinTableConfig = ({
@@ -32,7 +32,7 @@ export const useITwinTableConfig = ({
   iTwinFavorites,
   addITwinToFavorites,
   removeITwinFromFavorites,
-  forceRefresh,
+  refetchITwins,
 }: useITwinTableConfigProps) => {
   const onRowClick = (_: React.MouseEvent, row: any) => {
     const iTwin = row.original as ITwinFull;
@@ -113,7 +113,7 @@ export const useITwinTableConfig = ({
                   iTwinActions,
                   props.row.original,
                   close,
-                  forceRefresh
+                  refetchITwins
                 );
                 return options !== undefined ? options : [];
               };
@@ -148,7 +148,7 @@ export const useITwinTableConfig = ({
       strings.tableColumnFavorites,
       strings.tableColumnLastModified,
       strings.tableColumnName,
-      forceRefresh,
+      refetchITwins,
     ]
   );
 

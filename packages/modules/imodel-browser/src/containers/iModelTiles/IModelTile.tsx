@@ -27,8 +27,8 @@ export interface IModelTileProps {
   tileProps?: Partial<TileProps>;
   /** Object that configures different overrides for the API */
   apiOverrides?: ApiOverrides;
-  /** Function to force a refetch of the iModels */
-  forceRefresh?: () => void;
+  /** Function to refetch iModels */
+  refetchIModels?: () => void;
 }
 
 /**
@@ -41,7 +41,7 @@ export const IModelTile = ({
   onThumbnailClick,
   apiOverrides,
   tileProps,
-  forceRefresh,
+  refetchIModels,
 }: IModelTileProps) => {
   const moreOptions = React.useMemo(
     () =>
@@ -49,9 +49,9 @@ export const IModelTile = ({
         iModelOptions,
         iModel,
         undefined,
-        forceRefresh
+        refetchIModels
       ),
-    [iModelOptions, iModel, forceRefresh]
+    [iModelOptions, iModel, refetchIModels]
   );
   const thumbnailApiOverride =
     apiOverrides || iModel?.thumbnail

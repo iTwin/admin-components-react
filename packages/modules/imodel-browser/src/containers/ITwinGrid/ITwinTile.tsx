@@ -44,8 +44,8 @@ export interface ITwinTileProps {
   addToFavorites?(iTwinId: string): Promise<void>;
   /**  Function to remove the iTwin from favorites  */
   removeFromFavorites?(iTwinId: string): Promise<void>;
-  /** Function to force a refetch of the iTwins */
-  forceRefresh?: () => void;
+  /** Function to refetch iTwins */
+  refetchITwins?: () => void;
 }
 
 /**
@@ -60,7 +60,7 @@ export const ITwinTile = ({
   isFavorite,
   addToFavorites,
   removeFromFavorites,
-  forceRefresh,
+  refetchITwins,
 }: ITwinTileProps) => {
   const strings = _mergeStrings(
     {
@@ -79,9 +79,9 @@ export const ITwinTile = ({
         iTwinOptions,
         iTwin,
         undefined,
-        forceRefresh
+        refetchITwins
       ),
-    [iTwinOptions, iTwin, forceRefresh]
+    [iTwinOptions, iTwin, refetchITwins]
   );
   return (
     <ThemeProvider theme="inherit">

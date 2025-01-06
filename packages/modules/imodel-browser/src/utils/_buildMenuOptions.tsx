@@ -11,7 +11,7 @@ export interface ContextMenuBuilderItem<T = any>
   extends Omit<MenuItemProps, "onClick" | "value"> {
   key: string;
   visible?: boolean | ((value: T) => boolean);
-  onClick?: ((value?: T, forceRefresh?: () => void) => void) | undefined;
+  onClick?: ((value?: T, refetchData?: () => void) => void) | undefined;
 }
 
 /** Build MenuItem array for the value for each provided options
@@ -21,8 +21,8 @@ export const _buildManagedContextMenuOptions: <T>(
   options: ContextMenuBuilderItem<T>[] | undefined,
   value: T,
   closeMenu?: () => void,
-  forceRefresh?: () => void
-) => JSX.Element[] | undefined = (options, value, closeMenu, forceRefresh) => {
+  refetchData?: () => void
+) => JSX.Element[] | undefined = (options, value, closeMenu, refetchData) => {
   return options
     ?.filter?.(({ visible }) => {
       return typeof visible === "function" ? visible(value) : visible ?? true;
@@ -33,7 +33,7 @@ export const _buildManagedContextMenuOptions: <T>(
           {...contextMenuProps}
           onClick={() => {
             closeMenu?.();
-            onClick?.(value, forceRefresh);
+            onClick?.(value, refetchData);
           }}
           key={key}
           value={value}

@@ -22,8 +22,6 @@ export interface ProjectDataHookOptions {
   filterOptions?: ITwinFilterOptions;
   shouldRefetchFavorites?: boolean;
   resetShouldRefetchFavorites?: () => void;
-  isStaleData?: boolean;
-  resetStaleData?: () => void;
 }
 
 const PAGE_SIZE = 100;
@@ -36,8 +34,6 @@ export const useITwinData = ({
   filterOptions,
   shouldRefetchFavorites,
   resetShouldRefetchFavorites,
-  isStaleData,
-  resetStaleData,
 }: ProjectDataHookOptions) => {
   const data = apiOverrides?.data;
   const serverEnvironmentPrefix = apiOverrides?.serverEnvironmentPrefix;
@@ -47,15 +43,12 @@ export const useITwinData = ({
   const [page, setPage] = React.useState(0);
   const [morePages, setMorePages] = React.useState(true);
 
-  React.useEffect(() => {
-    if (isStaleData) {
-      setStatus(DataStatus.Fetching);
-      setProjects([]);
-      setPage(0);
-      setMorePages(true);
-      resetStaleData?.();
-    }
-  }, [isStaleData, resetStaleData]);
+  const refetchData = React.useCallback(() => {
+    setStatus(DataStatus.Fetching);
+    setProjects([]);
+    setPage(0);
+    setMorePages(true);
+  }, []);
 
   const fetchMore = React.useCallback(() => {
     setPage((page) => page + 1);
@@ -72,20 +65,21 @@ export const useITwinData = ({
       morePagesRef.current ||
       !["favorites", "recents"].includes(requestType)
     ) {
-      setStatus(DataStatus.Fetching);
-      setProjects([]);
-      setPage(0);
-      setMorePages(true);
+      refetchData();
     }
-  }, [filterOptions, requestType]);
+  }, [filterOptions, requestType, refetchData]);
 
   React.useEffect(() => {
     // If any of the dependencies change, always restart the fetch from scratch.
-    setStatus(DataStatus.Fetching);
-    setProjects([]);
-    setPage(0);
-    setMorePages(true);
-  }, [accessToken, requestType, iTwinSubClass, data, serverEnvironmentPrefix]);
+    refetchData();
+  }, [
+    accessToken,
+    requestType,
+    iTwinSubClass,
+    data,
+    serverEnvironmentPrefix,
+    refetchData,
+  ]);
 
   React.useEffect(() => {
     if (!morePages) {
@@ -180,5 +174,6 @@ export const useITwinData = ({
     iTwins: filteredProjects,
     status,
     fetchMore: morePages ? fetchMore : undefined,
+    refetchITwins: refetchData,
   };
 };

@@ -27,14 +27,14 @@ export interface useIModelTableConfigProps {
     noAuthentication: string;
     error: string;
   };
-  forceRefresh: () => void;
+  refetchIModels: () => void;
 }
 
 export const useIModelTableConfig = ({
   iModelActions,
   onThumbnailClick,
   strings,
-  forceRefresh,
+  refetchIModels,
 }: useIModelTableConfigProps) => {
   const onRowClick = (_: React.MouseEvent, row: any) => {
     const iModel = row.original as IModelFull;
@@ -89,7 +89,7 @@ export const useIModelTableConfig = ({
                   iModelActions,
                   props.row.original,
                   close,
-                  forceRefresh
+                  refetchIModels
                 );
                 return options !== undefined ? options : [];
               };
@@ -118,7 +118,7 @@ export const useIModelTableConfig = ({
       strings.tableColumnDescription,
       strings.tableColumnLastModified,
       strings.tableColumnName,
-      forceRefresh,
+      refetchIModels,
     ]
   );
 
