@@ -104,7 +104,7 @@ export const useIModelData = ({
 
     // if data is provided, use it and skip fetching
     if (apiOverrides?.data) {
-      setIModels(apiOverrides?.data);
+      setIModels(apiOverrides.data);
       setStatus(DataStatus.Complete);
       setMorePagesAvailable(false);
       return;
