@@ -2,6 +2,23 @@
   "name": "@itwin/imodel-browser-react",
   "entries": [
     {
+      "version": "2.2.0",
+      "tag": "@itwin/imodel-browser-react_v2.2.0",
+      "date": "Tue, 07 Jan 2025 19:47:55 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "Update access token docs for iTwinGrid and iModelGrid"
+          }
+        ],
+        "minor": [
+          {
+            "comment": "provide option to refresh the grid after an itwin/imodel action"
+          }
+        ]
+      }
+    },
+    {
       "version": "2.1.2",
       "tag": "@itwin/imodel-browser-react_v2.1.2",
       "date": "Mon, 09 Dec 2024 19:40:38 GMT",
