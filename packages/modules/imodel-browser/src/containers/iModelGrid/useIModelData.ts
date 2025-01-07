@@ -206,21 +206,11 @@ const createFetchIModelsFn = (
     ? `&$orderBy=${sortType} ${sortDescending ? "desc" : "asc"}`
     : "";
   const skip = page * PAGE_SIZE;
-  let top;
-  if (maxCount) {
-    top = Math.min(PAGE_SIZE, maxCount - skip);
-  } else {
-    top = PAGE_SIZE;
-  }
+  const top = maxCount ? Math.min(PAGE_SIZE, maxCount - skip) : PAGE_SIZE;
   const paging = `&$skip=${skip}&$top=${top}`;
   const searching = searchText?.trim() ? `&$search=${searchText}` : "";
 
   const abortController = new AbortController();
-  console.log(
-    `serverEnvironmentPrefix: ${serverEnvironmentPrefix}\n _getAPIServer(serverEnvironmentPrefix): ${_getAPIServer(
-      serverEnvironmentPrefix
-    )}`
-  );
   const url = `${_getAPIServer(
     serverEnvironmentPrefix
   )}/imodels/${selection}${sorting}${paging}${searching}`;
@@ -242,12 +232,13 @@ const createFetchIModelsFn = (
     }
 
     const result: { iModels: IModelFull[] } = await response.json();
-    console.log(result);
+    const totalLocalIModels = page * PAGE_SIZE + result.iModels.length;
+
     return {
       iModels: result.iModels,
-      morePagesAvailable:
-        result.iModels.length >= PAGE_SIZE ||
-        result.iModels.length === maxCount,
+      morePagesAvailable: !(
+        totalLocalIModels === maxCount || result.iModels.length < top
+      ),
     };
   };
 
