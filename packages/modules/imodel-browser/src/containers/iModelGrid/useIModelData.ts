@@ -44,27 +44,30 @@ export const useIModelData = ({
   const [status, setStatus] = React.useState<DataStatus>();
   const [page, setPage] = React.useState(0);
   const [morePages, setMorePages] = React.useState(true);
+
   const fetchMore = React.useCallback(() => {
     viewMode === "cells" && setStatus(DataStatus.Fetching);
     status !== DataStatus.Fetching && setPage((page) => page + 1);
   }, [status, viewMode]);
 
-  React.useEffect(() => {
-    // If sort changes but we already have all the data,
-    // let client side sorting do its job, otherwise, refetch from scratch.
-    if (morePages) {
-      setStatus(DataStatus.Fetching);
-      setIModels([]);
-      setPage(0);
-      setMorePages(true);
-    }
-  }, [sortType, sortDescending, morePages]);
-  React.useEffect(() => {
-    // If any of the dependencies change, always restart the fetch from scratch.
+  const refetchData = React.useCallback(() => {
     setStatus(DataStatus.Fetching);
     setIModels([]);
     setPage(0);
     setMorePages(true);
+  }, []);
+
+  React.useEffect(() => {
+    // If sort changes but we already have all the data,
+    // let client side sorting do its job, otherwise, refetch from scratch.
+    if (morePages) {
+      refetchData();
+    }
+  }, [sortType, sortDescending, morePages, refetchData]);
+
+  React.useEffect(() => {
+    // If any of the dependencies change, always restart the fetch from scratch.
+    refetchData();
   }, [
     accessToken,
     iTwinId,
@@ -72,6 +75,7 @@ export const useIModelData = ({
     apiOverrides?.serverEnvironmentPrefix,
     searchText,
     maxCount,
+    refetchData,
   ]);
 
   React.useEffect(() => {
@@ -175,5 +179,6 @@ export const useIModelData = ({
     iModels: sortedIModels,
     status,
     fetchMore: morePages ? fetchMore : undefined,
+    refetchIModels: refetchData,
   };
 };

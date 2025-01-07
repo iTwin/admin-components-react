@@ -27,6 +27,8 @@ export interface IModelTileProps {
   tileProps?: Partial<TileProps>;
   /** Object that configures different overrides for the API */
   apiOverrides?: ApiOverrides;
+  /** Function to refetch iModels */
+  refetchIModels?: () => void;
 }
 
 /**
@@ -39,10 +41,17 @@ export const IModelTile = ({
   onThumbnailClick,
   apiOverrides,
   tileProps,
+  refetchIModels,
 }: IModelTileProps) => {
   const moreOptions = React.useMemo(
-    () => _buildManagedContextMenuOptions(iModelOptions, iModel),
-    [iModelOptions, iModel]
+    () =>
+      _buildManagedContextMenuOptions(
+        iModelOptions,
+        iModel,
+        undefined,
+        refetchIModels
+      ),
+    [iModelOptions, iModel, refetchIModels]
   );
   const thumbnailApiOverride =
     apiOverrides || iModel?.thumbnail

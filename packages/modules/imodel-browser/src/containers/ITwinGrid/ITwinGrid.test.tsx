@@ -24,6 +24,7 @@ describe("ITwinGrid", () => {
       ],
       status: DataStatus.Complete,
       fetchMore: undefined,
+      refetchITwins: jest.fn(),
     });
   });
 
@@ -37,6 +38,7 @@ describe("ITwinGrid", () => {
       iTwins: [],
       status: DataStatus.Complete,
       fetchMore: undefined,
+      refetchITwins: jest.fn(),
     });
 
     // Act
@@ -58,11 +60,11 @@ describe("ITwinGrid", () => {
 
   it("should not refetch iTwins favorites when component rerenders", async () => {
     // Arrange
-    const fetchMore = jest.fn();
     jest.spyOn(useITwinData, "useITwinData").mockReturnValue({
       iTwins: [],
       status: DataStatus.Complete,
-      fetchMore,
+      fetchMore: jest.fn(),
+      refetchITwins: jest.fn(),
     });
     // Act
     const signal = new AbortController().signal;
