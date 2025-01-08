@@ -44,6 +44,8 @@ export interface ITwinTileProps {
   addToFavorites?(iTwinId: string): Promise<void>;
   /**  Function to remove the iTwin from favorites  */
   removeFromFavorites?(iTwinId: string): Promise<void>;
+  /** Function to refetch iTwins */
+  refetchITwins?: () => void;
 }
 
 /**
@@ -58,6 +60,7 @@ export const ITwinTile = ({
   isFavorite,
   addToFavorites,
   removeFromFavorites,
+  refetchITwins,
 }: ITwinTileProps) => {
   const strings = _mergeStrings(
     {
@@ -71,8 +74,14 @@ export const ITwinTile = ({
   );
 
   const moreOptions = React.useMemo(
-    () => _buildManagedContextMenuOptions(iTwinOptions, iTwin),
-    [iTwinOptions, iTwin]
+    () =>
+      _buildManagedContextMenuOptions(
+        iTwinOptions,
+        iTwin,
+        undefined,
+        refetchITwins
+      ),
+    [iTwinOptions, iTwin, refetchITwins]
   );
   return (
     <ThemeProvider theme="inherit">

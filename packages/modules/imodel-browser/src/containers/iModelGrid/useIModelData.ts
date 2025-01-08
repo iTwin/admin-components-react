@@ -67,6 +67,14 @@ export const useIModelData = ({
     setPreviousSortOptions(sortOptions);
   }
 
+  const reset = React.useCallback(() => {
+    setStatus(DataStatus.Fetching);
+    setIModels([]);
+    setPage(0);
+    setMorePagesAvailable(true);
+    setNeedsUpdate(true);
+  }, []);
+
   const fetchMore = React.useCallback(() => {
     if (status === DataStatus.Fetching || !morePagesAvailable) {
       return;
@@ -77,11 +85,7 @@ export const useIModelData = ({
 
   React.useEffect(() => {
     // start from scratch when any external state changes
-    setStatus(DataStatus.Fetching);
-    setIModels([]);
-    setPage(0);
-    setMorePagesAvailable(true);
-    setNeedsUpdate(true);
+    reset();
   }, [
     iTwinId,
     accessToken,
@@ -91,6 +95,7 @@ export const useIModelData = ({
     apiOverrides?.serverEnvironmentPrefix,
     searchText,
     maxCount,
+    reset,
   ]);
 
   // Main function
@@ -182,6 +187,7 @@ export const useIModelData = ({
     iModels: sortedIModels,
     status,
     fetchMore: morePagesAvailable ? fetchMore : undefined,
+    refetchIModels: reset,
   };
 };
 

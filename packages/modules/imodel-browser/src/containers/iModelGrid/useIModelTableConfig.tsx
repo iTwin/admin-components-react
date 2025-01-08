@@ -27,12 +27,14 @@ export interface useIModelTableConfigProps {
     noAuthentication: string;
     error: string;
   };
+  refetchIModels: () => void;
 }
 
 export const useIModelTableConfig = ({
   iModelActions,
   onThumbnailClick,
   strings,
+  refetchIModels,
 }: useIModelTableConfigProps) => {
   const onRowClick = (_: React.MouseEvent, row: any) => {
     const iModel = row.original as IModelFull;
@@ -86,7 +88,8 @@ export const useIModelTableConfig = ({
                 const options = _buildManagedContextMenuOptions(
                   iModelActions,
                   props.row.original,
-                  close
+                  close,
+                  refetchIModels
                 );
                 return options !== undefined ? options : [];
               };
@@ -115,6 +118,7 @@ export const useIModelTableConfig = ({
       strings.tableColumnDescription,
       strings.tableColumnLastModified,
       strings.tableColumnName,
+      refetchIModels,
     ]
   );
 

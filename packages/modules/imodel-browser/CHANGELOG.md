@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Mon, 09 Dec 2024 19:40:38 GMT and should not be manually modified.
+This log was last generated on Tue, 07 Jan 2025 19:47:55 GMT and should not be manually modified.
+
+## 2.2.0
+Tue, 07 Jan 2025 19:47:55 GMT
+
+### Minor changes
+
+- provide option to refresh the grid after an itwin/imodel action
 
 ## 2.1.2
 Mon, 09 Dec 2024 19:40:38 GMT

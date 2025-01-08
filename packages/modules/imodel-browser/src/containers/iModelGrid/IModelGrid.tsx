@@ -149,6 +149,7 @@ export const IModelGrid = ({
     iModels: fetchediModels,
     status: fetchStatus,
     fetchMore,
+    refetchIModels,
   } = useIModelData({
     accessToken,
     apiOverrides,
@@ -170,6 +171,7 @@ export const IModelGrid = ({
     iModelActions,
     onThumbnailClick,
     strings,
+    refetchIModels,
   });
 
   const noResultsText = {
@@ -198,6 +200,7 @@ export const IModelGrid = ({
                 onThumbnailClick={onThumbnailClick}
                 apiOverrides={tileApiOverrides}
                 useTileState={useIndividualState}
+                refetchIModels={refetchIModels}
                 {...tileOverrides}
               />
             ))}

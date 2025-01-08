@@ -145,6 +145,7 @@ export const ITwinGrid = ({
     iTwins: fetchedItwins,
     status: fetchStatus,
     fetchMore,
+    refetchITwins,
   } = useITwinData({
     requestType,
     iTwinSubClass,
@@ -168,6 +169,7 @@ export const ITwinGrid = ({
     iTwinFavorites,
     addITwinToFavorites,
     removeITwinFromFavorites,
+    refetchITwins,
   });
 
   const noResultsText = {
@@ -211,6 +213,7 @@ export const ITwinGrid = ({
                 isFavorite={iTwinFavorites.has(iTwin.id)}
                 addToFavorites={addITwinToFavorites}
                 removeFromFavorites={removeITwinFromFavorites}
+                refetchITwins={refetchITwins}
                 {...tileOverrides}
               />
             ))}
