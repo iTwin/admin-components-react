@@ -194,15 +194,43 @@ describe("useIModelData hook", () => {
     // Arrange
     const fetchSpy = jest.spyOn(window, "fetch");
 
+    let callNum = 0;
+    const mockIModels = Array.from({ length: 110 }, (_, i) => ({
+      id: `fakeId${i + 1}`,
+      displayName: `fakeName${i + 1}`,
+    }));
+
+    const watcher = jest.fn();
+    server.use(
+      rest.get("https://api.bentley.com/imodels/", (req, res, ctx) => {
+        watcher();
+        return res(
+          ctx.json({
+            iModels:
+              ++callNum === 1
+                ? mockIModels.slice(0, 100)
+                : mockIModels.slice(100),
+          })
+        );
+      })
+    );
+
     // Act
-    const { result, waitForNextUpdate } = renderHook(() =>
+    const { result, waitForValueToChange } = renderHook(() =>
       useIModelData({
         iTwinId: "iTwinId",
         accessToken: "accessToken",
-        maxCount: 5,
+        maxCount: 110,
       })
     );
-    await waitForNextUpdate();
+    await waitForValueToChange(
+      () => result.current.status === DataStatus.Complete
+    );
+
+    act(() => result.current.fetchMore?.());
+    await waitForValueToChange(
+      () => result.current.status === DataStatus.Complete
+    );
 
     // Assert
     const opts = {
@@ -213,10 +241,17 @@ describe("useIModelData hook", () => {
       },
       signal: new AbortController().signal,
     };
+
     expect(result.current.status).toEqual(DataStatus.Complete);
     expect(result.current.fetchMore).toBeUndefined();
-    expect(fetchSpy).toHaveBeenCalledWith(
-      "https://api.bentley.com/imodels/?iTwinId=iTwinId&$skip=0&$top=5",
+    expect(watcher).toBeCalledTimes(2);
+    expect(fetchSpy).toHaveBeenNthCalledWith(
+      fetchSpy.mock.calls.length - 1,
+      "https://api.bentley.com/imodels/?iTwinId=iTwinId&$skip=0&$top=100",
+      opts
+    );
+    expect(fetchSpy).toHaveBeenLastCalledWith(
+      "https://api.bentley.com/imodels/?iTwinId=iTwinId&$skip=100&$top=10",
       opts
     );
   });
@@ -264,9 +299,7 @@ describe("useIModelData hook", () => {
     expect(result.current.fetchMore).toBeDefined();
     expect(watcher).toHaveBeenCalledTimes(1);
 
-    act(() => {
-      result.current.fetchMore?.();
-    });
+    act(() => result.current.fetchMore?.());
     await waitForValueToChange(
       () => result.current.status === DataStatus.Complete
     );
