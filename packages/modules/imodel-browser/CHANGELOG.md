@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Tue, 07 Jan 2025 19:47:55 GMT and should not be manually modified.
+This log was last generated on Thu, 09 Jan 2025 03:49:28 GMT and should not be manually modified.
+
+## 2.2.1
+Thu, 09 Jan 2025 03:49:28 GMT
+
+### Patches
+
+- Fixed race conditions in useIModelData
 
 ## 2.2.0
 Tue, 07 Jan 2025 19:47:55 GMT
