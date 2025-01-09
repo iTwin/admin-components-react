@@ -3,14 +3,14 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { ThemeProvider, Tile } from "@itwin/itwinui-react";
-import React from "react";
+import React, { forwardRef } from "react";
 
 /**
  * Representation of a Ghost IModel
  */
-export const IModelGhostTile = () => {
+export const IModelGhostTile = forwardRef<HTMLDivElement>((props, ref) => {
   return (
-    <ThemeProvider theme="inherit">
+    <ThemeProvider ref={ref} theme="inherit" {...props}>
       <Tile
         name={
           <span
@@ -35,4 +35,4 @@ export const IModelGhostTile = () => {
       />
     </ThemeProvider>
   );
-};
+});

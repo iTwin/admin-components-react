@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { renderHook } from "@testing-library/react-hooks";
 import { rest } from "msw";
+import { act } from "react";
 
 import { server } from "../../tests/mocks/server";
 import { DataStatus, IModelSortOptionsKeys } from "../../types";
@@ -193,15 +194,43 @@ describe("useIModelData hook", () => {
     // Arrange
     const fetchSpy = jest.spyOn(window, "fetch");
 
+    let callNum = 0;
+    const mockIModels = Array.from({ length: 110 }, (_, i) => ({
+      id: `fakeId${i + 1}`,
+      displayName: `fakeName${i + 1}`,
+    }));
+
+    const watcher = jest.fn();
+    server.use(
+      rest.get("https://api.bentley.com/imodels/", (req, res, ctx) => {
+        watcher();
+        return res(
+          ctx.json({
+            iModels:
+              ++callNum === 1
+                ? mockIModels.slice(0, 100)
+                : mockIModels.slice(100),
+          })
+        );
+      })
+    );
+
     // Act
-    const { result, waitForNextUpdate } = renderHook(() =>
+    const { result, waitForValueToChange } = renderHook(() =>
       useIModelData({
         iTwinId: "iTwinId",
         accessToken: "accessToken",
-        maxCount: 5,
+        maxCount: 110,
       })
     );
-    await waitForNextUpdate();
+    await waitForValueToChange(
+      () => result.current.status === DataStatus.Complete
+    );
+
+    act(() => result.current.fetchMore?.());
+    await waitForValueToChange(
+      () => result.current.status === DataStatus.Complete
+    );
 
     // Assert
     const opts = {
@@ -212,11 +241,158 @@ describe("useIModelData hook", () => {
       },
       signal: new AbortController().signal,
     };
+
     expect(result.current.status).toEqual(DataStatus.Complete);
     expect(result.current.fetchMore).toBeUndefined();
-    expect(fetchSpy).toHaveBeenCalledWith(
-      "https://api.bentley.com/imodels/?iTwinId=iTwinId&$skip=0&$top=5",
+    expect(watcher).toBeCalledTimes(2);
+    expect(fetchSpy).toHaveBeenNthCalledWith(
+      fetchSpy.mock.calls.length - 1,
+      "https://api.bentley.com/imodels/?iTwinId=iTwinId&$skip=0&$top=100",
+      opts
+    );
+    expect(fetchSpy).toHaveBeenLastCalledWith(
+      "https://api.bentley.com/imodels/?iTwinId=iTwinId&$skip=100&$top=10",
       opts
     );
   });
+
+  it("returns properly paged iModels", async () => {
+    const fetchSpy = jest.spyOn(window, "fetch");
+
+    let callNum = 0;
+    const mockIModels = Array.from({ length: 101 }, (_, i) => ({
+      id: `fakeId${i + 1}`,
+      displayName: `fakeName${i + 1}`,
+    }));
+
+    const watcher = jest.fn();
+    server.use(
+      rest.get("https://api.bentley.com/imodels/", (req, res, ctx) => {
+        watcher();
+        return res(
+          ctx.json({
+            iModels:
+              ++callNum === 1
+                ? mockIModels.slice(0, 100)
+                : mockIModels.slice(100),
+          })
+        );
+      })
+    );
+
+    const { result, waitForValueToChange } = renderHook(() =>
+      useIModelData({
+        iTwinId: "iTwinId",
+        accessToken: "accessToken",
+      })
+    );
+
+    await waitForValueToChange(
+      () => result.current.status === DataStatus.Complete
+    );
+
+    expect(fetchSpy).toHaveBeenLastCalledWith(
+      expect.stringContaining(`$skip=0`) && expect.stringContaining(`$top=100`),
+      expect.any(Object)
+    );
+    expect(result.current.iModels.length).toBe(100);
+    expect(result.current.fetchMore).toBeDefined();
+    expect(watcher).toHaveBeenCalledTimes(1);
+
+    act(() => result.current.fetchMore?.());
+    await waitForValueToChange(
+      () => result.current.status === DataStatus.Complete
+    );
+
+    expect(fetchSpy).toHaveBeenLastCalledWith(
+      expect.stringContaining(`$skip=100`) &&
+        expect.stringContaining(`$top=100`),
+      expect.any(Object)
+    );
+    expect(result.current.iModels.length).toBe(101);
+    expect(result.current.fetchMore).toBeUndefined();
+    expect(watcher).toHaveBeenCalledTimes(2);
+  });
+});
+
+it("fetches data with searchText", async () => {
+  const fetchSpy = jest.spyOn(window, "fetch").mockImplementation(
+    () =>
+      Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({ iModels: [] }),
+      }) as any
+  );
+  const searchText = "testSearch";
+
+  const { result, waitForNextUpdate } = renderHook(() =>
+    useIModelData({
+      iTwinId: "iTwinId",
+      accessToken: "accessToken",
+      searchText,
+    })
+  );
+
+  await waitForNextUpdate();
+
+  expect(result.current.status).toEqual(DataStatus.Complete);
+  expect(fetchSpy).toHaveBeenCalledWith(
+    expect.stringContaining(`&$search=${searchText}`),
+    expect.any(Object)
+  );
+});
+
+it("fetches data with serverEnvironmentPrefix", async () => {
+  const fetchSpy = jest.spyOn(window, "fetch").mockImplementation(
+    () =>
+      Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({ iModels: [] }),
+      }) as any
+  );
+  const serverEnvironmentPrefix = "dev";
+
+  const { result, waitForNextUpdate } = renderHook(() =>
+    useIModelData({
+      iTwinId: "iTwinId",
+      accessToken: "accessToken",
+      apiOverrides: {
+        serverEnvironmentPrefix,
+      },
+    })
+  );
+
+  await waitForNextUpdate();
+
+  expect(result.current.status).toEqual(DataStatus.Complete);
+  expect(fetchSpy).toHaveBeenCalledWith(
+    expect.stringContaining(`${serverEnvironmentPrefix}`),
+    expect.any(Object)
+  );
+});
+
+it("aborts previous fetch when new fetch is initiated", async () => {
+  jest.spyOn(window, "fetch").mockImplementation(
+    () =>
+      Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({ iModels: [] }),
+      }) as any
+  );
+  const abortSpy = jest.spyOn(AbortController.prototype, "abort");
+
+  const { rerender, waitForNextUpdate } = renderHook(
+    ({ iTwinId, accessToken }) =>
+      useIModelData({
+        iTwinId,
+        accessToken,
+      }),
+    {
+      initialProps: { iTwinId: "iTwinId1", accessToken: "accessToken" },
+    }
+  );
+
+  rerender({ iTwinId: "iTwinId2", accessToken: "accessToken" });
+  await waitForNextUpdate();
+  expect(abortSpy).toHaveBeenCalled();
 });

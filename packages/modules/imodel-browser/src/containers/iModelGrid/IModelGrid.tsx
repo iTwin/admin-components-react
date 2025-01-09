@@ -191,36 +191,31 @@ export const IModelGrid = ({
       <>
         {viewMode !== "cells" ? (
           <GridStructure>
-            {fetchStatus === DataStatus.Fetching ? (
+            {iModels?.map((iModel) => (
+              <IModelHookedTile
+                key={iModel.id}
+                iModel={iModel}
+                iModelOptions={iModelActions}
+                accessToken={accessToken}
+                onThumbnailClick={onThumbnailClick}
+                apiOverrides={tileApiOverrides}
+                useTileState={useIndividualState}
+                refetchIModels={refetchIModels}
+                {...tileOverrides}
+              />
+            ))}
+            {fetchMore ? (
+              <InView>
+                {({ inView, ref }) => {
+                  inView && fetchStatus !== DataStatus.Fetching && fetchMore();
+                  return <IModelGhostTile ref={ref} />;
+                }}
+              </InView>
+            ) : null}
+            {fetchStatus === DataStatus.Fetching && (
               <>
                 <IModelGhostTile />
                 <IModelGhostTile />
-                <IModelGhostTile />
-              </>
-            ) : (
-              <>
-                {iModels?.map((iModel) => (
-                  <IModelHookedTile
-                    key={iModel.id}
-                    iModel={iModel}
-                    iModelOptions={iModelActions}
-                    accessToken={accessToken}
-                    onThumbnailClick={onThumbnailClick}
-                    apiOverrides={tileApiOverrides}
-                    useTileState={useIndividualState}
-                    refetchIModels={refetchIModels}
-                    {...tileOverrides}
-                  />
-                ))}
-                {fetchMore ? (
-                  <>
-                    <InView onChange={fetchMore}>
-                      <IModelGhostTile />
-                    </InView>
-                    <IModelGhostTile />
-                    <IModelGhostTile />
-                  </>
-                ) : null}
               </>
             )}
           </GridStructure>
