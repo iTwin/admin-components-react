@@ -139,7 +139,6 @@ export const useIModelData = ({
         maxCount,
         apiOverrides?.serverEnvironmentPrefix
       );
-    abortController?.abort();
     setAbortController(newAbortController);
 
     fetchIModels()
