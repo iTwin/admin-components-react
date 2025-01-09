@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import React from "react";
+import React, { useEffect } from "react";
 
 import {
   ApiOverrides,
@@ -42,15 +42,6 @@ export const useIModelData = ({
   const [abortController, setAbortController] = React.useState<
     AbortController | undefined
   >(undefined);
-  const updateAbortController = React.useCallback(
-    (val?: AbortController) => {
-      if (abortController) {
-        abortController.abort();
-      }
-      return val;
-    },
-    [abortController]
-  );
 
   const sortType =
     sortOptions && ["name", "createdDateTime"].includes(sortOptions.sortType)
@@ -67,6 +58,9 @@ export const useIModelData = ({
   if (sortChanged) {
     setPreviousSortOptions(sortOptions);
   }
+
+  // cleanup the abort controller when unmounting
+  useEffect(() => () => abortController?.abort(), [abortController]);
 
   const reset = React.useCallback(() => {
     setStatus(DataStatus.Fetching);
@@ -106,7 +100,8 @@ export const useIModelData = ({
     }
 
     setNeedsUpdate(false);
-    setAbortController(updateAbortController);
+    abortController?.abort();
+    setAbortController(undefined);
 
     // if data is provided, use it and skip fetching
     if (apiOverrides?.data) {
@@ -133,17 +128,19 @@ export const useIModelData = ({
     // Otherwise, fetch from server
     setStatus(DataStatus.Fetching);
 
-    const { abortController, fetchIModels } = createFetchIModelsFn(
-      iTwinId,
-      accessToken,
-      sortType,
-      sortDescending ?? false,
-      page,
-      searchText,
-      maxCount,
-      apiOverrides?.serverEnvironmentPrefix
-    );
-    setAbortController(updateAbortController(abortController));
+    const { abortController: newAbortController, fetchIModels } =
+      createFetchIModelsFn(
+        iTwinId,
+        accessToken,
+        sortType,
+        sortDescending ?? false,
+        page,
+        searchText,
+        maxCount,
+        apiOverrides?.serverEnvironmentPrefix
+      );
+    abortController?.abort();
+    setAbortController(newAbortController);
 
     fetchIModels()
       .then(({ iModels, morePagesAvailable }) => {
@@ -162,10 +159,6 @@ export const useIModelData = ({
         setStatus(DataStatus.FetchFailed);
         console.error(e);
       });
-
-    return () => {
-      updateAbortController();
-    };
   }, [
     abortController,
     accessToken,
@@ -181,7 +174,6 @@ export const useIModelData = ({
     sortChanged,
     sortDescending,
     sortType,
-    updateAbortController,
   ]);
 
   return {
