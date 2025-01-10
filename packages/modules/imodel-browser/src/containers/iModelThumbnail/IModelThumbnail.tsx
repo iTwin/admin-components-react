@@ -44,25 +44,31 @@ export const IModelThumbnail = ({
     inView ? accessToken : undefined,
     apiOverrides
   );
-  return thumbnail ? (
-    <img
-      className={classNames("iac-thumbnail", className)}
-      style={{
-        cursor: onClick ? "pointer" : "auto",
-        width: "100%",
-      }}
-      id="base64image"
-      src={thumbnail ?? ""}
-      alt=""
+  return (
+    <div
+      role="button"
+      aria-label={`Select iModel ${iModelId}`}
       onClick={() => onClick?.(iModelId)}
-    />
-  ) : (
-    <Text
-      as="p"
-      variant="body"
-      ref={ref}
-      isSkeleton={true}
-      style={{ height: "100%", width: "100%", margin: 0 }}
-    ></Text>
+    >
+      {thumbnail ? (
+        <img
+          className={classNames("iac-thumbnail", className)}
+          style={{
+            width: "100%",
+          }}
+          id="base64image"
+          src={thumbnail ?? ""}
+          alt=""
+        />
+      ) : (
+        <Text
+          as="p"
+          variant="body"
+          ref={ref}
+          isSkeleton={true}
+          style={{ height: "100%", width: "100%", margin: 0 }}
+        ></Text>
+      )}
+    </div>
   );
 };

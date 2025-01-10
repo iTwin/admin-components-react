@@ -108,7 +108,10 @@ export const ITwinTile = ({
         moreOptions={moreOptions}
         thumbnail={
           <div
-            aria-label={onThumbnailClick ? strings.navigateToITwin : ""}
+            role="button"
+            aria-label={
+              onThumbnailClick ? `${strings.navigateToITwin} ${iTwin?.id}` : ""
+            }
             onClick={() => onThumbnailClick?.(iTwin)}
             style={{ cursor: onThumbnailClick ? "pointer" : "auto" }}
           >
