@@ -30,6 +30,7 @@ export interface IModelThumbnailProps {
 /** Clickable iModel thumbnail, fetched from the servers */
 export const IModelThumbnail = ({
   iModelId,
+  onClick,
   accessToken,
   apiOverrides,
   className,
@@ -44,7 +45,11 @@ export const IModelThumbnail = ({
     apiOverrides
   );
   return (
-    <div role="button" aria-label={`Select iModel ${iModelId}`}>
+    <div
+      role="button"
+      aria-label={`Select iModel ${iModelId}`}
+      onClick={() => onClick?.(iModelId)}
+    >
       {thumbnail ? (
         <img
           className={classNames("iac-thumbnail", className)}
