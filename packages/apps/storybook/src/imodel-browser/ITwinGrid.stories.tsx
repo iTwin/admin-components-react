@@ -299,3 +299,9 @@ export const WithPostProcessCallback: Story<ITwinGridProps> =
 WithPostProcessCallback.args = {
   apiOverrides: { serverEnvironmentPrefix: "qa" },
 };
+
+export const FetchAllSubclasses = Template.bind({});
+FetchAllSubclasses.args = {
+  apiOverrides: { serverEnvironmentPrefix: "qa" },
+  iTwinSubClass: "All",
+};
