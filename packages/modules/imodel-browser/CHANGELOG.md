@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Fri, 10 Jan 2025 14:12:35 GMT and should not be manually modified.
+This log was last generated on Wed, 15 Jan 2025 16:32:32 GMT and should not be manually modified.
+
+## 2.3.0
+Wed, 15 Jan 2025 16:32:32 GMT
+
+### Minor changes
+
+- add ITwinSubClass "All" option to fetch all itwins regardless of subclass
 
 ## 2.2.2
 Fri, 10 Jan 2025 14:12:35 GMT
