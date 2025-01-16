@@ -103,7 +103,8 @@ export const useITwinData = ({
     const endpoint = ["favorites", "recents"].includes(requestType)
       ? requestType
       : "";
-    const subClass = `?subClass=${iTwinSubClass}`;
+    const resolvedITwinSubClass = iTwinSubClass === "All" ? "" : iTwinSubClass;
+    const subClass = `?subClass=${resolvedITwinSubClass}`;
     const paging = `&$skip=${page * PAGE_SIZE}&$top=${PAGE_SIZE}`;
     const search =
       ["favorites", "recents"].includes(requestType) || !filterOptions

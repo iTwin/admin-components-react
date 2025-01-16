@@ -2,6 +2,30 @@
   "name": "@itwin/imodel-browser-react",
   "entries": [
     {
+      "version": "2.3.0",
+      "tag": "@itwin/imodel-browser-react_v2.3.0",
+      "date": "Wed, 15 Jan 2025 16:32:32 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "add ITwinSubClass \"All\" option to fetch all itwins regardless of subclass"
+          }
+        ]
+      }
+    },
+    {
+      "version": "2.2.2",
+      "tag": "@itwin/imodel-browser-react_v2.2.2",
+      "date": "Fri, 10 Jan 2025 14:12:35 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "added accessibility to grid tiles"
+          }
+        ]
+      }
+    },
+    {
       "version": "2.2.1",
       "tag": "@itwin/imodel-browser-react_v2.2.1",
       "date": "Thu, 09 Jan 2025 03:49:28 GMT",

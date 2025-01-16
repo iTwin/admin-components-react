@@ -82,7 +82,8 @@ export type ITwinSubClass =
   | "Asset"
   | "Portfolio"
   | "Program"
-  | "WorkPackage";
+  | "WorkPackage"
+  | "All";
 export type ITwinClassType = "Thing" | "Endeavor";
 export type ITwinStatus =
   | "Active"
