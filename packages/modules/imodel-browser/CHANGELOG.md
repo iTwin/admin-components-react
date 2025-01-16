@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Wed, 15 Jan 2025 16:32:32 GMT and should not be manually modified.
+This log was last generated on Thu, 16 Jan 2025 14:25:11 GMT and should not be manually modified.
+
+## 2.3.1
+Thu, 16 Jan 2025 14:25:11 GMT
+
+### Patches
+
+- added accessibility to grid tiles
 
 ## 2.3.0
 Wed, 15 Jan 2025 16:32:32 GMT
