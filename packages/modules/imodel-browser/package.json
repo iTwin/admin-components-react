@@ -31,8 +31,8 @@
     "esm/**/*"
   ],
   "dependencies": {
-    "@itwin/itwinui-icons-react": "^2.2.0",
-    "@itwin/itwinui-react": "^2.12.18",
+    "@itwin/itwinui-icons-react": "^2.9.0",
+    "@itwin/itwinui-react": "^3.16.5",
     "classnames": "^2.2.6",
     "react-intersection-observer": "^8.31.1"
   },
@@ -64,7 +64,6 @@
     "jest": "^27.5.1",
     "jest-fetch-mock": "^3.0.3",
     "msw": "^0.27.1",
-    "sass": "^1.69.5",
     "postcss": "8.4.31",
     "prettier": "^2.0.5",
     "react": "^18.3.1",
@@ -75,6 +74,7 @@
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-postcss": "^4.0.0",
     "rollup-plugin-typescript2": "^0.36.0",
+    "sass": "^1.69.5",
     "stylelint": "^13.6.1",
     "stylelint-config-prettier": "^8.0.2",
     "stylelint-config-sass-guidelines": "^7.0.0",

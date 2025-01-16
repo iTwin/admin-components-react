@@ -62,26 +62,26 @@ export const IModelTile = ({
       : undefined;
   return (
     <ThemeProvider theme="inherit">
-      <Tile
-        key={iModel?.id}
-        name={<span title={iModel?.displayName}>{iModel?.displayName}</span>}
-        description={
-          <span title={iModel?.description ?? ""}>
-            {iModel?.description ?? ""}
-          </span>
-        }
-        moreOptions={moreOptions}
-        thumbnail={
-          <IModelThumbnail
-            iModelId={iModel?.id}
-            accessToken={accessToken}
-            onClick={() => onThumbnailClick?.(iModel)}
-            apiOverrides={thumbnailApiOverride}
-          />
-        }
-        className="iac-tile"
-        {...(tileProps ?? {})}
-      />
+      <Tile.Wrapper key={iModel?.id} {...(tileProps ?? {})}>
+        <Tile.Action
+          onClick={() => onThumbnailClick?.(iModel)}
+          aria-label={`Select iModel ${iModel.id}`}
+        >
+          <Tile.ThumbnailArea>
+            <Tile.ThumbnailPicture>
+              <IModelThumbnail
+                iModelId={iModel?.id}
+                accessToken={accessToken}
+                apiOverrides={thumbnailApiOverride}
+              />
+            </Tile.ThumbnailPicture>
+          </Tile.ThumbnailArea>
+        </Tile.Action>
+        <Tile.Name>
+          <Tile.NameLabel>{iModel?.displayName}</Tile.NameLabel>
+        </Tile.Name>
+        <Tile.MoreOptions>{moreOptions}</Tile.MoreOptions>
+      </Tile.Wrapper>
     </ThemeProvider>
   );
 };
