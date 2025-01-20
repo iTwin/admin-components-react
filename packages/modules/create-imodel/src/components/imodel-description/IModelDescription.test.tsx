@@ -3,7 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { fireEvent, render } from "@testing-library/react";
-import React from "react";
+import React, { act } from "react";
 
 import { IModelContext, InnerIModelContext } from "../context/imodel-context";
 import { IModelDescription } from "./IModelDescription";
@@ -58,7 +58,9 @@ describe("IModelDescription", () => {
     const description = container.querySelector(
       '[name="description"]'
     ) as HTMLTextAreaElement;
-    fireEvent.change(description, { target: { value: "changed" } });
+    await act(() =>
+      fireEvent.change(description, { target: { value: "changed" } })
+    );
     expect(callbackFun).toHaveBeenCalled();
   });
 

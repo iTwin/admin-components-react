@@ -3,6 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import {
+  act,
   fireEvent,
   render,
   screen,
@@ -51,7 +52,9 @@ describe("ManageVersions", () => {
   });
 
   const waitForSelectorToExist = async (selector: string) =>
-    waitFor(() => expect(document.querySelector(selector)).not.toBeNull());
+    await waitFor(() =>
+      expect(document.querySelector(selector)).not.toBeNull()
+    );
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -64,7 +67,7 @@ describe("ManageVersions", () => {
     const { container } = renderComponent();
 
     await waitForElementToBeRemoved(() =>
-      container.querySelector(".iui-progress-indicator-radial")
+      screen.findAllByTestId("progress-radial")
     );
     const versionRows = container.querySelectorAll(
       ".iui-table-body .iui-table-row"
@@ -96,7 +99,7 @@ describe("ManageVersions", () => {
     screen.getByText(defaultStrings.changes).click();
 
     await waitForElementToBeRemoved(() =>
-      container.querySelector(".iui-progress-indicator-radial")
+      screen.findAllByTestId("progress-radial")
     );
     const changesetRows = container.querySelectorAll(
       ".iac-changes-table div[role='rowgroup'] > div[role='row']"
@@ -135,10 +138,8 @@ describe("ManageVersions", () => {
   });
 
   it("should query data only once when switching tabs", async () => {
-    const { container } = renderComponent();
-
     await waitForElementToBeRemoved(() =>
-      container.querySelector(".iui-progress-indicator-radial")
+      screen.findAllByTestId("progress-radial")
     );
 
     screen.getByText(defaultStrings.changes).click();
@@ -197,12 +198,12 @@ describe("ManageVersions", () => {
     const { container } = renderComponent();
 
     await waitForElementToBeRemoved(() =>
-      container.querySelector(".iui-progress-indicator-radial")
+      screen.findAllByTestId("progress-radial")
     );
 
     screen.getByText(defaultStrings.changes).click();
     await waitForElementToBeRemoved(() =>
-      container.querySelector(".iui-progress-indicator-radial")
+      screen.findAllByTestId("progress-radial")
     );
 
     const createVersionButtons = screen.getAllByTitle(
@@ -223,7 +224,9 @@ describe("ManageVersions", () => {
 
     const nameInput = document.querySelector("input") as HTMLInputElement;
     expect(nameInput).toBeTruthy();
-    fireEvent.change(nameInput, { target: { value: "test name" } });
+    await act(() =>
+      fireEvent.change(nameInput, { target: { value: "test name" } })
+    );
 
     screen.getByText("Create").click();
     await waitForElementToBeRemoved(() =>
@@ -255,7 +258,7 @@ describe("ManageVersions", () => {
     const { container } = renderComponent();
 
     await waitForElementToBeRemoved(() =>
-      container.querySelector(".iui-progress-indicator-radial")
+      screen.findAllByTestId("progress-radial")
     );
     const versionRows = container.querySelectorAll(
       "div[role='rowgroup'] > div[role='row']"
@@ -275,10 +278,14 @@ describe("ManageVersions", () => {
       "textarea[name='description']"
     ) as HTMLTextAreaElement;
     expect(nameInput).toBeTruthy();
-    fireEvent.change(nameInput, { target: { value: "test name" } });
-    fireEvent.change(descriptionInput, {
-      target: { value: "test description" },
-    });
+    await act(() =>
+      fireEvent.change(nameInput, { target: { value: "test name" } })
+    );
+    await act(() =>
+      fireEvent.change(descriptionInput, {
+        target: { value: "test description" },
+      })
+    );
     screen.getByText("Update").click();
 
     await waitForElementToBeRemoved(() =>
@@ -317,7 +324,7 @@ it("should render with changesets tab opened", async () => {
   });
 
   await waitForElementToBeRemoved(() =>
-    container.querySelector(".iui-progress-indicator-radial")
+    screen.findAllByTestId("progress-radial")
   );
   const changesetRows = container.querySelectorAll(
     "div[role='rowgroup'] > div[role='row']"
@@ -349,12 +356,10 @@ it("should render with changesets tab opened", async () => {
 
 it("should trigger onTabChange", async () => {
   const onTabChange = jest.fn();
-  const { container } = renderComponent({ onTabChange });
+  renderComponent({ onTabChange });
 
   screen.getByText(defaultStrings.changes).click();
-  await waitForElementToBeRemoved(() =>
-    container.querySelector(".iui-progress-indicator-radial")
-  );
+  await waitForElementToBeRemoved(screen.findAllByTestId("progress-radial"));
   expect(onTabChange).toHaveBeenCalledWith(ManageVersionsTabs.Changes);
 
   screen.getByText(defaultStrings.namedVersions).click();

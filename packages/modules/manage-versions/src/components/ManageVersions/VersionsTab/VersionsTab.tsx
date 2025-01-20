@@ -5,7 +5,7 @@
 import "./VersionsTab.scss";
 
 import { SvgDownload, SvgEdit } from "@itwin/itwinui-icons-react";
-import { Table, Text, toaster } from "@itwin/itwinui-react";
+import { Table, Text, useToaster } from "@itwin/itwinui-react";
 import React, { useCallback } from "react";
 import { CellProps } from "react-table";
 
@@ -38,6 +38,7 @@ const isNamedVersion = (
 };
 
 const VersionsTab = (props: VersionsTabProps) => {
+  const toaster = useToaster();
   const {
     status,
     onVersionUpdated,
@@ -95,6 +96,7 @@ const VersionsTab = (props: VersionsTabProps) => {
       imodelId,
       stringsOverrides.messageCouldNotDownloadedFileSuccessfully,
       stringsOverrides.messageFileDownloadInProgress,
+      toaster,
     ]
   );
 

@@ -78,7 +78,7 @@ export const VersionModal = (props: VersionModalProps) => {
         className="iac-version-modal"
       >
         <LabeledInput
-          setFocus
+          autoFocus
           name="name"
           label={stringsOverrides.name}
           onChange={onChange}
@@ -130,7 +130,7 @@ export const VersionModal = (props: VersionModalProps) => {
         </ModalButtonBar>
         {isLoading && (
           <div className="iui-progress-indicator-overlay">
-            <ProgressRadial indeterminate />
+            <ProgressRadial indeterminate data-testid="progress-radial" />
           </div>
         )}
       </Modal>

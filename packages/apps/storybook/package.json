@@ -13,7 +13,7 @@
     "@itwin/delete-imodel-react": "^2.0.0",
     "@itwin/delete-itwin-react": "^2.0.0",
     "@itwin/imodel-browser-react": "~2.3.1",
-    "@itwin/itwinui-react": "^2.12.18",
+    "@itwin/itwinui-react": "^3.16.5",
     "@itwin/manage-versions-react": "~2.0.0",
     "@itwin/storybook-auth-addon": "^0.1.0",
     "@storybook/addon-actions": "^6.5.16",
@@ -45,7 +45,9 @@
     "react": "^18.3.1",
     "rimraf": "^3.0.2",
     "storybook-dark-mode": "^1.0.7",
-    "webpack": "^5.28.0"
+    "webpack": "^5.28.0",
+    "@testing-library/dom": "~10.4.0",
+    "@testing-library/jest-dom": "~6.6.3"
   },
   "scripts": {
     "start": "start-storybook -s ./node_modules/@itwin/storybook-auth-addon/build -p 6006",

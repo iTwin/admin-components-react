@@ -5,6 +5,6 @@
 @import "../../index.scss";
 
 .iui-tile-thumbnail .iac-thumbnail {
-  min-width: 100%;
-  min-height: 100%;
+  background-size: contain;
+  background-repeat: no-repeat; 
 }

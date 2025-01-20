@@ -26,5 +26,6 @@
     "include": [
         "**/*.ts*",
         "**/*.js"
-    ]
+    ],
+    "types": ["jest","testing-library/jest-dom"]
 }
