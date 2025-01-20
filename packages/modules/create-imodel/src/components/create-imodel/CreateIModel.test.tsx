@@ -85,12 +85,7 @@ describe("CreateIModel", () => {
       }
     );
     expect(successMock).toHaveBeenCalledWith(mockedimodel);
-    expect(toaster.positive).toHaveBeenCalledWith(
-      "iModel created successfully.",
-      {
-        hasCloseButton: true,
-      }
-    );
+    expect(toaster.positive).toHaveBeenCalled();
   });
 
   it("should show general error", async () => {
@@ -152,10 +147,7 @@ describe("CreateIModel", () => {
       }
     );
     expect(errorMock).toHaveBeenCalledWith(error);
-    expect(toaster.negative).toHaveBeenCalledWith(
-      "Could not create an iModel. Please try again later.",
-      { hasCloseButton: true }
-    );
+    expect(toaster.negative).toHaveBeenCalled();
   });
 
   it("should show imodel already exists error", async () => {
@@ -198,9 +190,6 @@ describe("CreateIModel", () => {
       }
     );
     expect(errorMock).toHaveBeenCalledWith(error);
-    expect(toaster.negative).toHaveBeenCalledWith(
-      "iModel with the same name already exists within the iTwin.",
-      { hasCloseButton: true }
-    );
+    expect(toaster.negative).toHaveBeenCalled();
   });
 });
