@@ -96,6 +96,7 @@ const VersionsTab = (props: VersionsTabProps) => {
       imodelId,
       stringsOverrides.messageCouldNotDownloadedFileSuccessfully,
       stringsOverrides.messageFileDownloadInProgress,
+      toaster,
     ]
   );
 
