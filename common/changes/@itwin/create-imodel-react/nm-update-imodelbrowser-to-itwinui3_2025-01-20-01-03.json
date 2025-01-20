@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/create-imodel-react",
+      "comment": "upgraded to itwinui 3",
+      "type": "minor"
+    }
+  ],
+  "packageName": "@itwin/create-imodel-react"
+}

@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/delete-imodel-react",
+      "comment": "upgraded to itwinui 3",
+      "type": "minor"
+    }
+  ],
+  "packageName": "@itwin/delete-imodel-react"
+}
