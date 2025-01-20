@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { fireEvent, render, screen, within } from "@testing-library/react";
+import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import React from "react";
 
 import { ConfigProvider } from "../../../common/configContext";
@@ -100,7 +100,7 @@ describe("ChangesTab", () => {
     expect(classAttribute).toContain("iac-create-version-icon-hidden");
   });
 
-  it("should show information panel icon for each changeset row", () => {
+  it("should show information panel icon for each changeset row", async () => {
     const { container } = renderComponent({
       changesets: MockedChangesetList(),
     });
@@ -110,7 +110,7 @@ describe("ChangesTab", () => {
 
     expect(infoIcons.length).toBe(rows.length);
     //should open information panel
-    fireEvent.click(infoIcons[0]);
+    await act(() => fireEvent.click(infoIcons[0]));
     const panel = container.querySelector(".iac-info-panel");
     expect(panel).toBeTruthy();
   });

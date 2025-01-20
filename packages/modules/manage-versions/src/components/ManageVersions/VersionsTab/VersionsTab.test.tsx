@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { fireEvent, render, screen, within } from "@testing-library/react";
+import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import React from "react";
 
 import { ChangesetClient } from "../../../clients/changesetClient";
@@ -54,7 +54,7 @@ describe("VersionsTab", () => {
     );
     expect(rows.length).toBe(1);
 
-    rows.forEach((row) => {
+    rows.forEach(async (row) => {
       const cells = row.querySelectorAll("div[role='cell']");
       expect(cells.length).toBe(6);
       expect(cells[0].textContent).toContain(MockedVersion().name);
@@ -63,10 +63,10 @@ describe("VersionsTab", () => {
       expect(cells[3].textContent).toContain(MockedVersion().createdDateTime);
       expect(cells[4].textContent).toContain(defaultStrings.view);
       const viewSpan = screen.getByText("View");
-      fireEvent.click(viewSpan);
+      await act(() => fireEvent.click(viewSpan));
       const actionButton = within(cells[5] as HTMLElement).getByText("More");
       expect(actionButton).toBeTruthy();
-      fireEvent.click(actionButton);
+      await act(() => fireEvent.click(actionButton));
       const updateAction = screen.getByText(defaultStrings.updateNamedVersion);
       if (defaultStrings.download) {
         const downloadAction = screen.getByText(defaultStrings.download);
@@ -104,7 +104,7 @@ describe("VersionsTab", () => {
     expect(screen.findAllByTestId("progress-radial")).toBeTruthy();
   });
 
-  it("should show included changesets on expand", () => {
+  it("should show included changesets on expand", async () => {
     const { container } = renderComponent({
       tableData: [
         {
@@ -118,11 +118,13 @@ describe("VersionsTab", () => {
     const rowgroup = container.querySelector('[role="rowgroup"]') as Element;
     const rowElements = rowgroup.querySelectorAll('[role="row"]');
     expect(rowElements.length).toBe(1);
-    fireEvent.click(screen.getByRole("button", { name: "Toggle sub row" }));
+    await act(() =>
+      fireEvent.click(screen.getByRole("button", { name: "Toggle sub row" }))
+    );
     const rowsOnExpand = rowgroup.querySelectorAll('[role="row"]');
     expect(rowsOnExpand.length).toBe(2);
 
-    rowsOnExpand.forEach((row, index) => {
+    rowsOnExpand.forEach(async (row, index) => {
       const cells = row.querySelectorAll('[role="cell"]');
       expect(cells.length).toBe(6);
       if (index === 0) {
@@ -132,12 +134,12 @@ describe("VersionsTab", () => {
         expect(cells[3].textContent).toContain(MockedVersion().createdDateTime);
         expect(cells[4].textContent).toContain(defaultStrings.view);
         const viewSpan = screen.getByText("View");
-        fireEvent.click(viewSpan);
+        await act(() => fireEvent.click(viewSpan));
         const actionsCell = cells[cells.length - 1];
         const actionButton = within(actionsCell as HTMLElement).getByText(
           "More"
         );
-        fireEvent.click(actionButton);
+        await act(() => fireEvent.click(actionButton));
         const updateAction = screen.getByText(
           defaultStrings.updateNamedVersion
         );

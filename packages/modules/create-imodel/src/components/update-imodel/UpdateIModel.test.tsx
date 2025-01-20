@@ -80,7 +80,9 @@ describe("UpdateIModel", () => {
     const name = container.querySelector(
       "input[name=name]"
     ) as HTMLInputElement;
-    fireEvent.change(name, { target: { value: "Some other name" } });
+    await act(() =>
+      fireEvent.change(name, { target: { value: "Some other name" } })
+    );
 
     const updateButton = getByText("Update");
     await act(async () => updateButton.click());
@@ -206,7 +208,7 @@ describe("UpdateIModel", () => {
     const name = container.querySelector(
       "input[name=name]"
     ) as HTMLInputElement;
-    fireEvent.change(name, { target: { value: "Some name" } });
+    await act(() => fireEvent.change(name, { target: { value: "Some name" } }));
 
     const updateButton = getByText("Update");
     await act(async () => updateButton.click());
@@ -254,7 +256,7 @@ describe("UpdateIModel", () => {
     const name = container.querySelector(
       "input[name=name]"
     ) as HTMLInputElement;
-    fireEvent.change(name, { target: { value: "Some name" } });
+    await act(() => fireEvent.change(name, { target: { value: "Some name" } }));
 
     const updateButton = getByText("Update");
     await act(async () => updateButton.click());

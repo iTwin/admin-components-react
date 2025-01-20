@@ -8,6 +8,7 @@ import {
   ToastProvider,
 } from "@itwin/itwinui-react/cjs/core/Toast/Toaster";
 import {
+  act,
   fireEvent,
   render,
   renderHook,
@@ -79,10 +80,14 @@ describe("UpdateVersionModal", () => {
     ) as HTMLTextAreaElement;
     expect(descriptionInput).toBeTruthy();
 
-    fireEvent.change(nameInput, { target: { value: "test name" } });
-    fireEvent.change(descriptionInput, {
-      target: { value: "test description" },
-    });
+    await act(() =>
+      fireEvent.change(nameInput, { target: { value: "test name" } })
+    );
+    await act(() =>
+      fireEvent.change(descriptionInput, {
+        target: { value: "test description" },
+      })
+    );
 
     screen.getByText("Update").click();
     await waitForElementToBeRemoved(() =>
@@ -123,7 +128,9 @@ describe("UpdateVersionModal", () => {
 
     const nameInput = document.querySelector("input") as HTMLInputElement;
     expect(nameInput).toBeTruthy();
-    fireEvent.change(nameInput, { target: { value: "test name" } });
+    await act(() =>
+      fireEvent.change(nameInput, { target: { value: "test name" } })
+    );
 
     screen.getByText("Update").click();
     await waitForElementToBeRemoved(() =>

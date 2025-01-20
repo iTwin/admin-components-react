@@ -3,7 +3,13 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { useToaster } from "@itwin/itwinui-react";
-import { act, fireEvent, render, renderHook } from "@testing-library/react";
+import {
+  act,
+  fireEvent,
+  render,
+  renderHook,
+  waitFor,
+} from "@testing-library/react";
 import React from "react";
 
 import { CreateIModel } from "./CreateIModel";
@@ -57,7 +63,7 @@ describe("CreateIModel", () => {
     const name = container.querySelector(
       "input[name=name]"
     ) as HTMLInputElement;
-    fireEvent.change(name, { target: { value: "Some name" } });
+    await act(() => fireEvent.change(name, { target: { value: "Some name" } }));
 
     const createButton = getByText("Create");
     await act(async () => createButton.click());
@@ -102,11 +108,21 @@ describe("CreateIModel", () => {
     const inputs = container.querySelectorAll<HTMLInputElement>(
       ".iac-inputs-container input"
     );
-    fireEvent.change(inputs[0], { target: { value: "Some name" } });
-    fireEvent.change(inputs[1], { target: { value: "1" } });
-    fireEvent.change(inputs[2], { target: { value: "2" } });
-    fireEvent.change(inputs[3], { target: { value: "3" } });
-    fireEvent.change(inputs[4], { target: { value: "4" } });
+    await waitFor(() =>
+      fireEvent.change(inputs[0], { target: { value: "Some name" } })
+    );
+    await waitFor(() =>
+      fireEvent.change(inputs[1], { target: { value: "1" } })
+    );
+    await waitFor(() =>
+      fireEvent.change(inputs[2], { target: { value: "2" } })
+    );
+    await waitFor(() =>
+      fireEvent.change(inputs[3], { target: { value: "3" } })
+    );
+    await waitFor(() =>
+      fireEvent.change(inputs[4], { target: { value: "4" } })
+    );
 
     const createButton = getByText("Create");
     await act(async () => createButton.click());
@@ -154,7 +170,7 @@ describe("CreateIModel", () => {
     const name = container.querySelector(
       "input[name=name]"
     ) as HTMLInputElement;
-    fireEvent.change(name, { target: { value: "Some name" } });
+    await act(() => fireEvent.change(name, { target: { value: "Some name" } }));
 
     const createButton = getByText("Create");
     await act(async () => createButton.click());

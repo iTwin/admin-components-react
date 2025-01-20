@@ -4,7 +4,13 @@
  *--------------------------------------------------------------------------------------------*/
 import "@testing-library/jest-dom";
 
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 import React from "react";
 
 import { IModelContext, InnerIModelContext } from "../context/imodel-context";
@@ -43,7 +49,7 @@ describe("ButtonBar", () => {
   it("should show buttons with value from context API", async () => {
     const { getByText } = render(renderFunction());
 
-    await waitFor(() =>
+    await act(() =>
       fireEvent.click(getByText(innerContextValue.confirmButtonText))
     );
     expect(callbackFun).toHaveBeenCalled();

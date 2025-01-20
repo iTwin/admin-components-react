@@ -4,7 +4,13 @@
  *--------------------------------------------------------------------------------------------*/
 import "@testing-library/jest-dom";
 
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 import React from "react";
 
 import { BaseIModelPage } from "./BaseIModel";
@@ -41,12 +47,12 @@ describe("BaseIModel", () => {
     }) as HTMLButtonElement;
     expect(confirmButton).toHaveAttribute("aria-disabled", "true");
     expect(confirmButton.textContent).toBe("Create");
-    await waitFor(() => fireEvent.click(confirmButton));
+    await act(() => fireEvent.click(confirmButton));
     expect(actionMock).not.toHaveBeenCalled();
     const cancelButton = container.querySelector(
       ".iac-button-bar button:last-child"
     ) as HTMLButtonElement;
-    await waitFor(() => fireEvent.click(cancelButton));
+    await act(() => fireEvent.click(cancelButton));
     expect(closeMock).toHaveBeenCalled();
   });
 
