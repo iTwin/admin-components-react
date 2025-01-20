@@ -2,10 +2,15 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { toaster } from "@itwin/itwinui-react";
+import { useToaster } from "@itwin/itwinui-react";
+import {
+  Toaster,
+  ToastProvider,
+} from "@itwin/itwinui-react/cjs/core/Toast/Toaster";
 import {
   fireEvent,
   render,
+  renderHook,
   screen,
   waitForElementToBeRemoved,
 } from "@testing-library/react";
@@ -24,6 +29,18 @@ import {
   UpdateVersionModalProps,
 } from "./UpdateVersionModal";
 
+function toasterContraption() {
+  const { result } = renderHook(() => useToaster(), {
+    wrapper: ({ children }) => (
+      <ToastProvider>
+        {children}
+        <Toaster />
+      </ToastProvider>
+    ),
+  });
+  return () => result.current;
+}
+
 const renderComponent = (initialProps?: Partial<UpdateVersionModalProps>) => {
   const props = {
     onClose: jest.fn(),
@@ -39,10 +56,11 @@ const renderComponent = (initialProps?: Partial<UpdateVersionModalProps>) => {
 };
 
 describe("UpdateVersionModal", () => {
+  const toaster = toasterContraption();
   const mockUpdateVersion = jest.spyOn(NamedVersionClient.prototype, "update");
-  const mockPositiveToast = jest.spyOn(toaster, "positive");
-  const mockNegativeToast = jest.spyOn(toaster, "negative");
-  const mockCloseAllToast = jest.spyOn(toaster, "closeAll");
+  const mockPositiveToast = jest.spyOn(toaster(), "positive");
+  const mockNegativeToast = jest.spyOn(toaster(), "negative");
+  const mockCloseAllToast = jest.spyOn(toaster(), "closeAll");
 
   beforeEach(() => {
     jest.clearAllMocks();

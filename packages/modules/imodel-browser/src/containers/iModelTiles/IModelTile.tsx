@@ -60,6 +60,7 @@ export const IModelTile = ({
           data: iModel?.thumbnail,
         }
       : undefined;
+
   return (
     <ThemeProvider theme="inherit">
       <Tile.Wrapper key={iModel?.id} {...(tileProps ?? {})}>
@@ -68,13 +69,11 @@ export const IModelTile = ({
           aria-label={`Select iModel ${iModel.id}`}
         >
           <Tile.ThumbnailArea>
-            <Tile.ThumbnailPicture>
-              <IModelThumbnail
-                iModelId={iModel?.id}
-                accessToken={accessToken}
-                apiOverrides={thumbnailApiOverride}
-              />
-            </Tile.ThumbnailPicture>
+            <IModelThumbnail
+              iModelId={iModel.id}
+              accessToken={accessToken}
+              apiOverrides={thumbnailApiOverride}
+            />
           </Tile.ThumbnailArea>
         </Tile.Action>
         <Tile.Name>

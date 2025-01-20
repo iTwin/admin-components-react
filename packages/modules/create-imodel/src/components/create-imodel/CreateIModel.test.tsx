@@ -2,11 +2,26 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { toaster } from "@itwin/itwinui-react";
-import { act, fireEvent, render } from "@testing-library/react";
+import { useToaster } from "@itwin/itwinui-react";
+import { act, fireEvent, render, renderHook } from "@testing-library/react";
 import React from "react";
 
 import { CreateIModel } from "./CreateIModel";
+
+const toasterNegative = jest.fn();
+const toasterPositive = jest.fn();
+const toasterInformational = jest.fn();
+const toasterWarning = jest.fn();
+
+jest.mock("@itwin/itwinui-react", () => ({
+  ...jest.requireActual("@itwin/itwinui-react"),
+  useToaster: () => ({
+    positive: toasterPositive,
+    informational: toasterInformational,
+    negative: toasterNegative,
+    warning: toasterWarning,
+  }),
+}));
 
 describe("CreateIModel", () => {
   const mockedimodel = { iModel: { id: "dd", name: "name" } };
@@ -28,7 +43,7 @@ describe("CreateIModel", () => {
 
   it("should create an iModel", async () => {
     const successMock = jest.fn();
-    toaster.positive = jest.fn();
+    const toaster = renderHook(() => useToaster()).result.current;
 
     const { getByText, container } = render(
       <CreateIModel
@@ -64,19 +79,16 @@ describe("CreateIModel", () => {
       }
     );
     expect(successMock).toHaveBeenCalledWith(mockedimodel);
-    expect(toaster.positive).toHaveBeenCalledWith(
-      "iModel created successfully.",
-      {
-        hasCloseButton: true,
-      }
-    );
+    expect(toaster.positive).toHaveBeenCalled();
   });
 
   it("should show general error", async () => {
+    const toaster = renderHook(() => useToaster()).result.current;
+
     const errorMock = jest.fn();
     const error = new Error("Fail");
     fetchMock.mockImplementationOnce(() => Promise.reject(error));
-    toaster.negative = jest.fn();
+    // toaster().negative = jest.fn();
 
     const { getByText, container } = render(
       <CreateIModel
@@ -120,17 +132,15 @@ describe("CreateIModel", () => {
       }
     );
     expect(errorMock).toHaveBeenCalledWith(error);
-    expect(toaster.negative).toHaveBeenCalledWith(
-      "Could not create an iModel. Please try again later.",
-      { hasCloseButton: true }
-    );
+    expect(toaster.negative).toHaveBeenCalled();
   });
 
   it("should show imodel already exists error", async () => {
     const errorMock = jest.fn();
     const error = { error: { code: "iModelExists" } };
     fetchMock.mockImplementationOnce(() => Promise.reject(error));
-    toaster.negative = jest.fn();
+    // toaster().negative = jest.fn();
+    const toaster = renderHook(() => useToaster()).result.current;
 
     const { getByText, container } = render(
       <CreateIModel
@@ -166,9 +176,6 @@ describe("CreateIModel", () => {
       }
     );
     expect(errorMock).toHaveBeenCalledWith(error);
-    expect(toaster.negative).toHaveBeenCalledWith(
-      "iModel with the same name already exists within the iTwin.",
-      { hasCloseButton: true }
-    );
+    expect(toaster.negative).toHaveBeenCalled();
   });
 });

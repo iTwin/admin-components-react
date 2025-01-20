@@ -11,7 +11,7 @@ import {
   ModalButtonBar,
   ProgressRadial,
   ThemeProvider,
-  toaster,
+  useToaster,
 } from "@itwin/itwinui-react";
 import React from "react";
 
@@ -46,6 +46,7 @@ export type DeleteITwinProps = {
 };
 
 export const DeleteITwin = (props: DeleteITwinProps) => {
+  const toaster = useToaster();
   const {
     iTwin,
     accessToken,
@@ -133,7 +134,7 @@ export const DeleteITwin = (props: DeleteITwinProps) => {
 const OverlaySpinner = () => {
   return (
     <div className="iac-delete-itwin-overlay-container">
-      <ProgressRadial indeterminate />
+      <ProgressRadial indeterminate data-testid="progress-radial" />
     </div>
   );
 };

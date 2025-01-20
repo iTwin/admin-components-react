@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import "./IModelThumbnail.scss";
 
-import { Text } from "@itwin/itwinui-react";
+import { Text, Tile } from "@itwin/itwinui-react";
 import classNames from "classnames";
 import React from "react";
 import { useInView } from "react-intersection-observer";
@@ -44,14 +44,10 @@ export const IModelThumbnail = ({
     apiOverrides
   );
   return thumbnail ? (
-    <img
+    <Tile.ThumbnailPicture
+      url={`${thumbnail}`}
+      ref={ref}
       className={classNames("iac-thumbnail", className)}
-      style={{
-        width: "100%",
-      }}
-      id="base64image"
-      src={thumbnail ?? ""}
-      alt=""
     />
   ) : (
     <Text

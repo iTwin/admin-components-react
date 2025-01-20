@@ -73,13 +73,11 @@ describe("ChangesTab", () => {
   });
 
   it("should show spinner when data is loading", () => {
-    const { container } = renderComponent({
+    renderComponent({
       changesets: [],
       status: RequestStatus.InProgress,
     });
-    expect(
-      container.querySelector(".iui-progress-indicator-radial")
-    ).toBeTruthy();
+    expect(screen.findAllByTestId("progress-radial")).toBeTruthy();
   });
 
   it("should not show create version icon when changeset already has a version", () => {

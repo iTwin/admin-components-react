@@ -12,7 +12,7 @@ import {
   ModalContent,
   ProgressRadial,
   ThemeProvider,
-  toaster,
+  useToaster,
 } from "@itwin/itwinui-react";
 import React from "react";
 
@@ -47,6 +47,7 @@ export type DeleteIModelProps = {
 };
 
 export function DeleteIModel(props: DeleteIModelProps) {
+  const toaster = useToaster();
   const {
     imodel: { id: imodelId, name: imodelName },
     accessToken,
@@ -140,7 +141,7 @@ export function DeleteIModel(props: DeleteIModelProps) {
 function OverlaySpinner() {
   return (
     <div className="iac-overlay-container">
-      <ProgressRadial indeterminate />
+      <ProgressRadial indeterminate data-testid="progress-radial" />
     </div>
   );
 }

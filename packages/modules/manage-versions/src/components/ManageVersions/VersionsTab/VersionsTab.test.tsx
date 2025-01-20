@@ -17,6 +17,16 @@ import { defaultStrings } from "../ManageVersions";
 import { RequestStatus } from "../types";
 import VersionsTab, { VersionsTabProps } from "./VersionsTab";
 
+jest.mock("@itwin/itwinui-react", () => ({
+  ...jest.requireActual("@itwin/itwinui-react"),
+  useToaster: () => ({
+    positive: jest.fn(),
+    informational: jest.fn(),
+    negative: jest.fn(),
+    warning: jest.fn(),
+  }),
+}));
+
 const renderComponent = (initialProps?: Partial<VersionsTabProps>) => {
   const props: VersionsTabProps = {
     status: RequestStatus.Finished,
@@ -44,7 +54,7 @@ describe("VersionsTab", () => {
     );
     expect(rows.length).toBe(1);
 
-    rows.forEach((row, index) => {
+    rows.forEach((row) => {
       const cells = row.querySelectorAll("div[role='cell']");
       expect(cells.length).toBe(6);
       expect(cells[0].textContent).toContain(MockedVersion().name);
@@ -87,13 +97,11 @@ describe("VersionsTab", () => {
   });
 
   it("should show spinner when data is loading", () => {
-    const { container } = renderComponent({
+    renderComponent({
       tableData: [],
       status: RequestStatus.InProgress,
     });
-    expect(
-      container.querySelector(".iui-progress-indicator-radial")
-    ).toBeTruthy();
+    expect(screen.findAllByTestId("progress-radial")).toBeTruthy();
   });
 
   it("should show included changesets on expand", () => {
@@ -109,13 +117,8 @@ describe("VersionsTab", () => {
     // check on expand changeset data must be there
     const rowgroup = container.querySelector('[role="rowgroup"]') as Element;
     const rowElements = rowgroup.querySelectorAll('[role="row"]');
-    const cell = container.querySelector('[role="cell"]') as Element;
     expect(rowElements.length).toBe(1);
-    fireEvent.click(
-      cell.querySelector(
-        "div[role='row'] > div[role='cell'] > button[type='button']:first-child"
-      ) as HTMLElement
-    );
+    fireEvent.click(screen.getByRole("button", { name: "Toggle sub row" }));
     const rowsOnExpand = rowgroup.querySelectorAll('[role="row"]');
     expect(rowsOnExpand.length).toBe(2);
 

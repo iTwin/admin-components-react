@@ -17,7 +17,7 @@ export function IModelName() {
 
   return (
     <LabeledInput
-      setFocus
+      autoFocus
       label={nameString ?? "Name"}
       name="name"
       required
