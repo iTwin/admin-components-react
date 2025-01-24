@@ -85,7 +85,12 @@ describe("CreateIModel", () => {
       }
     );
     expect(successMock).toHaveBeenCalledWith(mockedimodel);
-    expect(toaster.positive).toHaveBeenCalled();
+    expect(toaster.positive).toHaveBeenCalledWith(
+      "iModel created successfully.",
+      {
+        hasCloseButton: true,
+      }
+    );
   });
 
   it("should show general error", async () => {
@@ -94,7 +99,6 @@ describe("CreateIModel", () => {
     const errorMock = jest.fn();
     const error = new Error("Fail");
     fetchMock.mockImplementationOnce(() => Promise.reject(error));
-    // toaster().negative = jest.fn();
 
     const { getByText, container } = render(
       <CreateIModel
@@ -148,14 +152,16 @@ describe("CreateIModel", () => {
       }
     );
     expect(errorMock).toHaveBeenCalledWith(error);
-    expect(toaster.negative).toHaveBeenCalled();
+    expect(toaster.negative).toHaveBeenCalledWith(
+      "Could not create an iModel. Please try again later.",
+      { hasCloseButton: true }
+    );
   });
 
   it("should show imodel already exists error", async () => {
     const errorMock = jest.fn();
     const error = { error: { code: "iModelExists" } };
     fetchMock.mockImplementationOnce(() => Promise.reject(error));
-    // toaster().negative = jest.fn();
     const toaster = renderHook(() => useToaster()).result.current;
 
     const { getByText, container } = render(
@@ -192,6 +198,9 @@ describe("CreateIModel", () => {
       }
     );
     expect(errorMock).toHaveBeenCalledWith(error);
-    expect(toaster.negative).toHaveBeenCalled();
+    expect(toaster.negative).toHaveBeenCalledWith(
+      "iModel with the same name already exists within the iTwin.",
+      { hasCloseButton: true }
+    );
   });
 });

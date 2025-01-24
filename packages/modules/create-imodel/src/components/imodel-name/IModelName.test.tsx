@@ -2,8 +2,8 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { fireEvent, render } from "@testing-library/react";
-import React, { act } from "react";
+import { act, fireEvent, render } from "@testing-library/react";
+import React from "react";
 
 import { IModelContext, InnerIModelContext } from "../context/imodel-context";
 import { IModelName } from "./IModelName";
