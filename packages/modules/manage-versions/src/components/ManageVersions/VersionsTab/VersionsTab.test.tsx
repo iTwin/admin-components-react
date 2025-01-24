@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { fireEvent, render, screen, within } from "@testing-library/react";
+import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import React from "react";
 
 import { ChangesetClient } from "../../../clients/changesetClient";
@@ -16,6 +16,16 @@ import {
 import { defaultStrings } from "../ManageVersions";
 import { RequestStatus } from "../types";
 import VersionsTab, { VersionsTabProps } from "./VersionsTab";
+
+jest.mock("@itwin/itwinui-react", () => ({
+  ...jest.requireActual("@itwin/itwinui-react"),
+  useToaster: () => ({
+    positive: jest.fn(),
+    informational: jest.fn(),
+    negative: jest.fn(),
+    warning: jest.fn(),
+  }),
+}));
 
 const renderComponent = (initialProps?: Partial<VersionsTabProps>) => {
   const props: VersionsTabProps = {
@@ -44,7 +54,7 @@ describe("VersionsTab", () => {
     );
     expect(rows.length).toBe(1);
 
-    rows.forEach((row, index) => {
+    rows.forEach(async (row) => {
       const cells = row.querySelectorAll("div[role='cell']");
       expect(cells.length).toBe(6);
       expect(cells[0].textContent).toContain(MockedVersion().name);
@@ -53,11 +63,15 @@ describe("VersionsTab", () => {
       expect(cells[3].textContent).toContain(MockedVersion().createdDateTime);
       expect(cells[4].textContent).toContain(defaultStrings.view);
       const viewSpan = screen.getByText("View");
-      fireEvent.click(viewSpan);
-      const actionButton = within(cells[5] as HTMLElement).getByText("More");
+      await act(() => fireEvent.click(viewSpan));
+      const actionButton = within(cells[5] as HTMLElement).getByRole("button", {
+        name: "More",
+      });
       expect(actionButton).toBeTruthy();
-      fireEvent.click(actionButton);
-      const updateAction = screen.getByText(defaultStrings.updateNamedVersion);
+      await act(() => fireEvent.click(actionButton));
+      const updateAction = await screen.findByText(
+        defaultStrings.updateNamedVersion
+      );
       if (defaultStrings.download) {
         const downloadAction = screen.getByText(defaultStrings.download);
         expect(downloadAction).toBeTruthy();
@@ -87,16 +101,14 @@ describe("VersionsTab", () => {
   });
 
   it("should show spinner when data is loading", () => {
-    const { container } = renderComponent({
+    renderComponent({
       tableData: [],
       status: RequestStatus.InProgress,
     });
-    expect(
-      container.querySelector(".iui-progress-indicator-radial")
-    ).toBeTruthy();
+    expect(screen.findByTestId("progress-radial")).toBeTruthy();
   });
 
-  it("should show included changesets on expand", () => {
+  it("should show included changesets on expand", async () => {
     const { container } = renderComponent({
       tableData: [
         {
@@ -109,17 +121,14 @@ describe("VersionsTab", () => {
     // check on expand changeset data must be there
     const rowgroup = container.querySelector('[role="rowgroup"]') as Element;
     const rowElements = rowgroup.querySelectorAll('[role="row"]');
-    const cell = container.querySelector('[role="cell"]') as Element;
     expect(rowElements.length).toBe(1);
-    fireEvent.click(
-      cell.querySelector(
-        "div[role='row'] > div[role='cell'] > button[type='button']:first-child"
-      ) as HTMLElement
+    await act(() =>
+      fireEvent.click(screen.getByRole("button", { name: "Toggle sub row" }))
     );
     const rowsOnExpand = rowgroup.querySelectorAll('[role="row"]');
     expect(rowsOnExpand.length).toBe(2);
 
-    rowsOnExpand.forEach((row, index) => {
+    rowsOnExpand.forEach(async (row, index) => {
       const cells = row.querySelectorAll('[role="cell"]');
       expect(cells.length).toBe(6);
       if (index === 0) {
@@ -129,13 +138,14 @@ describe("VersionsTab", () => {
         expect(cells[3].textContent).toContain(MockedVersion().createdDateTime);
         expect(cells[4].textContent).toContain(defaultStrings.view);
         const viewSpan = screen.getByText("View");
-        fireEvent.click(viewSpan);
+        await act(() => fireEvent.click(viewSpan));
         const actionsCell = cells[cells.length - 1];
-        const actionButton = within(actionsCell as HTMLElement).getByText(
-          "More"
+        const actionButton = within(actionsCell as HTMLElement).getByRole(
+          "button",
+          { name: "More" }
         );
-        fireEvent.click(actionButton);
-        const updateAction = screen.getByText(
+        await act(() => fireEvent.click(actionButton));
+        const updateAction = await screen.findByText(
           defaultStrings.updateNamedVersion
         );
         if (updateAction) {

@@ -7,6 +7,16 @@ import React from "react";
 
 import { DeleteITwin } from "./DeleteITwin";
 
+jest.mock("@itwin/itwinui-react", () => ({
+  ...jest.requireActual("@itwin/itwinui-react"),
+  useToaster: () => ({
+    positive: jest.fn(),
+    informational: jest.fn(),
+    negative: jest.fn(),
+    warning: jest.fn(),
+  }),
+}));
+
 describe("DeleteITwin", () => {
   const fetchMock = jest.fn(() => Promise.resolve({ ok: true } as Response));
   global.fetch = fetchMock;
@@ -81,7 +91,7 @@ describe("DeleteITwin", () => {
     expect(failureMock).toHaveBeenCalledWith(error);
   });
 
-  it("should close dialog", () => {
+  it("should close dialog", async () => {
     const closeMock = jest.fn();
 
     const { getByText } = render(
@@ -93,7 +103,7 @@ describe("DeleteITwin", () => {
     );
 
     const button = getByText("No") as HTMLButtonElement;
-    act(() => button.click());
+    await act(async () => button.click());
     expect(fetchMock).not.toHaveBeenCalled();
     expect(closeMock).toHaveBeenCalled();
   });

@@ -336,7 +336,7 @@ export function BaseIModelPage(props: BaseIModelProps) {
 function OverlaySpinner() {
   return (
     <div className="iac-overlay-container">
-      <ProgressRadial indeterminate />
+      <ProgressRadial indeterminate data-testid="progress-radial" />
     </div>
   );
 }

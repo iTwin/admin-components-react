@@ -85,40 +85,45 @@ export const ITwinTile = ({
   );
   return (
     <ThemeProvider theme="inherit">
-      <Tile
-        key={iTwin?.id}
-        name={<span title={iTwin?.displayName}>{iTwin?.displayName}</span>}
-        description={<span title={iTwin?.number}>{iTwin?.number ?? ""}</span>}
-        badge={
-          iTwin?.status &&
-          iTwin.status.toLocaleLowerCase() !== "active" && (
-            <Badge
-              backgroundColor={
-                iTwin.status.toLocaleLowerCase() === "inactive"
-                  ? "#A47854" /** $iui-color-background-oak */
-                  : "#4585A5" /** $iui-color-background-steelblue */
-              }
+      <Tile.Wrapper key={iTwin?.id} {...(tileProps ?? {})}>
+        <Tile.Action
+          onClick={() => onThumbnailClick?.(iTwin)}
+          aria-label={
+            onThumbnailClick ? `${strings.navigateToITwin} ${iTwin?.id}` : ""
+          }
+        >
+          <Tile.ThumbnailArea>
+            <Tile.BadgeContainer>
+              {iTwin?.status &&
+                iTwin.status.toLocaleLowerCase() !== "active" && (
+                  <Badge
+                    backgroundColor={
+                      iTwin.status.toLocaleLowerCase() === "inactive"
+                        ? "oak"
+                        : "steelblue"
+                    }
+                  >
+                    {iTwin.status.toLocaleLowerCase() === "inactive"
+                      ? strings.inactiveBadge
+                      : strings.trialBadge}
+                  </Badge>
+                )}
+            </Tile.BadgeContainer>
+            <Tile.ThumbnailPicture
+              style={{ cursor: onThumbnailClick ? "pointer" : "auto" }}
             >
-              {iTwin.status.toLocaleLowerCase() === "inactive"
-                ? strings.inactiveBadge
-                : strings.trialBadge}
-            </Badge>
-          )
-        }
-        moreOptions={moreOptions}
-        thumbnail={
-          <div
-            role="button"
-            aria-label={
-              onThumbnailClick ? `${strings.navigateToITwin} ${iTwin?.id}` : ""
-            }
-            onClick={() => onThumbnailClick?.(iTwin)}
-            style={{ cursor: onThumbnailClick ? "pointer" : "auto" }}
-          >
-            <ITwinIcon />
-          </div>
-        }
-        rightIcon={
+              <ITwinIcon />
+            </Tile.ThumbnailPicture>
+          </Tile.ThumbnailArea>
+        </Tile.Action>
+        <Tile.Name>
+          <Tile.NameLabel>{iTwin?.displayName}</Tile.NameLabel>
+        </Tile.Name>
+        <Tile.ContentArea>
+          <Tile.Description>{iTwin?.number ?? ""}</Tile.Description>
+        </Tile.ContentArea>
+        <Tile.MoreOptions>{moreOptions}</Tile.MoreOptions>
+        <Tile.Buttons>
           <IconButton
             aria-label={
               isFavorite ? strings.removeFromFavorites : strings.addToFavorites
@@ -132,9 +137,8 @@ export const ITwinTile = ({
           >
             {isFavorite ? <SvgStar /> : <SvgStarHollow />}
           </IconButton>
-        }
-        {...(tileProps ?? {})}
-      />
+        </Tile.Buttons>
+      </Tile.Wrapper>
     </ThemeProvider>
   );
 };

@@ -2,14 +2,29 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { toaster } from "@itwin/itwinui-react";
-import { act, fireEvent, render } from "@testing-library/react";
+import { useToaster } from "@itwin/itwinui-react";
+import { act, fireEvent, render, renderHook } from "@testing-library/react";
 import React from "react";
 
-import { iModelExtent } from "../..";
 import { UpdateIModel } from "./UpdateIModel";
 
+const toasterNegative = jest.fn();
+const toasterPositive = jest.fn();
+const toasterInformational = jest.fn();
+const toasterWarning = jest.fn();
+
+jest.mock("@itwin/itwinui-react", () => ({
+  ...jest.requireActual("@itwin/itwinui-react"),
+  useToaster: () => ({
+    positive: toasterPositive,
+    informational: toasterInformational,
+    negative: toasterNegative,
+    warning: toasterWarning,
+  }),
+}));
+
 describe("UpdateIModel", () => {
+  const toaster = renderHook(useToaster).result.current;
   const mockedimodel = { iModel: { id: "dd", name: "name" } };
   const fetchMock = jest.fn(() =>
     Promise.resolve({
@@ -29,7 +44,6 @@ describe("UpdateIModel", () => {
 
   it("should update an iModel", async () => {
     const successMock = jest.fn();
-    toaster.positive = jest.fn();
 
     const { getByText, container } = render(
       <UpdateIModel
@@ -51,7 +65,9 @@ describe("UpdateIModel", () => {
     const name = container.querySelector(
       "input[name=name]"
     ) as HTMLInputElement;
-    fireEvent.change(name, { target: { value: "Some other name" } });
+    await act(() =>
+      fireEvent.change(name, { target: { value: "Some other name" } })
+    );
 
     const updateButton = getByText("Update");
     await act(async () => updateButton.click());
@@ -86,7 +102,6 @@ describe("UpdateIModel", () => {
 
   it("should enable update when extent is removed", async () => {
     const successMock = jest.fn();
-    toaster.positive = jest.fn();
 
     const { getByText, rerender } = render(
       <UpdateIModel
@@ -106,7 +121,9 @@ describe("UpdateIModel", () => {
     );
 
     const updateButton = getByText("Update");
-    expect(updateButton.closest("button")?.hasAttribute("disabled")).toBe(true);
+    expect(updateButton.closest("button")?.hasAttribute("aria-disabled")).toBe(
+      true
+    );
 
     rerender(
       <UpdateIModel
@@ -159,7 +176,6 @@ describe("UpdateIModel", () => {
     const errorMock = jest.fn();
     const error = new Error("Fail");
     fetchMock.mockImplementationOnce(() => Promise.reject(error));
-    toaster.negative = jest.fn();
 
     const { getByText, container } = render(
       <UpdateIModel
@@ -177,7 +193,7 @@ describe("UpdateIModel", () => {
     const name = container.querySelector(
       "input[name=name]"
     ) as HTMLInputElement;
-    fireEvent.change(name, { target: { value: "Some name" } });
+    await act(() => fireEvent.change(name, { target: { value: "Some name" } }));
 
     const updateButton = getByText("Update");
     await act(async () => updateButton.click());
@@ -208,7 +224,6 @@ describe("UpdateIModel", () => {
     const errorMock = jest.fn();
     const error = { error: { code: "iModelExists" } };
     fetchMock.mockImplementationOnce(() => Promise.reject(error));
-    toaster.negative = jest.fn();
 
     const { getByText, container } = render(
       <UpdateIModel
@@ -226,7 +241,7 @@ describe("UpdateIModel", () => {
     const name = container.querySelector(
       "input[name=name]"
     ) as HTMLInputElement;
-    fireEvent.change(name, { target: { value: "Some name" } });
+    await act(() => fireEvent.change(name, { target: { value: "Some name" } }));
 
     const updateButton = getByText("Update");
     await act(async () => updateButton.click());

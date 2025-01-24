@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { fireEvent, render } from "@testing-library/react";
+import { act, fireEvent, render } from "@testing-library/react";
 import React from "react";
 
 import { IModelContext, InnerIModelContext } from "../context/imodel-context";
@@ -58,7 +58,9 @@ describe("IModelDescription", () => {
     const description = container.querySelector(
       '[name="description"]'
     ) as HTMLTextAreaElement;
-    fireEvent.change(description, { target: { value: "changed" } });
+    await act(() =>
+      fireEvent.change(description, { target: { value: "changed" } })
+    );
     expect(callbackFun).toHaveBeenCalled();
   });
 

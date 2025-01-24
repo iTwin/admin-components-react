@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { HorizontalTabs, ThemeProvider } from "@itwin/itwinui-react";
+import { Tabs, ThemeProvider } from "@itwin/itwinui-react";
 import React from "react";
 
 import { ChangesetClient } from "../../clients/changesetClient";
@@ -302,7 +302,7 @@ export const ManageVersions = (props: ManageVersionsProps) => {
         .then(() => {
           const updatedVersionsTableData = versionsTableData?.map((td) => {
             const updatedVersion = updateNamedVersionsProperties(
-              [td.version] ?? [],
+              [td.version],
               usersRef.current
             );
             return {
@@ -387,11 +387,12 @@ export const ManageVersions = (props: ManageVersionsProps) => {
         log={log}
       >
         <div>
-          <HorizontalTabs
+          <Tabs
             labels={[stringsOverrides.namedVersions, stringsOverrides.changes]}
             activeIndex={_currentTab}
             onTabSelected={(index) => changeTab(index)}
             type="borderless"
+            orientation="horizontal"
           />
           {_currentTab === ManageVersionsTabs.Versions && (
             <VersionsTab
