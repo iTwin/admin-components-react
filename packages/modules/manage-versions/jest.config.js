@@ -27,4 +27,5 @@ module.exports = {
   collectCoverageFrom: ["<rootDir>/src/**"],
   collectCoverage: true,
   coverageReporters: ["json", "lcov", "text", "clover", "cobertura"],
+  setupFilesAfterEnv: ["@testing-library/jest-dom"],
 };

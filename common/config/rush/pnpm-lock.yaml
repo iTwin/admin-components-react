@@ -31,6 +31,7 @@ dependencies:
   '@storybook/theming': 6.5.16_react-dom@18.3.1+react@18.3.1
   '@svgr/rollup': 5.5.0
   '@testing-library/dom': 10.4.0
+  '@testing-library/jest-dom': 6.6.3
   '@testing-library/react': 16.2.0_5feffc8fc296d97fa717ec7b23843284
   '@testing-library/react-hooks': 5.1.3_2cbf9c82737fd127890f3c15fd1efad3
   '@types/jest': 27.5.2
@@ -24465,6 +24466,7 @@ packages:
       eslint-plugin-react: 7.28.0_eslint@8.54.0
       eslint-plugin-react-hooks: 4.3.0_eslint@8.54.0
       eslint-plugin-simple-import-sort: 5.0.3_eslint@8.54.0
+      identity-obj-proxy: 3.0.0
       jest: 27.5.1
       node-sass: 6.0.1
       postcss: 8.4.31
@@ -24487,7 +24489,7 @@ packages:
     peerDependencies:
       '@babel/core': '*'
     resolution:
-      integrity: sha512-V7mVa0+dFy+AFksLLRlRcZjmrdzgnrKMjTWRc/ytL15DeD4OawTYUjR3CXFSdsJZ9khpV+7U3rfNumL162DpfQ==
+      integrity: sha512-mBEoqxHURJp71ZA91vaQCZfhvD7ID7ogIx/Bkz48lKGN3JZYuHob9AfTMG3GGK/pWY1Kd0HX9HFkckGldm+z/g==
       tarball: file:projects/manage-versions-react.tgz
     version: 0.0.0
   file:projects/platform-storybook.tgz_a899b043d7ceb053ea84174e2c681be4:
@@ -24622,6 +24624,7 @@ specifiers:
   '@storybook/theming': ^6.5.16
   '@svgr/rollup': ^5.5.0
   '@testing-library/dom': ~10.4.0
+  '@testing-library/jest-dom': ~6.6.3
   '@testing-library/react': ^16.2.0
   '@testing-library/react-hooks': ^5.1.0
   '@types/jest': ^27.5.1

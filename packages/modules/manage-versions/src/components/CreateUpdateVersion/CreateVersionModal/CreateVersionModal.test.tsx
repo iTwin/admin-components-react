@@ -4,16 +4,11 @@
  *--------------------------------------------------------------------------------------------*/
 import { useToaster } from "@itwin/itwinui-react";
 import {
-  Toaster,
-  ToastProvider,
-} from "@itwin/itwinui-react/cjs/core/Toast/Toaster";
-import {
   act,
   fireEvent,
   render,
   renderHook,
   screen,
-  waitForElementToBeRemoved,
 } from "@testing-library/react";
 import React from "react";
 
@@ -30,22 +25,28 @@ import {
   ApimError,
   localeDateWithTimeFormat,
 } from "../../../models";
+import { defaultStrings } from "../../ManageVersions/ManageVersions";
 import {
   CreateVersionModal,
   CreateVersionModalProps,
 } from "./CreateVersionModal";
 
-function toasterContraption() {
-  const { result } = renderHook(() => useToaster(), {
-    wrapper: ({ children }) => (
-      <ToastProvider>
-        {children}
-        <Toaster />
-      </ToastProvider>
-    ),
-  });
-  return () => result.current;
-}
+const toasterNegative = jest.fn();
+const toasterPositive = jest.fn();
+const toasterInformational = jest.fn();
+const toasterWarning = jest.fn();
+const toasterCloseAll = jest.fn();
+
+jest.mock("@itwin/itwinui-react", () => ({
+  ...jest.requireActual("@itwin/itwinui-react"),
+  useToaster: () => ({
+    positive: toasterPositive,
+    informational: toasterInformational,
+    negative: toasterNegative,
+    warning: toasterWarning,
+    closeAll: toasterCloseAll,
+  }),
+}));
 
 const renderComponent = (initialProps?: Partial<CreateVersionModalProps>) => {
   const props = {
@@ -63,19 +64,19 @@ const renderComponent = (initialProps?: Partial<CreateVersionModalProps>) => {
 };
 
 describe("CreateVersionModal", () => {
-  const toaster = toasterContraption();
+  const toaster = renderHook(useToaster).result.current;
 
   const mockCreateVersion = jest.spyOn(NamedVersionClient.prototype, "create");
-  const mockPositiveToast = jest.spyOn(toaster(), "positive");
-  const mockNegativeToast = jest.spyOn(toaster(), "negative");
-  const mockCloseAllToast = jest.spyOn(toaster(), "closeAll");
+  const mockPositiveToast = jest.spyOn(toaster, "positive");
+  const mockNegativeToast = jest.spyOn(toaster, "negative");
+  const mockCloseAllToast = jest.spyOn(toaster, "closeAll");
 
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it("should show additional info", () => {
-    renderComponent({ latestVersion: MockedVersion() });
+  it("should show additional info", async () => {
+    await act(() => renderComponent({ latestVersion: MockedVersion() }));
 
     const additionalInfos = document.querySelectorAll(".iac-additional-info");
     expect(additionalInfos.length).toBe(2);
@@ -98,14 +99,12 @@ describe("CreateVersionModal", () => {
   it("should make a request with input data", async () => {
     mockCreateVersion.mockResolvedValue(MockedVersion());
     const onCreate = jest.fn();
-    renderComponent({ onCreate });
+    await act(() => renderComponent({ onCreate }));
 
-    const nameInput = document.querySelector("input") as HTMLInputElement;
+    const nameInput = await screen.findByLabelText("Name");
     expect(nameInput).toBeTruthy();
 
-    const descriptionInput = document.querySelector(
-      "textarea"
-    ) as HTMLTextAreaElement;
+    const descriptionInput = await screen.findByLabelText("Description");
     expect(descriptionInput).toBeTruthy();
 
     await act(() =>
@@ -117,10 +116,8 @@ describe("CreateVersionModal", () => {
       })
     );
 
-    screen.getByText("Create").click();
-    await waitForElementToBeRemoved(() =>
-      document.querySelector(".iui-progress-indicator-overlay")
-    );
+    const createButton = await screen.findByText("Create");
+    await act(async () => createButton.click());
 
     expect(mockCreateVersion).toHaveBeenCalledWith(MOCKED_IMODEL_ID, {
       name: "test name",
@@ -138,10 +135,10 @@ describe("CreateVersionModal", () => {
   it.each([
     [
       "InsufficientPermissions",
-      "You do not have the required permissions to create a Named Version.",
+      defaultStrings.messageInsufficientPermissionsToCreateVersion,
     ],
-    ["NamedVersionExists", "Named Version with the same name already exists."],
-    ["otherError", "Could not create a Named Version. Please try again later."],
+    ["NamedVersionExists", defaultStrings.messageVersionNameExists],
+    ["otherError", defaultStrings.messageCouldNotCreateVersion],
   ])("should show error message when got error %s", async (code, message) => {
     mockCreateVersion.mockRejectedValue(
       new ApimError({
@@ -149,7 +146,7 @@ describe("CreateVersionModal", () => {
         message: "error",
       })
     );
-    renderComponent();
+    await act(() => renderComponent());
 
     const nameInput = document.querySelector("input") as HTMLInputElement;
     expect(nameInput).toBeTruthy();
@@ -157,10 +154,8 @@ describe("CreateVersionModal", () => {
       fireEvent.change(nameInput, { target: { value: "test name" } })
     );
 
-    screen.getByText("Create").click();
-    await waitForElementToBeRemoved(() =>
-      document.querySelector(".iui-progress-indicator-overlay")
-    );
+    const createButton = await screen.findByText("Create");
+    await act(async () => createButton.click());
 
     expect(mockCreateVersion).toHaveBeenCalled();
     expect(mockCloseAllToast).toHaveBeenCalled();

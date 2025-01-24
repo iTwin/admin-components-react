@@ -3,10 +3,6 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { useToaster } from "@itwin/itwinui-react";
-import {
-  Toaster,
-  ToastProvider,
-} from "@itwin/itwinui-react/cjs/core/Toast/Toaster";
 import { act, fireEvent, render, renderHook } from "@testing-library/react";
 import React from "react";
 
@@ -27,19 +23,8 @@ jest.mock("@itwin/itwinui-react", () => ({
   }),
 }));
 
-function toasterContraption() {
-  const { result } = renderHook(() => useToaster(), {
-    wrapper: ({ children }) => (
-      <ToastProvider>
-        {children}
-        <Toaster />
-      </ToastProvider>
-    ),
-  });
-  return () => result.current;
-}
 describe("UpdateIModel", () => {
-  const toaster = toasterContraption();
+  const toaster = renderHook(useToaster).result.current;
   const mockedimodel = { iModel: { id: "dd", name: "name" } };
   const fetchMock = jest.fn(() =>
     Promise.resolve({
@@ -107,7 +92,7 @@ describe("UpdateIModel", () => {
       }
     );
     expect(successMock).toHaveBeenCalledWith(mockedimodel);
-    expect(toaster().positive).toHaveBeenCalledWith(
+    expect(toaster.positive).toHaveBeenCalledWith(
       "iModel updated successfully.",
       {
         hasCloseButton: true,
@@ -179,7 +164,7 @@ describe("UpdateIModel", () => {
       }
     );
     expect(successMock).toHaveBeenCalledWith(mockedimodel);
-    expect(toaster().positive).toHaveBeenCalledWith(
+    expect(toaster.positive).toHaveBeenCalledWith(
       "iModel updated successfully.",
       {
         hasCloseButton: true,
@@ -229,7 +214,7 @@ describe("UpdateIModel", () => {
       }
     );
     expect(errorMock).toHaveBeenCalledWith(error);
-    expect(toaster().negative).toHaveBeenCalledWith(
+    expect(toaster.negative).toHaveBeenCalledWith(
       "Could not update an iModel. Please try again later.",
       { hasCloseButton: true }
     );
@@ -277,7 +262,7 @@ describe("UpdateIModel", () => {
       }
     );
     expect(errorMock).toHaveBeenCalledWith(error);
-    expect(toaster().negative).toHaveBeenCalledWith(
+    expect(toaster.negative).toHaveBeenCalledWith(
       "iModel with the same name already exists within the iTwin.",
       { hasCloseButton: true }
     );

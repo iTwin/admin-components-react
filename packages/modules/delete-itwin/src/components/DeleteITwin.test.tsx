@@ -91,7 +91,7 @@ describe("DeleteITwin", () => {
     expect(failureMock).toHaveBeenCalledWith(error);
   });
 
-  it("should close dialog", () => {
+  it("should close dialog", async () => {
     const closeMock = jest.fn();
 
     const { getByText } = render(
@@ -103,7 +103,7 @@ describe("DeleteITwin", () => {
     );
 
     const button = getByText("No") as HTMLButtonElement;
-    act(() => button.click());
+    await act(async () => button.click());
     expect(fetchMock).not.toHaveBeenCalled();
     expect(closeMock).toHaveBeenCalled();
   });

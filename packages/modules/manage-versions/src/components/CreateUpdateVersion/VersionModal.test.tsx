@@ -2,6 +2,8 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+import "@testing-library/jest-dom";
+
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import React from "react";
 
@@ -9,6 +11,16 @@ import { ConfigProvider } from "../../common/configContext";
 import { MOCKED_CONFIG_PROPS } from "../../mocks";
 import { NamedVersion } from "../../models";
 import { VersionModal, VersionModalProps } from "./VersionModal";
+
+jest.mock("@itwin/itwinui-react", () => ({
+  ...jest.requireActual("@itwin/itwinui-react"),
+  useToaster: () => ({
+    positive: jest.fn(),
+    informational: jest.fn(),
+    negative: jest.fn(),
+    warning: jest.fn(),
+  }),
+}));
 
 const renderComponent = (initialProps?: Partial<VersionModalProps>) => {
   const props = {
@@ -83,7 +95,7 @@ describe("VersionModal", () => {
       .getByText("Action")
       .closest("button") as HTMLButtonElement;
     expect(actionButton).not.toBeUndefined();
-    expect(actionButton.disabled).toBe(true);
+    expect(actionButton).toHaveAttribute("aria-disabled", "true");
   });
 
   it("should disable action button when name is missing", () => {
@@ -93,9 +105,8 @@ describe("VersionModal", () => {
       .getByText("Action")
       .closest("button") as HTMLButtonElement;
     expect(actionButton).not.toBeUndefined();
-    expect(actionButton.disabled).toBe(true);
+    expect(actionButton).toHaveAttribute("aria-disabled", "true");
   });
-
   it("should disable action button when data is the same as before", async () => {
     renderComponent({
       initialVersion: {
@@ -125,7 +136,7 @@ describe("VersionModal", () => {
       .getByText("Action")
       .closest("button") as HTMLButtonElement;
     expect(actionButton).not.toBeUndefined();
-    expect(actionButton.disabled).toBe(true);
+    expect(actionButton).toHaveAttribute("aria-disabled", "true");
   });
 
   it("should trigger onClose", () => {

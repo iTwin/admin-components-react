@@ -302,7 +302,7 @@ export const ManageVersions = (props: ManageVersionsProps) => {
         .then(() => {
           const updatedVersionsTableData = versionsTableData?.map((td) => {
             const updatedVersion = updateNamedVersionsProperties(
-              [td.version] ?? [],
+              [td.version],
               usersRef.current
             );
             return {

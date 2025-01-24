@@ -64,10 +64,14 @@ describe("VersionsTab", () => {
       expect(cells[4].textContent).toContain(defaultStrings.view);
       const viewSpan = screen.getByText("View");
       await act(() => fireEvent.click(viewSpan));
-      const actionButton = within(cells[5] as HTMLElement).getByText("More");
+      const actionButton = within(cells[5] as HTMLElement).getByRole("button", {
+        name: "More",
+      });
       expect(actionButton).toBeTruthy();
       await act(() => fireEvent.click(actionButton));
-      const updateAction = screen.getByText(defaultStrings.updateNamedVersion);
+      const updateAction = await screen.findByText(
+        defaultStrings.updateNamedVersion
+      );
       if (defaultStrings.download) {
         const downloadAction = screen.getByText(defaultStrings.download);
         expect(downloadAction).toBeTruthy();
@@ -101,7 +105,7 @@ describe("VersionsTab", () => {
       tableData: [],
       status: RequestStatus.InProgress,
     });
-    expect(screen.findAllByTestId("progress-radial")).toBeTruthy();
+    expect(screen.findByTestId("progress-radial")).toBeTruthy();
   });
 
   it("should show included changesets on expand", async () => {
@@ -136,11 +140,12 @@ describe("VersionsTab", () => {
         const viewSpan = screen.getByText("View");
         await act(() => fireEvent.click(viewSpan));
         const actionsCell = cells[cells.length - 1];
-        const actionButton = within(actionsCell as HTMLElement).getByText(
-          "More"
+        const actionButton = within(actionsCell as HTMLElement).getByRole(
+          "button",
+          { name: "More" }
         );
         await act(() => fireEvent.click(actionButton));
-        const updateAction = screen.getByText(
+        const updateAction = await screen.findByText(
           defaultStrings.updateNamedVersion
         );
         if (updateAction) {
