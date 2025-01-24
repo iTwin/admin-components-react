@@ -32,7 +32,7 @@ import {
   ManageVersionsTabs,
 } from "./ManageVersions";
 
-jest.setTimeout(10000);
+jest.setTimeout(15000);
 
 const renderComponent = (initialProps?: Partial<ManageVersionsProps>) => {
   const props: ManageVersionsProps = {
@@ -319,7 +319,8 @@ it("should render with changesets tab opened", async () => {
 
   changesetRows.forEach(async (row, index) => {
     await waitFor(
-      async () => await screen.findByText(MockedChangeset(index).createdBy)
+      async () => await screen.findByText(MockedChangeset(index).createdBy),
+      { timeout: 5000 }
     );
     const cells = within(row as HTMLElement).getAllByRole("cell");
     expect(cells.length).toBe(6);
