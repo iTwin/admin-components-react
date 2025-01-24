@@ -35,7 +35,8 @@ describe("ContextMenu", () => {
       </ConfigProvider>
     );
     const moreButton = (await screen.findByText("More")).closest("button");
-    await waitFor(() => fireEvent.click(moreButton!));
+    expect(moreButton).not.toBeNull();
+    moreButton && (await waitFor(() => fireEvent.click(moreButton)));
     expect(screen.queryByText("Perform Action 1")).not.toBeNull();
   });
 
@@ -55,7 +56,8 @@ describe("ContextMenu", () => {
       </ConfigProvider>
     );
     const moreButton = (await screen.findByText("More")).closest("button");
-    await waitFor(() => fireEvent.click(moreButton!));
+    expect(moreButton).not.toBeNull();
+    moreButton && (await waitFor(() => fireEvent.click(moreButton)));
     const menuItem = screen.getByTitle("Action 1");
     await waitFor(() => fireEvent.click(menuItem));
     expect(mockActionClick).not.toHaveBeenCalled();
