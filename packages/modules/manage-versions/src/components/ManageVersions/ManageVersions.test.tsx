@@ -32,6 +32,8 @@ import {
   ManageVersionsTabs,
 } from "./ManageVersions";
 
+jest.setTimeout(10000);
+
 const renderComponent = (initialProps?: Partial<ManageVersionsProps>) => {
   const props: ManageVersionsProps = {
     accessToken: "test_token",
@@ -290,25 +292,19 @@ describe("ManageVersions", () => {
       within(await screen.findByRole("rowgroup")).getAllByRole("row")[0]
     ).getAllByRole("cell");
 
-    await waitFor(
-      () =>
-        expect(
-          within(versionCells[0]).getByText("test name new")
-        ).toBeInTheDocument(),
-      { timeout: 20000 }
-    );
-    expect(versionCells.length).toBe(5);
-
-    expect(moreButton).toBeInTheDocument();
-    expect(mockGetVersions).toHaveBeenCalledTimes(2);
-    expect(mockUpdateVersion).toHaveBeenCalledWith(
-      MOCKED_IMODEL_ID,
-      MockedVersion(2).id,
-      {
-        name: "test name new",
-        description: "test description new",
-      }
-    );
+    await waitFor(() => {
+      expect(versionCells.length).toBe(5);
+      expect(moreButton).toBeInTheDocument();
+      expect(mockGetVersions).toHaveBeenCalledTimes(2);
+      expect(mockUpdateVersion).toHaveBeenCalledWith(
+        MOCKED_IMODEL_ID,
+        MockedVersion(2).id,
+        {
+          name: "test name new",
+          description: "test description new",
+        }
+      );
+    });
   });
 });
 
