@@ -5,7 +5,7 @@
 import "./VersionsTab.scss";
 
 import { SvgDownload, SvgEdit } from "@itwin/itwinui-icons-react";
-import { Table, Text, toaster } from "@itwin/itwinui-react";
+import { Table, Text, useToaster } from "@itwin/itwinui-react";
 import React, { useCallback } from "react";
 import { CellProps } from "react-table";
 
@@ -69,7 +69,7 @@ const VersionsTab = (props: VersionsTabProps) => {
 
   const onDownloadClick = useCallback(
     async (changesetIndex: number) => {
-      toaster.closeAll();
+      useToaster().closeAll();
       try {
         const checkpointInfo = await changesetClient.getChangesetCheckpoint(
           imodelId,
@@ -77,12 +77,12 @@ const VersionsTab = (props: VersionsTabProps) => {
         );
         const downloadUrl = checkpointInfo._links.download.href;
         window.open(downloadUrl, "_blank", "noopener,noreferrer");
-        toaster.informational(stringsOverrides.messageFileDownloadInProgress, {
+        useToaster().informational(stringsOverrides.messageFileDownloadInProgress, {
           hasCloseButton: true,
           duration: 2000,
         });
       } catch (error) {
-        toaster.negative(
+        useToaster().negative(
           stringsOverrides.messageCouldNotDownloadedFileSuccessfully,
           {
             hasCloseButton: true,

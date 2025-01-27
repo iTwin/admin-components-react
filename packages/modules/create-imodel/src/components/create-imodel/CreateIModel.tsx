@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { toaster } from "@itwin/itwinui-react";
+import { useToaster } from "@itwin/itwinui-react";
 import React from "react";
 
 import { iModelExtent, IModelFull } from "../../types";
@@ -145,7 +145,7 @@ export function CreateIModel(props: CreateIModelProps) {
           });
         }
         setIsLoading(false);
-        toaster.positive(updatedStrings.successMessage, {
+        useToaster().positive(updatedStrings.successMessage, {
           hasCloseButton: true,
         });
         onSuccess?.(createdimodel);
@@ -163,7 +163,7 @@ export function CreateIModel(props: CreateIModelProps) {
       error?.error?.code === "iModelExists"
         ? updatedStrings.errorMessageIModelExists
         : updatedStrings.errorMessage;
-    toaster.negative(errorString, { hasCloseButton: true });
+        useToaster().negative(errorString, { hasCloseButton: true });
     onError?.(error);
   };
 

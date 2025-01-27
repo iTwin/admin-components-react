@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { toaster } from "@itwin/itwinui-react";
+import { useToaster } from "@itwin/itwinui-react";
 import {
   fireEvent,
   render,
@@ -45,6 +45,7 @@ const renderComponent = (initialProps?: Partial<CreateVersionModalProps>) => {
 };
 
 describe("CreateVersionModal", () => {
+  const toaster = useToaster();
   const mockCreateVersion = jest.spyOn(NamedVersionClient.prototype, "create");
   const mockPositiveToast = jest.spyOn(toaster, "positive");
   const mockNegativeToast = jest.spyOn(toaster, "negative");

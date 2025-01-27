@@ -33,11 +33,12 @@
   ],
   "dependencies": {
     "@itwin/itwinui-icons-react": "^2.2.0",
-    "@itwin/itwinui-react": "^2.12.18",
+    "@itwin/itwinui-react": "^3.16.0",
     "classnames": "^2.2.6"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "~17.1.0",
+    "@rollup/plugin-image": "^2.0.6",
     "@testing-library/react": "^11.1.0",
     "@types/jest": "^27.5.1",
     "@types/react": "^18.3.5",

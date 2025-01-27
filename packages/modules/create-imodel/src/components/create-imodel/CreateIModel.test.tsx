@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { toaster } from "@itwin/itwinui-react";
+import { useToaster } from "@itwin/itwinui-react";
 import { act, fireEvent, render } from "@testing-library/react";
 import React from "react";
 
@@ -28,7 +28,7 @@ describe("CreateIModel", () => {
 
   it("should create an iModel", async () => {
     const successMock = jest.fn();
-    toaster.positive = jest.fn();
+    useToaster().positive = jest.fn();
 
     const { getByText, container } = render(
       <CreateIModel
@@ -64,7 +64,7 @@ describe("CreateIModel", () => {
       }
     );
     expect(successMock).toHaveBeenCalledWith(mockedimodel);
-    expect(toaster.positive).toHaveBeenCalledWith(
+    expect(useToaster().positive).toHaveBeenCalledWith(
       "iModel created successfully.",
       {
         hasCloseButton: true,
@@ -76,7 +76,7 @@ describe("CreateIModel", () => {
     const errorMock = jest.fn();
     const error = new Error("Fail");
     fetchMock.mockImplementationOnce(() => Promise.reject(error));
-    toaster.negative = jest.fn();
+    useToaster().negative = jest.fn();
 
     const { getByText, container } = render(
       <CreateIModel
@@ -120,7 +120,7 @@ describe("CreateIModel", () => {
       }
     );
     expect(errorMock).toHaveBeenCalledWith(error);
-    expect(toaster.negative).toHaveBeenCalledWith(
+    expect(useToaster().negative).toHaveBeenCalledWith(
       "Could not create an iModel. Please try again later.",
       { hasCloseButton: true }
     );
@@ -130,7 +130,7 @@ describe("CreateIModel", () => {
     const errorMock = jest.fn();
     const error = { error: { code: "iModelExists" } };
     fetchMock.mockImplementationOnce(() => Promise.reject(error));
-    toaster.negative = jest.fn();
+    useToaster().negative = jest.fn();
 
     const { getByText, container } = render(
       <CreateIModel
@@ -166,7 +166,7 @@ describe("CreateIModel", () => {
       }
     );
     expect(errorMock).toHaveBeenCalledWith(error);
-    expect(toaster.negative).toHaveBeenCalledWith(
+    expect(useToaster().negative).toHaveBeenCalledWith(
       "iModel with the same name already exists within the iTwin.",
       { hasCloseButton: true }
     );

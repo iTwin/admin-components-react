@@ -11,7 +11,7 @@ import {
   ModalButtonBar,
   ProgressRadial,
   ThemeProvider,
-  toaster,
+  useToaster,
 } from "@itwin/itwinui-react";
 import React from "react";
 
@@ -72,7 +72,7 @@ export const DeleteITwin = (props: DeleteITwinProps) => {
         throw new Error(response.statusText);
       } else {
         setIsLoading(false);
-        toaster.positive(
+        useToaster().positive(
           stringsOverrides?.successMessage ?? "iTwin deleted successfully."
         );
         onSuccess?.();
@@ -86,7 +86,7 @@ export const DeleteITwin = (props: DeleteITwinProps) => {
 
   const error = (error: Error) => {
     setIsLoading(false);
-    toaster.negative(
+    useToaster().negative(
       stringsOverrides?.errorMessage ??
         "Could not delete an iTwin. Please try again later."
     );

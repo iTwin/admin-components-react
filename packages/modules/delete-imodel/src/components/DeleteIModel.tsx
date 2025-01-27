@@ -12,7 +12,7 @@ import {
   ModalContent,
   ProgressRadial,
   ThemeProvider,
-  toaster,
+  useToaster,
 } from "@itwin/itwinui-react";
 import React from "react";
 
@@ -79,7 +79,7 @@ export function DeleteIModel(props: DeleteIModelProps) {
         throw new Error(response.statusText);
       } else {
         setIsLoading(false);
-        toaster.positive(
+        useToaster().positive(
           stringsOverrides?.successMessage ?? "iModel deleted successfully."
         );
         onSuccess?.();
@@ -93,7 +93,7 @@ export function DeleteIModel(props: DeleteIModelProps) {
 
   const error = (error: Error) => {
     setIsLoading(false);
-    toaster.negative(
+    useToaster().negative(
       stringsOverrides?.errorMessage ??
         "Could not delete an iModel. Please try again later."
     );

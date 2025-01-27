@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import "./CreateVersionModal.scss";
 
-import { toaster } from "@itwin/itwinui-react";
+import { useToaster } from "@itwin/itwinui-react";
 import React from "react";
 
 import { NamedVersionClient } from "../../../clients/namedVersionClient";
@@ -56,13 +56,13 @@ export const CreateVersionModal = (props: CreateVersionModalProps) => {
 
   const onCreateClick = (name: string, description: string) => {
     setIsLoading(true);
-    toaster.closeAll();
+    useToaster().closeAll();
     versionClient
       .create(imodelId, { name, description, changeSetId: changeset.id })
       .then(() => {
         setIsLoading(false);
         onCreate();
-        toaster.positive(
+        useToaster().positive(
           stringsOverrides.messageVersionCreated.replace("{{name}}", name),
           {
             hasCloseButton: true,
@@ -71,7 +71,7 @@ export const CreateVersionModal = (props: CreateVersionModalProps) => {
       })
       .catch((e: ApimError) => {
         setIsLoading(false);
-        toaster.negative(getErrorMessage(e.code), {
+        useToaster().negative(getErrorMessage(e.code), {
           hasCloseButton: true,
         });
       });

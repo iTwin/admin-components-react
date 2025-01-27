@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { toaster } from "@itwin/itwinui-react";
+import { useToaster } from "@itwin/itwinui-react";
 import React from "react";
 
 import { NamedVersionClient } from "../../../clients/namedVersionClient";
@@ -47,13 +47,13 @@ export const UpdateVersionModal = (props: UpdateVersionModalProps) => {
 
   const onUpdateClick = (name: string, description: string) => {
     setIsLoading(true);
-    toaster.closeAll();
+    useToaster().closeAll();
     versionClient
       .update(imodelId, version.id, { name, description })
       .then(() => {
         setIsLoading(false);
         onUpdate();
-        toaster.positive(
+        useToaster().positive(
           stringsOverrides.messageVersionUpdated.replace("{{name}}", name),
           {
             hasCloseButton: true,
@@ -62,7 +62,7 @@ export const UpdateVersionModal = (props: UpdateVersionModalProps) => {
       })
       .catch((e: ApimError) => {
         setIsLoading(false);
-        toaster.negative(getErrorMessage(e.code), {
+        useToaster().negative(getErrorMessage(e.code), {
           hasCloseButton: true,
         });
       });

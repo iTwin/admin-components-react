@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import "./UploadImage.scss";
 
-import { FileUpload, FileUploadTemplate, toaster } from "@itwin/itwinui-react";
+import { FileUpload, FileUploadTemplate, useToaster } from "@itwin/itwinui-react";
 import React from "react";
 
 import { useIModelContext } from "../context/imodel-context";
@@ -72,7 +72,7 @@ export function UploadImage({
     const file: File = files[0];
     const error = ImageHelper.validateImage(file);
     if (!!error) {
-      toaster.negative(updatedStrings[error], {
+      useToaster().negative(updatedStrings[error], {
         hasCloseButton: true,
       });
       return;
@@ -81,7 +81,7 @@ export function UploadImage({
     const reader = new FileReader();
     reader.onloadend = () => {
       if (reader.error) {
-        toaster.negative(error, {
+        useToaster().negative(error, {
           hasCloseButton: true,
         });
         return;
