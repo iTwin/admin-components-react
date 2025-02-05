@@ -71,12 +71,12 @@ export const useIModelData = ({
   }, []);
 
   const fetchMore = React.useCallback(() => {
-    if (status === DataStatus.Fetching || !morePagesAvailable) {
+    if (needsUpdate || status === DataStatus.Fetching || !morePagesAvailable) {
       return;
     }
-    setPage((prev) => prev + 1);
+    setPage(page + 1);
     setNeedsUpdate(true);
-  }, [status, morePagesAvailable]);
+  }, [needsUpdate, status, morePagesAvailable, page]);
 
   React.useEffect(() => {
     // start from scratch when any external state changes
