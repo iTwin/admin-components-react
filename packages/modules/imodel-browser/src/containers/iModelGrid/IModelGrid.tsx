@@ -205,9 +205,12 @@ export const IModelGrid = ({
               />
             ))}
             {fetchMore ? (
-              <InView>
-                {({ inView, ref }) => {
+              <InView
+                onChange={(inView) => {
                   inView && fetchStatus !== DataStatus.Fetching && fetchMore();
+                }}
+              >
+                {({ ref }) => {
                   return <IModelGhostTile ref={ref} />;
                 }}
               </InView>

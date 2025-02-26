@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Thu, 16 Jan 2025 14:25:11 GMT and should not be manually modified.
+This log was last generated on Wed, 05 Feb 2025 12:32:34 GMT and should not be manually modified.
+
+## 2.3.2
+Wed, 05 Feb 2025 12:32:34 GMT
+
+### Patches
+
+- Fix iModel browser skipping pages
 
 ## 2.3.1
 Thu, 16 Jan 2025 14:25:11 GMT
