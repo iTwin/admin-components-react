@@ -31,7 +31,7 @@
     "clean": "rimraf cjs esm"
   },
   "dependencies": {
-    "@itwin/itwinui-react": "^3.16.5"  
+    "@itwin/itwinui-react": "~3.17.3"  
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "~17.1.0",

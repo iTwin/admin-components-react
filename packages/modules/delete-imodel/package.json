@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "@itwin/itwinui-icons-react": "^2.9.0",
-    "@itwin/itwinui-react": "^3.16.5"
+    "@itwin/itwinui-react": "~3.17.3"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "~17.1.0",

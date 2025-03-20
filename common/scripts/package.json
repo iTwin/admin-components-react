@@ -34,5 +34,8 @@
     "build": "",
     "clean": "",
     "test": ""
+  },
+  "dependencies": {
+    "@itwin/itwinui-react": "~3.17.3"
   }
 }

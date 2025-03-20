@@ -6,7 +6,8 @@
   "dependencies": {
     "@storybook/addons": "^6.5.16",
     "@storybook/api": "^6.5.16",
-    "@storybook/components": "^6.5.16"
+    "@storybook/components": "^6.5.16",
+    "@itwin/itwinui-react": "~3.17.3"
   },
   "devDependencies": {
     "@bentley/bentleyjs-core": "2.11.0",
