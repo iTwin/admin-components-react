@@ -24,6 +24,8 @@
     "@storybook/core-events": "^6.5.16",
     "@storybook/react": "^6.5.16",
     "@storybook/theming": "^6.5.16",
+    "@testing-library/dom": "~10.4.0",
+    "@testing-library/jest-dom": "~6.6.3",
     "@types/react": "^18.3.5",
     "@types/react-dom": "^18.3.0",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
@@ -45,9 +47,7 @@
     "react": "^18.3.1",
     "rimraf": "^3.0.2",
     "storybook-dark-mode": "^1.0.7",
-    "webpack": "^5.28.0",
-    "@testing-library/dom": "~10.4.0",
-    "@testing-library/jest-dom": "~6.6.3"
+    "webpack": "^5.28.0"
   },
   "scripts": {
     "start": "start-storybook -s ./node_modules/@itwin/storybook-auth-addon/build -p 6006",
