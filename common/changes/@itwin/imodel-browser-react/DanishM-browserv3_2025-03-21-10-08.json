@@ -3,7 +3,7 @@
     {
       "packageName": "@itwin/imodel-browser-react",
       "comment": "Updated imodel-browser-react to itwinui-react v3",
-      "type": "minor"
+      "type": "major"
     }
   ],
   "packageName": "@itwin/imodel-browser-react"
