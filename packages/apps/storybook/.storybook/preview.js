@@ -4,8 +4,10 @@
  *--------------------------------------------------------------------------------------------*/
 import React from "react";
 import { ThemeProvider } from "@itwin/itwinui-react";
+import { ThemeProvider as ThemeProviderV3 } from "@itwin/itwinui-react_v3";
 import addons from "@storybook/addons";
 import { themes } from "@storybook/theming";
+import "@itwin/itwinui-react_v3/styles.css";
 
 import { darkTheme, lightTheme } from "./itwinTheme";
 
@@ -30,21 +32,29 @@ export const parameters = {
   },
 };
 
+const useTheme = () => {
+  const [dark, setDark] = React.useState(false);
+
+  React.useEffect(() => {
+    channel.on("DARK_MODE", setDark);
+  }, []);
+
+  return dark ? "dark" : "light";
+}
+
 export const decorators = [
   (Story) => {
-    const [dark, setDark] = React.useState(false);
-
-    React.useEffect(() => {
-      channel.on("DARK_MODE", setDark);
-    }, []);
+    const theme = useTheme();
 
     return (
-      <ThemeProvider
+      <ThemeProviderV3
         style={{ background: "transparent" }}
-        theme={dark ? "dark" : "light"}
+        theme={theme}
       >
-        <Story />
-      </ThemeProvider>
+        <ThemeProvider style={{ background: "transparent" }} theme={theme}>
+          <Story />
+        </ThemeProvider>
+      </ThemeProviderV3>
     );
   },
 ];

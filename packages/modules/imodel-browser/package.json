@@ -31,8 +31,6 @@
     "esm/**/*"
   ],
   "dependencies": {
-    "@itwin/itwinui-icons-react": "^2.2.0",
-    "@itwin/itwinui-react": "^2.12.18",
     "classnames": "^2.2.6",
     "react-intersection-observer": "^8.31.1"
   },
@@ -86,6 +84,8 @@
   },
   "peerDependencies": {
     "react": "^17.0.2 || 18.3.1",
-    "react-dom": "^17.0.2 || 18.3.1"
+    "react-dom": "^17.0.2 || 18.3.1",
+    "@itwin/itwinui-icons-react": "^2.2.0",
+    "@itwin/itwinui-react": "^3.17.3"
   }
 }
