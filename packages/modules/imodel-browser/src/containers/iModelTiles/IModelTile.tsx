@@ -2,6 +2,8 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+import "./IModelTile.scss";
+
 import { ThemeProvider, Tile } from "@itwin/itwinui-react";
 import React from "react";
 
