@@ -43,7 +43,24 @@ export const IModelTile = ({
   tileProps,
   refetchIModels,
 }: IModelTileProps) => {
-  const moreOptions = React.useMemo(
+  const {
+    name,
+    status,
+    isNew,
+    isLoading,
+    isSelected,
+    thumbnail,
+    badge,
+    leftIcon,
+    rightIcon,
+    buttons,
+    moreOptions,
+    isDisabled,
+    onClick,
+    ...rest
+  } = tileProps as TileProps;
+
+  const moreOptionsBuilt = React.useMemo(
     () =>
       _buildManagedContextMenuOptions(
         iModelOptions,
@@ -63,23 +80,42 @@ export const IModelTile = ({
 
   return (
     <ThemeProvider theme="inherit">
-      <Tile.Wrapper key={iModel?.id} {...(tileProps ?? {})}>
+      <Tile.Wrapper
+        key={iModel?.id}
+        isNew={isNew}
+        isSelected={isSelected}
+        isLoading={isLoading}
+        status={status}
+        isDisabled={isDisabled}
+        {...rest}
+      >
         <Tile.Action
-          onClick={() => onThumbnailClick?.(iModel)}
+          onClick={(e) => onClick?.(e) ?? onThumbnailClick?.(iModel)}
           aria-label={`Select iModel ${iModel.id}`}
+          aria-disabled={isDisabled}
         >
           <Tile.ThumbnailArea>
-            <IModelThumbnail
-              iModelId={iModel.id}
-              accessToken={accessToken}
-              apiOverrides={thumbnailApiOverride}
-            />
+            {thumbnail ? (
+              <Tile.ThumbnailPicture>{thumbnail}</Tile.ThumbnailPicture>
+            ) : (
+              <IModelThumbnail
+                iModelId={iModel.id}
+                accessToken={accessToken}
+                apiOverrides={thumbnailApiOverride}
+              />
+            )}
+            {badge && <Tile.BadgeContainer>{badge}</Tile.BadgeContainer>}
+            {leftIcon && <Tile.TypeIndicator>{leftIcon}</Tile.TypeIndicator>}
+            {rightIcon && <Tile.QuickAction>{rightIcon}</Tile.QuickAction>}
           </Tile.ThumbnailArea>
         </Tile.Action>
         <Tile.Name>
-          <Tile.NameLabel>{iModel?.displayName}</Tile.NameLabel>
+          <Tile.NameLabel>{name ?? iModel?.displayName}</Tile.NameLabel>
         </Tile.Name>
-        <Tile.MoreOptions>{moreOptions}</Tile.MoreOptions>
+        {(moreOptions || moreOptionsBuilt) && (
+          <Tile.MoreOptions>{moreOptions ?? moreOptionsBuilt}</Tile.MoreOptions>
+        )}
+        {buttons && <Tile.Buttons>{buttons}</Tile.Buttons>}
       </Tile.Wrapper>
     </ThemeProvider>
   );

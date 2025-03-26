@@ -62,6 +62,26 @@ export const ITwinTile = ({
   removeFromFavorites,
   refetchITwins,
 }: ITwinTileProps) => {
+  const {
+    name,
+    description,
+    status,
+    isNew,
+    isLoading,
+    isSelected,
+    thumbnail,
+    badge,
+    leftIcon,
+    rightIcon,
+    buttons,
+    metadata,
+    moreOptions,
+    children,
+    isDisabled,
+    onClick,
+    ...rest
+  } = tileProps ?? {};
+
   const strings = _mergeStrings(
     {
       trialBadge: "Trial",
@@ -73,7 +93,7 @@ export const ITwinTile = ({
     stringsOverrides
   );
 
-  const moreOptions = React.useMemo(
+  const moreOptionsBuilt = React.useMemo(
     () =>
       _buildManagedContextMenuOptions(
         iTwinOptions,
@@ -85,58 +105,81 @@ export const ITwinTile = ({
   );
   return (
     <ThemeProvider theme="inherit">
-      <Tile.Wrapper key={iTwin?.id} {...(tileProps ?? {})}>
+      <Tile.Wrapper
+        key={iTwin?.id}
+        isNew={isNew}
+        isSelected={isSelected}
+        isLoading={isLoading}
+        status={status}
+        isDisabled={isDisabled}
+        {...rest}
+      >
         <Tile.Action
-          onClick={() => onThumbnailClick?.(iTwin)}
+          onClick={(e) => onClick?.(e) ?? onThumbnailClick?.(iTwin)}
           aria-label={
             onThumbnailClick ? `${strings.navigateToITwin} ${iTwin?.id}` : ""
           }
+          aria-disabled={isDisabled}
         >
           <Tile.ThumbnailArea>
             <Tile.BadgeContainer>
-              {iTwin?.status &&
-                iTwin.status.toLocaleLowerCase() !== "active" && (
-                  <Badge
-                    backgroundColor={
-                      iTwin.status.toLocaleLowerCase() === "inactive"
-                        ? "oak"
-                        : "steelblue"
-                    }
-                  >
-                    {iTwin.status.toLocaleLowerCase() === "inactive"
-                      ? strings.inactiveBadge
-                      : strings.trialBadge}
-                  </Badge>
-                )}
+              {badge ??
+                (iTwin?.status &&
+                  iTwin.status.toLocaleLowerCase() !== "active" && (
+                    <Badge
+                      backgroundColor={
+                        iTwin.status.toLocaleLowerCase() === "inactive"
+                          ? "oak"
+                          : "steelblue"
+                      }
+                    >
+                      {iTwin.status.toLocaleLowerCase() === "inactive"
+                        ? strings.inactiveBadge
+                        : strings.trialBadge}
+                    </Badge>
+                  ))}
             </Tile.BadgeContainer>
             <Tile.ThumbnailPicture
               style={{ cursor: onThumbnailClick ? "pointer" : "auto" }}
             >
-              <ITwinIcon />
+              {thumbnail ?? <ITwinIcon />}
             </Tile.ThumbnailPicture>
+            {leftIcon && <Tile.TypeIndicator>{leftIcon}</Tile.TypeIndicator>}
+            {rightIcon && <Tile.QuickAction>{rightIcon}</Tile.QuickAction>}
           </Tile.ThumbnailArea>
         </Tile.Action>
         <Tile.Name>
-          <Tile.NameLabel>{iTwin?.displayName}</Tile.NameLabel>
+          {(status || isNew || isLoading || isSelected) && <Tile.NameIcon />}
+          <Tile.NameLabel>{name ?? iTwin?.displayName}</Tile.NameLabel>
         </Tile.Name>
         <Tile.ContentArea>
-          <Tile.Description>{iTwin?.number ?? ""}</Tile.Description>
+          <Tile.Description>
+            {description ?? iTwin?.number ?? ""}
+          </Tile.Description>
+          {metadata && <Tile.Metadata>{metadata}</Tile.Metadata>}
+          {children}
         </Tile.ContentArea>
-        <Tile.MoreOptions>{moreOptions}</Tile.MoreOptions>
+        {(moreOptions || moreOptionsBuilt) && (
+          <Tile.MoreOptions>{moreOptions ?? moreOptionsBuilt}</Tile.MoreOptions>
+        )}
         <Tile.Buttons>
-          <IconButton
-            aria-label={
-              isFavorite ? strings.removeFromFavorites : strings.addToFavorites
-            }
-            onClick={async () => {
-              isFavorite
-                ? await removeFromFavorites?.(iTwin.id)
-                : await addToFavorites?.(iTwin.id);
-            }}
-            styleType="borderless"
-          >
-            {isFavorite ? <SvgStar /> : <SvgStarHollow />}
-          </IconButton>
+          {buttons ?? (
+            <IconButton
+              aria-label={
+                isFavorite
+                  ? strings.removeFromFavorites
+                  : strings.addToFavorites
+              }
+              onClick={async () => {
+                isFavorite
+                  ? await removeFromFavorites?.(iTwin?.id)
+                  : await addToFavorites?.(iTwin?.id);
+              }}
+              styleType="borderless"
+            >
+              {isFavorite ? <SvgStar /> : <SvgStarHollow />}
+            </IconButton>
+          )}
         </Tile.Buttons>
       </Tile.Wrapper>
     </ThemeProvider>
