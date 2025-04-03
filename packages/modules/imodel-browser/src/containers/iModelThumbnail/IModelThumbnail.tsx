@@ -2,7 +2,6 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import "./IModelThumbnail.scss";
 
 import { Text, Tile } from "@itwin/itwinui-react";
 import classNames from "classnames";
