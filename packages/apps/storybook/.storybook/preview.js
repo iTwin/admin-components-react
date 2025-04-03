@@ -4,10 +4,8 @@
  *--------------------------------------------------------------------------------------------*/
 import React from "react";
 import { ThemeProvider } from "@itwin/itwinui-react";
-import { ThemeProvider as ThemeProviderV3 } from "@itwin/itwinui-react_v3";
 import addons from "@storybook/addons";
 import { themes } from "@storybook/theming";
-import "@itwin/itwinui-react_v3/styles.css";
 
 import { darkTheme, lightTheme } from "./itwinTheme";
 
@@ -47,14 +45,9 @@ export const decorators = [
     const theme = useTheme();
 
     return (
-      <ThemeProviderV3
-        style={{ background: "transparent" }}
-        theme={theme}
-      >
         <ThemeProvider style={{ background: "transparent" }} theme={theme}>
           <Story />
         </ThemeProvider>
-      </ThemeProviderV3>
     );
   },
 ];

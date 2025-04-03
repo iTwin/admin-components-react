@@ -11,28 +11,24 @@ import React, { forwardRef } from "react";
 export const IModelGhostTile = forwardRef<HTMLDivElement>((props, ref) => {
   return (
     <ThemeProvider ref={ref} theme="inherit" {...props}>
-      <Tile
-        name={
-          <span
-            className={"iui-skeleton"}
-            style={{ width: "180px", margin: 0 }}
-          >
-            <br />
-          </span>
-        }
-        description={
-          <span className={"iui-skeleton"} style={{ width: "100%" }}>
-            <br />
-            <br />
-          </span>
-        }
-        thumbnail={
-          <span
+      <Tile.Wrapper>
+        <Tile.Name
+          className={"iui-skeleton"}
+          style={{ width: "180px", margin: 0 }}
+        >
+          <br />
+        </Tile.Name>
+        <Tile.Description className={"iui-skeleton"} style={{ width: "100%" }}>
+          <br />
+          <br />
+        </Tile.Description>
+        <Tile.ThumbnailArea>
+          <Tile.ThumbnailPicture
             className={"iui-skeleton"}
             style={{ height: "100%", width: "100%", margin: 0 }}
-          ></span>
-        }
-      />
+          />
+        </Tile.ThumbnailArea>
+      </Tile.Wrapper>
     </ThemeProvider>
   );
 });
