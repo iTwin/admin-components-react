@@ -14,30 +14,28 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x]
+        node-version: [20.x]
 
     steps:
-    - uses: actions/checkout@v2
-      with:
-        token: ${{ secrets.PUBLISH_PAT }}
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: |
-        set -e
-        export BROWSERSLIST_IGNORE_OLD_DATA=1
-
-        echo 'Installing...'
-        node common/scripts/install-run-rush.js install
-        
-        echo 'Building...'
-        node common/scripts/install-run-rush.js rebuild
-             
-        echo 'Publishing...'
-        git config user.name "AdminComponentsWorkflow"
-        git config user.email "admincomponents@users.noreply.github.com"
-        node common/scripts/install-run-rush.js version --bump --target-branch main
-        node common/scripts/install-run-rush.js publish --include-all --set-access-level public --apply --publish --npm-auth-token $NPM_TOKEN --target-branch main --suffix alpha
-      env:
-        NPM_TOKEN: ${{ secrets.NPMJS_PUBLISH_ITWIN }}
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.IMJS_ADMIN_GH_TOKEN }}
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: |
+          set -e
+          echo 'Installing...'
+          node common/scripts/install-run-rush.js install
+          
+          echo 'Building...'
+          node common/scripts/install-run-rush.js rebuild
+              
+          echo 'Publishing...'
+          git config user.name "imodeljs-admin"
+          git config user.email "imodeljs-admin@users.noreply.github.com"
+          node common/scripts/install-run-rush.js version --bump --target-branch main
+          node common/scripts/install-run-rush.js publish --include-all --set-access-level public --apply --publish --npm-auth-token $NPM_TOKEN --target-branch main --suffix alpha
+        env:
+          NPM_TOKEN: ${{ secrets.NPMJS_PUBLISH_ITWIN }}
