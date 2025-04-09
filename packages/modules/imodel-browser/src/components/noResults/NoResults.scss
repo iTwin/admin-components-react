@@ -20,5 +20,13 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: var(--iui-size-2xs);
+
+    > svg {
+      height: var(--iui-size-2xl);
+      width: var(--iui-size-2xl);
+      fill: var(--iui-color-icon-muted);
+      margin-bottom: var(--iui-size-2xs);
+    }
   }
 }
