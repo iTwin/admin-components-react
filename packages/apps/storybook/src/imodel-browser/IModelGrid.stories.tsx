@@ -15,6 +15,7 @@ import {
   DropdownButton,
   LabeledInput,
   MenuItem,
+  MenuItemSkeleton,
   Text,
   Tile,
 } from "@itwin/itwinui-react";
@@ -86,19 +87,19 @@ IndividualContextMenu.args = {
       children: "displayName contains 'R'",
       visible: (iModel) => iModel.displayName?.includes("R") ?? false,
       key: "withR",
-      onClick: (iModel) => alert("Contains R" + iModel.displayName),
+      onClick: (iModel) => alert("Contains R" + iModel?.displayName),
     },
     {
       children: "Add description",
       visible: (iModel) => !iModel.description,
       key: "addD",
-      onClick: (iModel) => alert("Add description" + iModel.displayName),
+      onClick: (iModel) => alert("Add description" + iModel?.displayName),
     },
     {
       children: "Edit description",
       visible: (iModel) => !!iModel.description,
       key: "editD",
-      onClick: (iModel) => alert("Edit description" + iModel.displayName),
+      onClick: (iModel) => alert("Edit description" + iModel?.displayName),
     },
   ],
 };
@@ -130,16 +131,19 @@ const buildMenuItems =
           event.stopPropagation();
         }}
       >
-        <MenuItem
-          key={v.id}
-          onClick={() => {
-            close();
-            v.id !== "loading" && setVersion(v);
-          }}
-          className={v.id === "loading" ? "iui-skeleton" : undefined}
-        >
-          {v.displayName}
-        </MenuItem>
+        {v.id === "loading" ? (
+          <MenuItemSkeleton />
+        ) : (
+          <MenuItem
+            key={v.id}
+            onClick={() => {
+              close();
+              v.id !== "loading" && setVersion(v);
+            }}
+          >
+            {v.displayName}
+          </MenuItem>
+        )}
       </span>
     );
 

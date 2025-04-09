@@ -243,7 +243,6 @@ export const ITwinGrid = ({
         }
         isLoading={fetchStatus === DataStatus.Fetching}
         onBottomReached={fetchMore}
-        className="iac-list-structure"
         autoResetFilters={false}
         autoResetSortBy={false}
       />

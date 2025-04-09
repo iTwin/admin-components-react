@@ -2,8 +2,6 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import "./IModelGrid.scss";
-
 import { Table, ThemeProvider } from "@itwin/itwinui-react";
 import React from "react";
 import { InView } from "react-intersection-observer";
@@ -253,7 +251,6 @@ export const IModelGrid = ({
               }}
               manualSortBy
               onBottomReached={fetchMore}
-              className="iac-list-structure"
               autoResetFilters={false}
               autoResetSortBy={false}
             />

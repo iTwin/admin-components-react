@@ -14,6 +14,7 @@ import {
   Code,
   DropdownButton,
   MenuItem,
+  MenuItemSkeleton,
   Text,
   Tile,
 } from "@itwin/itwinui-react";
@@ -76,19 +77,19 @@ IndividualContextMenu.args = {
       children: "displayName contains 'R'",
       visible: (iTwin) => iTwin.displayName?.includes("R") ?? false,
       key: "withR",
-      onClick: (iTwin) => alert("Contains R" + iTwin.displayName),
+      onClick: (iTwin) => alert("Contains R" + iTwin?.displayName),
     },
     {
       children: "Add iTwinNumber",
       visible: (iTwin) => !iTwin.number,
       key: "addD",
-      onClick: (iTwin) => alert("Add iTwinNumber to " + iTwin.displayName),
+      onClick: (iTwin) => alert("Add iTwinNumber to " + iTwin?.displayName),
     },
     {
       children: "Edit iTwinNumber",
       visible: (iTwin) => !!iTwin.number,
       key: "editD",
-      onClick: (iTwin) => alert("Edit iTwinNumber: " + iTwin.number),
+      onClick: (iTwin) => alert("Edit iTwinNumber: " + iTwin?.number),
     },
   ],
 };
@@ -125,16 +126,19 @@ const buildMenuItems =
           event.stopPropagation();
         }}
       >
-        <MenuItem
-          key={v.id}
-          onClick={() => {
-            close();
-            v.id !== "loading" && setVersion(v);
-          }}
-          className={v.id === "loading" ? "iui-skeleton" : undefined}
-        >
-          {v.displayName}
-        </MenuItem>
+        {v.id === "loading" ? (
+          <MenuItemSkeleton />
+        ) : (
+          <MenuItem
+            key={v.id}
+            onClick={() => {
+              close();
+              v.id !== "loading" && setVersion(v);
+            }}
+          >
+            {v.displayName}
+          </MenuItem>
+        )}
       </span>
     );
 

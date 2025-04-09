@@ -30,21 +30,24 @@ export const parameters = {
   },
 };
 
+const useTheme = () => {
+  const [dark, setDark] = React.useState(false);
+
+  React.useEffect(() => {
+    channel.on("DARK_MODE", setDark);
+  }, []);
+
+  return dark ? "dark" : "light";
+}
+
 export const decorators = [
   (Story) => {
-    const [dark, setDark] = React.useState(false);
-
-    React.useEffect(() => {
-      channel.on("DARK_MODE", setDark);
-    }, []);
+    const theme = useTheme();
 
     return (
-      <ThemeProvider
-        style={{ background: "transparent" }}
-        theme={dark ? "dark" : "light"}
-      >
-        <Story />
-      </ThemeProvider>
+        <ThemeProvider style={{ background: "transparent" }} theme={theme}>
+          <Story />
+        </ThemeProvider>
     );
   },
 ];
