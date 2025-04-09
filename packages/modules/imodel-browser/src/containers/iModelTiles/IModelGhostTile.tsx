@@ -12,20 +12,21 @@ export const IModelGhostTile = forwardRef<HTMLDivElement>((props, ref) => {
   return (
     <ThemeProvider ref={ref} theme="inherit" {...props}>
       <Tile.Wrapper>
-        <Tile.Name style={{ width: "180px", margin: 0 }}>
-          <br />
-        </Tile.Name>
-        <Tile.Description style={{ width: "100%" }}>
-          <Text isSkeleton />
-          <br />
-          <br />
-        </Tile.Description>
         <Tile.ThumbnailArea>
-          <Tile.ThumbnailPicture
-            style={{ height: "100%", width: "100%", margin: 0 }}
-          />
-          <Text isSkeleton />
+          <Text isSkeleton>Skeleton</Text>
         </Tile.ThumbnailArea>
+        <Tile.Name>
+          <Text isSkeleton variant="leading">
+            Skeleton Name
+          </Text>
+        </Tile.Name>
+        <Tile.ContentArea>
+          <Tile.Description>
+            <Text isSkeleton variant="title">
+              Skeleton Description
+            </Text>
+          </Tile.Description>
+        </Tile.ContentArea>
       </Tile.Wrapper>
     </ThemeProvider>
   );
