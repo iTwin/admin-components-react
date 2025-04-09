@@ -9,10 +9,37 @@
 //
 // For more information, see: https://rushjs.io/pages/maintainer/setup_new_repo/
 
-/*---------------------------------------------------------------------------------------------
- * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
- * See LICENSE.md in the project root for license terms and full copyright notice.
- *--------------------------------------------------------------------------------------------*/
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+/******/ 	var __webpack_modules__ = ({
+
+/***/ 679877:
+/*!************************************************!*\
+  !*** ./lib-esnext/utilities/npmrcUtilities.js ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "isVariableSetInNpmrcFile": () => (/* binding */ isVariableSetInNpmrcFile),
+/* harmony export */   "syncNpmrc": () => (/* binding */ syncNpmrc)
+/* harmony export */ });
+/* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! fs */ 657147);
+/* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(fs__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var path__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! path */ 371017);
+/* harmony import */ var path__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(path__WEBPACK_IMPORTED_MODULE_1__);
+// Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
+// See LICENSE in the project root for license information.
+// IMPORTANT - do not use any non-built-in libraries in this file
+
+
+/**
+ * This function reads the content for given .npmrc file path, and also trims
+ * unusable lines from the .npmrc file.
+ *
+ * @returns
+ * The text of the the .npmrc.
+ */
 // create a global _combinedNpmrc for cache purpose
 const _combinedNpmrcMap = new Map();
 function _trimNpmrcFile(sourceNpmrcPath) {
