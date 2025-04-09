@@ -111,9 +111,11 @@ export const IModelTile = ({
       <Tile.Name>
         <Tile.NameLabel>{name ?? iModel?.displayName}</Tile.NameLabel>
       </Tile.Name>
-      {(moreOptions || moreOptionsBuilt) && (
-        <Tile.MoreOptions>{moreOptions ?? moreOptionsBuilt}</Tile.MoreOptions>
-      )}
+      <Tile.ContentArea>
+        {(moreOptions || moreOptionsBuilt) && (
+          <Tile.MoreOptions>{moreOptions ?? moreOptionsBuilt}</Tile.MoreOptions>
+        )}
+      </Tile.ContentArea>
       {buttons && <Tile.Buttons>{buttons}</Tile.Buttons>}
     </Tile.Wrapper>
   );

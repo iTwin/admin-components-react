@@ -44,7 +44,7 @@ export const IModelThumbnail = ({
   );
   return thumbnail ? (
     <Tile.ThumbnailPicture
-      url={`${thumbnail}`}
+      url={thumbnail}
       ref={ref}
       className={classNames("iac-thumbnail", className)}
     />

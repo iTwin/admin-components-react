@@ -2,11 +2,10 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { SvgStar, SvgStarHollow } from "@itwin/itwinui-icons-react";
+import { SvgItwin, SvgStar, SvgStarHollow } from "@itwin/itwinui-icons-react";
 import { Badge, IconButton, ThemeProvider, Tile } from "@itwin/itwinui-react";
 import React from "react";
 
-import ITwinIcon from "../../images/itwin.svg";
 import { ITwinFull } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
 import {
@@ -122,6 +121,25 @@ export const ITwinTile = ({
           aria-disabled={isDisabled}
         >
           <Tile.ThumbnailArea>
+            <Tile.QuickAction>
+              {buttons ?? (
+                <IconButton
+                  aria-label={
+                    isFavorite
+                      ? strings.removeFromFavorites
+                      : strings.addToFavorites
+                  }
+                  onClick={async () => {
+                    isFavorite
+                      ? await removeFromFavorites?.(iTwin?.id)
+                      : await addToFavorites?.(iTwin?.id);
+                  }}
+                  styleType="borderless"
+                >
+                  {isFavorite ? <SvgStar /> : <SvgStarHollow />}
+                </IconButton>
+              )}
+            </Tile.QuickAction>
             <Tile.BadgeContainer>
               {badge ??
                 (iTwin?.status &&
@@ -142,7 +160,7 @@ export const ITwinTile = ({
             <Tile.ThumbnailPicture
               style={{ cursor: onThumbnailClick ? "pointer" : "auto" }}
             >
-              {thumbnail ?? <ITwinIcon />}
+              {thumbnail ?? <SvgItwin />}
             </Tile.ThumbnailPicture>
             {leftIcon && <Tile.TypeIndicator>{leftIcon}</Tile.TypeIndicator>}
             {rightIcon && <Tile.QuickAction>{rightIcon}</Tile.QuickAction>}
@@ -158,29 +176,12 @@ export const ITwinTile = ({
           </Tile.Description>
           {metadata && <Tile.Metadata>{metadata}</Tile.Metadata>}
           {children}
-        </Tile.ContentArea>
-        {(moreOptions || moreOptionsBuilt) && (
-          <Tile.MoreOptions>{moreOptions ?? moreOptionsBuilt}</Tile.MoreOptions>
-        )}
-        <Tile.Buttons>
-          {buttons ?? (
-            <IconButton
-              aria-label={
-                isFavorite
-                  ? strings.removeFromFavorites
-                  : strings.addToFavorites
-              }
-              onClick={async () => {
-                isFavorite
-                  ? await removeFromFavorites?.(iTwin?.id)
-                  : await addToFavorites?.(iTwin?.id);
-              }}
-              styleType="borderless"
-            >
-              {isFavorite ? <SvgStar /> : <SvgStarHollow />}
-            </IconButton>
+          {(moreOptions || moreOptionsBuilt) && (
+            <Tile.MoreOptions>
+              {moreOptions ?? moreOptionsBuilt}
+            </Tile.MoreOptions>
           )}
-        </Tile.Buttons>
+        </Tile.ContentArea>
       </Tile.Wrapper>
     </ThemeProvider>
   );
