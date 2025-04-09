@@ -30,7 +30,7 @@ jobs:
           node common/scripts/install-run-rush.js install
           
           echo 'Building...'
-          node common/scripts/install-run-rush.js rebuild
+          node common/scripts/install-run-rush.js build
               
           echo 'Publishing...'
           git config user.name "imodeljs-admin"

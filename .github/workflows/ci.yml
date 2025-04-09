@@ -38,7 +38,7 @@ jobs:
           node common/scripts/install-run-rush.js change -v
 
           echo 'Building...'
-          node common/scripts/install-run-rush.js rebuild
+          node common/scripts/install-run-rush.js build
 
           echo 'Testing...'
           node common/scripts/install-run-rush.js test --verbose
