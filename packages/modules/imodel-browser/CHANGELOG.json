@@ -2,6 +2,18 @@
   "name": "@itwin/imodel-browser-react",
   "entries": [
     {
+      "version": "3.0.0",
+      "tag": "@itwin/imodel-browser-react_v3.0.0",
+      "date": "Wed, 09 Apr 2025 20:07:16 GMT",
+      "comments": {
+        "major": [
+          {
+            "comment": "Updated imodel-browser-react to itwinui-react 3.17.3\n Removed support for react 17.x"
+          }
+        ]
+      }
+    },
+    {
       "version": "2.3.2",
       "tag": "@itwin/imodel-browser-react_v2.3.2",
       "date": "Wed, 05 Feb 2025 12:32:34 GMT",

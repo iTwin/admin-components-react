@@ -55,10 +55,7 @@ export const useIModelTableConfig = ({
             accessor: "name",
             maxWidth: 350,
             Cell: (props: CellProps<IModelFull>) => (
-              <div
-                data-tip={props.row.original.name}
-                className="iac-iModelCell"
-              >
+              <div data-tip={props.row.original.name}>
                 <span>{props.value}</span>
               </div>
             ),
