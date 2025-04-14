@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Wed, 09 Apr 2025 20:07:16 GMT and should not be manually modified.
+This log was last generated on Mon, 14 Apr 2025 18:32:24 GMT and should not be manually modified.
+
+## 3.0.1
+Mon, 14 Apr 2025 18:32:24 GMT
+
+### Patches
+
+- Fixed imodel descriptions not visible in iModelGrid
 
 ## 3.0.0
 Wed, 09 Apr 2025 20:07:16 GMT
