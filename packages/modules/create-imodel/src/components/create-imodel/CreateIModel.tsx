@@ -74,6 +74,19 @@ export type CreateIModelProps = {
   extentComponent?: React.ReactNode;
   /** Extent value that should be gotten from the `extentComponent`. */
   extent?: iModelExtent | null;
+  /** Creation Mode of iModel */
+  creationMode?: "empty" | "fromiModelVersion" | "fromBaseline";
+  /** geographicCoordinateSystem if for CRS is selected on iModel creation*/
+  geographicCoordinateSystem?: { horizontalCRSId: string };
+  /** Template to create iModel From version*/
+  template?: {
+    iModelId: string;
+    changesetId: string;
+  };
+  //**Used for describing Baseline File in bytes during iModel creation. */
+  baselineFile?: {
+    size: number;
+  };
   children?: React.ReactNode;
 };
 
@@ -88,6 +101,10 @@ export function CreateIModel(props: CreateIModelProps) {
     iTwinId,
     extentComponent,
     extent,
+    creationMode = "empty",
+    geographicCoordinateSystem,
+    template,
+    baselineFile,
   } = props;
   const [isLoading, setIsLoading] = React.useState(false);
 
@@ -124,6 +141,10 @@ export function CreateIModel(props: CreateIModelProps) {
           name: imodel.name,
           description: imodel.description,
           extent: imodel.extent,
+          creationMode,
+          geographicCoordinateSystem,
+          template,
+          baselineFile,
         }),
       });
       if (!response.ok) {

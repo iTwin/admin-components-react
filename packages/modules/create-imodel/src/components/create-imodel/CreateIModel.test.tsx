@@ -60,6 +60,7 @@ describe("CreateIModel", () => {
           iTwinId: "de47c5ad-5657-42b8-a2bc-f2b8bf84cd4b",
           name: "Some name",
           description: "",
+          creationMode: "empty",
         }),
       }
     );
@@ -116,6 +117,7 @@ describe("CreateIModel", () => {
             northEast: { latitude: 3, longitude: 4 },
             southWest: { latitude: 1, longitude: 2 },
           },
+          creationMode: "empty",
         }),
       }
     );
@@ -162,6 +164,7 @@ describe("CreateIModel", () => {
           iTwinId: "de47c5ad-5657-42b8-a2bc-f2b8bf84cd4b",
           name: "Some name",
           description: "",
+          creationMode: "empty",
         }),
       }
     );
