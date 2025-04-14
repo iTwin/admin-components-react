@@ -112,6 +112,7 @@ export const IModelTile = ({
         <Tile.NameLabel>{name ?? iModel?.displayName}</Tile.NameLabel>
       </Tile.Name>
       <Tile.ContentArea>
+        <Tile.Description>{iModel?.description ?? ""}</Tile.Description>
         {(moreOptions || moreOptionsBuilt) && (
           <Tile.MoreOptions>{moreOptions ?? moreOptionsBuilt}</Tile.MoreOptions>
         )}
