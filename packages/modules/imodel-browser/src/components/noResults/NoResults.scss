@@ -14,8 +14,7 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  margin-top: var(--iui-size-m);
-  margin-bottom: var(--iui-size-m);
+  margin: 1em;
 
   .iac-no-results {
     display: flex;
@@ -28,10 +27,6 @@
       width: var(--iui-size-2xl);
       fill: var(--iui-color-icon-muted);
       margin-bottom: var(--iui-size-2xs);
-    }
-
-    .iui-text-leading {
-      font-weight: var(--iui-font-weight-semibold);
     }
   }
 }
