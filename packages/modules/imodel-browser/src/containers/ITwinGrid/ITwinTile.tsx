@@ -32,8 +32,6 @@ export interface ITwinTileProps {
     addToFavorites?: string;
     /** Accessible text for the full star icon to remove the iTwin from favorites */
     removeFromFavorites?: string;
-    /** Accessible text for the thumbnail icon to navigate to the iTwin */
-    navigateToITwin?: string;
   };
   /** Tile props that will be applied after normal use. (Will override ITwinTile if used) */
   tileProps?: Partial<TileProps>;
@@ -87,7 +85,6 @@ export const ITwinTile = ({
       inactiveBadge: "Inactive",
       addToFavorites: "Add to favorites",
       removeFromFavorites: "Remove from favorites",
-      navigateToITwin: "Navigate to iTwin",
     },
     stringsOverrides
   );
