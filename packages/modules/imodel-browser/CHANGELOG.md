@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Mon, 14 Apr 2025 18:32:24 GMT and should not be manually modified.
+This log was last generated on Thu, 17 Apr 2025 14:42:55 GMT and should not be manually modified.
+
+## 3.0.2
+Thu, 17 Apr 2025 14:42:55 GMT
+
+### Patches
+
+- Fix iModelBrowser menu items opening the iModel in table view
 
 ## 3.0.1
 Mon, 14 Apr 2025 18:32:24 GMT
