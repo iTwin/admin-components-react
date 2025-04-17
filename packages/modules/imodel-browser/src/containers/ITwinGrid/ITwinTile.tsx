@@ -129,7 +129,8 @@ export const ITwinTile = ({
                       ? strings.removeFromFavorites
                       : strings.addToFavorites
                   }
-                  onClick={async () => {
+                  onClick={async (e) => {
+                    e.stopPropagation();
                     isFavorite
                       ? await removeFromFavorites?.(iTwin?.id)
                       : await addToFavorites?.(iTwin?.id);
