@@ -113,64 +113,65 @@ export const ITwinTile = ({
         isDisabled={isDisabled}
         {...rest}
       >
-        <Tile.Action
-          onClick={(e) => onClick?.(e) ?? onThumbnailClick?.(iTwin)}
-          aria-label={
-            onThumbnailClick ? `${strings.navigateToITwin} ${iTwin?.id}` : ""
-          }
-          aria-disabled={isDisabled}
-        >
-          <Tile.ThumbnailArea>
-            <Tile.QuickAction>
-              {buttons ?? (
-                <IconButton
-                  aria-label={
-                    isFavorite
-                      ? strings.removeFromFavorites
-                      : strings.addToFavorites
-                  }
-                  onClick={async (e) => {
-                    e.stopPropagation();
-                    isFavorite
-                      ? await removeFromFavorites?.(iTwin?.id)
-                      : await addToFavorites?.(iTwin?.id);
-                  }}
-                  styleType="borderless"
-                >
-                  {isFavorite ? <SvgStar /> : <SvgStarHollow />}
-                </IconButton>
-              )}
-            </Tile.QuickAction>
-            <Tile.BadgeContainer>
-              {badge ??
-                (iTwin?.status &&
-                  iTwin.status.toLocaleLowerCase() !== "active" && (
-                    <Badge
-                      backgroundColor={
-                        iTwin.status.toLocaleLowerCase() === "inactive"
-                          ? "oak"
-                          : "steelblue"
-                      }
-                    >
-                      {iTwin.status.toLocaleLowerCase() === "inactive"
-                        ? strings.inactiveBadge
-                        : strings.trialBadge}
-                    </Badge>
-                  ))}
-            </Tile.BadgeContainer>
-            <Tile.ThumbnailPicture
-              style={{ cursor: onThumbnailClick ? "pointer" : "auto" }}
-            >
-              {thumbnail ?? <SvgItwin />}
-            </Tile.ThumbnailPicture>
-            {leftIcon && <Tile.TypeIndicator>{leftIcon}</Tile.TypeIndicator>}
-            {rightIcon && <Tile.QuickAction>{rightIcon}</Tile.QuickAction>}
-          </Tile.ThumbnailArea>
-        </Tile.Action>
         <Tile.Name>
           {(status || isNew || isLoading || isSelected) && <Tile.NameIcon />}
-          <Tile.NameLabel>{name ?? iTwin?.displayName}</Tile.NameLabel>
+          <Tile.NameLabel>
+            <Tile.Action
+              onClick={(e) => onClick?.(e) ?? onThumbnailClick?.(iTwin)}
+              aria-label={
+                onThumbnailClick
+                  ? `${strings.navigateToITwin} ${iTwin?.id}`
+                  : ""
+              }
+              aria-disabled={isDisabled}
+            >
+              {name ?? iTwin?.displayName}
+            </Tile.Action>
+          </Tile.NameLabel>
         </Tile.Name>
+        <Tile.ThumbnailArea>
+          {leftIcon && <Tile.TypeIndicator>{leftIcon}</Tile.TypeIndicator>}
+          <Tile.QuickAction>
+            {rightIcon}
+            <IconButton
+              aria-label={
+                isFavorite
+                  ? strings.removeFromFavorites
+                  : strings.addToFavorites
+              }
+              onClick={async () => {
+                isFavorite
+                  ? await removeFromFavorites?.(iTwin?.id)
+                  : await addToFavorites?.(iTwin?.id);
+              }}
+              styleType="borderless"
+            >
+              {isFavorite ? <SvgStar /> : <SvgStarHollow />}
+            </IconButton>
+          </Tile.QuickAction>
+          <Tile.BadgeContainer>
+            {badge ??
+              (iTwin?.status &&
+                iTwin.status.toLocaleLowerCase() !== "active" && (
+                  <Badge
+                    backgroundColor={
+                      iTwin.status.toLocaleLowerCase() === "inactive"
+                        ? "oak"
+                        : "steelblue"
+                    }
+                  >
+                    {iTwin.status.toLocaleLowerCase() === "inactive"
+                      ? strings.inactiveBadge
+                      : strings.trialBadge}
+                  </Badge>
+                ))}
+          </Tile.BadgeContainer>
+          <Tile.ThumbnailPicture
+            style={{ cursor: onThumbnailClick ? "pointer" : "auto" }}
+          >
+            {thumbnail ?? <SvgItwin />}
+          </Tile.ThumbnailPicture>
+        </Tile.ThumbnailArea>
         <Tile.ContentArea>
           <Tile.Description>
             {description ?? iTwin?.number ?? ""}
@@ -183,6 +184,7 @@ export const ITwinTile = ({
             </Tile.MoreOptions>
           )}
         </Tile.ContentArea>
+        {buttons && <Tile.Buttons>{buttons}</Tile.Buttons>}
       </Tile.Wrapper>
     </ThemeProvider>
   );
