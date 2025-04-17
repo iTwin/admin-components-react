@@ -10,7 +10,7 @@ module.exports = {
     "storybook-dark-mode/register",
     "@storybook/addon-links",
     "@storybook/addon-essentials",
-    "@itwin/storybook-auth-addon",
+    "../../../modules/storybook-auth-addon/register.js",
     "../src/addon/register.js",
   ],
   reactOptions: { fastRefresh: true },
@@ -30,4 +30,5 @@ module.exports = {
     // Return the altered config
     return config;
   },
+  staticDirs: ["../../../modules/storybook-auth-addon/build"]
 };
