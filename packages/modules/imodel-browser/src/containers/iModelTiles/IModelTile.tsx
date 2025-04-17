@@ -114,7 +114,6 @@ export const IModelTile = ({
         )}
         {badge && <Tile.BadgeContainer>{badge}</Tile.BadgeContainer>}
       </Tile.ThumbnailArea>
-
       <Tile.ContentArea>
         <Tile.Description>{iModel?.description ?? ""}</Tile.Description>
         {(moreOptions || moreOptionsBuilt) && (
