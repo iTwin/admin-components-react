@@ -48,9 +48,9 @@
     "webpack": "^5.28.0"
   },
   "scripts": {
-    "start": "start-storybook -s ./node_modules/@itwin/storybook-auth-addon/build -p 6006",
+    "start": "start-storybook -p 6006",
     "build": "",
-    "test": "build-storybook -s ./node_modules/@itwin/storybook-auth-addon/build --loglevel error --quiet",
+    "test": "build-storybook --loglevel error --quiet",
     "clean": "rimraf storybook-static"
   }
 }
