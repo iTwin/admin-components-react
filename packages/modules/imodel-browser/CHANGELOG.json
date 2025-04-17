@@ -2,6 +2,18 @@
   "name": "@itwin/imodel-browser-react",
   "entries": [
     {
+      "version": "3.0.3",
+      "tag": "@itwin/imodel-browser-react_v3.0.3",
+      "date": "Thu, 17 Apr 2025 16:41:30 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "fix error when searching itwin"
+          }
+        ]
+      }
+    },
+    {
       "version": "3.0.2",
       "tag": "@itwin/imodel-browser-react_v3.0.2",
       "date": "Thu, 17 Apr 2025 14:42:55 GMT",
