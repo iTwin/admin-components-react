@@ -118,11 +118,6 @@ export const ITwinTile = ({
           <Tile.NameLabel>
             <Tile.Action
               onClick={(e) => onClick?.(e) ?? onThumbnailClick?.(iTwin)}
-              aria-label={
-                onThumbnailClick
-                  ? `${strings.navigateToITwin} ${iTwin?.id}`
-                  : ""
-              }
               aria-disabled={isDisabled}
             >
               {name ?? iTwin?.displayName}

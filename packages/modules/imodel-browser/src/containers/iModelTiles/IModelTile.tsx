@@ -93,7 +93,6 @@ export const IModelTile = ({
         <Tile.NameLabel>
           <Tile.Action
             onClick={(e) => onClick?.(e) ?? onThumbnailClick?.(iModel)}
-            aria-label={`Select iModel ${iModel?.id}`}
             aria-disabled={isDisabled}
           >
             {name ?? iModel?.displayName}
