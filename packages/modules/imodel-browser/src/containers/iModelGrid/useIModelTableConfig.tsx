@@ -92,7 +92,12 @@ export const useIModelTableConfig = ({
               };
 
               return iModelActions && iModelActions.length > 0 ? (
-                <DropdownMenu menuItems={moreOptions}>
+                <DropdownMenu
+                  menuItems={moreOptions}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
+                >
                   <IconButton
                     styleType="borderless"
                     aria-label="More options"
