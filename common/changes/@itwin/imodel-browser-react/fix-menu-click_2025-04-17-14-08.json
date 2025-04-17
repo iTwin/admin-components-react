@@ -2,7 +2,7 @@
   "changes": [
     {
       "packageName": "@itwin/imodel-browser-react",
-      "comment": "Fix Menu click invoking table row click",
+      "comment": "Fix iModelBrowser menu items opening the iModel in table view",
       "type": "patch"
     }
   ],
