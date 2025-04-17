@@ -29,15 +29,17 @@ export const _buildManagedContextMenuOptions: <T>(
     })
     .map(({ key, visible, onClick, ...contextMenuProps }) => {
       return (
-        <MenuItem
-          {...contextMenuProps}
-          onClick={() => {
-            closeMenu?.();
-            onClick?.(value, refetchData);
-          }}
-          key={key}
-          value={value}
-        />
+        // MenuItem doesn't expose the real click event, so wrap it in div to intercept it and stop propagation
+        <div key={key} onClick={(e) => e.stopPropagation()}>
+          <MenuItem
+            {...contextMenuProps}
+            onClick={() => {
+              closeMenu?.();
+              onClick?.(value, refetchData);
+            }}
+            value={value}
+          />
+        </div>
       );
     });
 };
