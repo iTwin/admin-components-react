@@ -72,6 +72,56 @@ describe("CreateIModel", () => {
     );
   });
 
+  it("should be able to extend request body", async () => {
+    const successMock = jest.fn();
+    toaster.positive = jest.fn();
+
+    const { getByText, container } = render(
+      <CreateIModel
+        accessToken="dd"
+        iTwinId="de47c5ad-5657-42b8-a2bc-f2b8bf84cd4b"
+        onSuccess={successMock}
+        apiOverrides={{ serverEnvironmentPrefix: "dev" }}
+        extendedRequestBody={{
+          creationMode: "empty",
+        }}
+      />
+    );
+
+    const name = container.querySelector(
+      "input[name=name]"
+    ) as HTMLInputElement;
+    fireEvent.change(name, { target: { value: "Some name" } });
+
+    const createButton = getByText("Create");
+    await act(async () => createButton.click());
+    expect(fetchMock).toHaveBeenCalledWith(
+      "https://dev-api.bentley.com/imodels",
+      {
+        method: "POST",
+        headers: {
+          Authorization: "dd",
+          Prefer: "return=representation",
+          Accept: "application/vnd.bentley.itwin-platform.v2+json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          iTwinId: "de47c5ad-5657-42b8-a2bc-f2b8bf84cd4b",
+          name: "Some name",
+          description: "",
+          creationMode: "empty",
+        }),
+      }
+    );
+    expect(successMock).toHaveBeenCalledWith(mockedimodel);
+    expect(toaster.positive).toHaveBeenCalledWith(
+      "iModel created successfully.",
+      {
+        hasCloseButton: true,
+      }
+    );
+  });
+
   it("should show general error", async () => {
     const errorMock = jest.fn();
     const error = new Error("Fail");

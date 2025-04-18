@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/create-imodel-react",
+      "comment": "Update iModel Creation Endpoint Body",
+      "type": "minor"
+    }
+  ],
+  "packageName": "@itwin/create-imodel-react"
+}

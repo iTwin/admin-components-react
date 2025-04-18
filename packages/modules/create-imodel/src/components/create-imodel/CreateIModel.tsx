@@ -74,6 +74,10 @@ export type CreateIModelProps = {
   extentComponent?: React.ReactNode;
   /** Extent value that should be gotten from the `extentComponent`. */
   extent?: iModelExtent | null;
+  extendedRequestBody?: {
+    creationMode: "empty";
+    geographicCoordinateSystem?: { horizontalCRSId: string };
+  };
   children?: React.ReactNode;
 };
 
@@ -88,6 +92,7 @@ export function CreateIModel(props: CreateIModelProps) {
     iTwinId,
     extentComponent,
     extent,
+    extendedRequestBody = {},
   } = props;
   const [isLoading, setIsLoading] = React.useState(false);
 
@@ -124,6 +129,7 @@ export function CreateIModel(props: CreateIModelProps) {
           name: imodel.name,
           description: imodel.description,
           extent: imodel.extent,
+          ...extendedRequestBody,
         }),
       });
       if (!response.ok) {
