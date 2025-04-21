@@ -109,7 +109,7 @@ export const useITwinData = ({
     const search =
       ["favorites", "recents"].includes(requestType) || !filterOptions
         ? ""
-        : `&$search=${filterOptions}`;
+        : `&$search=${encodeURIComponent(String(filterOptions).trim())}`;
     const url = `${_getAPIServer(
       serverEnvironmentPrefix
     )}/itwins/${endpoint}${subClass}${paging}${search}`;
