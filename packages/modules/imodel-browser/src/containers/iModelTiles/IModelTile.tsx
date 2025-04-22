@@ -88,29 +88,31 @@ export const IModelTile = ({
       isDisabled={isDisabled}
       {...rest}
     >
-      <Tile.Action
-        onClick={(e) => onClick?.(e) ?? onThumbnailClick?.(iModel)}
-        aria-label={`Select iModel ${iModel?.id}`}
-        aria-disabled={isDisabled}
-      >
-        <Tile.ThumbnailArea>
-          {thumbnail ? (
-            <Tile.ThumbnailPicture>{thumbnail}</Tile.ThumbnailPicture>
-          ) : (
-            <IModelThumbnail
-              iModelId={iModel?.id}
-              accessToken={accessToken}
-              apiOverrides={thumbnailApiOverride}
-            />
-          )}
-          {badge && <Tile.BadgeContainer>{badge}</Tile.BadgeContainer>}
-          {leftIcon && <Tile.TypeIndicator>{leftIcon}</Tile.TypeIndicator>}
-          {rightIcon && <Tile.QuickAction>{rightIcon}</Tile.QuickAction>}
-        </Tile.ThumbnailArea>
-      </Tile.Action>
       <Tile.Name>
-        <Tile.NameLabel>{name ?? iModel?.displayName}</Tile.NameLabel>
+        <Tile.NameIcon />
+        <Tile.NameLabel>
+          <Tile.Action
+            onClick={(e) => onClick?.(e) ?? onThumbnailClick?.(iModel)}
+            aria-disabled={isDisabled}
+          >
+            {name ?? iModel?.displayName}
+          </Tile.Action>
+        </Tile.NameLabel>
       </Tile.Name>
+      <Tile.ThumbnailArea>
+        {leftIcon && <Tile.TypeIndicator>{leftIcon}</Tile.TypeIndicator>}
+        {rightIcon && <Tile.QuickAction>{rightIcon}</Tile.QuickAction>}
+        {thumbnail ? (
+          <Tile.ThumbnailPicture>{thumbnail}</Tile.ThumbnailPicture>
+        ) : (
+          <IModelThumbnail
+            iModelId={iModel?.id}
+            accessToken={accessToken}
+            apiOverrides={thumbnailApiOverride}
+          />
+        )}
+        {badge && <Tile.BadgeContainer>{badge}</Tile.BadgeContainer>}
+      </Tile.ThumbnailArea>
       <Tile.ContentArea>
         <Tile.Description>{iModel?.description ?? ""}</Tile.Description>
         {(moreOptions || moreOptionsBuilt) && (
