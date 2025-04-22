@@ -1,6 +1,13 @@
 # Change Log - @itwin/create-imodel-react
 
-This log was last generated on Wed, 11 Sep 2024 12:52:00 GMT and should not be manually modified.
+This log was last generated on Tue, 22 Apr 2025 07:32:24 GMT and should not be manually modified.
+
+## 2.1.0
+Tue, 22 Apr 2025 07:32:24 GMT
+
+### Minor changes
+
+- Update iModel Creation Endpoint Body
 
 ## 2.0.0
 Wed, 11 Sep 2024 12:52:00 GMT

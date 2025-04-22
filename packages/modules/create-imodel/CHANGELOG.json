@@ -2,6 +2,18 @@
   "name": "@itwin/create-imodel-react",
   "entries": [
     {
+      "version": "2.1.0",
+      "tag": "@itwin/create-imodel-react_v2.1.0",
+      "date": "Tue, 22 Apr 2025 07:32:24 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Update iModel Creation Endpoint Body"
+          }
+        ]
+      }
+    },
+    {
       "version": "2.0.0",
       "tag": "@itwin/create-imodel-react_v2.0.0",
       "date": "Wed, 11 Sep 2024 12:52:00 GMT",
