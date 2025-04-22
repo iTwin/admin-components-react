@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Thu, 17 Apr 2025 16:41:30 GMT and should not be manually modified.
+This log was last generated on Tue, 22 Apr 2025 16:41:13 GMT and should not be manually modified.
+
+## 3.0.4
+Tue, 22 Apr 2025 16:41:13 GMT
+
+### Patches
+
+- fix favorite opening itwin on click
 
 ## 3.0.3
 Thu, 17 Apr 2025 16:41:30 GMT
