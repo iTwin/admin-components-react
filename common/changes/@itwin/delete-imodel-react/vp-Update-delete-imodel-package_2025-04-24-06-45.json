@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/delete-imodel-react",
+      "comment": "Updated imodel-delete to itwin-react V3",
+      "type": "minor"
+    }
+  ],
+  "packageName": "@itwin/delete-imodel-react"
+}
