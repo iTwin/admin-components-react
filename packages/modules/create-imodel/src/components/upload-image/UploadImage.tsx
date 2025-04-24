@@ -4,7 +4,12 @@
  *--------------------------------------------------------------------------------------------*/
 import "./UploadImage.scss";
 
-import { FileUpload, FileUploadTemplate, toaster } from "@itwin/itwinui-react";
+import {
+  FileUpload,
+  FileUploadCard,
+  ThemeProvider,
+  useToaster,
+} from "@itwin/itwinui-react";
 import React from "react";
 
 import { useIModelContext } from "../context/imodel-context";
@@ -40,11 +45,20 @@ export type UploadImageProps = {
   };
 };
 
-export function UploadImage({
+export function UploadImage(props: UploadImageProps) {
+  return (
+    <ThemeProvider>
+      <UploadImageComponent {...props} />
+    </ThemeProvider>
+  );
+}
+
+function UploadImageComponent({
   stringsOverrides,
   onChange,
   src: srcProp,
 }: UploadImageProps) {
+  const toaster = useToaster();
   const [imageUrl, setImageUrl] = React.useState<string>("");
   const [rotation, setRotation] = React.useState(0);
 
@@ -111,12 +125,17 @@ export function UploadImage({
       <div className="iac-file-upload-image">
         {imageUrl && <PreviewImage src={imageUrl} rotation={rotation} />}
       </div>
-      <FileUploadTemplate
-        label={updatedStrings.uploadLabel}
-        subtitle={updatedStrings.uploadSubLabel}
-        onChange={onFileChange}
-        acceptType=".jpeg,.png"
-      />
+      <FileUploadCard onChange={onFileChange}>
+        <FileUploadCard.Input accept=".jpeg,.png" />
+        <FileUploadCard.Info>
+          <FileUploadCard.Title>
+            {updatedStrings.uploadLabel}
+          </FileUploadCard.Title>
+          <FileUploadCard.Description>
+            {updatedStrings.uploadSubLabel}
+          </FileUploadCard.Description>
+        </FileUploadCard.Info>
+      </FileUploadCard>
     </FileUpload>
   );
 }
