@@ -199,14 +199,18 @@ const createFetchIModelsFn = (
     morePagesAvailable: boolean;
   }>;
 } => {
-  const selection = `?iTwinId=${iTwinId}`;
+  const selection = `?iTwinId=${encodeURIComponent(iTwinId)}`;
   const sorting = sortType
-    ? `&$orderBy=${sortType} ${sortDescending ? "desc" : "asc"}`
+    ? `&$orderBy=${encodeURIComponent(sortType)} ${
+        sortDescending ? "desc" : "asc"
+      }`
     : "";
   const skip = page * PAGE_SIZE;
   const top = maxCount ? Math.min(PAGE_SIZE, maxCount - skip) : PAGE_SIZE;
   const paging = `&$skip=${skip}&$top=${top}`;
-  const searching = searchText?.trim() ? `&$search=${searchText}` : "";
+  const searching = searchText?.trim()
+    ? `&$search=${encodeURIComponent(searchText)}`
+    : "";
 
   const abortController = new AbortController();
   const url = `${_getAPIServer(
