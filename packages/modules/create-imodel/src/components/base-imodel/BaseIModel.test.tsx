@@ -2,7 +2,9 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { fireEvent, render } from "@testing-library/react";
+import "@testing-library/jest-dom";
+
+import { act, fireEvent, render, waitFor } from "@testing-library/react";
 import React from "react";
 
 import { BaseIModelPage } from "./BaseIModel";
@@ -12,7 +14,7 @@ describe("BaseIModel", () => {
     jest.clearAllMocks();
   });
 
-  it("should show base page", () => {
+  it("should show base page", async () => {
     const actionMock = jest.fn();
     const closeMock = jest.fn();
 
@@ -37,14 +39,14 @@ describe("BaseIModel", () => {
     const confirmButton = container.querySelector(
       ".iac-button-bar button:first-child"
     ) as HTMLButtonElement;
-    expect(confirmButton.disabled).toBe(true);
+    expect(confirmButton).toHaveAttribute("aria-disabled", "true");
     expect(confirmButton.textContent).toBe("Create");
-    confirmButton.click();
+    await act(() => fireEvent.click(confirmButton));
     expect(actionMock).not.toHaveBeenCalled();
     const cancelButton = container.querySelector(
       ".iac-button-bar button:last-child"
     ) as HTMLButtonElement;
-    cancelButton.click();
+    await act(() => fireEvent.click(cancelButton));
     expect(closeMock).toHaveBeenCalled();
   });
 
@@ -70,7 +72,7 @@ describe("BaseIModel", () => {
     const confirmButton = container.querySelector(
       ".iac-button-bar button:first-child"
     ) as HTMLButtonElement;
-    expect(confirmButton.disabled).toBe(true);
+    expect(confirmButton).toHaveAttribute("aria-disabled", "true");
     expect(confirmButton.textContent).toBe("Create");
 
     expect(container.querySelector(".test-extent-map")).toBeTruthy();
@@ -88,12 +90,16 @@ describe("BaseIModel", () => {
     const name = container.querySelector(
       ".iac-inputs-container input"
     ) as HTMLInputElement;
-    fireEvent.change(name, { target: { value: new Array(260).join("a") } });
+    await waitFor(async () =>
+      fireEvent.change(name, {
+        target: { value: new Array(260).join("a") },
+      })
+    );
     getByText("The value exceeds allowed 255 characters.");
     const confirmButton = container.querySelector(
       ".iac-button-bar button:first-child"
     ) as HTMLButtonElement;
-    expect(confirmButton.disabled).toBe(true);
+    expect(confirmButton).toHaveAttribute("aria-disabled", "true");
   });
 
   it("should show base page with filled values", () => {

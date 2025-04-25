@@ -5,6 +5,7 @@
 import "./UploadImage.scss";
 
 import {
+  FileEmptyCard,
   FileUpload,
   FileUploadCard,
   ThemeProvider,
@@ -47,7 +48,7 @@ export type UploadImageProps = {
 
 export function UploadImage(props: UploadImageProps) {
   return (
-    <ThemeProvider>
+    <ThemeProvider className="iac-model-wrapper-element">
       <UploadImageComponent {...props} />
     </ThemeProvider>
   );
@@ -125,17 +126,22 @@ function UploadImageComponent({
       <div className="iac-file-upload-image">
         {imageUrl && <PreviewImage src={imageUrl} rotation={rotation} />}
       </div>
-      <FileUploadCard onChange={onFileChange}>
-        <FileUploadCard.Input accept=".jpeg,.png" />
-        <FileUploadCard.Info>
-          <FileUploadCard.Title>
-            {updatedStrings.uploadLabel}
-          </FileUploadCard.Title>
-          <FileUploadCard.Description>
-            {updatedStrings.uploadSubLabel}
-          </FileUploadCard.Description>
-        </FileUploadCard.Info>
-      </FileUploadCard>
+      <FileUploadCard
+        files={[]}
+        emptyCard={
+          <FileEmptyCard>
+            <FileEmptyCard.Icon />
+            <FileEmptyCard.Text>
+              <FileUploadCard.InputLabel>
+                {updatedStrings.uploadLabel}
+              </FileUploadCard.InputLabel>
+              <FileUploadCard.Input onChange={onFileChange} accept=".jpeg,.png">
+                {updatedStrings.uploadSubLabel}
+              </FileUploadCard.Input>
+            </FileEmptyCard.Text>
+          </FileEmptyCard>
+        }
+      />
     </FileUpload>
   );
 }
