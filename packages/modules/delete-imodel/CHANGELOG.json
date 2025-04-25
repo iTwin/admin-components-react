@@ -2,6 +2,18 @@
   "name": "@itwin/delete-imodel-react",
   "entries": [
     {
+      "version": "2.1.0",
+      "tag": "@itwin/delete-imodel-react_v2.1.0",
+      "date": "Fri, 25 Apr 2025 06:33:37 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Updated imodel-delete to itwin-react V3"
+          }
+        ]
+      }
+    },
+    {
       "version": "2.0.0",
       "tag": "@itwin/delete-imodel-react_v2.0.0",
       "date": "Wed, 11 Sep 2024 12:52:00 GMT",

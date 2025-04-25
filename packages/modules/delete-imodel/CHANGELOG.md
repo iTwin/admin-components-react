@@ -1,6 +1,13 @@
 # Change Log - @itwin/delete-imodel-react
 
-This log was last generated on Wed, 11 Sep 2024 12:52:00 GMT and should not be manually modified.
+This log was last generated on Fri, 25 Apr 2025 06:33:37 GMT and should not be manually modified.
+
+## 2.1.0
+Fri, 25 Apr 2025 06:33:37 GMT
+
+### Minor changes
+
+- Updated imodel-delete to itwin-react V3
 
 ## 2.0.0
 Wed, 11 Sep 2024 12:52:00 GMT

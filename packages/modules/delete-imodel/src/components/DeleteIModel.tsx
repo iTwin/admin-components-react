@@ -12,7 +12,7 @@ import {
   ModalContent,
   ProgressRadial,
   ThemeProvider,
-  toaster,
+  useToaster,
 } from "@itwin/itwinui-react";
 import React from "react";
 
@@ -47,6 +47,14 @@ export type DeleteIModelProps = {
 };
 
 export function DeleteIModel(props: DeleteIModelProps) {
+  return (
+    <ThemeProvider>
+      <DeleteIModelComponent {...props} />
+    </ThemeProvider>
+  );
+}
+
+function DeleteIModelComponent(props: DeleteIModelProps) {
   const {
     imodel: { id: imodelId, name: imodelName },
     accessToken,
@@ -56,6 +64,7 @@ export function DeleteIModel(props: DeleteIModelProps) {
     onSuccess,
     stringsOverrides,
   } = props;
+  const toaster = useToaster();
   const [isOpen, setIsOpen] = React.useState(true);
   const [isLoading, setIsLoading] = React.useState(false);
 
@@ -106,7 +115,7 @@ export function DeleteIModel(props: DeleteIModelProps) {
   }, [onClose]);
 
   return (
-    <ThemeProvider theme="inherit">
+    <>
       <Modal
         isOpen={isOpen}
         style={{ maxWidth: 600 }}
@@ -133,7 +142,7 @@ export function DeleteIModel(props: DeleteIModelProps) {
         </ModalButtonBar>
       </Modal>
       {isLoading && <OverlaySpinner />}
-    </ThemeProvider>
+    </>
   );
 }
 

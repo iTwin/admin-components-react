@@ -180,7 +180,7 @@ importers:
   ../../packages/modules/delete-imodel:
     specifiers:
       '@itwin/itwinui-icons-react': ^2.2.0
-      '@itwin/itwinui-react': ^2.12.18
+      '@itwin/itwinui-react': ^3.18.0
       '@rollup/plugin-commonjs': ~17.1.0
       '@rollup/plugin-image': ^2.0.6
       '@testing-library/react': ^11.1.0
@@ -217,7 +217,7 @@ importers:
       typescript: ^4.2.3
     dependencies:
       '@itwin/itwinui-icons-react': 2.10.0_nnrd3gsncyragczmpvfhocinkq
-      '@itwin/itwinui-react': 2.12.26_nnrd3gsncyragczmpvfhocinkq
+      '@itwin/itwinui-react': 3.18.0_nnrd3gsncyragczmpvfhocinkq
     devDependencies:
       '@rollup/plugin-commonjs': 17.1.0_rollup@2.79.2
       '@rollup/plugin-image': 2.1.1_rollup@2.79.2
