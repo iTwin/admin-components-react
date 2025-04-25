@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/create-imodel-react",
+      "comment": "Updated create-imodel-react to itwin-react V3",
+      "type": "major"
+    }
+  ],
+  "packageName": "@itwin/create-imodel-react"
+}
