@@ -3,7 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import React from "react";
 
 import { ConfigProvider } from "../../common/configContext";
@@ -28,17 +28,18 @@ describe("ContextMenu", () => {
     jest.clearAllMocks();
   });
 
-  it("should render with provided menu actions", () => {
+  it("should render with provided menu actions", async () => {
     render(
       <ConfigProvider {...MOCKED_CONFIG_PROPS}>
         <ContextMenu {...defaultProps} />
       </ConfigProvider>
     );
-    fireEvent.click(screen.getByText("More"));
+    const moreButton = (await screen.findByText("More")).closest("button");
+    moreButton && (await waitFor(() => fireEvent.click(moreButton)));
     expect(screen.queryByText("Perform Action 1")).not.toBeNull();
   });
 
-  it("does not trigger onClick for disabled menu actions", () => {
+  it("does not trigger onClick for disabled menu actions", async () => {
     const disabledActionProps = {
       ...defaultProps,
       menuActions: [
@@ -53,9 +54,10 @@ describe("ContextMenu", () => {
         <ContextMenu {...disabledActionProps} />
       </ConfigProvider>
     );
-    fireEvent.click(screen.getByText("More"));
+    const moreButton = (await screen.findByText("More")).closest("button");
+    moreButton && (await waitFor(() => fireEvent.click(moreButton)));
     const menuItem = screen.getByTitle("Action 1");
-    fireEvent.click(menuItem);
+    await waitFor(() => fireEvent.click(menuItem));
     expect(mockActionClick).not.toHaveBeenCalled();
   });
 });

@@ -78,7 +78,8 @@ export const VersionModal = (props: VersionModalProps) => {
         className="iac-version-modal"
       >
         <LabeledInput
-          setFocus
+          autoFocus
+          wrapperProps={{ className: "iac-version-modal-input" }}
           name="name"
           label={stringsOverrides.name}
           onChange={onChange}
@@ -96,6 +97,7 @@ export const VersionModal = (props: VersionModalProps) => {
           autoComplete="off"
         />
         <LabeledTextarea
+          wrapperProps={{ className: "iac-version-modal-input" }}
           name="description"
           label={stringsOverrides.description}
           onChange={onChange}
@@ -129,8 +131,8 @@ export const VersionModal = (props: VersionModalProps) => {
           <Button onClick={onClose}>{stringsOverrides.cancel}</Button>
         </ModalButtonBar>
         {isLoading && (
-          <div className="iui-progress-indicator-overlay">
-            <ProgressRadial indeterminate />
+          <div>
+            <ProgressRadial indeterminate data-testid="progress-radial" />
           </div>
         )}
       </Modal>

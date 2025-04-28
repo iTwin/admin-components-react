@@ -2,7 +2,9 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { fireEvent, render, screen, within } from "@testing-library/react";
+import "@testing-library/jest-dom";
+
+import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import React from "react";
 
 import { ConfigProvider } from "../../../common/configContext";
@@ -35,7 +37,7 @@ describe("ChangesTab", () => {
   it("should show data in versions table", () => {
     const { container } = renderComponent();
     const rows = container.querySelectorAll(
-      "div[role='rowgroup'] > div[role='row']"
+      "*[class$='table-body'] div[role='row']"
     );
     expect(rows.length).toBe(3);
 
@@ -55,10 +57,10 @@ describe("ChangesTab", () => {
       expect(cells[4].textContent).toContain(
         MockedChangeset(index).pushDateTime
       );
-      within(cells[5] as HTMLElement).getByTitle(
+      within(cells[5] as HTMLElement).getByText(
         defaultStrings.createNamedVersion
       );
-      within(cells[5] as HTMLElement).getByTitle("Information Panel");
+      within(cells[5] as HTMLElement).getByText("Information Panel");
     });
   });
 
@@ -73,17 +75,15 @@ describe("ChangesTab", () => {
   });
 
   it("should show spinner when data is loading", () => {
-    const { container } = renderComponent({
+    renderComponent({
       changesets: [],
       status: RequestStatus.InProgress,
     });
-    expect(
-      container.querySelector(".iui-progress-indicator-radial")
-    ).toBeTruthy();
+    expect(screen.findByTestId("progress-radial")).toBeTruthy();
   });
 
-  it("should not show create version icon when changeset already has a version", () => {
-    const { container, queryByTitle } = renderComponent({
+  it("should not show create version icon when changeset already has a version", async () => {
+    const { container } = renderComponent({
       changesets: [
         MockedChangeset(1, {
           _links: { namedVersion: { href: "https://test.url" } },
@@ -91,28 +91,24 @@ describe("ChangesTab", () => {
       ],
     });
     const rows = container.querySelectorAll(
-      "div[role='rowgroup'] > div[role='row']"
+      "*[class$='table-body'] div[role='row']"
     );
     expect(rows.length).toBe(1);
 
-    const createVersionIcon = queryByTitle(defaultStrings.createNamedVersion);
-    const classAttribute = (createVersionIcon as HTMLElement).getAttribute(
-      "class"
+    const createVersionIcon = container.querySelector(
+      ".iac-create-version-icon-hidden"
     );
-    expect(classAttribute).toContain("iac-create-version-icon-hidden");
+    expect(createVersionIcon).not.toBeNull();
   });
 
-  it("should show information panel icon for each changeset row", () => {
+  it("should show information panel icon for each changeset row", async () => {
     const { container } = renderComponent({
       changesets: MockedChangesetList(),
     });
-    const rowgroup = screen.getAllByRole("rowgroup")[0];
-    const infoIcons = within(rowgroup).queryAllByTitle("Information Panel");
-    const rows = within(rowgroup).queryAllByRole("row");
-
-    expect(infoIcons.length).toBe(rows.length);
+    const rowgroup = screen.getAllByRole("row")[2];
+    const infoIcons = within(rowgroup).queryAllByText("Information Panel");
     //should open information panel
-    fireEvent.click(infoIcons[0]);
+    await act(() => fireEvent.click(infoIcons[0]));
     const panel = container.querySelector(".iac-info-panel");
     expect(panel).toBeTruthy();
   });

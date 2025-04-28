@@ -2,12 +2,16 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { toaster } from "@itwin/itwinui-react";
+import "@testing-library/jest-dom";
+
+import { useToaster } from "@itwin/itwinui-react";
 import {
+  act,
   fireEvent,
   render,
+  renderHook,
   screen,
-  waitForElementToBeRemoved,
+  waitFor,
 } from "@testing-library/react";
 import React from "react";
 
@@ -19,10 +23,22 @@ import {
   MockedVersion,
 } from "../../../mocks";
 import { ApimCodes, ApimError } from "../../../models";
+import { defaultStrings } from "../../ManageVersions/ManageVersions";
 import {
   UpdateVersionModal,
   UpdateVersionModalProps,
 } from "./UpdateVersionModal";
+
+const mockToaster = {
+  negative: jest.fn(),
+  positive: jest.fn(),
+  closeAll: jest.fn(),
+};
+
+jest.mock("@itwin/itwinui-react", () => ({
+  ...jest.requireActual("@itwin/itwinui-react"),
+  useToaster: () => mockToaster,
+}));
 
 const renderComponent = (initialProps?: Partial<UpdateVersionModalProps>) => {
   const props = {
@@ -39,10 +55,8 @@ const renderComponent = (initialProps?: Partial<UpdateVersionModalProps>) => {
 };
 
 describe("UpdateVersionModal", () => {
+  const toaster = renderHook(useToaster).result.current;
   const mockUpdateVersion = jest.spyOn(NamedVersionClient.prototype, "update");
-  const mockPositiveToast = jest.spyOn(toaster, "positive");
-  const mockNegativeToast = jest.spyOn(toaster, "negative");
-  const mockCloseAllToast = jest.spyOn(toaster, "closeAll");
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -53,23 +67,20 @@ describe("UpdateVersionModal", () => {
     const onUpdate = jest.fn();
     renderComponent({ onUpdate });
 
-    const nameInput = document.querySelector("input") as HTMLInputElement;
-    expect(nameInput).toBeTruthy();
+    const nameInput = await screen.findByLabelText("Name");
+    const descriptionInput = await screen.findByLabelText("Description");
 
-    const descriptionInput = document.querySelector(
-      "textarea"
-    ) as HTMLTextAreaElement;
-    expect(descriptionInput).toBeTruthy();
-
-    fireEvent.change(nameInput, { target: { value: "test name" } });
-    fireEvent.change(descriptionInput, {
-      target: { value: "test description" },
-    });
-
-    screen.getByText("Update").click();
-    await waitForElementToBeRemoved(() =>
-      document.querySelector(".iui-progress-indicator-overlay")
+    await act(() =>
+      fireEvent.change(nameInput, { target: { value: "test name" } })
     );
+    await act(() =>
+      fireEvent.change(descriptionInput, {
+        target: { value: "test description" },
+      })
+    );
+
+    const updateButton = await screen.findByRole("button", { name: "Update" });
+    act(() => updateButton.click());
 
     expect(mockUpdateVersion).toHaveBeenCalledWith(
       MOCKED_IMODEL_ID,
@@ -79,9 +90,9 @@ describe("UpdateVersionModal", () => {
         description: "test description",
       }
     );
-    expect(onUpdate).toHaveBeenCalled();
-    expect(mockCloseAllToast).toHaveBeenCalled();
-    expect(mockPositiveToast).toHaveBeenCalledWith(
+    await waitFor(() => expect(onUpdate).toHaveBeenCalled());
+    expect(toaster.closeAll).toHaveBeenCalled();
+    expect(toaster.positive).toHaveBeenCalledWith(
       'Named Version "test name" was successfully updated.',
       { hasCloseButton: true }
     );
@@ -90,10 +101,10 @@ describe("UpdateVersionModal", () => {
   it.each([
     [
       "InsufficientPermissions",
-      "You do not have the required permissions to update a Named Version.",
+      defaultStrings.messageInsufficientPermissionsToUpdateVersion,
     ],
-    ["NamedVersionExists", "Named Version with the same name already exists."],
-    ["otherError", "Could not update a Named Version. Please try again later."],
+    ["NamedVersionExists", defaultStrings.messageVersionNameExists],
+    ["otherError", defaultStrings.messageCouldNotUpdateVersion],
   ])("should show error message when got error %s", async (code, message) => {
     mockUpdateVersion.mockRejectedValue(
       new ApimError({
@@ -101,20 +112,19 @@ describe("UpdateVersionModal", () => {
         message: "error",
       })
     );
-    renderComponent();
+    await act(() => renderComponent());
 
-    const nameInput = document.querySelector("input") as HTMLInputElement;
-    expect(nameInput).toBeTruthy();
-    fireEvent.change(nameInput, { target: { value: "test name" } });
-
-    screen.getByText("Update").click();
-    await waitForElementToBeRemoved(() =>
-      document.querySelector(".iui-progress-indicator-overlay")
+    const nameInput = await screen.findByLabelText("Name");
+    await act(() =>
+      fireEvent.change(nameInput, { target: { value: "test name" } })
     );
 
+    const updateButton = await screen.findByRole("button", { name: "Update" });
+    await act(async () => updateButton.click());
+
     expect(mockUpdateVersion).toHaveBeenCalled();
-    expect(mockCloseAllToast).toHaveBeenCalled();
-    expect(mockNegativeToast).toHaveBeenCalledWith(message, {
+    expect(toaster.closeAll).toHaveBeenCalled();
+    expect(toaster.negative).toHaveBeenCalledWith(message, {
       hasCloseButton: true,
     });
   });

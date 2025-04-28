@@ -3,6 +3,10 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 
+.iac-version-modal-label{
+  margin-bottom: var(--iui-size-2xs);
+}
+
 .iac-additional-info {
   display: flex;
   justify-content: space-between;

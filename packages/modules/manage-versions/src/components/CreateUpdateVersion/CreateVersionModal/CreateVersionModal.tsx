@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import "./CreateVersionModal.scss";
 
-import { toaster } from "@itwin/itwinui-react";
+import { Label, useToaster } from "@itwin/itwinui-react";
 import React from "react";
 
 import { NamedVersionClient } from "../../../clients/namedVersionClient";
@@ -27,7 +27,7 @@ export type CreateVersionModalProps = {
 
 export const CreateVersionModal = (props: CreateVersionModalProps) => {
   const { latestVersion, changeset, onClose, onCreate } = props;
-
+  const toaster = useToaster();
   const { accessToken, imodelId, apiOverrides, stringsOverrides, log } =
     useConfig();
 
@@ -85,9 +85,11 @@ export const CreateVersionModal = (props: CreateVersionModalProps) => {
       onClose={onClose}
       onActionClick={onCreateClick}
     >
-      <div className="iui-input-container">
-        <div className="iui-label">Latest included change</div>
-        <div className="iac-additional-info">
+      <div className="iac-version-modal-input">
+        <Label className="iac-version-modal-label">
+          Latest included change
+        </Label>
+        <div className="iac-additional-info" data-testid="additional-info">
           <span>#{changeset.index}</span>
           <span>
             {localeDateWithTimeFormat(new Date(changeset.pushDateTime))}
@@ -95,9 +97,11 @@ export const CreateVersionModal = (props: CreateVersionModalProps) => {
         </div>
       </div>
       {latestVersion && (
-        <div className="iui-input-container">
-          <div className="iui-label">Latest Named Version</div>
-          <div className="iac-additional-info">
+        <div className="iac-version-modal-input">
+          <Label className="iac-version-modal-label">
+            Latest Named Version
+          </Label>
+          <div className="iac-additional-info" data-testid="additional-info">
             <span className="iac-cell-ellipsis">{latestVersion.name}</span>
             <span>
               {localeDateWithTimeFormat(

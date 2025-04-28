@@ -2,7 +2,9 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { fireEvent, render, screen } from "@testing-library/react";
+import "@testing-library/jest-dom";
+
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import React from "react";
 
 import { ConfigProvider } from "../../common/configContext";
@@ -27,7 +29,7 @@ const renderComponent = (initialProps?: Partial<VersionModalProps>) => {
 };
 
 describe("VersionModal", () => {
-  it("should trigger onActionClick with input data", () => {
+  it("should trigger onActionClick with input data", async () => {
     const onActionClick = jest.fn();
     renderComponent({ onActionClick });
 
@@ -39,17 +41,21 @@ describe("VersionModal", () => {
     ) as HTMLTextAreaElement;
     expect(descriptionInput).toBeTruthy();
 
-    fireEvent.change(nameInput, { target: { value: "test name" } });
-    fireEvent.change(descriptionInput, {
-      target: { value: "test description" },
-    });
+    await waitFor(() =>
+      fireEvent.change(nameInput, { target: { value: "test name" } })
+    );
+    await waitFor(() =>
+      fireEvent.change(descriptionInput, {
+        target: { value: "test description" },
+      })
+    );
 
     screen.getByText("Action").click();
 
     expect(onActionClick).toHaveBeenCalledWith("test name", "test description");
   });
 
-  it("should show error messages when inputs are too long", () => {
+  it("should show error messages when inputs are too long", async () => {
     renderComponent();
 
     const nameInput = document.querySelector("input") as HTMLInputElement;
@@ -60,12 +66,16 @@ describe("VersionModal", () => {
     ) as HTMLTextAreaElement;
     expect(descriptionInput).toBeTruthy();
 
-    fireEvent.change(nameInput, {
-      target: { value: new Array(260).join("a") },
-    });
-    fireEvent.change(descriptionInput, {
-      target: { value: new Array(260).join("a") },
-    });
+    await waitFor(() =>
+      fireEvent.change(nameInput, {
+        target: { value: new Array(260).join("a") },
+      })
+    );
+    await waitFor(() =>
+      fireEvent.change(descriptionInput, {
+        target: { value: new Array(260).join("a") },
+      })
+    );
 
     expect(
       screen.getAllByText("The value exceeds allowed 255 characters.").length
@@ -75,7 +85,7 @@ describe("VersionModal", () => {
       .getByText("Action")
       .closest("button") as HTMLButtonElement;
     expect(actionButton).not.toBeUndefined();
-    expect(actionButton.disabled).toBe(true);
+    expect(actionButton).toHaveAttribute("aria-disabled", "true");
   });
 
   it("should disable action button when name is missing", () => {
@@ -85,10 +95,10 @@ describe("VersionModal", () => {
       .getByText("Action")
       .closest("button") as HTMLButtonElement;
     expect(actionButton).not.toBeUndefined();
-    expect(actionButton.disabled).toBe(true);
+    expect(actionButton).toHaveAttribute("aria-disabled", "true");
   });
 
-  it("should disable action button when data is the same as before", () => {
+  it("should disable action button when data is the same as before", async () => {
     renderComponent({
       initialVersion: {
         name: "test name",
@@ -104,16 +114,20 @@ describe("VersionModal", () => {
     ) as HTMLTextAreaElement;
     expect(descriptionInput).toBeTruthy();
 
-    fireEvent.change(nameInput, { target: { value: "test name" } });
-    fireEvent.change(descriptionInput, {
-      target: { value: "test description" },
-    });
+    await waitFor(() =>
+      fireEvent.change(nameInput, { target: { value: "test name" } })
+    );
+    await waitFor(() =>
+      fireEvent.change(descriptionInput, {
+        target: { value: "test description" },
+      })
+    );
 
     const actionButton = screen
       .getByText("Action")
       .closest("button") as HTMLButtonElement;
     expect(actionButton).not.toBeUndefined();
-    expect(actionButton.disabled).toBe(true);
+    expect(actionButton).toHaveAttribute("aria-disabled", "true");
   });
 
   it("should trigger onClose", () => {
@@ -128,10 +142,7 @@ describe("VersionModal", () => {
   it("should show spinner", () => {
     renderComponent({ isLoading: true });
 
-    const spinnerOverlay = document.querySelector(
-      ".iui-progress-indicator-overlay"
-    );
-    expect(spinnerOverlay).toBeTruthy();
+    expect(screen.findByTestId("progress-radial")).toBeTruthy();
     const modalOverlay = document.querySelector(".iac-version-modal-overlay");
     expect(modalOverlay).toBeTruthy();
   });
