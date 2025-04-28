@@ -8,7 +8,6 @@ import {
   FileEmptyCard,
   FileUpload,
   FileUploadCard,
-  ThemeProvider,
   useToaster,
 } from "@itwin/itwinui-react";
 import React from "react";
@@ -46,15 +45,7 @@ export type UploadImageProps = {
   };
 };
 
-export function UploadImage(props: UploadImageProps) {
-  return (
-    <ThemeProvider className="iac-model-wrapper-element">
-      <UploadImageComponent {...props} />
-    </ThemeProvider>
-  );
-}
-
-function UploadImageComponent({
+export function UploadImage({
   stringsOverrides,
   onChange,
   src: srcProp,
