@@ -65,7 +65,7 @@ describe("UpdateVersionModal", () => {
   it("should make a request with input data", async () => {
     mockUpdateVersion.mockResolvedValue(MockedVersion());
     const onUpdate = jest.fn();
-    renderComponent({ onUpdate });
+    await act(() => renderComponent({ onUpdate }));
 
     const nameInput = await screen.findByLabelText("Name");
     const descriptionInput = await screen.findByLabelText("Description");
@@ -81,6 +81,7 @@ describe("UpdateVersionModal", () => {
 
     const updateButton = await screen.findByRole("button", { name: "Update" });
     act(() => updateButton.click());
+    expect(screen.findByTestId("progress-radial"));
 
     expect(mockUpdateVersion).toHaveBeenCalledWith(
       MOCKED_IMODEL_ID,

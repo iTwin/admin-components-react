@@ -2,6 +2,8 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+import "@testing-library/jest-dom";
+
 import { useToaster } from "@itwin/itwinui-react";
 import {
   act,
@@ -9,6 +11,7 @@ import {
   render,
   renderHook,
   screen,
+  waitFor,
 } from "@testing-library/react";
 import React from "react";
 
@@ -61,9 +64,6 @@ describe("CreateVersionModal", () => {
   const toaster = renderHook(useToaster).result.current;
 
   const mockCreateVersion = jest.spyOn(NamedVersionClient.prototype, "create");
-  const mockPositiveToast = jest.spyOn(toaster, "positive");
-  const mockNegativeToast = jest.spyOn(toaster, "negative");
-  const mockCloseAllToast = jest.spyOn(toaster, "closeAll");
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -110,7 +110,7 @@ describe("CreateVersionModal", () => {
       })
     );
 
-    const createButton = await screen.findByText("Create");
+    const createButton = await screen.findByRole("button", { name: "Create" });
     await act(async () => createButton.click());
     expect(screen.findByTestId("progress-radial"));
 
@@ -119,9 +119,9 @@ describe("CreateVersionModal", () => {
       description: "test description",
       changeSetId: MockedChangeset().id,
     });
-    expect(onCreate).toHaveBeenCalled();
-    expect(mockCloseAllToast).toHaveBeenCalled();
-    expect(mockPositiveToast).toHaveBeenCalledWith(
+    await waitFor(() => expect(onCreate).toHaveBeenCalled());
+    expect(toaster.closeAll).toHaveBeenCalled();
+    expect(toaster.positive).toHaveBeenCalledWith(
       'Named Version "test name" was successfully created.',
       { hasCloseButton: true }
     );
@@ -143,18 +143,18 @@ describe("CreateVersionModal", () => {
     );
     await act(() => renderComponent());
 
-    const nameInput = document.querySelector("input") as HTMLInputElement;
+    const nameInput = await screen.findByLabelText("Name");
     expect(nameInput).toBeTruthy();
     await act(() =>
       fireEvent.change(nameInput, { target: { value: "test name" } })
     );
 
-    const createButton = await screen.findByText("Create");
+    const createButton = await screen.findByRole("button", { name: "Create" });
     await act(async () => createButton.click());
 
     expect(mockCreateVersion).toHaveBeenCalled();
-    expect(mockCloseAllToast).toHaveBeenCalled();
-    expect(mockNegativeToast).toHaveBeenCalledWith(message, {
+    expect(toaster.closeAll).toHaveBeenCalled();
+    expect(toaster.negative).toHaveBeenCalledWith(message, {
       hasCloseButton: true,
     });
   });
