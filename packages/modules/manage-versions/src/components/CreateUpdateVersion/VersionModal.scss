@@ -15,7 +15,12 @@
   top: 0;
   left: 0;
 }
-
+.iac-version-modal-loader{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
 .iac-version-modal .iac-version-modal-input {
   margin-bottom: var(--iui-size-s);
 }

@@ -131,7 +131,7 @@ export const VersionModal = (props: VersionModalProps) => {
           <Button onClick={onClose}>{stringsOverrides.cancel}</Button>
         </ModalButtonBar>
         {isLoading && (
-          <div>
+          <div className="iac-version-modal-loader">
             <ProgressRadial indeterminate data-testid="progress-radial" />
           </div>
         )}
