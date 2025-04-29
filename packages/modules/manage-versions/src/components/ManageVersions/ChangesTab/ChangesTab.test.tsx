@@ -105,9 +105,10 @@ describe("ChangesTab", () => {
     const { container } = renderComponent({
       changesets: MockedChangesetList(),
     });
-    const rowgroup = screen.getAllByRole("row")[2];
-    const infoIcons = within(rowgroup).queryAllByText("Information Panel");
+    const rows = screen.getAllByRole("row").slice(1); //remove header row
+    const infoIcons = screen.queryAllByText("Information Panel");
     //should open information panel
+    expect(infoIcons.length).toBe(rows.length);
     await act(() => fireEvent.click(infoIcons[0]));
     const panel = container.querySelector(".iac-info-panel");
     expect(panel).toBeTruthy();
