@@ -334,7 +334,9 @@ it("should render with changesets tab opened", async () => {
     await waitFor(() =>
       expect(cells[1].textContent).toContain(MockedChangeset(index).description)
     );
-    expect(cells[2].textContent).toContain(MockedChangeset(index).createdBy);
+    await waitFor(() =>
+      expect(cells[2].textContent).toContain(MockedChangeset(index).createdBy)
+    );
     expect(cells[3].textContent).toContain(
       MockedChangeset(index).synchronizationInfo.changedFiles.join(", ")
     );
