@@ -333,9 +333,21 @@ export const ManageVersions = (props: ManageVersionsProps) => {
       _currentTab === ManageVersionsTabs.Versions &&
       versionStatus === RequestStatus.NotStarted
     ) {
-      getVersions();
+      const loadUsers = async () => {
+        if (!usersRef.current) {
+          try {
+            await getUsers();
+          } catch (err) {
+            console.error("Unable to fetch users data", err);
+          }
+        }
+      };
+
+      loadUsers()
+        .then(() => getVersions())
+        .catch(console.error);
     }
-  }, [_currentTab, getVersions, versionStatus]);
+  }, [_currentTab, getUsers, getVersions, versionStatus]);
 
   React.useEffect(() => {
     if (
