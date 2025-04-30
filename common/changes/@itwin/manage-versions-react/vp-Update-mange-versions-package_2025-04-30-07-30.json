@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/manage-versions-react",
+      "comment": "Update Manage-Version to itwin-react V3",
+      "type": "major"
+    }
+  ],
+  "packageName": "@itwin/manage-versions-react"
+}
