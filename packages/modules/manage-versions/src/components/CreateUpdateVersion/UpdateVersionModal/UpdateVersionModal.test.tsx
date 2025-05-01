@@ -12,6 +12,7 @@ import {
   renderHook,
   screen,
   waitFor,
+  waitForElementToBeRemoved,
 } from "@testing-library/react";
 import React from "react";
 
@@ -65,7 +66,7 @@ describe("UpdateVersionModal", () => {
   it("should make a request with input data", async () => {
     mockUpdateVersion.mockResolvedValue(MockedVersion());
     const onUpdate = jest.fn();
-    await act(() => renderComponent({ onUpdate }));
+    const { container } = renderComponent({ onUpdate });
 
     const nameInput = await screen.findByLabelText("Name");
     const descriptionInput = await screen.findByLabelText("Description");
@@ -81,8 +82,9 @@ describe("UpdateVersionModal", () => {
 
     const updateButton = await screen.findByRole("button", { name: "Update" });
     act(() => updateButton.click());
-    expect(screen.findByTestId("progress-radial"));
-
+    await waitForElementToBeRemoved(() =>
+      container.querySelector(".iac-version-modal-loader")
+    );
     expect(mockUpdateVersion).toHaveBeenCalledWith(
       MOCKED_IMODEL_ID,
       MockedVersion().id,

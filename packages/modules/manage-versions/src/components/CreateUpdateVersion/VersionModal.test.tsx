@@ -139,10 +139,12 @@ describe("VersionModal", () => {
     expect(onClose).toHaveBeenCalled();
   });
 
-  it("should show spinner", () => {
-    renderComponent({ isLoading: true });
+  it("should show spinner", async () => {
+    const { container } = renderComponent({ isLoading: true });
 
-    expect(screen.findByTestId("progress-radial")).toBeTruthy();
+    await waitFor(() =>
+      expect(container.querySelector(".iac-version-modal-loader")).toBeTruthy()
+    );
     const modalOverlay = document.querySelector(".iac-version-modal-overlay");
     expect(modalOverlay).toBeTruthy();
   });

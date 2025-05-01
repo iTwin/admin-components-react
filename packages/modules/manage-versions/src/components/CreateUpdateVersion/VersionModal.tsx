@@ -132,7 +132,7 @@ export const VersionModal = (props: VersionModalProps) => {
         </ModalButtonBar>
         {isLoading && (
           <div className="iac-version-modal-loader">
-            <ProgressRadial indeterminate data-testid="progress-radial" />
+            <ProgressRadial indeterminate />
           </div>
         )}
       </Modal>

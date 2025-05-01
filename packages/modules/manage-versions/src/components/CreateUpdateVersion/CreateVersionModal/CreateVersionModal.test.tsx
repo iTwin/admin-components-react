@@ -12,6 +12,7 @@ import {
   renderHook,
   screen,
   waitFor,
+  waitForElementToBeRemoved,
 } from "@testing-library/react";
 import React from "react";
 
@@ -93,7 +94,7 @@ describe("CreateVersionModal", () => {
   it("should make a request with input data", async () => {
     mockCreateVersion.mockResolvedValue(MockedVersion());
     const onCreate = jest.fn();
-    await act(() => renderComponent({ onCreate }));
+    const { container } = renderComponent({ onCreate });
 
     const nameInput = await screen.findByLabelText("Name");
     expect(nameInput).toBeTruthy();
@@ -111,8 +112,10 @@ describe("CreateVersionModal", () => {
     );
 
     const createButton = await screen.findByRole("button", { name: "Create" });
-    await act(async () => createButton.click());
-    expect(screen.findByTestId("progress-radial"));
+    await fireEvent.click(createButton);
+    await waitForElementToBeRemoved(() =>
+      container.querySelector(".iac-version-modal-loader")
+    );
 
     expect(mockCreateVersion).toHaveBeenCalledWith(MOCKED_IMODEL_ID, {
       name: "test name",

@@ -4,7 +4,14 @@
  *--------------------------------------------------------------------------------------------*/
 import "@testing-library/jest-dom";
 
-import { act, fireEvent, render, screen, within } from "@testing-library/react";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import React from "react";
 
 import { ConfigProvider } from "../../../common/configContext";
@@ -74,12 +81,16 @@ describe("ChangesTab", () => {
     screen.getByText(defaultStrings.messageFailedGetChanges);
   });
 
-  it("should show spinner when data is loading", () => {
-    renderComponent({
+  it("should show spinner when data is loading", async () => {
+    const { container } = renderComponent({
       changesets: [],
       status: RequestStatus.InProgress,
     });
-    expect(screen.findByTestId("progress-radial")).toBeTruthy();
+    await waitFor(() =>
+      expect(
+        container.querySelector("[class*='progress-indicator']")
+      ).toBeTruthy()
+    );
   });
 
   it("should not show create version icon when changeset already has a version", async () => {
