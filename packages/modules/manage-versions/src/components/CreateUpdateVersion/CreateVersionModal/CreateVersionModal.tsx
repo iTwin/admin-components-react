@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import "./CreateVersionModal.scss";
 
-import { Label, useToaster } from "@itwin/itwinui-react";
+import { Flex, Label, useToaster } from "@itwin/itwinui-react";
 import React from "react";
 
 import { NamedVersionClient } from "../../../clients/namedVersionClient";
@@ -85,7 +85,7 @@ export const CreateVersionModal = (props: CreateVersionModalProps) => {
       onClose={onClose}
       onActionClick={onCreateClick}
     >
-      <div className="iac-version-modal-input">
+      <Flex.Item>
         <Label className="iac-version-modal-label">
           Latest included change
         </Label>
@@ -95,9 +95,9 @@ export const CreateVersionModal = (props: CreateVersionModalProps) => {
             {localeDateWithTimeFormat(new Date(changeset.pushDateTime))}
           </span>
         </div>
-      </div>
+      </Flex.Item>
       {latestVersion && (
-        <div className="iac-version-modal-input">
+        <Flex.Item>
           <Label className="iac-version-modal-label">
             Latest Named Version
           </Label>
@@ -109,7 +109,7 @@ export const CreateVersionModal = (props: CreateVersionModalProps) => {
               )}
             </span>
           </div>
-        </div>
+        </Flex.Item>
       )}
     </VersionModal>
   );
