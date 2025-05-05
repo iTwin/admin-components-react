@@ -42,10 +42,8 @@ const renderComponent = (initialProps?: Partial<ChangesTabProps>) => {
 
 describe("ChangesTab", () => {
   it("should show data in versions table", () => {
-    const { container } = renderComponent();
-    const rows = container.querySelectorAll(
-      "*[class$='table-body'] div[role='row']"
-    );
+    renderComponent();
+    const rows = screen.getAllByRole("row").slice(1);
     expect(rows.length).toBe(3);
 
     rows.forEach((row, index) => {
@@ -67,7 +65,9 @@ describe("ChangesTab", () => {
       within(cells[5] as HTMLElement).getByText(
         defaultStrings.createNamedVersion
       );
-      within(cells[5] as HTMLElement).getByText("Information Panel");
+      within(cells[5] as HTMLElement).getByText(
+        defaultStrings.informationPanel ?? ""
+      );
     });
   });
 
@@ -101,9 +101,7 @@ describe("ChangesTab", () => {
         }),
       ],
     });
-    const rows = container.querySelectorAll(
-      "*[class$='table-body'] div[role='row']"
-    );
+    const rows = screen.getAllByRole("row").slice(1);
     expect(rows.length).toBe(1);
 
     const createVersionIcon = container.querySelector(

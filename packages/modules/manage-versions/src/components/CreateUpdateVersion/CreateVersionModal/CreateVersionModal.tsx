@@ -89,7 +89,7 @@ export const CreateVersionModal = (props: CreateVersionModalProps) => {
         <Label className="iac-version-modal-label">
           Latest included change
         </Label>
-        <div className="iac-additional-info" data-testid="additional-info">
+        <div className="iac-additional-info">
           <span>#{changeset.index}</span>
           <span>
             {localeDateWithTimeFormat(new Date(changeset.pushDateTime))}
@@ -101,7 +101,7 @@ export const CreateVersionModal = (props: CreateVersionModalProps) => {
           <Label className="iac-version-modal-label">
             Latest Named Version
           </Label>
-          <div className="iac-additional-info" data-testid="additional-info">
+          <div className="iac-additional-info">
             <span className="iac-cell-ellipsis">{latestVersion.name}</span>
             <span>
               {localeDateWithTimeFormat(
