@@ -4,7 +4,12 @@
  *--------------------------------------------------------------------------------------------*/
 import "./UploadImage.scss";
 
-import { FileUpload, FileUploadTemplate, toaster } from "@itwin/itwinui-react";
+import {
+  FileEmptyCard,
+  FileUpload,
+  FileUploadCard,
+  useToaster,
+} from "@itwin/itwinui-react";
 import React from "react";
 
 import { useIModelContext } from "../context/imodel-context";
@@ -45,6 +50,7 @@ export function UploadImage({
   onChange,
   src: srcProp,
 }: UploadImageProps) {
+  const toaster = useToaster();
   const [imageUrl, setImageUrl] = React.useState<string>("");
   const [rotation, setRotation] = React.useState(0);
 
@@ -111,11 +117,21 @@ export function UploadImage({
       <div className="iac-file-upload-image">
         {imageUrl && <PreviewImage src={imageUrl} rotation={rotation} />}
       </div>
-      <FileUploadTemplate
-        label={updatedStrings.uploadLabel}
-        subtitle={updatedStrings.uploadSubLabel}
-        onChange={onFileChange}
-        acceptType=".jpeg,.png"
+      <FileUploadCard
+        files={[]}
+        emptyCard={
+          <FileEmptyCard>
+            <FileEmptyCard.Icon />
+            <FileEmptyCard.Text>
+              <FileUploadCard.InputLabel>
+                {updatedStrings.uploadLabel}
+              </FileUploadCard.InputLabel>
+              <FileUploadCard.Input onChange={onFileChange} accept=".jpeg,.png">
+                {updatedStrings.uploadSubLabel}
+              </FileUploadCard.Input>
+            </FileEmptyCard.Text>
+          </FileEmptyCard>
+        }
       />
     </FileUpload>
   );

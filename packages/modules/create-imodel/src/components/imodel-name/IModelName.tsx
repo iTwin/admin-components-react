@@ -17,7 +17,8 @@ export function IModelName() {
 
   return (
     <LabeledInput
-      setFocus
+      wrapperProps={{ className: "iac-model-wrapper-element" }}
+      autoFocus
       label={nameString ?? "Name"}
       name="name"
       required
@@ -30,7 +31,6 @@ export function IModelName() {
         isPropertyInvalid(imodel.name, MAX_LENGTH) ? "negative" : undefined
       }
       autoComplete="off"
-      className="iac-model-wrapper-element"
     />
   );
 }

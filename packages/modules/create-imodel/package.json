@@ -31,11 +31,13 @@
     "clean": "rimraf cjs esm"
   },
   "dependencies": {
-    "@itwin/itwinui-react": "^2.12.18"
+    "@itwin/itwinui-react": "^3.18.0"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "~17.1.0",
-    "@testing-library/react": "^11.1.0",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.2.0",
     "@types/jest": "^27.5.1",
     "@types/node": "^14.14.35",
     "@types/react": "^18.3.5",
