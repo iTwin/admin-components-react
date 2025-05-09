@@ -128,7 +128,7 @@ const ChangesTab = (props: ChangesTabProps) => {
                       setCurrentChangeset(changeset);
                       setIsCreateVersionModalOpen(true);
                     }}
-                    title={stringsOverrides.createNamedVersion}
+                    label={stringsOverrides.createNamedVersion}
                     styleType="borderless"
                     className={className}
                     size="small"
@@ -136,7 +136,7 @@ const ChangesTab = (props: ChangesTabProps) => {
                     <SvgNamedVersionAdd />
                   </IconButton>
                   <IconButton
-                    title={
+                    label={
                       stringsOverrides.informationPanel ?? "Information Panel"
                     }
                     styleType="borderless"
@@ -177,6 +177,9 @@ const ChangesTab = (props: ChangesTabProps) => {
       <Table<Changeset>
         columns={columns}
         data={changesets}
+        bodyProps={{
+          className: "iac-changes-table-body",
+        }}
         isLoading={
           status === RequestStatus.InProgress ||
           status === RequestStatus.NotStarted

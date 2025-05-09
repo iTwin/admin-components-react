@@ -3,7 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 
-.iac-version-modal .iui-modal-dialog {
+.iac-version-modal {
   max-width: calc(min(600px, 50%));
 }
 
@@ -16,6 +16,7 @@
   left: 0;
 }
 
-.iac-version-modal .iui-input-container {
-  margin-bottom: var(--iui-size-s);
+.iac-version-modal-loader{
+  position: absolute;
+  inset: 0;
 }

@@ -32,13 +32,15 @@
     "esm/**/*"
   ],
   "dependencies": {
-    "@itwin/itwinui-icons-react": "^2.2.0",
-    "@itwin/itwinui-react": "^2.12.18",
+    "@itwin/itwinui-icons-react": "^2.10.0",
+    "@itwin/itwinui-react": "^3.18.0",
     "classnames": "^2.2.6"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "~17.1.0",
-    "@testing-library/react": "^11.1.0",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.2.0",
     "@types/jest": "^27.5.1",
     "@types/react": "^18.3.5",
     "@types/react-dom": "^18.3.0",

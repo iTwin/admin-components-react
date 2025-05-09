@@ -6,10 +6,12 @@ import "./VersionModal.scss";
 
 import {
   Button,
+  Flex,
   LabeledInput,
   LabeledTextarea,
   Modal,
   ModalButtonBar,
+  Overlay,
   ProgressRadial,
 } from "@itwin/itwinui-react";
 import React from "react";
@@ -77,61 +79,64 @@ export const VersionModal = (props: VersionModalProps) => {
         onClose={onClose}
         className="iac-version-modal"
       >
-        <LabeledInput
-          setFocus
-          name="name"
-          label={stringsOverrides.name}
-          onChange={onChange}
-          value={version.name}
-          status={isLengthValid(version.name) ? undefined : "negative"}
-          message={
-            isLengthValid(version.name)
-              ? undefined
-              : stringsOverrides.messageValueTooLong.replace(
-                  "{{length}}",
-                  MAX_LENGTH.toString()
-                )
-          }
-          required
-          autoComplete="off"
-        />
-        <LabeledTextarea
-          name="description"
-          label={stringsOverrides.description}
-          onChange={onChange}
-          value={version.description}
-          status={isLengthValid(version.description) ? undefined : "negative"}
-          message={
-            isLengthValid(version.description)
-              ? undefined
-              : stringsOverrides.messageValueTooLong.replace(
-                  "{{length}}",
-                  MAX_LENGTH.toString()
-                )
-          }
-          rows={3}
-          autoComplete="off"
-        />
-        {children}
-        <ModalButtonBar>
-          <Button
-            styleType="high-visibility"
-            onClick={() => onActionClick(version.name, version.description)}
-            disabled={
-              !version.name ||
-              !hasChanges() ||
-              !isLengthValid(version.name) ||
-              !isLengthValid(version.description)
+        <Flex flexDirection="column" alignItems="stretch" gap="s">
+          <LabeledInput
+            autoFocus
+            name="name"
+            label={stringsOverrides.name}
+            onChange={onChange}
+            value={version.name}
+            status={isLengthValid(version.name) ? undefined : "negative"}
+            message={
+              isLengthValid(version.name)
+                ? undefined
+                : stringsOverrides.messageValueTooLong.replace(
+                    "{{length}}",
+                    MAX_LENGTH.toString()
+                  )
             }
-          >
-            {actionName}
-          </Button>
-          <Button onClick={onClose}>{stringsOverrides.cancel}</Button>
-        </ModalButtonBar>
+            required
+            autoComplete="off"
+          />
+          <LabeledTextarea
+            name="description"
+            label={stringsOverrides.description}
+            onChange={onChange}
+            value={version.description}
+            status={isLengthValid(version.description) ? undefined : "negative"}
+            message={
+              isLengthValid(version.description)
+                ? undefined
+                : stringsOverrides.messageValueTooLong.replace(
+                    "{{length}}",
+                    MAX_LENGTH.toString()
+                  )
+            }
+            rows={3}
+            autoComplete="off"
+          />
+          {children}
+          <ModalButtonBar>
+            <Button
+              styleType="high-visibility"
+              onClick={() => onActionClick(version.name, version.description)}
+              disabled={
+                !version.name ||
+                !hasChanges() ||
+                !isLengthValid(version.name) ||
+                !isLengthValid(version.description)
+              }
+            >
+              {actionName}
+            </Button>
+            <Button onClick={onClose}>{stringsOverrides.cancel}</Button>
+          </ModalButtonBar>
+        </Flex>
         {isLoading && (
-          <div className="iui-progress-indicator-overlay">
-            <ProgressRadial indeterminate />
-          </div>
+          <Overlay
+            className="iac-version-modal-loader"
+            content={<ProgressRadial indeterminate />}
+          />
         )}
       </Modal>
       {/* Prevents modal from being closed when clicked outside. */}
