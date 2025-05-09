@@ -177,6 +177,9 @@ const ChangesTab = (props: ChangesTabProps) => {
       <Table<Changeset>
         columns={columns}
         data={changesets}
+        bodyProps={{
+          className: "changes-table-body",
+        }}
         isLoading={
           status === RequestStatus.InProgress ||
           status === RequestStatus.NotStarted

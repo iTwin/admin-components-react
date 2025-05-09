@@ -9,7 +9,6 @@ import {
   render,
   screen,
   waitFor,
-  waitForElementToBeRemoved,
   within,
 } from "@testing-library/react";
 import React from "react";
@@ -65,11 +64,12 @@ describe("ManageVersions", () => {
   it("should show versions table with data", async () => {
     const { container } = renderComponent();
 
-    await waitForElementToBeRemoved(() =>
-      container.querySelector("[class*='progress-indicator']")
+    await waitFor(() =>
+      expect(container.querySelector(".versions-table-body")).toBeVisible()
     );
-
-    const versionRows = screen.getAllByRole("row").slice(1);
+    const versionRows = container.querySelectorAll(
+      ".versions-table-body [role='row']"
+    );
     expect(versionRows.length).toBe(3);
 
     versionRows.forEach((row, index) => {
@@ -94,17 +94,17 @@ describe("ManageVersions", () => {
   it("should show changesets table with data", async () => {
     const { container } = renderComponent();
 
-    await waitForElementToBeRemoved(() =>
-      container.querySelector("[class*='progress-indicator']")
-    );
+    await waitFor(() => screen.getByText(defaultStrings.changes));
 
     await screen.getByText(defaultStrings.changes).click();
 
-    await waitForElementToBeRemoved(() =>
-      container.querySelector("[class*='progress-indicator']")
+    await waitFor(() =>
+      expect(container.querySelector(".changes-table-body")).toBeVisible()
     );
 
-    const changesetRows = screen.getAllByRole("row").slice(1);
+    const changesetRows = container.querySelectorAll(
+      ".changes-table-body [role='row']"
+    );
     expect(changesetRows.length).toBe(3);
 
     changesetRows.forEach((row, index) => {
@@ -139,11 +139,9 @@ describe("ManageVersions", () => {
   });
 
   it("should query data only once when switching tabs", async () => {
-    const { container } = renderComponent();
+    renderComponent();
 
-    await waitForElementToBeRemoved(() =>
-      container.querySelector("[class*='progress-indicator']")
-    );
+    await waitFor(() => screen.getByText(defaultStrings.changes));
 
     await screen.getByText(defaultStrings.changes).click();
 
@@ -200,15 +198,11 @@ describe("ManageVersions", () => {
     mockCreateVersion.mockResolvedValue(MockedVersion());
     const { container } = renderComponent();
 
-    await waitForElementToBeRemoved(() =>
-      container.querySelector("[class*='progress-indicator']")
-    );
+    await waitFor(() => screen.getByText(defaultStrings.changes));
 
     await screen.getByText(defaultStrings.changes).click();
-    await waitForElementToBeRemoved(() =>
-      container.querySelector("[class*='progress-indicator']")
-    );
 
+    await waitFor(() => screen.getAllByText(defaultStrings.createNamedVersion));
     const createVersionButtons = screen.getAllByText(
       defaultStrings.createNamedVersion
     );
@@ -230,9 +224,7 @@ describe("ManageVersions", () => {
     fireEvent.change(nameInput, { target: { value: "test name" } });
 
     await screen.getByText("Create").click();
-    await waitForElementToBeRemoved(() =>
-      document.querySelector("[class*='progress-indicator']")
-    );
+    await waitFor(() => container.querySelector("versions-table-body"));
 
     const versionCells = container.querySelectorAll(
       "div[role='row']:first-child div[role='cell']"
@@ -257,10 +249,10 @@ describe("ManageVersions", () => {
     mockUpdateVersion.mockResolvedValue(MockedVersion());
     const { container } = renderComponent();
 
-    await waitForElementToBeRemoved(() =>
-      container.querySelector("[class*='progress-indicator']")
+    await waitFor(() => container.querySelector(".versions-table-body"));
+    const versionRows = container.querySelectorAll(
+      ".versions-table-body [role='row']"
     );
-    const versionRows = screen.getAllByRole("row").slice(1);
     const firstRowCells = versionRows[0].querySelectorAll("div[role='cell']");
     expect(firstRowCells.length).toBe(5);
     const actionsCell = firstRowCells[4] as HTMLElement;
@@ -284,9 +276,7 @@ describe("ManageVersions", () => {
     });
     await screen.getByText("Update").click();
 
-    await waitForElementToBeRemoved(() =>
-      document.querySelector("[class*='progress-indicator']")
-    );
+    await waitFor(() => container.querySelector("versions-table-body"));
 
     expect(mockUpdateVersion).toHaveBeenCalledWith(
       MOCKED_IMODEL_ID,
@@ -319,10 +309,10 @@ it("should render with changesets tab opened", async () => {
     currentTab: ManageVersionsTabs.Changes,
   });
 
-  await waitForElementToBeRemoved(() =>
-    container.querySelector("[class*='progress-indicator']")
+  await waitFor(() => container.querySelector(".changes-table-body"));
+  const changesetRows = container.querySelectorAll(
+    ".changes-table-body [role='row']"
   );
-  const changesetRows = screen.getAllByRole("row").slice(1);
   expect(changesetRows.length).toBe(3);
 
   changesetRows.forEach(async (row, index) => {
@@ -354,12 +344,9 @@ it("should render with changesets tab opened", async () => {
 
 it("should trigger onTabChange", async () => {
   const onTabChange = jest.fn();
-  const { container } = renderComponent({ onTabChange });
+  renderComponent({ onTabChange });
 
-  screen.getByText(defaultStrings.changes).click();
-  await waitForElementToBeRemoved(() =>
-    container.querySelector("[class*='progress-indicator']")
-  );
+  await screen.getByText(defaultStrings.changes).click();
   expect(onTabChange).toHaveBeenCalledWith(ManageVersionsTabs.Changes);
 
   screen.getByText(defaultStrings.namedVersions).click();

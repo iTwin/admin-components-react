@@ -56,8 +56,10 @@ const renderComponent = (initialProps?: Partial<VersionsTabProps>) => {
 describe("VersionsTab", () => {
   it("should show data in versions table", () => {
     const onViewClick = jest.fn();
-    renderComponent({ onViewClick });
-    const rows = screen.getAllByRole("row").slice(1);
+    const { container } = renderComponent({ onViewClick });
+    const rows = container.querySelectorAll(
+      ".versions-table-body [role='row']"
+    );
     expect(rows.length).toBe(1);
 
     rows.forEach(async (row) => {
@@ -88,8 +90,10 @@ describe("VersionsTab", () => {
   });
 
   it("should not show view column and name should not be clickable when onViewClick is not provided", () => {
-    renderComponent({ onViewClick: undefined });
-    const rows = screen.getAllByRole("row").slice(1);
+    const { container } = renderComponent({ onViewClick: undefined });
+    const rows = container.querySelectorAll(
+      ".versions-table-body [role='row']"
+    );
     expect(rows.length).toBe(1);
     expect(screen.queryAllByText(defaultStrings.view).length).toBe(0);
   });
