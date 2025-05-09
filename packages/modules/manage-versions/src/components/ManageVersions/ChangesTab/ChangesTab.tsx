@@ -178,7 +178,7 @@ const ChangesTab = (props: ChangesTabProps) => {
         columns={columns}
         data={changesets}
         bodyProps={{
-          className: "changes-table-body",
+          className: "iac-changes-table-body",
         }}
         isLoading={
           status === RequestStatus.InProgress ||

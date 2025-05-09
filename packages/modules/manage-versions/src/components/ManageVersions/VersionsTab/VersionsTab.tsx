@@ -328,7 +328,7 @@ const VersionsTab = (props: VersionsTabProps) => {
           status === RequestStatus.NotStarted
         }
         bodyProps={{
-          className: "versions-table-body",
+          className: "iac-versions-table-body",
         }}
         emptyTableContent={emptyTableContent}
         onBottomReached={loadMoreVersions}

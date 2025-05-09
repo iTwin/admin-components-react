@@ -58,7 +58,7 @@ describe("VersionsTab", () => {
     const onViewClick = jest.fn();
     const { container } = renderComponent({ onViewClick });
     const rows = container.querySelectorAll(
-      ".versions-table-body [role='row']"
+      ".iac-versions-table-body [role='row']"
     );
     expect(rows.length).toBe(1);
 
@@ -92,7 +92,7 @@ describe("VersionsTab", () => {
   it("should not show view column and name should not be clickable when onViewClick is not provided", () => {
     const { container } = renderComponent({ onViewClick: undefined });
     const rows = container.querySelectorAll(
-      ".versions-table-body [role='row']"
+      ".iac-versions-table-body [role='row']"
     );
     expect(rows.length).toBe(1);
     expect(screen.queryAllByText(defaultStrings.view).length).toBe(0);

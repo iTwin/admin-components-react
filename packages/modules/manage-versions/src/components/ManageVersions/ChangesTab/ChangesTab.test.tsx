@@ -43,7 +43,9 @@ const renderComponent = (initialProps?: Partial<ChangesTabProps>) => {
 describe("ChangesTab", () => {
   it("should show data in versions table", () => {
     const { container } = renderComponent();
-    const rows = container.querySelectorAll(".changes-table-body [role='row']");
+    const rows = container.querySelectorAll(
+      ".iac-changes-table-body [role='row']"
+    );
     expect(rows.length).toBe(3);
 
     rows.forEach((row, index) => {
@@ -101,7 +103,9 @@ describe("ChangesTab", () => {
         }),
       ],
     });
-    const rows = container.querySelectorAll(".changes-table-body [role='row']");
+    const rows = container.querySelectorAll(
+      ".iac-changes-table-body [role='row']"
+    );
     expect(rows.length).toBe(1);
 
     const createVersionIcon = container.querySelector(
@@ -114,7 +118,9 @@ describe("ChangesTab", () => {
     const { container } = renderComponent({
       changesets: MockedChangesetList(),
     });
-    const rows = container.querySelectorAll(".changes-table-body [role='row']");
+    const rows = container.querySelectorAll(
+      ".iac-changes-table-body [role='row']"
+    );
     const infoIcons = screen.queryAllByText("Information Panel");
     //should open information panel
     expect(infoIcons.length).toBe(rows.length);

@@ -65,10 +65,10 @@ describe("ManageVersions", () => {
     const { container } = renderComponent();
 
     await waitFor(() =>
-      expect(container.querySelector(".versions-table-body")).toBeVisible()
+      expect(container.querySelector(".iac-versions-table-body")).toBeVisible()
     );
     const versionRows = container.querySelectorAll(
-      ".versions-table-body [role='row']"
+      ".iac-versions-table-body [role='row']"
     );
     expect(versionRows.length).toBe(3);
 
@@ -99,11 +99,11 @@ describe("ManageVersions", () => {
     await screen.getByText(defaultStrings.changes).click();
 
     await waitFor(() =>
-      expect(container.querySelector(".changes-table-body")).toBeVisible()
+      expect(container.querySelector(".iac-changes-table-body")).toBeVisible()
     );
 
     const changesetRows = container.querySelectorAll(
-      ".changes-table-body [role='row']"
+      ".iac-changes-table-body [role='row']"
     );
     expect(changesetRows.length).toBe(3);
 
@@ -224,7 +224,7 @@ describe("ManageVersions", () => {
     fireEvent.change(nameInput, { target: { value: "test name" } });
 
     await screen.getByText("Create").click();
-    await waitFor(() => container.querySelector("versions-table-body"));
+    await waitFor(() => container.querySelector("iac-versions-table-body"));
 
     const versionCells = container.querySelectorAll(
       "div[role='row']:first-child div[role='cell']"
@@ -249,9 +249,9 @@ describe("ManageVersions", () => {
     mockUpdateVersion.mockResolvedValue(MockedVersion());
     const { container } = renderComponent();
 
-    await waitFor(() => container.querySelector(".versions-table-body"));
+    await waitFor(() => container.querySelector(".iac-versions-table-body"));
     const versionRows = container.querySelectorAll(
-      ".versions-table-body [role='row']"
+      ".iac-versions-table-body [role='row']"
     );
     const firstRowCells = versionRows[0].querySelectorAll("div[role='cell']");
     expect(firstRowCells.length).toBe(5);
@@ -276,7 +276,7 @@ describe("ManageVersions", () => {
     });
     await screen.getByText("Update").click();
 
-    await waitFor(() => container.querySelector("versions-table-body"));
+    await waitFor(() => container.querySelector("iac-versions-table-body"));
 
     expect(mockUpdateVersion).toHaveBeenCalledWith(
       MOCKED_IMODEL_ID,
@@ -309,9 +309,9 @@ it("should render with changesets tab opened", async () => {
     currentTab: ManageVersionsTabs.Changes,
   });
 
-  await waitFor(() => container.querySelector(".changes-table-body"));
+  await waitFor(() => container.querySelector(".iac-changes-table-body"));
   const changesetRows = container.querySelectorAll(
-    ".changes-table-body [role='row']"
+    ".iac-changes-table-body [role='row']"
   );
   expect(changesetRows.length).toBe(3);
 
