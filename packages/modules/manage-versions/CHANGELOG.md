@@ -1,6 +1,13 @@
 # Change Log - @itwin/manage-versions-react
 
-This log was last generated on Wed, 11 Sep 2024 12:52:00 GMT and should not be manually modified.
+This log was last generated on Mon, 12 May 2025 21:00:37 GMT and should not be manually modified.
+
+## 2.1.0
+Mon, 12 May 2025 21:00:37 GMT
+
+### Minor changes
+
+- Update Manage-Version to itwin-react V3
 
 ## 2.0.0
 Wed, 11 Sep 2024 12:52:00 GMT

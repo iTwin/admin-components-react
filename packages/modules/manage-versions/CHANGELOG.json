@@ -2,6 +2,18 @@
   "name": "@itwin/manage-versions-react",
   "entries": [
     {
+      "version": "2.1.0",
+      "tag": "@itwin/manage-versions-react_v2.1.0",
+      "date": "Mon, 12 May 2025 21:00:37 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Update Manage-Version to itwin-react V3"
+          }
+        ]
+      }
+    },
+    {
       "version": "2.0.0",
       "tag": "@itwin/manage-versions-react_v2.0.0",
       "date": "Wed, 11 Sep 2024 12:52:00 GMT",
