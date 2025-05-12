@@ -5,7 +5,7 @@
 import "./VersionsTab.scss";
 
 import { SvgDownload, SvgEdit } from "@itwin/itwinui-icons-react";
-import { Table, Text, toaster } from "@itwin/itwinui-react";
+import { Table, Text, useToaster } from "@itwin/itwinui-react";
 import React, { useCallback } from "react";
 import { CellProps } from "react-table";
 
@@ -47,7 +47,7 @@ const VersionsTab = (props: VersionsTabProps) => {
     changesetClient,
     setRelatedChangesets,
   } = props;
-
+  const toaster = useToaster();
   const { stringsOverrides, imodelId } = useConfig();
 
   const [currentVersion, setCurrentVersion] = React.useState<
@@ -327,6 +327,9 @@ const VersionsTab = (props: VersionsTabProps) => {
           status === RequestStatus.InProgress ||
           status === RequestStatus.NotStarted
         }
+        bodyProps={{
+          className: "iac-versions-table-body",
+        }}
         emptyTableContent={emptyTableContent}
         onBottomReached={loadMoreVersions}
         className="iac-versions-table"

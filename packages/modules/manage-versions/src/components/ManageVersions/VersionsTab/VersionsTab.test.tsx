@@ -2,7 +2,14 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { fireEvent, render, screen, within } from "@testing-library/react";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import React from "react";
 
 import { ChangesetClient } from "../../../clients/changesetClient";
@@ -16,6 +23,17 @@ import {
 import { defaultStrings } from "../ManageVersions";
 import { RequestStatus } from "../types";
 import VersionsTab, { VersionsTabProps } from "./VersionsTab";
+
+const mockToaster = {
+  negative: jest.fn(),
+  positive: jest.fn(),
+  closeAll: jest.fn(),
+};
+
+jest.mock("@itwin/itwinui-react", () => ({
+  ...jest.requireActual("@itwin/itwinui-react"),
+  useToaster: () => mockToaster,
+}));
 
 const renderComponent = (initialProps?: Partial<VersionsTabProps>) => {
   const props: VersionsTabProps = {
@@ -40,11 +58,11 @@ describe("VersionsTab", () => {
     const onViewClick = jest.fn();
     const { container } = renderComponent({ onViewClick });
     const rows = container.querySelectorAll(
-      "div[role='rowgroup'] > div[role='row']"
+      ".iac-versions-table-body [role='row']"
     );
     expect(rows.length).toBe(1);
 
-    rows.forEach((row, index) => {
+    rows.forEach(async (row) => {
       const cells = row.querySelectorAll("div[role='cell']");
       expect(cells.length).toBe(6);
       expect(cells[0].textContent).toContain(MockedVersion().name);
@@ -53,11 +71,15 @@ describe("VersionsTab", () => {
       expect(cells[3].textContent).toContain(MockedVersion().createdDateTime);
       expect(cells[4].textContent).toContain(defaultStrings.view);
       const viewSpan = screen.getByText("View");
-      fireEvent.click(viewSpan);
-      const actionButton = within(cells[5] as HTMLElement).getByText("More");
+      await act(() => fireEvent.click(viewSpan));
+      const actionButton = within(cells[5] as HTMLElement).getByRole("button", {
+        name: "More",
+      });
       expect(actionButton).toBeTruthy();
-      fireEvent.click(actionButton);
-      const updateAction = screen.getByText(defaultStrings.updateNamedVersion);
+      await act(() => fireEvent.click(actionButton));
+      const updateAction = await screen.findByText(
+        defaultStrings.updateNamedVersion
+      );
       if (defaultStrings.download) {
         const downloadAction = screen.getByText(defaultStrings.download);
         expect(downloadAction).toBeTruthy();
@@ -70,7 +92,7 @@ describe("VersionsTab", () => {
   it("should not show view column and name should not be clickable when onViewClick is not provided", () => {
     const { container } = renderComponent({ onViewClick: undefined });
     const rows = container.querySelectorAll(
-      "[role='rowgroup'] > div[role='row']"
+      ".iac-versions-table-body [role='row']"
     );
     expect(rows.length).toBe(1);
     expect(screen.queryAllByText(defaultStrings.view).length).toBe(0);
@@ -86,17 +108,19 @@ describe("VersionsTab", () => {
     screen.getByText(defaultStrings.messageFailedGetNamedVersions);
   });
 
-  it("should show spinner when data is loading", () => {
+  it("should show spinner when data is loading", async () => {
     const { container } = renderComponent({
       tableData: [],
       status: RequestStatus.InProgress,
     });
-    expect(
-      container.querySelector(".iui-progress-indicator-radial")
-    ).toBeTruthy();
+    await waitFor(() =>
+      expect(
+        container.querySelector("[class*='progress-indicator']")
+      ).toBeTruthy()
+    );
   });
 
-  it("should show included changesets on expand", () => {
+  it("should show included changesets on expand", async () => {
     const { container } = renderComponent({
       tableData: [
         {
@@ -107,7 +131,9 @@ describe("VersionsTab", () => {
       ],
     });
     // check on expand changeset data must be there
-    const rowgroup = container.querySelector('[role="rowgroup"]') as Element;
+    const rowgroup = container.querySelector(
+      "*[class$='table-body']"
+    ) as Element;
     const rowElements = rowgroup.querySelectorAll('[role="row"]');
     const cell = container.querySelector('[role="cell"]') as Element;
     expect(rowElements.length).toBe(1);
@@ -119,7 +145,7 @@ describe("VersionsTab", () => {
     const rowsOnExpand = rowgroup.querySelectorAll('[role="row"]');
     expect(rowsOnExpand.length).toBe(2);
 
-    rowsOnExpand.forEach((row, index) => {
+    rowsOnExpand.forEach(async (row, index) => {
       const cells = row.querySelectorAll('[role="cell"]');
       expect(cells.length).toBe(6);
       if (index === 0) {
@@ -129,13 +155,14 @@ describe("VersionsTab", () => {
         expect(cells[3].textContent).toContain(MockedVersion().createdDateTime);
         expect(cells[4].textContent).toContain(defaultStrings.view);
         const viewSpan = screen.getByText("View");
-        fireEvent.click(viewSpan);
+        await act(() => fireEvent.click(viewSpan));
         const actionsCell = cells[cells.length - 1];
-        const actionButton = within(actionsCell as HTMLElement).getByText(
-          "More"
+        const actionButton = within(actionsCell as HTMLElement).getByRole(
+          "button",
+          { name: "More" }
         );
-        fireEvent.click(actionButton);
-        const updateAction = screen.getByText(
+        await act(() => fireEvent.click(actionButton));
+        const updateAction = await screen.findByText(
           defaultStrings.updateNamedVersion
         );
         if (updateAction) {

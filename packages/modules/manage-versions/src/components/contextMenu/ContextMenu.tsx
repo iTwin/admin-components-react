@@ -28,7 +28,7 @@ export const ContextMenu = ({ menuActions }: ContextMenuProps) => {
     (close: () => void) => {
       return menuActions.map((action, index) => (
         <MenuItem
-          icon={action.icon}
+          startIcon={action.icon}
           key={index}
           onClick={() => {
             close();
