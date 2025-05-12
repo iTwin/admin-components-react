@@ -18,6 +18,7 @@ export function IModelDescription() {
 
   return (
     <LabeledTextarea
+      wrapperProps={{ className: "iac-model-wrapper-element" }}
       label={descriptionString ?? "Description"}
       name="description"
       value={imodel.description}
@@ -34,7 +35,6 @@ export function IModelDescription() {
           : undefined
       }
       autoComplete="off"
-      className="iac-model-wrapper-element"
     />
   );
 }
