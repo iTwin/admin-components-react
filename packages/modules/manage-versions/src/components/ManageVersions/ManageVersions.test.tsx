@@ -72,14 +72,15 @@ describe("ManageVersions", () => {
     );
     expect(versionRows.length).toBe(3);
 
-    versionRows.forEach((row, index) => {
+    versionRows.forEach(async (row, index) => {
       const cells = row.querySelectorAll("div[role='cell']");
       expect(cells.length).toBe(5);
       const mockedVersion = MockedVersion(versionRows.length - 1 - index);
       expect(cells[0].textContent).toContain(mockedVersion.name);
       expect(cells[1].textContent).toContain(mockedVersion.description);
-
-      expect(cells[2].textContent).toContain(mockedVersion.createdBy);
+      await waitFor(() =>
+        expect(cells[2].textContent).toContain(mockedVersion.createdBy)
+      );
       expect(cells[3].textContent).toContain(mockedVersion.createdDateTime);
       const actionsCell = cells[4] as HTMLElement;
       const button = within(actionsCell as HTMLElement).getByText("More");
