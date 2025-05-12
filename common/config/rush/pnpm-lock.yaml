@@ -102,9 +102,11 @@ importers:
 
   ../../packages/modules/create-imodel:
     specifiers:
-      '@itwin/itwinui-react': ^2.12.18
+      '@itwin/itwinui-react': ^3.18.0
       '@rollup/plugin-commonjs': ~17.1.0
-      '@testing-library/react': ^11.1.0
+      '@testing-library/dom': ^10.4.0
+      '@testing-library/jest-dom': ^6.6.3
+      '@testing-library/react': ^16.2.0
       '@types/jest': ^27.5.1
       '@types/node': ^14.14.35
       '@types/react': ^18.3.5
@@ -137,10 +139,12 @@ importers:
       tslib: ^2.6.2
       typescript: ^4.2.3
     dependencies:
-      '@itwin/itwinui-react': 2.12.26_nnrd3gsncyragczmpvfhocinkq
+      '@itwin/itwinui-react': 3.18.0_nnrd3gsncyragczmpvfhocinkq
     devDependencies:
       '@rollup/plugin-commonjs': 17.1.0_rollup@2.79.2
-      '@testing-library/react': 11.2.7_nnrd3gsncyragczmpvfhocinkq
+      '@testing-library/dom': 10.4.0
+      '@testing-library/jest-dom': 6.6.3
+      '@testing-library/react': 16.3.0_cg5vlg2yqdpl4icu5ffhwjcjba
       '@types/jest': 27.5.2
       '@types/node': 14.18.63
       '@types/react': 18.3.20
@@ -5377,6 +5381,28 @@ packages:
     dependencies:
       '@babel/runtime': 7.27.0
       '@testing-library/dom': 7.31.2
+      react: 18.3.1
+      react-dom: 18.3.1_react@18.3.1
+    dev: true
+
+  /@testing-library/react/16.3.0_cg5vlg2yqdpl4icu5ffhwjcjba:
+    resolution: {integrity: sha512-kFSyxiEDwv1WLl2fgsq6pPBbw5aWKrsY2/noi1Id0TK0UParSF62oFQFGHXIyaG4pp2tEub/Zlel+fjjZILDsw==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      '@testing-library/dom': ^10.0.0
+      '@types/react': ^18.0.0 || ^19.0.0
+      '@types/react-dom': ^18.0.0 || ^19.0.0
+      react: ^18.0.0 || ^19.0.0
+      react-dom: ^18.0.0 || ^19.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      '@types/react-dom':
+        optional: true
+    dependencies:
+      '@babel/runtime': 7.27.0
+      '@testing-library/dom': 10.4.0
+      '@types/react': 18.3.20
       react: 18.3.1
       react-dom: 18.3.1_react@18.3.1
     dev: true

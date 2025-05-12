@@ -2,6 +2,18 @@
   "name": "@itwin/create-imodel-react",
   "entries": [
     {
+      "version": "2.2.0",
+      "tag": "@itwin/create-imodel-react_v2.2.0",
+      "date": "Mon, 12 May 2025 12:34:53 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Updated create-imodel-react to itwin-react V3"
+          }
+        ]
+      }
+    },
+    {
       "version": "2.1.0",
       "tag": "@itwin/create-imodel-react_v2.1.0",
       "date": "Tue, 22 Apr 2025 07:32:24 GMT",

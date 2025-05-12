@@ -2,7 +2,10 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { fireEvent, render } from "@testing-library/react";
+import "@testing-library/jest-dom";
+
+import { ThemeProvider } from "@itwin/itwinui-react";
+import { act, fireEvent, render, waitFor } from "@testing-library/react";
 import React from "react";
 
 import { BaseIModelPage } from "./BaseIModel";
@@ -12,11 +15,15 @@ describe("BaseIModel", () => {
     jest.clearAllMocks();
   });
 
-  it("should show base page", () => {
+  const renderWithThemeProvider = (children: React.ReactNode) => {
+    return render(<ThemeProvider>{children}</ThemeProvider>);
+  };
+
+  it("should show base page", async () => {
     const actionMock = jest.fn();
     const closeMock = jest.fn();
 
-    const { container, getByText } = render(
+    const { container, getByText } = renderWithThemeProvider(
       <BaseIModelPage onActionClick={actionMock} onClose={closeMock} />
     );
 
@@ -37,19 +44,19 @@ describe("BaseIModel", () => {
     const confirmButton = container.querySelector(
       ".iac-button-bar button:first-child"
     ) as HTMLButtonElement;
-    expect(confirmButton.disabled).toBe(true);
+    expect(confirmButton).toHaveAttribute("aria-disabled", "true");
     expect(confirmButton.textContent).toBe("Create");
-    confirmButton.click();
+    await act(() => fireEvent.click(confirmButton));
     expect(actionMock).not.toHaveBeenCalled();
     const cancelButton = container.querySelector(
       ".iac-button-bar button:last-child"
     ) as HTMLButtonElement;
-    cancelButton.click();
+    await act(() => fireEvent.click(cancelButton));
     expect(closeMock).toHaveBeenCalled();
   });
 
   it("should show base page with custom extent component", () => {
-    const { container, getByText, queryByText } = render(
+    const { container, getByText, queryByText } = renderWithThemeProvider(
       <BaseIModelPage extentComponent={<div className="test-extent-map" />} />
     );
 
@@ -70,34 +77,40 @@ describe("BaseIModel", () => {
     const confirmButton = container.querySelector(
       ".iac-button-bar button:first-child"
     ) as HTMLButtonElement;
-    expect(confirmButton.disabled).toBe(true);
+    expect(confirmButton).toHaveAttribute("aria-disabled", "true");
     expect(confirmButton.textContent).toBe("Create");
 
     expect(container.querySelector(".test-extent-map")).toBeTruthy();
   });
 
   it("should show overlay spinner", () => {
-    const { container } = render(<BaseIModelPage isLoading />);
+    const { container } = renderWithThemeProvider(<BaseIModelPage isLoading />);
 
     expect(container.querySelector(".iac-overlay-container")).toBeTruthy();
   });
 
   it("should show error message for too long string", async () => {
-    const { container, getByText } = render(<BaseIModelPage />);
+    const { container, getByText } = renderWithThemeProvider(
+      <BaseIModelPage />
+    );
 
     const name = container.querySelector(
       ".iac-inputs-container input"
     ) as HTMLInputElement;
-    fireEvent.change(name, { target: { value: new Array(260).join("a") } });
+    await waitFor(async () =>
+      fireEvent.change(name, {
+        target: { value: new Array(260).join("a") },
+      })
+    );
     getByText("The value exceeds allowed 255 characters.");
     const confirmButton = container.querySelector(
       ".iac-button-bar button:first-child"
     ) as HTMLButtonElement;
-    expect(confirmButton.disabled).toBe(true);
+    expect(confirmButton).toHaveAttribute("aria-disabled", "true");
   });
 
   it("should show base page with filled values", () => {
-    const { container } = render(
+    const { container } = renderWithThemeProvider(
       <BaseIModelPage
         initialIModel={{
           name: "Some name",

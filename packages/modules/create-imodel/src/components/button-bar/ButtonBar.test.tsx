@@ -2,7 +2,9 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { fireEvent, render } from "@testing-library/react";
+import "@testing-library/jest-dom";
+
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import React from "react";
 
 import { IModelContext, InnerIModelContext } from "../context/imodel-context";
@@ -41,22 +43,28 @@ describe("ButtonBar", () => {
   it("should show buttons with value from context API", async () => {
     const { getByText } = render(renderFunction());
 
-    fireEvent.click(getByText(innerContextValue.confirmButtonText));
+    await act(() =>
+      fireEvent.click(getByText(innerContextValue.confirmButtonText))
+    );
     expect(callbackFun).toHaveBeenCalled();
   });
 
   it("should disable create button if isPrimaryButtonDisabled context prop is true", async () => {
-    const { getByText } = render(
-      renderFunction({ isPrimaryButtonDisabled: true })
-    );
+    render(renderFunction({ isPrimaryButtonDisabled: true }));
 
-    const buttonConfirm = getByText(
-      innerContextValue.confirmButtonText
-    ) as HTMLInputElement;
-    const buttonCancel = getByText(
-      innerContextValue.cancelButtonText
-    ) as HTMLInputElement;
-    expect(buttonConfirm.closest("button")?.disabled).toBe(true);
-    expect(buttonCancel.closest("button")?.disabled).toBe(false);
+    const buttonConfirm = (await screen.findByRole("button", {
+      name: innerContextValue.confirmButtonText,
+    })) as HTMLButtonElement;
+    const buttonCancel = (await screen.findByRole("button", {
+      name: innerContextValue.cancelButtonText,
+    })) as HTMLButtonElement;
+    expect(buttonConfirm.closest("button")).toHaveAttribute(
+      "aria-disabled",
+      "true"
+    );
+    expect(buttonCancel.closest("button")).not.toHaveAttribute(
+      "aria-disabled",
+      "true"
+    );
   });
 });
