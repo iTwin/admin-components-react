@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import "@testing-library/jest-dom";
 
+import { ThemeProvider } from "@itwin/itwinui-react";
 import { act, fireEvent, render, waitFor } from "@testing-library/react";
 import React from "react";
 
@@ -14,11 +15,15 @@ describe("BaseIModel", () => {
     jest.clearAllMocks();
   });
 
+  const renderWithThemeProvider = (children: React.ReactNode) => {
+    return render(<ThemeProvider>{children}</ThemeProvider>);
+  };
+
   it("should show base page", async () => {
     const actionMock = jest.fn();
     const closeMock = jest.fn();
 
-    const { container, getByText } = render(
+    const { container, getByText } = renderWithThemeProvider(
       <BaseIModelPage onActionClick={actionMock} onClose={closeMock} />
     );
 
@@ -51,7 +56,7 @@ describe("BaseIModel", () => {
   });
 
   it("should show base page with custom extent component", () => {
-    const { container, getByText, queryByText } = render(
+    const { container, getByText, queryByText } = renderWithThemeProvider(
       <BaseIModelPage extentComponent={<div className="test-extent-map" />} />
     );
 
@@ -79,13 +84,15 @@ describe("BaseIModel", () => {
   });
 
   it("should show overlay spinner", () => {
-    const { container } = render(<BaseIModelPage isLoading />);
+    const { container } = renderWithThemeProvider(<BaseIModelPage isLoading />);
 
     expect(container.querySelector(".iac-overlay-container")).toBeTruthy();
   });
 
   it("should show error message for too long string", async () => {
-    const { container, getByText } = render(<BaseIModelPage />);
+    const { container, getByText } = renderWithThemeProvider(
+      <BaseIModelPage />
+    );
 
     const name = container.querySelector(
       ".iac-inputs-container input"
@@ -103,7 +110,7 @@ describe("BaseIModel", () => {
   });
 
   it("should show base page with filled values", () => {
-    const { container } = render(
+    const { container } = renderWithThemeProvider(
       <BaseIModelPage
         initialIModel={{
           name: "Some name",
