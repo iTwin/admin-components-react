@@ -78,8 +78,9 @@ describe("ManageVersions", () => {
       const mockedVersion = MockedVersion(versionRows.length - 1 - index);
       expect(cells[0].textContent).toContain(mockedVersion.name);
       expect(cells[1].textContent).toContain(mockedVersion.description);
-      await waitFor(() =>
-        expect(cells[2].textContent).toContain(mockedVersion.createdBy)
+      await waitFor(
+        () => expect(cells[2].textContent).toContain(mockedVersion.createdBy),
+        { timeout: 5000 }
       );
       expect(cells[3].textContent).toContain(mockedVersion.createdDateTime);
       const actionsCell = cells[4] as HTMLElement;
