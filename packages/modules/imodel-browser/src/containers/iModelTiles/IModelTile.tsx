@@ -94,6 +94,7 @@ export const IModelTile = ({
           <Tile.Action
             onClick={(e) => onClick?.(e) ?? onThumbnailClick?.(iModel)}
             aria-disabled={isDisabled}
+            data-testid={`iModel-tile-${iModel?.id}`}
           >
             {name ?? iModel?.displayName}
           </Tile.Action>
