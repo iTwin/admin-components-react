@@ -2,6 +2,18 @@
   "name": "@itwin/imodel-browser-react",
   "entries": [
     {
+      "version": "3.0.6",
+      "tag": "@itwin/imodel-browser-react_v3.0.6",
+      "date": "Mon, 19 May 2025 12:15:34 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Added data-testid's to tiles"
+          }
+        ]
+      }
+    },
+    {
       "version": "3.0.5",
       "tag": "@itwin/imodel-browser-react_v3.0.5",
       "date": "Thu, 24 Apr 2025 20:04:45 GMT",

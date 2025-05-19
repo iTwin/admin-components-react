@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Thu, 24 Apr 2025 20:04:45 GMT and should not be manually modified.
+This log was last generated on Mon, 19 May 2025 12:15:34 GMT and should not be manually modified.
+
+## 3.0.6
+Mon, 19 May 2025 12:15:34 GMT
+
+### Patches
+
+- Added data-testid's to tiles
 
 ## 3.0.5
 Thu, 24 Apr 2025 20:04:45 GMT
