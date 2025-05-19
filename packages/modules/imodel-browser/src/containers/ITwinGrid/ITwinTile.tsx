@@ -116,6 +116,7 @@ export const ITwinTile = ({
             <Tile.Action
               onClick={(e) => onClick?.(e) ?? onThumbnailClick?.(iTwin)}
               aria-disabled={isDisabled}
+              data-testid={`iTwin-tile-${iTwin.id}`}
             >
               {name ?? iTwin?.displayName}
             </Tile.Action>
