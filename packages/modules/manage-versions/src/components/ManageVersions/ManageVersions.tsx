@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { Tabs, ThemeProvider } from "@itwin/itwinui-react";
+import { Flex, Tabs, ThemeProvider, ToggleSwitch } from "@itwin/itwinui-react";
 import React from "react";
 
 import { ChangesetClient } from "../../clients/changesetClient";
@@ -38,6 +38,8 @@ export const defaultStrings: ManageVersionsStringOverrides = {
   updateNamedVersion: "Update a Named Version",
   update: "Update",
   download: "Download",
+  hide: "Hide",
+  unhide: "Unhide",
   More: "More",
   view: "View",
   messageFailedGetNamedVersions:
@@ -61,6 +63,7 @@ export const defaultStrings: ManageVersionsStringOverrides = {
     "Could not update a Named Version. Please try again later.",
   messageValueTooLong: "The value exceeds allowed {{length}} characters.",
   informationPanelStringOverrides: informationPanelDefaultStrings,
+  showHiddenVersions: "Show hidden versions",
 };
 
 export type ManageVersionsProps = {
@@ -377,6 +380,40 @@ export const ManageVersions = (props: ManageVersionsProps) => {
     });
   };
 
+  const [showHiddenVersions, setShowHiddenVersions] =
+    React.useState<boolean>(false);
+
+  const handleToggleVersionState = React.useCallback(
+    async (version: NamedVersion) => {
+      const newState = version.state === "hidden" ? "visible" : "hidden";
+      try {
+        await versionClient.updateState(imodelId, version.id, newState);
+        setVersionsTableData((prevData) =>
+          prevData?.map((data) =>
+            data.version.id === version.id
+              ? { ...data, version: { ...data.version, state: newState } }
+              : data
+          )
+        );
+      } catch (error) {
+        console.error(`Failed to update version state: ${error}`);
+      }
+    },
+    [versionClient, imodelId]
+  );
+
+  const filteredVersionsTableData = React.useMemo(() => {
+    if (showHiddenVersions) {
+      return (versionsTableData ?? []).filter(
+        (data) => data.version.state === "hidden"
+      );
+    } else {
+      return (versionsTableData ?? []).filter(
+        (data) => data.version.state !== "hidden"
+      );
+    }
+  }, [versionsTableData, showHiddenVersions]);
+
   return (
     <ThemeProvider theme="inherit">
       <ConfigProvider
@@ -387,22 +424,37 @@ export const ManageVersions = (props: ManageVersionsProps) => {
         log={log}
       >
         <div>
-          <Tabs
-            orientation="horizontal"
-            labels={[stringsOverrides.namedVersions, stringsOverrides.changes]}
-            activeIndex={_currentTab}
-            onTabSelected={(index) => changeTab(index)}
-            type="borderless"
-          />
+          <Flex>
+            <Tabs
+              labels={[
+                stringsOverrides.namedVersions,
+                stringsOverrides.changes,
+              ]}
+              activeIndex={_currentTab}
+              onTabSelected={(index) => changeTab(index)}
+              type="borderless"
+              orientation="horizontal"
+            />
+            <Flex.Spacer />
+            {_currentTab === ManageVersionsTabs.Versions && (
+              <ToggleSwitch
+                size="small"
+                label={stringsOverrides.showHiddenVersions}
+                checked={showHiddenVersions}
+                onChange={() => setShowHiddenVersions(!showHiddenVersions)}
+              />
+            )}
+          </Flex>
           {_currentTab === ManageVersionsTabs.Versions && (
             <VersionsTab
               status={versionStatus}
               onVersionUpdated={refreshVersions}
               loadMoreVersions={getMoreVersions}
               onViewClick={onViewClick}
-              tableData={versionsTableData ?? []}
+              tableData={filteredVersionsTableData ?? []}
               changesetClient={changesetClient}
               setRelatedChangesets={setRelatedChangesets}
+              handleHideVersion={handleToggleVersionState}
             />
           )}
           {_currentTab === ManageVersionsTabs.Changes && (

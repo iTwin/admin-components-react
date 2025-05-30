@@ -27,6 +27,7 @@ export const MockedVersion = (
     name: `nv_name${index}`,
     description: `nv_description${index}`,
     createdDateTime: MOCKED_DATE,
+    state: `visible`,
     _links: {
       changeSet: {
         href: "https://someChangesetUrl.com",

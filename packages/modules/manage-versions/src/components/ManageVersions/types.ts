@@ -34,6 +34,10 @@ export type ManageVersionsStringOverrides = {
   update: string;
   /** Default: `Download` */
   download?: string;
+  /** Default: `Hide` */
+  hide?: string;
+  /** Default: `Hide` */
+  unhide?: string;
   /** Label for Named Version context menu` Default `More` */
   More?: string;
   /** Default: `View` */
@@ -72,6 +76,8 @@ export type ManageVersionsStringOverrides = {
   informationPanel?: string;
   /** string overrides for text within Information panel` */
   informationPanelStringOverrides?: InformationPanelStringOverrides;
+  /** Default: `Hide Named Versions` */
+  showHiddenVersions?: string;
 };
 
 export type LogFunc = (

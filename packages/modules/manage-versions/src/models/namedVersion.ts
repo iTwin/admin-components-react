@@ -10,6 +10,7 @@ export type NamedVersionBackend = {
   name: string;
   description: string;
   createdDateTime: string;
+  state: string;
   _links: {
     changeSet: {
       href: string;

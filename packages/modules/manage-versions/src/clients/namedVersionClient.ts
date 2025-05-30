@@ -71,4 +71,21 @@ export class NamedVersionClient {
       )
       .then((resp) => resp.namedVersion);
   }
+
+  public async updateState(
+    imodelId: string,
+    versionId: string,
+    state: string
+  ): Promise<NamedVersion> {
+    return this._http
+      .patch(
+        UrlBuilder.buildVersionsUrl(
+          imodelId,
+          versionId,
+          this._serverEnvironmentPrefix
+        ),
+        { state }
+      )
+      .then((resp) => resp.namedVersion);
+  }
 }

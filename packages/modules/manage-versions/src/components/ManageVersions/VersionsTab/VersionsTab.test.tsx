@@ -44,6 +44,7 @@ const renderComponent = (initialProps?: Partial<VersionsTabProps>) => {
     tableData: MockedVersionTableData(),
     changesetClient: new ChangesetClient("token"),
     setRelatedChangesets: jest.fn(),
+    handleHideVersion: jest.fn(),
     ...initialProps,
   };
   return render(

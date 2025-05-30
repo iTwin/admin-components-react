@@ -4,7 +4,12 @@
  *--------------------------------------------------------------------------------------------*/
 import "./VersionsTab.scss";
 
-import { SvgDownload, SvgEdit } from "@itwin/itwinui-icons-react";
+import {
+  SvgDownload,
+  SvgEdit,
+  SvgVisibilityHide,
+  SvgVisibilityShow,
+} from "@itwin/itwinui-icons-react";
 import { Table, Text, useToaster } from "@itwin/itwinui-react";
 import React, { useCallback } from "react";
 import { CellProps } from "react-table";
@@ -29,6 +34,7 @@ export type VersionsTabProps = {
   tableData: VersionTableData[];
   changesetClient: ChangesetClient;
   setRelatedChangesets: (versionId: string, changesets: Changeset[]) => void;
+  handleHideVersion: (version: NamedVersion) => void;
 };
 
 const isNamedVersion = (
@@ -46,6 +52,7 @@ const VersionsTab = (props: VersionsTabProps) => {
     tableData,
     changesetClient,
     setRelatedChangesets,
+    handleHideVersion,
   } = props;
   const toaster = useToaster();
   const { stringsOverrides, imodelId } = useConfig();
@@ -143,8 +150,18 @@ const VersionsTab = (props: VersionsTabProps) => {
     [renderDateColumn]
   );
 
+  const toggleVersionState = useCallback(
+    (version: NamedVersion) => {
+      handleHideVersion(version);
+    },
+    [handleHideVersion]
+  );
+
   const getToolbarActions = useCallback(
     (props: CellProps<VersionTableData>) => {
+      const version = props.row.original.version;
+      const isHidden = version.state === "hidden";
+
       const mainToolbarActions: MenuAction[] = [
         {
           title: stringsOverrides.updateNamedVersion,
@@ -164,6 +181,18 @@ const VersionsTab = (props: VersionsTabProps) => {
           onClick: async () => {
             const { changesetIndex } = props.row.original.version;
             await onDownloadClick(changesetIndex);
+          },
+        },
+        {
+          title: isHidden
+            ? stringsOverrides.unhide ?? "Unhide"
+            : stringsOverrides.hide ?? "Hide",
+          label: isHidden
+            ? stringsOverrides.unhide ?? "Unhide"
+            : stringsOverrides.hide ?? "Hide",
+          icon: isHidden ? <SvgVisibilityShow /> : <SvgVisibilityHide />,
+          onClick: () => {
+            toggleVersionState(props.row.original.version);
           },
         },
       ];
