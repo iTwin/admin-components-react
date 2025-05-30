@@ -2,7 +2,13 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { Flex, Tabs, ThemeProvider, ToggleSwitch } from "@itwin/itwinui-react";
+import {
+  Flex,
+  Tabs,
+  ThemeProvider,
+  ToggleSwitch,
+  useToaster,
+} from "@itwin/itwinui-react";
 import React from "react";
 
 import { ChangesetClient } from "../../clients/changesetClient";
@@ -63,7 +69,14 @@ export const defaultStrings: ManageVersionsStringOverrides = {
     "Could not update a Named Version. Please try again later.",
   messageValueTooLong: "The value exceeds allowed {{length}} characters.",
   informationPanelStringOverrides: informationPanelDefaultStrings,
-  showHiddenVersions: "Show hidden versions",
+  messageShowHiddenVersions: "Show hidden versions",
+  messageHideVersionSucess: "Named Version {{name}} was successfully hidden.",
+  messageUnhideVersionSucess:
+    "Named Version {{name}} was successfully unhidden.",
+  messageHideVersionFailed:
+    "Could not hide the Named Version. Please try again later.",
+  messageUnhideVersionFailed:
+    "Could not unhide the Named Version. Please try again later.",
 };
 
 export type ManageVersionsProps = {
@@ -156,7 +169,14 @@ const updateChangesetsProperties = (
   }));
 };
 
-export const ManageVersions = (props: ManageVersionsProps) => {
+export function ManageVersions(props: ManageVersionsProps) {
+  return (
+    <ThemeProvider theme="inherit">
+      <ManageVersionsComponent {...props} />
+    </ThemeProvider>
+  );
+}
+export const ManageVersionsComponent = (props: ManageVersionsProps) => {
   const {
     accessToken,
     apiOverrides,
@@ -168,6 +188,7 @@ export const ManageVersions = (props: ManageVersionsProps) => {
     onTabChange,
   } = props;
 
+  const toaster = useToaster();
   const versionClient = React.useMemo(
     () =>
       new NamedVersionClient(
@@ -386,6 +407,7 @@ export const ManageVersions = (props: ManageVersionsProps) => {
   const handleToggleVersionState = React.useCallback(
     async (version: NamedVersion) => {
       const newState = version.state === "hidden" ? "visible" : "hidden";
+      const isHiding = newState === "hidden";
       try {
         await versionClient.updateState(imodelId, version.id, newState);
         setVersionsTableData((prevData) =>
@@ -395,8 +417,23 @@ export const ManageVersions = (props: ManageVersionsProps) => {
               : data
           )
         );
+        toaster.positive(
+          isHiding
+            ? stringsOverrides.messageHideVersionSucess?.replace(
+                "{{name}}",
+                version.name
+              )
+            : stringsOverrides.messageUnhideVersionSucess?.replace(
+                "{{name}}",
+                version.name
+              )
+        );
       } catch (error) {
-        console.error(`Failed to update version state: ${error}`);
+        toaster.negative(
+          isHiding
+            ? stringsOverrides.messageHideVersionFailed
+            : stringsOverrides.messageUnhideVersionFailed
+        );
       }
     },
     [versionClient, imodelId]
@@ -415,59 +452,54 @@ export const ManageVersions = (props: ManageVersionsProps) => {
   }, [versionsTableData, showHiddenVersions]);
 
   return (
-    <ThemeProvider theme="inherit">
-      <ConfigProvider
-        accessToken={accessToken}
-        imodelId={imodelId}
-        apiOverrides={apiOverrides}
-        stringsOverrides={stringsOverrides}
-        log={log}
-      >
-        <div>
-          <Flex>
-            <Tabs
-              labels={[
-                stringsOverrides.namedVersions,
-                stringsOverrides.changes,
-              ]}
-              activeIndex={_currentTab}
-              onTabSelected={(index) => changeTab(index)}
-              type="borderless"
-              orientation="horizontal"
-            />
-            <Flex.Spacer />
-            {_currentTab === ManageVersionsTabs.Versions && (
-              <ToggleSwitch
-                size="small"
-                label={stringsOverrides.showHiddenVersions}
-                checked={showHiddenVersions}
-                onChange={() => setShowHiddenVersions(!showHiddenVersions)}
-              />
-            )}
-          </Flex>
+    <ConfigProvider
+      accessToken={accessToken}
+      imodelId={imodelId}
+      apiOverrides={apiOverrides}
+      stringsOverrides={stringsOverrides}
+      log={log}
+    >
+      <div>
+        <Flex>
+          <Tabs
+            labels={[stringsOverrides.namedVersions, stringsOverrides.changes]}
+            activeIndex={_currentTab}
+            onTabSelected={(index) => changeTab(index)}
+            type="borderless"
+            orientation="horizontal"
+          />
+          <Flex.Spacer />
           {_currentTab === ManageVersionsTabs.Versions && (
-            <VersionsTab
-              status={versionStatus}
-              onVersionUpdated={refreshVersions}
-              loadMoreVersions={getMoreVersions}
-              onViewClick={onViewClick}
-              tableData={filteredVersionsTableData ?? []}
-              changesetClient={changesetClient}
-              setRelatedChangesets={setRelatedChangesets}
-              handleHideVersion={handleToggleVersionState}
+            <ToggleSwitch
+              labelPosition="left"
+              label={stringsOverrides.messageShowHiddenVersions}
+              checked={showHiddenVersions}
+              onChange={() => setShowHiddenVersions(!showHiddenVersions)}
             />
           )}
-          {_currentTab === ManageVersionsTabs.Changes && (
-            <ChangesTab
-              changesets={changesets ?? []}
-              status={changesetStatus}
-              loadMoreChanges={getChangesets}
-              onVersionCreated={onVersionCreated}
-              latestVersion={latestVersion?.version}
-            />
-          )}
-        </div>
-      </ConfigProvider>
-    </ThemeProvider>
+        </Flex>
+        {_currentTab === ManageVersionsTabs.Versions && (
+          <VersionsTab
+            status={versionStatus}
+            onVersionUpdated={refreshVersions}
+            loadMoreVersions={getMoreVersions}
+            onViewClick={onViewClick}
+            tableData={filteredVersionsTableData ?? []}
+            changesetClient={changesetClient}
+            setRelatedChangesets={setRelatedChangesets}
+            handleHideVersion={handleToggleVersionState}
+          />
+        )}
+        {_currentTab === ManageVersionsTabs.Changes && (
+          <ChangesTab
+            changesets={changesets ?? []}
+            status={changesetStatus}
+            loadMoreChanges={getChangesets}
+            onVersionCreated={onVersionCreated}
+            latestVersion={latestVersion?.version}
+          />
+        )}
+      </div>
+    </ConfigProvider>
   );
 };

@@ -191,6 +191,7 @@ const VersionsTab = (props: VersionsTabProps) => {
             ? stringsOverrides.unhide ?? "Unhide"
             : stringsOverrides.hide ?? "Hide",
           icon: isHidden ? <SvgVisibilityShow /> : <SvgVisibilityHide />,
+          disabled: false,
           onClick: () => {
             toggleVersionState(props.row.original.version);
           },
@@ -201,6 +202,8 @@ const VersionsTab = (props: VersionsTabProps) => {
     [
       onDownloadClick,
       stringsOverrides.download,
+      stringsOverrides.hide,
+      stringsOverrides.unhide,
       stringsOverrides.updateNamedVersion,
     ]
   );

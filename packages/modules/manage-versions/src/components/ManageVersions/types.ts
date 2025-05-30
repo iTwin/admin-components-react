@@ -36,7 +36,7 @@ export type ManageVersionsStringOverrides = {
   download?: string;
   /** Default: `Hide` */
   hide?: string;
-  /** Default: `Hide` */
+  /** Default: `Unhide` */
   unhide?: string;
   /** Label for Named Version context menu` Default `More` */
   More?: string;
@@ -76,8 +76,16 @@ export type ManageVersionsStringOverrides = {
   informationPanel?: string;
   /** string overrides for text within Information panel` */
   informationPanelStringOverrides?: InformationPanelStringOverrides;
-  /** Default: `Hide Named Versions` */
-  showHiddenVersions?: string;
+  /** Default: `Show hidden Versions` */
+  messageShowHiddenVersions?: string;
+  /** Default: Named Version "{{versionName}}" was successfully hidden.*/
+  messageHideVersionSucess?: string;
+  /** Default: Named Version "{{versionName}}" was successfully unhidden.*/
+  messageUnhideVersionSucess?: string;
+  /** Default: `Could not hide Named Version. Please try again later. */
+  messageHideVersionFailed?: string;
+  /** Default: `Could not unhide Named Version. Please try again later. */
+  messageUnhideVersionFailed?: string;
 };
 
 export type LogFunc = (
