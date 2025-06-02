@@ -426,30 +426,37 @@ export const ManageVersionsComponent = (props: ManageVersionsProps) => {
             : stringsOverrides.messageUnhideVersionSucess?.replace(
                 "{{name}}",
                 version.name
-              )
+              ),
+          { hasCloseButton: true }
         );
       } catch (error) {
         toaster.negative(
           isHiding
             ? stringsOverrides.messageHideVersionFailed
-            : stringsOverrides.messageUnhideVersionFailed
+            : stringsOverrides.messageUnhideVersionFailed,
+          { hasCloseButton: true }
         );
       }
     },
-    [versionClient, imodelId]
+    [
+      versionClient,
+      imodelId,
+      stringsOverrides.messageHideVersionSucess,
+      stringsOverrides.messageUnhideVersionSucess,
+      stringsOverrides.messageHideVersionFailed,
+      stringsOverrides.messageUnhideVersionFailed,
+    ]
   );
 
-  const filteredVersionsTableData = React.useMemo(() => {
-    if (showHiddenVersions) {
-      return (versionsTableData ?? []).filter(
-        (data) => data.version.state === "hidden"
-      );
-    } else {
-      return (versionsTableData ?? []).filter(
-        (data) => data.version.state !== "hidden"
-      );
-    }
-  }, [versionsTableData, showHiddenVersions]);
+  const filteredVersionsTableData = React.useMemo(
+    () =>
+      showHiddenVersions
+        ? versionsTableData ?? []
+        : (versionsTableData ?? []).filter(
+            (data) => data.version.state !== "hidden"
+          ),
+    [versionsTableData, showHiddenVersions]
+  );
 
   return (
     <ConfigProvider
@@ -484,7 +491,7 @@ export const ManageVersionsComponent = (props: ManageVersionsProps) => {
             onVersionUpdated={refreshVersions}
             loadMoreVersions={getMoreVersions}
             onViewClick={onViewClick}
-            tableData={filteredVersionsTableData ?? []}
+            tableData={filteredVersionsTableData}
             changesetClient={changesetClient}
             setRelatedChangesets={setRelatedChangesets}
             handleHideVersion={handleToggleVersionState}

@@ -44,6 +44,10 @@ describe("ManageVersions", () => {
   const mockGetVersions = jest.spyOn(NamedVersionClient.prototype, "get");
   const mockCreateVersion = jest.spyOn(NamedVersionClient.prototype, "create");
   const mockUpdateVersion = jest.spyOn(NamedVersionClient.prototype, "update");
+  const mockUpdateStateVersion = jest.spyOn(
+    NamedVersionClient.prototype,
+    "updateState"
+  );
   const mockGetChangesets = jest.spyOn(ChangesetClient.prototype, "get");
   const mockGetUsers = jest.spyOn(ChangesetClient.prototype, "getUsers");
   const mockScrollTo = jest.fn();
@@ -266,8 +270,10 @@ describe("ManageVersions", () => {
     const updateAction = screen.getByText(defaultStrings.updateNamedVersion);
     await updateAction.click();
 
-    await waitForSelectorToExist("input");
-    const nameInput = document.querySelector("input") as HTMLInputElement;
+    await waitForSelectorToExist('input[name="name"]');
+    const nameInput = document.querySelector(
+      'input[name="name"]'
+    ) as HTMLInputElement;
     const descriptionInput = document.querySelector(
       "textarea[name='description']"
     ) as HTMLTextAreaElement;
@@ -303,6 +309,44 @@ describe("ManageVersions", () => {
     expect(updateButton).toBeTruthy();
     expect(mockGetVersions).toHaveBeenCalledTimes(2);
     expect(mockUpdateVersion).toHaveBeenCalled();
+  });
+  it.only("should hide version", async () => {
+    mockGetVersions.mockResolvedValueOnce(MockedVersionList());
+    mockUpdateStateVersion.mockResolvedValue(
+      MockedVersion(2, { state: "hidden" })
+    );
+    const { container } = renderComponent();
+
+    await waitFor(() => container.querySelector(".iac-versions-table-body"));
+    const versionRows = container.querySelectorAll(
+      ".iac-versions-table-body [role='row']"
+    );
+    const firstRowCells = versionRows[0].querySelectorAll("div[role='cell']");
+    expect(firstRowCells.length).toBe(5);
+    const actionsCell = firstRowCells[4] as HTMLElement;
+    const button = within(actionsCell as HTMLElement).getByText(
+      "More"
+    ).parentElement;
+    expect(button).toBeTruthy();
+    fireEvent.click(button as HTMLElement);
+    const hideAction = screen.getByText(defaultStrings.hide ?? "Hide");
+    await hideAction.click();
+    expect(mockUpdateStateVersion).toHaveBeenCalledWith(
+      MOCKED_IMODEL_ID,
+      MockedVersion(2).id,
+      "hidden"
+    );
+    await waitFor(() => container.querySelector("iac-versions-table-body"));
+    const versionCells = container.querySelectorAll(
+      "div[role='row']:first-child div[role='cell']"
+    );
+    console.log(MockedVersion(1));
+    expect(versionCells.length).toBe(5);
+    expect(versionCells[0].textContent).toEqual(MockedVersion(1).name);
+    expect(versionCells[1].textContent).toEqual(MockedVersion(1).description);
+    expect(versionCells[3].textContent).toEqual(
+      MockedVersion(1).createdDateTime
+    );
   });
 });
 

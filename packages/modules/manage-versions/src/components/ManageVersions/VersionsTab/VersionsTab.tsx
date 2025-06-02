@@ -205,6 +205,7 @@ const VersionsTab = (props: VersionsTabProps) => {
       stringsOverrides.hide,
       stringsOverrides.unhide,
       stringsOverrides.updateNamedVersion,
+      toggleVersionState,
     ]
   );
 

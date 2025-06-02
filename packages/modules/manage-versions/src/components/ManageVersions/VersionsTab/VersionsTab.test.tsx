@@ -85,6 +85,10 @@ describe("VersionsTab", () => {
         const downloadAction = screen.getByText(defaultStrings.download);
         expect(downloadAction).toBeTruthy();
       }
+      if (defaultStrings.hide) {
+        const hideAction = screen.getByText(defaultStrings.hide);
+        expect(hideAction).toBeTruthy();
+      }
       expect(updateAction).toBeTruthy();
     });
     expect(onViewClick).toHaveBeenCalledTimes(1);
