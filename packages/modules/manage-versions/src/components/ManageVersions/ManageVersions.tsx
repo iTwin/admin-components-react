@@ -410,13 +410,8 @@ export const ManageVersionsComponent = (props: ManageVersionsProps) => {
       const isHiding = newState === "hidden";
       try {
         await versionClient.updateState(imodelId, version.id, newState);
-        setVersionsTableData((prevData) =>
-          prevData?.map((data) =>
-            data.version.id === version.id
-              ? { ...data, version: { ...data.version, state: newState } }
-              : data
-          )
-        );
+        getVersions();
+        setVersionsTableData(versionsTableData);
         toaster.positive(
           isHiding
             ? stringsOverrides.messageHideVersionSucess?.replace(
@@ -495,6 +490,7 @@ export const ManageVersionsComponent = (props: ManageVersionsProps) => {
             changesetClient={changesetClient}
             setRelatedChangesets={setRelatedChangesets}
             handleHideVersion={handleToggleVersionState}
+            showHiddenVersions={showHiddenVersions}
           />
         )}
         {_currentTab === ManageVersionsTabs.Changes && (

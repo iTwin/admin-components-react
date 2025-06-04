@@ -11,8 +11,13 @@ import {
   SvgVisibilityShow,
 } from "@itwin/itwinui-icons-react";
 import { Table, Text, useToaster } from "@itwin/itwinui-react";
+import {
+  ActionType,
+  CellProps,
+  TableInstance,
+  TableState,
+} from "@itwin/itwinui-react/react-table";
 import React, { useCallback } from "react";
-import { CellProps } from "react-table";
 
 import { ChangesetClient } from "../../../clients/changesetClient";
 import { useConfig } from "../../../common/configContext";
@@ -35,6 +40,7 @@ export type VersionsTabProps = {
   changesetClient: ChangesetClient;
   setRelatedChangesets: (versionId: string, changesets: Changeset[]) => void;
   handleHideVersion: (version: NamedVersion) => void;
+  showHiddenVersions: boolean;
 };
 
 const isNamedVersion = (
@@ -53,9 +59,21 @@ const VersionsTab = (props: VersionsTabProps) => {
     changesetClient,
     setRelatedChangesets,
     handleHideVersion,
+    showHiddenVersions,
   } = props;
   const toaster = useToaster();
   const { stringsOverrides, imodelId } = useConfig();
+
+  const tableInstance = React.useRef<TableInstance<VersionTableData>>();
+  const collapseAllRows = useCallback(() => {
+    if (tableInstance.current) {
+      tableInstance.current.toggleAllRowsExpanded(false);
+    }
+  }, []);
+
+  React.useEffect(() => {
+    collapseAllRows();
+  }, [collapseAllRows, showHiddenVersions]);
 
   const [currentVersion, setCurrentVersion] = React.useState<
     NamedVersion | undefined
@@ -152,9 +170,10 @@ const VersionsTab = (props: VersionsTabProps) => {
 
   const toggleVersionState = useCallback(
     (version: NamedVersion) => {
+      collapseAllRows();
       handleHideVersion(version);
     },
-    [handleHideVersion]
+    [handleHideVersion, collapseAllRows]
   );
 
   const getToolbarActions = useCallback(
@@ -367,6 +386,18 @@ const VersionsTab = (props: VersionsTabProps) => {
         onBottomReached={loadMoreVersions}
         className="iac-versions-table"
         onExpand={onExpandRow}
+        stateReducer={useCallback(
+          (
+            newState: TableState<VersionTableData>,
+            _action: ActionType,
+            _prevState: TableState<VersionTableData>,
+            instance: TableInstance<VersionTableData> | undefined
+          ) => {
+            tableInstance.current = instance;
+            return newState;
+          },
+          []
+        )}
         autoResetExpanded={false}
       />
       {isUpdateVersionModalOpen && (

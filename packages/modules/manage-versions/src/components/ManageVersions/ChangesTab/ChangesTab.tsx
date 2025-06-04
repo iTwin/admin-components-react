@@ -9,8 +9,8 @@ import {
   SvgNamedVersionAdd,
 } from "@itwin/itwinui-icons-react";
 import { IconButton, Table, Text } from "@itwin/itwinui-react";
+import { CellProps } from "@itwin/itwinui-react/react-table";
 import React from "react";
-import { CellProps } from "react-table";
 
 import { useConfig } from "../../../common/configContext";
 import {
