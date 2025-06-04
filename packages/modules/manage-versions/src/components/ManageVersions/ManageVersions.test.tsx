@@ -310,8 +310,12 @@ describe("ManageVersions", () => {
     expect(mockGetVersions).toHaveBeenCalledTimes(2);
     expect(mockUpdateVersion).toHaveBeenCalled();
   });
-  it.only("should hide version", async () => {
+  it("should hide version", async () => {
     mockGetVersions.mockResolvedValueOnce(MockedVersionList());
+    mockGetVersions.mockResolvedValueOnce([
+      MockedVersion(3, { state: "hidden" }),
+      ...MockedVersionList(2),
+    ]);
     mockUpdateStateVersion.mockResolvedValue(
       MockedVersion(2, { state: "hidden" })
     );
@@ -340,10 +344,10 @@ describe("ManageVersions", () => {
     const versionCells = container.querySelectorAll(
       "div[role='row']:first-child div[role='cell']"
     );
-    console.log(MockedVersion(1));
     expect(versionCells.length).toBe(5);
     expect(versionCells[0].textContent).toEqual(MockedVersion(1).name);
     expect(versionCells[1].textContent).toEqual(MockedVersion(1).description);
+    expect(versionCells[2].textContent).toEqual(MockedVersion(1).createdBy);
     expect(versionCells[3].textContent).toEqual(
       MockedVersion(1).createdDateTime
     );
