@@ -256,6 +256,46 @@ describe("useIModelData hook", () => {
     );
   });
 
+  it("should call correct api when pageSize is provided", async () => {
+    const fetchSpy = jest.spyOn(window, "fetch");
+
+    const mockIModels = Array.from({ length: 110 }, (_, i) => ({
+      id: `fakeId${i + 1}`,
+      displayName: `fakeName${i + 1}`,
+    }));
+
+    const watcher = jest.fn();
+    server.use(
+      rest.get("https://api.bentley.com/imodels/", (req, res, ctx) => {
+        watcher();
+        return res(
+          ctx.json({
+            iModels: mockIModels,
+          })
+        );
+      })
+    );
+
+    const { result, waitForValueToChange } = renderHook(() =>
+      useIModelData({
+        iTwinId: "iTwinId",
+        accessToken: "accessToken",
+        pageSize: 110,
+      })
+    );
+
+    await waitForValueToChange(
+      () => result.current.status === DataStatus.Complete
+    );
+
+    expect(fetchSpy).toHaveBeenLastCalledWith(
+      expect.stringContaining(`$skip=0`) && expect.stringContaining(`$top=110`),
+      expect.any(Object)
+    );
+    expect(result.current.iModels.length).toBe(110);
+    expect(watcher).toHaveBeenCalledTimes(1);
+  });
+
   it("returns properly paged iModels", async () => {
     const fetchSpy = jest.spyOn(window, "fetch");
 

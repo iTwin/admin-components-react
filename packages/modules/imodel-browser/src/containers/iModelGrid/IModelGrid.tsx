@@ -84,6 +84,8 @@ export interface IModelGridProps {
   searchText?: string;
   /**iModel view mode */
   viewMode?: ViewType;
+  /** The maximum number of iModels that can be fetched per request */
+  pageSize?: number;
   /** Maximum number of iModels to fetch, default is unlimited */
   maxCount?: number;
 }
@@ -105,6 +107,7 @@ export const IModelGrid = ({
   emptyStateComponent,
   searchText,
   viewMode,
+  pageSize,
   maxCount,
 }: IModelGridProps) => {
   const [sort, setSort] = React.useState<IModelSortOptions>(sortOptions);
@@ -155,6 +158,7 @@ export const IModelGrid = ({
     sortOptions: sort,
     searchText,
     maxCount,
+    pageSize,
     viewMode,
   });
 

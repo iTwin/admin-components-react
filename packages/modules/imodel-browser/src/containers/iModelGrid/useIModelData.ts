@@ -21,10 +21,11 @@ export interface IModelDataHookOptions {
   apiOverrides?: ApiOverrides<IModelFull[]>;
   searchText?: string | undefined;
   maxCount?: number;
+  pageSize?: number;
   /** @deprecated in 2.1 It is no longer used as it has no effect on the data fetching. */
   viewMode?: ViewType;
 }
-const PAGE_SIZE = 100;
+const DEFAULT_PAGE_SIZE = 100;
 
 export const useIModelData = ({
   iTwinId,
@@ -32,6 +33,7 @@ export const useIModelData = ({
   sortOptions,
   apiOverrides,
   searchText,
+  pageSize = DEFAULT_PAGE_SIZE,
   maxCount,
 }: IModelDataHookOptions) => {
   const [needsUpdate, setNeedsUpdate] = React.useState(true);
@@ -89,6 +91,7 @@ export const useIModelData = ({
     apiOverrides?.data,
     apiOverrides?.serverEnvironmentPrefix,
     searchText,
+    pageSize,
     maxCount,
     reset,
   ]);
@@ -136,6 +139,7 @@ export const useIModelData = ({
         sortDescending ?? false,
         page,
         searchText,
+        pageSize,
         maxCount,
         apiOverrides?.serverEnvironmentPrefix
       );
@@ -166,6 +170,7 @@ export const useIModelData = ({
     iModels,
     iTwinId,
     maxCount,
+    pageSize,
     morePagesAvailable,
     needsUpdate,
     page,
@@ -190,6 +195,7 @@ const createFetchIModelsFn = (
   sortDescending: boolean,
   page: number,
   searchText: string | undefined,
+  pageSize: number = DEFAULT_PAGE_SIZE,
   maxCount: number | undefined,
   serverEnvironmentPrefix?: "" | "dev" | "qa"
 ): {
@@ -205,8 +211,8 @@ const createFetchIModelsFn = (
         sortDescending ? "desc" : "asc"
       }`
     : "";
-  const skip = page * PAGE_SIZE;
-  const top = maxCount ? Math.min(PAGE_SIZE, maxCount - skip) : PAGE_SIZE;
+  const skip = page * pageSize;
+  const top = maxCount ? Math.min(pageSize, maxCount - skip) : pageSize;
   const paging = `&$skip=${skip}&$top=${top}`;
   const searching = searchText?.trim()
     ? `&$search=${encodeURIComponent(searchText)}`
@@ -234,7 +240,7 @@ const createFetchIModelsFn = (
     }
 
     const result: { iModels: IModelFull[] } = await response.json();
-    const totalLocalIModels = page * PAGE_SIZE + result.iModels.length;
+    const totalLocalIModels = page * pageSize + result.iModels.length;
 
     return {
       iModels: result.iModels,
