@@ -21,7 +21,7 @@ describe("NamedVersionClient", () => {
 
     await namedVersionClient.get(MOCKED_IMODEL_ID);
     expect(mockHttpGet).toHaveBeenCalledWith(
-      `https://api.bentley.com/imodels/${MOCKED_IMODEL_ID}/namedversions`,
+      `https://api.bentley.com/imodels/${MOCKED_IMODEL_ID}/namedversions?$orderBy=changesetIndex+desc`,
       {
         headers: {
           Prefer: "return=representation",
@@ -36,7 +36,7 @@ describe("NamedVersionClient", () => {
 
     await namedVersionClient.get(MOCKED_IMODEL_ID, { top: 10, skip: 20 });
     expect(mockHttpGet).toHaveBeenCalledWith(
-      `https://api.bentley.com/imodels/${MOCKED_IMODEL_ID}/namedversions?$top=10&$skip=20`,
+      `https://api.bentley.com/imodels/${MOCKED_IMODEL_ID}/namedversions?$orderBy=changesetIndex+desc&$top=10&$skip=20`,
       {
         headers: {
           Prefer: "return=representation",
