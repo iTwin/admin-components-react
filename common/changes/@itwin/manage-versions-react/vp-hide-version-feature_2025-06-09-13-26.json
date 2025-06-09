@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/manage-versions-react",
+      "comment": "Added hide version option for manage versions",
+      "type": "minor"
+    }
+  ],
+  "packageName": "@itwin/manage-versions-react"
+}
