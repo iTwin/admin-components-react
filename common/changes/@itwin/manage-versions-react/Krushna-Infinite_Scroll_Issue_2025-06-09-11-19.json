@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/manage-versions-react",
+      "comment": "Fixed the infinite scroll issue on named version page",
+      "type": "patch"
+    }
+  ],
+  "packageName": "@itwin/manage-versions-react"
+}
