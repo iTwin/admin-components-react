@@ -27,7 +27,10 @@ export class NamedVersionClient {
           imodelId,
           undefined,
           this._serverEnvironmentPrefix
-        )}${UrlBuilder.getQuery(requestOptions)}`,
+        )}${UrlBuilder.getQuery({
+          orderBy: "changesetIndex+desc",
+          ...requestOptions,
+        })}`,
         {
           headers: {
             [HttpHeaderNames.Prefer]: "return=representation",

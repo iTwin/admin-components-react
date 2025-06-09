@@ -126,10 +126,23 @@ const initialChangeset: Changeset = {
 const initializeVersionTableData = (
   versions: NamedVersion[],
   versionTableData?: VersionTableData[],
-  reloadSubrows?: boolean
+  reloadSubrows?: boolean,
+  appendVersions?: boolean
 ): VersionTableData[] => {
-  return (versions ?? []).map((version, index) => {
-    const existingData = versionTableData?.[index];
+  const existingVersions =
+    versionTableData?.map((versionTableData) => versionTableData.version) ?? [];
+  const allVersions = appendVersions
+    ? [...existingVersions, ...versions]
+    : versions;
+  const versionsTableDataMap = new Map(
+    versionTableData?.map((versionTableData) => [
+      versionTableData.version.id,
+      versionTableData,
+    ])
+  );
+
+  return allVersions.map((version) => {
+    const existingData = versionsTableDataMap.get(version.id);
     const defaultSubRows = reloadSubrows
       ? [initialChangeset]
       : existingData?.subRows ?? [initialChangeset];
@@ -270,7 +283,8 @@ export const ManageVersionsComponent = (props: ManageVersionsProps) => {
             ...initializeVersionTableData(
               updateVersions ?? [],
               oldVersions,
-              reloadSubrows
+              reloadSubrows,
+              skip !== undefined
             ),
           ]);
           setVersionStatus(RequestStatus.Finished);
