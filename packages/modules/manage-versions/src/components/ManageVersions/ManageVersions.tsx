@@ -98,6 +98,8 @@ export type ManageVersionsProps = {
   currentTab?: ManageVersionsTabs;
   /** Callback when tabs are switched. */
   onTabChange?: (tab: ManageVersionsTabs) => void;
+  /** Disable hide versions feature */
+  disableHideVersions?: boolean;
 };
 
 export enum ManageVersionsTabs {
@@ -186,6 +188,7 @@ export const ManageVersionsComponent = (props: ManageVersionsProps) => {
     onViewClick,
     currentTab = ManageVersionsTabs.Versions,
     onTabChange,
+    disableHideVersions,
   } = props;
 
   const toaster = useToaster();
@@ -436,6 +439,8 @@ export const ManageVersionsComponent = (props: ManageVersionsProps) => {
     [
       versionClient,
       imodelId,
+      getVersions,
+      versionsTableData,
       stringsOverrides.messageHideVersionSucess,
       stringsOverrides.messageUnhideVersionSucess,
       stringsOverrides.messageHideVersionFailed,
@@ -477,6 +482,7 @@ export const ManageVersionsComponent = (props: ManageVersionsProps) => {
               label={stringsOverrides.messageShowHiddenVersions}
               checked={showHiddenVersions}
               onChange={() => setShowHiddenVersions(!showHiddenVersions)}
+              disabled={disableHideVersions ?? true}
             />
           )}
         </Flex>
@@ -491,6 +497,7 @@ export const ManageVersionsComponent = (props: ManageVersionsProps) => {
             setRelatedChangesets={setRelatedChangesets}
             handleHideVersion={handleToggleVersionState}
             showHiddenVersions={showHiddenVersions}
+            disableHideVersion={disableHideVersions ?? true}
           />
         )}
         {_currentTab === ManageVersionsTabs.Changes && (

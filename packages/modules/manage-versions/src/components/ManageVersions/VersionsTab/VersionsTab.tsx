@@ -41,6 +41,7 @@ export type VersionsTabProps = {
   setRelatedChangesets: (versionId: string, changesets: Changeset[]) => void;
   handleHideVersion: (version: NamedVersion) => void;
   showHiddenVersions: boolean;
+  disableHideVersion: boolean;
 };
 
 const isNamedVersion = (
@@ -60,6 +61,7 @@ const VersionsTab = (props: VersionsTabProps) => {
     setRelatedChangesets,
     handleHideVersion,
     showHiddenVersions,
+    disableHideVersion,
   } = props;
   const toaster = useToaster();
   const { stringsOverrides, imodelId } = useConfig();
@@ -210,7 +212,7 @@ const VersionsTab = (props: VersionsTabProps) => {
             ? stringsOverrides.unhide ?? "Unhide"
             : stringsOverrides.hide ?? "Hide",
           icon: isHidden ? <SvgVisibilityShow /> : <SvgVisibilityHide />,
-          disabled: false,
+          disabled: disableHideVersion,
           onClick: () => {
             toggleVersionState(props.row.original.version);
           },
@@ -219,6 +221,7 @@ const VersionsTab = (props: VersionsTabProps) => {
       return mainToolbarActions;
     },
     [
+      disableHideVersion,
       onDownloadClick,
       stringsOverrides.download,
       stringsOverrides.hide,
