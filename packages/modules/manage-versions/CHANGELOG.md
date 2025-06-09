@@ -1,6 +1,13 @@
 # Change Log - @itwin/manage-versions-react
 
-This log was last generated on Mon, 12 May 2025 21:00:37 GMT and should not be manually modified.
+This log was last generated on Mon, 09 Jun 2025 12:35:48 GMT and should not be manually modified.
+
+## 2.1.1
+Mon, 09 Jun 2025 12:35:48 GMT
+
+### Patches
+
+- Fixed the infinite scroll issue on named version page
 
 ## 2.1.0
 Mon, 12 May 2025 21:00:37 GMT
