@@ -35,7 +35,7 @@ const renderComponent = (initialProps?: Partial<ManageVersionsProps>) => {
   const props: ManageVersionsProps = {
     accessToken: "test_token",
     imodelId: MOCKED_IMODEL_ID,
-    disableHideVersions: false,
+    enableHideVersions: true,
     ...initialProps,
   };
   return render(<ManageVersions {...props} />);

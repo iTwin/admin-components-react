@@ -99,7 +99,7 @@ export type ManageVersionsProps = {
   /** Callback when tabs are switched. */
   onTabChange?: (tab: ManageVersionsTabs) => void;
   /** Disable hide versions feature */
-  disableHideVersions?: boolean;
+  enableHideVersions: boolean;
 };
 
 export enum ManageVersionsTabs {
@@ -201,7 +201,7 @@ export const ManageVersionsComponent = (props: ManageVersionsProps) => {
     onViewClick,
     currentTab = ManageVersionsTabs.Versions,
     onTabChange,
-    disableHideVersions,
+    enableHideVersions = true,
   } = props;
 
   const toaster = useToaster();
@@ -490,15 +490,15 @@ export const ManageVersionsComponent = (props: ManageVersionsProps) => {
             orientation="horizontal"
           />
           <Flex.Spacer />
-          {_currentTab === ManageVersionsTabs.Versions && (
-            <ToggleSwitch
-              labelPosition="left"
-              label={stringsOverrides.messageShowHiddenVersions}
-              checked={showHiddenVersions}
-              onChange={() => setShowHiddenVersions(!showHiddenVersions)}
-              disabled={disableHideVersions ?? true}
-            />
-          )}
+          {_currentTab === ManageVersionsTabs.Versions &&
+            enableHideVersions && (
+              <ToggleSwitch
+                labelPosition="left"
+                label={stringsOverrides.messageShowHiddenVersions}
+                checked={showHiddenVersions}
+                onChange={() => setShowHiddenVersions(!showHiddenVersions)}
+              />
+            )}
         </Flex>
         {_currentTab === ManageVersionsTabs.Versions && (
           <VersionsTab
@@ -511,7 +511,7 @@ export const ManageVersionsComponent = (props: ManageVersionsProps) => {
             setRelatedChangesets={setRelatedChangesets}
             handleHideVersion={handleToggleVersionState}
             showHiddenVersions={showHiddenVersions}
-            disableHideVersion={disableHideVersions ?? true}
+            enableHideVersions={enableHideVersions}
           />
         )}
         {_currentTab === ManageVersionsTabs.Changes && (
