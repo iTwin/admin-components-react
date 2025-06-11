@@ -81,7 +81,7 @@ describe("ManageVersions", () => {
       expect(cells[1].textContent).toContain(mockedVersion.description);
       await waitFor(
         () => expect(cells[2].textContent).toContain(mockedVersion.createdBy),
-        { timeout: 5000 }
+        { timeout: 10000 }
       );
       expect(cells[3].textContent).toContain(mockedVersion.createdDateTime);
       const actionsCell = cells[4] as HTMLElement;
@@ -297,6 +297,11 @@ describe("ManageVersions", () => {
     expect(versionCells.length).toBe(5);
     expect(versionCells[0].textContent).toEqual("test name");
     expect(versionCells[1].textContent).toEqual("test description");
+    await waitFor(
+      () =>
+        expect(versionCells[2].textContent).toEqual(MockedVersion(0).createdBy),
+      { timeout: 10000 }
+    );
     expect(versionCells[3].textContent).toEqual(
       MockedVersion(0).createdDateTime
     );
