@@ -46,7 +46,6 @@ const renderComponent = (initialProps?: Partial<VersionsTabProps>) => {
     setRelatedChangesets: jest.fn(),
     handleHideVersion: jest.fn(),
     showHiddenVersions: false,
-    enableHideVersions: true,
     ...initialProps,
   };
   return render(

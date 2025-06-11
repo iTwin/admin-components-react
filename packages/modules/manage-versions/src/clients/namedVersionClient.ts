@@ -61,7 +61,7 @@ export class NamedVersionClient {
   public async update(
     imodelId: string,
     versionId: string,
-    version: { name: string; description: string }
+    version: { name: string; description: string; state?: string }
   ): Promise<NamedVersion> {
     return this._http
       .patch(
@@ -71,23 +71,6 @@ export class NamedVersionClient {
           this._serverEnvironmentPrefix
         ),
         version
-      )
-      .then((resp) => resp.namedVersion);
-  }
-
-  public async updateState(
-    imodelId: string,
-    versionId: string,
-    state: string
-  ): Promise<NamedVersion> {
-    return this._http
-      .patch(
-        UrlBuilder.buildVersionsUrl(
-          imodelId,
-          versionId,
-          this._serverEnvironmentPrefix
-        ),
-        { state }
       )
       .then((resp) => resp.namedVersion);
   }

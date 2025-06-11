@@ -45,10 +45,6 @@ describe("ManageVersions", () => {
   const mockGetVersions = jest.spyOn(NamedVersionClient.prototype, "get");
   const mockCreateVersion = jest.spyOn(NamedVersionClient.prototype, "create");
   const mockUpdateVersion = jest.spyOn(NamedVersionClient.prototype, "update");
-  const mockUpdateStateVersion = jest.spyOn(
-    NamedVersionClient.prototype,
-    "updateState"
-  );
   const mockGetChangesets = jest.spyOn(ChangesetClient.prototype, "get");
   const mockGetUsers = jest.spyOn(ChangesetClient.prototype, "getUsers");
   const mockScrollTo = jest.fn();
@@ -317,16 +313,17 @@ describe("ManageVersions", () => {
       MockedVersion(3, { state: "hidden" }),
       ...MockedVersionList(2),
     ]);
-    mockUpdateStateVersion.mockResolvedValue(
-      MockedVersion(2, { state: "hidden" })
-    );
+    mockUpdateVersion.mockResolvedValue(MockedVersion(2, { state: "hidden" }));
     const { container } = renderComponent();
 
     await waitFor(() => container.querySelector(".iac-versions-table-body"));
-    const versionRows = container.querySelectorAll(
+    const initialVersionRows = container.querySelectorAll(
       ".iac-versions-table-body [role='row']"
     );
-    const firstRowCells = versionRows[0].querySelectorAll("div[role='cell']");
+    expect(initialVersionRows.length).toBe(3);
+
+    const firstRowCells =
+      initialVersionRows[0].querySelectorAll("div[role='cell']");
     expect(firstRowCells.length).toBe(5);
     const actionsCell = firstRowCells[4] as HTMLElement;
     const button = within(actionsCell as HTMLElement).getByText(
@@ -334,14 +331,20 @@ describe("ManageVersions", () => {
     ).parentElement;
     expect(button).toBeTruthy();
     fireEvent.click(button as HTMLElement);
-    const hideAction = screen.getByText(defaultStrings.hide ?? "Hide");
+    const hideAction = screen.getByText(defaultStrings.hide);
     await hideAction.click();
-    expect(mockUpdateStateVersion).toHaveBeenCalledWith(
+    expect(mockUpdateVersion).toHaveBeenCalledWith(
       MOCKED_IMODEL_ID,
       MockedVersion(2).id,
-      "hidden"
+      { description: "nv_description2", name: "nv_name2", state: "hidden" }
     );
     await waitFor(() => container.querySelector("iac-versions-table-body"));
+
+    const updatedVersionRows = container.querySelectorAll(
+      ".iac-versions-table-body [role='row']"
+    );
+    expect(updatedVersionRows.length).toBe(2);
+
     const versionCells = container.querySelectorAll(
       "div[role='row']:first-child div[role='cell']"
     );

@@ -15,6 +15,7 @@ export const MOCKED_CONFIG_PROPS = {
   accessToken: "Bearer test",
   imodelId: MOCKED_IMODEL_ID,
   stringsOverrides: defaultStrings,
+  enableHideVersions: true,
 } as ConfigProviderProps;
 
 export const MockedVersion = (

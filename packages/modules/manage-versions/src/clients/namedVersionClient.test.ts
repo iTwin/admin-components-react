@@ -79,16 +79,4 @@ describe("NamedVersionClient", () => {
       }
     );
   });
-
-  it("should have correct URL on update state", async () => {
-    mockHttpPatch.mockResolvedValue({ namedVersion: MockedVersion() });
-
-    await namedVersionClient.updateState(MOCKED_IMODEL_ID, "nv1", "visible");
-    expect(mockHttpPatch).toHaveBeenCalledWith(
-      `https://api.bentley.com/imodels/${MOCKED_IMODEL_ID}/namedversions/nv1`,
-      {
-        state: "visible",
-      }
-    );
-  });
 });

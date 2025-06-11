@@ -98,8 +98,8 @@ export type ManageVersionsProps = {
   currentTab?: ManageVersionsTabs;
   /** Callback when tabs are switched. */
   onTabChange?: (tab: ManageVersionsTabs) => void;
-  /** Disable hide versions feature */
-  enableHideVersions: boolean;
+  /** Enable hide versions feature */
+  enableHideVersions?: boolean;
 };
 
 export enum ManageVersionsTabs {
@@ -184,14 +184,14 @@ const updateChangesetsProperties = (
   }));
 };
 
-export function ManageVersions(props: ManageVersionsProps) {
+export const ManageVersions = (props: ManageVersionsProps) => {
   return (
     <ThemeProvider theme="inherit">
       <ManageVersionsComponent {...props} />
     </ThemeProvider>
   );
-}
-export const ManageVersionsComponent = (props: ManageVersionsProps) => {
+};
+const ManageVersionsComponent = (props: ManageVersionsProps) => {
   const {
     accessToken,
     apiOverrides,
@@ -201,7 +201,7 @@ export const ManageVersionsComponent = (props: ManageVersionsProps) => {
     onViewClick,
     currentTab = ManageVersionsTabs.Versions,
     onTabChange,
-    enableHideVersions = true,
+    enableHideVersions = false,
   } = props;
 
   const toaster = useToaster();
@@ -426,9 +426,12 @@ export const ManageVersionsComponent = (props: ManageVersionsProps) => {
       const newState = version.state === "hidden" ? "visible" : "hidden";
       const isHiding = newState === "hidden";
       try {
-        await versionClient.updateState(imodelId, version.id, newState);
-        getVersions();
-        setVersionsTableData(versionsTableData);
+        await versionClient.update(imodelId, version.id, {
+          name: version.name,
+          description: version.description,
+          state: newState,
+        });
+        refreshVersions();
         toaster.positive(
           isHiding
             ? stringsOverrides.messageHideVersionSucess?.replace(
@@ -453,8 +456,7 @@ export const ManageVersionsComponent = (props: ManageVersionsProps) => {
     [
       versionClient,
       imodelId,
-      getVersions,
-      versionsTableData,
+      refreshVersions,
       stringsOverrides.messageHideVersionSucess,
       stringsOverrides.messageUnhideVersionSucess,
       stringsOverrides.messageHideVersionFailed,
@@ -462,15 +464,17 @@ export const ManageVersionsComponent = (props: ManageVersionsProps) => {
     ]
   );
 
-  const filteredVersionsTableData = React.useMemo(
-    () =>
-      showHiddenVersions
-        ? versionsTableData ?? []
-        : (versionsTableData ?? []).filter(
-            (data) => data.version.state !== "hidden"
-          ),
-    [versionsTableData, showHiddenVersions]
-  );
+  const filteredVersionsTableData = React.useMemo(() => {
+    if (!enableHideVersions) {
+      return versionsTableData ?? [];
+    }
+
+    return showHiddenVersions
+      ? versionsTableData ?? []
+      : (versionsTableData ?? []).filter(
+          (data) => data.version.state !== "hidden"
+        );
+  }, [versionsTableData, showHiddenVersions, enableHideVersions]);
 
   return (
     <ConfigProvider
@@ -479,6 +483,7 @@ export const ManageVersionsComponent = (props: ManageVersionsProps) => {
       apiOverrides={apiOverrides}
       stringsOverrides={stringsOverrides}
       log={log}
+      enableHideVersions={enableHideVersions}
     >
       <div>
         <Flex>
@@ -511,7 +516,6 @@ export const ManageVersionsComponent = (props: ManageVersionsProps) => {
             setRelatedChangesets={setRelatedChangesets}
             handleHideVersion={handleToggleVersionState}
             showHiddenVersions={showHiddenVersions}
-            enableHideVersions={enableHideVersions}
           />
         )}
         {_currentTab === ManageVersionsTabs.Changes && (
