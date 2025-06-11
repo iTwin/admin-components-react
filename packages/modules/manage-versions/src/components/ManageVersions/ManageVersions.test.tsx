@@ -307,6 +307,46 @@ describe("ManageVersions", () => {
     expect(mockGetVersions).toHaveBeenCalledTimes(2);
     expect(mockUpdateVersion).toHaveBeenCalled();
   });
+  it("should show hidden versions when toggle is enabled", async () => {
+    mockGetVersions.mockResolvedValue([
+      MockedVersion(4, { state: "hidden" }),
+      MockedVersion(3, { state: "hidden" }),
+      MockedVersion(2),
+      MockedVersion(1),
+    ]);
+
+    const { container } = renderComponent();
+
+    await waitFor(() => container.querySelector(".iac-versions-table-body"));
+
+    const initialVersionRows = container.querySelectorAll(
+      ".iac-versions-table-body [role='row']"
+    );
+    expect(initialVersionRows.length).toBe(2);
+
+    expect(screen.queryByText(MockedVersion(4).name)).not.toBeInTheDocument();
+    expect(screen.queryByText(MockedVersion(3).name)).not.toBeInTheDocument();
+
+    await waitForSelectorToExist("input");
+    const toggleSwitch = document.querySelector("input") as HTMLInputElement;
+    expect(toggleSwitch).toBeInTheDocument();
+    fireEvent.click(toggleSwitch);
+
+    await waitFor(() => {
+      const updatedRows = container.querySelectorAll(
+        ".iac-versions-table-body [role='row']"
+      );
+      return updatedRows.length === 4;
+    });
+
+    const allVersionRows = container.querySelectorAll(
+      ".iac-versions-table-body [role='row']"
+    );
+    expect(allVersionRows.length).toBe(4);
+
+    expect(screen.getByText(MockedVersion(4).name)).toBeInTheDocument();
+    expect(screen.getByText(MockedVersion(3).name)).toBeInTheDocument();
+  });
   it("should hide version", async () => {
     mockGetVersions.mockResolvedValueOnce(MockedVersionList());
     mockGetVersions.mockResolvedValueOnce([
