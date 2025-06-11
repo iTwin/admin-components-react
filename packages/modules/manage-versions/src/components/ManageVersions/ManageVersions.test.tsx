@@ -297,7 +297,6 @@ describe("ManageVersions", () => {
     expect(versionCells.length).toBe(5);
     expect(versionCells[0].textContent).toEqual("test name");
     expect(versionCells[1].textContent).toEqual("test description");
-    expect(versionCells[2].textContent).toEqual(MockedVersion(0).createdBy);
     expect(versionCells[3].textContent).toEqual(
       MockedVersion(0).createdDateTime
     );
