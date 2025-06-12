@@ -336,13 +336,6 @@ describe("ManageVersions", () => {
     expect(toggleSwitch).toBeInTheDocument();
     fireEvent.click(toggleSwitch);
 
-    await waitFor(() => {
-      const updatedRows = container.querySelectorAll(
-        ".iac-versions-table-body [role='row']"
-      );
-      return updatedRows.length === 4;
-    });
-
     const allVersionRows = container.querySelectorAll(
       ".iac-versions-table-body [role='row']"
     );
