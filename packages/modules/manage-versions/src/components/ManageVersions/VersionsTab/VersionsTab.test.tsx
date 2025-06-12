@@ -44,6 +44,8 @@ const renderComponent = (initialProps?: Partial<VersionsTabProps>) => {
     tableData: MockedVersionTableData(),
     changesetClient: new ChangesetClient("token"),
     setRelatedChangesets: jest.fn(),
+    handleHideVersion: jest.fn(),
+    showHiddenVersions: false,
     ...initialProps,
   };
   return render(
@@ -83,6 +85,10 @@ describe("VersionsTab", () => {
       if (defaultStrings.download) {
         const downloadAction = screen.getByText(defaultStrings.download);
         expect(downloadAction).toBeTruthy();
+      }
+      if (defaultStrings.hide) {
+        const hideAction = screen.getByText(defaultStrings.hide);
+        expect(hideAction).toBeTruthy();
       }
       expect(updateAction).toBeTruthy();
     });
