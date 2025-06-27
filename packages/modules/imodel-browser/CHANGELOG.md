@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Fri, 06 Jun 2025 18:58:31 GMT and should not be manually modified.
+This log was last generated on Fri, 27 Jun 2025 06:46:50 GMT and should not be manually modified.
+
+## 3.1.0
+Fri, 27 Jun 2025 06:46:50 GMT
+
+### Minor changes
+
+- Add getBadge property on iModelTile in order to set badge based on iModel props
 
 ## 3.0.7
 Fri, 06 Jun 2025 18:58:31 GMT

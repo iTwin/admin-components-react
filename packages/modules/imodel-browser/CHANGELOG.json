@@ -2,6 +2,18 @@
   "name": "@itwin/imodel-browser-react",
   "entries": [
     {
+      "version": "3.1.0",
+      "tag": "@itwin/imodel-browser-react_v3.1.0",
+      "date": "Fri, 27 Jun 2025 06:46:50 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Add getBadge property on iModelTile in order to set badge based on iModel props"
+          }
+        ]
+      }
+    },
+    {
       "version": "3.0.7",
       "tag": "@itwin/imodel-browser-react_v3.0.7",
       "date": "Fri, 06 Jun 2025 18:58:31 GMT",
