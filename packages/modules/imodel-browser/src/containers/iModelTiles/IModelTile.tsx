@@ -118,20 +118,18 @@ export const IModelTile = ({
           </Tile.BadgeContainer>
         )}
       </Tile.ThumbnailArea>
-      <Tile.Action
-        onClick={(e) => onClick?.(e) ?? onThumbnailClick?.(iModel)}
-        aria-disabled={isDisabled}
-        data-testid={`iModel-tile-${iModel.id}`}
-      >
-        <Tile.ContentArea>
+      <Tile.ContentArea>
+        <Tile.Action
+          onClick={(e) => onClick?.(e) ?? onThumbnailClick?.(iModel)}
+          aria-disabled={isDisabled}
+          data-testid={`iModel-tile-${iModel.id}`}
+        >
           <Tile.Description>{iModel?.description ?? ""}</Tile.Description>
-          {(moreOptions || moreOptionsBuilt) && (
-            <Tile.MoreOptions>
-              {moreOptions ?? moreOptionsBuilt}
-            </Tile.MoreOptions>
-          )}
-        </Tile.ContentArea>
-      </Tile.Action>
+        </Tile.Action>
+        {(moreOptions || moreOptionsBuilt) && (
+          <Tile.MoreOptions>{moreOptions ?? moreOptionsBuilt}</Tile.MoreOptions>
+        )}
+      </Tile.ContentArea>
       {buttons && <Tile.Buttons>{buttons}</Tile.Buttons>}
     </Tile.Wrapper>
   );
