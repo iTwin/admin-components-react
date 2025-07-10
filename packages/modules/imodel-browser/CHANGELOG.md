@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Thu, 10 Jul 2025 16:59:48 GMT and should not be manually modified.
+This log was last generated on Thu, 10 Jul 2025 23:35:54 GMT and should not be manually modified.
+
+## 3.1.2
+Thu, 10 Jul 2025 23:35:54 GMT
+
+### Patches
+
+- Fix iModel opening when opening action dropdown
 
 ## 3.1.1
 Thu, 10 Jul 2025 16:59:48 GMT
