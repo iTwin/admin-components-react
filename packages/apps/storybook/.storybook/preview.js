@@ -8,6 +8,7 @@ import addons from "@storybook/addons";
 import { themes } from "@storybook/theming";
 
 import { darkTheme, lightTheme } from "./itwinTheme";
+import '@itwin/itwinui-react/styles.css';
 
 // get an instance to the communication channel for the manager and preview
 const channel = addons.getChannel();
