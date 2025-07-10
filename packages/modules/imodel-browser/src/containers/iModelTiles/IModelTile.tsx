@@ -93,14 +93,11 @@ export const IModelTile = ({
     >
       <Tile.Name>
         <Tile.NameIcon />
-        <Tile.NameLabel>
-          <Tile.Action
-            onClick={(e) => onClick?.(e) ?? onThumbnailClick?.(iModel)}
-            aria-disabled={isDisabled}
-            data-testid={`iModel-tile-${iModel.id}`}
-          >
-            {name ?? iModel.displayName}
-          </Tile.Action>
+        <Tile.NameLabel
+          onClick={(e) => onClick?.(e) ?? onThumbnailClick?.(iModel)}
+          aria-disabled={isDisabled}
+        >
+          {name ?? iModel.displayName}
         </Tile.NameLabel>
       </Tile.Name>
       <Tile.ThumbnailArea>
@@ -121,12 +118,20 @@ export const IModelTile = ({
           </Tile.BadgeContainer>
         )}
       </Tile.ThumbnailArea>
-      <Tile.ContentArea>
-        <Tile.Description>{iModel?.description ?? ""}</Tile.Description>
-        {(moreOptions || moreOptionsBuilt) && (
-          <Tile.MoreOptions>{moreOptions ?? moreOptionsBuilt}</Tile.MoreOptions>
-        )}
-      </Tile.ContentArea>
+      <Tile.Action
+        onClick={(e) => onClick?.(e) ?? onThumbnailClick?.(iModel)}
+        aria-disabled={isDisabled}
+        data-testid={`iModel-tile-${iModel.id}`}
+      >
+        <Tile.ContentArea>
+          <Tile.Description>{iModel?.description ?? ""}</Tile.Description>
+          {(moreOptions || moreOptionsBuilt) && (
+            <Tile.MoreOptions>
+              {moreOptions ?? moreOptionsBuilt}
+            </Tile.MoreOptions>
+          )}
+        </Tile.ContentArea>
+      </Tile.Action>
       {buttons && <Tile.Buttons>{buttons}</Tile.Buttons>}
     </Tile.Wrapper>
   );
