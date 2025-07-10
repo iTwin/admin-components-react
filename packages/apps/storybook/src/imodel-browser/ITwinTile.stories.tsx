@@ -17,4 +17,8 @@ export default {
 const Template: Story<ITwinTileProps> = (args) => <ITwinTile {...args} />;
 
 export const Primary = Template.bind({});
-Primary.args = {};
+Primary.args = {
+  iTwin: {
+    id: "1",
+  },
+};

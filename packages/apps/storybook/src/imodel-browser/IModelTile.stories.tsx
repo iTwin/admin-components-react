@@ -3,6 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { IModelTile as C, IModelTileProps } from "@itwin/imodel-browser-react";
+import { MiddleTextTruncation } from "@itwin/itwinui-react";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
 
@@ -17,4 +18,8 @@ export default {
 const Template: Story<IModelTileProps> = (args) => <IModelTile {...args} />;
 
 export const Primary = Template.bind({});
-Primary.args = {};
+Primary.args = {
+  iModel: {
+    id: "1",
+  },
+};
