@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/imodel-browser-react",
+      "comment": "Update itwinUI version in storybook",
+      "type": "none"
+    }
+  ],
+  "packageName": "@itwin/imodel-browser-react"
+}
