@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Fri, 27 Jun 2025 06:46:50 GMT and should not be manually modified.
+This log was last generated on Thu, 10 Jul 2025 16:59:48 GMT and should not be manually modified.
+
+## 3.1.1
+Thu, 10 Jul 2025 16:59:48 GMT
+
+### Patches
+
+- Refactor IModelTile component to allow hovering over name label
 
 ## 3.1.0
 Fri, 27 Jun 2025 06:46:50 GMT
