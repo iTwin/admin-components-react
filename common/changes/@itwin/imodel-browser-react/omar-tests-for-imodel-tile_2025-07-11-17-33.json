@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/imodel-browser-react",
+      "comment": "tests for iModel tile",
+      "type": "none"
+    }
+  ],
+  "packageName": "@itwin/imodel-browser-react"
+}
