@@ -1,4 +1,7 @@
 {
+  "compilerOptions": {
+    "strictNullChecks": true
+  },
   "include": [
     "**/*.ts*",
     "**/*.js*",
