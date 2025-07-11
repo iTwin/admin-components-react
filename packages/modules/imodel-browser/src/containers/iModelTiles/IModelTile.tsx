@@ -96,6 +96,7 @@ export const IModelTile = ({
         <Tile.NameLabel
           onClick={(e) => onClick?.(e) ?? onThumbnailClick?.(iModel)}
           aria-disabled={isDisabled}
+          data-testid={`iModel-tile-${iModel.id}-name-label`}
         >
           {name ?? iModel.displayName}
         </Tile.NameLabel>
@@ -122,12 +123,16 @@ export const IModelTile = ({
         <Tile.Action
           onClick={(e) => onClick?.(e) ?? onThumbnailClick?.(iModel)}
           aria-disabled={isDisabled}
-          data-testid={`iModel-tile-${iModel.id}`}
+          data-testid={`iModel-tile-${iModel.id}-action`}
         >
           <Tile.Description>{iModel?.description ?? ""}</Tile.Description>
         </Tile.Action>
         {(moreOptions || moreOptionsBuilt) && (
-          <Tile.MoreOptions>{moreOptions ?? moreOptionsBuilt}</Tile.MoreOptions>
+          <Tile.MoreOptions
+            data-testid={`iModel-tile-${iModel.id}-more-options`}
+          >
+            {moreOptions ?? moreOptionsBuilt}
+          </Tile.MoreOptions>
         )}
       </Tile.ContentArea>
       {buttons && <Tile.Buttons>{buttons}</Tile.Buttons>}
