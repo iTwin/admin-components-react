@@ -74,10 +74,10 @@ export const IModelTile = ({
     [iModelOptions, iModel, refetchIModels]
   );
   const thumbnailApiOverride =
-    apiOverrides || iModel?.thumbnail
+    apiOverrides || iModel.thumbnail
       ? {
           ...(apiOverrides ?? {}),
-          data: iModel?.thumbnail,
+          data: iModel.thumbnail,
         }
       : undefined;
 
