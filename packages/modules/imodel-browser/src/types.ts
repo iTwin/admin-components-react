@@ -2,6 +2,9 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+
+import { CellProps } from "react-table";
+
 /** Full representation of the iModel. */
 export interface IModelFull {
   /** "Globally Unique Identifier of the iModel" */
@@ -95,3 +98,9 @@ export type ITwinStatus =
 export type ViewType = "tile" | "cells";
 // Remove this IModelViewType with next major release i.e 2.0
 export type IModelViewType = ViewType;
+
+export type CellOverrides = {
+  name?: (cellData: CellProps<IModelFull>) => React.ReactNode;
+  description?: (cellData: CellProps<IModelFull>) => React.ReactNode;
+  createdDateTime?: (cellData: CellProps<IModelFull>) => React.ReactNode;
+};

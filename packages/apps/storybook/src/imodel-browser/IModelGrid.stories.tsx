@@ -9,10 +9,12 @@ import {
   IModelGridProps,
   IModelTileProps,
 } from "@itwin/imodel-browser-react";
+import { SvgStar } from "@itwin/itwinui-icons-react";
 import {
   Button,
   Code,
   DropdownButton,
+  IconButton,
   LabeledInput,
   MenuItem,
   MenuItemSkeleton,
@@ -54,6 +56,22 @@ export const PrimaryCell = Template.bind({});
 PrimaryCell.args = {
   apiOverrides: { serverEnvironmentPrefix: "qa" },
   viewMode: "cells",
+};
+
+export const OverrideCellData = Template.bind({});
+OverrideCellData.args = {
+  apiOverrides: { serverEnvironmentPrefix: "qa" },
+  cellOverrides: {
+    name: (props) => (
+      <div>
+        <IconButton size="small" styleType="borderless">
+          <SvgStar />
+        </IconButton>{" "}
+        {props.value}
+      </div>
+    ),
+    description: (props) => <em>{props.value}</em>,
+  },
 };
 
 export const OverrideApiData = Template.bind({});
