@@ -13,6 +13,7 @@ import { NoResults } from "../../components/noResults/NoResults";
 import {
   ApiOverrides,
   DataStatus,
+  ITwinCellOverrides,
   ITwinFilterOptions,
   ITwinFull,
   ITwinSubClass,
@@ -97,6 +98,8 @@ export interface ITwinGridProps {
   ) => ITwinFull[];
   /**iTwin view mode */
   viewMode?: ViewType;
+  /** Overrides for cell rendering in cells viewMode */
+  cellOverrides?: ITwinCellOverrides;
 }
 
 /**
@@ -115,6 +118,7 @@ export const ITwinGrid = ({
   useIndividualState,
   postProcessCallback,
   viewMode,
+  cellOverrides,
 }: ITwinGridProps) => {
   const {
     iTwinFavorites,
@@ -170,6 +174,7 @@ export const ITwinGrid = ({
     addITwinToFavorites,
     removeITwinFromFavorites,
     refetchITwins,
+    cellOverrides,
   });
 
   const noResultsText = {

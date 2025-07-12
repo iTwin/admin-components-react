@@ -2,10 +2,12 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+import "@testing-library/jest-dom";
+
 import { render } from "@testing-library/react";
 import React from "react";
 
-import { DataStatus } from "../../types";
+import { DataStatus, ITwinCellOverrides } from "../../types";
 import { ITwinGrid } from "./ITwinGrid";
 import * as useITwinData from "./useITwinData";
 
@@ -16,10 +18,12 @@ describe("ITwinGrid", () => {
         {
           id: "iTwin1",
           number: "iTwinNumber1",
+          displayName: "iTwinName1",
         },
         {
           id: "iTwin2",
           number: "iTwinNumber2",
+          displayName: "iTwinName2",
         },
       ],
       status: DataStatus.Complete,
@@ -95,5 +99,83 @@ describe("ITwinGrid", () => {
         signal: signal,
       }
     );
+  });
+  it("should display the table and correct rows with custom cell overrides", () => {
+    const cellOverrides: ITwinCellOverrides = {
+      ITwinNumber: (props) => <strong>{props.value} 2</strong>,
+      ITwinName: (props) => <em>{props.value} 3</em>,
+    };
+
+    const wrapper = render(
+      <ITwinGrid viewMode="cells" cellOverrides={cellOverrides} />
+    );
+
+    expect(wrapper.getByText("iTwinNumber1 2")).toHaveStyle(
+      "font-weight: bold"
+    );
+    expect(wrapper.getByText("iTwinName2 3")).toHaveStyle("font-style: italic");
+  });
+  it("should prevent onThumbnailClick from being called when button in cell is clicked with stopPropagation", () => {
+    const onThumbnailClick = jest.fn();
+    const onClick = jest.fn();
+    const cellOverrides: ITwinCellOverrides = {
+      ITwinNumber: (props) => (
+        <div>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onClick();
+            }}
+          >
+            Click Me
+          </button>
+          {props.value}
+        </div>
+      ),
+    };
+
+    const { getAllByText } = render(
+      <ITwinGrid
+        viewMode="cells"
+        cellOverrides={cellOverrides}
+        onThumbnailClick={onThumbnailClick}
+      />
+    );
+
+    const buttons = getAllByText("Click Me");
+    buttons[0].click();
+    expect(onClick).toHaveBeenCalled();
+    expect(onThumbnailClick).not.toHaveBeenCalled();
+  });
+  it("should call onThumbnailClick when button doesn't have stopPropagation", () => {
+    const onThumbnailClick = jest.fn();
+    const onClick = jest.fn();
+    const cellOverrides: ITwinCellOverrides = {
+      ITwinNumber: (props) => (
+        <div>
+          <button
+            onClick={() => {
+              onClick();
+            }}
+          >
+            Click Me
+          </button>
+          {props.value}
+        </div>
+      ),
+    };
+
+    const { getAllByText } = render(
+      <ITwinGrid
+        viewMode="cells"
+        cellOverrides={cellOverrides}
+        onThumbnailClick={onThumbnailClick}
+      />
+    );
+
+    const buttons = getAllByText("Click Me");
+    buttons[0].click();
+    expect(onClick).toHaveBeenCalled();
+    expect(onThumbnailClick).toHaveBeenCalled();
   });
 });

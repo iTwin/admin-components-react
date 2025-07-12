@@ -20,6 +20,7 @@ importers:
       '@itwin/delete-imodel-react': workspace:*
       '@itwin/delete-itwin-react': workspace:*
       '@itwin/imodel-browser-react': workspace:*
+      '@itwin/itwinui-icons-react': 2.10.0
       '@itwin/itwinui-react': 3.18.0
       '@itwin/manage-versions-react': workspace:*
       '@itwin/storybook-auth-addon': workspace:*
@@ -64,6 +65,7 @@ importers:
       '@itwin/delete-imodel-react': link:../../modules/delete-imodel
       '@itwin/delete-itwin-react': link:../../modules/delete-itwin
       '@itwin/imodel-browser-react': link:../../modules/imodel-browser
+      '@itwin/itwinui-icons-react': 2.10.0_nnrd3gsncyragczmpvfhocinkq
       '@itwin/itwinui-react': 3.18.0_nnrd3gsncyragczmpvfhocinkq
       '@itwin/manage-versions-react': link:../../modules/manage-versions
       '@itwin/storybook-auth-addon': link:../../modules/storybook-auth-addon
@@ -338,6 +340,7 @@ importers:
       '@rollup/plugin-commonjs': ~17.1.0
       '@rollup/plugin-url': ^8.0.1
       '@svgr/rollup': ^5.5.0
+      '@testing-library/jest-dom': ^6.6.3
       '@testing-library/react': ^11.1.0
       '@testing-library/react-hooks': ^5.1.0
       '@types/jest': ^27.5.1
@@ -392,6 +395,7 @@ importers:
       '@rollup/plugin-commonjs': 17.1.0_rollup@2.79.2
       '@rollup/plugin-url': 8.0.2_rollup@2.79.2
       '@svgr/rollup': 5.5.0
+      '@testing-library/jest-dom': 6.6.3
       '@testing-library/react': 11.2.7_nnrd3gsncyragczmpvfhocinkq
       '@testing-library/react-hooks': 5.1.3_fs7zzattp7ispciphqk72hx22m
       '@types/jest': 27.5.2
@@ -2805,7 +2809,6 @@ packages:
     dependencies:
       react: 18.3.1
       react-dom: 18.3.1_react@18.3.1
-    dev: false
 
   /@itwin/itwinui-illustrations-react/2.1.0_nnrd3gsncyragczmpvfhocinkq:
     resolution: {integrity: sha512-5JR2A3mZy0d0qwwHpveSG3fsXLheJkO6a0GoWb8NQWw5edNZMRynJg0l3hVw3CHMgaaCGbUoKC77MuG0jWDzuA==}

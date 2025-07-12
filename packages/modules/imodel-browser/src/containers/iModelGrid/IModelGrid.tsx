@@ -11,6 +11,7 @@ import { NoResults } from "../../components/noResults/NoResults";
 import {
   ApiOverrides,
   DataStatus,
+  IModelCellOverrides,
   IModelFull,
   IModelSortOptions,
   ViewType,
@@ -88,6 +89,8 @@ export interface IModelGridProps {
   pageSize?: number;
   /** Maximum number of iModels to fetch, default is unlimited */
   maxCount?: number;
+  /** Overrides for cell rendering in cells viewMode */
+  cellOverrides?: IModelCellOverrides;
 }
 
 /**
@@ -109,6 +112,7 @@ export const IModelGrid = ({
   viewMode,
   pageSize,
   maxCount,
+  cellOverrides,
 }: IModelGridProps) => {
   const [sort, setSort] = React.useState<IModelSortOptions>(sortOptions);
   const [isSortOnTable, setIsSortOnTable] = React.useState(false);
@@ -174,6 +178,7 @@ export const IModelGrid = ({
     onThumbnailClick,
     strings,
     refetchIModels,
+    cellOverrides,
   });
 
   const noResultsText = {
