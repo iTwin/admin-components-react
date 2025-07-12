@@ -116,6 +116,7 @@ export const useIModelTableConfig = ({
                   }}
                 >
                   <IconButton
+                    data-testid={`iModel-row-${props.row.original.id}-more-options`}
                     styleType="borderless"
                     aria-label="More options"
                     className="iac-options-icon"

@@ -144,6 +144,7 @@ export const useITwinTableConfig = ({
               return iTwinActions && iTwinActions.length > 0 ? (
                 <DropdownMenu menuItems={moreOptions}>
                   <IconButton
+                    data-testid={`iTwin-row-${props.row.original.id}-more-options`}
                     styleType="borderless"
                     aria-label="More options"
                     className="iac-options-icon"

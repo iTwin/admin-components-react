@@ -17,11 +17,13 @@ describe("IModelGrid", () => {
         {
           id: "iModel1",
           name: "Test IModel",
+          displayName: "Test IModel",
           description: "This is a test iModel",
         },
         {
           id: "iModel2",
           name: "Test IModel 2",
+          displayName: "Test IModel 2",
           description: "This is another test iModel",
         },
       ],
@@ -120,7 +122,7 @@ describe("IModelGrid", () => {
     expect(onClick).toHaveBeenCalled();
     expect(onThumbnailClick).not.toHaveBeenCalled();
   });
-  it("shoudl call onThumbnailClick when button doesn't have stopPropagation", () => {
+  it("should call onThumbnailClick when button doesn't have stopPropagation", () => {
     const onClick = jest.fn();
     const onThumbnailClick = jest.fn();
     const cellOverrides: IModelCellOverrides = {
@@ -152,7 +154,35 @@ describe("IModelGrid", () => {
     expect(onThumbnailClick).toHaveBeenCalledWith({
       id: "iModel1",
       name: "Test IModel",
+      displayName: "Test IModel",
       description: "This is a test iModel",
     });
+  });
+  it("should have more options when iModelActions are provided in cells view", () => {
+    const iModelActions = [
+      {
+        key: "action1",
+        label: "Action 1",
+        onClick: jest.fn(),
+      },
+      {
+        key: "action2",
+        label: "Action 2",
+        onClick: jest.fn(),
+      },
+    ];
+
+    const { getByTestId, queryAllByRole } = render(
+      <IModelGrid viewMode="cells" iModelActions={iModelActions} />
+    );
+
+    const optionsButton = getByTestId("iModel-row-Test IModel-more-options");
+    expect(optionsButton).toBeDefined();
+    let menuItems = queryAllByRole("menuitem");
+    expect(menuItems.length).toBe(0);
+    optionsButton.click();
+    // the dropdown should open and show the actions label Action 1 and Action 2
+    menuItems = queryAllByRole("menuitem");
+    expect(menuItems.length).toBe(2); // Action 1 and Action 2
   });
 });
