@@ -176,7 +176,7 @@ describe("IModelGrid", () => {
       <IModelGrid viewMode="cells" iModelActions={iModelActions} />
     );
 
-    const optionsButton = getByTestId("iModel-row-Test IModel-more-options");
+    const optionsButton = getByTestId("iModel-row-iModel1-more-options");
     expect(optionsButton).toBeDefined();
     let menuItems = queryAllByRole("menuitem");
     expect(menuItems.length).toBe(0);
