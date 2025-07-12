@@ -9,7 +9,7 @@ import {
   ITwinGrid as ExternalComponent,
   ITwinGridProps,
 } from "@itwin/imodel-browser-react";
-import { SvgStar } from "@itwin/itwinui-icons-react";
+import { SvgHeart } from "@itwin/itwinui-icons-react";
 import {
   Button,
   Code,
@@ -58,7 +58,7 @@ OverrideCellData.args = {
   viewMode: "cells",
   cellOverrides: {
     ITwinNumber: (props) => (
-      <div>
+      <strong>
         <IconButton
           size="small"
           styleType="borderless"
@@ -67,11 +67,12 @@ OverrideCellData.args = {
             console.log("Icon Clicked");
           }}
         >
-          <SvgStar />
+          <SvgHeart />
         </IconButton>{" "}
         {props.value}
-      </div>
+      </strong>
     ),
+    ITwinName: (props) => <i style={{ color: "red" }}>{props.value}</i>,
   },
 };
 

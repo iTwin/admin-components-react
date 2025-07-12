@@ -64,7 +64,7 @@ OverrideCellData.args = {
   viewMode: "cells",
   cellOverrides: {
     name: (props) => (
-      <div>
+      <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
         <IconButton size="small" styleType="borderless">
           <SvgStar />
         </IconButton>
