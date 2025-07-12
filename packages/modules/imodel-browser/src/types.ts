@@ -99,8 +99,14 @@ export type ViewType = "tile" | "cells";
 // Remove this IModelViewType with next major release i.e 2.0
 export type IModelViewType = ViewType;
 
-export type CellOverrides = {
+export type IModelCellOverrides = {
   name?: (cellData: CellProps<IModelFull>) => React.ReactNode;
   description?: (cellData: CellProps<IModelFull>) => React.ReactNode;
   createdDateTime?: (cellData: CellProps<IModelFull>) => React.ReactNode;
+};
+
+export type ITwinCellOverrides = {
+  ITwinNumber?: (cellData: CellProps<ITwinFull>) => React.ReactNode;
+  ITwinName?: (cellData: CellProps<ITwinFull>) => React.ReactNode;
+  LastModified?: (cellData: CellProps<ITwinFull>) => React.ReactNode;
 };

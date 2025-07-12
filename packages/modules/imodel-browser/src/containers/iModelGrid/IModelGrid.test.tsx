@@ -88,4 +88,71 @@ describe("IModelGrid", () => {
     expect(wrapper.getByRole("table")).toBeDefined();
     expect(wrapper.getAllByRole("row").length).toEqual(3); // Header row + 2 data rows
   });
+  it("should prevent onThumbnailClick from being called when button in cell is clicked with stopPropagation", () => {
+    const onClick = jest.fn();
+    const onThumbnailClick = jest.fn();
+    const cellOverrides: IModelCellOverrides = {
+      name: (props) => (
+        <div>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onClick();
+            }}
+          >
+            Click Me
+          </button>
+          {props.value}
+        </div>
+      ),
+    };
+
+    const { getAllByText } = render(
+      <IModelGrid
+        viewMode="cells"
+        cellOverrides={cellOverrides}
+        onThumbnailClick={onThumbnailClick}
+      />
+    );
+
+    const buttons = getAllByText("Click Me");
+    buttons[0].click();
+    expect(onClick).toHaveBeenCalled();
+    expect(onThumbnailClick).not.toHaveBeenCalled();
+  });
+  it("shoudl call onThumbnailClick when button doesn't have stopPropagation", () => {
+    const onClick = jest.fn();
+    const onThumbnailClick = jest.fn();
+    const cellOverrides: IModelCellOverrides = {
+      name: (props) => (
+        <div>
+          <button
+            onClick={() => {
+              onClick();
+            }}
+          >
+            Click Me
+          </button>
+          {props.value}
+        </div>
+      ),
+    };
+
+    const { getAllByText } = render(
+      <IModelGrid
+        viewMode="cells"
+        cellOverrides={cellOverrides}
+        onThumbnailClick={onThumbnailClick}
+      />
+    );
+
+    const buttons = getAllByText("Click Me");
+    buttons[0].click();
+    expect(onClick).toHaveBeenCalled();
+    expect(onThumbnailClick).toHaveBeenCalledWith({
+      id: "iModel1",
+      name: "Test IModel",
+      description: "This is a test iModel",
+    });
+  });
 });

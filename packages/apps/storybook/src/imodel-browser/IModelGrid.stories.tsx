@@ -61,12 +61,13 @@ PrimaryCell.args = {
 export const OverrideCellData = Template.bind({});
 OverrideCellData.args = {
   apiOverrides: { serverEnvironmentPrefix: "qa" },
+  viewMode: "cells",
   cellOverrides: {
     name: (props) => (
       <div>
         <IconButton size="small" styleType="borderless">
           <SvgStar />
-        </IconButton>{" "}
+        </IconButton>
         {props.value}
       </div>
     ),

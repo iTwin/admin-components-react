@@ -8,7 +8,7 @@ import React from "react";
 import { useMemo } from "react";
 import { CellProps } from "react-table";
 
-import { ITwinFull } from "../../types";
+import { ITwinCellOverrides, ITwinFull } from "../../types";
 import {
   _buildManagedContextMenuOptions,
   ContextMenuBuilderItem,
@@ -23,6 +23,7 @@ export interface useITwinTableConfigProps {
   addITwinToFavorites: (iTwinId: string) => Promise<void>;
   removeITwinFromFavorites: (iTwinId: string) => Promise<void>;
   refetchITwins: () => void;
+  cellOverrides?: ITwinCellOverrides;
 }
 
 export const useITwinTableConfig = ({
@@ -33,6 +34,7 @@ export const useITwinTableConfig = ({
   addITwinToFavorites,
   removeITwinFromFavorites,
   refetchITwins,
+  cellOverrides = {},
 }: useITwinTableConfigProps) => {
   const onRowClick = (_: React.MouseEvent, row: any) => {
     const iTwin = row.original as ITwinFull;
@@ -84,7 +86,11 @@ export const useITwinTableConfig = ({
                 data-tip={props.row.original.number}
                 className="iac-iTwinCell"
               >
-                <span>{props.value}</span>
+                {cellOverrides.ITwinNumber ? (
+                  cellOverrides.ITwinNumber(props)
+                ) : (
+                  <span>{props.value}</span>
+                )}
               </div>
             ),
           },
@@ -92,6 +98,19 @@ export const useITwinTableConfig = ({
             id: "ITwinName",
             Header: strings.tableColumnDescription,
             accessor: "displayName",
+            maxWidth: 350,
+            Cell: (props: CellProps<ITwinFull>) => (
+              <div
+                data-tip={props.row.original.displayName}
+                className="iac-iTwinCell"
+              >
+                {cellOverrides.ITwinName ? (
+                  cellOverrides.ITwinName(props)
+                ) : (
+                  <span>{props.value}</span>
+                )}
+              </div>
+            ),
           },
           {
             id: "LastModified",
@@ -100,7 +119,11 @@ export const useITwinTableConfig = ({
             maxWidth: 350,
             Cell: (props: CellProps<ITwinFull>) => {
               const date = props.data[props.row.index].createdDateTime;
-              return date ? new Date(date).toDateString() : "";
+              return cellOverrides.LastModified
+                ? cellOverrides.LastModified(props)
+                : date
+                ? new Date(date).toDateString()
+                : "";
             },
           },
           {
@@ -138,16 +161,17 @@ export const useITwinTableConfig = ({
       },
     ],
     [
-      addITwinToFavorites,
-      iTwinActions,
-      iTwinFavorites,
-      removeITwinFromFavorites,
+      strings.tableColumnFavorites,
+      strings.tableColumnName,
+      strings.tableColumnDescription,
+      strings.tableColumnLastModified,
       strings.addToFavorites,
       strings.removeFromFavorites,
-      strings.tableColumnDescription,
-      strings.tableColumnFavorites,
-      strings.tableColumnLastModified,
-      strings.tableColumnName,
+      iTwinFavorites,
+      removeITwinFromFavorites,
+      addITwinToFavorites,
+      cellOverrides,
+      iTwinActions,
       refetchITwins,
     ]
   );
