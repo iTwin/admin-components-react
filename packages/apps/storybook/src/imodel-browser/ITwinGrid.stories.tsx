@@ -9,10 +9,12 @@ import {
   ITwinGrid as ExternalComponent,
   ITwinGridProps,
 } from "@itwin/imodel-browser-react";
+import { SvgHeart } from "@itwin/itwinui-icons-react";
 import {
   Button,
   Code,
   DropdownButton,
+  IconButton,
   MenuItem,
   MenuItemSkeleton,
   Text,
@@ -48,6 +50,30 @@ const Template: Story<ITwinGridProps> = withAccessTokenOverride((args) => (
 export const Primary = Template.bind({});
 Primary.args = {
   apiOverrides: { serverEnvironmentPrefix: "qa" },
+};
+
+export const OverrideCellData = Template.bind({});
+OverrideCellData.args = {
+  apiOverrides: { serverEnvironmentPrefix: "qa" },
+  viewMode: "cells",
+  cellOverrides: {
+    ITwinNumber: (props) => (
+      <strong>
+        <IconButton
+          size="small"
+          styleType="borderless"
+          onClick={(e) => {
+            e.stopPropagation();
+            console.log("Icon Clicked");
+          }}
+        >
+          <SvgHeart />
+        </IconButton>{" "}
+        {props.value}
+      </strong>
+    ),
+    ITwinName: (props) => <i style={{ color: "red" }}>{props.value}</i>,
+  },
 };
 
 export const OverrideApiData = Template.bind({});

@@ -8,7 +8,7 @@ import React from "react";
 import { useMemo } from "react";
 import { CellProps } from "react-table";
 
-import { IModelFull } from "../../types";
+import { IModelCellOverrides, IModelFull } from "../../types";
 import {
   _buildManagedContextMenuOptions,
   ContextMenuBuilderItem,
@@ -28,6 +28,7 @@ export interface useIModelTableConfigProps {
     error: string;
   };
   refetchIModels: () => void;
+  cellOverrides?: IModelCellOverrides;
 }
 
 export const useIModelTableConfig = ({
@@ -35,6 +36,7 @@ export const useIModelTableConfig = ({
   onThumbnailClick,
   strings,
   refetchIModels,
+  cellOverrides = {},
 }: useIModelTableConfigProps) => {
   const onRowClick = (_: React.MouseEvent, row: any) => {
     const iModel = row.original as IModelFull;
@@ -56,7 +58,9 @@ export const useIModelTableConfig = ({
             maxWidth: 350,
             Cell: (props: CellProps<IModelFull>) => (
               <div data-tip={props.row.original.name}>
-                <span>{props.value}</span>
+                <span>
+                  {cellOverrides.name ? cellOverrides.name(props) : props.value}
+                </span>
               </div>
             ),
           },
@@ -65,6 +69,15 @@ export const useIModelTableConfig = ({
             Header: strings.tableColumnDescription,
             accessor: "description",
             disableSortBy: true,
+            Cell: (props: CellProps<IModelFull>) => (
+              <div data-tip={props.row.original.description}>
+                <span>
+                  {cellOverrides.description
+                    ? cellOverrides.description(props)
+                    : props.value}
+                </span>
+              </div>
+            ),
           },
           {
             id: "createdDateTime",
@@ -73,7 +86,11 @@ export const useIModelTableConfig = ({
             maxWidth: 350,
             Cell: (props: CellProps<IModelFull>) => {
               const date = props.data[props.row.index].createdDateTime;
-              return date ? new Date(date).toDateString() : "";
+              return cellOverrides.createdDateTime
+                ? cellOverrides.createdDateTime(props)
+                : date
+                ? new Date(date).toDateString()
+                : "";
             },
           },
           {
@@ -99,6 +116,7 @@ export const useIModelTableConfig = ({
                   }}
                 >
                   <IconButton
+                    data-testid={`iModel-row-${props.row.original.id}-more-options`}
                     styleType="borderless"
                     aria-label="More options"
                     className="iac-options-icon"
@@ -116,10 +134,11 @@ export const useIModelTableConfig = ({
       },
     ],
     [
-      iModelActions,
+      strings.tableColumnName,
       strings.tableColumnDescription,
       strings.tableColumnLastModified,
-      strings.tableColumnName,
+      cellOverrides,
+      iModelActions,
       refetchIModels,
     ]
   );
