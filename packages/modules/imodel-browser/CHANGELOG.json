@@ -2,6 +2,18 @@
   "name": "@itwin/imodel-browser-react",
   "entries": [
     {
+      "version": "3.2.0",
+      "tag": "@itwin/imodel-browser-react_v3.2.0",
+      "date": "Tue, 15 Jul 2025 19:19:08 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Add cellOverrides option to iModelGrid and iTwinGrid"
+          }
+        ]
+      }
+    },
+    {
       "version": "3.1.2",
       "tag": "@itwin/imodel-browser-react_v3.1.2",
       "date": "Thu, 10 Jul 2025 23:35:54 GMT",

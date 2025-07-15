@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Thu, 10 Jul 2025 23:35:54 GMT and should not be manually modified.
+This log was last generated on Tue, 15 Jul 2025 19:19:08 GMT and should not be manually modified.
+
+## 3.2.0
+Tue, 15 Jul 2025 19:19:08 GMT
+
+### Minor changes
+
+- Add cellOverrides option to iModelGrid and iTwinGrid
 
 ## 3.1.2
 Thu, 10 Jul 2025 23:35:54 GMT
