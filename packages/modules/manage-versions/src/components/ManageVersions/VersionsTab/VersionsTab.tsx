@@ -4,10 +4,20 @@
  *--------------------------------------------------------------------------------------------*/
 import "./VersionsTab.scss";
 
-import { SvgDownload, SvgEdit } from "@itwin/itwinui-icons-react";
-import { Table, Text, useToaster } from "@itwin/itwinui-react";
+import {
+  SvgDownload,
+  SvgEdit,
+  SvgVisibilityHide,
+  SvgVisibilityShow,
+} from "@itwin/itwinui-icons-react";
+import { Flex, Table, Text, Tooltip, useToaster } from "@itwin/itwinui-react";
+import {
+  ActionType,
+  CellProps,
+  TableInstance,
+  TableState,
+} from "@itwin/itwinui-react/react-table";
 import React, { useCallback } from "react";
-import { CellProps } from "react-table";
 
 import { ChangesetClient } from "../../../clients/changesetClient";
 import { useConfig } from "../../../common/configContext";
@@ -29,6 +39,8 @@ export type VersionsTabProps = {
   tableData: VersionTableData[];
   changesetClient: ChangesetClient;
   setRelatedChangesets: (versionId: string, changesets: Changeset[]) => void;
+  handleHideVersion: (version: NamedVersion) => void;
+  showHiddenVersions: boolean;
 };
 
 const isNamedVersion = (
@@ -46,9 +58,22 @@ const VersionsTab = (props: VersionsTabProps) => {
     tableData,
     changesetClient,
     setRelatedChangesets,
+    handleHideVersion,
+    showHiddenVersions,
   } = props;
   const toaster = useToaster();
-  const { stringsOverrides, imodelId } = useConfig();
+  const { stringsOverrides, imodelId, enableHideVersions } = useConfig();
+
+  const tableInstance = React.useRef<TableInstance<VersionTableData>>();
+  const collapseAllRows = useCallback(() => {
+    if (tableInstance.current) {
+      tableInstance.current.toggleAllRowsExpanded(false);
+    }
+  }, []);
+
+  React.useEffect(() => {
+    collapseAllRows();
+  }, [collapseAllRows, showHiddenVersions]);
 
   const [currentVersion, setCurrentVersion] = React.useState<
     NamedVersion | undefined
@@ -95,6 +120,7 @@ const VersionsTab = (props: VersionsTabProps) => {
       imodelId,
       stringsOverrides.messageCouldNotDownloadedFileSuccessfully,
       stringsOverrides.messageFileDownloadInProgress,
+      toaster,
     ]
   );
 
@@ -143,8 +169,19 @@ const VersionsTab = (props: VersionsTabProps) => {
     [renderDateColumn]
   );
 
+  const toggleVersionState = useCallback(
+    (version: NamedVersion) => {
+      collapseAllRows();
+      handleHideVersion(version);
+    },
+    [handleHideVersion, collapseAllRows]
+  );
+
   const getToolbarActions = useCallback(
     (props: CellProps<VersionTableData>) => {
+      const version = props.row.original.version;
+      const isHidden = version.state === "hidden";
+
       const mainToolbarActions: MenuAction[] = [
         {
           title: stringsOverrides.updateNamedVersion,
@@ -152,27 +189,41 @@ const VersionsTab = (props: VersionsTabProps) => {
           icon: <SvgEdit />,
           disabled: false,
           onClick: () => {
-            setCurrentVersion(props.row.original.version);
+            setCurrentVersion(version);
             setIsUpdateVersionModalOpen(true);
           },
         },
         {
-          title: stringsOverrides.download ?? "Download",
-          label: stringsOverrides.download ?? "Download",
+          title: stringsOverrides.download,
+          label: stringsOverrides.download,
           icon: <SvgDownload />,
           disabled: false,
           onClick: async () => {
-            const { changesetIndex } = props.row.original.version;
+            const { changesetIndex } = version;
             await onDownloadClick(changesetIndex);
           },
         },
       ];
+      if (enableHideVersions) {
+        mainToolbarActions.push({
+          title: isHidden ? stringsOverrides.unhide : stringsOverrides.hide,
+          label: isHidden ? stringsOverrides.unhide : stringsOverrides.hide,
+          icon: isHidden ? <SvgVisibilityShow /> : <SvgVisibilityHide />,
+          onClick: () => {
+            toggleVersionState(version);
+          },
+        });
+      }
       return mainToolbarActions;
     },
     [
+      enableHideVersions,
       onDownloadClick,
       stringsOverrides.download,
+      stringsOverrides.hide,
+      stringsOverrides.unhide,
       stringsOverrides.updateNamedVersion,
+      toggleVersionState,
     ]
   );
 
@@ -181,6 +232,25 @@ const VersionsTab = (props: VersionsTabProps) => {
       {
         Header: "Name",
         columns: [
+          {
+            id: "HIDDEN",
+            accessor: "Hidden",
+            width: 80,
+            Cell: (props: CellProps<VersionTableData>) => {
+              const version = props.row.original;
+              return showHiddenVersions &&
+                isNamedVersion(version) &&
+                version.version?.state === "hidden" ? (
+                <Tooltip content={stringsOverrides.hidden}>
+                  <Flex>
+                    <SvgVisibilityHide data-testid="hidden-version-icon" />
+                  </Flex>
+                </Tooltip>
+              ) : (
+                <></>
+              );
+            },
+          },
           {
             id: "NAME",
             Header: stringsOverrides.name,
@@ -247,7 +317,7 @@ const VersionsTab = (props: VersionsTabProps) => {
       },
     ];
     if (onViewClick) {
-      tableColumns[0].columns.splice(4, 0, {
+      tableColumns[0].columns.splice(5, 0, {
         id: "versions-table-view",
         width: 100,
         Cell: (props: CellProps<VersionTableData>) => {
@@ -270,8 +340,10 @@ const VersionsTab = (props: VersionsTabProps) => {
     stringsOverrides.description,
     stringsOverrides.user,
     stringsOverrides.time,
+    stringsOverrides.hidden,
     stringsOverrides.view,
     onViewClick,
+    showHiddenVersions,
     generateCellContent,
     getToolbarActions,
   ]);
@@ -318,6 +390,10 @@ const VersionsTab = (props: VersionsTabProps) => {
     });
   };
 
+  const hiddenColumns = React.useMemo(() => {
+    return enableHideVersions ? [] : ["HIDDEN"];
+  }, [enableHideVersions]);
+
   return (
     <>
       <Table<VersionTableData>
@@ -334,6 +410,18 @@ const VersionsTab = (props: VersionsTabProps) => {
         onBottomReached={loadMoreVersions}
         className="iac-versions-table"
         onExpand={onExpandRow}
+        stateReducer={useCallback(
+          (
+            newState: TableState<VersionTableData>,
+            _action: ActionType,
+            _prevState: TableState<VersionTableData>,
+            instance: TableInstance<VersionTableData> | undefined
+          ) => {
+            tableInstance.current = instance;
+            return { ...newState, hiddenColumns };
+          },
+          [hiddenColumns]
+        )}
         autoResetExpanded={false}
       />
       {isUpdateVersionModalOpen && (
