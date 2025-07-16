@@ -15,6 +15,7 @@ export const MOCKED_CONFIG_PROPS = {
   accessToken: "Bearer test",
   imodelId: MOCKED_IMODEL_ID,
   stringsOverrides: defaultStrings,
+  enableHideVersions: true,
 } as ConfigProviderProps;
 
 export const MockedVersion = (
@@ -27,6 +28,7 @@ export const MockedVersion = (
     name: `nv_name${index}`,
     description: `nv_description${index}`,
     createdDateTime: MOCKED_DATE,
+    state: `visible`,
     _links: {
       changeSet: {
         href: "https://someChangesetUrl.com",

@@ -17,6 +17,7 @@ const ConfigContext = React.createContext<
       imodelId: string;
       stringsOverrides: ManageVersionsStringOverrides;
       log?: LogFunc;
+      enableHideVersions: boolean;
     }
   | undefined
 >(undefined);
@@ -28,6 +29,7 @@ export type ConfigProviderProps = {
   stringsOverrides: ManageVersionsStringOverrides;
   log?: LogFunc;
   children: React.ReactNode;
+  enableHideVersions: boolean;
 };
 
 export const ConfigProvider = (props: ConfigProviderProps) => {
