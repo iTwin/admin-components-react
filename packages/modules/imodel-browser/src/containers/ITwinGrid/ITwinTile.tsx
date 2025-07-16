@@ -102,7 +102,7 @@ export const ITwinTile = ({
   return (
     <ThemeProvider theme="inherit">
       <Tile.Wrapper
-        key={iTwin?.id}
+        key={iTwin.id}
         isNew={isNew}
         isSelected={isSelected}
         isLoading={isLoading}
@@ -118,7 +118,7 @@ export const ITwinTile = ({
               aria-disabled={isDisabled}
               data-testid={`iTwin-tile-${iTwin.id}`}
             >
-              {name ?? iTwin?.displayName}
+              {name ?? iTwin.displayName}
             </Tile.Action>
           </Tile.NameLabel>
         </Tile.Name>
@@ -134,8 +134,8 @@ export const ITwinTile = ({
               }
               onClick={async () => {
                 isFavorite
-                  ? await removeFromFavorites?.(iTwin?.id)
-                  : await addToFavorites?.(iTwin?.id);
+                  ? await removeFromFavorites?.(iTwin.id)
+                  : await addToFavorites?.(iTwin.id);
               }}
               styleType="borderless"
             >
@@ -144,7 +144,7 @@ export const ITwinTile = ({
           </Tile.QuickAction>
           <Tile.BadgeContainer>
             {badge ??
-              (iTwin?.status &&
+              (iTwin.status &&
                 iTwin.status.toLocaleLowerCase() !== "active" && (
                   <Badge
                     backgroundColor={
@@ -167,12 +167,14 @@ export const ITwinTile = ({
         </Tile.ThumbnailArea>
         <Tile.ContentArea>
           <Tile.Description>
-            {description ?? iTwin?.number ?? ""}
+            {description ?? iTwin.number ?? ""}
           </Tile.Description>
           {metadata && <Tile.Metadata>{metadata}</Tile.Metadata>}
           {children}
           {(moreOptions || moreOptionsBuilt) && (
-            <Tile.MoreOptions>
+            <Tile.MoreOptions
+              data-testid={`iTwin-tile-${iTwin.id}-more-options`}
+            >
               {moreOptions ?? moreOptionsBuilt}
             </Tile.MoreOptions>
           )}

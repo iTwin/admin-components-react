@@ -77,6 +77,7 @@ export const defaultStrings: ManageVersionsStringOverrides = {
     "Could not hide the Named Version. Please try again later.",
   messageUnhideVersionFailed:
     "Could not unhide the Named Version. Please try again later.",
+  hidden: "Hidden",
 };
 
 export type ManageVersionsProps = {
@@ -457,6 +458,7 @@ const ManageVersionsComponent = (props: ManageVersionsProps) => {
       versionClient,
       imodelId,
       refreshVersions,
+      toaster,
       stringsOverrides.messageHideVersionSucess,
       stringsOverrides.messageUnhideVersionSucess,
       stringsOverrides.messageHideVersionFailed,
@@ -494,10 +496,11 @@ const ManageVersionsComponent = (props: ManageVersionsProps) => {
             type="borderless"
             orientation="horizontal"
           />
-          <Flex.Spacer />
           {_currentTab === ManageVersionsTabs.Versions &&
             enableHideVersions && (
               <ToggleSwitch
+                labelProps={{ className: "iac-label-show-hidden-versions" }}
+                size="small"
                 labelPosition="left"
                 label={stringsOverrides.messageShowHiddenVersions}
                 checked={showHiddenVersions}

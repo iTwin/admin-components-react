@@ -86,6 +86,8 @@ export type ManageVersionsStringOverrides = {
   messageHideVersionFailed: string;
   /** Default: `Could not unhide Named Version. Please try again later. */
   messageUnhideVersionFailed: string;
+  /** Default: `Hidden` */
+  hidden: string;
 };
 
 export type LogFunc = (

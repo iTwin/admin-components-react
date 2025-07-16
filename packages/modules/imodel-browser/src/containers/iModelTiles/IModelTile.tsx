@@ -24,7 +24,9 @@ export interface IModelTileProps {
   /** Function to call on thumbnail click */
   onThumbnailClick?(iModel: IModelFull): void;
   /** Tile props that will be applied after normal use. (Will override IModelTile if used) */
-  tileProps?: Partial<TileProps>;
+  tileProps?: Partial<
+    TileProps & { getBadge?: (iModel: IModelFull) => React.ReactNode }
+  >;
   /** Object that configures different overrides for the API */
   apiOverrides?: ApiOverrides;
   /** Function to refetch iModels */
@@ -51,6 +53,7 @@ export const IModelTile = ({
     isSelected,
     thumbnail,
     badge,
+    getBadge,
     leftIcon,
     rightIcon,
     buttons,
@@ -71,16 +74,16 @@ export const IModelTile = ({
     [iModelOptions, iModel, refetchIModels]
   );
   const thumbnailApiOverride =
-    apiOverrides || iModel?.thumbnail
+    apiOverrides || iModel.thumbnail
       ? {
           ...(apiOverrides ?? {}),
-          data: iModel?.thumbnail,
+          data: iModel.thumbnail,
         }
       : undefined;
 
   return (
     <Tile.Wrapper
-      key={iModel?.id}
+      key={iModel.id}
       isNew={isNew}
       isSelected={isSelected}
       isLoading={isLoading}
@@ -90,14 +93,12 @@ export const IModelTile = ({
     >
       <Tile.Name>
         <Tile.NameIcon />
-        <Tile.NameLabel>
-          <Tile.Action
-            onClick={(e) => onClick?.(e) ?? onThumbnailClick?.(iModel)}
-            aria-disabled={isDisabled}
-            data-testid={`iModel-tile-${iModel?.id}`}
-          >
-            {name ?? iModel?.displayName}
-          </Tile.Action>
+        <Tile.NameLabel
+          onClick={(e) => onClick?.(e) ?? onThumbnailClick?.(iModel)}
+          aria-disabled={isDisabled}
+          data-testid={`iModel-tile-${iModel.id}-name-label`}
+        >
+          {name ?? iModel.displayName}
         </Tile.NameLabel>
       </Tile.Name>
       <Tile.ThumbnailArea>
@@ -107,17 +108,31 @@ export const IModelTile = ({
           <Tile.ThumbnailPicture>{thumbnail}</Tile.ThumbnailPicture>
         ) : (
           <IModelThumbnail
-            iModelId={iModel?.id}
+            iModelId={iModel.id}
             accessToken={accessToken}
             apiOverrides={thumbnailApiOverride}
           />
         )}
-        {badge && <Tile.BadgeContainer>{badge}</Tile.BadgeContainer>}
+        {(getBadge || badge) && (
+          <Tile.BadgeContainer>
+            {getBadge?.(iModel) ?? badge}
+          </Tile.BadgeContainer>
+        )}
       </Tile.ThumbnailArea>
       <Tile.ContentArea>
-        <Tile.Description>{iModel?.description ?? ""}</Tile.Description>
+        <Tile.Action
+          onClick={(e) => onClick?.(e) ?? onThumbnailClick?.(iModel)}
+          aria-disabled={isDisabled}
+          data-testid={`iModel-tile-${iModel.id}-action`}
+        >
+          <Tile.Description>{iModel?.description ?? ""}</Tile.Description>
+        </Tile.Action>
         {(moreOptions || moreOptionsBuilt) && (
-          <Tile.MoreOptions>{moreOptions ?? moreOptionsBuilt}</Tile.MoreOptions>
+          <Tile.MoreOptions
+            data-testid={`iModel-tile-${iModel.id}-more-options`}
+          >
+            {moreOptions ?? moreOptionsBuilt}
+          </Tile.MoreOptions>
         )}
       </Tile.ContentArea>
       {buttons && <Tile.Buttons>{buttons}</Tile.Buttons>}

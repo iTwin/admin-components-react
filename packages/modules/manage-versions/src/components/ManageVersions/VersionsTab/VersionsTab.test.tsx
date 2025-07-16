@@ -66,17 +66,22 @@ describe("VersionsTab", () => {
 
     rows.forEach(async (row) => {
       const cells = row.querySelectorAll("div[role='cell']");
-      expect(cells.length).toBe(6);
-      expect(cells[0].textContent).toContain(MockedVersion().name);
-      expect(cells[1].textContent).toContain(MockedVersion().description);
-      expect(cells[2].textContent).toContain(MockedVersion().createdBy);
-      expect(cells[3].textContent).toContain(MockedVersion().createdDateTime);
-      expect(cells[4].textContent).toContain(defaultStrings.view);
+      expect(cells.length).toBe(7);
+      expect(cells[0].textContent).toContain("");
+      expect(cells[1].textContent).toContain(MockedVersion().name);
+      expect(cells[2].textContent).toContain(MockedVersion().description);
+      expect(cells[3].textContent).toContain(MockedVersion().createdBy);
+      expect(cells[4].textContent).toContain(MockedVersion().createdDateTime);
+      expect(cells[5].textContent).toContain(defaultStrings.view);
       const viewSpan = screen.getByText("View");
       await act(() => fireEvent.click(viewSpan));
-      const actionButton = within(cells[5] as HTMLElement).getByRole("button", {
-        name: "More",
-      });
+      const actionsCell = cells[cells.length - 1];
+      const actionButton = within(actionsCell as HTMLElement).getByRole(
+        "button",
+        {
+          name: "More",
+        }
+      );
       expect(actionButton).toBeTruthy();
       await act(() => fireEvent.click(actionButton));
       const updateAction = await screen.findByText(
@@ -153,13 +158,15 @@ describe("VersionsTab", () => {
 
     rowsOnExpand.forEach(async (row, index) => {
       const cells = row.querySelectorAll('[role="cell"]');
-      expect(cells.length).toBe(6);
+      expect(cells.length).toBe(7);
       if (index === 0) {
-        expect(cells[0].textContent).toContain(MockedVersion().name);
-        expect(cells[1].textContent).toContain(MockedVersion().description);
-        expect(cells[2].textContent).toContain(MockedVersion().createdBy);
-        expect(cells[3].textContent).toContain(MockedVersion().createdDateTime);
-        expect(cells[4].textContent).toContain(defaultStrings.view);
+        expect(cells[0].textContent).toContain("");
+        expect(cells[1].textContent).toContain(MockedVersion().name);
+        expect(cells[2].textContent).toContain(MockedVersion().description);
+        expect(cells[3].textContent).toContain(MockedVersion().createdBy);
+        expect(cells[4].textContent).toContain(MockedVersion().createdDateTime);
+        expect(cells[5].textContent).toContain(defaultStrings.view);
+
         const viewSpan = screen.getByText("View");
         await act(() => fireEvent.click(viewSpan));
         const actionsCell = cells[cells.length - 1];
@@ -175,19 +182,19 @@ describe("VersionsTab", () => {
           expect(updateAction).toBeTruthy();
         }
       } else {
-        expect(cells[0].textContent).toContain(
+        expect(cells[1].textContent).toContain(
           MockedChangeset(index).displayName
         );
-        expect(cells[1].textContent).toContain(
+        expect(cells[2].textContent).toContain(
           MockedChangeset(index).description
         );
-        expect(cells[2].textContent).toContain(
+        expect(cells[3].textContent).toContain(
           MockedChangeset(index).createdBy
         );
-        expect(cells[3].textContent).toContain(
+        expect(cells[4].textContent).toContain(
           MockedChangeset(index).pushDateTime
         );
-        expect(cells[4].textContent).not.toContain(defaultStrings.view);
+        expect(cells[5].textContent).not.toContain(defaultStrings.view);
         const actionsCell = cells[cells.length - 1];
         expect(actionsCell.children.length).toBe(0);
       }

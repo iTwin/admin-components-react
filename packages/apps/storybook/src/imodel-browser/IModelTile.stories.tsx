@@ -17,4 +17,8 @@ export default {
 const Template: Story<IModelTileProps> = (args) => <IModelTile {...args} />;
 
 export const Primary = Template.bind({});
-Primary.args = {};
+Primary.args = {
+  iModel: {
+    id: "1",
+  },
+};

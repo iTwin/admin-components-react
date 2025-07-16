@@ -10,7 +10,7 @@ import {
   SvgVisibilityHide,
   SvgVisibilityShow,
 } from "@itwin/itwinui-icons-react";
-import { Table, Text, useToaster } from "@itwin/itwinui-react";
+import { Flex, Table, Text, Tooltip, useToaster } from "@itwin/itwinui-react";
 import {
   ActionType,
   CellProps,
@@ -120,6 +120,7 @@ const VersionsTab = (props: VersionsTabProps) => {
       imodelId,
       stringsOverrides.messageCouldNotDownloadedFileSuccessfully,
       stringsOverrides.messageFileDownloadInProgress,
+      toaster,
     ]
   );
 
@@ -232,6 +233,25 @@ const VersionsTab = (props: VersionsTabProps) => {
         Header: "Name",
         columns: [
           {
+            id: "HIDDEN",
+            accessor: "Hidden",
+            width: 80,
+            Cell: (props: CellProps<VersionTableData>) => {
+              const version = props.row.original;
+              return showHiddenVersions &&
+                isNamedVersion(version) &&
+                version.version?.state === "hidden" ? (
+                <Tooltip content={stringsOverrides.hidden}>
+                  <Flex>
+                    <SvgVisibilityHide data-testid="hidden-version-icon" />
+                  </Flex>
+                </Tooltip>
+              ) : (
+                <></>
+              );
+            },
+          },
+          {
             id: "NAME",
             Header: stringsOverrides.name,
             accessor: "name",
@@ -297,7 +317,7 @@ const VersionsTab = (props: VersionsTabProps) => {
       },
     ];
     if (onViewClick) {
-      tableColumns[0].columns.splice(4, 0, {
+      tableColumns[0].columns.splice(5, 0, {
         id: "versions-table-view",
         width: 100,
         Cell: (props: CellProps<VersionTableData>) => {
@@ -320,8 +340,10 @@ const VersionsTab = (props: VersionsTabProps) => {
     stringsOverrides.description,
     stringsOverrides.user,
     stringsOverrides.time,
+    stringsOverrides.hidden,
     stringsOverrides.view,
     onViewClick,
+    showHiddenVersions,
     generateCellContent,
     getToolbarActions,
   ]);
@@ -368,6 +390,10 @@ const VersionsTab = (props: VersionsTabProps) => {
     });
   };
 
+  const hiddenColumns = React.useMemo(() => {
+    return enableHideVersions ? [] : ["HIDDEN"];
+  }, [enableHideVersions]);
+
   return (
     <>
       <Table<VersionTableData>
@@ -392,9 +418,9 @@ const VersionsTab = (props: VersionsTabProps) => {
             instance: TableInstance<VersionTableData> | undefined
           ) => {
             tableInstance.current = instance;
-            return newState;
+            return { ...newState, hiddenColumns };
           },
-          []
+          [hiddenColumns]
         )}
         autoResetExpanded={false}
       />

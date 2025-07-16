@@ -35,7 +35,7 @@ const renderComponent = (initialProps?: Partial<ManageVersionsProps>) => {
   const props: ManageVersionsProps = {
     accessToken: "test_token",
     imodelId: MOCKED_IMODEL_ID,
-    enableHideVersions: true,
+    enableHideVersions: false,
     ...initialProps,
   };
   return render(<ManageVersions {...props} />);
@@ -250,15 +250,15 @@ describe("ManageVersions", () => {
       ...MockedVersionList(2),
     ]);
     mockUpdateVersion.mockResolvedValue(MockedVersion());
-    const { container } = renderComponent();
+    const { container } = renderComponent({ enableHideVersions: true });
 
     await waitFor(() => container.querySelector(".iac-versions-table-body"));
     const versionRows = container.querySelectorAll(
       ".iac-versions-table-body [role='row']"
     );
     const firstRowCells = versionRows[0].querySelectorAll("div[role='cell']");
-    expect(firstRowCells.length).toBe(5);
-    const actionsCell = firstRowCells[4] as HTMLElement;
+    expect(firstRowCells.length).toBe(6);
+    const actionsCell = firstRowCells[firstRowCells.length - 1] as HTMLElement;
     const button = within(actionsCell as HTMLElement).getByText(
       "More"
     ).parentElement;
@@ -294,18 +294,19 @@ describe("ManageVersions", () => {
     const versionCells = container.querySelectorAll(
       "div[role='row']:first-child div[role='cell']"
     );
-    expect(versionCells.length).toBe(5);
-    expect(versionCells[0].textContent).toEqual("test name");
-    expect(versionCells[1].textContent).toEqual("test description");
+    expect(versionCells.length).toBe(6);
+    expect(versionCells[0].textContent).toEqual("");
+    expect(versionCells[1].textContent).toEqual("test name");
+    expect(versionCells[2].textContent).toEqual("test description");
     await waitFor(
       () =>
-        expect(versionCells[2].textContent).toEqual(MockedVersion(0).createdBy),
+        expect(versionCells[3].textContent).toEqual(MockedVersion(0).createdBy),
       { timeout: 10000 }
     );
-    expect(versionCells[3].textContent).toEqual(
+    expect(versionCells[4].textContent).toEqual(
       MockedVersion(0).createdDateTime
     );
-    const actionButton = firstRowCells[4] as HTMLElement;
+    const actionButton = firstRowCells[firstRowCells.length - 1] as HTMLElement;
     const updateButton = within(actionButton as HTMLElement).getByText("More");
     expect(updateButton).toBeTruthy();
     expect(mockGetVersions).toHaveBeenCalledTimes(2);
@@ -319,7 +320,7 @@ describe("ManageVersions", () => {
       MockedVersion(1),
     ]);
 
-    const { container } = renderComponent();
+    const { container } = renderComponent({ enableHideVersions: true });
 
     await waitFor(() => container.querySelector(".iac-versions-table-body"));
 
@@ -341,6 +342,10 @@ describe("ManageVersions", () => {
     );
     expect(allVersionRows.length).toBe(4);
 
+    const hiddenIcons = container.querySelectorAll(
+      "svg[data-testid='hidden-version-icon']"
+    );
+    expect(hiddenIcons.length).toBe(2);
     expect(screen.getByText(MockedVersion(4).name)).toBeInTheDocument();
     expect(screen.getByText(MockedVersion(3).name)).toBeInTheDocument();
   });
@@ -351,7 +356,7 @@ describe("ManageVersions", () => {
       ...MockedVersionList(2),
     ]);
     mockUpdateVersion.mockResolvedValue(MockedVersion(2, { state: "hidden" }));
-    const { container } = renderComponent();
+    const { container } = renderComponent({ enableHideVersions: true });
 
     await waitFor(() => container.querySelector(".iac-versions-table-body"));
     const initialVersionRows = container.querySelectorAll(
@@ -361,8 +366,8 @@ describe("ManageVersions", () => {
 
     const firstRowCells =
       initialVersionRows[0].querySelectorAll("div[role='cell']");
-    expect(firstRowCells.length).toBe(5);
-    const actionsCell = firstRowCells[4] as HTMLElement;
+    expect(firstRowCells.length).toBe(6);
+    const actionsCell = firstRowCells[firstRowCells.length - 1] as HTMLElement;
     const button = within(actionsCell as HTMLElement).getByText(
       "More"
     ).parentElement;
@@ -381,15 +386,20 @@ describe("ManageVersions", () => {
       ".iac-versions-table-body [role='row']"
     );
     expect(updatedVersionRows.length).toBe(2);
+    const hiddenIcons = container.querySelectorAll(
+      "svg[data-testid='hidden-version-icon']"
+    );
+    expect(hiddenIcons.length).toBe(0);
 
     const versionCells = container.querySelectorAll(
       "div[role='row']:first-child div[role='cell']"
     );
-    expect(versionCells.length).toBe(5);
-    expect(versionCells[0].textContent).toEqual(MockedVersion(1).name);
-    expect(versionCells[1].textContent).toEqual(MockedVersion(1).description);
-    expect(versionCells[2].textContent).toEqual(MockedVersion(1).createdBy);
-    expect(versionCells[3].textContent).toEqual(
+    expect(versionCells.length).toBe(6);
+    expect(versionCells[0].textContent).toEqual("");
+    expect(versionCells[1].textContent).toEqual(MockedVersion(1).name);
+    expect(versionCells[2].textContent).toEqual(MockedVersion(1).description);
+    expect(versionCells[3].textContent).toEqual(MockedVersion(1).createdBy);
+    expect(versionCells[4].textContent).toEqual(
       MockedVersion(1).createdDateTime
     );
   });

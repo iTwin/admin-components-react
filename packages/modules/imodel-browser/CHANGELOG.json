@@ -2,6 +2,54 @@
   "name": "@itwin/imodel-browser-react",
   "entries": [
     {
+      "version": "3.2.0",
+      "tag": "@itwin/imodel-browser-react_v3.2.0",
+      "date": "Tue, 15 Jul 2025 19:19:08 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Add cellOverrides option to iModelGrid and iTwinGrid"
+          }
+        ]
+      }
+    },
+    {
+      "version": "3.1.2",
+      "tag": "@itwin/imodel-browser-react_v3.1.2",
+      "date": "Thu, 10 Jul 2025 23:35:54 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Fix iModel opening when opening action dropdown"
+          }
+        ]
+      }
+    },
+    {
+      "version": "3.1.1",
+      "tag": "@itwin/imodel-browser-react_v3.1.1",
+      "date": "Thu, 10 Jul 2025 16:59:48 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Refactor IModelTile component to allow hovering over name label"
+          }
+        ]
+      }
+    },
+    {
+      "version": "3.1.0",
+      "tag": "@itwin/imodel-browser-react_v3.1.0",
+      "date": "Fri, 27 Jun 2025 06:46:50 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Add getBadge property on iModelTile in order to set badge based on iModel props"
+          }
+        ]
+      }
+    },
+    {
       "version": "3.0.7",
       "tag": "@itwin/imodel-browser-react_v3.0.7",
       "date": "Fri, 06 Jun 2025 18:58:31 GMT",
