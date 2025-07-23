@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Tue, 15 Jul 2025 19:19:08 GMT and should not be manually modified.
+This log was last generated on Wed, 23 Jul 2025 11:03:45 GMT and should not be manually modified.
+
+## 3.2.1
+Wed, 23 Jul 2025 11:03:45 GMT
+
+### Patches
+
+- Show Tile Metadata if provided
 
 ## 3.2.0
 Tue, 15 Jul 2025 19:19:08 GMT
