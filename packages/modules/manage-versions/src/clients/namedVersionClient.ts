@@ -61,7 +61,7 @@ export class NamedVersionClient {
   public async update(
     imodelId: string,
     versionId: string,
-    version: { name: string; description: string }
+    version: { name: string; description: string; state?: string }
   ): Promise<NamedVersion> {
     return this._http
       .patch(
