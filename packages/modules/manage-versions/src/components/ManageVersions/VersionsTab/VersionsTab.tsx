@@ -234,7 +234,6 @@ const VersionsTab = (props: VersionsTabProps) => {
         columns: [
           {
             id: "HIDDEN",
-            accessor: "Hidden",
             width: 80,
             Cell: (props: CellProps<VersionTableData>) => {
               const version = props.row.original;
