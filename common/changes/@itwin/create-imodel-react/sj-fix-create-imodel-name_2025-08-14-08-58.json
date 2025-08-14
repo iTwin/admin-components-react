@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/create-imodel-react",
+      "comment": "Disable create button when the name input contains only whitespace characters",
+      "type": "patch"
+    }
+  ],
+  "packageName": "@itwin/create-imodel-react"
+}
