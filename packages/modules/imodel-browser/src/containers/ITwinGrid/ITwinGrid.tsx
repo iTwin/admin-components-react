@@ -75,6 +75,10 @@ export interface ITwinGridProps {
    * A function allow filtering on anything, is used in a normal array.filter.
    */
   filterOptions?: ITwinFilterOptions;
+  /** OData $orderby string, for example: "displayName ASC".
+   * This only has effect when requestType is empty - it does not apply to "favorites" or "recents".
+   */
+  orderbyOptions?: string;
   /** List of actions to build for each iTwin context menu. */
   iTwinActions?: ContextMenuBuilderItem<ITwinFull>[];
   /** Function (can be a react hook) that returns state for an iTwin, returned values will be applied as props to the iTwinTile, overrides ITwinGrid provided values */
@@ -109,6 +113,7 @@ export const ITwinGrid = ({
   accessToken,
   apiOverrides,
   filterOptions,
+  orderbyOptions,
   onThumbnailClick,
   iTwinActions,
   requestType,
@@ -156,6 +161,7 @@ export const ITwinGrid = ({
     accessToken,
     apiOverrides,
     filterOptions,
+    orderbyOptions,
     shouldRefetchFavorites,
     resetShouldRefetchFavorites,
   });
