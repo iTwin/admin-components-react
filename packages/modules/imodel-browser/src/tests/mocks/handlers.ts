@@ -40,13 +40,6 @@ export const handlers = [
                   displayName: "mySearchedName1",
                 },
               ]
-            : req.url.searchParams.get("$orderby") === "displayName ASC"
-            ? [
-                {
-                  id: "myOrdered1",
-                  displayName: "myOrderedName1",
-                },
-              ]
             : [
                 {
                   id: "my1",

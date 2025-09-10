@@ -78,19 +78,6 @@ describe("useITwinData hook", () => {
     expect(result.current.status).toEqual(DataStatus.Complete);
   });
 
-  it("returns ordered iTwins and proper status on successful call", async () => {
-    const { result, waitForNextUpdate } = renderHook(() =>
-      useITwinData({ accessToken, orderbyOptions: "displayName ASC" })
-    );
-
-    await waitForNextUpdate();
-    expect(result.current.iTwins).toContainEqual({
-      id: "myOrdered1",
-      displayName: "myOrderedName1",
-    });
-    expect(result.current.status).toEqual(DataStatus.Complete);
-  });
-
   it("returns error status and no data on failure", async () => {
     server.use(
       rest.get("https://api.bentley.com/itwins/", (req, res, ctx) => {
@@ -201,6 +188,9 @@ describe("useITwinData hook", () => {
 
   describe("orderByOptions", () => {
     const orderbyOptions = "displayName DESC";
+    const fetchedITwins = [
+      { id: "fetchedId", displayName: "fetchedDisplayName" },
+    ];
 
     const handleRequest = (
       req: RestRequest,
@@ -208,13 +198,23 @@ describe("useITwinData hook", () => {
       ctx: RestContext
     ) => {
       urlWatcher(req.url.toString());
-      return res(
-        ctx.status(200),
-        ctx.json({
-          iTwins: [{ id: "fetchedId", displayName: "fetchedDisplayName" }],
-        })
-      );
+      return res(ctx.status(200), ctx.json({ iTwins: fetchedITwins }));
     };
+
+    it("returns ordered iTwins and proper status on successful call", async () => {
+      server.use(rest.get("https://api.bentley.com/itwins/", handleRequest));
+      const { result, waitForNextUpdate } = renderHook(() =>
+        useITwinData({ accessToken, orderbyOptions: "displayName ASC" })
+      );
+
+      await waitForNextUpdate();
+
+      expect(result.current.iTwins).toEqual(fetchedITwins);
+      expect(urlWatcher).toHaveBeenCalledWith(
+        expect.stringContaining("$orderby=displayName%20ASC")
+      );
+      expect(result.current.status).toEqual(DataStatus.Complete);
+    });
 
     it("ignores orderBy options for favorites request", async () => {
       server.use(
