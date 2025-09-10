@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Wed, 23 Jul 2025 11:03:45 GMT and should not be manually modified.
+This log was last generated on Tue, 09 Sep 2025 16:36:14 GMT and should not be manually modified.
+
+## 3.2.2
+Tue, 09 Sep 2025 16:36:14 GMT
+
+### Patches
+
+- Update iTwinFull type definition
 
 ## 3.2.1
 Wed, 23 Jul 2025 11:03:45 GMT
