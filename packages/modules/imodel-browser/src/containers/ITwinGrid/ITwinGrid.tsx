@@ -75,8 +75,12 @@ export interface ITwinGridProps {
    * A function allow filtering on anything, is used in a normal array.filter.
    */
   filterOptions?: ITwinFilterOptions;
-  /** OData $orderby string, for example: "displayName ASC".
-   * This only has effect when requestType is empty - it does not apply to "favorites" or "recents".
+  /**
+   * Set the `$orderby` parameter when fetching iTwins from the iTwin API, e.g. `displayName ASC`.
+   *
+   * This only has an effect when the `requestType` is empty - it does not apply to "favorites" or "recents".
+   *
+   * See https://developer.bentley.com/apis/itwins/operations/get-my-itwins/#odata-queries for details.
    */
   orderbyOptions?: string;
   /** List of actions to build for each iTwin context menu. */
