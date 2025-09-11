@@ -2,6 +2,18 @@
   "name": "@itwin/imodel-browser-react",
   "entries": [
     {
+      "version": "3.3.0",
+      "tag": "@itwin/imodel-browser-react_v3.3.0",
+      "date": "Thu, 11 Sep 2025 13:34:59 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Add option to pass $orderby API query param"
+          }
+        ]
+      }
+    },
+    {
       "version": "3.2.2",
       "tag": "@itwin/imodel-browser-react_v3.2.2",
       "date": "Tue, 09 Sep 2025 16:36:14 GMT",
