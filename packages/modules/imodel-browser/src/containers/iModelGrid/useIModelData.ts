@@ -25,7 +25,7 @@ export interface IModelDataHookOptions {
   /** @deprecated in 2.1 It is no longer used as it has no effect on the data fetching. */
   viewMode?: ViewType;
 }
-const DEFAULT_PAGE_SIZE = 100;
+export const DEFAULT_PAGE_SIZE = 100;
 
 export const useIModelData = ({
   iTwinId,

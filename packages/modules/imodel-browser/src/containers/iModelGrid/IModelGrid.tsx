@@ -20,7 +20,7 @@ import { _mergeStrings } from "../../utils/_apiOverrides";
 import { ContextMenuBuilderItem } from "../../utils/_buildMenuOptions";
 import { IModelGhostTile } from "../iModelTiles/IModelGhostTile";
 import { IModelTile, IModelTileProps } from "../iModelTiles/IModelTile";
-import { useIModelData } from "./useIModelData";
+import { DEFAULT_PAGE_SIZE, useIModelData } from "./useIModelData";
 import { useIModelTableConfig } from "./useIModelTableConfig";
 export interface IModelGridProps {
   /**
@@ -172,6 +172,16 @@ export const IModelGrid = ({
       fetchediModels,
     [postProcessCallback, fetchediModels, fetchStatus, searchText]
   );
+
+  React.useEffect(() => {
+    if (
+      iModels.length < (pageSize ?? DEFAULT_PAGE_SIZE) &&
+      fetchMore &&
+      fetchStatus !== DataStatus.Fetching
+    ) {
+      fetchMore();
+    }
+  }, [iModels.length, pageSize, fetchMore, fetchStatus]);
 
   const { columns, onRowClick } = useIModelTableConfig({
     iModelActions,
