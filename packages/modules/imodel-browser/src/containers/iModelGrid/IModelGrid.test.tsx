@@ -195,7 +195,7 @@ describe("IModelGrid", () => {
     }));
   };
 
-  it("handles pagination correctly with postProcessCallback filtering", async () => {
+  it("should show all data with postProcessCallback filtering", async () => {
     const pageSize = 3;
     const firstPageIModels = generateMockIModels(3, "iModel");
     firstPageIModels[1].description = "unmatched";
