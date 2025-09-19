@@ -248,11 +248,9 @@ describe("IModelGrid", () => {
     mockFetchMore.mockClear();
 
     postProcessCallback.mockImplementation((iModels: IModelFull[]) => {
-      return iModels.filter((iModel) => {
-        if (iModel.description === "iModel-description") {
-          return true;
-        }
-      });
+      return iModels.filter(
+        (iModel) => iModel.description === "iModel-description"
+      );
     });
 
     rerender(
