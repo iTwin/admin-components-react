@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Thu, 11 Sep 2025 13:34:59 GMT and should not be manually modified.
+This log was last generated on Fri, 19 Sep 2025 15:25:03 GMT and should not be manually modified.
+
+## 3.3.1
+Fri, 19 Sep 2025 15:25:03 GMT
+
+### Patches
+
+- Fix iModelGrid Filtering via postProcessCallback to Show Complete Results Across All Data
 
 ## 3.3.0
 Thu, 11 Sep 2025 13:34:59 GMT
