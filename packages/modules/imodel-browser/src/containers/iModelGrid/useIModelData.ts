@@ -212,6 +212,18 @@ const createFetchIModelsFn = (
       }`
     : "";
   const skip = page * pageSize;
+
+  if (maxCount !== undefined && skip >= maxCount) {
+    const abortController = new AbortController();
+    return {
+      abortController,
+      fetchIModels: async () => ({
+        iModels: [],
+        morePagesAvailable: false,
+      }),
+    };
+  }
+
   const top = maxCount ? Math.min(pageSize, maxCount - skip) : pageSize;
   const paging = `&$skip=${skip}&$top=${top}`;
   const searching = searchText?.trim()
