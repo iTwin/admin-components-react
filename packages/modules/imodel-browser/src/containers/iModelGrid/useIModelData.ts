@@ -159,6 +159,7 @@ export const useIModelData = ({
           return;
         }
         setIModels([]);
+        setMorePagesAvailable(false);
         setStatus(DataStatus.FetchFailed);
         console.error(e);
       });
