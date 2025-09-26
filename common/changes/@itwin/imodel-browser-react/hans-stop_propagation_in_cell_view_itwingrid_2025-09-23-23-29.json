@@ -2,7 +2,7 @@
   "changes": [
     {
       "packageName": "@itwin/imodel-browser-react",
-      "comment": "Updated itwinui version to stopPropagation on dropdown items",
+      "comment": "Updated itwinui to 3.19.4 and prevent clicks on row menu items from propagating up to the row",
       "type": "minor"
     }
   ],
