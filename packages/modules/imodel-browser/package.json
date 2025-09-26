@@ -36,7 +36,7 @@
     "react-intersection-observer": "^8.31.1"
   },
   "devDependencies": {
-    "@itwin/itwinui-react": "^3.17.3",
+    "@itwin/itwinui-react": "^3.19.4",
     "@rollup/plugin-commonjs": "~17.1.0",
     "@rollup/plugin-url": "^8.0.1",
     "@svgr/rollup": "^5.5.0",
