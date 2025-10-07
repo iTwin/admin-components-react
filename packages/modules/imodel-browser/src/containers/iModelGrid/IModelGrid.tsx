@@ -91,6 +91,8 @@ export interface IModelGridProps {
   maxCount?: number;
   /** Overrides for cell rendering in cells viewMode */
   cellOverrides?: IModelCellOverrides;
+  /** Additional class name for the grid structure */
+  className?: string;
 }
 
 /**
@@ -113,6 +115,7 @@ export const IModelGrid = ({
   pageSize,
   maxCount,
   cellOverrides,
+  className,
 }: IModelGridProps) => {
   const [sort, setSort] = React.useState<IModelSortOptions>(sortOptions);
   const [isSortOnTable, setIsSortOnTable] = React.useState(false);
@@ -207,7 +210,7 @@ export const IModelGrid = ({
     return (
       <>
         {viewMode !== "cells" ? (
-          <GridStructure>
+          <GridStructure className={className}>
             {iModels?.map((iModel) => (
               <IModelHookedTile
                 key={iModel.id}
