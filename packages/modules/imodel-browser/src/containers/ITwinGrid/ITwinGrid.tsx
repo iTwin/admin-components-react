@@ -202,9 +202,9 @@ export const ITwinGrid = ({
       <GridStructure>
         {fetchStatus === DataStatus.Fetching ? (
           <>
-            <IModelGhostTile />
-            <IModelGhostTile />
-            <IModelGhostTile />
+            <IModelGhostTile fullWidth={tileOverrides?.fullWidth} />
+            <IModelGhostTile fullWidth={tileOverrides?.fullWidth} />
+            <IModelGhostTile fullWidth={tileOverrides?.fullWidth} />
           </>
         ) : (
           <>
@@ -235,10 +235,10 @@ export const ITwinGrid = ({
             {fetchMore ? (
               <>
                 <InView onChange={fetchMore}>
-                  <IModelGhostTile />
+                  <IModelGhostTile fullWidth={tileOverrides?.fullWidth} />
                 </InView>
-                <IModelGhostTile />
-                <IModelGhostTile />
+                <IModelGhostTile fullWidth={tileOverrides?.fullWidth} />
+                <IModelGhostTile fullWidth={tileOverrides?.fullWidth} />
               </>
             ) : null}
           </>

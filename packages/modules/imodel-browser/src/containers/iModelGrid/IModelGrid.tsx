@@ -228,14 +228,19 @@ export const IModelGrid = ({
                 }}
               >
                 {({ ref }) => {
-                  return <IModelGhostTile ref={ref} />;
+                  return (
+                    <IModelGhostTile
+                      ref={ref}
+                      fullWidth={tileOverrides?.fullWidth}
+                    />
+                  );
                 }}
               </InView>
             ) : null}
             {fetchStatus === DataStatus.Fetching && (
               <>
-                <IModelGhostTile />
-                <IModelGhostTile />
+                <IModelGhostTile fullWidth={tileOverrides?.fullWidth} />
+                <IModelGhostTile fullWidth={tileOverrides?.fullWidth} />
               </>
             )}
           </GridStructure>
