@@ -46,7 +46,7 @@ export const IModelTile = ({
   apiOverrides,
   tileProps,
   refetchIModels,
-  fullWidth = false,
+  fullWidth,
 }: IModelTileProps) => {
   const {
     name,
