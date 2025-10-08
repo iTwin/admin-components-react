@@ -251,6 +251,7 @@ export const ITwinGrid = ({
   ) : (
     <ThemeProvider theme="inherit">
       <Table<{ [P in keyof ITwinFull]: ITwinFull[P] }>
+        className={onThumbnailClick ? "row-cursor" : ""}
         columns={columns}
         data={iTwins}
         onRowClick={onRowClick}
