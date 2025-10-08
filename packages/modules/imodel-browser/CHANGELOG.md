@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Fri, 19 Sep 2025 15:25:03 GMT and should not be manually modified.
+This log was last generated on Wed, 08 Oct 2025 14:40:05 GMT and should not be manually modified.
+
+## 3.4.0
+Wed, 08 Oct 2025 14:40:05 GMT
+
+### Minor changes
+
+- Updated itwinui to 3.19.4 and prevent clicks on row menu items from propagating up to the row
 
 ## 3.3.1
 Fri, 19 Sep 2025 15:25:03 GMT
