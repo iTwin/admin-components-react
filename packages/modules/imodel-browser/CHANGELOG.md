@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Wed, 08 Oct 2025 14:40:05 GMT and should not be manually modified.
+This log was last generated on Wed, 08 Oct 2025 16:14:50 GMT and should not be manually modified.
+
+## 3.4.1
+Wed, 08 Oct 2025 16:14:50 GMT
+
+### Patches
+
+- Add `fullWidth` prop to tiles
 
 ## 3.4.0
 Wed, 08 Oct 2025 14:40:05 GMT
