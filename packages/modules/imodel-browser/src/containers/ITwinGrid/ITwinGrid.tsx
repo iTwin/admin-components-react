@@ -108,6 +108,8 @@ export interface ITwinGridProps {
   viewMode?: ViewType;
   /** Overrides for cell rendering in cells viewMode */
   cellOverrides?: ITwinCellOverrides;
+  /** Additional class name for the grid structure */
+  className?: string;
 }
 
 /**
@@ -128,6 +130,7 @@ export const ITwinGrid = ({
   postProcessCallback,
   viewMode,
   cellOverrides,
+  className,
 }: ITwinGridProps) => {
   const {
     iTwinFavorites,
@@ -199,12 +202,12 @@ export const ITwinGrid = ({
     iTwins.length === 0 && noResultsText ? (
       <NoResults text={noResultsText} />
     ) : (
-      <GridStructure>
+      <GridStructure className={className}>
         {fetchStatus === DataStatus.Fetching ? (
           <>
-            <IModelGhostTile />
-            <IModelGhostTile />
-            <IModelGhostTile />
+            <IModelGhostTile fullWidth={tileOverrides?.fullWidth} />
+            <IModelGhostTile fullWidth={tileOverrides?.fullWidth} />
+            <IModelGhostTile fullWidth={tileOverrides?.fullWidth} />
           </>
         ) : (
           <>
@@ -235,10 +238,10 @@ export const ITwinGrid = ({
             {fetchMore ? (
               <>
                 <InView onChange={fetchMore}>
-                  <IModelGhostTile />
+                  <IModelGhostTile fullWidth={tileOverrides?.fullWidth} />
                 </InView>
-                <IModelGhostTile />
-                <IModelGhostTile />
+                <IModelGhostTile fullWidth={tileOverrides?.fullWidth} />
+                <IModelGhostTile fullWidth={tileOverrides?.fullWidth} />
               </>
             ) : null}
           </>
@@ -248,6 +251,7 @@ export const ITwinGrid = ({
   ) : (
     <ThemeProvider theme="inherit">
       <Table<{ [P in keyof ITwinFull]: ITwinFull[P] }>
+        className={onThumbnailClick ? "row-cursor" : ""}
         columns={columns}
         data={iTwins}
         onRowClick={onRowClick}

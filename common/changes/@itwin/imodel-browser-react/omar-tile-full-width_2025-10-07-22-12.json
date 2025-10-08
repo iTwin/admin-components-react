@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/imodel-browser-react",
+      "comment": "Add `fullWidth` prop to tiles",
+      "type": "patch"
+    }
+  ],
+  "packageName": "@itwin/imodel-browser-react"
+}
