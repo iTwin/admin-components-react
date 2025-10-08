@@ -87,7 +87,9 @@ describe("IModelGrid", () => {
   });
   it("should display the table and correct rows", () => {
     const wrapper = render(<IModelGrid viewMode="cells" />);
-    expect(wrapper.getByRole("table")).toBeDefined();
+    expect(
+      wrapper.container.querySelector('div[class$="-table"]')
+    ).toBeInTheDocument();
     expect(wrapper.getAllByRole("row").length).toEqual(3); // Header row + 2 data rows
   });
   it("should prevent onThumbnailClick from being called when button in cell is clicked with stopPropagation", () => {
