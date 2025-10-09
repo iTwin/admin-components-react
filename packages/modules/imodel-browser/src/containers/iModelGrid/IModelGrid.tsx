@@ -252,7 +252,6 @@ export const IModelGrid = ({
         ) : (
           <ThemeProvider theme="inherit">
             <Table<{ [P in keyof IModelFull]: IModelFull[P] }>
-              className={onThumbnailClick ? styles.rowCursor : ""}
               columns={columns}
               data={iModels}
               onRowClick={onRowClick}
@@ -283,6 +282,9 @@ export const IModelGrid = ({
               onBottomReached={fetchMore}
               autoResetFilters={false}
               autoResetSortBy={false}
+              bodyProps={{
+                className: onThumbnailClick ? styles.rowCursor : "",
+              }}
             />
           </ThemeProvider>
         )}
