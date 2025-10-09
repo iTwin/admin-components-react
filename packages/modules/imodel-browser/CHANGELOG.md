@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Wed, 08 Oct 2025 16:14:50 GMT and should not be manually modified.
+This log was last generated on Thu, 09 Oct 2025 13:32:32 GMT and should not be manually modified.
+
+## 3.4.2
+Thu, 09 Oct 2025 13:32:32 GMT
+
+### Patches
+
+- Fix: Cursor pointer on clickable rows in table
 
 ## 3.4.1
 Wed, 08 Oct 2025 16:14:50 GMT
