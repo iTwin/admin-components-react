@@ -49,9 +49,9 @@
     "webpack": "^5.28.0"
   },
   "scripts": {
-    "start": "start-storybook -p 6006",
-    "build": "",
-    "test": "build-storybook --loglevel error --quiet",
-    "clean": "rimraf storybook-static"
+  "start": "start-storybook -p 6006",
+  "build": "build-storybook -o storybook-static",
+  "test": "build-storybook --loglevel error --quiet",
+  "clean": "rimraf storybook-static"
   }
 }
