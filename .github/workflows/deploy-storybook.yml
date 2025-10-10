@@ -36,8 +36,8 @@ jobs:
         working-directory: packages/apps/storybook
         run: |
           set -e
-          # Try workspace-aware pnpm build first, fall back to running the package script directly
-          pnpm -w run -r --filter @itwin/platform-storybook build || (cd packages/apps/storybook && npm run build)
+          # Try workspace-aware pnpm build first, fall back to running the package script directly with pnpm
+          pnpm -w run -r --filter @itwin/platform-storybook build || (cd packages/apps/storybook && pnpm run build)
 
       - name: Upload Storybook artifact
         uses: actions/upload-pages-artifact@v1
