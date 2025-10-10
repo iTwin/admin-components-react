@@ -73,7 +73,13 @@ export const useIModelData = ({
   }, []);
 
   const fetchMore = React.useCallback(() => {
-    if (needsUpdate || status === DataStatus.Fetching || !morePagesAvailable) {
+    if (
+      needsUpdate ||
+      status === DataStatus.Fetching ||
+      status === DataStatus.TokenRequired ||
+      status === DataStatus.ContextRequired ||
+      !morePagesAvailable
+    ) {
       return;
     }
     setPage(page + 1);
