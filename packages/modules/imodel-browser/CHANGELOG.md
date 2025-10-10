@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Thu, 09 Oct 2025 13:32:32 GMT and should not be manually modified.
+This log was last generated on Fri, 10 Oct 2025 18:56:16 GMT and should not be manually modified.
+
+## 3.4.3
+Fri, 10 Oct 2025 18:56:16 GMT
+
+### Patches
+
+- Fixed bug where fetching never happens when access token has not yet loaded
 
 ## 3.4.2
 Thu, 09 Oct 2025 13:32:32 GMT
