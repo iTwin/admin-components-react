@@ -18,8 +18,6 @@ const HOOK_ABORT_ERROR =
  * - {Set<string>} iModelFavorites - A set of iModel IDs that are marked as favorites.
  * - {function} addIModelToFavorites - A function to add an iModel to favorites.
  * - {function} removeIModelFromFavorites - A function to remove an iModel from favorites.
- * - {boolean} shouldRefetchFavorites - A boolean indicating whether to refetch favorites when switching to the favorites tab.
- * - {function} resetShouldRefetchFavorites - A function to reset shouldRefetchFavorites back to false.
  */
 export const useIModelFavorites = (
   iTwinId: string,
@@ -29,11 +27,8 @@ export const useIModelFavorites = (
   iModelFavorites: Set<string>;
   addIModelToFavorites: (iTwinId: string) => Promise<void>;
   removeIModelFromFavorites: (iTwinId: string) => Promise<void>;
-  shouldRefetchFavorites: boolean;
-  resetShouldRefetchFavorites: () => void;
 } => {
   const [iModelFavorites, setIModelFavorites] = useState(new Set<string>());
-  const [shouldRefetchFavorites, setShouldRefetchFavorites] = useState(false);
 
   /**
    * Adds an iModel to the favorites.
@@ -65,7 +60,6 @@ export const useIModelFavorites = (
         }
 
         setIModelFavorites((prev) => new Set([...prev, iModelId]));
-        setShouldRefetchFavorites(true);
       } catch (error) {
         console.error(error);
       }
@@ -107,7 +101,6 @@ export const useIModelFavorites = (
           newFavorites.delete(iModelId);
           return newFavorites;
         });
-        setShouldRefetchFavorites(true);
       } catch (error) {
         console.error(error);
       }
@@ -131,7 +124,6 @@ export const useIModelFavorites = (
       )}/imodels/favorites?iTwinId=${iTwinId}`;
       const result = await fetch(url, {
         headers: {
-          "Cache-Control": shouldRefetchFavorites ? "no-cache" : "",
           authorization:
             typeof accessToken === "function"
               ? await accessToken()
@@ -156,12 +148,8 @@ export const useIModelFavorites = (
       const response: IModelFavoritesResponse = await result.json();
       return response.iModels;
     },
-    [accessToken, iTwinId, serverEnvironmentPrefix, shouldRefetchFavorites]
+    [accessToken, iTwinId, serverEnvironmentPrefix]
   );
-
-  const resetShouldRefetchFavorites = useCallback(() => {
-    setShouldRefetchFavorites(false);
-  }, []);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -194,8 +182,6 @@ export const useIModelFavorites = (
     iModelFavorites,
     addIModelToFavorites,
     removeIModelFromFavorites,
-    shouldRefetchFavorites,
-    resetShouldRefetchFavorites,
   };
 };
 

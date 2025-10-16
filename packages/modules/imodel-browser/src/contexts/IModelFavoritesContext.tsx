@@ -10,10 +10,6 @@ export interface IModelFavoritesContextValue {
   favorites: Set<string>;
   add: (iModelId: string) => Promise<void>;
   remove: (iModelId: string) => Promise<void>;
-  /** @internal implementation detail for legacy flows */
-  _shouldRefetch: boolean;
-  /** @internal implementation detail for legacy flows */
-  _resetShouldRefetch: () => void;
 }
 
 export const IModelFavoritesContext = React.createContext<
@@ -33,35 +29,22 @@ export const IModelFavoritesProvider = ({
   serverEnvironmentPrefix,
   children,
 }: IModelFavoritesProviderProps) => {
-  const {
-    iModelFavorites,
-    addIModelToFavorites,
-    removeIModelFromFavorites,
-    shouldRefetchFavorites,
-    resetShouldRefetchFavorites,
-  } = useIModelFavorites(
-    iTwinId,
-    accessToken,
-    serverEnvironmentPrefix === "dev" || serverEnvironmentPrefix === "qa"
-      ? serverEnvironmentPrefix
-      : undefined
-  );
+  const { iModelFavorites, addIModelToFavorites, removeIModelFromFavorites } =
+    useIModelFavorites(
+      iTwinId,
+      accessToken,
+      serverEnvironmentPrefix === "dev" || serverEnvironmentPrefix === "qa"
+        ? serverEnvironmentPrefix
+        : undefined
+    );
 
   const value = React.useMemo<IModelFavoritesContextValue>(
     () => ({
       favorites: iModelFavorites,
       add: addIModelToFavorites,
       remove: removeIModelFromFavorites,
-      _shouldRefetch: shouldRefetchFavorites,
-      _resetShouldRefetch: resetShouldRefetchFavorites,
     }),
-    [
-      iModelFavorites,
-      addIModelToFavorites,
-      removeIModelFromFavorites,
-      shouldRefetchFavorites,
-      resetShouldRefetchFavorites,
-    ]
+    [iModelFavorites, addIModelToFavorites, removeIModelFromFavorites]
   );
 
   return (
