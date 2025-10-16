@@ -104,7 +104,7 @@ export const IModelTile = ({
         }
       : undefined;
 
-  const internalOnClick = React.useCallback(
+  const handleClickAndAddToRecents = React.useCallback(
     async (e: React.MouseEvent<HTMLElement>) => {
       if (favoritesContext) {
         try {
@@ -157,7 +157,7 @@ export const IModelTile = ({
       <Tile.Name>
         <Tile.NameIcon />
         <Tile.NameLabel
-          onClick={internalOnClick}
+          onClick={handleClickAndAddToRecents}
           aria-disabled={isDisabled}
           data-testid={`iModel-tile-${iModel.id}-name-label`}
         >
@@ -212,7 +212,7 @@ export const IModelTile = ({
       </Tile.ThumbnailArea>
       <Tile.ContentArea>
         <Tile.Action
-          onClick={internalOnClick}
+          onClick={handleClickAndAddToRecents}
           aria-disabled={isDisabled}
           data-testid={`iModel-tile-${iModel.id}-action`}
         >
