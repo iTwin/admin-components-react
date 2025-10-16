@@ -15,6 +15,7 @@ import { _getAPIServer } from "../../utils/_apiOverrides";
 import { useIModelSort } from "./useIModelSort";
 
 export interface IModelDataHookOptions {
+  requestType?: "favorites" | "recents" | "";
   iTwinId?: string | undefined;
   accessToken?: string | (() => Promise<string>) | undefined;
   sortOptions?: IModelSortOptions;
@@ -28,6 +29,7 @@ export interface IModelDataHookOptions {
 export const DEFAULT_PAGE_SIZE = 100;
 
 export const useIModelData = ({
+  requestType = "",
   iTwinId,
   accessToken,
   sortOptions,
@@ -53,7 +55,11 @@ export const useIModelData = ({
     IModelSortOptions | undefined
   >(sortOptions && { ...sortOptions });
   const sortDescending = sortOptions?.descending;
-  const sortedIModels = useIModelSort(iModels, sortOptions);
+  const sortedIModels = useIModelSort(
+    iModels,
+    sortOptions,
+    requestType === "recents"
+  );
   const sortChanged =
     sortOptions?.descending !== previousSortOptions?.descending ||
     sortOptions?.sortType !== previousSortOptions?.sortType;
@@ -82,9 +88,9 @@ export const useIModelData = ({
     ) {
       return;
     }
-    setPage(page + 1);
+    setPage((page) => page + 1);
     setNeedsUpdate(true);
-  }, [needsUpdate, status, morePagesAvailable, page]);
+  }, [needsUpdate, status, morePagesAvailable]);
 
   React.useEffect(() => {
     // start from scratch when any external state changes
@@ -99,6 +105,7 @@ export const useIModelData = ({
     searchText,
     pageSize,
     maxCount,
+    requestType,
     reset,
   ]);
 
@@ -147,7 +154,8 @@ export const useIModelData = ({
         searchText,
         pageSize,
         maxCount,
-        apiOverrides?.serverEnvironmentPrefix
+        apiOverrides?.serverEnvironmentPrefix,
+        requestType
       );
     setAbortController(newAbortController);
 
@@ -181,6 +189,7 @@ export const useIModelData = ({
     morePagesAvailable,
     needsUpdate,
     page,
+    requestType,
     searchText,
     sortChanged,
     sortDescending,
@@ -204,7 +213,8 @@ const createFetchIModelsFn = (
   searchText: string | undefined,
   pageSize: number = DEFAULT_PAGE_SIZE,
   maxCount: number | undefined,
-  serverEnvironmentPrefix?: "" | "dev" | "qa"
+  serverEnvironmentPrefix?: "" | "dev" | "qa",
+  requestType: "favorites" | "recents" | "" = ""
 ): {
   abortController: AbortController;
   fetchIModels: () => Promise<{
@@ -231,6 +241,9 @@ const createFetchIModelsFn = (
     };
   }
 
+  const endpoint = ["favorites", "recents"].includes(requestType)
+    ? requestType
+    : "";
   const top = maxCount ? Math.min(pageSize, maxCount - skip) : pageSize;
   const paging = `&$skip=${skip}&$top=${top}`;
   const searching = searchText?.trim()
@@ -240,7 +253,7 @@ const createFetchIModelsFn = (
   const abortController = new AbortController();
   const url = `${_getAPIServer(
     serverEnvironmentPrefix
-  )}/imodels/${selection}${sorting}${paging}${searching}`;
+  )}/imodels/${endpoint}${selection}${sorting}${paging}${searching}`;
 
   const doFetchRequest = async () => {
     const options: RequestInit = {

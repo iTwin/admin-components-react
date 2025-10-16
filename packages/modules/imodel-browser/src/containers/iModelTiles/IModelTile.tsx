@@ -2,10 +2,13 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { Tile } from "@itwin/itwinui-react";
+import { SvgStar, SvgStarHollow } from "@itwin/itwinui-icons-react";
+import { IconButton, Tile } from "@itwin/itwinui-react";
 import React from "react";
 
+import { useIModelFavoritesContext } from "../../contexts/IModelFavoritesContext";
 import { ApiOverrides, IModelFull } from "../../types";
+import { _getAPIServer, _mergeStrings } from "../../utils/_apiOverrides";
 import {
   _buildManagedContextMenuOptions,
   ContextMenuBuilderItem,
@@ -23,6 +26,13 @@ export interface IModelTileProps {
   iModelOptions?: ContextMenuBuilderItem<IModelFull>[];
   /** Function to call on thumbnail click */
   onThumbnailClick?(iModel: IModelFull): void;
+  /** Strings displayed by the browser */
+  stringsOverrides?: {
+    /** Accessible text for the hollow star icon to add the iModel to favorites */
+    addToFavorites?: string;
+    /** Accessible text for the full star icon to remove the iModel from favorites */
+    removeFromFavorites?: string;
+  };
   /** Tile props that will be applied after normal use. (Will override IModelTile if used) */
   tileProps?: Partial<
     TileProps & { getBadge?: (iModel: IModelFull) => React.ReactNode }
@@ -45,6 +55,7 @@ export const IModelTile = ({
   onThumbnailClick,
   apiOverrides,
   tileProps,
+  stringsOverrides,
   refetchIModels,
   fullWidth,
 }: IModelTileProps) => {
@@ -66,6 +77,14 @@ export const IModelTile = ({
     metadata,
     ...rest
   } = tileProps ?? {};
+  const favoritesContext = useIModelFavoritesContext();
+  const strings = _mergeStrings(
+    {
+      addToFavorites: "Add to favorites",
+      removeFromFavorites: "Remove from favorites",
+    },
+    stringsOverrides
+  );
 
   const moreOptionsBuilt = React.useMemo(
     () =>
@@ -85,6 +104,45 @@ export const IModelTile = ({
         }
       : undefined;
 
+  const internalOnClick = React.useCallback(
+    async (e: React.MouseEvent<HTMLElement>) => {
+      if (favoritesContext) {
+        try {
+          if (!accessToken) {
+            return;
+          }
+
+          const url = `${_getAPIServer(
+            apiOverrides?.serverEnvironmentPrefix
+          )}/imodels/recents/${encodeURIComponent(iModel.id)}`;
+
+          void fetch(url, {
+            method: "POST",
+            headers: {
+              authorization:
+                typeof accessToken === "function"
+                  ? await accessToken()
+                  : accessToken,
+              Accept: "application/vnd.bentley.itwin-platform.v2+json",
+            },
+          });
+        } catch (e) {
+          // swallow errors to avoid disrupting the UI
+          console.error("Failed to add iModel to recents", e);
+        }
+      }
+      onClick?.(e) ?? onThumbnailClick?.(iModel);
+    },
+    [
+      accessToken,
+      apiOverrides?.serverEnvironmentPrefix,
+      favoritesContext,
+      iModel,
+      onClick,
+      onThumbnailClick,
+    ]
+  );
+
   return (
     <Tile.Wrapper
       key={iModel.id}
@@ -99,7 +157,7 @@ export const IModelTile = ({
       <Tile.Name>
         <Tile.NameIcon />
         <Tile.NameLabel
-          onClick={(e) => onClick?.(e) ?? onThumbnailClick?.(iModel)}
+          onClick={internalOnClick}
           aria-disabled={isDisabled}
           data-testid={`iModel-tile-${iModel.id}-name-label`}
         >
@@ -108,7 +166,35 @@ export const IModelTile = ({
       </Tile.Name>
       <Tile.ThumbnailArea>
         {leftIcon && <Tile.TypeIndicator>{leftIcon}</Tile.TypeIndicator>}
-        {rightIcon && <Tile.QuickAction>{rightIcon}</Tile.QuickAction>}
+        <Tile.QuickAction>
+          {rightIcon}
+          {favoritesContext && (
+            <IconButton
+              aria-label={
+                favoritesContext.favorites.has(iModel.id)
+                  ? strings.removeFromFavorites
+                  : strings.addToFavorites
+              }
+              onClick={async () => {
+                favoritesContext.favorites.has(iModel.id)
+                  ? await favoritesContext.remove?.(iModel.id)
+                  : await favoritesContext.add?.(iModel.id);
+              }}
+              style={{
+                paddingInline: "var(--iui-button-padding-block)",
+                backgroundColor:
+                  "rgb(from var(--iui-color-background) r g b / 0.7)",
+              }}
+              styleType="borderless"
+            >
+              {favoritesContext.favorites.has(iModel.id) ? (
+                <SvgStar />
+              ) : (
+                <SvgStarHollow />
+              )}
+            </IconButton>
+          )}
+        </Tile.QuickAction>
         {thumbnail ? (
           <Tile.ThumbnailPicture>{thumbnail}</Tile.ThumbnailPicture>
         ) : (
@@ -126,7 +212,7 @@ export const IModelTile = ({
       </Tile.ThumbnailArea>
       <Tile.ContentArea>
         <Tile.Action
-          onClick={(e) => onClick?.(e) ?? onThumbnailClick?.(iModel)}
+          onClick={internalOnClick}
           aria-disabled={isDisabled}
           data-testid={`iModel-tile-${iModel.id}-action`}
         >

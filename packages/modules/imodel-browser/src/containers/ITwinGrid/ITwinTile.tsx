@@ -130,21 +130,23 @@ export const ITwinTile = ({
           {leftIcon && <Tile.TypeIndicator>{leftIcon}</Tile.TypeIndicator>}
           <Tile.QuickAction>
             {rightIcon}
-            <IconButton
-              aria-label={
-                isFavorite
-                  ? strings.removeFromFavorites
-                  : strings.addToFavorites
-              }
-              onClick={async () => {
-                isFavorite
-                  ? await removeFromFavorites?.(iTwin.id)
-                  : await addToFavorites?.(iTwin.id);
-              }}
-              styleType="borderless"
-            >
-              {isFavorite ? <SvgStar /> : <SvgStarHollow />}
-            </IconButton>
+            {isFavorite !== undefined && (
+              <IconButton
+                aria-label={
+                  isFavorite
+                    ? strings.removeFromFavorites
+                    : strings.addToFavorites
+                }
+                onClick={async () => {
+                  isFavorite
+                    ? await removeFromFavorites?.(iTwin.id)
+                    : await addToFavorites?.(iTwin.id);
+                }}
+                styleType="borderless"
+              >
+                {isFavorite ? <SvgStar /> : <SvgStarHollow />}
+              </IconButton>
+            )}
           </Tile.QuickAction>
           <Tile.BadgeContainer>
             {badge ??
