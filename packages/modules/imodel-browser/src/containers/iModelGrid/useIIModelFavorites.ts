@@ -116,7 +116,7 @@ export const useIModelFavorites = (
    */
   const getIModelFavorites = useCallback(
     async (abortSignal?: AbortSignal): Promise<IModelFavorites[]> => {
-      if (!accessToken) {
+      if (!accessToken || !iTwinId) {
         return [];
       }
       const url = `${_getAPIServer(
