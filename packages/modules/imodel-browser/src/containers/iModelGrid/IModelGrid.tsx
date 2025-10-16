@@ -163,7 +163,12 @@ const IModelGridInner = ({
       noIModelSearch: "No results found",
       noIModelSearchSubtext:
         "Try adjusting your search by using fewer or more general terms.",
-      noIModels: "There are no iModels in this iTwin.",
+      noIModels:
+        requestType === "recents"
+          ? "There are no recent iModels."
+          : requestType === "favorites"
+          ? "There are no favorite iModels."
+          : "There are no iModels in this iTwin.",
       noContext: "No context provided",
       noAuthentication: "No access token provided",
       error: "An error occurred",
@@ -358,7 +363,7 @@ const IModelGridInner = ({
         <NoResults
           text={strings.noIModelSearch}
           subtext={strings.noIModelSearchSubtext}
-          isSearchResult={true}
+          isSearchResult
         />
       );
     }
