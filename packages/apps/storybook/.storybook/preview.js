@@ -4,10 +4,14 @@
  *--------------------------------------------------------------------------------------------*/
 import React from "react";
 import { ThemeProvider } from "@itwin/itwinui-react";
+import addons from "@storybook/addons";
 import { themes } from "@storybook/theming";
-import { useDarkMode } from "storybook-dark-mode";
+
 import { darkTheme, lightTheme } from "./itwinTheme";
-import "@itwin/itwinui-react/styles.css";
+import '@itwin/itwinui-react/styles.css';
+
+// get an instance to the communication channel for the manager and preview
+const channel = addons.getChannel();
 
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
@@ -27,15 +31,24 @@ export const parameters = {
   },
 };
 
+const useTheme = () => {
+  const [dark, setDark] = React.useState(false);
+
+  React.useEffect(() => {
+    channel.on("DARK_MODE", setDark);
+  }, []);
+
+  return dark ? "dark" : "light";
+}
+
 export const decorators = [
   (Story) => {
-    const isDark = useDarkMode();
-    const theme = isDark ? "dark" : "light";
+    const theme = useTheme();
 
     return (
-      <ThemeProvider style={{ background: "transparent" }} theme={theme}>
-        <Story />
-      </ThemeProvider>
+        <ThemeProvider style={{ background: "transparent" }} theme={theme}>
+          <Story />
+        </ThemeProvider>
     );
   },
 ];
