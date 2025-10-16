@@ -105,7 +105,7 @@ export interface IModelGridProps {
 export const IModelGrid = (props: IModelGridProps) => {
   return (
     <IModelFavoritesProvider
-      iTwinId={props.iTwinId ?? ""}
+      iTwinId={props.iTwinId}
       accessToken={props.accessToken}
       serverEnvironmentPrefix={props.apiOverrides?.serverEnvironmentPrefix}
     >

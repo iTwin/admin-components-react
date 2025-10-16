@@ -17,7 +17,7 @@ export const IModelFavoritesContext = React.createContext<
 >(undefined);
 
 export interface IModelFavoritesProviderProps {
-  iTwinId: string;
+  iTwinId: string | undefined;
   accessToken?: string | (() => Promise<string>);
   serverEnvironmentPrefix?: string;
   children: React.ReactNode;

@@ -20,13 +20,13 @@ const HOOK_ABORT_ERROR =
  * - {function} removeIModelFromFavorites - A function to remove an iModel from favorites.
  */
 export const useIModelFavorites = (
-  iTwinId: string,
+  iTwinId: string | undefined,
   accessToken: string | (() => Promise<string>) | undefined,
   serverEnvironmentPrefix?: "dev" | "qa" | ""
 ): {
   iModelFavorites: Set<string>;
-  addIModelToFavorites: (iTwinId: string) => Promise<void>;
-  removeIModelFromFavorites: (iTwinId: string) => Promise<void>;
+  addIModelToFavorites: (iModelId: string) => Promise<void>;
+  removeIModelFromFavorites: (iModelId: string) => Promise<void>;
 } => {
   const [iModelFavorites, setIModelFavorites] = useState(new Set<string>());
 
