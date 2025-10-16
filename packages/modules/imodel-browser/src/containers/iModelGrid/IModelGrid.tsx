@@ -8,6 +8,7 @@ import { InView } from "react-intersection-observer";
 
 import { GridStructure } from "../../components/gridStructure/GridStructure";
 import { NoResults } from "../../components/noResults/NoResults";
+import { IModelFavoritesProvider } from "../../contexts/IModelFavoritesContext";
 import {
   ApiOverrides,
   DataStatus,
@@ -16,7 +17,7 @@ import {
   IModelSortOptions,
   ViewType,
 } from "../../types";
-import { _mergeStrings } from "../../utils/_apiOverrides";
+import { _getAPIServer, _mergeStrings } from "../../utils/_apiOverrides";
 import { ContextMenuBuilderItem } from "../../utils/_buildMenuOptions";
 import { IModelGhostTile } from "../iModelTiles/IModelGhostTile";
 import { IModelTile, IModelTileProps } from "../iModelTiles/IModelTile";
@@ -30,6 +31,7 @@ export interface IModelGridProps {
   accessToken?: string | (() => Promise<string>) | undefined;
   /** ITwin Id to list the iModels from (mutually exclusive to assetId) */
   iTwinId?: string | undefined;
+  requestType?: "favorites" | "recents" | "";
   /** Thumbnail click handler. */
   onThumbnailClick?(iModel: IModelFull): void;
   /** Configure IModel sorting behavior.
@@ -100,13 +102,25 @@ export interface IModelGridProps {
 /**
  * Component that will allow displaying a grid of iModels, given a contextId
  */
-export const IModelGrid = ({
+export const IModelGrid = (props: IModelGridProps) => {
+  return (
+    <IModelFavoritesProvider
+      iTwinId={props.iTwinId}
+      accessToken={props.accessToken}
+      serverEnvironmentPrefix={props.apiOverrides?.serverEnvironmentPrefix}
+    >
+      <IModelGridInner {...props} />
+    </IModelFavoritesProvider>
+  );
+};
+const IModelGridInner = ({
   accessToken,
   apiOverrides,
   iModelActions,
   onThumbnailClick,
   iTwinId,
   sortOptions = { sortType: "name", descending: false },
+  requestType,
   stringsOverrides,
   tileOverrides,
   useIndividualState,
@@ -141,6 +155,7 @@ export const IModelGrid = ({
 
   const strings = _mergeStrings(
     {
+      tableColumnFavorites: "",
       tableColumnName: "Name",
       tableColumnDescription: "Description",
       tableColumnLastModified: "Last Modified",
@@ -148,10 +163,17 @@ export const IModelGrid = ({
       noIModelSearch: "No results found",
       noIModelSearchSubtext:
         "Try adjusting your search by using fewer or more general terms.",
-      noIModels: "There are no iModels in this iTwin.",
+      noIModels:
+        requestType === "recents"
+          ? "There are no recent iModels."
+          : requestType === "favorites"
+          ? "There are no favorite iModels."
+          : "There are no iModels in this iTwin.",
       noContext: "No context provided",
       noAuthentication: "No access token provided",
       error: "An error occurred",
+      addToFavorites: "Add to favorites",
+      removeFromFavorites: "Remove from favorites",
     },
     stringsOverrides
   );
@@ -161,6 +183,7 @@ export const IModelGrid = ({
     fetchMore,
     refetchIModels,
   } = useIModelData({
+    requestType,
     accessToken,
     apiOverrides,
     iTwinId,
@@ -190,7 +213,33 @@ export const IModelGrid = ({
 
   const { columns, onRowClick } = useIModelTableConfig({
     iModelActions,
-    onThumbnailClick,
+    onThumbnailClick: async (iModel) => {
+      try {
+        if (!accessToken) {
+          onThumbnailClick?.(iModel);
+          return;
+        }
+
+        const url = `${_getAPIServer(
+          apiOverrides?.serverEnvironmentPrefix
+        )}/imodels/recents/${encodeURIComponent(iModel.id)}`;
+
+        void fetch(url, {
+          method: "POST",
+          headers: {
+            authorization:
+              typeof accessToken === "function"
+                ? await accessToken()
+                : accessToken,
+            Accept: "application/vnd.bentley.itwin-platform.v2+json",
+          },
+        });
+      } catch (e) {
+        // swallow errors to avoid disrupting the UI
+        console.error("Failed to add iModel to recents", e);
+      }
+      onThumbnailClick?.(iModel);
+    },
     strings,
     refetchIModels,
     cellOverrides,
@@ -223,6 +272,7 @@ export const IModelGrid = ({
                 apiOverrides={tileApiOverrides}
                 useTileState={useIndividualState}
                 refetchIModels={refetchIModels}
+                {...cellOverrides}
                 {...tileOverrides}
               />
             ))}
@@ -313,7 +363,7 @@ export const IModelGrid = ({
         <NoResults
           text={strings.noIModelSearch}
           subtext={strings.noIModelSearchSubtext}
-          isSearchResult={true}
+          isSearchResult
         />
       );
     }

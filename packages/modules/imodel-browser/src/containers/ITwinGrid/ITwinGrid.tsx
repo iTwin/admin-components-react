@@ -149,7 +149,12 @@ export const ITwinGrid = ({
       tableLoadingData: "Loading...",
       trialBadge: "Trial",
       inactiveBadge: "Inactive",
-      noITwins: "No iTwin found.",
+      noITwins:
+        requestType === "recents"
+          ? "No recent iTwins."
+          : requestType === "favorites"
+          ? "No favorite iTwins."
+          : "No iTwin found.",
       noAuthentication: "No access token provided",
       error: "An error occurred",
       addToFavorites: "Add to favorites",

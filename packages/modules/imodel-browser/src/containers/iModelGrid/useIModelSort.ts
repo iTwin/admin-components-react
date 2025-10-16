@@ -32,7 +32,8 @@ const sortStringValues = (a: string, b: string) => a.localeCompare(b);
 
 export const useIModelSort = (
   iModels: IModelFull[],
-  options?: IModelSortOptions
+  options?: IModelSortOptions,
+  skipSort = false
 ) => {
   const sortType =
     typeof options !== "function" ? options?.sortType : undefined;
@@ -40,6 +41,9 @@ export const useIModelSort = (
     typeof options !== "function" ? options?.descending ?? false : undefined;
   const sortFn = typeof options === "function" ? options : undefined;
   return React.useMemo(() => {
+    if (skipSort) {
+      return iModels;
+    }
     if (sortFn) {
       return [...iModels].sort(sortFn);
     }
@@ -61,5 +65,5 @@ export const useIModelSort = (
       }
     );
     return descending ? sorted.reverse() : sorted;
-  }, [sortFn, sortType, iModels, descending]);
+  }, [skipSort, iModels, sortFn, sortType, descending]);
 };
