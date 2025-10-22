@@ -68,8 +68,8 @@ export const useIModelTableConfig = ({
                   styleType="borderless"
                   aria-label={
                     isFavorite
-                      ? strings.addToFavorites
-                      : strings.removeFromFavorites
+                      ? strings.removeFromFavorites
+                      : strings.addToFavorites
                   }
                   onClick={async (e) => {
                     e.stopPropagation();
