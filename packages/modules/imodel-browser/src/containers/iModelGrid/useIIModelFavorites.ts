@@ -93,7 +93,7 @@ export const useIModelFavorites = (
         });
 
         if (!result || (result.status !== 200 && result.status !== 204)) {
-          throw new Error(`Failed to remove iModel ${iModelId} to favorites`);
+          throw new Error(`Failed to remove iModel ${iModelId} from favorites`);
         }
 
         setIModelFavorites((prev) => {
