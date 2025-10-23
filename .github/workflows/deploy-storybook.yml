@@ -6,7 +6,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -23,29 +23,24 @@ jobs:
           node-version: 20
 
       - name: Install dependencies (rush)
-        run: |
-          set -e
-          node common/scripts/install-run-rush.js install
+        run: node common/scripts/install-run-rush.js install
 
       - name: Build repo (rush build)
-        run: |
-          set -e
-          node common/scripts/install-run-rush.js build
+        run: node common/scripts/install-run-rush.js build
 
       - name: Build Storybook static
         working-directory: packages/apps/storybook
         run: |
           set -e
-          # Try workspace-aware pnpm build first, fall back to running the package script directly with pnpm
-          pnpm -w run -r --filter @itwin/platform-storybook build || (cd packages/apps/storybook && pnpm run build)
+          node common/scripts/install-run-rush.js build --only @itwin/platform-storybook
 
       - name: Upload Storybook artifact
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v3
         with:
           path: packages/apps/storybook/storybook-static
 
   deploy:
-    needs: build-and-deploy
+    needs: build
     runs-on: ubuntu-latest
     permissions:
       pages: write
