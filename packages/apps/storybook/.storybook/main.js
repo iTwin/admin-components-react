@@ -27,6 +27,46 @@ module.exports = {
 
     config.resolve.mainFields = ["module", "main"];
 
+    const packagePaths = {
+      "@itwin/imodel-browser-react": path.resolve(__dirname, "../../../modules/imodel-browser/src"),
+        "@itwin/create-imodel-react": path.resolve(__dirname, "../../../modules/create-imodel/src"),
+        "@itwin/delete-imodel-react": path.resolve(__dirname, "../../../modules/delete-imodel/src"),
+        "@itwin/delete-itwin-react": path.resolve(__dirname, "../../../modules/delete-itwin/src"),
+        "@itwin/manage-versions-react": path.resolve(__dirname, "../../../modules/manage-versions/src"),
+    }
+    // Enable HMR for local packages in development by aliasing to source directories
+    if (configType === 'DEVELOPMENT') {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        ...packagePaths
+      };
+
+      // Ensure TypeScript files from source directories are processed
+      config.module.rules.push({
+        test: /\.(ts|tsx)$/,
+        include: Object.values(packagePaths),
+        use: [
+          {
+            loader: require.resolve('babel-loader'),
+            options: {
+              presets: [
+                require.resolve('@babel/preset-env'),
+                require.resolve('@babel/preset-react'),
+                require.resolve('@babel/preset-typescript'),
+              ],
+            },
+          },
+        ],
+      });
+
+      // Handle SCSS files from source directories
+      config.module.rules.push({
+        test: /\.scss$/,
+        include: Object.values(packagePaths),
+        use: ['style-loader', 'css-loader', 'sass-loader'],
+      });
+    }
+
     // Return the altered config
     return config;
   },
