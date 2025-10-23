@@ -36,6 +36,15 @@ module.exports = {
     }
     // Enable HMR for local packages in development by aliasing to source directories
     if (configType === 'DEVELOPMENT') {
+      // Use full source maps to allow VS Code Chrome debugger to map back to TS/TSX sources
+      config.devtool = 'source-map';
+      config.output = config.output || {};
+      config.output.devtoolModuleFilenameTemplate = (info) => {
+        // Derive repo root (four levels up from .storybook: ../../../../)
+        const repoRoot = path.resolve(__dirname, '../../../../');
+        let relPath = path.relative(repoRoot, info.absoluteResourcePath).replace(/\\/g, '/');
+        return `webpack:///${relPath}`;
+      };
       config.resolve.alias = {
         ...config.resolve.alias,
         ...packagePaths
@@ -67,7 +76,6 @@ module.exports = {
       });
     }
 
-    // Return the altered config
     return config;
   },
   staticDirs: ["../../../modules/storybook-auth-addon/build"]
