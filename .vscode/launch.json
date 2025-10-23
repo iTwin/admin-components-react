@@ -1,0 +1,47 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Start Storybook",
+      "cwd": "${workspaceFolder}/packages/apps/storybook",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["start"],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "serverReadyAction": {
+        "pattern": "Local:\\s+(https?://\\S+)",
+        "uriFormat": "%s",
+        "action": "openExternally"
+      }
+    },
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Debug Storybook",
+      "url": "http://localhost:6006",
+      "webRoot": "${workspaceFolder}",
+      "sourceMaps": true,
+      "skipFiles": ["<node_internals>/**"],
+      "sourceMapPathOverrides": {
+        "webpack:///packages/modules/*": "${webRoot}/packages/modules/*",
+        "webpack:///./packages/apps/storybook/src/*": "${webRoot}/packages/apps/storybook/src/*",
+        "webpack:///./packages/modules/imodel-browser/src/*": "${webRoot}/packages/modules/imodel-browser/src/*",
+        "webpack:///./packages/modules/create-imodel/src/*": "${webRoot}/packages/modules/create-imodel/src/*",
+        "webpack:///./packages/modules/delete-imodel/src/*": "${webRoot}/packages/modules/delete-imodel/src/*",
+        "webpack:///./packages/modules/delete-itwin/src/*": "${webRoot}/packages/modules/delete-itwin/src/*",
+        "webpack:///./packages/modules/manage-versions/src/*": "${webRoot}/packages/modules/manage-versions/src/*",
+        "webpack://@itwin/imodel-browser-react/src/*": "${webRoot}/packages/modules/imodel-browser/src/*",
+        "webpack://@itwin/create-imodel-react/src/*": "${webRoot}/packages/modules/create-imodel/src/*",
+        "webpack://@itwin/delete-imodel-react/src/*": "${webRoot}/packages/modules/delete-imodel/src/*",
+        "webpack://@itwin/delete-itwin-react/src/*": "${webRoot}/packages/modules/delete-itwin/src/*",
+        "webpack://@itwin/manage-versions-react/src/*": "${webRoot}/packages/modules/manage-versions/src/*",
+        "webpack:///*": "${webRoot}/*",
+        "webpack:///./~/*": "${webRoot}/node_modules/*",
+        "webpack:///./*": "${webRoot}/*"
+      },
+      "preLaunchTask": "Start Storybook Server"
+    }
+  ]
+}
