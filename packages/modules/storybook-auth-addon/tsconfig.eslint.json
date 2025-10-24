@@ -4,6 +4,7 @@
   },
   "include": [
     "**/*.js*",
-    "**/.*.js*"
+    "**/.*.js*",
+    "vite.config.ts"
   ],
 }
