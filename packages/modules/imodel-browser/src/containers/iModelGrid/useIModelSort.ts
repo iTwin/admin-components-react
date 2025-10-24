@@ -33,6 +33,7 @@ const sortStringValues = (a: string, b: string) => a.localeCompare(b);
 export const useIModelSort = (
   iModels: IModelFull[],
   options?: IModelSortOptions,
+  // needed to account for limitation of react hooks
   enableSort = true
 ) => {
   const sortType =
@@ -65,5 +66,5 @@ export const useIModelSort = (
       }
     );
     return descending ? sorted.reverse() : sorted;
-  }, [skipSort, iModels, sortFn, sortType, descending]);
+  }, [enableSort, sortFn, sortType, iModels, descending]);
 };
