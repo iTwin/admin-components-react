@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import React from "react";
 
-import { useIModelFavorites } from "../containers/iModelGrid/useIIModelFavorites";
+import { useIModelFavorites } from "../containers/iModelGrid/useIModelFavorites";
 
 export interface IModelFavoritesContextValue {
   favorites: Set<string>;

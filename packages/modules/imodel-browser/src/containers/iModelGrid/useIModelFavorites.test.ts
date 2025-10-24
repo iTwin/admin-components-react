@@ -6,10 +6,10 @@
 import { renderHook } from "@testing-library/react-hooks";
 import { act } from "react";
 
-import { useIModelFavorites } from "./useIIModelFavorites";
+import { useIModelFavorites } from "./useIModelFavorites";
 
 export function mockFetch(data: any, status = 200) {
-  return jest.fn().mockImplementationOnce(async () =>
+  return jest.fn().mockImplementation(async () =>
     Promise.resolve({
       status,
       ok: true,
@@ -66,18 +66,17 @@ describe("useIModelFavorites", () => {
   });
 
   test("should add and remove an iModel from favorites", async () => {
+    window.fetch = mockFetch({});
     const { result } = renderHook(() =>
       useIModelFavorites(iTwinId, accessToken)
     );
     const iModelId = "test-iModel-id";
     await act(async () => {
-      window.fetch = mockFetch({});
       await result.current.addIModelToFavorites(iModelId);
     });
     expect(result.current.iModelFavorites.has(iModelId)).toBe(true);
 
     await act(async () => {
-      window.fetch = mockFetch({});
       await result.current.removeIModelFromFavorites(iModelId);
     });
     expect(result.current.iModelFavorites.has(iModelId)).toBe(false);
