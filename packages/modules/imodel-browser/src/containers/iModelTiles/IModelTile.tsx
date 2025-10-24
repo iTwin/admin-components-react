@@ -13,6 +13,7 @@ import {
   _buildManagedContextMenuOptions,
   ContextMenuBuilderItem,
 } from "../../utils/_buildMenuOptions";
+import { addIModelToRecents } from "../../utils/imodelApi";
 import { IModelThumbnail } from "../iModelThumbnail/IModelThumbnail";
 
 type TileProps = React.ComponentPropsWithoutRef<typeof Tile>;
@@ -107,29 +108,15 @@ export const IModelTile = ({
   const handleClickAndAddToRecents = React.useCallback(
     async (e: React.MouseEvent<HTMLElement>) => {
       if (favoritesContext) {
-        try {
-          if (!accessToken) {
-            return;
-          }
-
-          const url = `${_getAPIServer(
-            apiOverrides?.serverEnvironmentPrefix
-          )}/imodels/recents/${encodeURIComponent(iModel.id)}`;
-
-          void fetch(url, {
-            method: "POST",
-            headers: {
-              authorization:
-                typeof accessToken === "function"
-                  ? await accessToken()
-                  : accessToken,
-              Accept: "application/vnd.bentley.itwin-platform.v2+json",
-            },
-          });
-        } catch (e) {
-          // swallow errors to avoid disrupting the UI
-          console.error("Failed to add iModel to recents", e);
+        if (!accessToken) {
+          return;
         }
+
+        void addIModelToRecents({
+          iModelId: iModel.id,
+          accessToken,
+          serverEnvironmentPrefix: apiOverrides?.serverEnvironmentPrefix,
+        });
       }
       onClick?.(e) ?? onThumbnailClick?.(iModel);
     },

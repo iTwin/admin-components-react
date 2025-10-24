@@ -17,8 +17,9 @@ import {
   IModelSortOptions,
   ViewType,
 } from "../../types";
-import { _getAPIServer, _mergeStrings } from "../../utils/_apiOverrides";
+import { _mergeStrings } from "../../utils/_apiOverrides";
 import { ContextMenuBuilderItem } from "../../utils/_buildMenuOptions";
+import { addIModelToRecents } from "../../utils/imodelApi";
 import { IModelGhostTile } from "../iModelTiles/IModelGhostTile";
 import { IModelTile, IModelTileProps } from "../iModelTiles/IModelTile";
 import styles from "./IModelGrid.module.scss";
@@ -221,19 +222,10 @@ const IModelGridInner = ({
           return;
         }
 
-        const url = `${_getAPIServer(
-          apiOverrides?.serverEnvironmentPrefix
-        )}/imodels/recents/${encodeURIComponent(iModel.id)}`;
-
-        void fetch(url, {
-          method: "POST",
-          headers: {
-            authorization:
-              typeof accessToken === "function"
-                ? await accessToken()
-                : accessToken,
-            Accept: "application/vnd.bentley.itwin-platform.v2+json",
-          },
+        void addIModelToRecents({
+          iModelId: iModel.id,
+          accessToken,
+          serverEnvironmentPrefix: apiOverrides?.serverEnvironmentPrefix,
         });
       } catch (e) {
         // swallow errors to avoid disrupting the UI
