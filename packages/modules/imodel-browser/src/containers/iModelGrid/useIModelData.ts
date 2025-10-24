@@ -61,6 +61,24 @@ export const useIModelData = ({
     sortOptions,
     requestType !== "recents"
   );
+
+  // For recents and favorites, apply client-side filtering based on searchText
+  const filteredIModels = React.useMemo(() => {
+    if (
+      !searchText?.trim() ||
+      (requestType !== "recents" && requestType !== "favorites")
+    ) {
+      return sortedIModels;
+    }
+
+    const lowerSearchText = searchText.toLowerCase();
+    return sortedIModels.filter(
+      (iModel) =>
+        (iModel.name?.toLowerCase().includes(lowerSearchText) ?? false) ||
+        (iModel.description?.toLowerCase().includes(lowerSearchText) ?? false)
+    );
+  }, [sortedIModels, searchText, requestType]);
+
   const sortChanged =
     sortOptions?.descending !== previousSortOptions?.descending ||
     sortOptions?.sortType !== previousSortOptions?.sortType;
@@ -95,7 +113,9 @@ export const useIModelData = ({
 
   React.useEffect(() => {
     // start from scratch when any external state changes
-    reset();
+    if (requestType !== "recents" && requestType !== "favorites") {
+      reset();
+    }
   }, [
     iTwinId,
     accessToken,
@@ -104,6 +124,24 @@ export const useIModelData = ({
     apiOverrides?.data,
     apiOverrides?.serverEnvironmentPrefix,
     searchText,
+    pageSize,
+    maxCount,
+    requestType,
+    reset,
+  ]);
+
+  React.useEffect(() => {
+    // start from scratch when any external state changes
+    if (requestType === "recents" || requestType === "favorites") {
+      reset();
+    }
+  }, [
+    iTwinId,
+    accessToken,
+    sortOptions?.descending,
+    sortOptions?.sortType,
+    apiOverrides?.data,
+    apiOverrides?.serverEnvironmentPrefix,
     pageSize,
     maxCount,
     requestType,
@@ -198,7 +236,7 @@ export const useIModelData = ({
   ]);
 
   return {
-    iModels: sortedIModels,
+    iModels: filteredIModels,
     status,
     fetchMore: morePagesAvailable ? fetchMore : undefined,
     refetchIModels: reset,
@@ -247,9 +285,11 @@ const createFetchIModelsFn = (
     : "";
   const top = maxCount ? Math.min(pageSize, maxCount - skip) : pageSize;
   const paging = `&$skip=${skip}&$top=${top}`;
-  const searching = searchText?.trim()
-    ? `&$search=${encodeURIComponent(searchText)}`
-    : "";
+  // Only apply server-side search for non-recents and non-favorites requests
+  const searching =
+    searchText?.trim() && !["favorites", "recents"].includes(requestType)
+      ? `&$search=${encodeURIComponent(searchText)}`
+      : "";
 
   const abortController = new AbortController();
   const url = `${_getAPIServer(
