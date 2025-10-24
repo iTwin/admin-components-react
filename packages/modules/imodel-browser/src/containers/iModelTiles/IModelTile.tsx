@@ -74,7 +74,7 @@ export const IModelTile = ({
     buttons,
     moreOptions,
     isDisabled,
-    onClick,
+    onClick: tilePropsOnClick,
     metadata,
     ...rest
   } = tileProps ?? {};
@@ -118,14 +118,14 @@ export const IModelTile = ({
           serverEnvironmentPrefix: apiOverrides?.serverEnvironmentPrefix,
         });
       }
-      onClick?.(e) ?? onThumbnailClick?.(iModel);
+      tilePropsOnClick?.(e) ?? onThumbnailClick?.(iModel);
     },
     [
       accessToken,
       apiOverrides?.serverEnvironmentPrefix,
       favoritesContext,
       iModel,
-      onClick,
+      tilePropsOnClick,
       onThumbnailClick,
     ]
   );
@@ -164,8 +164,8 @@ export const IModelTile = ({
               }
               onClick={async () => {
                 favoritesContext.favorites.has(iModel.id)
-                  ? await favoritesContext.remove?.(iModel.id)
-                  : await favoritesContext.add?.(iModel.id);
+                  ? await favoritesContext.remove(iModel.id)
+                  : await favoritesContext.add(iModel.id);
               }}
               style={{
                 paddingInline: "var(--iui-button-padding-block)",
