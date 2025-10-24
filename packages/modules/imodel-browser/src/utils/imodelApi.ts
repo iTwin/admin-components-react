@@ -5,9 +5,29 @@
 /*---------------------------------------------------------------------------------------------
  * Utility functions for iModel related API operations.
  *--------------------------------------------------------------------------------------------*/
+import { AccessTokenProvider } from "../types";
 import { _getAPIServer } from "./_apiOverrides";
 
-export type AccessTokenProvider = string | (() => Promise<string>) | undefined;
+/** Response from https://developer.bentley.com/apis/imodels-v2/operations/get-my-favorite-imodels/ */
+export interface IModelFavoritesResponse {
+  iModels: IModelFavorites[];
+  _links: {
+    self: {
+      href: string;
+    };
+    prev?: {
+      href: string;
+    };
+    next?: {
+      href: string;
+    };
+  };
+}
+export interface IModelFavorites {
+  id: string;
+  displayName: string;
+  dataCenterLocation: string;
+}
 
 export async function addIModelToRecents(options: {
   iModelId: string;

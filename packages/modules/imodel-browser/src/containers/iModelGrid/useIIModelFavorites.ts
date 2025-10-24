@@ -5,6 +5,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 
+import { AccessTokenProvider } from "../../types";
 import { _getAPIServer } from "../../utils/_apiOverrides";
 
 const HOOK_ABORT_ERROR =
@@ -12,7 +13,7 @@ const HOOK_ABORT_ERROR =
 
 /**
  * Custom hook to manage iModel favorites.
- * @param {string | (() => Promise<string>) | undefined} accessToken - Access token that requires the `itwin-platform` scope. Provide a function that returns the token to prevent the token from expiring.
+ * @param {AccessTokenProvider} accessToken - Access token that requires the `itwin-platform` scope. Provide a function that returns the token to prevent the token from expiring.
  * @param {ApiOverrides<IModelFull[]>} [apiOverrides] - Optional API overrides.
  * @returns {object} - An object containing:
  * - {Set<string>} iModelFavorites - A set of iModel IDs that are marked as favorites.
@@ -21,7 +22,7 @@ const HOOK_ABORT_ERROR =
  */
 export const useIModelFavorites = (
   iTwinId: string | undefined,
-  accessToken: string | (() => Promise<string>) | undefined,
+  accessToken: AccessTokenProvider,
   serverEnvironmentPrefix?: "dev" | "qa" | ""
 ): {
   iModelFavorites: Set<string>;

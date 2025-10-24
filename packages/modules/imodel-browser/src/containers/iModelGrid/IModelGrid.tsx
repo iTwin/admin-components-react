@@ -10,6 +10,7 @@ import { GridStructure } from "../../components/gridStructure/GridStructure";
 import { NoResults } from "../../components/noResults/NoResults";
 import { IModelFavoritesProvider } from "../../contexts/IModelFavoritesContext";
 import {
+  AccessTokenProvider,
   ApiOverrides,
   DataStatus,
   IModelCellOverrides,
@@ -29,7 +30,7 @@ import { useIModelTableConfig } from "./useIModelTableConfig";
 export interface IModelGridProps {
   /**
    * Access token that requires the `imodels:read` scope. Provide a function that returns the token to prevent the token from expiring. Function must be memoized. */
-  accessToken?: string | (() => Promise<string>) | undefined;
+  accessToken?: AccessTokenProvider;
   /** ITwin Id to list the iModels from (mutually exclusive to assetId) */
   iTwinId?: string | undefined;
   /** Type of iModels to request - "favorites" for user's favorite iModels, "recents" for recently accessed iModels, or empty string for all iModels */

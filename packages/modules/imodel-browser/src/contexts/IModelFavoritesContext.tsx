@@ -5,6 +5,7 @@
 import React from "react";
 
 import { useIModelFavorites } from "../containers/iModelGrid/useIModelFavorites";
+import { AccessTokenProvider } from "../types";
 
 export interface IModelFavoritesContextValue {
   favorites: Set<string>;
@@ -18,7 +19,7 @@ export const IModelFavoritesContext = React.createContext<
 
 export interface IModelFavoritesProviderProps {
   iTwinId: string | undefined;
-  accessToken?: string | (() => Promise<string>);
+  accessToken?: AccessTokenProvider;
   serverEnvironmentPrefix?: string;
   children: React.ReactNode;
 }

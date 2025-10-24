@@ -7,8 +7,8 @@ import { IconButton, Tile } from "@itwin/itwinui-react";
 import React from "react";
 
 import { useIModelFavoritesContext } from "../../contexts/IModelFavoritesContext";
-import { ApiOverrides, IModelFull } from "../../types";
-import { _getAPIServer, _mergeStrings } from "../../utils/_apiOverrides";
+import { AccessTokenProvider, ApiOverrides, IModelFull } from "../../types";
+import { _mergeStrings } from "../../utils/_apiOverrides";
 import {
   _buildManagedContextMenuOptions,
   ContextMenuBuilderItem,
@@ -22,7 +22,7 @@ export interface IModelTileProps {
   /** iModel to display */
   iModel: IModelFull;
   /** Access token to display */
-  accessToken?: string | (() => Promise<string>) | undefined;
+  accessToken?: AccessTokenProvider;
   /** List of options to build for the imodel context menu */
   iModelOptions?: ContextMenuBuilderItem<IModelFull>[];
   /** Function to call on thumbnail click */

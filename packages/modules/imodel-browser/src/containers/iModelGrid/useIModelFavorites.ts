@@ -5,14 +5,19 @@
 
 import { useCallback, useEffect, useState } from "react";
 
+import { AccessTokenProvider } from "../../types";
 import { _getAPIServer } from "../../utils/_apiOverrides";
+import {
+  IModelFavorites,
+  IModelFavoritesResponse,
+} from "../../utils/imodelApi";
 
 const HOOK_ABORT_ERROR =
   "The fetch request was aborted by the cleanup function.";
 
 /**
  * Custom hook to manage iModel favorites.
- * @param {string | (() => Promise<string>) | undefined} accessToken - Access token that requires the `itwin-platform` scope. Provide a function that returns the token to prevent the token from expiring.
+ * @param {AccessTokenProvider} accessToken - Access token that requires the `itwin-platform` scope. Provide a function that returns the token to prevent the token from expiring.
  * @param {ApiOverrides<IModelFull[]>} [apiOverrides] - Optional API overrides.
  * @returns {object} - An object containing:
  * - {Set<string>} iModelFavorites - A set of iModel IDs that are marked as favorites.
@@ -21,7 +26,7 @@ const HOOK_ABORT_ERROR =
  */
 export const useIModelFavorites = (
   iTwinId: string | undefined,
-  accessToken: string | (() => Promise<string>) | undefined,
+  accessToken: AccessTokenProvider | undefined,
   serverEnvironmentPrefix?: "dev" | "qa" | ""
 ): {
   iModelFavorites: Set<string>;
@@ -184,24 +189,3 @@ export const useIModelFavorites = (
     removeIModelFromFavorites,
   };
 };
-
-/** Response from https://developer.bentley.com/apis/imodels-v2/operations/get-my-favorite-imodels/ */
-interface IModelFavoritesResponse {
-  iModels: IModelFavorites[];
-  _links: {
-    self: {
-      href: string;
-    };
-    prev?: {
-      href: string;
-    };
-    next?: {
-      href: string;
-    };
-  };
-}
-interface IModelFavorites {
-  id: string;
-  displayName: string;
-  dataCenterLocation: string;
-}

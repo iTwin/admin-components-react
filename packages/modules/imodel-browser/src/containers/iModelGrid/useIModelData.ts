@@ -5,6 +5,7 @@
 import React, { useEffect } from "react";
 
 import {
+  AccessTokenProvider,
   ApiOverrides,
   DataStatus,
   IModelFull,
@@ -17,7 +18,7 @@ import { useIModelSort } from "./useIModelSort";
 export interface IModelDataHookOptions {
   requestType?: "favorites" | "recents" | "";
   iTwinId?: string | undefined;
-  accessToken?: string | (() => Promise<string>) | undefined;
+  accessToken?: AccessTokenProvider;
   sortOptions?: IModelSortOptions;
   apiOverrides?: ApiOverrides<IModelFull[]>;
   searchText?: string | undefined;
@@ -206,7 +207,7 @@ export const useIModelData = ({
 
 const createFetchIModelsFn = (
   iTwinId: string,
-  accessToken: string | (() => Promise<string>),
+  accessToken: AccessTokenProvider,
   sortType: string | undefined,
   sortDescending: boolean,
   page: number,
