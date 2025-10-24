@@ -8,7 +8,7 @@ import { useCallback, useEffect, useState } from "react";
 import { _getAPIServer } from "../../utils/_apiOverrides";
 
 const HOOK_ABORT_ERROR =
-  "The fetch request was aborted by the cleanup function.";
+  "iModel favorites request was aborted by the cleanup function.";
 
 /**
  * Custom hook to manage iModel favorites.
