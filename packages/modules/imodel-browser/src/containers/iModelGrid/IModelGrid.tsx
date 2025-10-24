@@ -31,6 +31,7 @@ export interface IModelGridProps {
   accessToken?: string | (() => Promise<string>) | undefined;
   /** ITwin Id to list the iModels from (mutually exclusive to assetId) */
   iTwinId?: string | undefined;
+  /** Type of iModels to request - "favorites" for user's favorite iModels, "recents" for recently accessed iModels, or empty string for all iModels */
   requestType?: "favorites" | "recents" | "";
   /** Thumbnail click handler. */
   onThumbnailClick?(iModel: IModelFull): void;
