@@ -33,7 +33,7 @@ const sortStringValues = (a: string, b: string) => a.localeCompare(b);
 export const useIModelSort = (
   iModels: IModelFull[],
   options?: IModelSortOptions,
-  skipSort = false
+  enableSort = true
 ) => {
   const sortType =
     typeof options !== "function" ? options?.sortType : undefined;
@@ -41,7 +41,7 @@ export const useIModelSort = (
     typeof options !== "function" ? options?.descending ?? false : undefined;
   const sortFn = typeof options === "function" ? options : undefined;
   return React.useMemo(() => {
-    if (skipSort) {
+    if (!enableSort) {
       return iModels;
     }
     if (sortFn) {

@@ -59,7 +59,7 @@ export const useIModelData = ({
   const sortedIModels = useIModelSort(
     iModels,
     sortOptions,
-    requestType === "recents"
+    requestType !== "recents"
   );
   const sortChanged =
     sortOptions?.descending !== previousSortOptions?.descending ||
