@@ -2,10 +2,11 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { SvgItwin, SvgStar, SvgStarHollow } from "@itwin/itwinui-icons-react";
-import { Badge, IconButton, ThemeProvider, Tile } from "@itwin/itwinui-react";
+import { SvgItwin } from "@itwin/itwinui-icons-react";
+import { Badge, ThemeProvider, Tile } from "@itwin/itwinui-react";
 import React from "react";
 
+import { TileFavoriteIcon } from "../../components/tileFavoriteIcon/TileFavoriteIcon";
 import { ITwinFull } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
 import {
@@ -81,7 +82,7 @@ export const ITwinTile = ({
     onClick,
     ...rest
   } = tileProps ?? {};
-
+  const [isHovered, setIsHovered] = React.useState(false);
   const strings = _mergeStrings(
     {
       trialBadge: "Trial",
@@ -112,6 +113,8 @@ export const ITwinTile = ({
         status={status}
         isDisabled={isDisabled}
         style={fullWidth ? { width: "100%" } : undefined}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
         {...rest}
       >
         <Tile.Name>
@@ -130,23 +133,18 @@ export const ITwinTile = ({
           {leftIcon && <Tile.TypeIndicator>{leftIcon}</Tile.TypeIndicator>}
           <Tile.QuickAction>
             {rightIcon}
-            {isFavorite !== undefined && (
-              <IconButton
-                aria-label={
-                  isFavorite
-                    ? strings.removeFromFavorites
-                    : strings.addToFavorites
-                }
-                onClick={async () => {
-                  isFavorite
-                    ? await removeFromFavorites?.(iTwin.id)
-                    : await addToFavorites?.(iTwin.id);
-                }}
-                styleType="borderless"
-              >
-                {isFavorite ? <SvgStar /> : <SvgStarHollow />}
-              </IconButton>
-            )}
+            {isFavorite !== undefined &&
+              addToFavorites &&
+              removeFromFavorites && (
+                <TileFavoriteIcon
+                  isFavorite={isFavorite}
+                  onAddToFavorites={() => addToFavorites(iTwin.id)}
+                  onRemoveFromFavorites={() => removeFromFavorites(iTwin.id)}
+                  addLabel={strings.addToFavorites}
+                  removeLabel={strings.removeFromFavorites}
+                  hide={!isHovered}
+                />
+              )}
           </Tile.QuickAction>
           <Tile.BadgeContainer>
             {badge ??

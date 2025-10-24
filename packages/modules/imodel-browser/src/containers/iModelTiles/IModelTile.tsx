@@ -2,10 +2,10 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { SvgStar, SvgStarHollow } from "@itwin/itwinui-icons-react";
-import { IconButton, Tile } from "@itwin/itwinui-react";
+import { Tile } from "@itwin/itwinui-react";
 import React from "react";
 
+import { TileFavoriteIcon } from "../../components/tileFavoriteIcon/TileFavoriteIcon";
 import { useIModelFavoritesContext } from "../../contexts/IModelFavoritesContext";
 import { AccessTokenProvider, ApiOverrides, IModelFull } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
@@ -128,6 +128,8 @@ export const IModelTile = ({
     ]
   );
 
+  const [isHovered, setIsHovered] = React.useState(false);
+
   return (
     <Tile.Wrapper
       key={iModel.id}
@@ -137,6 +139,8 @@ export const IModelTile = ({
       status={status}
       isDisabled={isDisabled}
       style={fullWidth ? { width: "100%" } : undefined}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       {...rest}
     >
       <Tile.Name>
@@ -154,30 +158,14 @@ export const IModelTile = ({
         <Tile.QuickAction>
           {rightIcon}
           {favoritesContext && (
-            <IconButton
-              aria-label={
-                favoritesContext.favorites.has(iModel.id)
-                  ? strings.removeFromFavorites
-                  : strings.addToFavorites
-              }
-              onClick={async () => {
-                favoritesContext.favorites.has(iModel.id)
-                  ? await favoritesContext.remove(iModel.id)
-                  : await favoritesContext.add(iModel.id);
-              }}
-              style={{
-                paddingInline: "var(--iui-button-padding-block)",
-                backgroundColor:
-                  "rgb(from var(--iui-color-background) r g b / 0.7)",
-              }}
-              styleType="borderless"
-            >
-              {favoritesContext.favorites.has(iModel.id) ? (
-                <SvgStar />
-              ) : (
-                <SvgStarHollow />
-              )}
-            </IconButton>
+            <TileFavoriteIcon
+              isFavorite={favoritesContext.favorites.has(iModel.id)}
+              onAddToFavorites={() => favoritesContext.add(iModel.id)}
+              onRemoveFromFavorites={() => favoritesContext.remove(iModel.id)}
+              addLabel={strings.addToFavorites}
+              removeLabel={strings.removeFromFavorites}
+              hide={!isHovered}
+            />
           )}
         </Tile.QuickAction>
         {thumbnail ? (

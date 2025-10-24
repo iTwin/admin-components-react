@@ -112,11 +112,11 @@ export const IModelGrid = (props: IModelGridProps) => {
       accessToken={props.accessToken}
       serverEnvironmentPrefix={props.apiOverrides?.serverEnvironmentPrefix}
     >
-      <IModelGridInner {...props} />
+      <ITwinGridInternal {...props} />
     </IModelFavoritesProvider>
   );
 };
-const IModelGridInner = ({
+const ITwinGridInternal = ({
   accessToken,
   apiOverrides,
   iModelActions,
