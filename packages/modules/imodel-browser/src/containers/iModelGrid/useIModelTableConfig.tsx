@@ -2,12 +2,13 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { SvgMore } from "@itwin/itwinui-icons-react";
+import { SvgMore, SvgStar, SvgStarHollow } from "@itwin/itwinui-icons-react";
 import { DropdownMenu, IconButton } from "@itwin/itwinui-react";
 import React from "react";
 import { useMemo } from "react";
 import { CellProps } from "react-table";
 
+import { useIModelFavoritesContext } from "../../contexts/IModelFavoritesContext";
 import { IModelCellOverrides, IModelFull } from "../../types";
 import {
   _buildManagedContextMenuOptions,
@@ -26,6 +27,9 @@ export interface useIModelTableConfigProps {
     noContext: string;
     noAuthentication: string;
     error: string;
+    tableColumnFavorites: string;
+    addToFavorites: string;
+    removeFromFavorites: string;
   };
   refetchIModels: () => void;
   cellOverrides?: IModelCellOverrides;
@@ -38,6 +42,7 @@ export const useIModelTableConfig = ({
   refetchIModels,
   cellOverrides = {},
 }: useIModelTableConfigProps) => {
+  const favoritesContext = useIModelFavoritesContext();
   const onRowClick = (_: React.MouseEvent, row: any) => {
     const iModel = row.original as IModelFull;
     if (!iModel) {
@@ -51,6 +56,33 @@ export const useIModelTableConfig = ({
       {
         Header: "Table",
         columns: [
+          {
+            id: "Favorite",
+            Header: strings.tableColumnFavorites,
+            accessor: "id",
+            width: 70,
+            Cell: (props: CellProps<IModelFull>) => {
+              const isFavorite = favoritesContext?.favorites.has(props.value);
+              return (
+                <IconButton
+                  styleType="borderless"
+                  aria-label={
+                    isFavorite
+                      ? strings.removeFromFavorites
+                      : strings.addToFavorites
+                  }
+                  onClick={async (e) => {
+                    e.stopPropagation();
+                    isFavorite
+                      ? await favoritesContext?.remove?.(props.value)
+                      : await favoritesContext?.add?.(props.value);
+                  }}
+                >
+                  {isFavorite ? <SvgStar /> : <SvgStarHollow />}
+                </IconButton>
+              );
+            },
+          },
           {
             id: "name",
             Header: strings.tableColumnName,
@@ -134,9 +166,13 @@ export const useIModelTableConfig = ({
       },
     ],
     [
+      strings.tableColumnFavorites,
       strings.tableColumnName,
       strings.tableColumnDescription,
       strings.tableColumnLastModified,
+      strings.addToFavorites,
+      strings.removeFromFavorites,
+      favoritesContext,
       cellOverrides,
       iModelActions,
       refetchIModels,

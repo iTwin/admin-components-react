@@ -5,11 +5,15 @@
 import { Tile } from "@itwin/itwinui-react";
 import React from "react";
 
-import { ApiOverrides, IModelFull } from "../../types";
+import { TileFavoriteIcon } from "../../components/tileFavoriteIcon/TileFavoriteIcon";
+import { useIModelFavoritesContext } from "../../contexts/IModelFavoritesContext";
+import { AccessTokenProvider, ApiOverrides, IModelFull } from "../../types";
+import { _mergeStrings } from "../../utils/_apiOverrides";
 import {
   _buildManagedContextMenuOptions,
   ContextMenuBuilderItem,
 } from "../../utils/_buildMenuOptions";
+import { addIModelToRecents } from "../../utils/imodelApi";
 import { IModelThumbnail } from "../iModelThumbnail/IModelThumbnail";
 
 type TileProps = React.ComponentPropsWithoutRef<typeof Tile>;
@@ -18,11 +22,18 @@ export interface IModelTileProps {
   /** iModel to display */
   iModel: IModelFull;
   /** Access token to display */
-  accessToken?: string | (() => Promise<string>) | undefined;
+  accessToken?: AccessTokenProvider;
   /** List of options to build for the imodel context menu */
   iModelOptions?: ContextMenuBuilderItem<IModelFull>[];
   /** Function to call on thumbnail click */
   onThumbnailClick?(iModel: IModelFull): void;
+  /** Strings displayed by the browser */
+  stringsOverrides?: {
+    /** Accessible text for the hollow star icon to add the iModel to favorites */
+    addToFavorites?: string;
+    /** Accessible text for the full star icon to remove the iModel from favorites */
+    removeFromFavorites?: string;
+  };
   /** Tile props that will be applied after normal use. (Will override IModelTile if used) */
   tileProps?: Partial<
     TileProps & { getBadge?: (iModel: IModelFull) => React.ReactNode }
@@ -45,6 +56,7 @@ export const IModelTile = ({
   onThumbnailClick,
   apiOverrides,
   tileProps,
+  stringsOverrides,
   refetchIModels,
   fullWidth,
 }: IModelTileProps) => {
@@ -62,10 +74,18 @@ export const IModelTile = ({
     buttons,
     moreOptions,
     isDisabled,
-    onClick,
+    onClick: tilePropsOnClick,
     metadata,
     ...rest
   } = tileProps ?? {};
+  const favoritesContext = useIModelFavoritesContext();
+  const strings = _mergeStrings(
+    {
+      addToFavorites: "Add to favorites",
+      removeFromFavorites: "Remove from favorites",
+    },
+    stringsOverrides
+  );
 
   const moreOptionsBuilt = React.useMemo(
     () =>
@@ -85,6 +105,31 @@ export const IModelTile = ({
         }
       : undefined;
 
+  const handleClickAndAddToRecents = React.useCallback(
+    async (e: React.MouseEvent<HTMLElement>) => {
+      tilePropsOnClick?.(e) ?? onThumbnailClick?.(iModel);
+
+      if (!accessToken) {
+        return;
+      }
+
+      void addIModelToRecents({
+        iModelId: iModel.id,
+        accessToken,
+        serverEnvironmentPrefix: apiOverrides?.serverEnvironmentPrefix,
+      });
+    },
+    [
+      accessToken,
+      apiOverrides?.serverEnvironmentPrefix,
+      iModel,
+      tilePropsOnClick,
+      onThumbnailClick,
+    ]
+  );
+
+  const [isHovered, setIsHovered] = React.useState(false);
+
   return (
     <Tile.Wrapper
       key={iModel.id}
@@ -94,12 +139,14 @@ export const IModelTile = ({
       status={status}
       isDisabled={isDisabled}
       style={fullWidth ? { width: "100%" } : undefined}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       {...rest}
     >
       <Tile.Name>
         <Tile.NameIcon />
         <Tile.NameLabel
-          onClick={(e) => onClick?.(e) ?? onThumbnailClick?.(iModel)}
+          onClick={handleClickAndAddToRecents}
           aria-disabled={isDisabled}
           data-testid={`iModel-tile-${iModel.id}-name-label`}
         >
@@ -108,7 +155,19 @@ export const IModelTile = ({
       </Tile.Name>
       <Tile.ThumbnailArea>
         {leftIcon && <Tile.TypeIndicator>{leftIcon}</Tile.TypeIndicator>}
-        {rightIcon && <Tile.QuickAction>{rightIcon}</Tile.QuickAction>}
+        <Tile.QuickAction>
+          {rightIcon}
+          {favoritesContext && (
+            <TileFavoriteIcon
+              isFavorite={favoritesContext.favorites.has(iModel.id)}
+              onAddToFavorites={() => favoritesContext.add(iModel.id)}
+              onRemoveFromFavorites={() => favoritesContext.remove(iModel.id)}
+              addLabel={strings.addToFavorites}
+              removeLabel={strings.removeFromFavorites}
+              hide={!isHovered}
+            />
+          )}
+        </Tile.QuickAction>
         {thumbnail ? (
           <Tile.ThumbnailPicture>{thumbnail}</Tile.ThumbnailPicture>
         ) : (
@@ -126,7 +185,7 @@ export const IModelTile = ({
       </Tile.ThumbnailArea>
       <Tile.ContentArea>
         <Tile.Action
-          onClick={(e) => onClick?.(e) ?? onThumbnailClick?.(iModel)}
+          onClick={handleClickAndAddToRecents}
           aria-disabled={isDisabled}
           data-testid={`iModel-tile-${iModel.id}-action`}
         >

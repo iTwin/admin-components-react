@@ -118,3 +118,5 @@ export type ITwinCellOverrides = {
   ITwinName?: (cellData: CellProps<ITwinFull>) => React.ReactNode;
   LastModified?: (cellData: CellProps<ITwinFull>) => React.ReactNode;
 };
+
+export type AccessTokenProvider = string | (() => Promise<string>);
