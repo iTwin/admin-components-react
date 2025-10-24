@@ -107,6 +107,8 @@ export const IModelTile = ({
 
   const handleClickAndAddToRecents = React.useCallback(
     async (e: React.MouseEvent<HTMLElement>) => {
+      tilePropsOnClick?.(e) ?? onThumbnailClick?.(iModel);
+
       if (!accessToken) {
         return;
       }
@@ -116,8 +118,6 @@ export const IModelTile = ({
         accessToken,
         serverEnvironmentPrefix: apiOverrides?.serverEnvironmentPrefix,
       });
-
-      tilePropsOnClick?.(e) ?? onThumbnailClick?.(iModel);
     },
     [
       accessToken,
