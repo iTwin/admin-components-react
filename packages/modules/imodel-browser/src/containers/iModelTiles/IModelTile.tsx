@@ -107,23 +107,21 @@ export const IModelTile = ({
 
   const handleClickAndAddToRecents = React.useCallback(
     async (e: React.MouseEvent<HTMLElement>) => {
-      if (favoritesContext) {
-        if (!accessToken) {
-          return;
-        }
-
-        void addIModelToRecents({
-          iModelId: iModel.id,
-          accessToken,
-          serverEnvironmentPrefix: apiOverrides?.serverEnvironmentPrefix,
-        });
+      if (!accessToken) {
+        return;
       }
+
+      void addIModelToRecents({
+        iModelId: iModel.id,
+        accessToken,
+        serverEnvironmentPrefix: apiOverrides?.serverEnvironmentPrefix,
+      });
+
       tilePropsOnClick?.(e) ?? onThumbnailClick?.(iModel);
     },
     [
       accessToken,
       apiOverrides?.serverEnvironmentPrefix,
-      favoritesContext,
       iModel,
       tilePropsOnClick,
       onThumbnailClick,
