@@ -37,6 +37,8 @@ export interface IModelGridProps {
   requestType?: "favorites" | "recents" | "";
   /** Thumbnail click handler. */
   onThumbnailClick?(iModel: IModelFull): void;
+  /** When true, prevents automatically adding iModels to recents when thumbnail is clicked. Default is false. */
+  disableAddToRecents?: boolean;
   /** Configure IModel sorting behavior.
    */
   sortOptions?: IModelSortOptions;
@@ -135,6 +137,7 @@ const ITwinGridInternal = ({
   maxCount,
   cellOverrides,
   className,
+  disableAddToRecents = false,
 }: IModelGridProps) => {
   const [sort, setSort] = React.useState<IModelSortOptions>(sortOptions);
   const [isSortOnTable, setIsSortOnTable] = React.useState(false);
@@ -214,26 +217,32 @@ const ITwinGridInternal = ({
     }
   }, [iModels.length, pageSize, fetchMore, fetchStatus]);
 
+  const iModelClickAndAddToRecents = async (
+    iModel: IModelFull,
+    clickFn: () => void
+  ) => {
+    try {
+      if (!accessToken || disableAddToRecents) {
+        clickFn();
+        return;
+      }
+
+      void addIModelToRecents({
+        iModelId: iModel.id,
+        accessToken,
+        serverEnvironmentPrefix: apiOverrides?.serverEnvironmentPrefix,
+      });
+    } catch (e) {
+      // swallow errors to avoid disrupting the UI
+      console.error("Failed to add iModel to recents", e);
+    }
+    onThumbnailClick?.(iModel);
+  };
+
   const { columns, onRowClick } = useIModelTableConfig({
     iModelActions,
-    onThumbnailClick: async (iModel) => {
-      try {
-        if (!accessToken) {
-          onThumbnailClick?.(iModel);
-          return;
-        }
-
-        void addIModelToRecents({
-          iModelId: iModel.id,
-          accessToken,
-          serverEnvironmentPrefix: apiOverrides?.serverEnvironmentPrefix,
-        });
-      } catch (e) {
-        // swallow errors to avoid disrupting the UI
-        console.error("Failed to add iModel to recents", e);
-      }
-      onThumbnailClick?.(iModel);
-    },
+    onThumbnailClick: (iModel) =>
+      iModelClickAndAddToRecents(iModel, () => onThumbnailClick?.(iModel)),
     strings,
     refetchIModels,
     cellOverrides,
@@ -262,12 +271,29 @@ const ITwinGridInternal = ({
                 iModel={iModel}
                 iModelOptions={iModelActions}
                 accessToken={accessToken}
-                onThumbnailClick={onThumbnailClick}
+                onThumbnailClick={(iModel) =>
+                  iModelClickAndAddToRecents(iModel, () =>
+                    onThumbnailClick?.(iModel)
+                  )
+                }
                 apiOverrides={tileApiOverrides}
                 useTileState={useIndividualState}
                 refetchIModels={refetchIModels}
                 {...cellOverrides}
                 {...tileOverrides}
+                tileProps={
+                  tileOverrides
+                    ? {
+                        ...tileOverrides.tileProps,
+                        onClick: tileOverrides.tileProps?.onClick
+                          ? (e) =>
+                              iModelClickAndAddToRecents(iModel, () =>
+                                tileOverrides.tileProps?.onClick?.(e)
+                              )
+                          : undefined,
+                      }
+                    : undefined
+                }
               />
             ))}
             {fetchMore ? (

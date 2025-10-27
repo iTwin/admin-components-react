@@ -105,29 +105,6 @@ export const IModelTile = ({
         }
       : undefined;
 
-  const handleClickAndAddToRecents = React.useCallback(
-    async (e: React.MouseEvent<HTMLElement>) => {
-      tilePropsOnClick?.(e) ?? onThumbnailClick?.(iModel);
-
-      if (!accessToken) {
-        return;
-      }
-
-      void addIModelToRecents({
-        iModelId: iModel.id,
-        accessToken,
-        serverEnvironmentPrefix: apiOverrides?.serverEnvironmentPrefix,
-      });
-    },
-    [
-      accessToken,
-      apiOverrides?.serverEnvironmentPrefix,
-      iModel,
-      tilePropsOnClick,
-      onThumbnailClick,
-    ]
-  );
-
   const [isHovered, setIsHovered] = React.useState(false);
 
   return (
@@ -146,7 +123,7 @@ export const IModelTile = ({
       <Tile.Name>
         <Tile.NameIcon />
         <Tile.NameLabel
-          onClick={handleClickAndAddToRecents}
+          onClick={(e) => tilePropsOnClick?.(e) ?? onThumbnailClick?.(iModel)}
           aria-disabled={isDisabled}
           data-testid={`iModel-tile-${iModel.id}-name-label`}
         >
@@ -185,7 +162,7 @@ export const IModelTile = ({
       </Tile.ThumbnailArea>
       <Tile.ContentArea>
         <Tile.Action
-          onClick={handleClickAndAddToRecents}
+          onClick={(e) => tilePropsOnClick?.(e) ?? onThumbnailClick?.(iModel)}
           aria-disabled={isDisabled}
           data-testid={`iModel-tile-${iModel.id}-action`}
         >
