@@ -13,7 +13,6 @@ import {
   _buildManagedContextMenuOptions,
   ContextMenuBuilderItem,
 } from "../../utils/_buildMenuOptions";
-import { addIModelToRecents } from "../../utils/iModelApi";
 import { IModelThumbnail } from "../iModelThumbnail/IModelThumbnail";
 
 type TileProps = React.ComponentPropsWithoutRef<typeof Tile>;
