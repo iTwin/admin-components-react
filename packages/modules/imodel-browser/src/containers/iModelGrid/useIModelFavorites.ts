@@ -6,7 +6,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { AccessTokenProvider } from "../../types";
-import * as iModelApi from "../../utils/iModelApi-rename-fix";
+import * as iModelApi from "../../utils/iModelApi";
 
 /**
  * Custom hook to manage iModel favorites.
