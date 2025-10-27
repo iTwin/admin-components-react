@@ -9,7 +9,7 @@ import {
   IModelGridProps,
   IModelTileProps,
 } from "@itwin/imodel-browser-react";
-import { SvgStar } from "@itwin/itwinui-icons-react";
+import { SvgApple } from "@itwin/itwinui-icons-react";
 import {
   Button,
   Code,
@@ -50,6 +50,7 @@ const Template: Story<IModelGridProps> = withITwinIdOverride(
 export const Primary = Template.bind({});
 Primary.args = {
   apiOverrides: { serverEnvironmentPrefix: "qa" },
+  sortOptions: { sortType: "name", descending: false },
 };
 
 export const PrimaryCell = Template.bind({});
@@ -63,14 +64,17 @@ OverrideCellData.args = {
   apiOverrides: { serverEnvironmentPrefix: "qa" },
   viewMode: "cells",
   cellOverrides: {
-    name: (props) => (
-      <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-        <IconButton size="small" styleType="borderless">
-          <SvgStar />
-        </IconButton>
-        {props.value}
-      </div>
-    ),
+    name: (props) =>
+      props.value.includes("a") ? (
+        <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+          <IconButton size="small" styleType="borderless">
+            <SvgApple />
+          </IconButton>
+          {props.value}
+        </div>
+      ) : (
+        props.value
+      ),
     description: (props) => <em>{props.value}</em>,
   },
 };
