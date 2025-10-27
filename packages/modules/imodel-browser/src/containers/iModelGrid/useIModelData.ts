@@ -16,6 +16,7 @@ import { _getAPIServer } from "../../utils/_apiOverrides";
 import { useIModelSort } from "./useIModelSort";
 
 export interface IModelDataHookOptions {
+  /** Type of iModels to request - "favorites" for user's favorite iModels, "recents" for recently accessed iModels, or empty string for all iModels */
   requestType?: "favorites" | "recents" | "";
   iTwinId?: string | undefined;
   accessToken?: AccessTokenProvider;

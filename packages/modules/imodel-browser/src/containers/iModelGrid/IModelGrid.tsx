@@ -20,7 +20,7 @@ import {
 } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
 import { ContextMenuBuilderItem } from "../../utils/_buildMenuOptions";
-import { addIModelToRecents } from "../../utils/imodelApi";
+import { addIModelToRecents } from "../../utils/iModelApi";
 import { IModelGhostTile } from "../iModelTiles/IModelGhostTile";
 import { IModelTile, IModelTileProps } from "../iModelTiles/IModelTile";
 import styles from "./IModelGrid.module.scss";

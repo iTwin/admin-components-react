@@ -6,20 +6,14 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { AccessTokenProvider } from "../../types";
-import { _getAPIServer } from "../../utils/_apiOverrides";
-import {
-  IModelFavorites,
-  IModelFavoritesResponse,
-} from "../../utils/imodelApi";
-
-const HOOK_ABORT_ERROR =
-  "The fetch request was aborted by the cleanup function.";
+import * as iModelApi from "../../utils/iModelApi";
 
 /**
  * Custom hook to manage iModel favorites.
- * @param {AccessTokenProvider} accessToken - Access token that requires the `itwin-platform` scope. Provide a function that returns the token to prevent the token from expiring.
- * @param {ApiOverrides<IModelFull[]>} [apiOverrides] - Optional API overrides.
- * @returns {object} - An object containing:
+ * @param iTwinId - The ID of the iTwin for which to fetch favorites.
+ * @param accessToken - Access token that requires the `itwin-platform` scope. Provide a function that returns the token to prevent the token from expiring.
+ * @param serverEnvironmentPrefix - Optional server environment prefix.
+ * @returns An object containing:
  * - {Set<string>} iModelFavorites - A set of iModel IDs that are marked as favorites.
  * - {function} addIModelToFavorites - A function to add an iModel to favorites.
  * - {function} removeIModelFromFavorites - A function to remove an iModel from favorites.
@@ -45,24 +39,12 @@ export const useIModelFavorites = (
       if (!accessToken || !iModelId || iModelId === "") {
         return;
       }
-      const url = `${_getAPIServer(
-        serverEnvironmentPrefix
-      )}/imodels/favorites/${iModelId}`;
       try {
-        const result = await fetch(url, {
-          method: "PUT",
-          headers: {
-            authorization:
-              typeof accessToken === "function"
-                ? await accessToken()
-                : accessToken,
-            Accept: "application/vnd.bentley.itwin-platform.v2+json",
-          },
+        await iModelApi.addIModelToFavorites({
+          iModelId,
+          accessToken,
+          serverEnvironmentPrefix,
         });
-
-        if (!result || (result.status !== 200 && result.status !== 204)) {
-          throw new Error(`Failed to add iModel ${iModelId} to favorites`);
-        }
 
         setIModelFavorites((prev) => new Set([...prev, iModelId]));
       } catch (error) {
@@ -82,24 +64,12 @@ export const useIModelFavorites = (
       if (!accessToken || !iModelId || iModelId === "") {
         return;
       }
-      const url = `${_getAPIServer(
-        serverEnvironmentPrefix
-      )}/imodels/favorites/${iModelId}`;
       try {
-        const result = await fetch(url, {
-          method: "DELETE",
-          headers: {
-            authorization:
-              typeof accessToken === "function"
-                ? await accessToken()
-                : accessToken,
-            Accept: "application/vnd.bentley.itwin-platform.v2+json",
-          },
+        await iModelApi.removeIModelFromFavorites({
+          iModelId,
+          accessToken,
+          serverEnvironmentPrefix,
         });
-
-        if (!result || (result.status !== 200 && result.status !== 204)) {
-          throw new Error(`Failed to remove iModel ${iModelId} from favorites`);
-        }
 
         setIModelFavorites((prev) => {
           const newFavorites = new Set(prev);
@@ -113,49 +83,6 @@ export const useIModelFavorites = (
     [accessToken, serverEnvironmentPrefix]
   );
 
-  /**
-   * Fetches iTwin favorites from the API.
-   * @param {AbortSignal} [abortSignal] - Optional abort signal to cancel the fetch request.
-   * @returns {Promise<IModelFavorites[]>} - A promise that resolves to an array of iTwin favorites.
-   * @throws {Error} - Throws an error if the fetch request fails.
-   */
-  const getIModelFavorites = useCallback(
-    async (abortSignal?: AbortSignal): Promise<IModelFavorites[]> => {
-      if (!accessToken || !iTwinId) {
-        return [];
-      }
-      const url = `${_getAPIServer(
-        serverEnvironmentPrefix
-      )}/imodels/favorites?iTwinId=${iTwinId}`;
-      const result = await fetch(url, {
-        headers: {
-          authorization:
-            typeof accessToken === "function"
-              ? await accessToken()
-              : accessToken,
-          Accept: "application/vnd.bentley.itwin-platform.v2+json",
-        },
-        signal: abortSignal,
-      });
-      if (abortSignal?.aborted) {
-        throw new Error(HOOK_ABORT_ERROR);
-      }
-      if (!result) {
-        throw new Error(
-          `Failed to fetch iModels favorites from ${url}.\nNo response.`
-        );
-      }
-      if (result.status !== 200) {
-        throw new Error(
-          `Failed to fetch iModels favorites from ${url}.\nStatus: ${result.status}`
-        );
-      }
-      const response: IModelFavoritesResponse = await result.json();
-      return response.iModels;
-    },
-    [accessToken, iTwinId, serverEnvironmentPrefix]
-  );
-
   useEffect(() => {
     const controller = new AbortController();
     /**
@@ -164,13 +91,20 @@ export const useIModelFavorites = (
      */
     const fetchIModelFavorites = async (abortSignal?: AbortSignal) => {
       try {
-        const favorites = await getIModelFavorites(abortSignal);
+        if (!iTwinId || !accessToken) {
+          setIModelFavorites(new Set());
+          return;
+        }
+
+        const favorites = await iModelApi.getIModelFavorites({
+          iTwinId,
+          accessToken,
+          serverEnvironmentPrefix,
+          abortSignal,
+        });
         setIModelFavorites(new Set(favorites.map((favorite) => favorite.id)));
       } catch (error) {
-        if (
-          error === HOOK_ABORT_ERROR ||
-          (error instanceof Error && error.name === "AbortError")
-        ) {
+        if (error instanceof Error && error.name === "AbortError") {
           return;
         }
         console.error(error);
@@ -181,7 +115,7 @@ export const useIModelFavorites = (
     return () => {
       controller.abort();
     };
-  }, [getIModelFavorites]);
+  }, [iTwinId, accessToken, serverEnvironmentPrefix]);
 
   return {
     iModelFavorites,

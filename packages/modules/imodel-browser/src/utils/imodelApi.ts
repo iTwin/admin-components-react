@@ -95,3 +95,101 @@ export async function removeIModelFromRecents(options: {
     console.error("Failed to remove iModel from recents", e);
   }
 }
+
+export async function getIModelFavorites(options: {
+  iTwinId: string;
+  accessToken: AccessTokenProvider;
+  serverEnvironmentPrefix?: "dev" | "qa" | "";
+  abortSignal?: AbortSignal;
+}): Promise<IModelFavorites[]> {
+  const { iTwinId, accessToken, serverEnvironmentPrefix, abortSignal } =
+    options;
+
+  const token =
+    typeof accessToken === "function" ? await accessToken() : accessToken;
+
+  const url = `${_getAPIServer(
+    serverEnvironmentPrefix
+  )}/imodels/favorites?iTwinId=${iTwinId}`;
+
+  const result = await fetch(url, {
+    headers: {
+      authorization: token as string,
+      Accept: "application/vnd.bentley.itwin-platform.v2+json",
+    },
+    signal: abortSignal,
+  });
+
+  if (abortSignal?.aborted) {
+    throw new Error("The fetch request was aborted by the cleanup function.");
+  }
+
+  if (!result) {
+    throw new Error(
+      `Failed to fetch iModels favorites from ${url}.\nNo response.`
+    );
+  }
+
+  if (result.status !== 200) {
+    throw new Error(
+      `Failed to fetch iModels favorites from ${url}.\nStatus: ${result.status}`
+    );
+  }
+
+  const response: IModelFavoritesResponse = await result.json();
+  return response.iModels;
+}
+
+export async function addIModelToFavorites(options: {
+  iModelId: string;
+  accessToken: AccessTokenProvider;
+  serverEnvironmentPrefix?: "dev" | "qa" | "";
+}): Promise<void> {
+  const { iModelId, accessToken, serverEnvironmentPrefix } = options;
+
+  const token =
+    typeof accessToken === "function" ? await accessToken() : accessToken;
+
+  const url = `${_getAPIServer(
+    serverEnvironmentPrefix
+  )}/imodels/favorites/${iModelId}`;
+
+  const result = await fetch(url, {
+    method: "PUT",
+    headers: {
+      authorization: token as string,
+      Accept: "application/vnd.bentley.itwin-platform.v2+json",
+    },
+  });
+
+  if (!result || (result.status !== 200 && result.status !== 204)) {
+    throw new Error(`Failed to add iModel ${iModelId} to favorites`);
+  }
+}
+
+export async function removeIModelFromFavorites(options: {
+  iModelId: string;
+  accessToken: AccessTokenProvider;
+  serverEnvironmentPrefix?: "dev" | "qa" | "";
+}): Promise<void> {
+  const { iModelId, accessToken, serverEnvironmentPrefix } = options;
+
+  const token =
+    typeof accessToken === "function" ? await accessToken() : accessToken;
+
+  const url = `${_getAPIServer(
+    serverEnvironmentPrefix
+  )}/imodels/favorites/${iModelId}`;
+
+  const result = await fetch(url, {
+    method: "DELETE",
+    headers: {
+      authorization: token as string,
+      Accept: "application/vnd.bentley.itwin-platform.v2+json",
+    },
+  });
+
+  if (!result || (result.status !== 200 && result.status !== 204)) {
+    throw new Error(`Failed to remove iModel ${iModelId} from favorites`);
+  }
+}
