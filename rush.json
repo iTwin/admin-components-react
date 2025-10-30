@@ -47,7 +47,8 @@
     {
       "packageName": "@itwin/platform-storybook",
       "projectFolder": "packages/apps/storybook",
-      "shouldPublish": false
+      "shouldPublish": false,
+      "skipRushCheck": true
     },
     {
       "packageName": "@itwin/storybook-auth-addon",
