@@ -5,6 +5,7 @@
 import React from "react";
 
 import {
+  AccessTokenProvider,
   ApiOverrides,
   DataStatus,
   ITwinFilterOptions,
@@ -17,7 +18,7 @@ import { useITwinFilter } from "./useITwinFilter";
 export interface ProjectDataHookOptions {
   requestType?: "favorites" | "recents" | "";
   iTwinSubClass?: ITwinSubClass;
-  accessToken?: string | (() => Promise<string>) | undefined;
+  accessToken?: AccessTokenProvider;
   apiOverrides?: ApiOverrides<ITwinFull[]>;
   filterOptions?: ITwinFilterOptions;
   orderbyOptions?: string;

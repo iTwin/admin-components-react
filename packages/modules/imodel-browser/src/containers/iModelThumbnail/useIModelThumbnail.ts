@@ -5,7 +5,7 @@
 import { useEffect, useState } from "react";
 
 import defaultIModelThumbnail from "../../images/default-thumbnail.png";
-import { ApiOverrides } from "../../types";
+import { AccessTokenProvider, ApiOverrides } from "../../types";
 import { _getAPIServer } from "../../utils/_apiOverrides";
 
 /** Convert buffer response to URL format: data:image/png;base64 */
@@ -24,7 +24,7 @@ function convertArrayBufferToUrlBase64PNG(buffer: ArrayBuffer) {
 /** Use cached thumbnail or upload thumbnail from server */
 export const useIModelThumbnail = (
   iModelId: string,
-  accessToken?: string | (() => Promise<string>) | undefined,
+  accessToken?: AccessTokenProvider,
   apiOverrides?: ApiOverrides<string>
 ) => {
   const [thumbnail, setThumbnail] = useState<string>();
