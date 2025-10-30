@@ -46,6 +46,8 @@ export interface ITwinTileProps {
   refetchITwins?: () => void;
   /** Indicates whether the tile should take the full width of its container */
   fullWidth?: boolean;
+  /** Hides the favorite icon when true */
+  hideFavoriteIcon?: boolean;
 }
 
 /**
@@ -62,6 +64,7 @@ export const ITwinTile = ({
   removeFromFavorites,
   refetchITwins,
   fullWidth,
+  hideFavoriteIcon,
 }: ITwinTileProps) => {
   const {
     name,
@@ -133,7 +136,8 @@ export const ITwinTile = ({
           {leftIcon && <Tile.TypeIndicator>{leftIcon}</Tile.TypeIndicator>}
           <Tile.QuickAction>
             {rightIcon}
-            {isFavorite !== undefined &&
+            {!hideFavoriteIcon &&
+              isFavorite !== undefined &&
               addToFavorites &&
               removeFromFavorites && (
                 <TileFavoriteIcon
