@@ -130,7 +130,7 @@ export const useIModelTableConfig = ({
               ) : null;
             },
           },
-        ],
+        ].filter(({ id }) => !cellOverrides.hideColumns?.includes(id)),
       },
     ],
     [
