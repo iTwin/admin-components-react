@@ -107,10 +107,18 @@ export type ViewType = "tile" | "cells";
 // Remove this IModelViewType with next major release i.e 2.0
 export type IModelViewType = ViewType;
 
+/* Supported IModel cell columns */
+export enum IModelCellColumn {
+  Name = "name",
+  Description = "description",
+  CreatedDateTime = "createdDateTime",
+  Options = "options",
+}
 export type IModelCellOverrides = {
   name?: (cellData: CellProps<IModelFull>) => React.ReactNode;
   description?: (cellData: CellProps<IModelFull>) => React.ReactNode;
   createdDateTime?: (cellData: CellProps<IModelFull>) => React.ReactNode;
+  hideColumns?: IModelCellColumn[];
 };
 
 export type ITwinCellOverrides = {

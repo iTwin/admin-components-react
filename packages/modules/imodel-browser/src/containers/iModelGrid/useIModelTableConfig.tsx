@@ -8,7 +8,7 @@ import React from "react";
 import { useMemo } from "react";
 import { CellProps } from "react-table";
 
-import { IModelCellOverrides, IModelFull } from "../../types";
+import { IModelCellColumn, IModelCellOverrides, IModelFull } from "../../types";
 import {
   _buildManagedContextMenuOptions,
   ContextMenuBuilderItem,
@@ -52,7 +52,7 @@ export const useIModelTableConfig = ({
         Header: "Table",
         columns: [
           {
-            id: "name",
+            id: IModelCellColumn.Name,
             Header: strings.tableColumnName,
             accessor: "name",
             maxWidth: 350,
@@ -65,7 +65,7 @@ export const useIModelTableConfig = ({
             ),
           },
           {
-            id: "description",
+            id: IModelCellColumn.Description,
             Header: strings.tableColumnDescription,
             accessor: "description",
             disableSortBy: true,
@@ -80,7 +80,7 @@ export const useIModelTableConfig = ({
             ),
           },
           {
-            id: "createdDateTime",
+            id: IModelCellColumn.CreatedDateTime,
             Header: strings.tableColumnLastModified,
             accessor: "createdDateTime",
             maxWidth: 350,
@@ -94,7 +94,7 @@ export const useIModelTableConfig = ({
             },
           },
           {
-            id: "options",
+            id: IModelCellColumn.Options,
             disableSortBy: true,
             maxWidth: 65,
             Cell: (props: CellProps<IModelFull>) => {
