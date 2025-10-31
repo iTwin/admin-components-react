@@ -72,6 +72,7 @@ OverrideCellData.args = {
       </div>
     ),
     description: (props) => <em>{props.value}</em>,
+    hideColumns: ["createdDateTime"],
   },
 };
 
