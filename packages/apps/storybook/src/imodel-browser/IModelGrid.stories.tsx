@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import {
   DataStatus,
+  IModelCellColumn,
   IModelFull,
   IModelGrid as ExternalComponent,
   IModelGridProps,
@@ -72,7 +73,7 @@ OverrideCellData.args = {
       </div>
     ),
     description: (props) => <em>{props.value}</em>,
-    hideColumns: ["createdDateTime"],
+    hideColumns: [IModelCellColumn.CreatedDateTime],
   },
 };
 
