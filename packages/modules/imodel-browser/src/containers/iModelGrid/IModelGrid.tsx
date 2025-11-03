@@ -20,7 +20,10 @@ import {
 } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
 import { ContextMenuBuilderItem } from "../../utils/_buildMenuOptions";
-import { addIModelToRecents } from "../../utils/iModelApi";
+import {
+  addIModelToRecents,
+  removeIModelFromRecents,
+} from "../../utils/iModelApi";
 import { IModelGhostTile } from "../iModelTiles/IModelGhostTile";
 import { IModelTile, IModelTileProps } from "../iModelTiles/IModelTile";
 import styles from "./IModelGrid.module.scss";
@@ -39,8 +42,7 @@ export interface IModelGridProps {
   onThumbnailClick?(iModel: IModelFull): void;
   /** When true, prevents automatically adding iModels to recents when thumbnail is clicked. Default is false. */
   disableAddToRecents?: boolean;
-  /** Configure IModel sorting behavior.
-   */
+  /** Configure IModel sorting behavior. */
   sortOptions?: IModelSortOptions;
   /** List of actions to build for each imodel context menu. */
   iModelActions?: ContextMenuBuilderItem<IModelFull>[];
@@ -73,6 +75,8 @@ export interface IModelGridProps {
     noAuthentication?: string;
     /** Generic message displayed if an error occurs while fetching. */
     error?: string;
+    /** Displayed in context menu for removing iModel from recents. */
+    removeFromRecents?: string;
   };
   /** Object that configures different overrides for the API.
    * @property `data`: Array of iModels used in the grid.
@@ -180,9 +184,42 @@ const ITwinGridInternal = ({
       error: "An error occurred",
       addToFavorites: "Add to favorites",
       removeFromFavorites: "Remove from favorites",
+      removeFromRecents: "Remove from recents",
     },
     stringsOverrides
   );
+
+  // Add "Remove from recents" action when viewing recents
+  const enhancedIModelActions = React.useMemo(() => {
+    if (requestType === "recents") {
+      const removeFromRecentsAction: ContextMenuBuilderItem<IModelFull> = {
+        key: "remove-from-recents",
+        children: strings.removeFromRecents,
+        onClick: async (iModel, refetchData) => {
+          if (!iModel || !accessToken) {
+            return;
+          }
+          await removeIModelFromRecents({
+            iModelId: iModel.id,
+            accessToken,
+            serverEnvironmentPrefix: apiOverrides?.serverEnvironmentPrefix,
+          });
+          refetchData?.();
+        },
+      };
+      return iModelActions
+        ? [...iModelActions, removeFromRecentsAction]
+        : [removeFromRecentsAction];
+    }
+    return iModelActions;
+  }, [
+    requestType,
+    iModelActions,
+    strings.removeFromRecents,
+    accessToken,
+    apiOverrides?.serverEnvironmentPrefix,
+  ]);
+
   const {
     iModels: fetchediModels,
     status: fetchStatus,
@@ -240,7 +277,7 @@ const ITwinGridInternal = ({
   };
 
   const { columns, onRowClick } = useIModelTableConfig({
-    iModelActions,
+    iModelActions: enhancedIModelActions,
     onThumbnailClick: (iModel) =>
       iModelClickAndAddToRecents(iModel, () => onThumbnailClick?.(iModel)),
     strings,
@@ -269,7 +306,7 @@ const ITwinGridInternal = ({
               <IModelHookedTile
                 key={iModel.id}
                 iModel={iModel}
-                iModelOptions={iModelActions}
+                iModelOptions={enhancedIModelActions}
                 accessToken={accessToken}
                 onThumbnailClick={(iModel) =>
                   iModelClickAndAddToRecents(iModel, () =>

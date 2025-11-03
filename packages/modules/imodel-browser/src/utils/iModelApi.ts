@@ -81,7 +81,7 @@ export async function removeIModelFromRecents(options: {
       serverEnvironmentPrefix
     )}/imodels/recents/${encodeURIComponent(iModelId)}`;
 
-    void fetch(url, {
+    await fetch(url, {
       method: "DELETE",
       headers: {
         authorization: token as string,
