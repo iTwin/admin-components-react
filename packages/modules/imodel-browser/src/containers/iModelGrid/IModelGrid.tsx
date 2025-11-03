@@ -38,7 +38,7 @@ export interface IModelGridProps {
   iTwinId?: string | undefined;
   /** Type of iModels to request - "favorites" for user's favorite iModels, "recents" for recently accessed iModels, or empty string for all iModels */
   requestType?: "favorites" | "recents" | "";
-  /** Thumbnail click handler. */
+  /** Thumbnail click handler. Adds iModel to recents when clicked unless disableAddToRecents is true. */
   onThumbnailClick?(iModel: IModelFull): void;
   /** When true, prevents automatically adding iModels to recents when thumbnail is clicked. Default is false. */
   disableAddToRecents?: boolean;
