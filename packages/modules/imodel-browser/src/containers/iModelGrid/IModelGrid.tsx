@@ -8,7 +8,9 @@ import { InView } from "react-intersection-observer";
 
 import { GridStructure } from "../../components/gridStructure/GridStructure";
 import { NoResults } from "../../components/noResults/NoResults";
+import { IModelFavoritesProvider } from "../../contexts/IModelFavoritesContext";
 import {
+  AccessTokenProvider,
   ApiOverrides,
   DataStatus,
   IModelCellOverrides,
@@ -18,6 +20,10 @@ import {
 } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
 import { ContextMenuBuilderItem } from "../../utils/_buildMenuOptions";
+import {
+  addIModelToRecents,
+  removeIModelFromRecents,
+} from "../../utils/iModelApi";
 import { IModelGhostTile } from "../iModelTiles/IModelGhostTile";
 import { IModelTile, IModelTileProps } from "../iModelTiles/IModelTile";
 import styles from "./IModelGrid.module.scss";
@@ -27,13 +33,16 @@ import { useIModelTableConfig } from "./useIModelTableConfig";
 export interface IModelGridProps {
   /**
    * Access token that requires the `imodels:read` scope. Provide a function that returns the token to prevent the token from expiring. Function must be memoized. */
-  accessToken?: string | (() => Promise<string>) | undefined;
+  accessToken?: AccessTokenProvider;
   /** ITwin Id to list the iModels from (mutually exclusive to assetId) */
   iTwinId?: string | undefined;
-  /** Thumbnail click handler. */
+  /** Type of iModels to request - "favorites" for user's favorite iModels, "recents" for recently accessed iModels, or empty string for all iModels */
+  requestType?: "favorites" | "recents" | "";
+  /** Thumbnail click handler. Adds iModel to recents when clicked unless disableAddToRecents is true. */
   onThumbnailClick?(iModel: IModelFull): void;
-  /** Configure IModel sorting behavior.
-   */
+  /** When true, prevents automatically adding iModels to recents when thumbnail is clicked. Default is false. */
+  disableAddToRecents?: boolean;
+  /** Configure IModel sorting behavior. */
   sortOptions?: IModelSortOptions;
   /** List of actions to build for each imodel context menu. */
   iModelActions?: ContextMenuBuilderItem<IModelFull>[];
@@ -66,6 +75,8 @@ export interface IModelGridProps {
     noAuthentication?: string;
     /** Generic message displayed if an error occurs while fetching. */
     error?: string;
+    /** Displayed in context menu for removing iModel from recents. */
+    removeFromRecents?: string;
   };
   /** Object that configures different overrides for the API.
    * @property `data`: Array of iModels used in the grid.
@@ -100,13 +111,25 @@ export interface IModelGridProps {
 /**
  * Component that will allow displaying a grid of iModels, given a contextId
  */
-export const IModelGrid = ({
+export const IModelGrid = (props: IModelGridProps) => {
+  return (
+    <IModelFavoritesProvider
+      iTwinId={props.iTwinId}
+      accessToken={props.accessToken}
+      serverEnvironmentPrefix={props.apiOverrides?.serverEnvironmentPrefix}
+    >
+      <ITwinGridInternal {...props} />
+    </IModelFavoritesProvider>
+  );
+};
+const ITwinGridInternal = ({
   accessToken,
   apiOverrides,
   iModelActions,
   onThumbnailClick,
   iTwinId,
   sortOptions = { sortType: "name", descending: false },
+  requestType,
   stringsOverrides,
   tileOverrides,
   useIndividualState,
@@ -118,6 +141,7 @@ export const IModelGrid = ({
   maxCount,
   cellOverrides,
   className,
+  disableAddToRecents = false,
 }: IModelGridProps) => {
   const [sort, setSort] = React.useState<IModelSortOptions>(sortOptions);
   const [isSortOnTable, setIsSortOnTable] = React.useState(false);
@@ -141,6 +165,7 @@ export const IModelGrid = ({
 
   const strings = _mergeStrings(
     {
+      tableColumnFavorites: "",
       tableColumnName: "Name",
       tableColumnDescription: "Description",
       tableColumnLastModified: "Last Modified",
@@ -148,19 +173,60 @@ export const IModelGrid = ({
       noIModelSearch: "No results found",
       noIModelSearchSubtext:
         "Try adjusting your search by using fewer or more general terms.",
-      noIModels: "There are no iModels in this iTwin.",
+      noIModels:
+        requestType === "recents"
+          ? "There are no recent iModels."
+          : requestType === "favorites"
+          ? "There are no favorite iModels."
+          : "There are no iModels in this iTwin.",
       noContext: "No context provided",
       noAuthentication: "No access token provided",
       error: "An error occurred",
+      addToFavorites: "Add to favorites",
+      removeFromFavorites: "Remove from favorites",
+      removeFromRecents: "Remove from recents",
     },
     stringsOverrides
   );
+
+  // Add "Remove from recents" action when viewing recents
+  const enhancedIModelActions = React.useMemo(() => {
+    if (requestType === "recents") {
+      const removeFromRecentsAction: ContextMenuBuilderItem<IModelFull> = {
+        key: "remove-from-recents",
+        children: strings.removeFromRecents,
+        onClick: async (iModel, refetchData) => {
+          if (!iModel || !accessToken) {
+            return;
+          }
+          await removeIModelFromRecents({
+            iModelId: iModel.id,
+            accessToken,
+            serverEnvironmentPrefix: apiOverrides?.serverEnvironmentPrefix,
+          });
+          refetchData?.();
+        },
+      };
+      return iModelActions
+        ? [...iModelActions, removeFromRecentsAction]
+        : [removeFromRecentsAction];
+    }
+    return iModelActions;
+  }, [
+    requestType,
+    iModelActions,
+    strings.removeFromRecents,
+    accessToken,
+    apiOverrides?.serverEnvironmentPrefix,
+  ]);
+
   const {
     iModels: fetchediModels,
     status: fetchStatus,
     fetchMore,
     refetchIModels,
   } = useIModelData({
+    requestType,
     accessToken,
     apiOverrides,
     iTwinId,
@@ -188,9 +254,32 @@ export const IModelGrid = ({
     }
   }, [iModels.length, pageSize, fetchMore, fetchStatus]);
 
+  const iModelClickAndAddToRecents = async (
+    iModel: IModelFull,
+    clickFn: () => void
+  ) => {
+    try {
+      if (!accessToken || disableAddToRecents) {
+        clickFn();
+        return;
+      }
+
+      void addIModelToRecents({
+        iModelId: iModel.id,
+        accessToken,
+        serverEnvironmentPrefix: apiOverrides?.serverEnvironmentPrefix,
+      });
+    } catch (e) {
+      // swallow errors to avoid disrupting the UI
+      console.error("Failed to add iModel to recents", e);
+    }
+    onThumbnailClick?.(iModel);
+  };
+
   const { columns, onRowClick } = useIModelTableConfig({
-    iModelActions,
-    onThumbnailClick,
+    iModelActions: enhancedIModelActions,
+    onThumbnailClick: (iModel) =>
+      iModelClickAndAddToRecents(iModel, () => onThumbnailClick?.(iModel)),
     strings,
     refetchIModels,
     cellOverrides,
@@ -217,13 +306,31 @@ export const IModelGrid = ({
               <IModelHookedTile
                 key={iModel.id}
                 iModel={iModel}
-                iModelOptions={iModelActions}
+                iModelOptions={enhancedIModelActions}
                 accessToken={accessToken}
-                onThumbnailClick={onThumbnailClick}
+                onThumbnailClick={(iModel) =>
+                  iModelClickAndAddToRecents(iModel, () =>
+                    onThumbnailClick?.(iModel)
+                  )
+                }
                 apiOverrides={tileApiOverrides}
                 useTileState={useIndividualState}
                 refetchIModels={refetchIModels}
+                {...cellOverrides}
                 {...tileOverrides}
+                tileProps={
+                  tileOverrides
+                    ? {
+                        ...tileOverrides.tileProps,
+                        onClick: tileOverrides.tileProps?.onClick
+                          ? (e) =>
+                              iModelClickAndAddToRecents(iModel, () =>
+                                tileOverrides.tileProps?.onClick?.(e)
+                              )
+                          : undefined,
+                      }
+                    : undefined
+                }
               />
             ))}
             {fetchMore ? (
@@ -313,7 +420,7 @@ export const IModelGrid = ({
         <NoResults
           text={strings.noIModelSearch}
           subtext={strings.noIModelSearchSubtext}
-          isSearchResult={true}
+          isSearchResult
         />
       );
     }

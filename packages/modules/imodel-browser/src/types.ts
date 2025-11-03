@@ -109,6 +109,7 @@ export type IModelViewType = ViewType;
 
 /* Supported IModel cell columns */
 export enum IModelCellColumn {
+  Favorite = "favorite",
   Name = "name",
   Description = "description",
   CreatedDateTime = "createdDateTime",
@@ -126,3 +127,5 @@ export type ITwinCellOverrides = {
   ITwinName?: (cellData: CellProps<ITwinFull>) => React.ReactNode;
   LastModified?: (cellData: CellProps<ITwinFull>) => React.ReactNode;
 };
+
+export type AccessTokenProvider = string | (() => Promise<string>);

@@ -11,6 +11,7 @@ import { InView } from "react-intersection-observer";
 import { GridStructure } from "../../components/gridStructure/GridStructure";
 import { NoResults } from "../../components/noResults/NoResults";
 import {
+  AccessTokenProvider,
   ApiOverrides,
   DataStatus,
   ITwinCellOverrides,
@@ -63,7 +64,7 @@ export interface ITwinGridStrings {
 
 export interface ITwinGridProps {
   /** Access token that requires the `itwins:read` scope. Provide a function that returns the token to prevent the token from expiring. Function must be memoized. */
-  accessToken?: string | (() => Promise<string>) | undefined;
+  accessToken?: AccessTokenProvider;
   /** Type of iTwin to request */
   requestType?: "favorites" | "recents" | "";
   /** Sub class of iTwin, defaults to Project */
@@ -149,7 +150,12 @@ export const ITwinGrid = ({
       tableLoadingData: "Loading...",
       trialBadge: "Trial",
       inactiveBadge: "Inactive",
-      noITwins: "No iTwin found.",
+      noITwins:
+        requestType === "recents"
+          ? "No recent iTwins."
+          : requestType === "favorites"
+          ? "No favorite iTwins."
+          : "No iTwin found.",
       noAuthentication: "No access token provided",
       error: "An error occurred",
       addToFavorites: "Add to favorites",
