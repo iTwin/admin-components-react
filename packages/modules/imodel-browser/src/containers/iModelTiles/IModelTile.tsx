@@ -14,6 +14,7 @@ import {
   ContextMenuBuilderItem,
 } from "../../utils/_buildMenuOptions";
 import { IModelThumbnail } from "../iModelThumbnail/IModelThumbnail";
+import styles from "./IModelTile.module.scss";
 
 type TileProps = React.ComponentPropsWithoutRef<typeof Tile>;
 
@@ -78,6 +79,7 @@ export const IModelTile = ({
     isDisabled,
     onClick: tilePropsOnClick,
     metadata,
+    className = "",
     ...rest
   } = tileProps ?? {};
   const favoritesContext = useIModelFavoritesContext();
@@ -107,8 +109,6 @@ export const IModelTile = ({
         }
       : undefined;
 
-  const [isHovered, setIsHovered] = React.useState(false);
-
   return (
     <Tile.Wrapper
       key={iModel.id}
@@ -117,9 +117,9 @@ export const IModelTile = ({
       isLoading={isLoading}
       status={status}
       isDisabled={isDisabled}
-      style={fullWidth ? { width: "100%" } : undefined}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      className={`${styles.iModelTile} ${
+        fullWidth ? styles.fullWidth : ""
+      } ${className}`}
       {...rest}
     >
       <Tile.Name>
@@ -143,7 +143,9 @@ export const IModelTile = ({
               onRemoveFromFavorites={() => favoritesContext.remove(iModel.id)}
               addLabel={strings.addToFavorites}
               removeLabel={strings.removeFromFavorites}
-              hide={!isHovered}
+              className={`${styles.iModelTileFavoriteIcon} ${
+                !favoritesContext.favorites.has(iModel.id) && styles.hidden
+              }`}
             />
           )}
         </Tile.QuickAction>

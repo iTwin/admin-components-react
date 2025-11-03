@@ -13,6 +13,7 @@ import {
   _buildManagedContextMenuOptions,
   ContextMenuBuilderItem,
 } from "../../utils/_buildMenuOptions";
+import styles from "./ITwinTile.module.scss";
 
 export type TileProps = React.ComponentPropsWithoutRef<typeof Tile>;
 
@@ -83,9 +84,9 @@ export const ITwinTile = ({
     children,
     isDisabled,
     onClick,
+    className = "",
     ...rest
   } = tileProps ?? {};
-  const [isHovered, setIsHovered] = React.useState(false);
   const strings = _mergeStrings(
     {
       trialBadge: "Trial",
@@ -115,9 +116,9 @@ export const ITwinTile = ({
         isLoading={isLoading}
         status={status}
         isDisabled={isDisabled}
-        style={fullWidth ? { width: "100%" } : undefined}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
+        className={`${styles.iTwinTile} ${
+          fullWidth ? styles.fullWidth : ""
+        } ${className}`}
         {...rest}
       >
         <Tile.Name>
@@ -146,7 +147,9 @@ export const ITwinTile = ({
                   onRemoveFromFavorites={() => removeFromFavorites(iTwin.id)}
                   addLabel={strings.addToFavorites}
                   removeLabel={strings.removeFromFavorites}
-                  hide={!isHovered}
+                  className={`${styles.iTwinTileFavoriteIcon} ${
+                    !isFavorite && styles.hidden
+                  }`}
                 />
               )}
           </Tile.QuickAction>

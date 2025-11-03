@@ -19,8 +19,8 @@ export interface TileFavoriteIconProps {
   addLabel: string;
   /** Accessible label for removing from favorites */
   removeLabel: string;
-  /** Whether to hide the icon (will not hide if the item is favorited) */
-  hide?: boolean;
+  /** CSS class to apply to the icon */
+  className?: string;
 }
 
 /**
@@ -33,20 +33,15 @@ export const TileFavoriteIcon = ({
   onRemoveFromFavorites,
   addLabel,
   removeLabel,
-  hide,
+  className = "",
 }: TileFavoriteIconProps) => {
-  // Don't render if hide is true and not favorited
-  if (hide && !isFavorite) {
-    return null;
-  }
-
   return (
     <IconButton
       aria-label={isFavorite ? removeLabel : addLabel}
       onClick={async () => {
         isFavorite ? await onRemoveFromFavorites() : await onAddToFavorites();
       }}
-      className={styles.favoriteIconButton}
+      className={`${styles.favoriteIconButton} ${className}`}
       styleType="borderless"
     >
       {isFavorite ? <SvgStar /> : <SvgStarHollow />}
