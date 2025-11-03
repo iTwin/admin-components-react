@@ -1,0 +1,51 @@
+name: Deploy Storybook to GitHub Pages
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies (rush)
+        run: node common/scripts/install-run-rush.js install
+
+      - name: Build repo (rush build)
+        run: node common/scripts/install-run-rush.js build
+
+      - name: Build Storybook static
+        working-directory: packages/apps/storybook
+        run: |
+          set -e
+          node ../../../common/scripts/install-run-rushx.js build-storybook
+
+      - name: Upload Storybook artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: packages/apps/storybook/storybook-static
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+
+    steps:
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v1
