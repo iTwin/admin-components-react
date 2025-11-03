@@ -32,7 +32,7 @@ jobs:
         working-directory: packages/apps/storybook
         run: |
           set -e
-          node common/scripts/install-run-rush.js build --only @itwin/platform-storybook
+          node ../../../common/scripts/install-run-rushx.js build-storybook
 
       - name: Upload Storybook artifact
         uses: actions/upload-pages-artifact@v3
