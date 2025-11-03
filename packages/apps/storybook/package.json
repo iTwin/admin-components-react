@@ -58,6 +58,7 @@
   "scripts": {
     "start": "start-storybook -p 6006",
     "build": "",
+    "build-storybook": "build-storybook -o storybook-static",
     "test": "build-storybook --loglevel error --quiet",
     "clean": "rimraf storybook-static"
   },
