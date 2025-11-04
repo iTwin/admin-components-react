@@ -2,6 +2,18 @@
   "name": "@itwin/imodel-browser-react",
   "entries": [
     {
+      "version": "3.5.0",
+      "tag": "@itwin/imodel-browser-react_v3.5.0",
+      "date": "Tue, 04 Nov 2025 17:20:33 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Feat: Add iModel recents and favorites functionality"
+          }
+        ]
+      }
+    },
+    {
       "version": "3.4.3",
       "tag": "@itwin/imodel-browser-react_v3.4.3",
       "date": "Fri, 10 Oct 2025 18:56:16 GMT",

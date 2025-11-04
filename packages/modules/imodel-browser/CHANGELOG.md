@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Fri, 10 Oct 2025 18:56:16 GMT and should not be manually modified.
+This log was last generated on Tue, 04 Nov 2025 17:20:33 GMT and should not be manually modified.
+
+## 3.5.0
+Tue, 04 Nov 2025 17:20:33 GMT
+
+### Minor changes
+
+- Feat: Add iModel recents and favorites functionality
 
 ## 3.4.3
 Fri, 10 Oct 2025 18:56:16 GMT
