@@ -122,10 +122,19 @@ export type IModelCellOverrides = {
   hideColumns?: IModelCellColumn[];
 };
 
+/* Supported ITwin cell columns */
+export enum ITwinCellColumn {
+  Favorite = "Favorite",
+  Number = "ITwinNumber",
+  Name = "ITwinName",
+  LastModified = "LastModified",
+  Options = "options",
+}
 export type ITwinCellOverrides = {
   ITwinNumber?: (cellData: CellProps<ITwinFull>) => React.ReactNode;
   ITwinName?: (cellData: CellProps<ITwinFull>) => React.ReactNode;
   LastModified?: (cellData: CellProps<ITwinFull>) => React.ReactNode;
+  hideColumns?: ITwinCellColumn[];
 };
 
 export type AccessTokenProvider = string | (() => Promise<string>);

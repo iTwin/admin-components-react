@@ -8,7 +8,7 @@ import React from "react";
 import { useMemo } from "react";
 import { CellProps } from "react-table";
 
-import { ITwinCellOverrides, ITwinFull } from "../../types";
+import { ITwinCellColumn, ITwinCellOverrides, ITwinFull } from "../../types";
 import {
   _buildManagedContextMenuOptions,
   ContextMenuBuilderItem,
@@ -50,7 +50,7 @@ export const useITwinTableConfig = ({
         Header: "Table",
         columns: [
           {
-            id: "Favorite",
+            id: ITwinCellColumn.Favorite,
             Header: strings.tableColumnFavorites,
             accessor: "id",
             width: 70,
@@ -77,7 +77,7 @@ export const useITwinTableConfig = ({
             },
           },
           {
-            id: "ITwinNumber",
+            id: ITwinCellColumn.Number,
             Header: strings.tableColumnName,
             accessor: "number",
             maxWidth: 350,
@@ -95,7 +95,7 @@ export const useITwinTableConfig = ({
             ),
           },
           {
-            id: "ITwinName",
+            id: ITwinCellColumn.Name,
             Header: strings.tableColumnDescription,
             accessor: "displayName",
             maxWidth: 350,
@@ -113,7 +113,7 @@ export const useITwinTableConfig = ({
             ),
           },
           {
-            id: "LastModified",
+            id: ITwinCellColumn.LastModified,
             Header: strings.tableColumnLastModified,
             accessor: "createdDateTime",
             maxWidth: 350,
@@ -127,7 +127,7 @@ export const useITwinTableConfig = ({
             },
           },
           {
-            id: "options",
+            id: ITwinCellColumn.Options,
             disableSortBy: true,
             maxWidth: 65,
             Cell: (props: CellProps<ITwinFull>) => {
@@ -158,7 +158,7 @@ export const useITwinTableConfig = ({
               ) : null;
             },
           },
-        ],
+        ].filter((column) => !cellOverrides.hideColumns?.includes(column.id)),
       },
     ],
     [
