@@ -9,7 +9,7 @@ import {
   IModelGridProps,
   IModelTileProps,
 } from "@itwin/imodel-browser-react";
-import { SvgStar } from "@itwin/itwinui-icons-react";
+import { SvgApple } from "@itwin/itwinui-icons-react";
 import {
   Button,
   Code,
@@ -50,6 +50,7 @@ const Template: Story<IModelGridProps> = withITwinIdOverride(
 export const Primary = Template.bind({});
 Primary.args = {
   apiOverrides: { serverEnvironmentPrefix: "qa" },
+  sortOptions: { sortType: "name", descending: false },
 };
 
 export const PrimaryCell = Template.bind({});
@@ -63,14 +64,17 @@ OverrideCellData.args = {
   apiOverrides: { serverEnvironmentPrefix: "qa" },
   viewMode: "cells",
   cellOverrides: {
-    name: (props) => (
-      <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-        <IconButton size="small" styleType="borderless">
-          <SvgStar />
-        </IconButton>
-        {props.value}
-      </div>
-    ),
+    name: (props) =>
+      props.value.includes("a") ? (
+        <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+          <IconButton size="small" styleType="borderless">
+            <SvgApple />
+          </IconButton>
+          {props.value}
+        </div>
+      ) : (
+        props.value
+      ),
     description: (props) => <em>{props.value}</em>,
   },
 };
@@ -311,6 +315,7 @@ export const WithPostProcessCallback: Story<IModelGridProps> =
 WithPostProcessCallback.args = {
   apiOverrides: { serverEnvironmentPrefix: "qa" },
 };
+
 export const DefaultNoStateComponentOverride = Template.bind({});
 DefaultNoStateComponentOverride.args = {
   apiOverrides: { serverEnvironmentPrefix: "qa" },
@@ -319,4 +324,28 @@ DefaultNoStateComponentOverride.args = {
       <Text variant="title">There are no iModels to show.</Text>
     </div>
   ),
+};
+
+export const DisableAddToRecents = Template.bind({});
+DisableAddToRecents.args = {
+  apiOverrides: { serverEnvironmentPrefix: "qa" },
+  disableAddToRecents: true,
+};
+DisableAddToRecents.argTypes = {
+  accessToken: { table: { disable: true } },
+  onThumbnailClick: { table: { disable: true } },
+  sortOptions: { table: { disable: true } },
+  iModelActions: { table: { disable: true } },
+  useIndividualState: { table: { disable: true } },
+  tileOverrides: { table: { disable: true } },
+  stringsOverrides: { table: { disable: true } },
+  apiOverrides: { table: { disable: true } },
+  postProcessCallback: { table: { disable: true } },
+  emptyStateComponent: { table: { disable: true } },
+  searchText: { table: { disable: true } },
+  viewMode: { table: { disable: true } },
+  pageSize: { table: { disable: true } },
+  maxCount: { table: { disable: true } },
+  cellOverrides: { table: { disable: true } },
+  className: { table: { disable: true } },
 };

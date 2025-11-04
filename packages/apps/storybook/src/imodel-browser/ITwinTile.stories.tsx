@@ -20,5 +20,6 @@ export const Primary = Template.bind({});
 Primary.args = {
   iTwin: {
     id: "1",
+    displayName: "iTwin Name",
   },
 };
