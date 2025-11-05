@@ -9,7 +9,7 @@ import {
   IModelGridProps,
   IModelTileProps,
 } from "@itwin/imodel-browser-react";
-import { SvgApple } from "@itwin/itwinui-icons-react";
+import { SvgApple, SvgClose, SvgDelete } from "@itwin/itwinui-icons-react";
 import {
   Button,
   Code,
@@ -348,4 +348,24 @@ DisableAddToRecents.argTypes = {
   maxCount: { table: { disable: true } },
   cellOverrides: { table: { disable: true } },
   className: { table: { disable: true } },
+};
+
+export const Recents = Template.bind({});
+Recents.args = {
+  apiOverrides: { serverEnvironmentPrefix: "qa" },
+  requestType: "recents",
+};
+
+export const RecentsWithCustomIcon = Template.bind({});
+RecentsWithCustomIcon.args = {
+  apiOverrides: { serverEnvironmentPrefix: "qa" },
+  requestType: "recents",
+  removeFromRecentsIcon: <SvgDelete />,
+};
+
+export const RecentsWithCloseIcon = Template.bind({});
+RecentsWithCloseIcon.args = {
+  apiOverrides: { serverEnvironmentPrefix: "qa" },
+  requestType: "recents",
+  removeFromRecentsIcon: <SvgClose />,
 };
