@@ -124,10 +124,10 @@ export type IModelCellOverrides = {
 
 /* Supported ITwin cell columns */
 export enum ITwinCellColumn {
-  Favorite = "Favorite",
-  Number = "ITwinNumber",
-  Name = "ITwinName",
-  LastModified = "LastModified",
+  Favorite = "favorite",
+  Number = "iTwinNumber",
+  Name = "iTwinName",
+  LastModified = "lastModified",
   Options = "options",
 }
 export type ITwinCellOverrides = {
