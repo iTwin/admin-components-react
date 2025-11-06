@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Tue, 04 Nov 2025 17:20:33 GMT and should not be manually modified.
+This log was last generated on Thu, 06 Nov 2025 14:59:15 GMT and should not be manually modified.
+
+## 3.5.1
+Thu, 06 Nov 2025 14:59:15 GMT
+
+### Patches
+
+- Fix: favorite icon shift on hover
 
 ## 3.5.0
 Tue, 04 Nov 2025 17:20:33 GMT
