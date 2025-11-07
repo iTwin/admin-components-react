@@ -46,6 +46,8 @@ export interface IModelGridProps {
   sortOptions?: IModelSortOptions;
   /** List of actions to build for each imodel context menu. */
   iModelActions?: ContextMenuBuilderItem<IModelFull>[];
+  /** Custom icon for the "Remove from recents" context menu action. Only applies when requestType is "recents". */
+  removeFromRecentsIcon?: JSX.Element;
   /** Function (can be a react hook) that returns state for an iModel, returned values will be applied as props to the IModelTile, overrides IModelGrid provided values */
   useIndividualState?: (
     iModel: IModelFull,
@@ -126,6 +128,7 @@ const ITwinGridInternal = ({
   accessToken,
   apiOverrides,
   iModelActions,
+  removeFromRecentsIcon,
   onThumbnailClick,
   iTwinId,
   sortOptions = { sortType: "name", descending: false },
@@ -195,6 +198,7 @@ const ITwinGridInternal = ({
       const removeFromRecentsAction: ContextMenuBuilderItem<IModelFull> = {
         key: "remove-from-recents",
         children: strings.removeFromRecents,
+        ...(removeFromRecentsIcon && { icon: removeFromRecentsIcon }),
         onClick: async (iModel, refetchData) => {
           if (!iModel || !accessToken) {
             return;
@@ -208,7 +212,7 @@ const ITwinGridInternal = ({
         },
       };
       return iModelActions
-        ? [...iModelActions, removeFromRecentsAction]
+        ? [removeFromRecentsAction, ...iModelActions]
         : [removeFromRecentsAction];
     }
     return iModelActions;
@@ -216,6 +220,7 @@ const ITwinGridInternal = ({
     requestType,
     iModelActions,
     strings.removeFromRecents,
+    removeFromRecentsIcon,
     accessToken,
     apiOverrides?.serverEnvironmentPrefix,
   ]);
