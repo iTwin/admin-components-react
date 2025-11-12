@@ -107,16 +107,34 @@ export type ViewType = "tile" | "cells";
 // Remove this IModelViewType with next major release i.e 2.0
 export type IModelViewType = ViewType;
 
+/* Supported IModel cell columns */
+export enum IModelCellColumn {
+  Favorite = "Favorite",
+  Name = "name",
+  Description = "description",
+  CreatedDateTime = "createdDateTime",
+  Options = "options",
+}
 export type IModelCellOverrides = {
   name?: (cellData: CellProps<IModelFull>) => React.ReactNode;
   description?: (cellData: CellProps<IModelFull>) => React.ReactNode;
   createdDateTime?: (cellData: CellProps<IModelFull>) => React.ReactNode;
+  hideColumns?: IModelCellColumn[];
 };
 
+/* Supported ITwin cell columns */
+export enum ITwinCellColumn {
+  Favorite = "Favorite",
+  Number = "ITwinNumber",
+  Name = "ITwinName",
+  LastModified = "LastModified",
+  Options = "options",
+}
 export type ITwinCellOverrides = {
   ITwinNumber?: (cellData: CellProps<ITwinFull>) => React.ReactNode;
   ITwinName?: (cellData: CellProps<ITwinFull>) => React.ReactNode;
   LastModified?: (cellData: CellProps<ITwinFull>) => React.ReactNode;
+  hideColumns?: ITwinCellColumn[];
 };
 
 export type AccessTokenProvider = string | (() => Promise<string>);
