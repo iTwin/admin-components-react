@@ -2,7 +2,7 @@
   "changes": [
     {
       "packageName": "@itwin/imodel-browser-react",
-      "comment": "Added hide columns option for iTwinGrid and iModelGrid while in cells view and renamed column ids to use camel case.",
+      "comment": "Added hide columns option for iTwinGrid and iModelGrid while in cells view.",
       "type": "minor"
     }
   ],

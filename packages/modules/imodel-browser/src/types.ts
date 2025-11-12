@@ -109,7 +109,7 @@ export type IModelViewType = ViewType;
 
 /* Supported IModel cell columns */
 export enum IModelCellColumn {
-  Favorite = "favorite",
+  Favorite = "Favorite",
   Name = "name",
   Description = "description",
   CreatedDateTime = "createdDateTime",
@@ -124,10 +124,10 @@ export type IModelCellOverrides = {
 
 /* Supported ITwin cell columns */
 export enum ITwinCellColumn {
-  Favorite = "favorite",
-  Number = "iTwinNumber",
-  Name = "iTwinName",
-  LastModified = "lastModified",
+  Favorite = "Favorite",
+  Number = "ITwinNumber",
+  Name = "ITwinName",
+  LastModified = "LastModified",
   Options = "options",
 }
 export type ITwinCellOverrides = {
