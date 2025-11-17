@@ -65,6 +65,10 @@ export interface ApiOverrides<T = never> {
   serverEnvironmentPrefix?: "dev" | "qa" | "";
   /** Data as props */
   data?: T;
+  /** Loading state when using consumer-provided data. */
+  isLoading?: boolean;
+  /** Indicates if more data is available for infinite scroll when using consumer-provided data. */
+  hasMoreData?: boolean;
 }
 
 type FilterOptions = string;

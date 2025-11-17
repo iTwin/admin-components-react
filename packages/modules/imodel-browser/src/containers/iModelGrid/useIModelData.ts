@@ -27,6 +27,9 @@ export interface IModelDataHookOptions {
   pageSize?: number;
   /** @deprecated in 2.1 It is no longer used as it has no effect on the data fetching. */
   viewMode?: ViewType;
+  dataMode?: "internal" | "external";
+  onLoadMore?: () => void | Promise<void>;
+  onRefetch?: () => void | Promise<void>;
 }
 export const DEFAULT_PAGE_SIZE = 100;
 
@@ -39,6 +42,9 @@ export const useIModelData = ({
   searchText,
   pageSize = DEFAULT_PAGE_SIZE,
   maxCount,
+  dataMode,
+  onLoadMore,
+  onRefetch,
 }: IModelDataHookOptions) => {
   const [needsUpdate, setNeedsUpdate] = React.useState(true);
   const [iModels, setIModels] = React.useState<IModelFull[]>([]);
@@ -91,14 +97,22 @@ export const useIModelData = ({
   useEffect(() => () => abortController?.abort(), [abortController]);
 
   const reset = React.useCallback(() => {
+    if (dataMode === "external") {
+      return;
+    }
+
     setStatus(DataStatus.Fetching);
     setIModels([]);
     setPage(0);
     setMorePagesAvailable(true);
     setNeedsUpdate(true);
-  }, []);
+  }, [dataMode]);
 
   const fetchMore = React.useCallback(() => {
+    if (dataMode === "external") {
+      return;
+    }
+
     if (
       needsUpdate ||
       status === DataStatus.Fetching ||
@@ -110,14 +124,19 @@ export const useIModelData = ({
     }
     setPage((page) => page + 1);
     setNeedsUpdate(true);
-  }, [needsUpdate, status, morePagesAvailable]);
+  }, [dataMode, needsUpdate, status, morePagesAvailable]);
 
   React.useEffect(() => {
+    if (dataMode === "external") {
+      return;
+    }
+
     // start from scratch when any external state changes
     if (requestType !== "recents" && requestType !== "favorites") {
       reset();
     }
   }, [
+    dataMode,
     iTwinId,
     accessToken,
     sortOptions?.descending,
@@ -132,11 +151,16 @@ export const useIModelData = ({
   ]);
 
   React.useEffect(() => {
+    if (dataMode === "external") {
+      return;
+    }
+
     // start from scratch when any external state changes
     if (requestType === "recents" || requestType === "favorites") {
       reset();
     }
   }, [
+    dataMode,
     iTwinId,
     accessToken,
     sortOptions?.descending,
@@ -151,21 +175,13 @@ export const useIModelData = ({
 
   // Main function
   React.useEffect(() => {
-    if (!needsUpdate) {
+    if (dataMode === "external" || !needsUpdate) {
       return;
     }
 
     setNeedsUpdate(false);
     abortController?.abort();
     setAbortController(undefined);
-
-    // if data is provided, use it and skip fetching
-    if (apiOverrides?.data) {
-      setIModels(apiOverrides.data);
-      setStatus(DataStatus.Complete);
-      setMorePagesAvailable(false);
-      return;
-    }
 
     if (!accessToken || !iTwinId) {
       setStatus(
@@ -218,6 +234,7 @@ export const useIModelData = ({
         console.error(e);
       });
   }, [
+    dataMode,
     abortController,
     accessToken,
     apiOverrides?.data,
@@ -235,6 +252,24 @@ export const useIModelData = ({
     sortDescending,
     sortType,
   ]);
+
+  if (dataMode === "external") {
+    return {
+      iModels: apiOverrides?.data ?? [],
+      status: apiOverrides?.isLoading
+        ? DataStatus.Fetching
+        : DataStatus.Complete,
+      fetchMore:
+        apiOverrides?.hasMoreData && apiOverrides.isLoading === false
+          ? onLoadMore
+          : undefined,
+      refetchIModels:
+        onRefetch ??
+        (() => {
+          // No-op in external mode - consumer handles refetch
+        }),
+    };
+  }
 
   return {
     iModels: filteredIModels,

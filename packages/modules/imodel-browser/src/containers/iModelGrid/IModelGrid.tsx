@@ -82,6 +82,8 @@ export interface IModelGridProps {
   };
   /** Object that configures different overrides for the API.
    * @property `data`: Array of iModels used in the grid.
+   * @property `isLoading`: Loading state when using consumer-provided data.
+   * @property `hasMoreData`: Whether more data is available for infinite scroll (external mode only).
    * @property `serverEnvironmentPrefix`: Either qa or dev.
    */
   apiOverrides?: ApiOverrides<IModelFull[]>;
@@ -108,6 +110,22 @@ export interface IModelGridProps {
   cellOverrides?: IModelCellOverrides;
   /** Additional class name for the grid structure */
   className?: string;
+  /**
+   * Specifies how data should be managed.
+   * - 'internal': Package handles data fetching internally (default)
+   * - 'external': Consumer manages data via apiOverrides.data and isLoading
+   * -  Allows for infinite scrolling and data refresh via onLoadMore and onRefetch callbacks.
+   */
+  dataMode?: "internal" | "external";
+  /**
+   * Callback function to load more data when using apiOverrides.data.
+   * This enables infinite scrolling when you provide data directly from your consumer.
+   */
+  onLoadMore?: () => void | Promise<void>;
+  /**
+   * Callback function to refresh data when using external data mode.
+   */
+  onRefetch?: () => void | Promise<void>;
 }
 
 /**
@@ -144,6 +162,9 @@ const ITwinGridInternal = ({
   maxCount,
   cellOverrides,
   className,
+  onLoadMore,
+  onRefetch,
+  dataMode = "internal",
   disableAddToRecents = false,
 }: IModelGridProps) => {
   const [sort, setSort] = React.useState<IModelSortOptions>(sortOptions);
@@ -240,6 +261,9 @@ const ITwinGridInternal = ({
     maxCount,
     pageSize,
     viewMode,
+    dataMode,
+    onLoadMore,
+    onRefetch,
   });
 
   const iModels = React.useMemo(
