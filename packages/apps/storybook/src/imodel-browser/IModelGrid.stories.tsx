@@ -81,6 +81,7 @@ OverrideCellData.args = {
 
 export const OverrideApiData = Template.bind({});
 OverrideApiData.args = {
+  dataMode: "external",
   apiOverrides: {
     data: [
       {
