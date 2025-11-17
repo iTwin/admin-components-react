@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Thu, 06 Nov 2025 14:59:15 GMT and should not be manually modified.
+This log was last generated on Wed, 12 Nov 2025 15:33:21 GMT and should not be manually modified.
+
+## 3.6.0
+Wed, 12 Nov 2025 15:33:21 GMT
+
+### Minor changes
+
+- Added hide columns option for iTwinGrid and iModelGrid while in cells view.
 
 ## 3.5.1
 Thu, 06 Nov 2025 14:59:15 GMT
