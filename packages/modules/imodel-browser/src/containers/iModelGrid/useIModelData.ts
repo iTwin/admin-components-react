@@ -260,7 +260,7 @@ export const useIModelData = ({
         ? DataStatus.Fetching
         : DataStatus.Complete,
       fetchMore:
-        apiOverrides?.hasMoreData && apiOverrides.isLoading === false
+        apiOverrides?.hasMoreData && !apiOverrides.isLoading
           ? onLoadMore
           : undefined,
       refetchIModels:

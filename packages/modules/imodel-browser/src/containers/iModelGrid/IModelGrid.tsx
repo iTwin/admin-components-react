@@ -114,7 +114,7 @@ export interface IModelGridProps {
    * Specifies how data should be managed.
    * - 'internal': Package handles data fetching internally (default)
    * - 'external': Consumer manages data via apiOverrides.data and isLoading
-   * -  Allows for infinite scrolling and data refresh via onLoadMore and onRefetch callbacks.
+   * Allows for infinite scrolling and data refresh via onLoadMore and onRefetch callbacks.
    */
   dataMode?: "internal" | "external";
   /**
@@ -437,7 +437,12 @@ const ITwinGridInternal = ({
     ) {
       return <>{emptyStateComponent}</>;
     }
-    if (!searchText && iModels.length === 0 && noResultsText) {
+    if (
+      !searchText &&
+      iModels.length === 0 &&
+      noResultsText &&
+      dataMode === "internal"
+    ) {
       return <NoResults text={noResultsText} />;
     }
     if (
