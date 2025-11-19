@@ -7,6 +7,7 @@ import React, { useEffect } from "react";
 import {
   AccessTokenProvider,
   ApiOverrides,
+  DataMode,
   DataStatus,
   IModelFull,
   IModelSortOptions,
@@ -27,7 +28,8 @@ export interface IModelDataHookOptions {
   pageSize?: number;
   /** @deprecated in 2.1 It is no longer used as it has no effect on the data fetching. */
   viewMode?: ViewType;
-  dataMode?: "internal" | "external";
+  /** Controls whether data is fetched and managed internally or externally.*/
+  dataMode?: DataMode;
   onLoadMore?: () => void | Promise<void>;
   onRefetch?: () => void | Promise<void>;
 }

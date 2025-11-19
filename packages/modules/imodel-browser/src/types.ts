@@ -84,6 +84,13 @@ export enum DataStatus {
   ContextRequired = "error_contextRequired",
 }
 
+/**
+ * Specifies the data management mode for the hook.
+ * - "internal": Hook manages all data fetching, pagination, sorting, and filtering. Requires accessToken and iTwinId.
+ * - "external": Hook uses data provided via apiOverrides.data and delegates all data management to the consumer.
+ */
+export type DataMode = "internal" | "external";
+
 type SortOptions<T, K extends keyof T> = { sortType: K; descending: boolean };
 
 /** Supported IModel sorting types */

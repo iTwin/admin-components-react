@@ -12,6 +12,7 @@ import { IModelFavoritesProvider } from "../../contexts/IModelFavoritesContext";
 import {
   AccessTokenProvider,
   ApiOverrides,
+  DataMode,
   DataStatus,
   IModelCellOverrides,
   IModelFull,
@@ -116,14 +117,15 @@ export interface IModelGridProps {
    * - 'external': Consumer manages data via apiOverrides.data and isLoading
    * Allows for infinite scrolling and data refresh via onLoadMore and onRefetch callbacks.
    */
-  dataMode?: "internal" | "external";
+  dataMode?: DataMode;
   /**
-   * Callback function to load more data when using apiOverrides.data.
-   * This enables infinite scrolling when you provide data directly from your consumer.
+   * Callback function to load more data when using external data mode.
+   * Only used when dataMode is set to 'external'. This enables infinite scrolling when you provide data directly from your consumer.
    */
   onLoadMore?: () => void | Promise<void>;
   /**
    * Callback function to refresh data when using external data mode.
+   * Only used when dataMode is set to 'external'.
    */
   onRefetch?: () => void | Promise<void>;
 }
