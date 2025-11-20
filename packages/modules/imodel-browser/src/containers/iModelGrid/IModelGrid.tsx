@@ -42,8 +42,6 @@ export interface IModelGridProps {
   onThumbnailClick?(iModel: IModelFull): void;
   /** When true, prevents automatically adding iModels to recents when thumbnail is clicked. Default is false. */
   disableAddToRecents?: boolean;
-  /** When true, prevents automatically fetching favorite iModels when the component is mounted. Default is false. */
-  disableFavorites?: boolean;
   /** Configure IModel sorting behavior. */
   sortOptions?: IModelSortOptions;
   /** List of actions to build for each imodel context menu. */
@@ -121,7 +119,7 @@ export const IModelGrid = (props: IModelGridProps) => {
       iTwinId={props.iTwinId}
       accessToken={props.accessToken}
       serverEnvironmentPrefix={props.apiOverrides?.serverEnvironmentPrefix}
-      disabled={props.disableFavorites}
+      disabled={props.tileOverrides?.hideFavoriteIcon}
     >
       <ITwinGridInternal {...props} />
     </IModelFavoritesProvider>
