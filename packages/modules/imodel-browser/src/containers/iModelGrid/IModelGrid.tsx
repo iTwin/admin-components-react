@@ -439,12 +439,7 @@ const ITwinGridInternal = ({
     ) {
       return <>{emptyStateComponent}</>;
     }
-    if (
-      !searchText &&
-      iModels.length === 0 &&
-      noResultsText &&
-      dataMode === "internal"
-    ) {
+    if (!searchText && iModels.length === 0 && noResultsText) {
       return <NoResults text={noResultsText} />;
     }
     if (
