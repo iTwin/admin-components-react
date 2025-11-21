@@ -2,7 +2,7 @@
   "changes": [
     {
       "packageName": "@itwin/imodel-browser-react",
-      "comment": "added option to disable fetching favorite iModels",
+      "comment": "use `hideFavoriteIcon` option to disable fetching favorite iModels",
       "type": "minor"
     }
   ],
