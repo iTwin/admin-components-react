@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Wed, 12 Nov 2025 15:33:21 GMT and should not be manually modified.
+This log was last generated on Fri, 21 Nov 2025 15:41:38 GMT and should not be manually modified.
+
+## 3.7.0
+Fri, 21 Nov 2025 15:41:38 GMT
+
+### Minor changes
+
+- use `hideFavoriteIcon` option to disable fetching favorite iModels
 
 ## 3.6.0
 Wed, 12 Nov 2025 15:33:21 GMT
