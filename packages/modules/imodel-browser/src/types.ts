@@ -65,6 +65,10 @@ export interface ApiOverrides<T = never> {
   serverEnvironmentPrefix?: "dev" | "qa" | "";
   /** Data as props */
   data?: T;
+  /** Loading state when using consumer-provided data. */
+  isLoading?: boolean;
+  /** Indicates if more data is available for infinite scroll when using consumer-provided data. */
+  hasMoreData?: boolean;
 }
 
 type FilterOptions = string;
@@ -79,6 +83,13 @@ export enum DataStatus {
   TokenRequired = "error_tokenRequired",
   ContextRequired = "error_contextRequired",
 }
+
+/**
+ * Specifies the data management mode for the hook.
+ * - "internal": Hook manages all data fetching, pagination, sorting, and filtering. Requires accessToken and iTwinId.
+ * - "external": Hook uses data provided via apiOverrides.data and delegates all data management to the consumer.
+ */
+export type DataMode = "internal" | "external";
 
 type SortOptions<T, K extends keyof T> = { sortType: K; descending: boolean };
 
