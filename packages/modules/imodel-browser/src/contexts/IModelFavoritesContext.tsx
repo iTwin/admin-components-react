@@ -22,6 +22,7 @@ export interface IModelFavoritesProviderProps {
   accessToken?: AccessTokenProvider;
   serverEnvironmentPrefix?: string;
   children: React.ReactNode;
+  disabled?: boolean;
 }
 
 export const IModelFavoritesProvider = ({
@@ -29,6 +30,7 @@ export const IModelFavoritesProvider = ({
   accessToken,
   serverEnvironmentPrefix,
   children,
+  disabled,
 }: IModelFavoritesProviderProps) => {
   const { iModelFavorites, addIModelToFavorites, removeIModelFromFavorites } =
     useIModelFavorites(
@@ -36,7 +38,8 @@ export const IModelFavoritesProvider = ({
       accessToken,
       serverEnvironmentPrefix === "dev" || serverEnvironmentPrefix === "qa"
         ? serverEnvironmentPrefix
-        : undefined
+        : undefined,
+      disabled
     );
 
   const value = React.useMemo<IModelFavoritesContextValue>(

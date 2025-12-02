@@ -139,6 +139,7 @@ export const IModelGrid = (props: IModelGridProps) => {
       iTwinId={props.iTwinId}
       accessToken={props.accessToken}
       serverEnvironmentPrefix={props.apiOverrides?.serverEnvironmentPrefix}
+      disabled={props.tileOverrides?.hideFavoriteIcon}
     >
       <ITwinGridInternal {...props} />
     </IModelFavoritesProvider>

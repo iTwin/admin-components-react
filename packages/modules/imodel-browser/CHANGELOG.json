@@ -2,6 +2,18 @@
   "name": "@itwin/imodel-browser-react",
   "entries": [
     {
+      "version": "3.7.0",
+      "tag": "@itwin/imodel-browser-react_v3.7.0",
+      "date": "Fri, 21 Nov 2025 15:41:38 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "use `hideFavoriteIcon` option to disable fetching favorite iModels"
+          }
+        ]
+      }
+    },
+    {
       "version": "3.6.0",
       "tag": "@itwin/imodel-browser-react_v3.6.0",
       "date": "Wed, 12 Nov 2025 15:33:21 GMT",
