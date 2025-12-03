@@ -339,7 +339,10 @@ const VersionsTab = (props: VersionsTabProps) => {
         width: 100,
         Cell: (props: CellProps<VersionTableData>) => {
           return isNamedVersion(props.row.original) ? (
-            <Anchor onClick={() => onViewClick(props.row.original.version)}>
+            <Anchor
+              as="button"
+              onClick={() => onViewClick(props.row.original.version)}
+            >
               {stringsOverrides.view}
             </Anchor>
           ) : (
