@@ -8,12 +8,31 @@ export class UrlBuilder {
     top?: number;
     orderBy?: string;
     lastIndex?: number;
+    afterIndex?: number;
+    $search?: string;
+    name?: string;
   }) => {
     const query = Object.entries(params)
-      .filter(([key, value]) => !!value)
-      .map(([key, value]) =>
-        key === "lastIndex" ? `${key}=${value}` : `$${key}=${value}`
+      .filter(
+        ([key, value]) => value !== undefined && value !== null && value !== ""
       )
+      .map(([key, value]) => {
+        if (key === "lastIndex" || key === "afterIndex") {
+          return `${key}=${value}`;
+        } else if (key === "orderBy") {
+          // Replace + with space before encoding
+          const orderByValue = (value as string).replace(/\+/g, " ");
+          return `$orderBy=${encodeURIComponent(orderByValue)}`;
+        } else if (key === "skip") {
+          return `$skip=${value}`;
+        } else if (key === "top") {
+          return `$top=${value}`;
+        } else if (key === "name") {
+          return `name=${encodeURIComponent(value as string)}`;
+        } else {
+          return `${key}=${value}`;
+        }
+      })
       .join("&");
     return query ? `?${query}` : "";
   };

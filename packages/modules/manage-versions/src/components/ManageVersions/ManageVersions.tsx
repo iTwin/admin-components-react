@@ -54,6 +54,7 @@ export const defaultStrings: ManageVersionsStringOverrides = {
     "There are no Named Versions created. To create first go to Changes.",
   messageFailedGetChanges: "Could not get changes. Please try again later.",
   messageNoChanges: "There are no changes synchronized.",
+  messageNoFilterResults: "No results found. Clear or try another filter.",
   messageVersionCreated: 'Named Version "{{name}}" was successfully created.',
   messageVersionNameExists: "Named Version with the same name already exists.",
   messageInsufficientPermissionsToCreateVersion:
@@ -252,11 +253,20 @@ const ManageVersionsComponent = (props: ManageVersionsProps) => {
   const [versionStatus, setVersionStatus] = React.useState(
     RequestStatus.NotStarted
   );
+  const [versionNameFilter, setVersionNameFilter] = React.useState("");
+  const [versionDescriptionFilter, setVersionDescriptionFilter] =
+    React.useState("");
 
   const [changesets, setChangesets] = React.useState<Changeset[]>();
   const [changesetStatus, setChangesetStatus] = React.useState(
     RequestStatus.NotStarted
   );
+  const [changesetAfterIndex, setChangesetAfterIndex] = React.useState<
+    number | undefined
+  >();
+  const [changesetLastIndex, setChangesetLastIndex] = React.useState<
+    number | undefined
+  >();
 
   const changeTab = React.useCallback(
     (tab: ManageVersionsTabs) => {
@@ -267,13 +277,28 @@ const ManageVersionsComponent = (props: ManageVersionsProps) => {
   );
 
   const getVersions = React.useCallback(
-    (skip?: number, reloadSubrows?: boolean) => {
+    (
+      skip?: number,
+      reloadSubrows?: boolean,
+      nameFilter?: string,
+      descriptionFilter?: string
+    ) => {
       setVersionStatus(RequestStatus.InProgress);
+      const requestOptions: any = {
+        top: NAMED_VERSION_TOP,
+        skip,
+      };
+
+      if (nameFilter) {
+        requestOptions.name = nameFilter;
+      }
+
+      if (descriptionFilter) {
+        requestOptions.$search = descriptionFilter;
+      }
+
       versionClient
-        .get(imodelId, {
-          top: NAMED_VERSION_TOP,
-          skip,
-        })
+        .get(imodelId, requestOptions)
         .then((newVersions) => {
           newVersions.sort((v1, v2) => v2.changesetIndex - v1.changesetIndex);
           const updateVersions = updateNamedVersionsProperties(
@@ -303,36 +328,152 @@ const ManageVersionsComponent = (props: ManageVersionsProps) => {
       return;
     }
 
-    getVersions(versionsTableData?.length);
-  }, [getVersions, versionsTableData]);
+    getVersions(
+      versionsTableData?.length,
+      false,
+      versionNameFilter,
+      versionDescriptionFilter
+    );
+  }, [
+    getVersions,
+    versionsTableData,
+    versionNameFilter,
+    versionDescriptionFilter,
+  ]);
 
-  const getChangesets = React.useCallback(() => {
-    if (changesets && changesets.length % CHANGESET_TOP !== 0) {
-      return;
-    }
+  const getChangesets = React.useCallback(
+    (afterIndex?: number, lastIndex?: number) => {
+      if (changesets && changesets.length % CHANGESET_TOP !== 0) {
+        return;
+      }
 
-    setChangesetStatus(RequestStatus.InProgress);
-    changesetClient
-      .get(imodelId, {
+      setChangesetStatus(RequestStatus.InProgress);
+      const requestOptions: any = {
         top: CHANGESET_TOP,
         skip: changesets?.length,
-      })
-      .then((newChangesets) => {
-        setChangesets([
-          ...(changesets ?? []),
-          ...(updateChangesetsProperties(newChangesets, usersRef.current) ??
-            []),
-        ]);
-        setChangesetStatus(RequestStatus.Finished);
-      })
-      .catch(() => setChangesetStatus(RequestStatus.Failed));
-  }, [changesets, changesetClient, imodelId]);
+        orderBy: "index+desc",
+      };
+
+      if (afterIndex !== undefined) {
+        requestOptions.afterIndex = afterIndex;
+      }
+      if (lastIndex !== undefined) {
+        requestOptions.lastIndex = lastIndex;
+      }
+
+      changesetClient
+        .get(imodelId, requestOptions)
+        .then((newChangesets) => {
+          setChangesets([
+            ...(changesets ?? []),
+            ...(updateChangesetsProperties(newChangesets, usersRef.current) ??
+              []),
+          ]);
+          setChangesetStatus(RequestStatus.Finished);
+        })
+        .catch(() => setChangesetStatus(RequestStatus.Failed));
+    },
+    [changesets, changesetClient, imodelId]
+  );
 
   const refreshVersions = React.useCallback(
     (reloadSubrows?: boolean) => {
-      getVersions(undefined, reloadSubrows);
+      setVersionsTableData([]);
+      getVersions(
+        undefined,
+        reloadSubrows,
+        versionNameFilter,
+        versionDescriptionFilter
+      );
+    },
+    [getVersions, versionNameFilter, versionDescriptionFilter]
+  );
+
+  const handleVersionFilterChange = React.useCallback(
+    (filters: { id: string; value: any }[]) => {
+      // Extract name and description filters
+      const nameFilter = filters.find((f) => f.id === "name");
+      const descriptionFilter = filters.find((f) => f.id === "description");
+
+      const nameText = nameFilter?.value || "";
+      const descriptionText = descriptionFilter?.value || "";
+
+      // Store filter values
+      setVersionNameFilter(nameText);
+      setVersionDescriptionFilter(descriptionText);
+
+      // Call API with separate parameters: name for Name filter, $search for Description filter
+      setVersionsTableData([]);
+      getVersions(undefined, false, nameText, descriptionText);
     },
     [getVersions]
+  );
+
+  const handleChangesetFilterChange = React.useCallback(
+    (filters: { id: string; value: any }[]) => {
+      // Extract index filter
+      const indexFilter = filters.find((f) => f.id === "index");
+
+      let afterIndex = indexFilter?.value?.[0];
+      let lastIndex = indexFilter?.value?.[1];
+
+      // Swap if user entered From > To (swap BEFORE subtraction)
+      if (
+        afterIndex !== undefined &&
+        afterIndex !== null &&
+        lastIndex !== undefined &&
+        lastIndex !== null &&
+        afterIndex > lastIndex
+      ) {
+        const temp = afterIndex;
+        afterIndex = lastIndex;
+        lastIndex = temp;
+      }
+
+      // Subtract 1 from afterIndex to make it inclusive (UI shows "From" which should include that index)
+      if (afterIndex !== undefined && afterIndex !== null) {
+        afterIndex = afterIndex - 1;
+      }
+
+      // Special case: if both are same after subtraction, adjust lastIndex
+      if (
+        afterIndex !== undefined &&
+        afterIndex !== null &&
+        lastIndex !== undefined &&
+        lastIndex !== null &&
+        afterIndex === lastIndex
+      ) {
+        lastIndex = lastIndex + 1; // Ensure we get the single row
+      }
+
+      setChangesetAfterIndex(afterIndex);
+      setChangesetLastIndex(lastIndex);
+      setChangesets([]); // Reset changesets
+      setChangesetStatus(RequestStatus.InProgress);
+
+      const requestOptions: any = {
+        top: CHANGESET_TOP,
+        orderBy: "index desc", // Descending order
+      };
+
+      if (afterIndex !== undefined && afterIndex !== null && afterIndex >= 0) {
+        requestOptions.afterIndex = afterIndex;
+      }
+      if (lastIndex !== undefined && lastIndex !== null) {
+        requestOptions.lastIndex = lastIndex;
+      }
+
+      changesetClient
+        .get(imodelId, requestOptions)
+        .then((newChangesets) => {
+          const updatedChangesets =
+            updateChangesetsProperties(newChangesets, usersRef.current) ?? [];
+          setChangesets(updatedChangesets);
+          setChangesetStatus(RequestStatus.Finished);
+        })
+        .catch(() => setChangesetStatus(RequestStatus.Failed));
+    },
+    [changesetClient, imodelId]
   );
 
   React.useEffect(() => {
@@ -384,9 +525,15 @@ const ManageVersionsComponent = (props: ManageVersionsProps) => {
       _currentTab === ManageVersionsTabs.Changes &&
       changesetStatus === RequestStatus.NotStarted
     ) {
-      getChangesets();
+      getChangesets(changesetAfterIndex, changesetLastIndex);
     }
-  }, [changesetStatus, _currentTab, getChangesets]);
+  }, [
+    changesetStatus,
+    _currentTab,
+    getChangesets,
+    changesetAfterIndex,
+    changesetLastIndex,
+  ]);
 
   const onVersionCreated = React.useCallback(() => {
     changeTab(ManageVersionsTabs.Versions);
@@ -519,15 +666,19 @@ const ManageVersionsComponent = (props: ManageVersionsProps) => {
             setRelatedChangesets={setRelatedChangesets}
             handleHideVersion={handleToggleVersionState}
             showHiddenVersions={showHiddenVersions}
+            onFilterChange={handleVersionFilterChange}
           />
         )}
         {_currentTab === ManageVersionsTabs.Changes && (
           <ChangesTab
             changesets={changesets ?? []}
             status={changesetStatus}
-            loadMoreChanges={getChangesets}
+            loadMoreChanges={() =>
+              getChangesets(changesetAfterIndex, changesetLastIndex)
+            }
             onVersionCreated={onVersionCreated}
             latestVersion={latestVersion?.version}
+            onFilterChange={handleChangesetFilterChange}
           />
         )}
       </div>
