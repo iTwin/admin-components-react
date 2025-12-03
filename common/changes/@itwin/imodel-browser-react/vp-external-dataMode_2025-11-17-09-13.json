@@ -2,7 +2,7 @@
   "changes": [
     {
       "packageName": "@itwin/imodel-browser-react",
-      "comment": "Added callback to fetch the data while providing the data from consumer end",
+      "comment": "Added callback to fetch the data while providing the data from consumer's end",
       "type": "minor"
     }
   ],

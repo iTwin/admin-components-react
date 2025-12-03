@@ -114,7 +114,8 @@ export interface IModelGridProps {
   /**
    * Specifies how data should be managed.
    * - 'internal': Package handles data fetching internally (default)
-   * - 'external': Consumer manages data via apiOverrides.data and isLoading
+   * - 'external': Consumer manages data via apiOverrides.data and isLoading.
+   * When using 'external' mode, `accessToken` and `iTwinId` are not required, as the consumer is responsible for data fetching.
    * Allows for infinite scrolling and data refresh via onLoadMore and onRefetch callbacks.
    */
   dataMode?: DataMode;
