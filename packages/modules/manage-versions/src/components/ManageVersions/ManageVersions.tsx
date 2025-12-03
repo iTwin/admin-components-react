@@ -391,19 +391,15 @@ const ManageVersionsComponent = (props: ManageVersionsProps) => {
 
   const handleVersionFilterChange = React.useCallback(
     (filters: { id: string; value: any }[]) => {
-      // Extract name and description filters
       const nameFilter = filters.find((f) => f.id === "name");
       const descriptionFilter = filters.find((f) => f.id === "description");
 
       const nameText = nameFilter?.value || "";
       const descriptionText = descriptionFilter?.value || "";
 
-      // Store filter values
       setVersionNameFilter(nameText);
       setVersionDescriptionFilter(descriptionText);
 
-      // Call API with separate parameters: name for Name filter, $search for Description filter
-      setVersionsTableData([]);
       getVersions(undefined, false, nameText, descriptionText);
     },
     [getVersions]
@@ -556,14 +552,22 @@ const ManageVersionsComponent = (props: ManageVersionsProps) => {
   const setRelatedChangesets = (versionId: string, changesets: Changeset[]) => {
     const updateChangesets =
       updateChangesetsProperties(changesets, usersRef.current) ?? [];
-    setVersionsTableData((prevVersionsTableData) => {
-      const updatedVersions = prevVersionsTableData?.map((version) =>
-        version.version.id === versionId
-          ? { ...version, subRows: updateChangesets, subRowsLoaded: true }
-          : version
-      );
-      return updatedVersions ?? prevVersionsTableData;
-    });
+    const changesetsWithSubRows = updateChangesets.map((changeset) => ({
+      ...changeset,
+      subRows: [],
+    }));
+    setVersionsTableData(
+      (prevVersionsTableData) =>
+        prevVersionsTableData?.map((version) =>
+          version.version.id === versionId
+            ? {
+                ...version,
+                subRows: changesetsWithSubRows,
+                subRowsLoaded: true,
+              }
+            : version
+        ) ?? prevVersionsTableData
+    );
   };
 
   const [showHiddenVersions, setShowHiddenVersions] =
