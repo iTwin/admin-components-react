@@ -81,28 +81,125 @@ OverrideCellData.args = {
   },
 };
 
-export const OverrideApiData = Template.bind({});
-OverrideApiData.args = {
-  apiOverrides: {
-    data: [
-      {
-        id: "1",
-        displayName: "Provided iModel",
-        description: "No Network Calls",
-        thumbnail:
-          "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/activity.svg",
-      },
-      {
-        id: "2",
-        displayName: "Useful iModel",
-        description:
-          "Use if the data comes from a different API or needs to be tweaked",
-        thumbnail:
-          "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/developer.svg",
-      },
-    ],
-  },
-};
+export const OverrideApiDataWithLoadMore: Story<IModelGridProps> =
+  withITwinIdOverride(
+    withAccessTokenOverride((args) => {
+      const initialData: IModelFull[] = [
+        {
+          id: "1",
+          displayName: "External iModel 1",
+          description: "Loaded from external source",
+          thumbnail:
+            "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/activity.svg",
+        },
+        {
+          id: "2",
+          displayName: "External iModel 2",
+          description: "Consumer manages pagination",
+          thumbnail:
+            "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/developer.svg",
+        },
+        {
+          id: "3",
+          displayName: "External iModel 3",
+          description: "Pagination demo",
+          thumbnail:
+            "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/folder.svg",
+        },
+        {
+          id: "4",
+          displayName: "External iModel 4",
+          description: "Initial batch of 6",
+          thumbnail:
+            "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/organization.svg",
+        },
+        {
+          id: "5",
+          displayName: "External iModel 5",
+          description: "More data",
+          thumbnail:
+            "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/settings.svg",
+        },
+        {
+          id: "6",
+          displayName: "External iModel 6",
+          description: "Last in first batch",
+          thumbnail:
+            "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/tools.svg",
+        },
+      ];
+
+      const [data, setData] = React.useState<IModelFull[]>(initialData);
+      const [isLoading, setIsLoading] = React.useState(false);
+      const [hasMore, setHasMore] = React.useState(true);
+
+      const handleLoadMore = React.useCallback(async () => {
+        setIsLoading(true);
+        // Simulate network delay
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+        setData((prev) => [
+          ...prev,
+          {
+            id: "7",
+            displayName: "External iModel 7",
+            description: "Loaded on demand via onLoadMore",
+            thumbnail:
+              "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/folder.svg",
+          },
+          {
+            id: "8",
+            displayName: "External iModel 8",
+            description: "Second batch",
+            thumbnail:
+              "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/organization.svg",
+          },
+          {
+            id: "9",
+            displayName: "External iModel 9",
+            description: "More paginated data",
+            thumbnail:
+              "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/settings.svg",
+          },
+          {
+            id: "10",
+            displayName: "External iModel 10",
+            description: "Second batch item",
+            thumbnail:
+              "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/tools.svg",
+          },
+          {
+            id: "11",
+            displayName: "External iModel 11",
+            description: "Second batch item",
+            thumbnail:
+              "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/activity.svg",
+          },
+          {
+            id: "12",
+            displayName: "External iModel 12",
+            description: "Last in second batch",
+            thumbnail:
+              "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/developer.svg",
+          },
+        ]);
+        setHasMore(false);
+        setIsLoading(false);
+      }, []);
+
+      return (
+        <IModelGrid
+          {...args}
+          dataMode="external"
+          apiOverrides={{
+            data,
+            isLoading,
+            hasMoreData: hasMore,
+          }}
+          onLoadMore={handleLoadMore}
+        />
+      );
+    })
+  );
 
 export const IndividualContextMenu = Template.bind({});
 IndividualContextMenu.args = {

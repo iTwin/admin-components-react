@@ -7,7 +7,7 @@ import { rest } from "msw";
 import { act } from "react";
 
 import { server } from "../../tests/mocks/server";
-import { DataStatus, IModelSortOptionsKeys } from "../../types";
+import { DataStatus } from "../../types";
 import { useIModelData } from "./useIModelData";
 
 describe("useIModelData hook", () => {
@@ -69,7 +69,11 @@ describe("useIModelData hook", () => {
   });
 
   it("returns apiOverrides.data without fetching when it is provided", async () => {
-    const data = [{ id: "rerenderedId", displayName: "rerenderedDisplayName" }];
+    const externalData = [
+      { id: "externalId1", displayName: "External IModel 1" },
+      { id: "externalId2", displayName: "External IModel 2" },
+    ];
+    const onLoadMore = jest.fn();
     const watcher = jest.fn();
     server.use(
       rest.get("https://api.bentley.com/imodels/", (req, res, ctx) => {
@@ -94,19 +98,31 @@ describe("useIModelData hook", () => {
 
     rerender([
       {
+        dataMode: "external",
         apiOverrides: {
-          data,
+          data: externalData,
+          isLoading: false,
+          hasMoreData: true,
         },
+        onLoadMore,
       },
     ]);
 
-    expect(result.current.iModels).toEqual([
-      { id: "rerenderedId", displayName: "rerenderedDisplayName" },
-    ]);
+    expect(result.current.iModels).toEqual(externalData);
     expect(result.current.status).toEqual(DataStatus.Complete);
+    expect(result.current.fetchMore).toBe(onLoadMore);
     expect(watcher).toHaveBeenCalledTimes(1);
 
-    rerender([{ iTwinId: "iTwinId", accessToken: "accessToken" }]);
+    act(() => result.current.fetchMore?.());
+    expect(onLoadMore).toHaveBeenCalledTimes(1);
+
+    rerender([
+      {
+        iTwinId: "iTwinId",
+        accessToken: "accessToken",
+      },
+    ]);
+
     await waitForNextUpdate();
 
     expect(result.current.iModels).toEqual([]);
@@ -129,65 +145,6 @@ describe("useIModelData hook", () => {
 
     expect(result.current.iModels).toEqual([]);
     expect(result.current.status).toEqual(DataStatus.ContextRequired);
-  });
-
-  it("apply sorting", async () => {
-    const expectedSortOrder = ["2", "4", "5", "1", "3"];
-    const options = {
-      apiOverrides: {
-        data: [
-          {
-            id: "1",
-            displayName: "d",
-            name: "c",
-            description: "e",
-            initialized: true,
-            createdDateTime: "2020-09-05T12:42:51.593Z",
-          },
-          {
-            id: "2",
-            displayName: "a",
-            name: "d",
-            description: "d",
-            initialized: true,
-            createdDateTime: "2020-09-03T12:42:51.593Z",
-          },
-          {
-            id: "3",
-            displayName: "e",
-            name: "a",
-            description: "c",
-            initialized: false,
-            createdDateTime: "2020-09-04T12:42:51.593Z",
-          },
-          {
-            id: "4",
-            displayName: "b",
-            name: "b",
-            description: "b",
-            initialized: false,
-            createdDateTime: "2020-09-01T12:42:51.593Z",
-          },
-          {
-            id: "5",
-            displayName: "c",
-            name: "d",
-            description: "a",
-            initialized: true,
-            createdDateTime: "2020-09-02T12:42:51.593Z",
-          },
-        ],
-      },
-      sortOptions: {
-        sortType: "displayName" as IModelSortOptionsKeys,
-        descending: false,
-      },
-    };
-    const { result } = renderHook(() => useIModelData(options));
-
-    expect(result.current.iModels.map((iModel) => iModel.id)).toEqual(
-      expectedSortOrder
-    );
   });
 
   it("should call correct api when maxCount is provided", async () => {
