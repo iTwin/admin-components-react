@@ -361,12 +361,9 @@ const VersionsTab = (props: VersionsTabProps) => {
         width: 100,
         Cell: (props: CellProps<VersionTableData>) => {
           return isNamedVersion(props.row.original) ? (
-            <span
-              className="iac-table-view-anchor"
-              onClick={() => onViewClick(props.row.original.version)}
-            >
+            <Anchor onClick={() => onViewClick(props.row.original.version)}>
               {stringsOverrides.view}
-            </span>
+            </Anchor>
           ) : (
             <></>
           );

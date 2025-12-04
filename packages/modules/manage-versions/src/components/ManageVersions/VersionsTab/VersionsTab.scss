@@ -12,12 +12,3 @@
 .iac-label-show-hidden-versions {
   width: max-content;
 }
-
-.iac-table-view-anchor {
-  color: var(--iui-color-text-accent);
-  cursor: pointer;
-
-  &:hover {
-    text-decoration: underline;
-  }
-}
