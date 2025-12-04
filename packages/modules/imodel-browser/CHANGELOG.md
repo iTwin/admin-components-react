@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Fri, 21 Nov 2025 15:41:38 GMT and should not be manually modified.
+This log was last generated on Thu, 04 Dec 2025 12:32:04 GMT and should not be manually modified.
+
+## 3.8.0
+Thu, 04 Dec 2025 12:32:04 GMT
+
+### Minor changes
+
+- Added callback to fetch the data while providing the data from consumer's end
 
 ## 3.7.0
 Fri, 21 Nov 2025 15:41:38 GMT
