@@ -138,6 +138,7 @@ describe("ManageVersions", () => {
     expect(mockGetChangesets).toHaveBeenCalledWith(MOCKED_IMODEL_ID, {
       top: 100,
       skip: 0,
+      orderBy: "index+desc",
     });
   });
 

@@ -8,7 +8,7 @@ import {
   SvgInfoCircular,
   SvgNamedVersionAdd,
 } from "@itwin/itwinui-icons-react";
-import { IconButton, Table, Text } from "@itwin/itwinui-react";
+import { IconButton, Table, tableFilters, Text } from "@itwin/itwinui-react";
 import { CellProps } from "@itwin/itwinui-react/react-table";
 import React from "react";
 
@@ -28,6 +28,7 @@ export type ChangesTabProps = {
   loadMoreChanges: () => void;
   onVersionCreated: () => void;
   latestVersion: NamedVersion | undefined;
+  onFilterChange: (filters: { id: string; value: any }[]) => void;
 };
 
 const ChangesTab = (props: ChangesTabProps) => {
@@ -37,6 +38,7 @@ const ChangesTab = (props: ChangesTabProps) => {
     loadMoreChanges,
     onVersionCreated,
     latestVersion,
+    onFilterChange,
   } = props;
 
   const { stringsOverrides } = useConfig();
@@ -65,10 +67,12 @@ const ChangesTab = (props: ChangesTabProps) => {
         Header: "Name",
         columns: [
           {
-            id: "INDEX",
+            id: "index",
             Header: "#",
             accessor: "index",
             width: 90,
+            Filter: tableFilters.NumberRangeFilter(),
+            filter: "between",
           },
           {
             id: "DESCRIPTION",
@@ -177,6 +181,8 @@ const ChangesTab = (props: ChangesTabProps) => {
       <Table<Changeset>
         columns={columns}
         data={changesets}
+        manualFilters={true}
+        onFilter={onFilterChange}
         bodyProps={{
           className: "iac-changes-table-body",
         }}
@@ -185,6 +191,7 @@ const ChangesTab = (props: ChangesTabProps) => {
           status === RequestStatus.NotStarted
         }
         emptyTableContent={emptyTableContent}
+        emptyFilteredTableContent={stringsOverrides.messageNoFilterResults}
         onBottomReached={loadMoreChanges}
         className="iac-changes-table"
       />

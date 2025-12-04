@@ -31,6 +31,7 @@ const renderComponent = (initialProps?: Partial<ChangesTabProps>) => {
     loadMoreChanges: jest.fn(),
     latestVersion: undefined,
     onVersionCreated: jest.fn(),
+    onFilterChange: jest.fn(),
     ...initialProps,
   };
   return render(

@@ -6,4 +6,8 @@ export type RequestOptions = {
   skip?: number;
   top?: number;
   lastIndex?: number;
+  afterIndex?: number;
+  orderBy?: string;
+  $search?: string;
+  name?: string;
 };
