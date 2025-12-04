@@ -21,12 +21,17 @@ export class ChangesetClient {
     imodelId: string,
     requestOptions: RequestOptions = {}
   ): Promise<Changeset[]> {
+    const options = {
+      orderBy: "index+desc",
+      ...requestOptions,
+    };
+
     return this._http
       .get(
         `${UrlBuilder.buildChangesetUrl(
           imodelId,
           this._serverEnvironmentPrefix
-        )}${UrlBuilder.getQuery({ orderBy: "index+desc", ...requestOptions })}`,
+        )}${UrlBuilder.getQuery(options)}`,
         {
           headers: {
             [HttpHeaderNames.Prefer]: "return=representation",

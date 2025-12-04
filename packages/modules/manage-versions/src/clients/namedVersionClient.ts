@@ -21,16 +21,18 @@ export class NamedVersionClient {
     imodelId: string,
     requestOptions: RequestOptions = {}
   ): Promise<NamedVersion[]> {
+    const options = {
+      orderBy: "changesetIndex+desc",
+      ...requestOptions,
+    };
+
     return this._http
       .get(
         `${UrlBuilder.buildVersionsUrl(
           imodelId,
           undefined,
           this._serverEnvironmentPrefix
-        )}${UrlBuilder.getQuery({
-          orderBy: "changesetIndex+desc",
-          ...requestOptions,
-        })}`,
+        )}${UrlBuilder.getQuery(options)}`,
         {
           headers: {
             [HttpHeaderNames.Prefer]: "return=representation",

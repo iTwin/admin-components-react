@@ -50,6 +50,8 @@ export type ManageVersionsStringOverrides = {
   messageFailedGetChanges: string;
   /** Message when there are no changes. Default `There are no changes synchronized.`. */
   messageNoChanges: string;
+  /** Message when no results found after filtering. Default `No results found. Clear or try another filter.`. */
+  messageNoFilterResults: string;
   /** Default `Named Version "{{name}}" was successfully created.` - `{{name}}` - Named Version name. */
   messageVersionCreated: string;
   /** Default `Named Version with the same name already exists.` */
