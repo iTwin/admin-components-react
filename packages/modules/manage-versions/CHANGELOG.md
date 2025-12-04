@@ -1,6 +1,13 @@
 # Change Log - @itwin/manage-versions-react
 
-This log was last generated on Wed, 30 Jul 2025 11:37:03 GMT and should not be manually modified.
+This log was last generated on Thu, 04 Dec 2025 10:44:03 GMT and should not be manually modified.
+
+## 2.2.1
+Thu, 04 Dec 2025 10:44:03 GMT
+
+### Patches
+
+- Added server-side filtering for Named Versions (name, description) and Changesets (index range) tables with improved performance and preserved expandable row state.
 
 ## 2.2.0
 Wed, 30 Jul 2025 11:37:03 GMT
