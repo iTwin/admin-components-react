@@ -50,6 +50,7 @@ export type VersionsTabProps = {
   handleHideVersion: (version: NamedVersion) => void;
   showHiddenVersions: boolean;
   onFilterChange: (filters: { id: string; value: any }[]) => void;
+  nameFilter?: string;
 };
 
 const isNamedVersion = (
@@ -70,6 +71,7 @@ const VersionsTab = (props: VersionsTabProps) => {
     handleHideVersion,
     showHiddenVersions,
     onFilterChange,
+    nameFilter,
   } = props;
   const toaster = useToaster();
   const { stringsOverrides, imodelId, enableHideVersions } = useConfig();
@@ -417,6 +419,14 @@ const VersionsTab = (props: VersionsTabProps) => {
     return enableHideVersions ? [] : ["HIDDEN"];
   }, [enableHideVersions]);
 
+  const initialFilters = React.useMemo(() => {
+    const filterArray = [];
+    if (nameFilter) {
+      filterArray.push({ id: "name", value: nameFilter });
+    }
+    return filterArray;
+  }, [nameFilter]);
+
   return (
     <>
       <Table<VersionTableData>
@@ -436,7 +446,7 @@ const VersionsTab = (props: VersionsTabProps) => {
         onBottomReached={loadMoreVersions}
         className="iac-versions-table"
         onExpand={onExpandRow}
-        initialState={{ hiddenColumns }}
+        initialState={{ hiddenColumns, filters: initialFilters }}
         autoResetFilters={false}
         stateReducer={useCallback(
           (

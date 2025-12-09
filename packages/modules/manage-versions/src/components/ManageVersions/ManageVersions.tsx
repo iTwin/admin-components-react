@@ -642,6 +642,7 @@ const ManageVersionsComponent = (props: ManageVersionsProps) => {
             handleHideVersion={handleToggleVersionState}
             showHiddenVersions={showHiddenVersions}
             onFilterChange={handleVersionFilterChange}
+            nameFilter={versionNameFilter}
           />
         )}
         {_currentTab === ManageVersionsTabs.Changes && (
@@ -654,6 +655,8 @@ const ManageVersionsComponent = (props: ManageVersionsProps) => {
             onVersionCreated={onVersionCreated}
             latestVersion={latestVersion?.version}
             onFilterChange={handleChangesetFilterChange}
+            afterIndex={changesetAfterIndex}
+            lastIndex={changesetLastIndex}
           />
         )}
       </div>
