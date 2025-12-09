@@ -376,12 +376,17 @@ describe("ManageVersions", () => {
     mockUpdateVersion.mockResolvedValue(MockedVersion(2, { state: "hidden" }));
     const { container } = renderComponent({ enableHideVersions: true });
 
-    await waitFor(() => container.querySelector(".iac-versions-table-body"));
+    // Wait for at least one row to render with virtualization
+    await waitFor(() => {
+      const rows = container.querySelectorAll(
+        ".iac-versions-table-body [role='row']"
+      );
+      expect(rows.length).toBeGreaterThanOrEqual(1);
+    });
+
     const initialVersionRows = container.querySelectorAll(
       ".iac-versions-table-body [role='row']"
     );
-    // Virtualization renders only visible rows
-    expect(initialVersionRows.length).toBeGreaterThanOrEqual(1);
 
     const firstRowCells =
       initialVersionRows[0].querySelectorAll("div[role='cell']");
