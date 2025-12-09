@@ -1,6 +1,13 @@
 # Change Log - @itwin/manage-versions-react
 
-This log was last generated on Thu, 04 Dec 2025 10:44:03 GMT and should not be manually modified.
+This log was last generated on Tue, 09 Dec 2025 18:16:22 GMT and should not be manually modified.
+
+## 2.2.2
+Tue, 09 Dec 2025 18:16:22 GMT
+
+### Patches
+
+- Fix filter state persistence across tabs and remove description filter
 
 ## 2.2.1
 Thu, 04 Dec 2025 10:44:03 GMT

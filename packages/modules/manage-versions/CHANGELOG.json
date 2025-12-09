@@ -2,6 +2,18 @@
   "name": "@itwin/manage-versions-react",
   "entries": [
     {
+      "version": "2.2.2",
+      "tag": "@itwin/manage-versions-react_v2.2.2",
+      "date": "Tue, 09 Dec 2025 18:16:22 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Fix filter state persistence across tabs and remove description filter"
+          }
+        ]
+      }
+    },
+    {
       "version": "2.2.1",
       "tag": "@itwin/manage-versions-react_v2.2.1",
       "date": "Thu, 04 Dec 2025 10:44:03 GMT",
