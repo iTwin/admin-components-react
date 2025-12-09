@@ -50,6 +50,7 @@ export type VersionsTabProps = {
   handleHideVersion: (version: NamedVersion) => void;
   showHiddenVersions: boolean;
   onFilterChange: (filters: { id: string; value: any }[]) => void;
+  nameFilter?: string;
 };
 
 const isNamedVersion = (
@@ -70,6 +71,7 @@ const VersionsTab = (props: VersionsTabProps) => {
     handleHideVersion,
     showHiddenVersions,
     onFilterChange,
+    nameFilter,
   } = props;
   const toaster = useToaster();
   const { stringsOverrides, imodelId, enableHideVersions } = useConfig();
@@ -292,19 +294,6 @@ const VersionsTab = (props: VersionsTabProps) => {
                 ? row.version.description
                 : row.description;
             },
-            Filter: tableFilters.TextFilter(),
-            filter: (rows: any[], _id: string, filterValue: string) => {
-              // Only filter parent rows (VersionTableData), not subRows (Changesets)
-              return rows.filter((row) => {
-                if (!isNamedVersion(row.original)) {
-                  return true;
-                }
-                const description = (
-                  row.original.version.description || ""
-                ).toLowerCase();
-                return description.includes(filterValue.toLowerCase());
-              });
-            },
             Cell: (props: CellProps<VersionTableData | Changeset>) => {
               return generateCellContent(props.row.original, "description");
             },
@@ -430,11 +419,20 @@ const VersionsTab = (props: VersionsTabProps) => {
     return enableHideVersions ? [] : ["HIDDEN"];
   }, [enableHideVersions]);
 
+  const initialFilters = React.useMemo(() => {
+    const filterArray = [];
+    if (nameFilter) {
+      filterArray.push({ id: "name", value: nameFilter });
+    }
+    return filterArray;
+  }, [nameFilter]);
+
   return (
     <>
       <Table<VersionTableData>
         columns={columns}
         data={tableData}
+        enableVirtualization={true}
         manualFilters={true}
         onFilter={onFilterChange}
         isLoading={
@@ -449,7 +447,7 @@ const VersionsTab = (props: VersionsTabProps) => {
         onBottomReached={loadMoreVersions}
         className="iac-versions-table"
         onExpand={onExpandRow}
-        initialState={{ hiddenColumns }}
+        initialState={{ hiddenColumns, filters: initialFilters }}
         autoResetFilters={false}
         stateReducer={useCallback(
           (

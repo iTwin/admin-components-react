@@ -254,8 +254,6 @@ const ManageVersionsComponent = (props: ManageVersionsProps) => {
     RequestStatus.NotStarted
   );
   const [versionNameFilter, setVersionNameFilter] = React.useState("");
-  const [versionDescriptionFilter, setVersionDescriptionFilter] =
-    React.useState("");
 
   const [changesets, setChangesets] = React.useState<Changeset[]>();
   const [changesetStatus, setChangesetStatus] = React.useState(
@@ -277,12 +275,7 @@ const ManageVersionsComponent = (props: ManageVersionsProps) => {
   );
 
   const getVersions = React.useCallback(
-    (
-      skip?: number,
-      reloadSubrows?: boolean,
-      nameFilter?: string,
-      descriptionFilter?: string
-    ) => {
+    (skip?: number, reloadSubrows?: boolean, nameFilter?: string) => {
       setVersionStatus(RequestStatus.InProgress);
       const requestOptions: any = {
         top: NAMED_VERSION_TOP,
@@ -291,10 +284,6 @@ const ManageVersionsComponent = (props: ManageVersionsProps) => {
 
       if (nameFilter) {
         requestOptions.name = nameFilter;
-      }
-
-      if (descriptionFilter) {
-        requestOptions.$search = descriptionFilter;
       }
 
       versionClient
@@ -328,18 +317,8 @@ const ManageVersionsComponent = (props: ManageVersionsProps) => {
       return;
     }
 
-    getVersions(
-      versionsTableData?.length,
-      false,
-      versionNameFilter,
-      versionDescriptionFilter
-    );
-  }, [
-    getVersions,
-    versionsTableData,
-    versionNameFilter,
-    versionDescriptionFilter,
-  ]);
+    getVersions(versionsTableData?.length, false, versionNameFilter);
+  }, [getVersions, versionsTableData, versionNameFilter]);
 
   const getChangesets = React.useCallback(
     (afterIndex?: number, lastIndex?: number) => {
@@ -379,28 +358,21 @@ const ManageVersionsComponent = (props: ManageVersionsProps) => {
   const refreshVersions = React.useCallback(
     (reloadSubrows?: boolean) => {
       setVersionsTableData([]);
-      getVersions(
-        undefined,
-        reloadSubrows,
-        versionNameFilter,
-        versionDescriptionFilter
-      );
+      getVersions(undefined, reloadSubrows, versionNameFilter);
     },
-    [getVersions, versionNameFilter, versionDescriptionFilter]
+    [getVersions, versionNameFilter]
   );
 
   const handleVersionFilterChange = React.useCallback(
     (filters: { id: string; value: any }[]) => {
       const nameFilter = filters.find((f) => f.id === "name");
-      const descriptionFilter = filters.find((f) => f.id === "description");
 
       const nameText = nameFilter?.value || "";
-      const descriptionText = descriptionFilter?.value || "";
 
       setVersionNameFilter(nameText);
-      setVersionDescriptionFilter(descriptionText);
+      setVersionsTableData([]);
 
-      getVersions(undefined, false, nameText, descriptionText);
+      getVersions(undefined, false, nameText);
     },
     [getVersions]
   );
@@ -671,6 +643,7 @@ const ManageVersionsComponent = (props: ManageVersionsProps) => {
             handleHideVersion={handleToggleVersionState}
             showHiddenVersions={showHiddenVersions}
             onFilterChange={handleVersionFilterChange}
+            nameFilter={versionNameFilter}
           />
         )}
         {_currentTab === ManageVersionsTabs.Changes && (
@@ -683,6 +656,8 @@ const ManageVersionsComponent = (props: ManageVersionsProps) => {
             onVersionCreated={onVersionCreated}
             latestVersion={latestVersion?.version}
             onFilterChange={handleChangesetFilterChange}
+            afterIndex={changesetAfterIndex}
+            lastIndex={changesetLastIndex}
           />
         )}
       </div>
