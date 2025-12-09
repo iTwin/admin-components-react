@@ -292,19 +292,6 @@ const VersionsTab = (props: VersionsTabProps) => {
                 ? row.version.description
                 : row.description;
             },
-            Filter: tableFilters.TextFilter(),
-            filter: (rows: any[], _id: string, filterValue: string) => {
-              // Only filter parent rows (VersionTableData), not subRows (Changesets)
-              return rows.filter((row) => {
-                if (!isNamedVersion(row.original)) {
-                  return true;
-                }
-                const description = (
-                  row.original.version.description || ""
-                ).toLowerCase();
-                return description.includes(filterValue.toLowerCase());
-              });
-            },
             Cell: (props: CellProps<VersionTableData | Changeset>) => {
               return generateCellContent(props.row.original, "description");
             },
