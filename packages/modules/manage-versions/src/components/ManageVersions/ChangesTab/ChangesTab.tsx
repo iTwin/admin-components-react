@@ -194,6 +194,7 @@ const ChangesTab = (props: ChangesTabProps) => {
       <Table<Changeset>
         columns={columns}
         data={changesets}
+        enableVirtualization={true}
         manualFilters={true}
         onFilter={onFilterChange}
         bodyProps={{

@@ -432,6 +432,7 @@ const VersionsTab = (props: VersionsTabProps) => {
       <Table<VersionTableData>
         columns={columns}
         data={tableData}
+        enableVirtualization={true}
         manualFilters={true}
         onFilter={onFilterChange}
         isLoading={

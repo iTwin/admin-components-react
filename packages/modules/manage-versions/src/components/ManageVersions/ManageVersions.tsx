@@ -370,6 +370,7 @@ const ManageVersionsComponent = (props: ManageVersionsProps) => {
       const nameText = nameFilter?.value || "";
 
       setVersionNameFilter(nameText);
+      setVersionsTableData([]);
 
       getVersions(undefined, false, nameText);
     },
