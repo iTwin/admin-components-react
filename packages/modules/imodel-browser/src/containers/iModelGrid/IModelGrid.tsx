@@ -192,7 +192,7 @@ const IModelGridInternal = ({
       tableColumnFavorites: "",
       tableColumnName: "Name",
       tableColumnDescription: "Description",
-      tableColumnLastModified: "Last Modified",
+      tableColumnLastModified: "Created Date",
       tableLoadingData: "Loading...",
       noIModelSearch: "No results found",
       noIModelSearchSubtext:
