@@ -116,7 +116,6 @@ export const useITwinTableConfig = ({
             id: ITwinCellColumn.LastModified,
             Header: strings.tableColumnLastModified,
             accessor: "lastModifiedDateTime",
-            // maxWidth: 350,
             Cell: (props: CellProps<ITwinFull>) => {
               const date = props.data[props.row.index].lastModifiedDateTime;
               return cellOverrides.LastModified
