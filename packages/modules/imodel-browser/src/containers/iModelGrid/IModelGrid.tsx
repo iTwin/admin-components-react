@@ -172,24 +172,20 @@ const IModelGridInternal = ({
   disableAddToRecents = false,
 }: IModelGridProps) => {
   const [sort, setSort] = React.useState<IModelSortOptions>(sortOptions);
-  const [isSortOnTable, setIsSortOnTable] = React.useState(false);
 
   React.useEffect(() => {
-    if (!isSortOnTable) {
-      const defaultTableSort: IModelSortOptions = {
-        sortType: "name",
-        descending: false,
-      };
-      setSort(
-        viewMode === "cells"
-          ? defaultTableSort
-          : {
-              sortType: sortOptions.sortType,
-              descending: sortOptions.descending,
-            }
-      );
-    }
-  }, [isSortOnTable, sortOptions.descending, sortOptions.sortType, viewMode]);
+    setSort(
+      viewMode === "cells"
+        ? {
+            sortType: "name",
+            descending: false,
+          }
+        : {
+            sortType: sortOptions.sortType,
+            descending: sortOptions.descending,
+          }
+    );
+  }, [sortOptions.descending, sortOptions.sortType, viewMode]);
 
   const strings = _mergeStrings(
     {
