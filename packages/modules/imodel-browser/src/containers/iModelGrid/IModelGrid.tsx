@@ -142,11 +142,11 @@ export const IModelGrid = (props: IModelGridProps) => {
       serverEnvironmentPrefix={props.apiOverrides?.serverEnvironmentPrefix}
       disabled={props.tileOverrides?.hideFavoriteIcon}
     >
-      <ITwinGridInternal {...props} />
+      <IModelGridInternal {...props} />
     </IModelFavoritesProvider>
   );
 };
-const ITwinGridInternal = ({
+const IModelGridInternal = ({
   accessToken,
   apiOverrides,
   iModelActions,
@@ -172,31 +172,27 @@ const ITwinGridInternal = ({
   disableAddToRecents = false,
 }: IModelGridProps) => {
   const [sort, setSort] = React.useState<IModelSortOptions>(sortOptions);
-  const [isSortOnTable, setIsSortOnTable] = React.useState(false);
 
   React.useEffect(() => {
-    if (!isSortOnTable) {
-      const defaultTableSort: IModelSortOptions = {
-        sortType: "name",
-        descending: false,
-      };
-      setSort(
-        viewMode === "cells"
-          ? defaultTableSort
-          : {
-              sortType: sortOptions.sortType,
-              descending: sortOptions.descending,
-            }
-      );
-    }
-  }, [isSortOnTable, sortOptions.descending, sortOptions.sortType, viewMode]);
+    setSort(
+      viewMode === "cells"
+        ? {
+            sortType: "name",
+            descending: false,
+          }
+        : {
+            sortType: sortOptions.sortType,
+            descending: sortOptions.descending,
+          }
+    );
+  }, [sortOptions.descending, sortOptions.sortType, viewMode]);
 
   const strings = _mergeStrings(
     {
       tableColumnFavorites: "",
       tableColumnName: "Name",
       tableColumnDescription: "Description",
-      tableColumnLastModified: "Last Modified",
+      tableColumnLastModified: "Created Date",
       tableLoadingData: "Loading...",
       noIModelSearch: "No results found",
       noIModelSearchSubtext:
@@ -402,23 +398,6 @@ const ITwinGridInternal = ({
               }
               isLoading={fetchStatus === DataStatus.Fetching}
               isSortable
-              onSort={(state) => {
-                const sortBy =
-                  state.sortBy.length > 0 ? state.sortBy[0] : undefined;
-                setIsSortOnTable(sortBy?.id !== undefined);
-                if (
-                  !sortBy ||
-                  sortBy.desc === undefined ||
-                  (sortBy.id !== "name" && sortBy.id !== "createdDateTime")
-                ) {
-                  return;
-                }
-                setSort({
-                  sortType: sortBy.id,
-                  descending: sortBy.desc,
-                });
-              }}
-              manualSortBy
               onBottomReached={fetchMore}
               autoResetFilters={false}
               autoResetSortBy={false}
