@@ -60,6 +60,7 @@ export const useIModelTableConfig = ({
             id: IModelCellColumn.Favorite,
             Header: strings.tableColumnFavorites,
             accessor: "id",
+            disableSortBy: true,
             width: 70,
             Cell: (props: CellProps<IModelFull>) => {
               const isFavorite = favoritesContext?.favorites.has(props.value);
