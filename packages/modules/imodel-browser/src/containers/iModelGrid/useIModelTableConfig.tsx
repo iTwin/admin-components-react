@@ -91,9 +91,11 @@ export const useIModelTableConfig = ({
             maxWidth: 350,
             Cell: (props: CellProps<IModelFull>) => (
               <div data-tip={props.row.original.name}>
-                <span>
-                  {cellOverrides.name ? cellOverrides.name(props) : props.value}
-                </span>
+                {cellOverrides.name ? (
+                  cellOverrides.name(props)
+                ) : (
+                  <span>{props.value}</span>
+                )}
               </div>
             ),
           },
@@ -104,11 +106,11 @@ export const useIModelTableConfig = ({
             disableSortBy: true,
             Cell: (props: CellProps<IModelFull>) => (
               <div data-tip={props.row.original.description}>
-                <span>
-                  {cellOverrides.description
-                    ? cellOverrides.description(props)
-                    : props.value}
-                </span>
+                {cellOverrides.description ? (
+                  cellOverrides.description(props)
+                ) : (
+                  <span>{props.value}</span>
+                )}
               </div>
             ),
           },
