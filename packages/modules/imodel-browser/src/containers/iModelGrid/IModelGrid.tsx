@@ -345,7 +345,6 @@ const IModelGridInternal = ({
                 apiOverrides={tileApiOverrides}
                 useTileState={useIndividualState}
                 refetchIModels={refetchIModels}
-                {...cellOverrides}
                 {...tileOverrides}
                 tileProps={
                   tileOverrides
