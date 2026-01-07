@@ -53,6 +53,7 @@ export const useITwinTableConfig = ({
             id: ITwinCellColumn.Favorite,
             Header: strings.tableColumnFavorites,
             accessor: "id",
+            disableSortBy: true,
             width: 70,
             Cell: (props: CellProps<ITwinFull>) => {
               const isFavorite = iTwinFavorites.has(props.value);
