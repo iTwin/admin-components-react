@@ -15,22 +15,24 @@ import {
   ContextMenuBuilderItem,
 } from "../../utils/_buildMenuOptions";
 
+export interface IModelTableStrings {
+  /** Displayed for table name header. */
+  tableColumnName: string;
+  /** Displayed for table description header. */
+  tableColumnDescription: string;
+  /** Displayed for table created date header. */
+  tableColumnCreatedDate: string;
+  /** Displayed for table favorites header. */
+  tableColumnFavorites: string;
+  /** Text for adding an iModel to favorites. */
+  addToFavorites: string;
+  /** Text for removing an iModel from favorites. */
+  removeFromFavorites: string;
+}
 export interface useIModelTableConfigProps {
   iModelActions: ContextMenuBuilderItem<IModelFull>[] | undefined;
   onThumbnailClick: ((iModel: IModelFull) => void) | undefined;
-  strings: {
-    tableColumnName: string;
-    tableColumnDescription: string;
-    tableColumnLastModified: string;
-    noIModelSearch: string;
-    noIModels: string;
-    noContext: string;
-    noAuthentication: string;
-    error: string;
-    tableColumnFavorites: string;
-    addToFavorites: string;
-    removeFromFavorites: string;
-  };
+  strings: IModelTableStrings;
   refetchIModels: () => void;
   cellOverrides?: IModelCellOverrides;
 }
@@ -116,7 +118,7 @@ export const useIModelTableConfig = ({
           },
           {
             id: IModelCellColumn.CreatedDateTime,
-            Header: strings.tableColumnLastModified,
+            Header: strings.tableColumnCreatedDate,
             accessor: "createdDateTime",
             maxWidth: 350,
             Cell: (props: CellProps<IModelFull>) => {
@@ -172,7 +174,7 @@ export const useIModelTableConfig = ({
       strings.tableColumnFavorites,
       strings.tableColumnName,
       strings.tableColumnDescription,
-      strings.tableColumnLastModified,
+      strings.tableColumnCreatedDate,
       strings.addToFavorites,
       strings.removeFromFavorites,
       favoritesContext,
