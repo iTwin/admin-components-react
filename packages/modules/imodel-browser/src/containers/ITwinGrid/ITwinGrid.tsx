@@ -78,9 +78,7 @@ export interface ITwinGridProps {
   filterOptions?: ITwinFilterOptions;
   /**
    * Set the `$orderby` parameter when fetching iTwins from the iTwin API, e.g. `displayName ASC`.
-   *
    * This only has an effect when the `requestType` is empty - it does not apply to "favorites" or "recents".
-   *
    * See https://developer.bentley.com/apis/itwins/operations/get-my-itwins/#odata-queries for details.
    */
   orderbyOptions?: string;
@@ -266,6 +264,7 @@ export const ITwinGrid = ({
             : strings.noITwins
         }
         isLoading={fetchStatus === DataStatus.Fetching}
+        isSortable
         onBottomReached={fetchMore}
         autoResetFilters={false}
         autoResetSortBy={false}

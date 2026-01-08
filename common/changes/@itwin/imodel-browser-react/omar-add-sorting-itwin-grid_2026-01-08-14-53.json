@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/imodel-browser-react",
+      "comment": "Fix sort in iModel/iTwin grid tables",
+      "type": "major"
+    }
+  ],
+  "packageName": "@itwin/imodel-browser-react"
+}
