@@ -116,6 +116,7 @@ export const useITwinTableConfig = ({
           {
             id: ITwinCellColumn.LastModified,
             Header: strings.tableColumnLastModified,
+            // Use lastModifiedDateTime (not createdDateTime) so this column reflects the last update, matching the "Last modified" header.
             accessor: "lastModifiedDateTime",
             Cell: (props: CellProps<ITwinFull>) => {
               const date = props.data[props.row.index].lastModifiedDateTime;
