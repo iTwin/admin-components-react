@@ -8,7 +8,7 @@ import classNames from "classnames";
 import React from "react";
 import { useInView } from "react-intersection-observer";
 
-import { ApiOverrides } from "../../types";
+import { AccessTokenProvider, ApiOverrides } from "../../types";
 import { useIModelThumbnail } from "./useIModelThumbnail";
 
 export interface IModelThumbnailProps {
@@ -18,7 +18,7 @@ export interface IModelThumbnailProps {
   /** Triggered on the image click, controls pointer */
   onClick?(iModelId: string): void;
   /* Access token that requires the `imodels:read` scope. */
-  accessToken?: string | (() => Promise<string>) | undefined;
+  accessToken?: AccessTokenProvider;
   /** Object that configures different overrides for the API
    * @property data thumbnail URL
    * @property serverEnvironmentPrefix Either qa or dev

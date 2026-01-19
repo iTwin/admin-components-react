@@ -5,6 +5,7 @@
 import {
   DataStatus,
   IndividualITwinStateHook,
+  ITwinCellColumn,
   ITwinFull,
   ITwinGrid as ExternalComponent,
   ITwinGridProps,
@@ -73,6 +74,7 @@ OverrideCellData.args = {
       </strong>
     ),
     ITwinName: (props) => <i style={{ color: "red" }}>{props.value}</i>,
+    hideColumns: [ITwinCellColumn.LastModified],
   },
 };
 

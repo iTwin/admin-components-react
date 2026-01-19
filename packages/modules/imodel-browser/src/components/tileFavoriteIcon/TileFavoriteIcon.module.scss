@@ -2,12 +2,15 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-export type RequestOptions = {
-  skip?: number;
-  top?: number;
-  lastIndex?: number;
-  afterIndex?: number;
-  orderBy?: string;
-  $search?: string;
-  name?: string;
-};
+.favoriteIconButton {
+  padding-inline: var(--iui-button-padding-block);
+  background-color: rgb(from var(--iui-color-background-hover) r g b / 0.7);
+
+  &:hover {
+    background-color: var(--iui-color-background-hover);
+  }
+
+  &:active {
+    background-color: var(--iui-color-background);
+  }
+}

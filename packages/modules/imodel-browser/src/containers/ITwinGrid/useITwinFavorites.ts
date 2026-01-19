@@ -5,6 +5,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 
+import { AccessTokenProvider } from "../../types";
 import { _getAPIServer } from "../../utils/_apiOverrides";
 
 const HOOK_ABORT_ERROR =
@@ -12,9 +13,9 @@ const HOOK_ABORT_ERROR =
 
 /**
  * Custom hook to manage iTwin favorites.
- * @param {string | (() => Promise<string>) | undefined} accessToken - Access token that requires the `itwin-platform` scope. Provide a function that returns the token to prevent the token from expiring.
- * @param {ApiOverrides<ITwinFull[]>} [apiOverrides] - Optional API overrides.
- * @returns {object} - An object containing:
+ * @param accessToken - Access token that requires the `itwin-platform` scope. Provide a function that returns the token to prevent the token from expiring.
+ * @param serverEnvironmentPrefix Optional server environment prefix to target different environments. Can be "dev", "qa", or "" (empty string for production)
+ * @returns {object} An object containing:
  * - {Set<string>} iTwinFavorites - A set of iTwin IDs that are marked as favorites.
  * - {function} addITwinToFavorites - A function to add an iTwin to favorites.
  * - {function} removeITwinFromFavorites - A function to remove an iTwin from favorites.
@@ -22,7 +23,7 @@ const HOOK_ABORT_ERROR =
  * - {function} resetShouldRefetchFavorites - A function to reset shouldRefetchFavorites back to false.
  */
 export const useITwinFavorites = (
-  accessToken: string | (() => Promise<string>) | undefined,
+  accessToken: AccessTokenProvider | undefined,
   serverEnvironmentPrefix?: "dev" | "qa" | ""
 ): {
   iTwinFavorites: Set<string>;

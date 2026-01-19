@@ -32,11 +32,13 @@ describe("UrlBuilder", () => {
   it("should return query with given params", () => {
     expect(
       UrlBuilder.getQuery({ skip: 20, top: 10, orderBy: "index+desc" })
-    ).toEqual("?$skip=20&$top=10&$orderBy=index+desc");
+    ).toEqual("?$skip=20&$top=10&$orderBy=index%20desc");
   });
 
   it("should return query with given params (one with falsy value)", () => {
-    expect(UrlBuilder.getQuery({ skip: 0, top: 10 })).toEqual("?$top=10");
+    expect(UrlBuilder.getQuery({ skip: 0, top: 10 })).toEqual(
+      "?$skip=0&$top=10"
+    );
     expect(UrlBuilder.getQuery({ skip: undefined, top: 10 })).toEqual(
       "?$top=10"
     );
@@ -45,7 +47,7 @@ describe("UrlBuilder", () => {
 
   it("should return empty string when query params are empty", () => {
     expect(UrlBuilder.getQuery({})).toEqual("");
-    expect(UrlBuilder.getQuery({ skip: 0, top: 0 })).toEqual("");
+    expect(UrlBuilder.getQuery({ skip: 0, top: 0 })).toEqual("?$skip=0&$top=0");
     expect(UrlBuilder.getQuery({ skip: undefined, top: undefined })).toEqual(
       ""
     );

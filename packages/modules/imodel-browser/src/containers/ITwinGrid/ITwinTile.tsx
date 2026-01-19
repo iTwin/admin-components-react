@@ -2,16 +2,18 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { SvgItwin, SvgStar, SvgStarHollow } from "@itwin/itwinui-icons-react";
-import { Badge, IconButton, ThemeProvider, Tile } from "@itwin/itwinui-react";
+import { SvgItwin } from "@itwin/itwinui-icons-react";
+import { Badge, ThemeProvider, Tile } from "@itwin/itwinui-react";
 import React from "react";
 
+import { TileFavoriteIcon } from "../../components/tileFavoriteIcon/TileFavoriteIcon";
 import { ITwinFull } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
 import {
   _buildManagedContextMenuOptions,
   ContextMenuBuilderItem,
 } from "../../utils/_buildMenuOptions";
+import styles from "./ITwinTile.module.scss";
 
 export type TileProps = React.ComponentPropsWithoutRef<typeof Tile>;
 
@@ -45,6 +47,8 @@ export interface ITwinTileProps {
   refetchITwins?: () => void;
   /** Indicates whether the tile should take the full width of its container */
   fullWidth?: boolean;
+  /** Hides the favorite icon when true */
+  hideFavoriteIcon?: boolean;
 }
 
 /**
@@ -61,6 +65,7 @@ export const ITwinTile = ({
   removeFromFavorites,
   refetchITwins,
   fullWidth,
+  hideFavoriteIcon,
 }: ITwinTileProps) => {
   const {
     name,
@@ -79,9 +84,9 @@ export const ITwinTile = ({
     children,
     isDisabled,
     onClick,
+    className = "",
     ...rest
   } = tileProps ?? {};
-
   const strings = _mergeStrings(
     {
       trialBadge: "Trial",
@@ -111,7 +116,9 @@ export const ITwinTile = ({
         isLoading={isLoading}
         status={status}
         isDisabled={isDisabled}
-        style={fullWidth ? { width: "100%" } : undefined}
+        className={`${styles.iTwinTile} ${
+          fullWidth ? styles.fullWidth : ""
+        } ${className}`}
         {...rest}
       >
         <Tile.Name>
@@ -130,21 +137,21 @@ export const ITwinTile = ({
           {leftIcon && <Tile.TypeIndicator>{leftIcon}</Tile.TypeIndicator>}
           <Tile.QuickAction>
             {rightIcon}
-            <IconButton
-              aria-label={
-                isFavorite
-                  ? strings.removeFromFavorites
-                  : strings.addToFavorites
-              }
-              onClick={async () => {
-                isFavorite
-                  ? await removeFromFavorites?.(iTwin.id)
-                  : await addToFavorites?.(iTwin.id);
-              }}
-              styleType="borderless"
-            >
-              {isFavorite ? <SvgStar /> : <SvgStarHollow />}
-            </IconButton>
+            {!hideFavoriteIcon &&
+              isFavorite !== undefined &&
+              addToFavorites &&
+              removeFromFavorites && (
+                <TileFavoriteIcon
+                  isFavorite={isFavorite}
+                  onAddToFavorites={() => addToFavorites(iTwin.id)}
+                  onRemoveFromFavorites={() => removeFromFavorites(iTwin.id)}
+                  addLabel={strings.addToFavorites}
+                  removeLabel={strings.removeFromFavorites}
+                  className={`${styles.iTwinTileFavoriteIcon} ${
+                    !isFavorite && styles.hidden
+                  }`}
+                />
+              )}
           </Tile.QuickAction>
           <Tile.BadgeContainer>
             {badge ??

@@ -2,13 +2,14 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { SvgMore } from "@itwin/itwinui-icons-react";
+import { SvgMore, SvgStar, SvgStarHollow } from "@itwin/itwinui-icons-react";
 import { DropdownMenu, IconButton } from "@itwin/itwinui-react";
 import React from "react";
 import { useMemo } from "react";
 import { CellProps } from "react-table";
 
-import { IModelCellOverrides, IModelFull } from "../../types";
+import { useIModelFavoritesContext } from "../../contexts/IModelFavoritesContext";
+import { IModelCellColumn, IModelCellOverrides, IModelFull } from "../../types";
 import {
   _buildManagedContextMenuOptions,
   ContextMenuBuilderItem,
@@ -26,6 +27,9 @@ export interface useIModelTableConfigProps {
     noContext: string;
     noAuthentication: string;
     error: string;
+    tableColumnFavorites: string;
+    addToFavorites: string;
+    removeFromFavorites: string;
   };
   refetchIModels: () => void;
   cellOverrides?: IModelCellOverrides;
@@ -38,6 +42,7 @@ export const useIModelTableConfig = ({
   refetchIModels,
   cellOverrides = {},
 }: useIModelTableConfigProps) => {
+  const favoritesContext = useIModelFavoritesContext();
   const onRowClick = (_: React.MouseEvent, row: any) => {
     const iModel = row.original as IModelFull;
     if (!iModel) {
@@ -52,7 +57,34 @@ export const useIModelTableConfig = ({
         Header: "Table",
         columns: [
           {
-            id: "name",
+            id: IModelCellColumn.Favorite,
+            Header: strings.tableColumnFavorites,
+            accessor: "id",
+            width: 70,
+            Cell: (props: CellProps<IModelFull>) => {
+              const isFavorite = favoritesContext?.favorites.has(props.value);
+              return (
+                <IconButton
+                  styleType="borderless"
+                  aria-label={
+                    isFavorite
+                      ? strings.removeFromFavorites
+                      : strings.addToFavorites
+                  }
+                  onClick={async (e) => {
+                    e.stopPropagation();
+                    isFavorite
+                      ? await favoritesContext?.remove?.(props.value)
+                      : await favoritesContext?.add?.(props.value);
+                  }}
+                >
+                  {isFavorite ? <SvgStar /> : <SvgStarHollow />}
+                </IconButton>
+              );
+            },
+          },
+          {
+            id: IModelCellColumn.Name,
             Header: strings.tableColumnName,
             accessor: "name",
             maxWidth: 350,
@@ -65,7 +97,7 @@ export const useIModelTableConfig = ({
             ),
           },
           {
-            id: "description",
+            id: IModelCellColumn.Description,
             Header: strings.tableColumnDescription,
             accessor: "description",
             disableSortBy: true,
@@ -80,7 +112,7 @@ export const useIModelTableConfig = ({
             ),
           },
           {
-            id: "createdDateTime",
+            id: IModelCellColumn.CreatedDateTime,
             Header: strings.tableColumnLastModified,
             accessor: "createdDateTime",
             maxWidth: 350,
@@ -94,7 +126,7 @@ export const useIModelTableConfig = ({
             },
           },
           {
-            id: "options",
+            id: IModelCellColumn.Options,
             disableSortBy: true,
             maxWidth: 65,
             Cell: (props: CellProps<IModelFull>) => {
@@ -130,13 +162,17 @@ export const useIModelTableConfig = ({
               ) : null;
             },
           },
-        ],
+        ].filter(({ id }) => !cellOverrides.hideColumns?.includes(id)),
       },
     ],
     [
+      strings.tableColumnFavorites,
       strings.tableColumnName,
       strings.tableColumnDescription,
       strings.tableColumnLastModified,
+      strings.addToFavorites,
+      strings.removeFromFavorites,
+      favoritesContext,
       cellOverrides,
       iModelActions,
       refetchIModels,

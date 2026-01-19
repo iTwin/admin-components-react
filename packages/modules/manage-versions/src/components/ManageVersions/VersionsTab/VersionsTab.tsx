@@ -10,7 +10,15 @@ import {
   SvgVisibilityHide,
   SvgVisibilityShow,
 } from "@itwin/itwinui-icons-react";
-import { Flex, Table, Text, Tooltip, useToaster } from "@itwin/itwinui-react";
+import {
+  Anchor,
+  Flex,
+  Table,
+  tableFilters,
+  Text,
+  Tooltip,
+  useToaster,
+} from "@itwin/itwinui-react";
 import {
   ActionType,
   CellProps,
@@ -41,6 +49,8 @@ export type VersionsTabProps = {
   setRelatedChangesets: (versionId: string, changesets: Changeset[]) => void;
   handleHideVersion: (version: NamedVersion) => void;
   showHiddenVersions: boolean;
+  onFilterChange: (filters: { id: string; value: any }[]) => void;
+  nameFilter?: string;
 };
 
 const isNamedVersion = (
@@ -60,6 +70,8 @@ const VersionsTab = (props: VersionsTabProps) => {
     setRelatedChangesets,
     handleHideVersion,
     showHiddenVersions,
+    onFilterChange,
+    nameFilter,
   } = props;
   const toaster = useToaster();
   const { stringsOverrides, imodelId, enableHideVersions } = useConfig();
@@ -251,9 +263,22 @@ const VersionsTab = (props: VersionsTabProps) => {
             },
           },
           {
-            id: "NAME",
+            id: "name",
             Header: stringsOverrides.name,
-            accessor: "name",
+            accessor: (row: VersionTableData | Changeset) => {
+              return isNamedVersion(row) ? row.version.name : row.displayName;
+            },
+            Filter: tableFilters.TextFilter(),
+            filter: (rows: any[], _id: string, filterValue: string) => {
+              // Only filter parent rows (VersionTableData), not subRows (Changesets)
+              return rows.filter((row) => {
+                if (!isNamedVersion(row.original)) {
+                  return true;
+                }
+                const name = row.original.version.name.toLowerCase();
+                return name.includes(filterValue.toLowerCase());
+              });
+            },
             Cell: (props: CellProps<VersionTableData | Changeset>) => {
               const columnAccessor = isNamedVersion(props.row.original)
                 ? "name"
@@ -262,9 +287,13 @@ const VersionsTab = (props: VersionsTabProps) => {
             },
           },
           {
-            id: "DESCRIPTION",
+            id: "description",
             Header: stringsOverrides.description,
-            accessor: "description",
+            accessor: (row: VersionTableData | Changeset) => {
+              return isNamedVersion(row)
+                ? row.version.description
+                : row.description;
+            },
             Cell: (props: CellProps<VersionTableData | Changeset>) => {
               return generateCellContent(props.row.original, "description");
             },
@@ -321,12 +350,9 @@ const VersionsTab = (props: VersionsTabProps) => {
         width: 100,
         Cell: (props: CellProps<VersionTableData>) => {
           return isNamedVersion(props.row.original) ? (
-            <span
-              className="iui-anchor"
-              onClick={() => onViewClick(props.row.original.version)}
-            >
+            <Anchor onClick={() => onViewClick(props.row.original.version)}>
               {stringsOverrides.view}
-            </span>
+            </Anchor>
           ) : (
             <></>
           );
@@ -393,11 +419,22 @@ const VersionsTab = (props: VersionsTabProps) => {
     return enableHideVersions ? [] : ["HIDDEN"];
   }, [enableHideVersions]);
 
+  const initialFilters = React.useMemo(() => {
+    const filterArray = [];
+    if (nameFilter) {
+      filterArray.push({ id: "name", value: nameFilter });
+    }
+    return filterArray;
+  }, [nameFilter]);
+
   return (
     <>
       <Table<VersionTableData>
         columns={columns}
         data={tableData}
+        enableVirtualization={true}
+        manualFilters={true}
+        onFilter={onFilterChange}
         isLoading={
           status === RequestStatus.InProgress ||
           status === RequestStatus.NotStarted
@@ -406,9 +443,12 @@ const VersionsTab = (props: VersionsTabProps) => {
           className: "iac-versions-table-body",
         }}
         emptyTableContent={emptyTableContent}
+        emptyFilteredTableContent={stringsOverrides.messageNoFilterResults}
         onBottomReached={loadMoreVersions}
         className="iac-versions-table"
         onExpand={onExpandRow}
+        initialState={{ hiddenColumns, filters: initialFilters }}
+        autoResetFilters={false}
         stateReducer={useCallback(
           (
             newState: TableState<VersionTableData>,

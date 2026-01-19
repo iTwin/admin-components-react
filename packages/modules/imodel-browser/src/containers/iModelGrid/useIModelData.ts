@@ -5,7 +5,9 @@
 import React, { useEffect } from "react";
 
 import {
+  AccessTokenProvider,
   ApiOverrides,
+  DataMode,
   DataStatus,
   IModelFull,
   IModelSortOptions,
@@ -15,8 +17,10 @@ import { _getAPIServer } from "../../utils/_apiOverrides";
 import { useIModelSort } from "./useIModelSort";
 
 export interface IModelDataHookOptions {
+  /** Type of iModels to request - "favorites" for user's favorite iModels, "recents" for recently accessed iModels, or empty string for all iModels */
+  requestType?: "favorites" | "recents" | "";
   iTwinId?: string | undefined;
-  accessToken?: string | (() => Promise<string>) | undefined;
+  accessToken?: AccessTokenProvider;
   sortOptions?: IModelSortOptions;
   apiOverrides?: ApiOverrides<IModelFull[]>;
   searchText?: string | undefined;
@@ -24,10 +28,15 @@ export interface IModelDataHookOptions {
   pageSize?: number;
   /** @deprecated in 2.1 It is no longer used as it has no effect on the data fetching. */
   viewMode?: ViewType;
+  /** Controls whether data is fetched and managed internally or externally.*/
+  dataMode?: DataMode;
+  onLoadMore?: () => void | Promise<void>;
+  onRefetch?: () => void | Promise<void>;
 }
 export const DEFAULT_PAGE_SIZE = 100;
 
 export const useIModelData = ({
+  requestType = "",
   iTwinId,
   accessToken,
   sortOptions,
@@ -35,6 +44,9 @@ export const useIModelData = ({
   searchText,
   pageSize = DEFAULT_PAGE_SIZE,
   maxCount,
+  dataMode,
+  onLoadMore,
+  onRefetch,
 }: IModelDataHookOptions) => {
   const [needsUpdate, setNeedsUpdate] = React.useState(true);
   const [iModels, setIModels] = React.useState<IModelFull[]>([]);
@@ -53,7 +65,29 @@ export const useIModelData = ({
     IModelSortOptions | undefined
   >(sortOptions && { ...sortOptions });
   const sortDescending = sortOptions?.descending;
-  const sortedIModels = useIModelSort(iModels, sortOptions);
+  const sortedIModels = useIModelSort(
+    iModels,
+    sortOptions,
+    requestType !== "recents"
+  );
+
+  // For recents and favorites, apply client-side filtering based on searchText
+  const filteredIModels = React.useMemo(() => {
+    if (
+      !searchText?.trim() ||
+      (requestType !== "recents" && requestType !== "favorites")
+    ) {
+      return sortedIModels;
+    }
+
+    const lowerSearchText = searchText.toLowerCase();
+    return sortedIModels.filter(
+      (iModel) =>
+        (iModel.name?.toLowerCase().includes(lowerSearchText) ?? false) ||
+        (iModel.description?.toLowerCase().includes(lowerSearchText) ?? false)
+    );
+  }, [sortedIModels, searchText, requestType]);
+
   const sortChanged =
     sortOptions?.descending !== previousSortOptions?.descending ||
     sortOptions?.sortType !== previousSortOptions?.sortType;
@@ -65,14 +99,22 @@ export const useIModelData = ({
   useEffect(() => () => abortController?.abort(), [abortController]);
 
   const reset = React.useCallback(() => {
+    if (dataMode === "external") {
+      return;
+    }
+
     setStatus(DataStatus.Fetching);
     setIModels([]);
     setPage(0);
     setMorePagesAvailable(true);
     setNeedsUpdate(true);
-  }, []);
+  }, [dataMode]);
 
   const fetchMore = React.useCallback(() => {
+    if (dataMode === "external") {
+      return;
+    }
+
     if (
       needsUpdate ||
       status === DataStatus.Fetching ||
@@ -82,14 +124,21 @@ export const useIModelData = ({
     ) {
       return;
     }
-    setPage(page + 1);
+    setPage((page) => page + 1);
     setNeedsUpdate(true);
-  }, [needsUpdate, status, morePagesAvailable, page]);
+  }, [dataMode, needsUpdate, status, morePagesAvailable]);
 
   React.useEffect(() => {
+    if (dataMode === "external") {
+      return;
+    }
+
     // start from scratch when any external state changes
-    reset();
+    if (requestType !== "recents" && requestType !== "favorites") {
+      reset();
+    }
   }, [
+    dataMode,
     iTwinId,
     accessToken,
     sortOptions?.descending,
@@ -99,26 +148,42 @@ export const useIModelData = ({
     searchText,
     pageSize,
     maxCount,
+    requestType,
+    reset,
+  ]);
+
+  React.useEffect(() => {
+    if (dataMode === "external") {
+      return;
+    }
+
+    // start from scratch when any external state changes
+    if (requestType === "recents" || requestType === "favorites") {
+      reset();
+    }
+  }, [
+    dataMode,
+    iTwinId,
+    accessToken,
+    sortOptions?.descending,
+    sortOptions?.sortType,
+    apiOverrides?.data,
+    apiOverrides?.serverEnvironmentPrefix,
+    pageSize,
+    maxCount,
+    requestType,
     reset,
   ]);
 
   // Main function
   React.useEffect(() => {
-    if (!needsUpdate) {
+    if (dataMode === "external" || !needsUpdate) {
       return;
     }
 
     setNeedsUpdate(false);
     abortController?.abort();
     setAbortController(undefined);
-
-    // if data is provided, use it and skip fetching
-    if (apiOverrides?.data) {
-      setIModels(apiOverrides.data);
-      setStatus(DataStatus.Complete);
-      setMorePagesAvailable(false);
-      return;
-    }
 
     if (!accessToken || !iTwinId) {
       setStatus(
@@ -147,7 +212,8 @@ export const useIModelData = ({
         searchText,
         pageSize,
         maxCount,
-        apiOverrides?.serverEnvironmentPrefix
+        apiOverrides?.serverEnvironmentPrefix,
+        requestType
       );
     setAbortController(newAbortController);
 
@@ -170,6 +236,7 @@ export const useIModelData = ({
         console.error(e);
       });
   }, [
+    dataMode,
     abortController,
     accessToken,
     apiOverrides?.data,
@@ -181,14 +248,33 @@ export const useIModelData = ({
     morePagesAvailable,
     needsUpdate,
     page,
+    requestType,
     searchText,
     sortChanged,
     sortDescending,
     sortType,
   ]);
 
+  if (dataMode === "external") {
+    return {
+      iModels: apiOverrides?.data ?? [],
+      status: apiOverrides?.isLoading
+        ? DataStatus.Fetching
+        : DataStatus.Complete,
+      fetchMore:
+        apiOverrides?.hasMoreData && !apiOverrides.isLoading
+          ? onLoadMore
+          : undefined,
+      refetchIModels:
+        onRefetch ??
+        (() => {
+          // No-op in external mode - consumer handles refetch
+        }),
+    };
+  }
+
   return {
-    iModels: sortedIModels,
+    iModels: filteredIModels,
     status,
     fetchMore: morePagesAvailable ? fetchMore : undefined,
     refetchIModels: reset,
@@ -197,14 +283,15 @@ export const useIModelData = ({
 
 const createFetchIModelsFn = (
   iTwinId: string,
-  accessToken: string | (() => Promise<string>),
+  accessToken: AccessTokenProvider,
   sortType: string | undefined,
   sortDescending: boolean,
   page: number,
   searchText: string | undefined,
   pageSize: number = DEFAULT_PAGE_SIZE,
   maxCount: number | undefined,
-  serverEnvironmentPrefix?: "" | "dev" | "qa"
+  serverEnvironmentPrefix?: "" | "dev" | "qa",
+  requestType: "favorites" | "recents" | "" = ""
 ): {
   abortController: AbortController;
   fetchIModels: () => Promise<{
@@ -231,16 +318,21 @@ const createFetchIModelsFn = (
     };
   }
 
+  const endpoint = ["favorites", "recents"].includes(requestType)
+    ? requestType
+    : "";
   const top = maxCount ? Math.min(pageSize, maxCount - skip) : pageSize;
   const paging = `&$skip=${skip}&$top=${top}`;
-  const searching = searchText?.trim()
-    ? `&$search=${encodeURIComponent(searchText)}`
-    : "";
+  // Only apply server-side search for non-recents and non-favorites requests
+  const searching =
+    searchText?.trim() && !["favorites", "recents"].includes(requestType)
+      ? `&$search=${encodeURIComponent(searchText)}`
+      : "";
 
   const abortController = new AbortController();
   const url = `${_getAPIServer(
     serverEnvironmentPrefix
-  )}/imodels/${selection}${sorting}${paging}${searching}`;
+  )}/imodels/${endpoint}${selection}${sorting}${paging}${searching}`;
 
   const doFetchRequest = async () => {
     const options: RequestInit = {

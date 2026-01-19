@@ -65,6 +65,10 @@ export interface ApiOverrides<T = never> {
   serverEnvironmentPrefix?: "dev" | "qa" | "";
   /** Data as props */
   data?: T;
+  /** Loading state when using consumer-provided data. */
+  isLoading?: boolean;
+  /** Indicates if more data is available for infinite scroll when using consumer-provided data. */
+  hasMoreData?: boolean;
 }
 
 type FilterOptions = string;
@@ -79,6 +83,13 @@ export enum DataStatus {
   TokenRequired = "error_tokenRequired",
   ContextRequired = "error_contextRequired",
 }
+
+/**
+ * Specifies the data management mode for the hook.
+ * - "internal": Hook manages all data fetching, pagination, sorting, and filtering. Requires accessToken and iTwinId.
+ * - "external": Hook uses data provided via apiOverrides.data and delegates all data management to the consumer.
+ */
+export type DataMode = "internal" | "external";
 
 type SortOptions<T, K extends keyof T> = { sortType: K; descending: boolean };
 
@@ -107,14 +118,34 @@ export type ViewType = "tile" | "cells";
 // Remove this IModelViewType with next major release i.e 2.0
 export type IModelViewType = ViewType;
 
+/* Supported IModel cell columns */
+export enum IModelCellColumn {
+  Favorite = "Favorite",
+  Name = "name",
+  Description = "description",
+  CreatedDateTime = "createdDateTime",
+  Options = "options",
+}
 export type IModelCellOverrides = {
   name?: (cellData: CellProps<IModelFull>) => React.ReactNode;
   description?: (cellData: CellProps<IModelFull>) => React.ReactNode;
   createdDateTime?: (cellData: CellProps<IModelFull>) => React.ReactNode;
+  hideColumns?: IModelCellColumn[];
 };
 
+/* Supported ITwin cell columns */
+export enum ITwinCellColumn {
+  Favorite = "Favorite",
+  Number = "ITwinNumber",
+  Name = "ITwinName",
+  LastModified = "LastModified",
+  Options = "options",
+}
 export type ITwinCellOverrides = {
   ITwinNumber?: (cellData: CellProps<ITwinFull>) => React.ReactNode;
   ITwinName?: (cellData: CellProps<ITwinFull>) => React.ReactNode;
   LastModified?: (cellData: CellProps<ITwinFull>) => React.ReactNode;
+  hideColumns?: ITwinCellColumn[];
 };
+
+export type AccessTokenProvider = string | (() => Promise<string>);
