@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Thu, 04 Dec 2025 12:32:04 GMT and should not be manually modified.
+This log was last generated on Tue, 20 Jan 2026 13:43:21 GMT and should not be manually modified.
+
+## 4.0.0
+Tue, 20 Jan 2026 13:43:21 GMT
+
+### Breaking changes
+
+- Fix sort in iModel/iTwin grid tables
 
 ## 3.8.0
 Thu, 04 Dec 2025 12:32:04 GMT
