@@ -29,7 +29,10 @@ import { IModelGhostTile } from "../iModelTiles/IModelGhostTile";
 import { IModelTile, IModelTileProps } from "../iModelTiles/IModelTile";
 import styles from "./IModelGrid.module.scss";
 import { DEFAULT_PAGE_SIZE, useIModelData } from "./useIModelData";
-import { useIModelTableConfig } from "./useIModelTableConfig";
+import {
+  IModelTableStrings,
+  useIModelTableConfig,
+} from "./useIModelTableConfig";
 
 export interface IModelGridProps {
   /**
@@ -57,19 +60,9 @@ export interface IModelGridProps {
   /** Static props to apply over each tile, mainly used for tileProps, overrides IModelGrid provided values */
   tileOverrides?: Partial<IModelTileProps>;
   /** Strings displayed by the browser */
-  stringsOverrides?: {
-    /** Displayed for table name header. */
-    tableColumnName?: string;
-    /** Displayed for table description header. */
-    tableColumnDescription?: string;
-    /** Displayed for table lastModified header. */
-    tableColumnLastModified?: string;
-    /** Displayed on table while loading data. */
-    tableLoadingData?: string;
+  stringsOverrides?: Partial<IModelTableStrings> & {
     /** Displayed after successful fetch search, but no iModel is returned. */
     noIModelSearch?: string;
-    /** Displayed after successful fetch search, but no iModel is returned, along with noIModelSearch text. */
-    noIModelSearchSubtext?: string;
     /** Displayed after successful fetch, but no iModels are returned. */
     noIModels?: string;
     /** Displayed when the component is mounted and there is no iTwin or asset Id. */
@@ -78,6 +71,10 @@ export interface IModelGridProps {
     noAuthentication?: string;
     /** Generic message displayed if an error occurs while fetching. */
     error?: string;
+    /** Displayed on table while loading data. */
+    tableLoadingData?: string;
+    /** Displayed after successful fetch search, but no iModel is returned, along with noIModelSearch text. */
+    noIModelSearchSubtext?: string;
     /** Displayed in context menu for removing iModel from recents. */
     removeFromRecents?: string;
   };
@@ -142,11 +139,11 @@ export const IModelGrid = (props: IModelGridProps) => {
       serverEnvironmentPrefix={props.apiOverrides?.serverEnvironmentPrefix}
       disabled={props.tileOverrides?.hideFavoriteIcon}
     >
-      <ITwinGridInternal {...props} />
+      <IModelGridInternal {...props} />
     </IModelFavoritesProvider>
   );
 };
-const ITwinGridInternal = ({
+const IModelGridInternal = ({
   accessToken,
   apiOverrides,
   iModelActions,
@@ -172,31 +169,27 @@ const ITwinGridInternal = ({
   disableAddToRecents = false,
 }: IModelGridProps) => {
   const [sort, setSort] = React.useState<IModelSortOptions>(sortOptions);
-  const [isSortOnTable, setIsSortOnTable] = React.useState(false);
 
   React.useEffect(() => {
-    if (!isSortOnTable) {
-      const defaultTableSort: IModelSortOptions = {
-        sortType: "name",
-        descending: false,
-      };
-      setSort(
-        viewMode === "cells"
-          ? defaultTableSort
-          : {
-              sortType: sortOptions.sortType,
-              descending: sortOptions.descending,
-            }
-      );
-    }
-  }, [isSortOnTable, sortOptions.descending, sortOptions.sortType, viewMode]);
+    setSort(
+      viewMode === "cells"
+        ? {
+            sortType: "name",
+            descending: false,
+          }
+        : {
+            sortType: sortOptions.sortType,
+            descending: sortOptions.descending,
+          }
+    );
+  }, [sortOptions.descending, sortOptions.sortType, viewMode]);
 
   const strings = _mergeStrings(
     {
       tableColumnFavorites: "",
       tableColumnName: "Name",
       tableColumnDescription: "Description",
-      tableColumnLastModified: "Last Modified",
+      tableColumnCreatedDate: "Created Date",
       tableLoadingData: "Loading...",
       noIModelSearch: "No results found",
       noIModelSearchSubtext:
@@ -349,7 +342,6 @@ const ITwinGridInternal = ({
                 apiOverrides={tileApiOverrides}
                 useTileState={useIndividualState}
                 refetchIModels={refetchIModels}
-                {...cellOverrides}
                 {...tileOverrides}
                 tileProps={
                   tileOverrides
@@ -402,23 +394,6 @@ const ITwinGridInternal = ({
               }
               isLoading={fetchStatus === DataStatus.Fetching}
               isSortable
-              onSort={(state) => {
-                const sortBy =
-                  state.sortBy.length > 0 ? state.sortBy[0] : undefined;
-                setIsSortOnTable(sortBy?.id !== undefined);
-                if (
-                  !sortBy ||
-                  sortBy.desc === undefined ||
-                  (sortBy.id !== "name" && sortBy.id !== "createdDateTime")
-                ) {
-                  return;
-                }
-                setSort({
-                  sortType: sortBy.id,
-                  descending: sortBy.desc,
-                });
-              }}
-              manualSortBy
               onBottomReached={fetchMore}
               autoResetFilters={false}
               autoResetSortBy={false}

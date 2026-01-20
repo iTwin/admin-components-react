@@ -68,7 +68,11 @@ OverrideCellData.args = {
     name: (props) =>
       props.value.includes("a") ? (
         <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-          <IconButton size="small" styleType="borderless">
+          <IconButton
+            aria-label="apple-icon"
+            size="small"
+            styleType="borderless"
+          >
             <SvgApple />
           </IconButton>
           {props.value}
