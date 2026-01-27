@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/manage-versions-react",
+      "comment": "Fetch next user batch if current view has user that are not fetched yet.",
+      "type": "patch"
+    }
+  ],
+  "packageName": "@itwin/manage-versions-react"
+}
