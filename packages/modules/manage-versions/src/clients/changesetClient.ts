@@ -43,13 +43,16 @@ export class ChangesetClient {
       .then((resp) => resp.changesets);
   }
 
-  public async getUsers(imodelId: string): Promise<User[]> {
+  public async getUsers(
+    imodelId: string,
+    requestOptions: RequestOptions = {}
+  ): Promise<{ users: User[]; hasMore: boolean }> {
     return this._http
       .get(
         `${UrlBuilder.buildGetUsersUrl(
           imodelId,
           this._serverEnvironmentPrefix
-        )}`,
+        )}${UrlBuilder.getQuery(requestOptions)}`,
         {
           headers: {
             [HttpHeaderNames.Prefer]: "return=representation",
@@ -58,7 +61,10 @@ export class ChangesetClient {
           },
         }
       )
-      .then((resp) => resp.users);
+      .then((resp) => ({
+        users: resp.users,
+        hasMore: !!resp._links?.next?.href,
+      }));
   }
 
   public async getChangesetCheckpoint(
