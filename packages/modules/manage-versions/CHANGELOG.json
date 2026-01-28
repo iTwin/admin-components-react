@@ -2,6 +2,18 @@
   "name": "@itwin/manage-versions-react",
   "entries": [
     {
+      "version": "2.2.3",
+      "tag": "@itwin/manage-versions-react_v2.2.3",
+      "date": "Wed, 28 Jan 2026 09:51:00 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Fetch next user batch if current view has user that are not fetched yet."
+          }
+        ]
+      }
+    },
+    {
       "version": "2.2.2",
       "tag": "@itwin/manage-versions-react_v2.2.2",
       "date": "Tue, 09 Dec 2025 18:16:22 GMT",

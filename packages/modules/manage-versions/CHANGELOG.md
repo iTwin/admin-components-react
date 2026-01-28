@@ -1,6 +1,13 @@
 # Change Log - @itwin/manage-versions-react
 
-This log was last generated on Tue, 09 Dec 2025 18:16:22 GMT and should not be manually modified.
+This log was last generated on Wed, 28 Jan 2026 09:51:00 GMT and should not be manually modified.
+
+## 2.2.3
+Wed, 28 Jan 2026 09:51:00 GMT
+
+### Patches
+
+- Fetch next user batch if current view has user that are not fetched yet.
 
 ## 2.2.2
 Tue, 09 Dec 2025 18:16:22 GMT
