@@ -455,26 +455,19 @@ const ManageVersionsComponent = (props: ManageVersionsProps) => {
 
   React.useEffect(() => {
     const loadUsers = async () => {
-      if (!hasMoreUsersRef.current) {
-        return;
-      }
-
+      hasMoreUsersRef.current = false;
       if (!usersRef.current) {
-        hasMoreUsersRef.current = false;
         await getUsers();
       } else {
-        const hasMissingUsers =
-          versionsTableData?.some((td) => !td.version.createdBy) ||
-          changesets?.some((cs) => !cs.createdBy);
-
-        if (hasMissingUsers) {
-          hasMoreUsersRef.current = false;
-          await getUsers(Object.keys(usersRef.current).length);
-        }
+        await getUsers(Object.keys(usersRef.current).length);
       }
     };
 
-    if (!usersRef.current || versionsTableData || changesets) {
+    const hasMissingUsers =
+      versionsTableData?.some((td) => !td.version.createdBy) ||
+      changesets?.some((cs) => !cs.createdBy);
+
+    if (!usersRef.current || (hasMissingUsers && hasMoreUsersRef.current)) {
       loadUsers()
         .then(() => {
           const updatedVersionsTableData = versionsTableData?.map((td) => {
