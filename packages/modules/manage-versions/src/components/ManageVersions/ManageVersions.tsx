@@ -111,6 +111,7 @@ export enum ManageVersionsTabs {
 
 const NAMED_VERSION_TOP = 100;
 const CHANGESET_TOP = 100;
+const USERS_TOP = 100;
 
 const initialChangeset: Changeset = {
   id: "",
@@ -231,18 +232,26 @@ const ManageVersionsComponent = (props: ManageVersionsProps) => {
   const usersRef = React.useRef<{ [key: string]: string } | undefined>(
     undefined
   );
+  const hasMoreUsersRef = React.useRef<boolean>(true);
 
-  const getUsers = React.useCallback(async () => {
-    const users = await changesetClient.getUsers(imodelId);
-    const userMapData = users.reduce((acc, user) => {
-      const userFullName = [user.givenName, user.surname].filter(Boolean);
-      acc[user.id] = userFullName.length
-        ? userFullName.join(" ")
-        : user.displayName;
-      return acc;
-    }, {} as { [key: string]: string });
-    usersRef.current = userMapData;
-  }, [changesetClient, imodelId]);
+  const getUsers = React.useCallback(
+    async (skip?: number) => {
+      const { users, hasMore } = await changesetClient.getUsers(imodelId, {
+        top: USERS_TOP,
+        skip,
+      });
+      const userMapData = users.reduce((acc, user) => {
+        const userFullName = [user.givenName, user.surname].filter(Boolean);
+        acc[user.id] = userFullName.length
+          ? userFullName.join(" ")
+          : user.displayName;
+        return acc;
+      }, {} as { [key: string]: string });
+      usersRef.current = { ...usersRef.current, ...userMapData };
+      hasMoreUsersRef.current = hasMore;
+    },
+    [changesetClient, imodelId]
+  );
 
   React.useEffect(() => {
     setCurrentTab(currentTab);
@@ -446,9 +455,26 @@ const ManageVersionsComponent = (props: ManageVersionsProps) => {
 
   React.useEffect(() => {
     const loadUsers = async () => {
-      await getUsers();
+      if (!hasMoreUsersRef.current) {
+        return;
+      }
+
+      if (!usersRef.current) {
+        hasMoreUsersRef.current = false;
+        await getUsers();
+      } else {
+        const hasMissingUsers =
+          versionsTableData?.some((td) => !td.version.createdBy) ||
+          changesets?.some((cs) => !cs.createdBy);
+
+        if (hasMissingUsers) {
+          hasMoreUsersRef.current = false;
+          await getUsers(Object.keys(usersRef.current).length);
+        }
+      }
     };
-    if (!usersRef.current) {
+
+    if (!usersRef.current || versionsTableData || changesets) {
       loadUsers()
         .then(() => {
           const updatedVersionsTableData = versionsTableData?.map((td) => {

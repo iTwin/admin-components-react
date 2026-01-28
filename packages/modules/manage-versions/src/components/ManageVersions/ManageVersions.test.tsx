@@ -65,7 +65,7 @@ describe("ManageVersions", () => {
     jest.clearAllMocks();
     mockGetVersions.mockResolvedValue(MockedVersionList());
     mockGetChangesets.mockResolvedValue(MockedChangesetList());
-    mockGetUsers.mockResolvedValue(MockedUsers());
+    mockGetUsers.mockResolvedValue({ users: MockedUsers(), hasMore: false });
   });
 
   it("should show versions table with data", async () => {
