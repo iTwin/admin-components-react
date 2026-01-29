@@ -2,6 +2,18 @@
   "name": "@itwin/manage-versions-react",
   "entries": [
     {
+      "version": "2.2.4",
+      "tag": "@itwin/manage-versions-react_v2.2.4",
+      "date": "Thu, 29 Jan 2026 09:00:08 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Fix infinite rerender edge case"
+          }
+        ]
+      }
+    },
+    {
       "version": "2.2.3",
       "tag": "@itwin/manage-versions-react_v2.2.3",
       "date": "Wed, 28 Jan 2026 09:51:00 GMT",
