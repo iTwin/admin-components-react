@@ -17,6 +17,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Validate Storybook auth client id
+        env:
+          STORYBOOK_AUTH_CLIENT_ID: ${{ secrets.STORYBOOK_AUTH_CLIENT_ID }}
+        run: |
+          if [ -z "$STORYBOOK_AUTH_CLIENT_ID" ]; then
+            echo "STORYBOOK_AUTH_CLIENT_ID is not set. Add it as a GitHub Actions secret."
+            exit 1
+          fi
+
       - name: Use Node.js 20
         uses: actions/setup-node@v4
         with:
@@ -30,6 +39,8 @@ jobs:
 
       - name: Build Storybook static
         working-directory: packages/apps/storybook
+        env:
+          STORYBOOK_AUTH_CLIENT_ID: ${{ secrets.STORYBOOK_AUTH_CLIENT_ID }}
         run: |
           set -e
           node ../../../common/scripts/install-run-rushx.js build-storybook
