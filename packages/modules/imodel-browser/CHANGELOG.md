@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Tue, 20 Jan 2026 13:43:21 GMT and should not be manually modified.
+This log was last generated on Wed, 04 Feb 2026 22:37:11 GMT and should not be manually modified.
+
+## 4.1.0
+Wed, 04 Feb 2026 22:37:11 GMT
+
+### Minor changes
+
+- Add option to provide callback function to iModel action disable prop
 
 ## 4.0.0
 Tue, 20 Jan 2026 13:43:21 GMT
