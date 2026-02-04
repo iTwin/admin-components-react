@@ -213,19 +213,32 @@ IndividualContextMenu.args = {
       children: "displayName contains 'R'",
       visible: (iModel) => iModel.displayName?.includes("R") ?? false,
       key: "withR",
-      onClick: (iModel) => alert("Contains R" + iModel?.displayName),
+      onClick: (iModel) => alert("Contains R: " + iModel?.displayName),
     },
     {
       children: "Add description",
       visible: (iModel) => !iModel.description,
       key: "addD",
-      onClick: (iModel) => alert("Add description" + iModel?.displayName),
+      onClick: (iModel) => alert("Add description: " + iModel?.displayName),
     },
     {
       children: "Edit description",
       visible: (iModel) => !!iModel.description,
       key: "editD",
-      onClick: (iModel) => alert("Edit description" + iModel?.displayName),
+      onClick: (iModel) => alert("Edit description: " + iModel?.displayName),
+    },
+  ],
+};
+
+export const DisabledContextMenu = Template.bind({});
+DisabledContextMenu.args = {
+  apiOverrides: { serverEnvironmentPrefix: "qa" },
+  iModelActions: [
+    {
+      children: "Disabled if name contains 'T'",
+      disabled: (iModel) => iModel.displayName?.includes("T") ?? false,
+      key: "withT",
+      onClick: (iModel) => alert("Does not contain T: " + iModel?.displayName),
     },
   ],
 };
