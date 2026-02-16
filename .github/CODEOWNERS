@@ -5,13 +5,13 @@
 
 # These owners will be the default owners for everything in
 # the repo, unless a later match takes precedence.
-rush.json                       @aruniverse
-.github/workflows/publish.yml   @aruniverse
+rush.json                       @aruniverse @ben-polinsky
+.github/workflows/publish.yml   @aruniverse @ben-polinsky
  
 # imodel-browser
-packages/modules/imodel-browser/ @aruniverse
-common/changes/@itwin/imodel-browser-react/ @aruniverse
-packages/apps/storybook/src/imodel-browser/ @aruniverse
+packages/modules/imodel-browser/ @aruniverse @ben-polinsky
+common/changes/@itwin/imodel-browser-react/ @aruniverse @ben-polinsky
+packages/apps/storybook/src/imodel-browser/ @aruniverse @ben-polinsky
 
 # delete-imodel
 packages/modules/delete-imodel/ @veekeys

@@ -8,10 +8,11 @@ import React from "react";
 type MenuItemProps = React.ComponentPropsWithoutRef<typeof MenuItem>;
 
 export interface ContextMenuBuilderItem<T = any>
-  extends Omit<MenuItemProps, "onClick" | "value"> {
+  extends Omit<MenuItemProps, "onClick" | "value" | "disabled"> {
   key: string;
   visible?: boolean | ((value: T) => boolean);
   onClick?: ((value?: T, refetchData?: () => void) => void) | undefined;
+  disabled?: MenuItemProps["disabled"] | ((value: T) => boolean);
 }
 
 /** Build MenuItem array for the value for each provided options
@@ -27,10 +28,11 @@ export const _buildManagedContextMenuOptions: <T>(
     ?.filter?.(({ visible }) => {
       return typeof visible === "function" ? visible(value) : visible ?? true;
     })
-    .map(({ key, visible, onClick, ...contextMenuProps }) => {
+    .map(({ key, visible, onClick, disabled, ...contextMenuProps }) => {
       return (
         <MenuItem
           {...contextMenuProps}
+          disabled={typeof disabled === "function" ? disabled(value) : disabled}
           onClick={(e?: React.MouseEvent) => {
             e?.stopPropagation();
             closeMenu?.();

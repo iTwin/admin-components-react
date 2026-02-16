@@ -2,6 +2,18 @@
   "name": "@itwin/imodel-browser-react",
   "entries": [
     {
+      "version": "4.1.0",
+      "tag": "@itwin/imodel-browser-react_v4.1.0",
+      "date": "Wed, 04 Feb 2026 22:37:11 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Add option to provide callback function to iModel action disable prop"
+          }
+        ]
+      }
+    },
+    {
       "version": "4.0.0",
       "tag": "@itwin/imodel-browser-react_v4.0.0",
       "date": "Tue, 20 Jan 2026 13:43:21 GMT",
