@@ -10,6 +10,10 @@ import React from "react";
 import { DataStatus, IModelCellOverrides, IModelFull, IModelGrid } from "../..";
 import * as useIModelData from "./useIModelData";
 
+jest.mock("../iModelThumbnail/IModelThumbnail", () => ({
+  IModelThumbnail: () => <div data-testid="imodel-thumbnail" />,
+}));
+
 describe("IModelGrid", () => {
   beforeEach(() => {
     jest.spyOn(useIModelData, "useIModelData").mockReturnValue({
@@ -91,6 +95,63 @@ describe("IModelGrid", () => {
       wrapper.container.querySelector('div[class$="-table"]')
     ).toBeInTheDocument();
     expect(wrapper.getAllByRole("row").length).toEqual(3); // Header row + 2 data rows
+  });
+  it("should show ghost tiles only on the initial tile load", () => {
+    jest.spyOn(useIModelData, "useIModelData").mockReturnValue({
+      iModels: [],
+      status: DataStatus.Fetching,
+      fetchMore: undefined,
+      refetchIModels: jest.fn(),
+    });
+
+    const { getAllByText, queryByText } = render(<IModelGrid />);
+
+    expect(getAllByText("Skeleton Name")).toHaveLength(2);
+    expect(queryByText("Test IModel")).not.toBeInTheDocument();
+  });
+  it("should keep cached tile content visible while refreshing", () => {
+    jest.spyOn(useIModelData, "useIModelData").mockReturnValue({
+      iModels: [
+        {
+          id: "iModel1",
+          name: "Test IModel",
+          displayName: "Test IModel",
+          description: "This is a test iModel",
+        },
+      ],
+      status: DataStatus.Fetching,
+      fetchMore: undefined,
+      refetchIModels: jest.fn(),
+    });
+
+    const { getByRole, getByText, queryByText } = render(<IModelGrid />);
+
+    expect(getByText("Test IModel")).toBeInTheDocument();
+    expect(getByRole("status")).toHaveTextContent("Loading...");
+    expect(queryByText("Skeleton Name")).not.toBeInTheDocument();
+  });
+  it("should keep cached table content visible while refreshing", () => {
+    jest.spyOn(useIModelData, "useIModelData").mockReturnValue({
+      iModels: [
+        {
+          id: "iModel1",
+          name: "Test IModel",
+          displayName: "Test IModel",
+          description: "This is a test iModel",
+        },
+      ],
+      status: DataStatus.Fetching,
+      fetchMore: undefined,
+      refetchIModels: jest.fn(),
+    });
+
+    const { getAllByRole, getByRole, getByText } = render(
+      <IModelGrid viewMode="cells" />
+    );
+
+    expect(getByText("Test IModel")).toBeInTheDocument();
+    expect(getAllByRole("row")).toHaveLength(2);
+    expect(getByRole("status")).toHaveTextContent("Loading...");
   });
   it("should prevent onThumbnailClick from being called when button in cell is clicked with stopPropagation", () => {
     const onClick = jest.fn();

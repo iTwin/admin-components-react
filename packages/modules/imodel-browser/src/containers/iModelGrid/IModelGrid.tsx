@@ -269,6 +269,13 @@ const IModelGridInternal = ({
       fetchediModels,
     [postProcessCallback, fetchediModels, fetchStatus, searchText]
   );
+  const hasCachedIModels = iModels.length > 0;
+  const showInitialLoadingTiles =
+    fetchStatus === DataStatus.Fetching && !hasCachedIModels;
+  const showBackgroundLoadingIndicator =
+    fetchStatus === DataStatus.Fetching && hasCachedIModels;
+  const showLoadMoreSentinel =
+    !!fetchMore && hasCachedIModels && fetchStatus !== DataStatus.Fetching;
 
   React.useEffect(() => {
     if (
@@ -325,74 +332,85 @@ const IModelGridInternal = ({
 
   const renderIModelGridStructure = () => {
     return (
-      <>
-        {viewMode !== "cells" ? (
-          <GridStructure className={className}>
-            {iModels?.map((iModel) => (
-              <IModelHookedTile
-                key={iModel.id}
-                iModel={iModel}
-                iModelOptions={enhancedIModelActions}
-                accessToken={accessToken}
-                onThumbnailClick={(iModel) =>
-                  iModelClickAndAddToRecents(iModel, () =>
-                    onThumbnailClick?.(iModel)
-                  )
-                }
-                apiOverrides={tileApiOverrides}
-                useTileState={useIndividualState}
-                refetchIModels={refetchIModels}
-                {...tileOverrides}
-                tileProps={
-                  tileOverrides
-                    ? {
-                        ...tileOverrides.tileProps,
-                        onClick: tileOverrides.tileProps?.onClick
-                          ? (e) =>
-                              iModelClickAndAddToRecents(iModel, () =>
-                                tileOverrides.tileProps?.onClick?.(e)
-                              )
-                          : undefined,
-                      }
-                    : undefined
-                }
-              />
-            ))}
-            {fetchMore ? (
-              <InView
-                onChange={(inView) => {
-                  inView && fetchStatus !== DataStatus.Fetching && fetchMore();
-                }}
-              >
-                {({ ref }) => {
-                  return (
-                    <IModelGhostTile
-                      ref={ref}
-                      fullWidth={tileOverrides?.fullWidth}
-                    />
-                  );
-                }}
-              </InView>
-            ) : null}
-            {fetchStatus === DataStatus.Fetching && (
-              <>
-                <IModelGhostTile fullWidth={tileOverrides?.fullWidth} />
-                <IModelGhostTile fullWidth={tileOverrides?.fullWidth} />
-              </>
-            )}
-          </GridStructure>
-        ) : (
-          <ThemeProvider theme="inherit">
+      <ThemeProvider theme="inherit">
+        <div className={styles.gridShell}>
+          {showBackgroundLoadingIndicator && (
+            <div
+              className={styles.refreshIndicator}
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+            >
+              <span className={styles.refreshIndicatorDot} aria-hidden="true" />
+              {strings.tableLoadingData}
+            </div>
+          )}
+          {viewMode !== "cells" ? (
+            <GridStructure className={className}>
+              {iModels?.map((iModel) => (
+                <IModelHookedTile
+                  key={iModel.id}
+                  iModel={iModel}
+                  iModelOptions={enhancedIModelActions}
+                  accessToken={accessToken}
+                  onThumbnailClick={(iModel) =>
+                    iModelClickAndAddToRecents(iModel, () =>
+                      onThumbnailClick?.(iModel)
+                    )
+                  }
+                  apiOverrides={tileApiOverrides}
+                  useTileState={useIndividualState}
+                  refetchIModels={refetchIModels}
+                  {...tileOverrides}
+                  tileProps={
+                    tileOverrides
+                      ? {
+                          ...tileOverrides.tileProps,
+                          onClick: tileOverrides.tileProps?.onClick
+                            ? (e) =>
+                                iModelClickAndAddToRecents(iModel, () =>
+                                  tileOverrides.tileProps?.onClick?.(e)
+                                )
+                            : undefined,
+                        }
+                      : undefined
+                  }
+                />
+              ))}
+              {showLoadMoreSentinel ? (
+                <InView
+                  onChange={(inView) => {
+                    inView && fetchMore();
+                  }}
+                >
+                  {({ ref }) => {
+                    return (
+                      <IModelGhostTile
+                        ref={ref}
+                        fullWidth={tileOverrides?.fullWidth}
+                      />
+                    );
+                  }}
+                </InView>
+              ) : null}
+              {showInitialLoadingTiles && (
+                <>
+                  <IModelGhostTile fullWidth={tileOverrides?.fullWidth} />
+                  <IModelGhostTile fullWidth={tileOverrides?.fullWidth} />
+                </>
+              )}
+            </GridStructure>
+          ) : (
             <Table<{ [P in keyof IModelFull]: IModelFull[P] }>
               columns={columns}
               data={iModels}
               onRowClick={onRowClick}
               emptyTableContent={
-                fetchStatus === DataStatus.Fetching
+                showInitialLoadingTiles
                   ? strings.tableLoadingData
                   : strings.noIModelSearch
               }
-              isLoading={fetchStatus === DataStatus.Fetching}
+              isLoading={showInitialLoadingTiles}
               isSortable
               onBottomReached={fetchMore}
               autoResetFilters={false}
@@ -401,9 +419,9 @@ const IModelGridInternal = ({
                 className: onThumbnailClick ? styles.rowCursor : "",
               }}
             />
-          </ThemeProvider>
-        )}
-      </>
+          )}
+        </div>
+      </ThemeProvider>
     );
   };
 

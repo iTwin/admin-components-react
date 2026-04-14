@@ -2,6 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+import { waitFor } from "@testing-library/react";
 import { renderHook } from "@testing-library/react-hooks";
 import { rest } from "msw";
 import { act } from "react";
@@ -440,4 +441,68 @@ it("aborts previous fetch when new fetch is initiated", async () => {
   rerender({ iTwinId: "iTwinId2", accessToken: "accessToken" });
   await waitForNextUpdate();
   expect(abortSpy).toHaveBeenCalled();
+});
+
+it("keeps cached iModels visible while refreshed data is loading", async () => {
+  const initialIModels = [{ id: "first", displayName: "First" }];
+  const refreshedIModels = [{ id: "second", displayName: "Second" }];
+
+  let resolveRefetch:
+    | ((value: {
+        ok: boolean;
+        json: () => Promise<{ iModels: typeof refreshedIModels }>;
+      }) => void)
+    | undefined;
+
+  jest
+    .spyOn(window, "fetch")
+    .mockImplementationOnce(
+      () =>
+        Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({ iModels: initialIModels }),
+        }) as any
+    )
+    .mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          resolveRefetch = resolve;
+        }) as any
+    );
+
+  const { result, rerender, waitForNextUpdate } = renderHook(
+    ({ searchText }: { searchText?: string }) =>
+      useIModelData({
+        iTwinId: "iTwinId",
+        accessToken: "accessToken",
+        searchText,
+      }),
+    {
+      initialProps: { searchText: undefined as string | undefined },
+    }
+  );
+
+  await waitForNextUpdate();
+
+  expect(result.current.iModels).toEqual(initialIModels);
+  expect(result.current.status).toEqual(DataStatus.Complete);
+
+  rerender({ searchText: "updated" });
+
+  await waitFor(() => {
+    expect(result.current.status).toEqual(DataStatus.Fetching);
+  });
+  expect(result.current.iModels).toEqual(initialIModels);
+
+  await act(async () => {
+    resolveRefetch?.({
+      ok: true,
+      json: () => Promise.resolve({ iModels: refreshedIModels }),
+    });
+  });
+
+  await waitFor(() => {
+    expect(result.current.status).toEqual(DataStatus.Complete);
+  });
+  expect(result.current.iModels).toEqual(refreshedIModels);
 });

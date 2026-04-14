@@ -104,7 +104,6 @@ export const useIModelData = ({
     }
 
     setStatus(DataStatus.Fetching);
-    setIModels([]);
     setPage(0);
     setMorePagesAvailable(true);
     setNeedsUpdate(true);
