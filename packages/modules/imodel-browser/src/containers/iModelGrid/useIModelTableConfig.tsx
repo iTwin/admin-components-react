@@ -126,8 +126,10 @@ export const useIModelTableConfig = ({
               const date =
                 props.data[props.row.index].lastChangesetPushDateTime ??
                 props.data[props.row.index].createdDateTime;
-              return cellOverrides.lastModified
-                ? cellOverrides.lastModified(props)
+              const lastModifiedOverride =
+                cellOverrides.lastModified ?? cellOverrides.createdDateTime;
+              return lastModifiedOverride
+                ? lastModifiedOverride(props)
                 : date
                 ? new Date(date).toDateString()
                 : "";
@@ -170,7 +172,17 @@ export const useIModelTableConfig = ({
               ) : null;
             },
           },
-        ].filter(({ id }) => !cellOverrides.hideColumns?.includes(id)),
+        ].filter(
+          ({ id }) =>
+            !cellOverrides.hideColumns?.includes(id) &&
+            // Support deprecated CreatedDateTime alias for the LastModified column
+            !(
+              id === IModelCellColumn.LastModified &&
+              cellOverrides.hideColumns?.includes(
+                IModelCellColumn.CreatedDateTime
+              )
+            )
+        ),
       },
     ],
     [

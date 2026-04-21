@@ -127,12 +127,16 @@ export enum IModelCellColumn {
   Name = "name",
   Description = "description",
   LastModified = "lastChangesetPushDateTime",
+  /** @deprecated Since 4.1.0. Use `LastModified` instead. */
+  CreatedDateTime = "createdDateTime",
   Options = "options",
 }
 export type IModelCellOverrides = {
   name?: (cellData: CellProps<IModelFull>) => React.ReactNode;
   description?: (cellData: CellProps<IModelFull>) => React.ReactNode;
   lastModified?: (cellData: CellProps<IModelFull>) => React.ReactNode;
+  /** @deprecated Since 4.1.0. Use `lastModified` instead. */
+  createdDateTime?: (cellData: CellProps<IModelFull>) => React.ReactNode;
   hideColumns?: IModelCellColumn[];
 };
 
