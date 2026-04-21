@@ -35,7 +35,7 @@ export interface IModelFull {
   thumbnail?: string;
 
   /** "Date when the last changeset was pushed to the iModel." */
-  lastChangesetPushDateTime: string | null;
+  lastChangesetPushDateTime?: string | null;
 }
 
 /** Full representation of an iTwin */
