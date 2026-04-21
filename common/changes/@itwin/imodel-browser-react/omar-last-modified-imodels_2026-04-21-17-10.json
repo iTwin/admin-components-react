@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/imodel-browser-react",
+      "comment": "Display last modified date in iModel table instead of created date",
+      "type": "major"
+    }
+  ],
+  "packageName": "@itwin/imodel-browser-react"
+}
