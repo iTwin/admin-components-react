@@ -33,7 +33,11 @@
   "dependencies": {
     "@itwin/itwinui-icons-react": "^2.9.0",
     "classnames": "^2.2.6",
-    "react-intersection-observer": "^8.31.1"
+    "react-intersection-observer": "^8.31.1",
+    "@stratakit/mui": "~0.4.1",
+    "@stratakit/icons": "~0.3.1",
+    "@mui/system": "~9.0.0",
+    "@mui/material": "~9.0.0"
   },
   "devDependencies": {
     "@itwin/itwinui-react": "^3.19.4",
