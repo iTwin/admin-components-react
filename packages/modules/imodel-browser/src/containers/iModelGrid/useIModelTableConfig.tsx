@@ -20,8 +20,8 @@ export interface IModelTableStrings {
   tableColumnName: string;
   /** Displayed for table description header. */
   tableColumnDescription: string;
-  /** Displayed for table created date header. */
-  tableColumnCreatedDate: string;
+  /** Displayed for table last modified date header. */
+  tableColumnLastModified: string;
   /** Displayed for table favorites header. */
   tableColumnFavorites: string;
   /** Text for adding an iModel to favorites. */
@@ -117,14 +117,19 @@ export const useIModelTableConfig = ({
             ),
           },
           {
-            id: IModelCellColumn.CreatedDateTime,
-            Header: strings.tableColumnCreatedDate,
-            accessor: "createdDateTime",
+            id: IModelCellColumn.LastModified,
+            Header: strings.tableColumnLastModified,
+            accessor: (row: IModelFull) =>
+              row.lastChangesetPushDateTime ?? row.createdDateTime ?? "",
             maxWidth: 350,
             Cell: (props: CellProps<IModelFull>) => {
-              const date = props.data[props.row.index].createdDateTime;
-              return cellOverrides.createdDateTime
-                ? cellOverrides.createdDateTime(props)
+              const date =
+                props.data[props.row.index].lastChangesetPushDateTime ??
+                props.data[props.row.index].createdDateTime;
+              const lastModifiedOverride =
+                cellOverrides.lastModified ?? cellOverrides.createdDateTime;
+              return lastModifiedOverride
+                ? lastModifiedOverride(props)
                 : date
                 ? new Date(date).toDateString()
                 : "";
@@ -167,14 +172,24 @@ export const useIModelTableConfig = ({
               ) : null;
             },
           },
-        ].filter(({ id }) => !cellOverrides.hideColumns?.includes(id)),
+        ].filter(
+          ({ id }) =>
+            !cellOverrides.hideColumns?.includes(id) &&
+            // Support deprecated CreatedDateTime alias for the LastModified column
+            !(
+              id === IModelCellColumn.LastModified &&
+              cellOverrides.hideColumns?.includes(
+                IModelCellColumn.CreatedDateTime
+              )
+            )
+        ),
       },
     ],
     [
       strings.tableColumnFavorites,
       strings.tableColumnName,
       strings.tableColumnDescription,
-      strings.tableColumnCreatedDate,
+      strings.tableColumnLastModified,
       strings.addToFavorites,
       strings.removeFromFavorites,
       favoritesContext,
