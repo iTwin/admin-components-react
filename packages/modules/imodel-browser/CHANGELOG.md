@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Wed, 04 Feb 2026 22:37:11 GMT and should not be manually modified.
+This log was last generated on Wed, 29 Apr 2026 20:47:51 GMT and should not be manually modified.
+
+## 4.2.0
+Wed, 29 Apr 2026 20:47:51 GMT
+
+### Minor changes
+
+- Display last modified date in iModel table instead of created date
 
 ## 4.1.0
 Wed, 04 Feb 2026 22:37:11 GMT
