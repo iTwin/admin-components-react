@@ -46,34 +46,48 @@ function NameStatusIcon({
     return <CircularProgress size={16} sx={{ mr: 0.5, flexShrink: 0 }} />;
   }
   if (isSelected) {
-    return <Icon svg={svgCheckmark} sx={{ mr: 0.5, fontSize: 16, flexShrink: 0 }} />;
+    return (
+      <Box component="span" sx={{ mr: 0.5, flexShrink: 0, lineHeight: 0 }}>
+        <Icon href={svgCheckmark} size="regular" />
+      </Box>
+    );
   }
   if (status === "positive") {
     return (
-      <Icon
-        svg={svgStatusSuccess}
-        sx={{ mr: 0.5, fontSize: 16, flexShrink: 0, color: "success.main" }}
-      />
+      <Box
+        component="span"
+        sx={{ mr: 0.5, flexShrink: 0, lineHeight: 0, color: "success.main" }}
+      >
+        <Icon href={svgStatusSuccess} size="regular" />
+      </Box>
     );
   }
   if (status === "warning") {
     return (
-      <Icon
-        svg={svgStatusWarning}
-        sx={{ mr: 0.5, fontSize: 16, flexShrink: 0, color: "warning.main" }}
-      />
+      <Box
+        component="span"
+        sx={{ mr: 0.5, flexShrink: 0, lineHeight: 0, color: "warning.main" }}
+      >
+        <Icon href={svgStatusWarning} size="regular" />
+      </Box>
     );
   }
   if (status === "negative") {
     return (
-      <Icon
-        svg={svgStatusError}
-        sx={{ mr: 0.5, fontSize: 16, flexShrink: 0, color: "error.main" }}
-      />
+      <Box
+        component="span"
+        sx={{ mr: 0.5, flexShrink: 0, lineHeight: 0, color: "error.main" }}
+      >
+        <Icon href={svgStatusError} size="regular" />
+      </Box>
     );
   }
   if (isNew) {
-    return <Icon svg={svgNew} sx={{ mr: 0.5, fontSize: 16, flexShrink: 0 }} />;
+    return (
+      <Box component="span" sx={{ mr: 0.5, flexShrink: 0, lineHeight: 0 }}>
+        <Icon href={svgNew} size="regular" />
+      </Box>
+    );
   }
   return null;
 }
@@ -86,7 +100,7 @@ function buildMenuItems<T>(
 ): React.ReactNode[] | undefined {
   return options
     ?.filter(({ visible }) =>
-      typeof visible === "function" ? visible(value) : (visible ?? true)
+      typeof visible === "function" ? visible(value) : visible ?? true
     )
     .map(({ key, visible, onClick, disabled, children }) => (
       <MenuItem
@@ -223,14 +237,19 @@ export const ITwinTileV2 = ({
 
   const moreOptionsBuilt = React.useMemo(
     () =>
-      buildMenuItems(iTwinOptions, iTwin, () =>
-        setMoreOptionsAnchor(null), refetchITwins),
+      buildMenuItems(
+        iTwinOptions,
+        iTwin,
+        () => setMoreOptionsAnchor(null),
+        refetchITwins
+      ),
     [iTwinOptions, iTwin, refetchITwins]
   );
 
   const hasMoreOptions = !!(moreOptions || moreOptionsBuilt?.length);
 
-  const statusBadge = badge ??
+  const statusBadge =
+    badge ??
     (iTwin.status && iTwin.status.toLocaleLowerCase() !== "active" ? (
       <Chip
         size="small"
@@ -274,7 +293,11 @@ export const ITwinTileV2 = ({
       ) : (
         <Box
           component="span"
-          sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
+          sx={{
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+          }}
         >
           {name ?? iTwin.displayName}
         </Box>
@@ -286,7 +309,16 @@ export const ITwinTileV2 = ({
     <Card
       variant="outlined"
       aria-disabled={isDisabled || undefined}
-      className={classNames(styles.iTwinTile, { [styles.fullWidth]: fullWidth }, className)}
+      className={classNames(
+        styles.iTwinTile,
+        { [styles.fullWidth]: fullWidth },
+        className
+      )}
+      sx={{
+        width: fullWidth ? "100%" : "fit-content",
+        minWidth: 288,
+        ...rest.sx,
+      }}
       {...rest}
     >
       {/* Thumbnail area */}
@@ -338,7 +370,9 @@ export const ITwinTileV2 = ({
         {thumbnail ? (
           <Box sx={{ height: "100%", width: "100%" }}>{thumbnail}</Box>
         ) : (
-          <Icon svg={svgItwin} sx={{ fontSize: 48, color: "text.secondary" }} />
+          <Box component="span" sx={{ lineHeight: 0, color: "text.secondary" }}>
+            <Icon href={svgItwin} size="large" />
+          </Box>
         )}
         {statusBadge && (
           <Box sx={{ position: "absolute", bottom: 8, right: 8, zIndex: 1 }}>
@@ -373,7 +407,7 @@ export const ITwinTileV2 = ({
                 onClick={(e) => setMoreOptionsAnchor(e.currentTarget)}
                 sx={{ flexShrink: 0, mt: -0.5 }}
               >
-                <Icon svg={svgMore} />
+                <Icon href={svgMore} size="regular" />
               </IconButton>
               <Menu
                 anchorEl={moreOptionsAnchor}
@@ -400,9 +434,7 @@ export const ITwinTileV2 = ({
       </CardContent>
 
       {/* Footer buttons */}
-      {buttons && (
-        <CardActions {...slotProps?.actions}>{buttons}</CardActions>
-      )}
+      {buttons && <CardActions {...slotProps?.actions}>{buttons}</CardActions>}
     </Card>
   );
 };

@@ -1,0 +1,57 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+
+.baseCard {
+  overflow: hidden;
+  width: fit-content;
+  min-width: 18rem;
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.thumbnailArea {
+  position: relative;
+  height: 140px;
+  background-color: var(--mui-palette-action-hover);
+  overflow: hidden;
+
+  > img,
+  > video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+}
+
+.thumbnailTopLeft {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 1;
+}
+
+.thumbnailTopRight {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 1;
+  display: flex;
+  gap: 4px;
+}
+
+.thumbnailBottomRight {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  z-index: 1;
+}
+
+.statusIcon {
+  display: flex;
+  align-items: flex-start;
+}

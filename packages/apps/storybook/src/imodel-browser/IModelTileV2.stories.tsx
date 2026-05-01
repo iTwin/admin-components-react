@@ -6,8 +6,11 @@ import {
   IModelTileV2,
   IModelTileV2Props,
 } from "../../../../modules/imodel-browser/src/containers/iModelTiles/IModelTileV2";
-import { SvgImodel, SvgPlaceholder } from "@itwin/itwinui-icons-react";
-import { Badge, Button } from "@itwin/itwinui-react";
+import Button from "@mui/material/Button";
+import Chip from "@mui/material/Chip";
+import { Icon } from "@stratakit/mui";
+import svgImodel from "@stratakit/icons/model.svg";
+import svgPlaceholder from "@stratakit/icons/placeholder.svg";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
 
@@ -36,19 +39,19 @@ Primary.args = {
     { key: "option-1", children: "Option 1" },
     { key: "option-2", children: "Option 2" },
   ],
-  tileProps: {
-    status: "positive",
-    isDisabled: false,
-    isLoading: false,
-    isSelected: false,
-    isNew: false,
-    badge: <Badge>Badge</Badge>,
-    leftIcon: <SvgPlaceholder />,
-    rightIcon: <SvgPlaceholder />,
-    buttons: [
-      <Button key="button-1">Button 1</Button>,
-      <Button key="button-2">Button 2</Button>,
-    ],
-    thumbnail: <SvgImodel />,
-  },
+  status: "positive",
+  isDisabled: false,
+  isLoading: false,
+  isSelected: false,
+  isNew: false,
+  badge: <Chip size="small" label="Badge" />,
+  leftIcon: <Icon svg={svgPlaceholder} />,
+  rightIcon: <Icon svg={svgPlaceholder} />,
+  buttons: (
+    <>
+      <Button key="button-1">Button 1</Button>
+      <Button key="button-2">Button 2</Button>
+    </>
+  ),
+  thumbnail: <Icon svg={svgImodel} sx={{ fontSize: 48 }} />,
 };

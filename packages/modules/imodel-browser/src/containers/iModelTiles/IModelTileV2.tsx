@@ -43,39 +43,51 @@ function NameStatusIcon({
   isSelected?: boolean;
 }) {
   if (isLoading) {
-    return (
-      <CircularProgress size={16} sx={{ mr: 0.5, flexShrink: 0 }} />
-    );
+    return <CircularProgress size={16} sx={{ mr: 0.5, flexShrink: 0 }} />;
   }
   if (isSelected) {
-    return <Icon svg={svgCheckmark} sx={{ mr: 0.5, fontSize: 16, flexShrink: 0 }} />;
+    return (
+      <Box component="span" sx={{ mr: 0.5, flexShrink: 0, lineHeight: 0 }}>
+        <Icon href={svgCheckmark} size="regular" />
+      </Box>
+    );
   }
   if (status === "positive") {
     return (
-      <Icon
-        svg={svgStatusSuccess}
-        sx={{ mr: 0.5, fontSize: 16, flexShrink: 0, color: "success.main" }}
-      />
+      <Box
+        component="span"
+        sx={{ mr: 0.5, flexShrink: 0, lineHeight: 0, color: "success.main" }}
+      >
+        <Icon href={svgStatusSuccess} size="regular" />
+      </Box>
     );
   }
   if (status === "warning") {
     return (
-      <Icon
-        svg={svgStatusWarning}
-        sx={{ mr: 0.5, fontSize: 16, flexShrink: 0, color: "warning.main" }}
-      />
+      <Box
+        component="span"
+        sx={{ mr: 0.5, flexShrink: 0, lineHeight: 0, color: "warning.main" }}
+      >
+        <Icon href={svgStatusWarning} size="regular" />
+      </Box>
     );
   }
   if (status === "negative") {
     return (
-      <Icon
-        svg={svgStatusError}
-        sx={{ mr: 0.5, fontSize: 16, flexShrink: 0, color: "error.main" }}
-      />
+      <Box
+        component="span"
+        sx={{ mr: 0.5, flexShrink: 0, lineHeight: 0, color: "error.main" }}
+      >
+        <Icon href={svgStatusError} size="regular" />
+      </Box>
     );
   }
   if (isNew) {
-    return <Icon svg={svgNew} sx={{ mr: 0.5, fontSize: 16, flexShrink: 0 }} />;
+    return (
+      <Box component="span" sx={{ mr: 0.5, flexShrink: 0, lineHeight: 0 }}>
+        <Icon href={svgNew} size="regular" />
+      </Box>
+    );
   }
   return null;
 }
@@ -88,9 +100,9 @@ function buildMenuItems<T>(
 ): React.ReactNode[] | undefined {
   return options
     ?.filter(({ visible }) =>
-      typeof visible === "function" ? visible(value) : (visible ?? true)
+      typeof visible === "function" ? visible(value) : visible ?? true
     )
-    .map(({ key, visible, onClick, disabled, children }) => (
+    .map(({ key, onClick, disabled, children }) => (
       <MenuItem
         key={key}
         disabled={typeof disabled === "function" ? disabled(value) : disabled}
@@ -214,8 +226,12 @@ export const IModelTileV2 = ({
 
   const moreOptionsBuilt = React.useMemo(
     () =>
-      buildMenuItems(iModelOptions, iModel, () =>
-        setMoreOptionsAnchor(null), refetchIModels),
+      buildMenuItems(
+        iModelOptions,
+        iModel,
+        () => setMoreOptionsAnchor(null),
+        refetchIModels
+      ),
     [iModelOptions, iModel, refetchIModels]
   );
 
@@ -224,7 +240,7 @@ export const IModelTileV2 = ({
       ? { ...(apiOverrides ?? {}), data: iModel.thumbnail }
       : undefined;
 
-  const hasMoreOptions = !!(moreOptions || moreOptionsBuilt?.length);
+  const hasMoreOptions = !!(moreOptions ?? moreOptionsBuilt?.length);
 
   const titleNode = (
     <Box sx={{ display: "flex", alignItems: "center", minWidth: 0 }}>
@@ -238,7 +254,7 @@ export const IModelTileV2 = ({
         <CardActionArea
           nativeButton={false}
           onClick={() => onThumbnailClick(iModel)}
-          aria-disabled={isDisabled || undefined}
+          aria-disabled={isDisabled ?? undefined}
           data-testid={`iModel-tile-${iModel.id}-name-label`}
           sx={{
             font: "inherit",
@@ -253,7 +269,11 @@ export const IModelTileV2 = ({
       ) : (
         <Box
           component="span"
-          sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
+          sx={{
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+          }}
         >
           {name ?? iModel.displayName}
         </Box>
@@ -264,30 +284,42 @@ export const IModelTileV2 = ({
   return (
     <Card
       variant="outlined"
-      aria-disabled={isDisabled || undefined}
-      className={classNames(styles.iModelTile, { [styles.fullWidth]: fullWidth }, className)}
+      aria-disabled={isDisabled ?? undefined}
+      className={classNames(
+        styles.iModelTile,
+        { [styles.fullWidth]: fullWidth },
+        className
+      )}
+      sx={{
+        width: fullWidth ? "100%" : "fit-content",
+        minWidth: 288,
+        ...rest.sx,
+      }}
       {...rest}
     >
       {/* Thumbnail area */}
       <Box sx={{ position: "relative", height: 140 }}>
         {leftIcon && (
-          <Box
-            sx={{ position: "absolute", top: 8, left: 8, zIndex: 1 }}
-          >
+          <Box sx={{ position: "absolute", top: 8, left: 8, zIndex: 1 }}>
             {leftIcon}
           </Box>
         )}
         <Box
-          sx={{ position: "absolute", top: 8, right: 8, zIndex: 1, display: "flex", gap: 0.5 }}
+          sx={{
+            position: "absolute",
+            top: 8,
+            right: 8,
+            zIndex: 1,
+            display: "flex",
+            gap: 0.5,
+          }}
         >
           {rightIcon}
           {!hideFavoriteIcon && favoritesContext && (
             <TileFavoriteIcon
               isFavorite={favoritesContext.favorites.has(iModel.id)}
               onAddToFavorites={() => favoritesContext.add(iModel.id)}
-              onRemoveFromFavorites={() =>
-                favoritesContext.remove(iModel.id)
-              }
+              onRemoveFromFavorites={() => favoritesContext.remove(iModel.id)}
               addLabel={strings.addToFavorites}
               removeLabel={strings.removeFromFavorites}
               className={classNames(styles.iModelTileFavoriteIcon, {
@@ -342,7 +374,7 @@ export const IModelTileV2 = ({
                 onClick={(e) => setMoreOptionsAnchor(e.currentTarget)}
                 sx={{ flexShrink: 0, mt: -0.5 }}
               >
-                <Icon svg={svgMore} />
+                <Icon href={svgMore} size="regular" />
               </IconButton>
               <Menu
                 anchorEl={moreOptionsAnchor}
@@ -368,9 +400,7 @@ export const IModelTileV2 = ({
       </CardContent>
 
       {/* Footer buttons */}
-      {buttons && (
-        <CardActions {...slotProps?.actions}>{buttons}</CardActions>
-      )}
+      {buttons && <CardActions {...slotProps?.actions}>{buttons}</CardActions>}
     </Card>
   );
 };
