@@ -2,7 +2,10 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { Text, ThemeProvider, Tile } from "@itwin/itwinui-react";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardHeader from "@mui/material/CardHeader";
+import Skeleton from "@mui/material/Skeleton";
 import React, { forwardRef } from "react";
 
 interface IModelGhostTileV2Props {
@@ -17,24 +20,20 @@ export const IModelGhostTileV2 = forwardRef<
   IModelGhostTileV2Props
 >(({ fullWidth, ...props }, ref) => {
   return (
-    <ThemeProvider ref={ref} theme="inherit" {...props}>
-      <Tile.Wrapper style={fullWidth ? { width: "100%" } : undefined}>
-        <Tile.ThumbnailArea>
-          <Text isSkeleton>Skeleton</Text>
-        </Tile.ThumbnailArea>
-        <Tile.Name>
-          <Text isSkeleton variant="leading">
-            Skeleton Name
-          </Text>
-        </Tile.Name>
-        <Tile.ContentArea>
-          <Tile.Description>
-            <Text isSkeleton variant="title">
-              Skeleton Description
-            </Text>
-          </Tile.Description>
-        </Tile.ContentArea>
-      </Tile.Wrapper>
-    </ThemeProvider>
+    <Card
+      ref={ref}
+      variant="outlined"
+      style={fullWidth ? { width: "100%" } : undefined}
+      {...props}
+    >
+      <Skeleton variant="rectangular" sx={{ height: 140 }} />
+      <CardHeader
+        title={<Skeleton variant="text" sx={{ fontSize: "1.25rem", width: "60%" }} />}
+      />
+      <CardContent>
+        <Skeleton variant="text" />
+        <Skeleton variant="text" sx={{ width: "80%" }} />
+      </CardContent>
+    </Card>
   );
 });

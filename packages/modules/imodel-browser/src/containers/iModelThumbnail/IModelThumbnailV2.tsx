@@ -3,7 +3,8 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 
-import { Text, Tile } from "@itwin/itwinui-react";
+import CardMedia from "@mui/material/CardMedia";
+import Skeleton from "@mui/material/Skeleton";
 import classNames from "classnames";
 import React from "react";
 import { useInView } from "react-intersection-observer";
@@ -43,18 +44,18 @@ export const IModelThumbnailV2 = ({
     apiOverrides
   );
   return thumbnail ? (
-    <Tile.ThumbnailPicture
-      url={thumbnail}
+    <CardMedia
+      component="img"
+      src={thumbnail}
       ref={ref}
       className={classNames("iac-thumbnail", className)}
+      sx={{ height: "100%" }}
     />
   ) : (
-    <Text
-      as="p"
-      variant="body"
+    <Skeleton
+      variant="rectangular"
       ref={ref}
-      isSkeleton
-      style={{ height: "100%", width: "100%", margin: 0 }}
+      sx={{ height: "100%", width: "100%", minHeight: 140 }}
     />
   );
 };
