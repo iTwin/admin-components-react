@@ -3,11 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import Box from "@mui/material/Box";
-import Card, { CardProps } from "@mui/material/Card";
-import CardActionArea from "@mui/material/CardActionArea";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import CardHeader from "@mui/material/CardHeader";
+import { CardProps } from "@mui/material/Card";
 import CircularProgress from "@mui/material/CircularProgress";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
@@ -16,15 +12,17 @@ import Typography from "@mui/material/Typography";
 import svgCheckmark from "@stratakit/icons/checkmark.svg";
 import svgMore from "@stratakit/icons/more-vertical.svg";
 import svgNew from "@stratakit/icons/new.svg";
-import svgStatusError from "@stratakit/icons/status-error.svg";
-import svgStatusSuccess from "@stratakit/icons/status-success.svg";
-import svgStatusWarning from "@stratakit/icons/status-warning.svg";
+import svgImodel from "@stratakit/icons/imodel.svg";
 import { Icon } from "@stratakit/mui";
 import classNames from "classnames";
 import React from "react";
 
+import {
+  BaseCard,
+  BaseCardSlotProps,
+} from "../../components/baseCard/BaseCard";
 import { TileFavoriteIcon } from "../../components/tileFavoriteIcon/TileFavoriteIcon";
-import { useIModelFavoritesContext } from "../../contexts/IModelFavoritesContext";
+import { IModelFavoritesContext } from "../../contexts/IModelFavoritesContext";
 import { AccessTokenProvider, ApiOverrides, IModelFull } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
 import { ContextMenuBuilderItem } from "../../utils/_buildMenuOptions";
@@ -45,51 +43,26 @@ function NameStatusIcon({
   if (isLoading) {
     return <CircularProgress size={16} sx={{ mr: 0.5, flexShrink: 0 }} />;
   }
-  if (isSelected) {
-    return (
-      <Box component="span" sx={{ mr: 0.5, flexShrink: 0, lineHeight: 0 }}>
-        <Icon href={svgCheckmark} size="regular" />
-      </Box>
-    );
-  }
-  if (status === "positive") {
-    return (
-      <Box
-        component="span"
-        sx={{ mr: 0.5, flexShrink: 0, lineHeight: 0, color: "success.main" }}
-      >
-        <Icon href={svgStatusSuccess} size="regular" />
-      </Box>
-    );
-  }
-  if (status === "warning") {
-    return (
-      <Box
-        component="span"
-        sx={{ mr: 0.5, flexShrink: 0, lineHeight: 0, color: "warning.main" }}
-      >
-        <Icon href={svgStatusWarning} size="regular" />
-      </Box>
-    );
-  }
-  if (status === "negative") {
-    return (
-      <Box
-        component="span"
-        sx={{ mr: 0.5, flexShrink: 0, lineHeight: 0, color: "error.main" }}
-      >
-        <Icon href={svgStatusError} size="regular" />
-      </Box>
-    );
-  }
-  if (isNew) {
-    return (
-      <Box component="span" sx={{ mr: 0.5, flexShrink: 0, lineHeight: 0 }}>
-        <Icon href={svgNew} size="regular" />
-      </Box>
-    );
-  }
-  return null;
+
+  const color =
+    status === "positive"
+      ? "success.main"
+      : status === "warning"
+      ? "warning.main"
+      : status === "negative"
+      ? "error.main"
+      : undefined;
+
+  const icon = isSelected ? svgCheckmark : isNew ? svgNew : svgImodel;
+
+  return (
+    <Box
+      component="span"
+      sx={{ mt: 0.25, mr: 0.5, flexShrink: 0, lineHeight: 0, color }}
+    >
+      <Icon href={icon} size="regular" />
+    </Box>
+  );
 }
 
 function buildMenuItems<T>(
@@ -142,6 +115,12 @@ export interface IModelTileV2Props
   fullWidth?: boolean;
   /** Hides the favorite icon when true */
   hideFavoriteIcon?: boolean;
+  /** Indicates whether the iModel is marked as a favorite (standalone mode). */
+  isFavorite?: boolean;
+  /** Function to add the iModel to favorites (standalone mode). */
+  addToFavorites?(iModelId: string): Promise<void>;
+  /** Function to remove the iModel from favorites (standalone mode). */
+  removeFromFavorites?(iModelId: string): Promise<void>;
   // ── State ───────────────────────────────────────────────────────────────────
   /** Marks the card as new */
   isNew?: boolean;
@@ -152,14 +131,12 @@ export interface IModelTileV2Props
   /** Applies disabled styling and aria-disabled */
   isDisabled?: boolean;
   /** Status indicator shown in the card header */
-  status?: "positive" | "warning" | "negative";
+  status?: "positive" | "warning" | "negative" | undefined;
   // ── Thumbnail area ──────────────────────────────────────────────────────────
   /** Custom thumbnail content — replaces the auto-fetched thumbnail */
   thumbnail?: React.ReactNode;
   /** Icon shown in the top-left of the thumbnail */
   leftIcon?: React.ReactNode;
-  /** Icon shown in the top-right of the thumbnail (alongside the favorite icon) */
-  rightIcon?: React.ReactNode;
   /** Badge shown at the bottom of the thumbnail */
   badge?: React.ReactNode;
   /** Function that returns a badge node for the given iModel */
@@ -174,11 +151,7 @@ export interface IModelTileV2Props
   /** Action buttons rendered in the card footer */
   buttons?: React.ReactNode;
   // ── Sub-component customization ─────────────────────────────────────────────
-  slotProps?: {
-    header?: Partial<React.ComponentPropsWithoutRef<typeof CardHeader>>;
-    content?: Partial<React.ComponentPropsWithoutRef<typeof CardContent>>;
-    actions?: Partial<React.ComponentPropsWithoutRef<typeof CardActions>>;
-  };
+  slotProps?: BaseCardSlotProps;
 }
 
 /**
@@ -194,6 +167,9 @@ export const IModelTileV2 = ({
   refetchIModels,
   fullWidth,
   hideFavoriteIcon,
+  isFavorite,
+  addToFavorites,
+  removeFromFavorites,
   isNew,
   isSelected,
   isLoading,
@@ -201,7 +177,6 @@ export const IModelTileV2 = ({
   status,
   thumbnail,
   leftIcon,
-  rightIcon,
   badge,
   getBadge,
   name,
@@ -215,7 +190,7 @@ export const IModelTileV2 = ({
   const [moreOptionsAnchor, setMoreOptionsAnchor] =
     React.useState<HTMLElement | null>(null);
 
-  const favoritesContext = useIModelFavoritesContext();
+  const favoritesContext = React.useContext(IModelFavoritesContext);
   const strings = _mergeStrings(
     {
       addToFavorites: "Add to favorites",
@@ -242,165 +217,109 @@ export const IModelTileV2 = ({
 
   const hasMoreOptions = !!(moreOptions ?? moreOptionsBuilt?.length);
 
-  const titleNode = (
-    <Box sx={{ display: "flex", alignItems: "center", minWidth: 0 }}>
-      <NameStatusIcon
-        status={status}
-        isNew={isNew}
-        isLoading={isLoading}
-        isSelected={isSelected}
+  const favoriteState =
+    isFavorite !== undefined
+      ? {
+          isFavorite,
+          add: addToFavorites ? () => addToFavorites(iModel.id) : undefined,
+          remove: removeFromFavorites
+            ? () => removeFromFavorites(iModel.id)
+            : undefined,
+        }
+      : favoritesContext
+      ? {
+          isFavorite: favoritesContext.favorites.has(iModel.id),
+          add: () => favoritesContext.add(iModel.id),
+          remove: () => favoritesContext.remove(iModel.id),
+        }
+      : undefined;
+
+  const favoriteIcon =
+    !hideFavoriteIcon && favoriteState?.add && favoriteState?.remove ? (
+      <TileFavoriteIcon
+        isFavorite={favoriteState.isFavorite}
+        onAddToFavorites={favoriteState.add}
+        onRemoveFromFavorites={favoriteState.remove}
+        addLabel={strings.addToFavorites}
+        removeLabel={strings.removeFromFavorites}
+        className={styles.iModelTileFavoriteIcon}
       />
-      {onThumbnailClick ? (
-        <CardActionArea
-          nativeButton={false}
-          onClick={() => onThumbnailClick(iModel)}
-          aria-disabled={isDisabled ?? undefined}
-          data-testid={`iModel-tile-${iModel.id}-name-label`}
-          sx={{
-            font: "inherit",
-            textAlign: "left",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
-          }}
-        >
-          {name ?? iModel.displayName}
-        </CardActionArea>
-      ) : (
-        <Box
-          component="span"
-          sx={{
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
-          }}
-        >
-          {name ?? iModel.displayName}
-        </Box>
-      )}
-    </Box>
-  );
+    ) : undefined;
+
+  const thumbnailTopRight = favoriteIcon;
+
+  const headerRight = hasMoreOptions ? (
+    <>
+      <IconButton
+        size="small"
+        aria-label="More options"
+        data-testid={`iModel-tile-${iModel.id}-more-options`}
+        onClick={(e) => setMoreOptionsAnchor(e.currentTarget)}
+        sx={{ flexShrink: 0 }}
+      >
+        <Icon href={svgMore} size="regular" />
+      </IconButton>
+      <Menu
+        anchorEl={moreOptionsAnchor}
+        open={Boolean(moreOptionsAnchor)}
+        onClose={() => setMoreOptionsAnchor(null)}
+      >
+        {moreOptions ?? moreOptionsBuilt}
+      </Menu>
+    </>
+  ) : undefined;
+
+  const cardInfo = metadata ? (
+    <Typography
+      variant="caption"
+      color="text.secondary"
+      component="div"
+      data-testid={`iModel-tile-${iModel.id}-metadata`}
+      sx={{ mt: 0.75 }}
+    >
+      {metadata}
+    </Typography>
+  ) : undefined;
 
   return (
-    <Card
-      variant="outlined"
+    <BaseCard
       aria-disabled={isDisabled ?? undefined}
       className={classNames(
         styles.iModelTile,
         { [styles.fullWidth]: fullWidth },
         className
       )}
-      sx={{
-        width: fullWidth ? "100%" : "fit-content",
-        minWidth: 288,
-        ...rest.sx,
-      }}
-      {...rest}
-    >
-      {/* Thumbnail area */}
-      <Box sx={{ position: "relative", height: 140 }}>
-        {leftIcon && (
-          <Box sx={{ position: "absolute", top: 8, left: 8, zIndex: 1 }}>
-            {leftIcon}
-          </Box>
-        )}
-        <Box
-          sx={{
-            position: "absolute",
-            top: 8,
-            right: 8,
-            zIndex: 1,
-            display: "flex",
-            gap: 0.5,
-          }}
-        >
-          {rightIcon}
-          {!hideFavoriteIcon && favoritesContext && (
-            <TileFavoriteIcon
-              isFavorite={favoritesContext.favorites.has(iModel.id)}
-              onAddToFavorites={() => favoritesContext.add(iModel.id)}
-              onRemoveFromFavorites={() => favoritesContext.remove(iModel.id)}
-              addLabel={strings.addToFavorites}
-              removeLabel={strings.removeFromFavorites}
-              className={classNames(styles.iModelTileFavoriteIcon, {
-                [styles.hidden]: !favoritesContext.favorites.has(iModel.id),
-              })}
-            />
-          )}
-        </Box>
-        {thumbnail ? (
-          <Box sx={{ height: "100%", width: "100%" }}>{thumbnail}</Box>
-        ) : (
+      fullWidth={fullWidth}
+      thumbnail={
+        thumbnail ?? (
           <IModelThumbnailV2
             iModelId={iModel.id}
             accessToken={accessToken}
             apiOverrides={thumbnailApiOverride}
           />
-        )}
-        {(getBadge || badge) && (
-          <Box sx={{ position: "absolute", bottom: 8, right: 8, zIndex: 1 }}>
-            {getBadge?.(iModel) ?? badge}
-          </Box>
-        )}
-      </Box>
-
-      {/* Card header — name with status icon */}
-      <CardHeader
-        title={titleNode}
-        titleTypographyProps={{ variant: "subtitle1" }}
-        {...slotProps?.header}
-      />
-
-      {/* Card content — description, more options, metadata */}
-      <CardContent
-        data-testid={`iModel-tile-${iModel.id}-action`}
-        sx={{ pt: 0 }}
-        {...slotProps?.content}
-      >
-        <Box sx={{ display: "flex", alignItems: "flex-start", gap: 1 }}>
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            sx={{ flex: 1, minWidth: 0 }}
-          >
-            {iModel.description ?? ""}
-          </Typography>
-          {hasMoreOptions && (
-            <>
-              <IconButton
-                size="small"
-                aria-label="More options"
-                data-testid={`iModel-tile-${iModel.id}-more-options`}
-                onClick={(e) => setMoreOptionsAnchor(e.currentTarget)}
-                sx={{ flexShrink: 0, mt: -0.5 }}
-              >
-                <Icon href={svgMore} size="regular" />
-              </IconButton>
-              <Menu
-                anchorEl={moreOptionsAnchor}
-                open={Boolean(moreOptionsAnchor)}
-                onClose={() => setMoreOptionsAnchor(null)}
-              >
-                {moreOptions ?? moreOptionsBuilt}
-              </Menu>
-            </>
-          )}
-        </Box>
-        {metadata && (
-          <Typography
-            variant="caption"
-            color="text.secondary"
-            component="div"
-            data-testid={`iModel-tile-${iModel.id}-metadata`}
-            sx={{ mt: 1 }}
-          >
-            {metadata}
-          </Typography>
-        )}
-      </CardContent>
-
-      {/* Footer buttons */}
-      {buttons && <CardActions {...slotProps?.actions}>{buttons}</CardActions>}
-    </Card>
+        )
+      }
+      thumbnailTopLeft={leftIcon}
+      thumbnailTopRight={thumbnailTopRight}
+      thumbnailBottomRight={getBadge?.(iModel) ?? badge}
+      name={name ?? iModel.displayName ?? ""}
+      onNameClick={
+        onThumbnailClick ? () => onThumbnailClick(iModel) : undefined
+      }
+      headerRight={headerRight}
+      statusIcon={
+        <NameStatusIcon
+          status={status}
+          isNew={isNew}
+          isLoading={isLoading}
+          isSelected={isSelected}
+        />
+      }
+      description={iModel.description ?? ""}
+      cardInfo={cardInfo}
+      actions={buttons}
+      slotProps={slotProps}
+      {...rest}
+    ></BaseCard>
   );
 };

@@ -17,6 +17,7 @@ import svgStar from "@stratakit/icons/star.svg";
 import svgStatusSuccess from "@stratakit/icons/status-success.svg";
 import svgStatusWarning from "@stratakit/icons/status-warning.svg";
 import svgStatusError from "@stratakit/icons/status-error.svg";
+import bridgeThumbnail from "./bridge.jpg";
 import { Icon } from "@stratakit/mui";
 import { action } from "@storybook/addon-actions";
 import { Meta, Story } from "@storybook/react/types-6-0";
@@ -50,6 +51,16 @@ Default.args = {
   name: "Main Street Bridge",
   description: "3D model of the Main Street bridge structure and components.",
   metadata: "Edited 1/16/2024",
+  thumbnail: bridgeThumbnail,
+};
+
+export const WithoutThumbnail = Template.bind({});
+WithoutThumbnail.storyName = "Without thumbnail";
+WithoutThumbnail.args = {
+  name: "Main Street Bridge",
+  description: "3D model of the Main Street bridge structure and components.",
+  metadata: "Edited 1/16/2024",
+  thumbnail: undefined,
 };
 
 export const WithThumbnailActions = Template.bind({});
@@ -58,12 +69,23 @@ WithThumbnailActions.args = {
   name: "Main Street Bridge",
   description: "3D model of the Main Street bridge structure and components.",
   metadata: "Edited 1/16/2024",
+  thumbnail: bridgeThumbnail,
   thumbnailTopRight: (
     <>
-      <IconButton size="small" color="secondary" aria-label="Add to favorites">
+      <IconButton
+        size="small"
+        color="secondary"
+        aria-label="Add to favorites"
+        onClick={action("thumbnail favorite clicked")}
+      >
         <Icon href={svgStar} size="regular" />
       </IconButton>
-      <IconButton size="small" color="secondary" aria-label="More options">
+      <IconButton
+        size="small"
+        color="secondary"
+        aria-label="More options"
+        onClick={action("thumbnail more-options clicked")}
+      >
         <Icon href={svgMore} size="regular" />
       </IconButton>
     </>
@@ -76,14 +98,23 @@ WithImageThumbnail.args = {
   name: "Main Street Bridge",
   description: "3D model of the Main Street bridge structure and components.",
   metadata: "Edited 1/16/2024",
-  thumbnailMediaSrc: "https://picsum.photos/640/360?random=42",
-  thumbnailMediaAlt: "Bridge thumbnail",
+  thumbnail: bridgeThumbnail,
   thumbnailTopRight: (
     <>
-      <IconButton size="small" color="secondary" aria-label="Add to favorites">
+      <IconButton
+        size="small"
+        color="secondary"
+        aria-label="Add to favorites"
+        onClick={action("image thumbnail favorite clicked")}
+      >
         <Icon href={svgStar} size="regular" />
       </IconButton>
-      <IconButton size="small" color="secondary" aria-label="More options">
+      <IconButton
+        size="small"
+        color="secondary"
+        aria-label="More options"
+        onClick={action("image thumbnail more-options clicked")}
+      >
         <Icon href={svgMore} size="regular" />
       </IconButton>
     </>
@@ -91,11 +122,12 @@ WithImageThumbnail.args = {
 };
 
 export const WithAvatarGroup = Template.bind({});
-WithAvatarGroup.storyName = "With collaborators (AvatarGroup)";
+WithAvatarGroup.storyName = "With AvatarGroup";
 WithAvatarGroup.args = {
   name: "Main Street Bridge",
   description: "3D model of the Main Street bridge structure and components.",
   metadata: "Edited 1/16/2024",
+  thumbnail: bridgeThumbnail,
   headerRight: (
     <AvatarGroup
       max={3}
@@ -114,6 +146,7 @@ WithStatusIcon.args = {
   name: "Main Street Bridge",
   description: "3D model of the Main Street bridge structure and components.",
   metadata: "Edited 1/16/2024",
+  thumbnail: bridgeThumbnail,
   statusIcon: <Icon href={svgStatusSuccess} />,
 };
 
@@ -123,6 +156,7 @@ WithBadge.args = {
   name: "Main Street Bridge",
   description: "3D model of the Main Street bridge structure and components.",
   metadata: "Edited 1/16/2024",
+  thumbnail: bridgeThumbnail,
   thumbnailBottomRight: <Chip size="small" label="Trial" color="primary" />,
 };
 
@@ -132,10 +166,17 @@ WithActions.args = {
   name: "Main Street Bridge",
   description: "3D model of the Main Street bridge structure and components.",
   metadata: "Edited 1/16/2024",
+  thumbnail: bridgeThumbnail,
   actions: (
     <>
-      <Button size="small">Open</Button>
-      <Button size="small" variant="outlined">
+      <Button size="small" onClick={action("actions open clicked")}>
+        Open
+      </Button>
+      <Button
+        size="small"
+        variant="outlined"
+        onClick={action("actions share clicked")}
+      >
         Share
       </Button>
     </>
@@ -148,6 +189,7 @@ WithClickableName.args = {
   name: "Main Street Bridge",
   description: "3D model of the Main Street bridge structure and components.",
   metadata: "Edited 1/16/2024",
+  thumbnail: bridgeThumbnail,
   onNameClick: action("name-clicked"),
 };
 
@@ -157,12 +199,17 @@ WithSlotProps.args = {
   name: "Main Street Bridge",
   description: "3D model of the Main Street bridge structure and components.",
   metadata: "Edited 1/16/2024",
-  thumbnailMediaSrc: "https://picsum.photos/640/360?random=7",
-  thumbnailMediaAlt: "Bridge thumbnail",
+  thumbnail: bridgeThumbnail,
   actions: (
     <>
-      <Button size="small">Open</Button>
-      <Button size="small" variant="outlined">
+      <Button size="small" onClick={action("slot props open clicked")}>
+        Open
+      </Button>
+      <Button
+        size="small"
+        variant="outlined"
+        onClick={action("slot props share clicked")}
+      >
         Share
       </Button>
     </>
@@ -197,6 +244,7 @@ export const Statuses = () => (
         name="Main Street Bridge"
         description="3D model of the Main Street bridge structure."
         metadata="Edited 1/16/2024"
+        thumbnail={bridgeThumbnail}
         statusIcon={
           <Box component="span" sx={{ lineHeight: 0, color }}>
             <Icon href={icon} size="regular" />
@@ -214,6 +262,7 @@ FullWidth.args = {
   name: "Main Street Bridge",
   description: "3D model of the Main Street bridge structure and components.",
   metadata: "Edited 1/16/2024",
+  thumbnail: bridgeThumbnail,
 };
 
 export const Kitchen = Template.bind({});
@@ -222,6 +271,7 @@ Kitchen.args = {
   name: "Main Street Bridge",
   description: "3D model of the Main Street bridge structure and components.",
   metadata: "Edited 1/16/2024",
+  thumbnail: bridgeThumbnail,
   statusIcon: (
     <Box component="span" sx={{ lineHeight: 0, color: "warning.main" }}>
       <Icon href={svgStatusWarning} size="regular" />
@@ -239,10 +289,20 @@ Kitchen.args = {
   ),
   thumbnailTopRight: (
     <>
-      <IconButton size="small" color="secondary" aria-label="Add to favorites">
+      <IconButton
+        size="small"
+        color="secondary"
+        aria-label="Add to favorites"
+        onClick={action("kitchen thumbnail favorite clicked")}
+      >
         <Icon href={svgStar} size="regular" />
       </IconButton>
-      <IconButton size="small" color="secondary" aria-label="More options">
+      <IconButton
+        size="small"
+        color="secondary"
+        aria-label="More options"
+        onClick={action("kitchen thumbnail more-options clicked")}
+      >
         <Icon href={svgMore} size="regular" />
       </IconButton>
     </>
@@ -250,8 +310,14 @@ Kitchen.args = {
   thumbnailBottomRight: <Chip size="small" label="Trial" color="primary" />,
   actions: (
     <>
-      <Button size="small">Open</Button>
-      <Button size="small" variant="outlined">
+      <Button size="small" onClick={action("kitchen open clicked")}>
+        Open
+      </Button>
+      <Button
+        size="small"
+        variant="outlined"
+        onClick={action("kitchen share clicked")}
+      >
         Share
       </Button>
     </>

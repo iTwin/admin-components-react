@@ -6,7 +6,6 @@ import Box from "@mui/material/Box";
 import Card, { CardProps } from "@mui/material/Card";
 import CardActionArea from "@mui/material/CardActionArea";
 import CardActions from "@mui/material/CardActions";
-import CardMedia from "@mui/material/CardMedia";
 import Divider from "@mui/material/Divider";
 import Stack from "@mui/material/Stack";
 import { SxProps, Theme } from "@mui/material/styles";
@@ -23,7 +22,6 @@ interface BaseCardSlotStyleProps {
 
 export interface BaseCardSlotProps {
   thumbnail?: BaseCardSlotStyleProps;
-  media?: BaseCardSlotStyleProps;
   divider?: BaseCardSlotStyleProps;
   content?: BaseCardSlotStyleProps;
   header?: BaseCardSlotStyleProps;
@@ -36,20 +34,11 @@ export interface BaseCardProps
   extends Omit<CardProps, "children" | "title" | "onClick"> {
   // ── Thumbnail area ──────────────────────────────────────────────────────────
   /**
-   * Main thumbnail content override (icon, skeleton, custom layout, etc.).
-   * If provided, it takes precedence over `thumbnailMediaSrc`.
+   * Main thumbnail content (icon, image, skeleton, custom layout, etc.).
+   * When a string URL is provided, BaseCard renders an image with default cover styling.
+   * Leave undefined to render an empty reserved thumbnail area.
    */
   thumbnail?: React.ReactNode;
-  /**
-   * Media source URL for thumbnail image/video.
-   * Rendered through MUI `CardMedia` when `thumbnail` is not provided.
-   */
-  thumbnailMediaSrc?: string;
-  /**
-   * Alt text for `thumbnailMediaSrc` when rendered as an image.
-   * Defaults to an empty string for decorative media.
-   */
-  thumbnailMediaAlt?: string;
   /**
    * Overlay slot in the top-left of the thumbnail (e.g. TypeIndicator icon).
    */
@@ -113,8 +102,6 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
   (
     {
       thumbnail,
-      thumbnailMediaSrc,
-      thumbnailMediaAlt,
       thumbnailTopLeft,
       thumbnailTopRight,
       thumbnailBottomRight,
@@ -133,6 +120,13 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
     },
     ref
   ) => {
+    const thumbnailNode =
+      typeof thumbnail === "string" ? (
+        <img src={thumbnail} alt="" />
+      ) : (
+        thumbnail
+      );
+
     return (
       <Card
         ref={ref}
@@ -150,7 +144,6 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
             styles.thumbnailArea,
             slotProps?.thumbnail?.className
           )}
-          {...slotProps?.thumbnail}
           sx={{
             ...(slotProps?.thumbnail?.sx ?? {}),
           }}
@@ -161,21 +154,7 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
           {thumbnailTopRight && (
             <Box className={styles.thumbnailTopRight}>{thumbnailTopRight}</Box>
           )}
-          {thumbnail ??
-            (thumbnailMediaSrc ? (
-              <CardMedia
-                component="img"
-                src={thumbnailMediaSrc}
-                alt={thumbnailMediaAlt ?? ""}
-                {...slotProps?.media}
-                sx={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  ...(slotProps?.media?.sx ?? {}),
-                }}
-              />
-            ) : null)}
+          {thumbnailNode}
           {thumbnailBottomRight && (
             <Box className={styles.thumbnailBottomRight}>
               {thumbnailBottomRight}
@@ -227,8 +206,6 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
                     minWidth: 0,
                     textAlign: "left",
                     borderRadius: 1,
-                    px: 0.5,
-                    py: 0.25,
                     ...(slotProps?.nameAction?.sx ?? {}),
                   }}
                 >
@@ -256,7 +233,7 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
             >
               {description && (
                 <Typography
-                  variant="subtitle1"
+                  variant="body2"
                   color="text.secondary"
                   component="p"
                 >
