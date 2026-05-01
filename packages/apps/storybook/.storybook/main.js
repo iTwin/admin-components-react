@@ -15,7 +15,7 @@ module.exports = {
   ],
   reactOptions: { fastRefresh: true },
   core: {
-    builder: 'webpack5',
+    builder: "webpack5",
   },
   typescript: {
     reactDocgen: false, // Storybook 6 does not support react-docgen-typescript with Typescript 6 - once we update Storybook this can be restored
@@ -28,29 +28,74 @@ module.exports = {
     // You can change the configuration based on that.
     // 'PRODUCTION' is used when building the static version of storybook.
 
-    config.resolve.mainFields = ["module", "main"];
+    config.resolve.mainFields = ["browser", "module", "main"];
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      fs: false,
+    };
+    // Keep symlinked package paths (e.g. node_modules/@stratakit/icons) instead of
+    // resolving to pnpm realpaths under common/temp. This prevents "../.." segments
+    // from leaking into emitted asset URLs.
+    config.resolve.symlinks = false;
+
+    // Ensure StrataKit icon SVGs are emitted with stable URLs so <Icon href="...#icon" />
+    // resolves correctly in Storybook (pnpm paths can otherwise leak into URLs).
+    config.module.rules.unshift({
+      test: /\.svg$/i,
+      include: (resourcePath) => {
+        if (!resourcePath) {
+          return false;
+        }
+        const normalized = resourcePath.replace(/\\/g, "/");
+        return (
+          normalized.includes("/node_modules/@stratakit/icons/") ||
+          normalized.includes("/.pnpm/@stratakit+icons@")
+        );
+      },
+      type: "asset/resource",
+      generator: {
+        filename: "static/media/[name].[contenthash:8][ext]",
+      },
+    });
 
     const packagePaths = {
-      "@itwin/imodel-browser-react": path.resolve(__dirname, "../../../modules/imodel-browser/src"),
-        "@itwin/create-imodel-react": path.resolve(__dirname, "../../../modules/create-imodel/src"),
-        "@itwin/delete-imodel-react": path.resolve(__dirname, "../../../modules/delete-imodel/src"),
-        "@itwin/delete-itwin-react": path.resolve(__dirname, "../../../modules/delete-itwin/src"),
-        "@itwin/manage-versions-react": path.resolve(__dirname, "../../../modules/manage-versions/src"),
-    }
+      "@itwin/imodel-browser-react": path.resolve(
+        __dirname,
+        "../../../modules/imodel-browser/src"
+      ),
+      "@itwin/create-imodel-react": path.resolve(
+        __dirname,
+        "../../../modules/create-imodel/src"
+      ),
+      "@itwin/delete-imodel-react": path.resolve(
+        __dirname,
+        "../../../modules/delete-imodel/src"
+      ),
+      "@itwin/delete-itwin-react": path.resolve(
+        __dirname,
+        "../../../modules/delete-itwin/src"
+      ),
+      "@itwin/manage-versions-react": path.resolve(
+        __dirname,
+        "../../../modules/manage-versions/src"
+      ),
+    };
     // Enable HMR for local packages in development by aliasing to source directories
-    if (configType === 'DEVELOPMENT') {
+    if (configType === "DEVELOPMENT") {
       // Use full source maps to allow VS Code Chrome debugger to map back to TS/TSX sources
-      config.devtool = 'source-map';
+      config.devtool = "source-map";
       config.output = config.output || {};
       config.output.devtoolModuleFilenameTemplate = (info) => {
         // Derive repo root (four levels up from .storybook: ../../../../)
-        const repoRoot = path.resolve(__dirname, '../../../../');
-        let relPath = path.relative(repoRoot, info.absoluteResourcePath).replace(/\\/g, '/');
+        const repoRoot = path.resolve(__dirname, "../../../../");
+        let relPath = path
+          .relative(repoRoot, info.absoluteResourcePath)
+          .replace(/\\/g, "/");
         return `webpack:///${relPath}`;
       };
       config.resolve.alias = {
         ...config.resolve.alias,
-        ...packagePaths
+        ...packagePaths,
       };
 
       // Ensure TypeScript files from source directories are processed
@@ -59,12 +104,12 @@ module.exports = {
         include: Object.values(packagePaths),
         use: [
           {
-            loader: require.resolve('babel-loader'),
+            loader: require.resolve("babel-loader"),
             options: {
               presets: [
-                require.resolve('@babel/preset-env'),
-                require.resolve('@babel/preset-react'),
-                require.resolve('@babel/preset-typescript'),
+                require.resolve("@babel/preset-env"),
+                require.resolve("@babel/preset-react"),
+                require.resolve("@babel/preset-typescript"),
               ],
             },
           },
@@ -75,11 +120,11 @@ module.exports = {
       config.module.rules.push({
         test: /\.scss$/,
         include: Object.values(packagePaths),
-        use: ['style-loader', 'css-loader', 'sass-loader'],
+        use: ["style-loader", "css-loader", "sass-loader"],
       });
     }
 
     return config;
   },
-  staticDirs: ["../../../modules/storybook-auth-addon/build"]
+  staticDirs: ["../../../modules/storybook-auth-addon/build"],
 };
