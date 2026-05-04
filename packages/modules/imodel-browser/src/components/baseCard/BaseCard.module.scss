@@ -7,17 +7,22 @@
   overflow: hidden;
   width: fit-content;
   min-width: 18rem;
-}
+  min-height: 15rem;
+  display: flex;
+  flex-direction: column;
 
-.fullWidth {
-  width: 100%;
+  &.selected {
+    outline: 2px solid;
+    outline-color: var(--mui-palette-primary-main);
+  }
 }
 
 .thumbnailArea {
   position: relative;
-  height: 140px;
+  height: 10rem;
   background-color: var(--mui-palette-action-hover);
   overflow: hidden;
+  flex-shrink: 0;
 
   > img,
   > video {

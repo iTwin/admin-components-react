@@ -12,6 +12,9 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
 import IconButton from "@mui/material/IconButton";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Typography from "@mui/material/Typography";
 import svgMore from "@stratakit/icons/more-vertical.svg";
 import svgStar from "@stratakit/icons/star.svg";
 import svgStatusSuccess from "@stratakit/icons/status-success.svg";
@@ -39,6 +42,9 @@ export default {
     statusIcon: { control: false },
     cardInfo: { control: false },
     actions: { control: false },
+    onTitleClick: { control: false },
+    onContextMenu: { control: false },
+    onDoubleClick: { control: false },
   },
 } as Meta;
 
@@ -48,7 +54,7 @@ const Template: Story<BaseCardProps> = (args) => <BaseCardStory {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {
-  name: "Main Street Bridge",
+  title: "Main Street Bridge",
   description: "3D model of the Main Street bridge structure and components.",
   metadata: "Edited 1/16/2024",
   thumbnail: bridgeThumbnail,
@@ -57,7 +63,7 @@ Default.args = {
 export const WithoutThumbnail = Template.bind({});
 WithoutThumbnail.storyName = "Without thumbnail";
 WithoutThumbnail.args = {
-  name: "Main Street Bridge",
+  title: "Main Street Bridge",
   description: "3D model of the Main Street bridge structure and components.",
   metadata: "Edited 1/16/2024",
   thumbnail: undefined,
@@ -66,7 +72,7 @@ WithoutThumbnail.args = {
 export const WithThumbnailActions = Template.bind({});
 WithThumbnailActions.storyName = "With thumbnail actions";
 WithThumbnailActions.args = {
-  name: "Main Street Bridge",
+  title: "Main Street Bridge",
   description: "3D model of the Main Street bridge structure and components.",
   metadata: "Edited 1/16/2024",
   thumbnail: bridgeThumbnail,
@@ -95,7 +101,7 @@ WithThumbnailActions.args = {
 export const WithImageThumbnail = Template.bind({});
 WithImageThumbnail.storyName = "With image thumbnail";
 WithImageThumbnail.args = {
-  name: "Main Street Bridge",
+  title: "Main Street Bridge",
   description: "3D model of the Main Street bridge structure and components.",
   metadata: "Edited 1/16/2024",
   thumbnail: bridgeThumbnail,
@@ -124,7 +130,7 @@ WithImageThumbnail.args = {
 export const WithAvatarGroup = Template.bind({});
 WithAvatarGroup.storyName = "With AvatarGroup";
 WithAvatarGroup.args = {
-  name: "Main Street Bridge",
+  title: "Main Street Bridge",
   description: "3D model of the Main Street bridge structure and components.",
   metadata: "Edited 1/16/2024",
   thumbnail: bridgeThumbnail,
@@ -143,7 +149,7 @@ WithAvatarGroup.args = {
 export const WithStatusIcon = Template.bind({});
 WithStatusIcon.storyName = "With status icon";
 WithStatusIcon.args = {
-  name: "Main Street Bridge",
+  title: "Main Street Bridge",
   description: "3D model of the Main Street bridge structure and components.",
   metadata: "Edited 1/16/2024",
   thumbnail: bridgeThumbnail,
@@ -153,7 +159,7 @@ WithStatusIcon.args = {
 export const WithBadge = Template.bind({});
 WithBadge.storyName = "With thumbnail badge";
 WithBadge.args = {
-  name: "Main Street Bridge",
+  title: "Main Street Bridge",
   description: "3D model of the Main Street bridge structure and components.",
   metadata: "Edited 1/16/2024",
   thumbnail: bridgeThumbnail,
@@ -163,7 +169,7 @@ WithBadge.args = {
 export const WithActions = Template.bind({});
 WithActions.storyName = "With footer actions";
 WithActions.args = {
-  name: "Main Street Bridge",
+  title: "Main Street Bridge",
   description: "3D model of the Main Street bridge structure and components.",
   metadata: "Edited 1/16/2024",
   thumbnail: bridgeThumbnail,
@@ -184,19 +190,19 @@ WithActions.args = {
 };
 
 export const WithClickableName = Template.bind({});
-WithClickableName.storyName = "With clickable name";
+WithClickableName.storyName = "With clickable title";
 WithClickableName.args = {
-  name: "Main Street Bridge",
+  title: "Main Street Bridge",
   description: "3D model of the Main Street bridge structure and components.",
   metadata: "Edited 1/16/2024",
   thumbnail: bridgeThumbnail,
-  onNameClick: action("name-clicked"),
+  onTitleClick: action("title clicked"),
 };
 
 export const WithSlotProps = Template.bind({});
 WithSlotProps.storyName = "With slot props";
 WithSlotProps.args = {
-  name: "Main Street Bridge",
+  title: "Main Street Bridge",
   description: "3D model of the Main Street bridge structure and components.",
   metadata: "Edited 1/16/2024",
   thumbnail: bridgeThumbnail,
@@ -241,7 +247,7 @@ export const Statuses = () => (
     ).map(({ label, icon, color }) => (
       <BaseCard
         key={label}
-        name="Main Street Bridge"
+        title="Main Street Bridge"
         description="3D model of the Main Street bridge structure."
         metadata="Edited 1/16/2024"
         thumbnail={bridgeThumbnail}
@@ -255,38 +261,39 @@ export const Statuses = () => (
   </Box>
 );
 
-export const FullWidth = Template.bind({});
-FullWidth.storyName = "Full width";
-FullWidth.args = {
-  fullWidth: true,
-  name: "Main Street Bridge",
-  description: "3D model of the Main Street bridge structure and components.",
-  metadata: "Edited 1/16/2024",
-  thumbnail: bridgeThumbnail,
-};
-
 export const Kitchen = Template.bind({});
 Kitchen.storyName = "Kitchen sink";
 Kitchen.args = {
-  name: "Main Street Bridge",
+  title: "Main Street Bridge",
   description: "3D model of the Main Street bridge structure and components.",
   metadata: "Edited 1/16/2024",
   thumbnail: bridgeThumbnail,
+  selected: false,
+  onTitleClick: action("kitchen title clicked"),
+  onContextMenu: (event: React.MouseEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    action("kitchen context menu opened")(event);
+  },
+  onDoubleClick: action("kitchen double-clicked"),
   statusIcon: (
     <Box component="span" sx={{ lineHeight: 0, color: "warning.main" }}>
       <Icon href={svgStatusWarning} size="regular" />
     </Box>
   ),
   headerRight: (
-    <AvatarGroup
-      max={3}
-      sx={{ "& .MuiAvatar-root": { width: 24, height: 24, fontSize: 12 } }}
-    >
-      <Avatar alt="User 1" src="https://i.pravatar.cc/150?img=1" />
-      <Avatar alt="User 2" src="https://i.pravatar.cc/150?img=2" />
-      <Avatar alt="User 3" src="https://i.pravatar.cc/150?img=3" />
-    </AvatarGroup>
+    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+      <Chip size="small" label="Owned" variant="outlined" />
+      <AvatarGroup
+        max={3}
+        sx={{ "& .MuiAvatar-root": { width: 24, height: 24, fontSize: 12 } }}
+      >
+        <Avatar alt="User 1" src="https://i.pravatar.cc/150?img=1" />
+        <Avatar alt="User 2" src="https://i.pravatar.cc/150?img=2" />
+        <Avatar alt="User 3" src="https://i.pravatar.cc/150?img=3" />
+      </AvatarGroup>
+    </Box>
   ),
+  thumbnailTopLeft: <Chip size="small" label="iModel" color="secondary" />,
   thumbnailTopRight: (
     <>
       <IconButton
@@ -308,6 +315,11 @@ Kitchen.args = {
     </>
   ),
   thumbnailBottomRight: <Chip size="small" label="Trial" color="primary" />,
+  cardInfo: (
+    <Typography variant="caption" color="text.secondary" component="p">
+      Last opened by Alex
+    </Typography>
+  ),
   actions: (
     <>
       <Button size="small" onClick={action("kitchen open clicked")}>
@@ -322,4 +334,114 @@ Kitchen.args = {
       </Button>
     </>
   ),
+};
+
+export const Selected = Template.bind({});
+Selected.storyName = "Selected state";
+Selected.args = {
+  title: "Main Street Bridge",
+  description: "3D model of the Main Street bridge structure and components.",
+  metadata: "Edited 1/16/2024",
+  thumbnail: bridgeThumbnail,
+  selected: true,
+};
+
+export const WithAvatarGroupSlot = Template.bind({});
+WithAvatarGroupSlot.storyName = "With AvatarGroup in headerRight";
+WithAvatarGroupSlot.args = {
+  title: "Main Street Bridge",
+  description: "3D model of the Main Street bridge structure and components.",
+  metadata: "Edited 1/16/2024",
+  thumbnail: bridgeThumbnail,
+  headerRight: (
+    <AvatarGroup
+      max={3}
+      sx={{ "& .MuiAvatar-root": { width: 24, height: 24, fontSize: 12 } }}
+    >
+      <Avatar alt="User 1" src="https://i.pravatar.cc/150?img=1" />
+      <Avatar alt="User 2" src="https://i.pravatar.cc/150?img=2" />
+      <Avatar alt="User 3" src="https://i.pravatar.cc/150?img=3" />
+    </AvatarGroup>
+  ),
+};
+
+export const WithContextMenu = () => {
+  const [contextMenu, setContextMenu] = React.useState<{
+    mouseX: number;
+    mouseY: number;
+  } | null>(null);
+
+  const handleContextMenu = (event: React.MouseEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    action("context-menu opened")(event);
+    setContextMenu({
+      mouseX: event.clientX - 2,
+      mouseY: event.clientY - 4,
+    });
+  };
+
+  const handleClose = () => {
+    action("context-menu closed")();
+    setContextMenu(null);
+  };
+
+  return (
+    <Box sx={{ p: 2 }}>
+      <BaseCard
+        title="Main Street Bridge"
+        description="3D model of the Main Street bridge structure and components."
+        metadata="Edited 1/16/2024"
+        thumbnail={bridgeThumbnail}
+        onContextMenu={handleContextMenu}
+      />
+      <Box sx={{ mt: 2, fontSize: "0.875rem", color: "text.secondary" }}>
+        💡 Right-click the card to see context menu
+      </Box>
+      <Menu
+        open={contextMenu !== null}
+        onClose={handleClose}
+        anchorReference="anchorPosition"
+        anchorPosition={
+          contextMenu !== null
+            ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
+            : undefined
+        }
+      >
+        <MenuItem
+          onClick={() => {
+            action("menu: open clicked")();
+            handleClose();
+          }}
+        >
+          Open
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            action("menu: share clicked")();
+            handleClose();
+          }}
+        >
+          Share
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            action("menu: delete clicked")();
+            handleClose();
+          }}
+        >
+          Delete
+        </MenuItem>
+      </Menu>
+    </Box>
+  );
+};
+
+export const WithDoubleClick = Template.bind({});
+WithDoubleClick.storyName = "With double-click handler";
+WithDoubleClick.args = {
+  title: "Main Street Bridge",
+  description: "3D model of the Main Street bridge structure and components.",
+  metadata: "Edited 1/16/2024",
+  thumbnail: bridgeThumbnail,
+  onDoubleClick: action("double-clicked"),
 };

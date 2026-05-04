@@ -11,7 +11,6 @@ import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 import svgCheckmark from "@stratakit/icons/checkmark.svg";
 import svgMore from "@stratakit/icons/more-vertical.svg";
-import svgNew from "@stratakit/icons/new.svg";
 import svgImodel from "@stratakit/icons/imodel.svg";
 import { Icon } from "@stratakit/mui";
 import classNames from "classnames";
@@ -29,14 +28,12 @@ import { ContextMenuBuilderItem } from "../../utils/_buildMenuOptions";
 import { IModelThumbnailV2 } from "../iModelThumbnail/IModelThumbnailV2";
 import styles from "./IModelTile.module.scss";
 
-function NameStatusIcon({
+function TitleStatusIcon({
   status,
-  isNew,
   isLoading,
   isSelected,
 }: {
   status?: "positive" | "warning" | "negative";
-  isNew?: boolean;
   isLoading?: boolean;
   isSelected?: boolean;
 }) {
@@ -53,7 +50,7 @@ function NameStatusIcon({
       ? "error.main"
       : undefined;
 
-  const icon = isSelected ? svgCheckmark : isNew ? svgNew : svgImodel;
+  const icon = isSelected ? svgCheckmark : svgImodel;
 
   return (
     <Box
@@ -122,8 +119,6 @@ export interface IModelTileV2Props
   /** Function to remove the iModel from favorites (standalone mode). */
   removeFromFavorites?(iModelId: string): Promise<void>;
   // ── State ───────────────────────────────────────────────────────────────────
-  /** Marks the card as new */
-  isNew?: boolean;
   /** Marks the card as selected */
   isSelected?: boolean;
   /** Shows a loading indicator in the card header */
@@ -142,8 +137,8 @@ export interface IModelTileV2Props
   /** Function that returns a badge node for the given iModel */
   getBadge?: (iModel: IModelFull) => React.ReactNode;
   // ── Content ─────────────────────────────────────────────────────────────────
-  /** Override the displayed name (defaults to iModel.displayName) */
-  name?: string;
+  /** Override the displayed title (defaults to iModel.displayName) */
+  title?: string;
   /** Additional metadata rendered below the description */
   metadata?: React.ReactNode;
   /** Pre-built menu items rendered in the more-options menu */
@@ -170,7 +165,6 @@ export const IModelTileV2 = ({
   isFavorite,
   addToFavorites,
   removeFromFavorites,
-  isNew,
   isSelected,
   isLoading,
   isDisabled,
@@ -179,7 +173,7 @@ export const IModelTileV2 = ({
   leftIcon,
   badge,
   getBadge,
-  name,
+  title,
   metadata,
   moreOptions,
   buttons,
@@ -289,7 +283,6 @@ export const IModelTileV2 = ({
         { [styles.fullWidth]: fullWidth },
         className
       )}
-      fullWidth={fullWidth}
       thumbnail={
         thumbnail ?? (
           <IModelThumbnailV2
@@ -302,15 +295,14 @@ export const IModelTileV2 = ({
       thumbnailTopLeft={leftIcon}
       thumbnailTopRight={thumbnailTopRight}
       thumbnailBottomRight={getBadge?.(iModel) ?? badge}
-      name={name ?? iModel.displayName ?? ""}
-      onNameClick={
+      title={title ?? iModel.displayName ?? ""}
+      onTitleClick={
         onThumbnailClick ? () => onThumbnailClick(iModel) : undefined
       }
       headerRight={headerRight}
       statusIcon={
-        <NameStatusIcon
+        <TitleStatusIcon
           status={status}
-          isNew={isNew}
           isLoading={isLoading}
           isSelected={isSelected}
         />

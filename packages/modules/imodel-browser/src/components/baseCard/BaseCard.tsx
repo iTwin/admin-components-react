@@ -11,7 +11,7 @@ import Stack from "@mui/material/Stack";
 import { SxProps, Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import classNames from "classnames";
-import React from "react";
+import React, { type ReactNode } from "react";
 
 import styles from "./BaseCard.module.scss";
 
@@ -27,7 +27,7 @@ export interface BaseCardSlotProps {
   header?: BaseCardSlotStyleProps;
   info?: BaseCardSlotStyleProps;
   actions?: BaseCardSlotStyleProps;
-  nameAction?: BaseCardSlotStyleProps;
+  titleAction?: BaseCardSlotStyleProps;
 }
 
 export interface BaseCardProps
@@ -38,39 +38,38 @@ export interface BaseCardProps
    * When a string URL is provided, BaseCard renders an image with default cover styling.
    * Leave undefined to render an empty reserved thumbnail area.
    */
-  thumbnail?: React.ReactNode;
+  thumbnail?: ReactNode;
   /**
    * Overlay slot in the top-left of the thumbnail (e.g. TypeIndicator icon).
    */
-  thumbnailTopLeft?: React.ReactNode;
+  thumbnailTopLeft?: ReactNode;
   /**
    * Overlay slot in the top-right of the thumbnail
    * (e.g. favorite button, quick-action icon).
    */
-  thumbnailTopRight?: React.ReactNode;
+  thumbnailTopRight?: ReactNode;
   /**
    * Overlay slot in the bottom-right of the thumbnail (e.g. status badge, chip).
    */
-  thumbnailBottomRight?: React.ReactNode;
+  thumbnailBottomRight?: ReactNode;
 
   // ── Header ──────────────────────────────────────────────────────────────────
-  /** Primary name/title of the card. */
-  name: string;
-  /** Optional click handler for the card title. */
-  onNameClick?: React.MouseEventHandler<HTMLElement>;
+  /** Primary title of the card. */
+  title: string;
+
   /**
-   * Optional slot to the right of the name in the header row
-   * (e.g. AvatarGroup, status chip, icon button).
+   * Optional slot to the right of the title in the header row
+   * (e.g. status chip, icon button, AvatarGroup).
    */
-  headerRight?: React.ReactNode;
+  headerRight?: ReactNode;
 
   // ── Content ─────────────────────────────────────────────────────────────────
   /**
    * Optional icon rendered to the left of the entire content area.
    * Use this for status icons, type indicators, etc.
    */
-  statusIcon?: React.ReactNode;
-  /** Short description rendered below the name. */
+  statusIcon?: ReactNode;
+  /** Short description rendered below the title. */
   description?: string;
   /** Secondary metadata line rendered below the description (e.g. "Edited 1/16/2024"). */
   metadata?: string;
@@ -78,17 +77,25 @@ export interface BaseCardProps
    * Additional free-form content injected below description + metadata.
    * Use for extra info rows, tags, etc.
    */
-  cardInfo?: React.ReactNode;
+  cardInfo?: ReactNode;
 
   // ── Footer ───────────────────────────────────────────────────────────────────
   /**
    * Action buttons rendered in the card footer (`CardActions`).
    */
-  actions?: React.ReactNode;
+  actions?: ReactNode;
 
   // ── Layout ───────────────────────────────────────────────────────────────────
-  /** Makes the card take the full width of its container. */
-  fullWidth?: boolean;
+  /** Indicates whether the card is in a selected state. Applies outline styling. */
+  selected?: boolean;
+  /** Optional click handler for the card title. */
+  onTitleClick?: NonNullable<
+    React.ComponentProps<typeof CardActionArea>["onClick"]
+  >;
+  /** Optional callback fired on right-click of the card. */
+  onContextMenu?: CardProps["onContextMenu"];
+  /** Optional callback fired on double-click of the card. */
+  onDoubleClick?: CardProps["onDoubleClick"];
   /** Props for internal wrapper slots following MUI slotProps conventions. */
   slotProps?: BaseCardSlotProps;
 }
@@ -105,17 +112,20 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
       thumbnailTopLeft,
       thumbnailTopRight,
       thumbnailBottomRight,
-      name,
-      onNameClick,
+      title,
+      onTitleClick,
       headerRight,
       statusIcon,
       description,
       metadata,
       cardInfo,
       actions,
-      fullWidth,
+      selected,
+      onContextMenu,
+      onDoubleClick,
       slotProps,
       className,
+      sx,
       ...rest
     },
     ref
@@ -133,9 +143,17 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
         variant="outlined"
         className={classNames(
           styles.baseCard,
-          { [styles.fullWidth]: fullWidth },
+          { [styles.selected]: selected },
           className
         )}
+        sx={[
+          {
+            cursor: onDoubleClick ? "pointer" : "default",
+          },
+          ...(Array.isArray(sx) ? sx : sx ? [sx] : []),
+        ]}
+        onContextMenu={onContextMenu}
+        onDoubleClick={onDoubleClick}
         {...rest}
       >
         {/* ── Thumbnail area ── */}
@@ -186,7 +204,7 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
           )}
 
           <Stack spacing={0.5} sx={{ flex: 1, minWidth: 0 }}>
-            {/* Header row: name + optional right slot */}
+            {/* Header row: title + optional right slot */}
             <Stack
               direction="row"
               className={slotProps?.header?.className}
@@ -197,29 +215,45 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
                 ...(slotProps?.header?.sx ?? {}),
               }}
             >
-              {onNameClick ? (
+              {onTitleClick ? (
                 <CardActionArea
-                  onClick={onNameClick}
-                  className={slotProps?.nameAction?.className}
+                  onClick={onTitleClick}
+                  className={slotProps?.titleAction?.className}
                   sx={{
                     flex: 1,
                     minWidth: 0,
                     textAlign: "left",
                     borderRadius: 1,
-                    ...(slotProps?.nameAction?.sx ?? {}),
+                    ...(slotProps?.titleAction?.sx ?? {}),
                   }}
                 >
-                  <Typography variant="body1" noWrap>
-                    {name}
+                  <Typography
+                    variant="body1"
+                    component="p"
+                    sx={{
+                      display: "-webkit-box",
+                      WebkitLineClamp: 1,
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden",
+                    }}
+                  >
+                    {title}
                   </Typography>
                 </CardActionArea>
               ) : (
                 <Typography
                   variant="body1"
-                  noWrap
-                  sx={{ flex: 1, minWidth: 0 }}
+                  component="p"
+                  sx={{
+                    flex: 1,
+                    minWidth: 0,
+                    display: "-webkit-box",
+                    WebkitLineClamp: 1,
+                    WebkitBoxOrient: "vertical",
+                    overflow: "hidden",
+                  }}
                 >
-                  {name}
+                  {title}
                 </Typography>
               )}
               {headerRight && <Box sx={{ flexShrink: 0 }}>{headerRight}</Box>}
@@ -236,6 +270,12 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
                   variant="body2"
                   color="text.secondary"
                   component="p"
+                  sx={{
+                    display: "-webkit-box",
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: "vertical",
+                    overflow: "hidden",
+                  }}
                 >
                   {description}
                 </Typography>

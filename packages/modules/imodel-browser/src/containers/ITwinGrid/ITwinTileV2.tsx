@@ -17,7 +17,6 @@ import Typography from "@mui/material/Typography";
 import svgCheckmark from "@stratakit/icons/checkmark.svg";
 import svgItwin from "@stratakit/icons/itwin.svg";
 import svgMore from "@stratakit/icons/more-vertical.svg";
-import svgNew from "@stratakit/icons/new.svg";
 import svgStatusError from "@stratakit/icons/status-error.svg";
 import svgStatusSuccess from "@stratakit/icons/status-success.svg";
 import svgStatusWarning from "@stratakit/icons/status-warning.svg";
@@ -31,14 +30,12 @@ import { _mergeStrings } from "../../utils/_apiOverrides";
 import { ContextMenuBuilderItem } from "../../utils/_buildMenuOptions";
 import styles from "./ITwinTile.module.scss";
 
-function NameStatusIcon({
+function TitleStatusIcon({
   status,
-  isNew,
   isLoading,
   isSelected,
 }: {
   status?: "positive" | "warning" | "negative";
-  isNew?: boolean;
   isLoading?: boolean;
   isSelected?: boolean;
 }) {
@@ -82,13 +79,6 @@ function NameStatusIcon({
       </Box>
     );
   }
-  if (isNew) {
-    return (
-      <Box component="span" sx={{ mr: 0.5, flexShrink: 0, lineHeight: 0 }}>
-        <Icon href={svgNew} size="regular" />
-      </Box>
-    );
-  }
   return null;
 }
 
@@ -102,7 +92,7 @@ function buildMenuItems<T>(
     ?.filter(({ visible }) =>
       typeof visible === "function" ? visible(value) : visible ?? true
     )
-    .map(({ key, visible, onClick, disabled, children }) => (
+    .map(({ key, onClick, disabled, children }) => (
       <MenuItem
         key={key}
         disabled={typeof disabled === "function" ? disabled(value) : disabled}
@@ -149,8 +139,6 @@ export interface ITwinTileV2Props
   /** Hides the favorite icon when true */
   hideFavoriteIcon?: boolean;
   // ── State ───────────────────────────────────────────────────────────────────
-  /** Marks the card as new */
-  isNew?: boolean;
   /** Marks the card as selected */
   isSelected?: boolean;
   /** Shows a loading indicator in the card header */
@@ -169,8 +157,8 @@ export interface ITwinTileV2Props
   /** Badge shown at the bottom of the thumbnail (overrides auto status badge) */
   badge?: React.ReactNode;
   // ── Content ─────────────────────────────────────────────────────────────────
-  /** Override the displayed name (defaults to iTwin.displayName) */
-  name?: string;
+  /** Override the displayed title (defaults to iTwin.displayName) */
+  title?: string;
   /** Override the description (defaults to iTwin.number) */
   description?: string;
   /** Additional metadata rendered below the description */
@@ -203,7 +191,6 @@ export const ITwinTileV2 = ({
   refetchITwins,
   fullWidth,
   hideFavoriteIcon,
-  isNew,
   isSelected,
   isLoading,
   isDisabled,
@@ -212,7 +199,7 @@ export const ITwinTileV2 = ({
   leftIcon,
   rightIcon,
   badge,
-  name,
+  title,
   description,
   metadata,
   moreOptions,
@@ -246,7 +233,7 @@ export const ITwinTileV2 = ({
     [iTwinOptions, iTwin, refetchITwins]
   );
 
-  const hasMoreOptions = !!(moreOptions || moreOptionsBuilt?.length);
+  const hasMoreOptions = !!(moreOptions ?? moreOptionsBuilt?.length);
 
   const statusBadge =
     badge ??
@@ -268,9 +255,8 @@ export const ITwinTileV2 = ({
 
   const titleNode = (
     <Box sx={{ display: "flex", alignItems: "center", minWidth: 0 }}>
-      <NameStatusIcon
+      <TitleStatusIcon
         status={status}
-        isNew={isNew}
         isLoading={isLoading}
         isSelected={isSelected}
       />
@@ -278,7 +264,7 @@ export const ITwinTileV2 = ({
         <CardActionArea
           nativeButton={false}
           onClick={() => onThumbnailClick(iTwin)}
-          aria-disabled={isDisabled || undefined}
+          aria-disabled={isDisabled ?? undefined}
           data-testid={`iTwin-tile-${iTwin.id}`}
           sx={{
             font: "inherit",
@@ -288,7 +274,7 @@ export const ITwinTileV2 = ({
             whiteSpace: "nowrap",
           }}
         >
-          {name ?? iTwin.displayName}
+          {title ?? iTwin.displayName}
         </CardActionArea>
       ) : (
         <Box
@@ -299,7 +285,7 @@ export const ITwinTileV2 = ({
             whiteSpace: "nowrap",
           }}
         >
-          {name ?? iTwin.displayName}
+          {title ?? iTwin.displayName}
         </Box>
       )}
     </Box>
@@ -308,7 +294,7 @@ export const ITwinTileV2 = ({
   return (
     <Card
       variant="outlined"
-      aria-disabled={isDisabled || undefined}
+      aria-disabled={isDisabled ?? undefined}
       className={classNames(
         styles.iTwinTile,
         { [styles.fullWidth]: fullWidth },

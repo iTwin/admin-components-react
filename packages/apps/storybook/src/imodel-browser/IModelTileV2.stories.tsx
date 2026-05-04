@@ -74,7 +74,6 @@ Primary.args = {
   isDisabled: false,
   isLoading: false,
   isSelected: false,
-  isNew: false,
   badge: <Chip size="small" label="Badge" />,
   leftIcon: <Icon href={svgPlaceholder} size="regular" />,
   buttons: (
