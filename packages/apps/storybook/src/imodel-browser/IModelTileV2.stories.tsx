@@ -6,6 +6,7 @@ import {
   IModelTileV2,
   IModelTileV2Props,
 } from "../../../../modules/imodel-browser/src/containers/iModelTiles/IModelTileV2";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
 import { Icon } from "@stratakit/mui";
@@ -15,8 +16,16 @@ import { action } from "@storybook/addon-actions";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
 
+const InConstrainedContainer = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => <Box sx={{ maxWidth: "28rem", width: "100%" }}>{children}</Box>;
+
 export const IModelTileV2Story = (props: IModelTileV2Props) => (
-  <IModelTileV2 {...props} />
+  <InConstrainedContainer>
+    <IModelTileV2 {...props} />
+  </InConstrainedContainer>
 );
 
 export default {

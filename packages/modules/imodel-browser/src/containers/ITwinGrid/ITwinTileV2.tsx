@@ -134,8 +134,6 @@ export interface ITwinTileV2Props
   removeFromFavorites?(iTwinId: string): Promise<void>;
   /** Function to refetch iTwins */
   refetchITwins?: () => void;
-  /** Indicates whether the tile should take the full width of its container */
-  fullWidth?: boolean;
   /** Hides the favorite icon when true */
   hideFavoriteIcon?: boolean;
   // ── State ───────────────────────────────────────────────────────────────────
@@ -161,8 +159,8 @@ export interface ITwinTileV2Props
   title?: string;
   /** Override the description (defaults to iTwin.number) */
   description?: string;
-  /** Additional metadata rendered below the description */
-  metadata?: React.ReactNode;
+  /** Additional fineprint rendered below the description */
+  fineprint?: React.ReactNode;
   /** Pre-built menu items rendered in the more-options menu */
   moreOptions?: React.ReactNode;
   /** Action buttons rendered in the card footer */
@@ -189,7 +187,6 @@ export const ITwinTileV2 = ({
   addToFavorites,
   removeFromFavorites,
   refetchITwins,
-  fullWidth,
   hideFavoriteIcon,
   isSelected,
   isLoading,
@@ -201,7 +198,7 @@ export const ITwinTileV2 = ({
   badge,
   title,
   description,
-  metadata,
+  fineprint,
   moreOptions,
   buttons,
   children,
@@ -295,13 +292,9 @@ export const ITwinTileV2 = ({
     <Card
       variant="outlined"
       aria-disabled={isDisabled ?? undefined}
-      className={classNames(
-        styles.iTwinTile,
-        { [styles.fullWidth]: fullWidth },
-        className
-      )}
+      className={classNames(styles.iTwinTile, className)}
       sx={{
-        width: fullWidth ? "100%" : "fit-content",
+        width: "fit-content",
         minWidth: 288,
         ...rest.sx,
       }}
@@ -374,7 +367,7 @@ export const ITwinTileV2 = ({
         {...slotProps?.header}
       />
 
-      {/* Card content — description, more options, metadata */}
+      {/* Card content — description, more options, fineprint */}
       <CardContent sx={{ pt: 0 }} {...slotProps?.content}>
         <Box sx={{ display: "flex", alignItems: "flex-start", gap: 1 }}>
           <Typography
@@ -405,15 +398,15 @@ export const ITwinTileV2 = ({
             </>
           )}
         </Box>
-        {metadata && (
+        {fineprint && (
           <Typography
             variant="caption"
             color="text.secondary"
             component="div"
-            data-testid={`iTwin-tile-${iTwin.id}-metadata`}
+            data-testid={`iTwin-tile-${iTwin.id}-fineprint`}
             sx={{ mt: 1 }}
           >
-            {metadata}
+            {fineprint}
           </Typography>
         )}
         {children}

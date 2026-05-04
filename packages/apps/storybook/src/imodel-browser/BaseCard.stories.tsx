@@ -12,8 +12,6 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
 import IconButton from "@mui/material/IconButton";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 import svgMore from "@stratakit/icons/more-vertical.svg";
 import svgStar from "@stratakit/icons/star.svg";
@@ -40,7 +38,7 @@ export default {
     thumbnailBottomRight: { control: false },
     headerRight: { control: false },
     statusIcon: { control: false },
-    cardInfo: { control: false },
+    fineprint: { control: false },
     actions: { control: false },
     onTitleClick: { control: false },
     onContextMenu: { control: false },
@@ -56,7 +54,7 @@ export const Default = Template.bind({});
 Default.args = {
   title: "Main Street Bridge",
   description: "3D model of the Main Street bridge structure and components.",
-  metadata: "Edited 1/16/2024",
+  fineprint: "Edited 1/16/2024",
   thumbnail: bridgeThumbnail,
 };
 
@@ -65,7 +63,7 @@ WithoutThumbnail.storyName = "Without thumbnail";
 WithoutThumbnail.args = {
   title: "Main Street Bridge",
   description: "3D model of the Main Street bridge structure and components.",
-  metadata: "Edited 1/16/2024",
+  fineprint: "Edited 1/16/2024",
   thumbnail: undefined,
 };
 
@@ -74,7 +72,7 @@ WithThumbnailActions.storyName = "With thumbnail actions";
 WithThumbnailActions.args = {
   title: "Main Street Bridge",
   description: "3D model of the Main Street bridge structure and components.",
-  metadata: "Edited 1/16/2024",
+  fineprint: "Edited 1/16/2024",
   thumbnail: bridgeThumbnail,
   thumbnailTopRight: (
     <>
@@ -103,7 +101,7 @@ WithImageThumbnail.storyName = "With image thumbnail";
 WithImageThumbnail.args = {
   title: "Main Street Bridge",
   description: "3D model of the Main Street bridge structure and components.",
-  metadata: "Edited 1/16/2024",
+  fineprint: "Edited 1/16/2024",
   thumbnail: bridgeThumbnail,
   thumbnailTopRight: (
     <>
@@ -132,7 +130,7 @@ WithAvatarGroup.storyName = "With AvatarGroup";
 WithAvatarGroup.args = {
   title: "Main Street Bridge",
   description: "3D model of the Main Street bridge structure and components.",
-  metadata: "Edited 1/16/2024",
+  fineprint: "Edited 1/16/2024",
   thumbnail: bridgeThumbnail,
   headerRight: (
     <AvatarGroup
@@ -151,7 +149,7 @@ WithStatusIcon.storyName = "With status icon";
 WithStatusIcon.args = {
   title: "Main Street Bridge",
   description: "3D model of the Main Street bridge structure and components.",
-  metadata: "Edited 1/16/2024",
+  fineprint: "Edited 1/16/2024",
   thumbnail: bridgeThumbnail,
   statusIcon: <Icon href={svgStatusSuccess} />,
 };
@@ -161,7 +159,7 @@ WithBadge.storyName = "With thumbnail badge";
 WithBadge.args = {
   title: "Main Street Bridge",
   description: "3D model of the Main Street bridge structure and components.",
-  metadata: "Edited 1/16/2024",
+  fineprint: "Edited 1/16/2024",
   thumbnail: bridgeThumbnail,
   thumbnailBottomRight: <Chip size="small" label="Trial" color="primary" />,
 };
@@ -171,7 +169,7 @@ WithActions.storyName = "With footer actions";
 WithActions.args = {
   title: "Main Street Bridge",
   description: "3D model of the Main Street bridge structure and components.",
-  metadata: "Edited 1/16/2024",
+  fineprint: "Edited 1/16/2024",
   thumbnail: bridgeThumbnail,
   actions: (
     <>
@@ -194,7 +192,7 @@ WithClickableName.storyName = "With clickable title";
 WithClickableName.args = {
   title: "Main Street Bridge",
   description: "3D model of the Main Street bridge structure and components.",
-  metadata: "Edited 1/16/2024",
+  fineprint: "Edited 1/16/2024",
   thumbnail: bridgeThumbnail,
   onTitleClick: action("title clicked"),
 };
@@ -204,7 +202,7 @@ WithSlotProps.storyName = "With slot props";
 WithSlotProps.args = {
   title: "Main Street Bridge",
   description: "3D model of the Main Street bridge structure and components.",
-  metadata: "Edited 1/16/2024",
+  fineprint: "Edited 1/16/2024",
   thumbnail: bridgeThumbnail,
   actions: (
     <>
@@ -249,7 +247,7 @@ export const Statuses = () => (
         key={label}
         title="Main Street Bridge"
         description="3D model of the Main Street bridge structure."
-        metadata="Edited 1/16/2024"
+        fineprint="Edited 1/16/2024"
         thumbnail={bridgeThumbnail}
         statusIcon={
           <Box component="span" sx={{ lineHeight: 0, color }}>
@@ -266,7 +264,11 @@ Kitchen.storyName = "Kitchen sink";
 Kitchen.args = {
   title: "Main Street Bridge",
   description: "3D model of the Main Street bridge structure and components.",
-  metadata: "Edited 1/16/2024",
+  fineprint: (
+    <Typography variant="caption" color="text.secondary" component="p">
+      Last opened by Alex
+    </Typography>
+  ),
   thumbnail: bridgeThumbnail,
   selected: false,
   onTitleClick: action("kitchen title clicked"),
@@ -315,11 +317,6 @@ Kitchen.args = {
     </>
   ),
   thumbnailBottomRight: <Chip size="small" label="Trial" color="primary" />,
-  cardInfo: (
-    <Typography variant="caption" color="text.secondary" component="p">
-      Last opened by Alex
-    </Typography>
-  ),
   actions: (
     <>
       <Button size="small" onClick={action("kitchen open clicked")}>
@@ -341,7 +338,7 @@ Selected.storyName = "Selected state";
 Selected.args = {
   title: "Main Street Bridge",
   description: "3D model of the Main Street bridge structure and components.",
-  metadata: "Edited 1/16/2024",
+  fineprint: "Edited 1/16/2024",
   thumbnail: bridgeThumbnail,
   selected: true,
 };
@@ -351,7 +348,7 @@ WithAvatarGroupSlot.storyName = "With AvatarGroup in headerRight";
 WithAvatarGroupSlot.args = {
   title: "Main Street Bridge",
   description: "3D model of the Main Street bridge structure and components.",
-  metadata: "Edited 1/16/2024",
+  fineprint: "Edited 1/16/2024",
   thumbnail: bridgeThumbnail,
   headerRight: (
     <AvatarGroup
@@ -366,72 +363,35 @@ WithAvatarGroupSlot.args = {
 };
 
 export const WithContextMenu = () => {
-  const [contextMenu, setContextMenu] = React.useState<{
-    mouseX: number;
-    mouseY: number;
-  } | null>(null);
-
-  const handleContextMenu = (event: React.MouseEvent<HTMLDivElement>) => {
-    event.preventDefault();
-    action("context-menu opened")(event);
-    setContextMenu({
-      mouseX: event.clientX - 2,
-      mouseY: event.clientY - 4,
-    });
-  };
-
-  const handleClose = () => {
-    action("context-menu closed")();
-    setContextMenu(null);
-  };
-
   return (
     <Box sx={{ p: 2 }}>
       <BaseCard
         title="Main Street Bridge"
         description="3D model of the Main Street bridge structure and components."
-        metadata="Edited 1/16/2024"
+        fineprint="Edited 1/16/2024"
         thumbnail={bridgeThumbnail}
-        onContextMenu={handleContextMenu}
+        onContextMenu={action("context-menu opened")}
+        contextMenuItems={[
+          {
+            key: "open",
+            label: "Open",
+            onClick: action("menu: open clicked"),
+          },
+          {
+            key: "share",
+            label: "Share",
+            onClick: action("menu: share clicked"),
+          },
+          {
+            key: "delete",
+            label: "Delete",
+            onClick: action("menu: delete clicked"),
+          },
+        ]}
       />
       <Box sx={{ mt: 2, fontSize: "0.875rem", color: "text.secondary" }}>
-        💡 Right-click the card to see context menu
+        Right-click the card to see context menu
       </Box>
-      <Menu
-        open={contextMenu !== null}
-        onClose={handleClose}
-        anchorReference="anchorPosition"
-        anchorPosition={
-          contextMenu !== null
-            ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
-            : undefined
-        }
-      >
-        <MenuItem
-          onClick={() => {
-            action("menu: open clicked")();
-            handleClose();
-          }}
-        >
-          Open
-        </MenuItem>
-        <MenuItem
-          onClick={() => {
-            action("menu: share clicked")();
-            handleClose();
-          }}
-        >
-          Share
-        </MenuItem>
-        <MenuItem
-          onClick={() => {
-            action("menu: delete clicked")();
-            handleClose();
-          }}
-        >
-          Delete
-        </MenuItem>
-      </Menu>
     </Box>
   );
 };
@@ -441,7 +401,7 @@ WithDoubleClick.storyName = "With double-click handler";
 WithDoubleClick.args = {
   title: "Main Street Bridge",
   description: "3D model of the Main Street bridge structure and components.",
-  metadata: "Edited 1/16/2024",
+  fineprint: "Edited 1/16/2024",
   thumbnail: bridgeThumbnail,
   onDoubleClick: action("double-clicked"),
 };

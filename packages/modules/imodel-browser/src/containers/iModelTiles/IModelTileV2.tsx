@@ -5,12 +5,9 @@
 import Box from "@mui/material/Box";
 import { CardProps } from "@mui/material/Card";
 import CircularProgress from "@mui/material/CircularProgress";
-import IconButton from "@mui/material/IconButton";
-import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 import svgCheckmark from "@stratakit/icons/checkmark.svg";
-import svgMore from "@stratakit/icons/more-vertical.svg";
 import svgImodel from "@stratakit/icons/imodel.svg";
 import { Icon } from "@stratakit/mui";
 import classNames from "classnames";
@@ -65,7 +62,6 @@ function TitleStatusIcon({
 function buildMenuItems<T>(
   options: ContextMenuBuilderItem<T>[] | undefined,
   value: T,
-  closeMenu: () => void,
   refetchData?: () => void
 ): React.ReactNode[] | undefined {
   return options
@@ -78,7 +74,6 @@ function buildMenuItems<T>(
         disabled={typeof disabled === "function" ? disabled(value) : disabled}
         onClick={(e) => {
           e.stopPropagation();
-          closeMenu();
           onClick?.(value, refetchData);
         }}
       >
@@ -108,8 +103,6 @@ export interface IModelTileV2Props
   apiOverrides?: ApiOverrides;
   /** Function to refetch iModels */
   refetchIModels?: () => void;
-  /** Indicates whether the tile should take the full width of its container */
-  fullWidth?: boolean;
   /** Hides the favorite icon when true */
   hideFavoriteIcon?: boolean;
   /** Indicates whether the iModel is marked as a favorite (standalone mode). */
@@ -139,8 +132,8 @@ export interface IModelTileV2Props
   // ── Content ─────────────────────────────────────────────────────────────────
   /** Override the displayed title (defaults to iModel.displayName) */
   title?: string;
-  /** Additional metadata rendered below the description */
-  metadata?: React.ReactNode;
+  /** Additional fineprint rendered below the description */
+  fineprint?: React.ReactNode;
   /** Pre-built menu items rendered in the more-options menu */
   moreOptions?: React.ReactNode;
   /** Action buttons rendered in the card footer */
@@ -160,7 +153,6 @@ export const IModelTileV2 = ({
   apiOverrides,
   stringsOverrides,
   refetchIModels,
-  fullWidth,
   hideFavoriteIcon,
   isFavorite,
   addToFavorites,
@@ -174,16 +166,14 @@ export const IModelTileV2 = ({
   badge,
   getBadge,
   title,
-  metadata,
+  fineprint,
   moreOptions,
   buttons,
   slotProps,
   className,
+  onContextMenu: onCardContextMenu,
   ...rest
 }: IModelTileV2Props) => {
-  const [moreOptionsAnchor, setMoreOptionsAnchor] =
-    React.useState<HTMLElement | null>(null);
-
   const favoritesContext = React.useContext(IModelFavoritesContext);
   const strings = _mergeStrings(
     {
@@ -194,13 +184,7 @@ export const IModelTileV2 = ({
   );
 
   const moreOptionsBuilt = React.useMemo(
-    () =>
-      buildMenuItems(
-        iModelOptions,
-        iModel,
-        () => setMoreOptionsAnchor(null),
-        refetchIModels
-      ),
+    () => buildMenuItems(iModelOptions, iModel, refetchIModels),
     [iModelOptions, iModel, refetchIModels]
   );
 
@@ -240,49 +224,22 @@ export const IModelTileV2 = ({
       />
     ) : undefined;
 
-  const thumbnailTopRight = favoriteIcon;
-
-  const headerRight = hasMoreOptions ? (
-    <>
-      <IconButton
-        size="small"
-        aria-label="More options"
-        data-testid={`iModel-tile-${iModel.id}-more-options`}
-        onClick={(e) => setMoreOptionsAnchor(e.currentTarget)}
-        sx={{ flexShrink: 0 }}
-      >
-        <Icon href={svgMore} size="regular" />
-      </IconButton>
-      <Menu
-        anchorEl={moreOptionsAnchor}
-        open={Boolean(moreOptionsAnchor)}
-        onClose={() => setMoreOptionsAnchor(null)}
-      >
-        {moreOptions ?? moreOptionsBuilt}
-      </Menu>
-    </>
-  ) : undefined;
-
-  const cardInfo = metadata ? (
+  const fineprintNode = fineprint ? (
     <Typography
       variant="caption"
       color="text.secondary"
       component="div"
-      data-testid={`iModel-tile-${iModel.id}-metadata`}
+      data-testid={`iModel-tile-${iModel.id}-fineprint`}
       sx={{ mt: 0.75 }}
     >
-      {metadata}
+      {fineprint}
     </Typography>
   ) : undefined;
 
   return (
     <BaseCard
       aria-disabled={isDisabled ?? undefined}
-      className={classNames(
-        styles.iModelTile,
-        { [styles.fullWidth]: fullWidth },
-        className
-      )}
+      className={classNames(styles.iModelTile, className)}
       thumbnail={
         thumbnail ?? (
           <IModelThumbnailV2
@@ -293,13 +250,14 @@ export const IModelTileV2 = ({
         )
       }
       thumbnailTopLeft={leftIcon}
-      thumbnailTopRight={thumbnailTopRight}
+      thumbnailTopRight={favoriteIcon}
       thumbnailBottomRight={getBadge?.(iModel) ?? badge}
       title={title ?? iModel.displayName ?? ""}
-      onTitleClick={
-        onThumbnailClick ? () => onThumbnailClick(iModel) : undefined
+      onTitleClick={onThumbnailClick ? () => onThumbnailClick(iModel) : undefined}
+      onContextMenu={onCardContextMenu}
+      contextMenuContent={
+        hasMoreOptions ? moreOptions ?? moreOptionsBuilt : undefined
       }
-      headerRight={headerRight}
       statusIcon={
         <TitleStatusIcon
           status={status}
@@ -308,10 +266,10 @@ export const IModelTileV2 = ({
         />
       }
       description={iModel.description ?? ""}
-      cardInfo={cardInfo}
+      fineprint={fineprintNode}
       actions={buttons}
       slotProps={slotProps}
       {...rest}
-    ></BaseCard>
+    />
   );
 };

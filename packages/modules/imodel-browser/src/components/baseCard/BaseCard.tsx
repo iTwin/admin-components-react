@@ -7,6 +7,8 @@ import Card, { CardProps } from "@mui/material/Card";
 import CardActionArea from "@mui/material/CardActionArea";
 import CardActions from "@mui/material/CardActions";
 import Divider from "@mui/material/Divider";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 import Stack from "@mui/material/Stack";
 import { SxProps, Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
@@ -28,6 +30,13 @@ export interface BaseCardSlotProps {
   info?: BaseCardSlotStyleProps;
   actions?: BaseCardSlotStyleProps;
   titleAction?: BaseCardSlotStyleProps;
+}
+
+export interface BaseCardContextMenuItem {
+  key: string;
+  label: ReactNode;
+  disabled?: boolean;
+  onClick?: React.MouseEventHandler<HTMLLIElement>;
 }
 
 export interface BaseCardProps
@@ -63,21 +72,17 @@ export interface BaseCardProps
    */
   headerRight?: ReactNode;
 
-  // ── Content ─────────────────────────────────────────────────────────────────
   /**
    * Optional icon rendered to the left of the entire content area.
-   * Use this for status icons, type indicators, etc.
    */
   statusIcon?: ReactNode;
   /** Short description rendered below the title. */
   description?: string;
-  /** Secondary metadata line rendered below the description (e.g. "Edited 1/16/2024"). */
-  metadata?: string;
   /**
-   * Additional free-form content injected below description + metadata.
-   * Use for extra info rows, tags, etc.
+   * Secondary fineprint content rendered below the description.
+   * Accepts either a string (rendered with default subtitle styling) or custom React content.
    */
-  cardInfo?: ReactNode;
+  fineprint?: ReactNode;
 
   // ── Footer ───────────────────────────────────────────────────────────────────
   /**
@@ -85,7 +90,17 @@ export interface BaseCardProps
    */
   actions?: ReactNode;
 
-  // ── Layout ───────────────────────────────────────────────────────────────────
+  /**
+   * Optional right-click context menu content rendered by BaseCard.
+   * When provided, the menu opens at cursor position on right-click.
+   */
+  contextMenuContent?: ReactNode;
+  /**
+   * Optional context menu item descriptors rendered by BaseCard.
+   * Prefer this over `contextMenuContent` when calling across package boundaries.
+   */
+  contextMenuItems?: BaseCardContextMenuItem[];
+
   /** Indicates whether the card is in a selected state. Applies outline styling. */
   selected?: boolean;
   /** Optional click handler for the card title. */
@@ -117,9 +132,10 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
       headerRight,
       statusIcon,
       description,
-      metadata,
-      cardInfo,
+      fineprint,
       actions,
+      contextMenuContent,
+      contextMenuItems,
       selected,
       onContextMenu,
       onDoubleClick,
@@ -130,6 +146,15 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
     },
     ref
   ) => {
+    const fineprintNode =
+      typeof fineprint === "string" ? (
+        <Typography variant="subtitle2" color="text.disabled" component="p">
+          {fineprint}
+        </Typography>
+      ) : (
+        fineprint
+      );
+
     const thumbnailNode =
       typeof thumbnail === "string" ? (
         <img src={thumbnail} alt="" />
@@ -137,100 +162,155 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
         thumbnail
       );
 
+    const [contextMenuPosition, setContextMenuPosition] = React.useState<{
+      mouseX: number;
+      mouseY: number;
+    } | null>(null);
+
+    const closeContextMenu = React.useCallback(() => {
+      setContextMenuPosition(null);
+    }, []);
+
+    const handleContextMenu = React.useCallback(
+      (event: React.MouseEvent<HTMLDivElement>) => {
+        onContextMenu?.(event);
+
+        if (
+          !(contextMenuItems?.length || contextMenuContent) ||
+          event.defaultPrevented
+        ) {
+          return;
+        }
+
+        event.preventDefault();
+        setContextMenuPosition({
+          mouseX: event.clientX - 2,
+          mouseY: event.clientY - 4,
+        });
+      },
+      [contextMenuContent, contextMenuItems, onContextMenu]
+    );
+
     return (
-      <Card
-        ref={ref}
-        variant="outlined"
-        className={classNames(
-          styles.baseCard,
-          { [styles.selected]: selected },
-          className
-        )}
-        sx={[
-          {
-            cursor: onDoubleClick ? "pointer" : "default",
-          },
-          ...(Array.isArray(sx) ? sx : sx ? [sx] : []),
-        ]}
-        onContextMenu={onContextMenu}
-        onDoubleClick={onDoubleClick}
-        {...rest}
-      >
-        {/* ── Thumbnail area ── */}
-        <Box
+      <>
+        <Card
+          ref={ref}
+          variant="outlined"
           className={classNames(
-            styles.thumbnailArea,
-            slotProps?.thumbnail?.className
+            styles.baseCard,
+            { [styles.selected]: selected },
+            className
           )}
-          sx={{
-            ...(slotProps?.thumbnail?.sx ?? {}),
-          }}
+          sx={[
+            {
+              cursor: onDoubleClick ? "pointer" : "default",
+            },
+            ...(Array.isArray(sx) ? sx : sx ? [sx] : []),
+          ]}
+          onContextMenu={
+            onContextMenu || contextMenuContent || contextMenuItems?.length
+              ? handleContextMenu
+              : undefined
+          }
+          onDoubleClick={onDoubleClick}
+          {...rest}
         >
-          {thumbnailTopLeft && (
-            <Box className={styles.thumbnailTopLeft}>{thumbnailTopLeft}</Box>
-          )}
-          {thumbnailTopRight && (
-            <Box className={styles.thumbnailTopRight}>{thumbnailTopRight}</Box>
-          )}
-          {thumbnailNode}
-          {thumbnailBottomRight && (
-            <Box className={styles.thumbnailBottomRight}>
-              {thumbnailBottomRight}
-            </Box>
-          )}
-        </Box>
+          {/* ── Thumbnail area ── */}
+          <Box
+            className={classNames(
+              styles.thumbnailArea,
+              slotProps?.thumbnail?.className
+            )}
+            sx={{
+              ...(slotProps?.thumbnail?.sx ?? {}),
+            }}
+          >
+            {thumbnailTopLeft && (
+              <Box className={styles.thumbnailTopLeft}>{thumbnailTopLeft}</Box>
+            )}
+            {thumbnailTopRight && (
+              <Box className={styles.thumbnailTopRight}>
+                {thumbnailTopRight}
+              </Box>
+            )}
+            {thumbnailNode}
+            {thumbnailBottomRight && (
+              <Box className={styles.thumbnailBottomRight}>
+                {thumbnailBottomRight}
+              </Box>
+            )}
+          </Box>
 
-        <Divider
-          className={slotProps?.divider?.className}
-          sx={{ ...(slotProps?.divider?.sx ?? {}) }}
-        />
+          <Divider
+            className={slotProps?.divider?.className}
+            sx={{ ...(slotProps?.divider?.sx ?? {}) }}
+          />
 
-        {/* ── Content area ── */}
-        <Stack
-          direction="row"
-          spacing={1}
-          className={slotProps?.content?.className}
-          sx={{
-            p: 2,
-            pt: 1.5,
-            alignItems: "flex-start",
-            ...(slotProps?.content?.sx ?? {}),
-          }}
-        >
-          {statusIcon && (
-            <Box className={styles.statusIcon} sx={{ flexShrink: 0, pt: 0.25 }}>
-              {statusIcon}
-            </Box>
-          )}
+          {/* ── Content area ── */}
+          <Stack
+            direction="row"
+            spacing={1}
+            className={slotProps?.content?.className}
+            sx={{
+              p: 2,
+              pt: 1.5,
+              alignItems: "flex-start",
+              ...(slotProps?.content?.sx ?? {}),
+            }}
+          >
+            {statusIcon && (
+              <Box
+                className={styles.statusIcon}
+                sx={{ flexShrink: 0, pt: 0.25 }}
+              >
+                {statusIcon}
+              </Box>
+            )}
 
-          <Stack spacing={0.5} sx={{ flex: 1, minWidth: 0 }}>
-            {/* Header row: title + optional right slot */}
-            <Stack
-              direction="row"
-              className={slotProps?.header?.className}
-              sx={{
-                alignItems: "center",
-                justifyContent: "space-between",
-                gap: 1,
-                ...(slotProps?.header?.sx ?? {}),
-              }}
-            >
-              {onTitleClick ? (
-                <CardActionArea
-                  onClick={onTitleClick}
-                  className={slotProps?.titleAction?.className}
-                  sx={{
-                    flex: 1,
-                    minWidth: 0,
-                    textAlign: "left",
-                    borderRadius: 1,
-                    ...(slotProps?.titleAction?.sx ?? {}),
-                  }}
-                >
+            <Stack spacing={0.5} sx={{ flex: 1, minWidth: 0 }}>
+              {/* Header row: title + optional right slot */}
+              <Stack
+                direction="row"
+                className={slotProps?.header?.className}
+                sx={{
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: 1,
+                  ...(slotProps?.header?.sx ?? {}),
+                }}
+              >
+                {onTitleClick ? (
+                  <CardActionArea
+                    onClick={onTitleClick}
+                    className={slotProps?.titleAction?.className}
+                    sx={{
+                      flex: 1,
+                      minWidth: 0,
+                      textAlign: "left",
+                      borderRadius: 1,
+                      ...(slotProps?.titleAction?.sx ?? {}),
+                    }}
+                  >
+                    <Typography
+                      variant="body1"
+                      component="p"
+                      sx={{
+                        display: "-webkit-box",
+                        WebkitLineClamp: 1,
+                        WebkitBoxOrient: "vertical",
+                        overflow: "hidden",
+                      }}
+                    >
+                      {title}
+                    </Typography>
+                  </CardActionArea>
+                ) : (
                   <Typography
                     variant="body1"
                     component="p"
                     sx={{
+                      flex: 1,
+                      minWidth: 0,
                       display: "-webkit-box",
                       WebkitLineClamp: 1,
                       WebkitBoxOrient: "vertical",
@@ -239,71 +319,77 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
                   >
                     {title}
                   </Typography>
-                </CardActionArea>
-              ) : (
-                <Typography
-                  variant="body1"
-                  component="p"
-                  sx={{
-                    flex: 1,
-                    minWidth: 0,
-                    display: "-webkit-box",
-                    WebkitLineClamp: 1,
-                    WebkitBoxOrient: "vertical",
-                    overflow: "hidden",
-                  }}
-                >
-                  {title}
-                </Typography>
-              )}
-              {headerRight && <Box sx={{ flexShrink: 0 }}>{headerRight}</Box>}
-            </Stack>
+                )}
+                {headerRight && <Box sx={{ flexShrink: 0 }}>{headerRight}</Box>}
+              </Stack>
 
-            {/* Info: description + metadata + injected cardInfo */}
-            <Stack
-              spacing={0.25}
-              className={slotProps?.info?.className}
-              sx={{ ...(slotProps?.info?.sx ?? {}) }}
-            >
-              {description && (
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  component="p"
-                  sx={{
-                    display: "-webkit-box",
-                    WebkitLineClamp: 2,
-                    WebkitBoxOrient: "vertical",
-                    overflow: "hidden",
-                  }}
-                >
-                  {description}
-                </Typography>
-              )}
-              {metadata && (
-                <Typography
-                  variant="subtitle2"
-                  color="text.disabled"
-                  component="p"
-                >
-                  {metadata}
-                </Typography>
-              )}
-              {cardInfo}
+              {/* Info: description + fineprint */}
+              <Stack
+                spacing={0.25}
+                className={slotProps?.info?.className}
+                sx={{ ...(slotProps?.info?.sx ?? {}) }}
+              >
+                {description && (
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    component="p"
+                    sx={{
+                      display: "-webkit-box",
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden",
+                    }}
+                  >
+                    {description}
+                  </Typography>
+                )}
+                {fineprintNode}
+              </Stack>
             </Stack>
           </Stack>
-        </Stack>
 
-        {/* ── Footer actions ── */}
-        {actions && (
-          <CardActions
-            className={slotProps?.actions?.className}
-            sx={{ pt: 0, ...(slotProps?.actions?.sx ?? {}) }}
+          {/* ── Footer actions ── */}
+          {actions && (
+            <CardActions
+              className={slotProps?.actions?.className}
+              sx={{ pt: 0, ...(slotProps?.actions?.sx ?? {}) }}
+            >
+              {actions}
+            </CardActions>
+          )}
+        </Card>
+        {(contextMenuItems?.length || contextMenuContent) && (
+          <Menu
+            open={contextMenuPosition !== null}
+            onClose={closeContextMenu}
+            onClick={closeContextMenu}
+            anchorReference="anchorPosition"
+            anchorPosition={
+              contextMenuPosition !== null
+                ? {
+                    top: contextMenuPosition.mouseY,
+                    left: contextMenuPosition.mouseX,
+                  }
+                : undefined
+            }
           >
-            {actions}
-          </CardActions>
+            {contextMenuItems?.length
+              ? contextMenuItems.map(({ key, label, disabled, onClick }) => (
+                  <MenuItem
+                    key={key}
+                    disabled={disabled}
+                    onClick={(event) => {
+                      onClick?.(event);
+                    }}
+                  >
+                    {label}
+                  </MenuItem>
+                ))
+              : contextMenuContent}
+          </Menu>
         )}
-      </Card>
+      </>
     );
   }
 );

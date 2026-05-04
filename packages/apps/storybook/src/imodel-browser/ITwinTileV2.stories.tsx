@@ -6,11 +6,20 @@ import {
   ITwinTileV2,
   ITwinTileV2Props,
 } from "../../../../modules/imodel-browser/src/containers/ITwinGrid/ITwinTileV2";
+import Box from "@mui/material/Box";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
 
+const InConstrainedContainer = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => <Box sx={{ maxWidth: "28rem", width: "100%" }}>{children}</Box>;
+
 export const ITwinTileV2Story = (props: ITwinTileV2Props) => (
-  <ITwinTileV2 {...props} />
+  <InConstrainedContainer>
+    <ITwinTileV2 {...props} />
+  </InConstrainedContainer>
 );
 
 export default {
