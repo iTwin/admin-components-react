@@ -3,9 +3,9 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import {
-  IModelTileV2,
-  IModelTileV2Props,
-} from "../../../../modules/imodel-browser/src/containers/iModelTiles/IModelTileV2";
+  IModelTileMUI,
+  IModelTileMUIProps,
+} from "../../../../modules/imodel-browser/src/containers/iModelTiles/IModelTileMUI";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
@@ -22,16 +22,16 @@ const InConstrainedContainer = ({
   children: React.ReactNode;
 }) => <Box sx={{ maxWidth: "28rem", width: "100%" }}>{children}</Box>;
 
-export const IModelTileV2Story = (props: IModelTileV2Props) => (
+export const IModelTileMUIStory = (props: IModelTileMUIProps) => (
   <InConstrainedContainer>
-    <IModelTileV2 {...props} />
+    <IModelTileMUI {...props} />
   </InConstrainedContainer>
 );
 
 export default {
-  title: "imodel-browser/IModelTileV2",
-  component: IModelTileV2Story,
-  excludeStories: ["IModelTileV2Story"],
+  title: "imodel-browser/IModelTileMUI",
+  component: IModelTileMUIStory,
+  excludeStories: ["IModelTileMUIStory"],
   argTypes: {
     status: {
       options: ["undefined", "positive", "warning", "negative"],
@@ -59,11 +59,11 @@ export default {
   },
 } as Meta;
 
-const Template: Story<IModelTileV2Props> = (args) => (
-  <IModelTileV2Story {...args} />
+const Template: Story<IModelTileMUIProps> = (args) => (
+  <IModelTileMUIStory {...args} />
 );
 
-const baseArgs: IModelTileV2Props = {
+const baseArgs: IModelTileMUIProps = {
   iModel: {
     id: "1",
     displayName: "iModel Name",

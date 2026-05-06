@@ -17,10 +17,10 @@ import {
   buildContextMenuItemsMUI,
   ContextMenuBuilderItemMUI,
 } from "../../utils/_buildMenuOptions";
-import { IModelThumbnailV2 } from "../iModelThumbnail/IModelThumbnailV2";
+import { IModelThumbnailMUI } from "../iModelThumbnail/IModelThumbnailMUI";
 import styles from "./IModelTile.module.scss";
 
-export interface IModelTileV2Props
+export interface IModelTileMUIProps
   extends Omit<
     BaseCardProps,
     | "headerRight"
@@ -68,7 +68,7 @@ export interface IModelTileV2Props
 /**
  * Representation of an IModel — V2 (Stratakit/MUI)
  */
-export const IModelTileV2 = ({
+export const IModelTileMUI = ({
   iModel,
   contextMenuItems,
   accessToken,
@@ -99,7 +99,7 @@ export const IModelTileV2 = ({
   className,
   onContextMenu: onCardContextMenu,
   ...rest
-}: IModelTileV2Props) => {
+}: IModelTileMUIProps) => {
   const favoritesContext = React.useContext(IModelFavoritesContext);
   const strings = _mergeStrings(
     {
@@ -171,7 +171,7 @@ export const IModelTileV2 = ({
       loading={loading}
       thumbnail={
         thumbnail ?? (
-          <IModelThumbnailV2
+          <IModelThumbnailMUI
             iModelId={iModel.id}
             accessToken={accessToken}
             apiOverrides={thumbnailApiOverride}

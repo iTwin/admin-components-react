@@ -76,7 +76,7 @@ function TitleStatusIcon({
   return null;
 }
 
-export interface ITwinTileV2Props
+export interface ITwinTileMUIProps
   extends Omit<
     BaseCardProps,
     | "headerRight"
@@ -124,7 +124,7 @@ export interface ITwinTileV2Props
 /**
  * Representation of an iTwin — V2 (Stratakit/MUI)
  */
-export const ITwinTileV2 = ({
+export const ITwinTileMUI = ({
   iTwin,
   contextMenuItems,
   onThumbnailClick,
@@ -153,7 +153,7 @@ export const ITwinTileV2 = ({
   className,
   onContextMenu: onCardContextMenu,
   ...rest
-}: ITwinTileV2Props) => {
+}: ITwinTileMUIProps) => {
   const strings = _mergeStrings(
     {
       trialBadge: "Trial",

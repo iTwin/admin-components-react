@@ -12,7 +12,7 @@ import React, { forwardRef } from "react";
 /**
  * Representation of a Ghost IModel — V2 (Stratakit/MUI migration target)
  */
-export const IModelGhostTileV2 = forwardRef<HTMLDivElement, CardProps>(
+export const IModelGhostTileMUI = forwardRef<HTMLDivElement, CardProps>(
   ({ ...props }, ref) => {
     return (
       <Card

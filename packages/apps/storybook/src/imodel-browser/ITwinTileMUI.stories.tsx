@@ -3,9 +3,9 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import {
-  ITwinTileV2,
-  ITwinTileV2Props,
-} from "../../../../modules/imodel-browser/src/containers/ITwinGrid/ITwinTileV2";
+  ITwinTileMUI,
+  ITwinTileMUIProps,
+} from "../../../../modules/imodel-browser/src/containers/ITwinGrid/ITwinTileMUI";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
@@ -23,16 +23,16 @@ const InConstrainedContainer = ({
   children: React.ReactNode;
 }) => <Box sx={{ maxWidth: "28rem", width: "100%" }}>{children}</Box>;
 
-export const ITwinTileV2Story = (props: ITwinTileV2Props) => (
+export const ITwinTileMUIStory = (props: ITwinTileMUIProps) => (
   <InConstrainedContainer>
-    <ITwinTileV2 {...props} />
+    <ITwinTileMUI {...props} />
   </InConstrainedContainer>
 );
 
 export default {
-  title: "imodel-browser/ITwinTileV2",
-  component: ITwinTileV2Story,
-  excludeStories: ["ITwinTileV2Story"],
+  title: "imodel-browser/ITwinTileMUI",
+  component: ITwinTileMUIStory,
+  excludeStories: ["ITwinTileMUIStory"],
   argTypes: {
     status: {
       options: ["undefined", "positive", "warning", "negative"],
@@ -62,11 +62,11 @@ export default {
   },
 } as Meta;
 
-const Template: Story<ITwinTileV2Props> = (args) => (
-  <ITwinTileV2Story {...args} />
+const Template: Story<ITwinTileMUIProps> = (args) => (
+  <ITwinTileMUIStory {...args} />
 );
 
-const baseArgs: ITwinTileV2Props = {
+const baseArgs: ITwinTileMUIProps = {
   iTwin: {
     id: "1",
     displayName: "iTwin Name",

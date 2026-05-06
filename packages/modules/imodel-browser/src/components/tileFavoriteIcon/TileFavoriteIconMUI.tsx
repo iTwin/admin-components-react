@@ -3,9 +3,9 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import React from "react";
+import IconButton from "@mui/material/IconButton";
 import { Icon } from "@stratakit/mui";
 import pinIcon from "@stratakit/icons/pin.svg";
-import IconButton from "@mui/material/IconButton";
 import styles from "./TileFavoriteIcon.module.scss";
 
 export interface TileFavoriteIconProps {
