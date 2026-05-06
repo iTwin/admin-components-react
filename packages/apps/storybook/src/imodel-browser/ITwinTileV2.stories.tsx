@@ -68,7 +68,7 @@ const baseArgs: ITwinTileV2Props = {
   iTwin: {
     id: "1",
     displayName: "iTwin Name",
-    number: "12345",
+    number: "aaaa-bbbb-cccc-dddd",
     status: "Trial",
     lastModifiedDateTime: "2024-01-01T12:00:00Z",
   },
@@ -99,7 +99,6 @@ Default.args = {
   ...baseArgs,
   status: "positive",
   isFavorite: false,
-  description: "Example iTwin description",
 
   disabled: false,
   loading: false,
@@ -121,7 +120,8 @@ MoreOptions.args = {
   ...baseArgs,
   status: "warning",
   isFavorite: false,
-
+  title: "Overridden Title",
+  description: "Overriden description",
   disabled: false,
   loading: false,
   selected: false,
@@ -129,7 +129,7 @@ MoreOptions.args = {
   rightIcon: <Icon href={svgPlaceholder} size="regular" />,
   thumbnailBottomLeft: <Chip size="small" label="Featured" color="default" />,
   badge: <Chip size="small" label="Trial" color="primary" />,
-  description: "Example iTwin description",
+
   buttons: (
     <>
       <Button key="button-1" onClick={action("iTwin button 1 clicked")}>

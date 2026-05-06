@@ -5,7 +5,6 @@
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import CircularProgress from "@mui/material/CircularProgress";
-import Typography from "@mui/material/Typography";
 import svgCheckmark from "@stratakit/icons/checkmark.svg";
 import svgItwin from "@stratakit/icons/itwin.svg";
 import svgStatusError from "@stratakit/icons/status-error.svg";
@@ -90,6 +89,8 @@ export interface ITwinTileV2Props
     | "thumbnailTopLeft"
     | "thumbnailTopRight"
     | "thumbnailBottomRight"
+    | "title"
+    | "description"
   > {
   /** Defaults to iTwin.displayName */
   title?: string;

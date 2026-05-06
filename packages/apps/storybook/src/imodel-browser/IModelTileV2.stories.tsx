@@ -61,50 +61,27 @@ const Template: Story<IModelTileV2Props> = (args) => (
   <IModelTileV2Story {...args} />
 );
 
-export const Default = Template.bind({});
-Default.args = {
+const baseArgs: IModelTileV2Props = {
   iModel: {
     id: "1",
     displayName: "iModel Name",
-    description: "iModel Description",
+    description: "iModel Description from iModel Hub",
     lastChangesetPushDateTime: "2024-01-01T12:00:00Z",
   },
-  contextMenuItems: [
-    {
-      key: "option-1",
-      children: "Context Menu Option 1",
-      onClick: (iModel) => action("iModel option 1 clicked")(iModel),
-    },
-    {
-      key: "option-2",
-      children: "Context Menu Option 2",
-      onClick: (iModel) => action("iModel option 2 clicked")(iModel),
-    },
-  ],
-  onThumbnailClick: action("iModel thumbnail/name clicked"),
-  isFavorite: false,
-  addToFavorites: async (iModelId) => {
-    action("iModel add to favorites")(iModelId);
-  },
-  removeFromFavorites: async (iModelId) => {
-    action("iModel remove from favorites")(iModelId);
-  },
-  disabled: false,
-  loading: false,
-  selected: false,
-  badge: <Chip size="small" label="Badge" />,
-  leftIcon: <Icon href={svgPlaceholder} size="regular" />,
 
   thumbnail: bridgeThumbnail,
-};
 
-export const WithButtons = Template.bind({});
-WithButtons.args = {
-  iModel: {
-    id: "1",
-    displayName: "iModel Name",
-    description: "iModel Description",
+  onThumbnailClick: action("iModel thumbnail/name clicked"),
+  isFavorite: false,
+  addToFavorites: async (iModelId) => {
+    action("iModel add to favorites")(iModelId);
   },
+  removeFromFavorites: async (iModelId) => {
+    action("iModel remove from favorites")(iModelId);
+  },
+  disabled: false,
+  loading: false,
+  selected: false,
   contextMenuItems: [
     {
       key: "option-1",
@@ -117,17 +94,25 @@ WithButtons.args = {
       onClick: (iModel) => action("iModel option 2 clicked")(iModel),
     },
   ],
-  onThumbnailClick: action("iModel thumbnail/name clicked"),
-  isFavorite: false,
+};
+
+export const Default = Template.bind({});
+Default.args = {
+  ...baseArgs,
+};
+
+export const MoreOptions = Template.bind({});
+MoreOptions.args = {
+  ...baseArgs,
+  title: "Overridden Title",
+  description: "Overriden description",
+  isFavorite: true,
   addToFavorites: async (iModelId) => {
     action("iModel add to favorites")(iModelId);
   },
   removeFromFavorites: async (iModelId) => {
     action("iModel remove from favorites")(iModelId);
   },
-  disabled: false,
-  loading: false,
-  selected: false,
   badge: <Chip size="small" label="Badge" />,
   leftIcon: <Icon href={svgPlaceholder} size="regular" />,
   buttons: (
@@ -140,5 +125,4 @@ WithButtons.args = {
       </Button>
     </>
   ),
-  thumbnail: bridgeThumbnail,
 };

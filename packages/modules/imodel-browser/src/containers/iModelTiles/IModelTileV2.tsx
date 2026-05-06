@@ -32,7 +32,13 @@ export interface IModelTileV2Props
     | "onDoubleClick"
     | "thumbnailTopLeft"
     | "thumbnailBottomRight"
+    | "title"
+    | "description"
   > {
+  /** If not provided, iModel display name will be used */
+  title?: string;
+  /** If not provided, iModel description will be used */
+  description?: string;
   /** iModel to display */
   iModel: IModelFull;
   /** List of options to build for the context menu */
