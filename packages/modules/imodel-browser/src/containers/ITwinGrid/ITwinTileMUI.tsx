@@ -4,16 +4,10 @@
  *--------------------------------------------------------------------------------------------*/
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
-import CircularProgress from "@mui/material/CircularProgress";
-import svgCheckmark from "@stratakit/icons/checkmark.svg";
 import svgItwin from "@stratakit/icons/itwin.svg";
-import svgStatusError from "@stratakit/icons/status-error.svg";
-import svgStatusSuccess from "@stratakit/icons/status-success.svg";
-import svgStatusWarning from "@stratakit/icons/status-warning.svg";
 import { Icon } from "@stratakit/mui";
 import classNames from "classnames";
 import React from "react";
-
 import { BaseCard, BaseCardProps } from "../../components/baseCard/BaseCard";
 import { TileFavoriteIconMUI } from "../../components/tileFavoriteIcon/TileFavoriteIconMUI";
 import { ITwinFull } from "../../types";
@@ -23,58 +17,7 @@ import {
   ContextMenuBuilderItemMUI,
 } from "../../utils/_buildMenuOptions";
 import styles from "./ITwinTile.module.scss";
-
-function TitleStatusIcon({
-  status,
-  loading,
-  selected,
-}: {
-  status?: "positive" | "warning" | "negative";
-  loading?: boolean;
-  selected?: boolean;
-}) {
-  if (loading) {
-    return <CircularProgress size={16} sx={{ mr: 0.5, flexShrink: 0 }} />;
-  }
-  if (selected) {
-    return (
-      <Box component="span" sx={{ mr: 0.5, flexShrink: 0, lineHeight: 0 }}>
-        <Icon href={svgCheckmark} size="regular" />
-      </Box>
-    );
-  }
-  if (status === "positive") {
-    return (
-      <Box
-        component="span"
-        sx={{ mr: 0.5, flexShrink: 0, lineHeight: 0, color: "success.main" }}
-      >
-        <Icon href={svgStatusSuccess} size="regular" />
-      </Box>
-    );
-  }
-  if (status === "warning") {
-    return (
-      <Box
-        component="span"
-        sx={{ mr: 0.5, flexShrink: 0, lineHeight: 0, color: "warning.main" }}
-      >
-        <Icon href={svgStatusWarning} size="regular" />
-      </Box>
-    );
-  }
-  if (status === "negative") {
-    return (
-      <Box
-        component="span"
-        sx={{ mr: 0.5, flexShrink: 0, lineHeight: 0, color: "error.main" }}
-      >
-        <Icon href={svgStatusError} size="regular" />
-      </Box>
-    );
-  }
-  return null;
-}
+import { StatusIcon } from "./StatusIcon";
 
 export interface ITwinTileMUIProps
   extends Omit<
@@ -145,7 +88,7 @@ export const ITwinTileMUI = ({
   thumbnailBottomRight,
   title,
   description,
-  actions,
+
   contextMenuContent,
   children,
   onTitleClick,
@@ -260,15 +203,10 @@ export const ITwinTileMUI = ({
         hasMoreOptions ? contextMenuContent ?? moreOptionsBuilt : undefined
       }
       statusIcon={
-        <TitleStatusIcon
-          status={status}
-          loading={loading}
-          selected={selected}
-        />
+        <StatusIcon status={status} loading={loading} selected={selected} />
       }
       description={description ?? iTwin.number ?? ""}
       fineprint={fineprint}
-      actions={actions}
       slotProps={slotProps}
       {...rest}
     />

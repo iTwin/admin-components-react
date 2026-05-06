@@ -2,10 +2,6 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import CircularProgress from "@mui/material/CircularProgress";
-import svgCheckmark from "@stratakit/icons/checkmark.svg";
-import svgImodel from "@stratakit/icons/imodel.svg";
-import { Icon } from "@stratakit/mui";
 import classNames from "classnames";
 import React from "react";
 import { BaseCard, BaseCardProps } from "../../components/baseCard/BaseCard";
@@ -19,6 +15,7 @@ import {
 } from "../../utils/_buildMenuOptions";
 import { IModelThumbnailMUI } from "../iModelThumbnail/IModelThumbnailMUI";
 import styles from "./IModelTile.module.scss";
+import { StatusIcon } from "./StatusIcon";
 
 export interface IModelTileMUIProps
   extends Omit<
@@ -192,11 +189,7 @@ export const IModelTileMUI = ({
         hasMoreOptions ? contextMenuContent ?? moreOptionsBuilt : undefined
       }
       statusIcon={
-        <TitleStatusIcon
-          status={status}
-          loading={loading}
-          selected={selected}
-        />
+        <StatusIcon status={status} loading={loading} selected={selected} />
       }
       description={description ?? iModel.description ?? ""}
       fineprint={fineprint}
@@ -207,30 +200,3 @@ export const IModelTileMUI = ({
     />
   );
 };
-
-function TitleStatusIcon({
-  status,
-  loading,
-  selected,
-}: {
-  status?: "positive" | "warning" | "negative";
-  loading?: boolean;
-  selected?: boolean;
-}) {
-  if (loading) {
-    return <CircularProgress size={16} sx={{ mr: 0.5, flexShrink: 0 }} />;
-  }
-
-  const color =
-    status === "positive"
-      ? "success.main"
-      : status === "warning"
-      ? "warning.main"
-      : status === "negative"
-      ? "error.main"
-      : undefined;
-
-  const icon = selected ? svgCheckmark : svgImodel;
-
-  return <Icon href={icon} size="regular" color={color} />;
-}

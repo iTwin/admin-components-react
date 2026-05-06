@@ -19,7 +19,7 @@ export const IModelGhostTileMUI = forwardRef<HTMLDivElement, CardProps>(
         ref={ref}
         variant="outlined"
         sx={{
-          width: "fit-content",
+          width: "100%",
           minWidth: "18rem",
         }}
         {...props}

@@ -87,6 +87,9 @@ export interface BaseCardProps
    */
   fineprint?: string;
 
+  /** Additional content rendered below the description and above the footer. */
+  additionalContent?: ReactNode;
+
   // ── Footer ───────────────────────────────────────────────────────────────────
   /**
    * Action buttons rendered in the card footer (`CardActions`).
@@ -146,6 +149,7 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
       statusIcon,
       description,
       fineprint,
+      additionalContent,
       actions,
       contextMenuContent,
       contextMenuItems,
@@ -294,6 +298,7 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
                   width: "1.5rem",
                   height: "1.5rem",
                 }}
+                data-testid="status-icon"
               >
                 {statusIcon}
               </Box>
@@ -393,6 +398,9 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
                   </Typography>
                 )}
               </Stack>
+              {additionalContent && (
+                <Box sx={{ mt: 1 }}>{additionalContent}</Box>
+              )}
             </Stack>
           </Stack>
 

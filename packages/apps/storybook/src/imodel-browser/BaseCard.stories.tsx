@@ -22,6 +22,7 @@ import { Icon } from "@stratakit/mui";
 import { action } from "@storybook/addon-actions";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
+import Typography from "@mui/material/Typography";
 
 export const BaseCardStory = (props: BaseCardProps) => <BaseCard {...props} />;
 
@@ -137,6 +138,12 @@ Everything.args = {
   ),
   thumbnailBottomLeft: <Chip size="small" label="Featured" color="default" />,
   thumbnailBottomRight: <Chip size="small" label="Trial" color="primary" />,
+  additionalContent: (
+    <Typography variant="body2" color="text.secondary">
+      This is some additional content rendered below the description and above
+      the footer actions.
+    </Typography>
+  ),
   actions: (
     <>
       <Button size="small" onClick={action("kitchen open clicked")}>
