@@ -47,11 +47,13 @@ export default {
     },
     iModel: { control: false },
     onThumbnailClick: { control: false },
+    onTitleClick: { control: false },
     thumbnail: { control: false },
-    buttons: { control: false },
+    actions: { control: false },
+    contextMenuContent: { control: false },
     contextMenuItems: { control: false },
-    leftIcon: { control: false },
-    badge: { control: false },
+    thumbnailTopLeft: { control: false },
+    thumbnailBottomRight: { control: false },
     accessToken: { control: false },
     stringOverrides: { control: false },
   },
@@ -113,9 +115,9 @@ MoreOptions.args = {
   removeFromFavorites: async (iModelId) => {
     action("iModel remove from favorites")(iModelId);
   },
-  badge: <Chip size="small" label="Badge" />,
-  leftIcon: <Icon href={svgPlaceholder} size="regular" />,
-  buttons: (
+  thumbnailBottomRight: <Chip size="small" label="Badge" />,
+  thumbnailTopLeft: <Icon href={svgPlaceholder} size="regular" />,
+  actions: (
     <>
       <Button key="button-1" onClick={action("iModel button 1 clicked")}>
         Button 1

@@ -49,12 +49,14 @@ export default {
     iTwin: { control: false },
     contextMenuItems: { control: false },
     onThumbnailClick: { control: false },
+    onTitleClick: { control: false },
     thumbnailBottomLeft: { control: false },
     thumbnail: { control: false },
-    buttons: { control: false },
-    leftIcon: { control: false },
-    rightIcon: { control: false },
-    badge: { control: false },
+    actions: { control: false },
+    contextMenuContent: { control: false },
+    thumbnailTopLeft: { control: false },
+    thumbnailTopRight: { control: false },
+    thumbnailBottomRight: { control: false },
     children: { control: false },
     stringsOverrides: { control: false },
   },
@@ -103,7 +105,7 @@ Default.args = {
   disabled: false,
   loading: false,
   selected: false,
-  buttons: (
+  actions: (
     <>
       <Button key="button-1" onClick={action("iTwin button 1 clicked")}>
         Button 1
@@ -125,12 +127,12 @@ MoreOptions.args = {
   disabled: false,
   loading: false,
   selected: false,
-  leftIcon: <Icon href={svgPlaceholder} size="regular" />,
-  rightIcon: <Icon href={svgPlaceholder} size="regular" />,
+  thumbnailTopLeft: <Icon href={svgPlaceholder} size="regular" />,
+  thumbnailTopRight: <Icon href={svgPlaceholder} size="regular" />,
   thumbnailBottomLeft: <Chip size="small" label="Featured" color="default" />,
-  badge: <Chip size="small" label="Trial" color="primary" />,
+  thumbnailBottomRight: <Chip size="small" label="Trial" color="primary" />,
 
-  buttons: (
+  actions: (
     <>
       <Button key="button-1" onClick={action("iTwin button 1 clicked")}>
         Button 1

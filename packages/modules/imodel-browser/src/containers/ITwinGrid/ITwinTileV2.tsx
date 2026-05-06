@@ -81,14 +81,8 @@ export interface ITwinTileV2Props
     BaseCardProps,
     | "headerRight"
     | "statusIcon"
-    | "actions"
-    | "contextMenuContent"
     | "contextMenuItems"
-    | "onTitleClick"
     | "onDoubleClick"
-    | "thumbnailTopLeft"
-    | "thumbnailTopRight"
-    | "thumbnailBottomRight"
     | "title"
     | "description"
   > {
@@ -123,16 +117,6 @@ export interface ITwinTileV2Props
   refetchITwins?: () => void;
   /** Hides the favorite icon when true */
   hideFavoriteIcon?: boolean;
-  /** Icon shown in the top-left of the thumbnail */
-  leftIcon?: React.ReactNode;
-  /** Icon shown in the top-right of the thumbnail (alongside the favorite icon) */
-  rightIcon?: React.ReactNode;
-  /** Badge shown at the bottom of the thumbnail (overrides auto status badge) */
-  badge?: React.ReactNode;
-  /** Pre-built menu items rendered in the more-options menu */
-  moreOptions?: React.ReactNode;
-  /** Action buttons rendered in the card footer */
-  buttons?: React.ReactNode;
   /** Additional content rendered below fineprint in the info section */
   children?: React.ReactNode;
 }
@@ -155,16 +139,16 @@ export const ITwinTileV2 = ({
   disabled,
   status,
   thumbnail,
-  leftIcon,
-  rightIcon,
+  thumbnailTopLeft,
+  thumbnailTopRight,
   thumbnailBottomLeft,
-  badge,
+  thumbnailBottomRight,
   title,
   description,
-
-  moreOptions,
-  buttons,
+  actions,
+  contextMenuContent,
   children,
+  onTitleClick,
   slotProps,
   className,
   onContextMenu: onCardContextMenu,
@@ -185,10 +169,10 @@ export const ITwinTileV2 = ({
     [contextMenuItems, iTwin, refetchITwins]
   );
 
-  const hasMoreOptions = !!(moreOptions ?? moreOptionsBuilt?.length);
+  const hasMoreOptions = !!(contextMenuContent ?? moreOptionsBuilt?.length);
 
   const statusBadge =
-    badge ??
+    thumbnailBottomRight ??
     (iTwin.status && iTwin.status.toLocaleLowerCase() !== "active" ? (
       <Chip
         size="small"
@@ -223,10 +207,10 @@ export const ITwinTileV2 = ({
       />
     ) : undefined;
 
-  const thumbnailTopRight =
-    rightIcon || favoriteIcon ? (
+  const thumbnailTopRightContent =
+    thumbnailTopRight || favoriteIcon ? (
       <>
-        {rightIcon}
+        {thumbnailTopRight}
         {favoriteIcon}
       </>
     ) : undefined;
@@ -262,17 +246,18 @@ export const ITwinTileV2 = ({
           </Box>
         )
       }
-      thumbnailTopLeft={leftIcon}
-      thumbnailTopRight={thumbnailTopRight}
+      thumbnailTopLeft={thumbnailTopLeft}
+      thumbnailTopRight={thumbnailTopRightContent}
       thumbnailBottomLeft={thumbnailBottomLeft}
       thumbnailBottomRight={statusBadge}
       title={title ?? iTwin.displayName ?? ""}
       onTitleClick={
-        onThumbnailClick ? () => onThumbnailClick(iTwin) : undefined
+        onTitleClick ??
+        (onThumbnailClick ? () => onThumbnailClick(iTwin) : undefined)
       }
       onContextMenu={onCardContextMenu}
       contextMenuContent={
-        hasMoreOptions ? moreOptions ?? moreOptionsBuilt : undefined
+        hasMoreOptions ? contextMenuContent ?? moreOptionsBuilt : undefined
       }
       statusIcon={
         <TitleStatusIcon
@@ -283,7 +268,7 @@ export const ITwinTileV2 = ({
       }
       description={description ?? iTwin.number ?? ""}
       fineprint={fineprint}
-      actions={buttons}
+      actions={actions}
       slotProps={slotProps}
       {...rest}
     />

@@ -25,13 +25,8 @@ export interface IModelTileV2Props
     BaseCardProps,
     | "headerRight"
     | "statusIcon"
-    | "actions"
-    | "contextMenuContent"
     | "contextMenuItems"
-    | "onTitleClick"
     | "onDoubleClick"
-    | "thumbnailTopLeft"
-    | "thumbnailBottomRight"
     | "title"
     | "description"
   > {
@@ -66,16 +61,8 @@ export interface IModelTileV2Props
   addToFavorites?(iModelId: string): Promise<void>;
   /** Function to remove the iModel from favorites (standalone mode). */
   removeFromFavorites?(iModelId: string): Promise<void>;
-  /** Icon shown in the top-left of the thumbnail */
-  leftIcon?: React.ReactNode;
-  /** Badge shown at the bottom of the thumbnail */
-  badge?: React.ReactNode;
   /** Function that returns a badge node for the given iModel */
   getBadge?: (iModel: IModelFull) => React.ReactNode;
-  /** Pre-built menu items rendered in the more-options menu */
-  moreOptions?: React.ReactNode;
-  /** Action buttons rendered in the card footer */
-  buttons?: React.ReactNode;
 }
 
 /**
@@ -98,13 +85,16 @@ export const IModelTileV2 = ({
   disabled,
   status,
   thumbnail,
-  leftIcon,
-  badge,
+  thumbnailTopLeft,
+  thumbnailTopRight,
   thumbnailBottomLeft,
+  thumbnailBottomRight,
   getBadge,
   title,
-  moreOptions,
-  buttons,
+  description,
+  actions,
+  contextMenuContent,
+  onTitleClick,
   slotProps,
   className,
   onContextMenu: onCardContextMenu,
@@ -129,7 +119,7 @@ export const IModelTileV2 = ({
       ? { ...(apiOverrides ?? {}), data: iModel.thumbnail }
       : undefined;
 
-  const hasMoreOptions = !!(moreOptions ?? moreOptionsBuilt?.length);
+  const hasMoreOptions = !!(contextMenuContent ?? moreOptionsBuilt?.length);
 
   const favoriteState =
     isFavorite !== undefined
@@ -161,6 +151,14 @@ export const IModelTileV2 = ({
       />
     ) : undefined;
 
+  const thumbnailTopRightContent =
+    thumbnailTopRight || favoriteIcon ? (
+      <>
+        {thumbnailTopRight}
+        {favoriteIcon}
+      </>
+    ) : undefined;
+
   const fineprint = iModel.lastChangesetPushDateTime
     ? new Date(iModel.lastChangesetPushDateTime).toDateString()
     : undefined;
@@ -180,17 +178,18 @@ export const IModelTileV2 = ({
           />
         )
       }
-      thumbnailTopLeft={leftIcon}
-      thumbnailTopRight={favoriteIcon}
+      thumbnailTopLeft={thumbnailTopLeft}
+      thumbnailTopRight={thumbnailTopRightContent}
       thumbnailBottomLeft={thumbnailBottomLeft}
-      thumbnailBottomRight={getBadge?.(iModel) ?? badge}
+      thumbnailBottomRight={getBadge?.(iModel) ?? thumbnailBottomRight}
       title={title ?? iModel.displayName ?? ""}
       onTitleClick={
-        onThumbnailClick ? () => onThumbnailClick(iModel) : undefined
+        onTitleClick ??
+        (onThumbnailClick ? () => onThumbnailClick(iModel) : undefined)
       }
       onContextMenu={onCardContextMenu}
       contextMenuContent={
-        hasMoreOptions ? moreOptions ?? moreOptionsBuilt : undefined
+        hasMoreOptions ? contextMenuContent ?? moreOptionsBuilt : undefined
       }
       statusIcon={
         <TitleStatusIcon
@@ -199,9 +198,9 @@ export const IModelTileV2 = ({
           selected={selected}
         />
       }
-      description={iModel.description ?? ""}
+      description={description ?? iModel.description ?? ""}
       fineprint={fineprint}
-      actions={buttons}
+      actions={actions}
       slotProps={slotProps}
       selected={selected}
       {...rest}
