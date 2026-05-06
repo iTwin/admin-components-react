@@ -2,92 +2,41 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import Box from "@mui/material/Box";
-import { CardProps } from "@mui/material/Card";
 import CircularProgress from "@mui/material/CircularProgress";
-import MenuItem from "@mui/material/MenuItem";
-import Typography from "@mui/material/Typography";
 import svgCheckmark from "@stratakit/icons/checkmark.svg";
 import svgImodel from "@stratakit/icons/imodel.svg";
 import { Icon } from "@stratakit/mui";
 import classNames from "classnames";
 import React from "react";
-
-import {
-  BaseCard,
-  BaseCardSlotProps,
-} from "../../components/baseCard/BaseCard";
+import { BaseCard, BaseCardProps } from "../../components/baseCard/BaseCard";
 import { TileFavoriteIconMUI } from "../../components/tileFavoriteIcon/TileFavoriteIconMUI";
 import { IModelFavoritesContext } from "../../contexts/IModelFavoritesContext";
 import { AccessTokenProvider, ApiOverrides, IModelFull } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
-import { ContextMenuBuilderItem } from "../../utils/_buildMenuOptions";
+import {
+  buildContextMenuItemsMUI,
+  ContextMenuBuilderItemMUI,
+} from "../../utils/_buildMenuOptions";
 import { IModelThumbnailV2 } from "../iModelThumbnail/IModelThumbnailV2";
 import styles from "./IModelTile.module.scss";
 
-function TitleStatusIcon({
-  status,
-  loading,
-  selected,
-}: {
-  status?: "positive" | "warning" | "negative";
-  loading?: boolean;
-  selected?: boolean;
-}) {
-  if (loading) {
-    return <CircularProgress size={16} sx={{ mr: 0.5, flexShrink: 0 }} />;
-  }
-
-  const color =
-    status === "positive"
-      ? "success.main"
-      : status === "warning"
-      ? "warning.main"
-      : status === "negative"
-      ? "error.main"
-      : undefined;
-
-  const icon = selected ? svgCheckmark : svgImodel;
-
-  return (
-    <Box
-      component="span"
-      sx={{ mt: 0.25, mr: 0.5, flexShrink: 0, lineHeight: 0, color }}
-    >
-      <Icon href={icon} size="regular" />
-    </Box>
-  );
-}
-
-function buildMenuItems<T>(
-  options: ContextMenuBuilderItem<T>[] | undefined,
-  value: T,
-  refetchData?: () => void
-): React.ReactNode[] | undefined {
-  return options
-    ?.filter(({ visible }) =>
-      typeof visible === "function" ? visible(value) : visible ?? true
-    )
-    .map(({ key, onClick, disabled, children }) => (
-      <MenuItem
-        key={key}
-        disabled={typeof disabled === "function" ? disabled(value) : disabled}
-        onClick={(e) => {
-          e.stopPropagation();
-          onClick?.(value, refetchData);
-        }}
-      >
-        {children}
-      </MenuItem>
-    ));
-}
-
 export interface IModelTileV2Props
-  extends Omit<CardProps, "children" | "title"> {
+  extends Omit<
+    BaseCardProps,
+    | "headerRight"
+    | "statusIcon"
+    | "actions"
+    | "contextMenuContent"
+    | "contextMenuItems"
+    | "onTitleClick"
+    | "onDoubleClick"
+    | "thumbnailTopLeft"
+    | "thumbnailBottomRight"
+  > {
   /** iModel to display */
   iModel: IModelFull;
-  /** List of options to build for the imodel context menu */
-  iModelOptions?: ContextMenuBuilderItem<IModelFull>[];
+  /** List of options to build for the context menu */
+  contextMenuItems?: ContextMenuBuilderItemMUI<IModelFull>[];
   /** Function to call on card click — receives the iModel object */
   onThumbnailClick?(iModel: IModelFull): void;
   /** Strings displayed by the component */
@@ -111,37 +60,16 @@ export interface IModelTileV2Props
   addToFavorites?(iModelId: string): Promise<void>;
   /** Function to remove the iModel from favorites (standalone mode). */
   removeFromFavorites?(iModelId: string): Promise<void>;
-  // ── State ───────────────────────────────────────────────────────────────────
-  /** Marks the card as selected */
-  selected?: boolean;
-  /** Shows a loading indicator in the card header */
-  loading?: boolean;
-  /** Applies disabled styling and aria-disabled */
-  disabled?: boolean;
-  /** Status indicator shown in the card header */
-  status?: "positive" | "warning" | "negative" | undefined;
-  // ── Thumbnail area ──────────────────────────────────────────────────────────
-  /** Custom thumbnail content — replaces the auto-fetched thumbnail */
-  thumbnail?: React.ReactNode;
   /** Icon shown in the top-left of the thumbnail */
   leftIcon?: React.ReactNode;
   /** Badge shown at the bottom of the thumbnail */
   badge?: React.ReactNode;
-  /** Content shown at the bottom-left of the thumbnail */
-  thumbnailBottomLeft?: React.ReactNode;
   /** Function that returns a badge node for the given iModel */
   getBadge?: (iModel: IModelFull) => React.ReactNode;
-  // ── Content ─────────────────────────────────────────────────────────────────
-  /** Override the displayed title (defaults to iModel.displayName) */
-  title?: string;
-  /** Additional fineprint rendered below the description */
-  fineprint?: React.ReactNode;
   /** Pre-built menu items rendered in the more-options menu */
   moreOptions?: React.ReactNode;
   /** Action buttons rendered in the card footer */
   buttons?: React.ReactNode;
-  // ── Sub-component customization ─────────────────────────────────────────────
-  slotProps?: BaseCardSlotProps;
 }
 
 /**
@@ -149,7 +77,7 @@ export interface IModelTileV2Props
  */
 export const IModelTileV2 = ({
   iModel,
-  iModelOptions,
+  contextMenuItems,
   accessToken,
   onThumbnailClick,
   apiOverrides,
@@ -169,7 +97,6 @@ export const IModelTileV2 = ({
   thumbnailBottomLeft,
   getBadge,
   title,
-  fineprint,
   moreOptions,
   buttons,
   slotProps,
@@ -187,8 +114,8 @@ export const IModelTileV2 = ({
   );
 
   const moreOptionsBuilt = React.useMemo(
-    () => buildMenuItems(iModelOptions, iModel, refetchIModels),
-    [iModelOptions, iModel, refetchIModels]
+    () => buildContextMenuItemsMUI(contextMenuItems, iModel, refetchIModels),
+    [contextMenuItems, iModel, refetchIModels]
   );
 
   const thumbnailApiOverride =
@@ -228,17 +155,9 @@ export const IModelTileV2 = ({
       />
     ) : undefined;
 
-  const fineprintNode = fineprint ? (
-    <Typography
-      variant="caption"
-      color="text.secondary"
-      component="div"
-      data-testid={`iModel-tile-${iModel.id}-fineprint`}
-      sx={{ mt: 0.75 }}
-    >
-      {fineprint}
-    </Typography>
-  ) : undefined;
+  const fineprint = iModel.lastChangesetPushDateTime
+    ? new Date(iModel.lastChangesetPushDateTime).toDateString()
+    : undefined;
 
   return (
     <BaseCard
@@ -275,7 +194,7 @@ export const IModelTileV2 = ({
         />
       }
       description={iModel.description ?? ""}
-      fineprint={fineprintNode}
+      fineprint={fineprint}
       actions={buttons}
       slotProps={slotProps}
       selected={selected}
@@ -283,3 +202,30 @@ export const IModelTileV2 = ({
     />
   );
 };
+
+function TitleStatusIcon({
+  status,
+  loading,
+  selected,
+}: {
+  status?: "positive" | "warning" | "negative";
+  loading?: boolean;
+  selected?: boolean;
+}) {
+  if (loading) {
+    return <CircularProgress size={16} sx={{ mr: 0.5, flexShrink: 0 }} />;
+  }
+
+  const color =
+    status === "positive"
+      ? "success.main"
+      : status === "warning"
+      ? "warning.main"
+      : status === "negative"
+      ? "error.main"
+      : undefined;
+
+  const icon = selected ? svgCheckmark : svgImodel;
+
+  return <Icon href={icon} size="regular" color={color} />;
+}

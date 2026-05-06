@@ -3,10 +3,8 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import Box from "@mui/material/Box";
-import { CardProps } from "@mui/material/Card";
 import Chip from "@mui/material/Chip";
 import CircularProgress from "@mui/material/CircularProgress";
-import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 import svgCheckmark from "@stratakit/icons/checkmark.svg";
 import svgItwin from "@stratakit/icons/itwin.svg";
@@ -17,14 +15,14 @@ import { Icon } from "@stratakit/mui";
 import classNames from "classnames";
 import React from "react";
 
-import {
-  BaseCard,
-  BaseCardSlotProps,
-} from "../../components/baseCard/BaseCard";
-import { TileFavoriteIcon } from "../../components/tileFavoriteIcon/TileFavoriteIcon";
+import { BaseCard, BaseCardProps } from "../../components/baseCard/BaseCard";
+import { TileFavoriteIconMUI } from "../../components/tileFavoriteIcon/TileFavoriteIconMUI";
 import { ITwinFull } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
-import { ContextMenuBuilderItem } from "../../utils/_buildMenuOptions";
+import {
+  buildContextMenuItemsMUI,
+  ContextMenuBuilderItemMUI,
+} from "../../utils/_buildMenuOptions";
 import styles from "./ITwinTile.module.scss";
 
 function TitleStatusIcon({
@@ -79,35 +77,28 @@ function TitleStatusIcon({
   return null;
 }
 
-function buildMenuItems<T>(
-  options: ContextMenuBuilderItem<T>[] | undefined,
-  value: T,
-  refetchData?: () => void
-): React.ReactNode[] | undefined {
-  return options
-    ?.filter(({ visible }) =>
-      typeof visible === "function" ? visible(value) : visible ?? true
-    )
-    .map(({ key, onClick, disabled, children }) => (
-      <MenuItem
-        key={key}
-        disabled={typeof disabled === "function" ? disabled(value) : disabled}
-        onClick={(e) => {
-          e.stopPropagation();
-          onClick?.(value, refetchData);
-        }}
-      >
-        {children}
-      </MenuItem>
-    ));
-}
-
 export interface ITwinTileV2Props
-  extends Omit<CardProps, "children" | "title"> {
+  extends Omit<
+    BaseCardProps,
+    | "headerRight"
+    | "statusIcon"
+    | "actions"
+    | "contextMenuContent"
+    | "contextMenuItems"
+    | "onTitleClick"
+    | "onDoubleClick"
+    | "thumbnailTopLeft"
+    | "thumbnailTopRight"
+    | "thumbnailBottomRight"
+  > {
+  /** Defaults to iTwin.displayName */
+  title?: string;
+  /** If not provided, iTwin number will be used */
+  description?: string;
   /** iTwin to display */
   iTwin: ITwinFull;
-  /** List of options to build for the iTwin context menu */
-  iTwinOptions?: ContextMenuBuilderItem<ITwinFull>[];
+  /** List of options to build for the context menu */
+  contextMenuItems?: ContextMenuBuilderItemMUI<ITwinFull>[];
   /** Function to call on card click — receives the iTwin object */
   onThumbnailClick?(iTwin: ITwinFull): void;
   /** Strings displayed by the component */
@@ -131,41 +122,18 @@ export interface ITwinTileV2Props
   refetchITwins?: () => void;
   /** Hides the favorite icon when true */
   hideFavoriteIcon?: boolean;
-  // ── State ───────────────────────────────────────────────────────────────────
-  /** Marks the card as selected */
-  selected?: boolean;
-  /** Shows a loading indicator in the card header */
-  loading?: boolean;
-  /** Applies disabled styling and aria-disabled */
-  disabled?: boolean;
-  /** Status indicator shown in the card header */
-  status?: "positive" | "warning" | "negative";
-  // ── Thumbnail area ──────────────────────────────────────────────────────────
-  /** Custom thumbnail content — replaces the default iTwin icon */
-  thumbnail?: React.ReactNode;
   /** Icon shown in the top-left of the thumbnail */
   leftIcon?: React.ReactNode;
   /** Icon shown in the top-right of the thumbnail (alongside the favorite icon) */
   rightIcon?: React.ReactNode;
-  /** Content shown in the bottom-left of the thumbnail */
-  thumbnailBottomLeft?: React.ReactNode;
   /** Badge shown at the bottom of the thumbnail (overrides auto status badge) */
   badge?: React.ReactNode;
-  // ── Content ─────────────────────────────────────────────────────────────────
-  /** Override the displayed title (defaults to iTwin.displayName) */
-  title?: string;
-  /** Override the description (defaults to iTwin.number) */
-  description?: string;
-  /** Additional fineprint rendered below the description */
-  fineprint?: React.ReactNode;
   /** Pre-built menu items rendered in the more-options menu */
   moreOptions?: React.ReactNode;
   /** Action buttons rendered in the card footer */
   buttons?: React.ReactNode;
   /** Additional content rendered below fineprint in the info section */
   children?: React.ReactNode;
-  // ── Sub-component customization ─────────────────────────────────────────────
-  slotProps?: BaseCardSlotProps;
 }
 
 /**
@@ -173,7 +141,7 @@ export interface ITwinTileV2Props
  */
 export const ITwinTileV2 = ({
   iTwin,
-  iTwinOptions,
+  contextMenuItems,
   onThumbnailClick,
   stringsOverrides,
   isFavorite,
@@ -192,7 +160,7 @@ export const ITwinTileV2 = ({
   badge,
   title,
   description,
-  fineprint,
+
   moreOptions,
   buttons,
   children,
@@ -212,8 +180,8 @@ export const ITwinTileV2 = ({
   );
 
   const moreOptionsBuilt = React.useMemo(
-    () => buildMenuItems(iTwinOptions, iTwin, refetchITwins),
-    [iTwinOptions, iTwin, refetchITwins]
+    () => buildContextMenuItemsMUI(contextMenuItems, iTwin, refetchITwins),
+    [contextMenuItems, iTwin, refetchITwins]
   );
 
   const hasMoreOptions = !!(moreOptions ?? moreOptionsBuilt?.length);
@@ -241,7 +209,7 @@ export const ITwinTileV2 = ({
     isFavorite !== undefined &&
     addToFavorites &&
     removeFromFavorites ? (
-      <TileFavoriteIcon
+      <TileFavoriteIconMUI
         isFavorite={isFavorite}
         onAddToFavorites={() => addToFavorites(iTwin.id)}
         onRemoveFromFavorites={() => removeFromFavorites(iTwin.id)}
@@ -250,6 +218,7 @@ export const ITwinTileV2 = ({
         className={classNames(styles.iTwinTileFavoriteIcon, {
           [styles.hidden]: !isFavorite,
         })}
+        disabled={disabled}
       />
     ) : undefined;
 
@@ -261,23 +230,9 @@ export const ITwinTileV2 = ({
       </>
     ) : undefined;
 
-  const fineprintNode =
-    fineprint || children ? (
-      <>
-        {fineprint && (
-          <Typography
-            variant="caption"
-            color="text.secondary"
-            component="div"
-            data-testid={`iTwin-tile-${iTwin.id}-fineprint`}
-            sx={{ mt: 0.75 }}
-          >
-            {fineprint}
-          </Typography>
-        )}
-        {children}
-      </>
-    ) : undefined;
+  const fineprint = iTwin.lastModifiedDateTime
+    ? new Date(iTwin.lastModifiedDateTime).toDateString()
+    : undefined;
 
   return (
     <BaseCard
@@ -326,7 +281,7 @@ export const ITwinTileV2 = ({
         />
       }
       description={description ?? iTwin.number ?? ""}
-      fineprint={fineprintNode}
+      fineprint={fineprint}
       actions={buttons}
       slotProps={slotProps}
       {...rest}

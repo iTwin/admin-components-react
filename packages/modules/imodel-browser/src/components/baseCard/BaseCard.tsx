@@ -77,16 +77,15 @@ export interface BaseCardProps
   headerRight?: ReactNode;
 
   /**
-   * Optional icon rendered to the left of the entire content area.
+   * Optional icon rendered to the left of the entire content area.  Pass just an `<Icon>` component.
    */
   statusIcon?: ReactNode;
   /** Short description rendered below the title. */
   description?: string;
   /**
    * Secondary fineprint content rendered below the description.
-   * Accepts either a string (rendered with default subtitle styling) or custom React content.
    */
-  fineprint?: ReactNode;
+  fineprint?: string;
 
   // ── Footer ───────────────────────────────────────────────────────────────────
   /**
@@ -111,7 +110,12 @@ export interface BaseCardProps
   loading?: boolean;
   /** Indicates whether the card is disabled. */
   disabled?: boolean;
-  /** Optional click handler for the card title. */
+  /** Status indicator used for styling (divider color, etc.) */
+  status?:
+    | "positive"
+    | "warning"
+    | "negative"
+    | undefined /** Optional click handler for the card title. */;
   onTitleClick?: NonNullable<
     React.ComponentProps<typeof CardActionArea>["onClick"]
   >;
@@ -148,6 +152,7 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
       selected,
       loading,
       disabled: cardDisabled,
+      status,
       onContextMenu,
       onDoubleClick,
       slotProps,
@@ -157,15 +162,6 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
     },
     ref
   ) => {
-    const fineprintNode =
-      typeof fineprint === "string" ? (
-        <Typography variant="subtitle2" color="text.disabled" component="p">
-          {fineprint}
-        </Typography>
-      ) : (
-        fineprint
-      );
-
     const thumbnailNode =
       typeof thumbnail === "string" ? (
         <img src={thumbnail} alt="" />
@@ -264,7 +260,17 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
 
           <Divider
             className={slotProps?.divider?.className}
-            sx={{ ...(slotProps?.divider?.sx ?? {}) }}
+            sx={{
+              borderColor:
+                status === "positive"
+                  ? "success.main"
+                  : status === "warning"
+                  ? "warning.main"
+                  : status === "negative"
+                  ? "error.main"
+                  : undefined,
+              ...(slotProps?.divider?.sx ?? {}),
+            }}
           />
 
           {/* ── Content area ── */}
@@ -281,14 +287,19 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
           >
             {statusIcon && (
               <Box
-                className={styles.statusIcon}
-                sx={{ flexShrink: 0, pt: 0.25 }}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: "1.5rem",
+                  height: "1.5rem",
+                }}
               >
                 {statusIcon}
               </Box>
             )}
 
-            <Stack spacing={0.5} sx={{ flex: 1, minWidth: 0 }}>
+            <Stack sx={{ flexDirection: "column", gap: 0.5, flex: 1 }}>
               {/* Header row: title + optional right slot */}
               <Stack
                 direction="row"
@@ -365,7 +376,22 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
                     {description}
                   </Typography>
                 )}
-                {fineprintNode}
+                {fineprint && (
+                  <Typography
+                    variant="subtitle2"
+                    color="secondary"
+                    component="p"
+                    sx={{
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      display: "-webkit-box",
+                      WebkitLineClamp: 1,
+                      WebkitBoxOrient: "vertical",
+                    }}
+                  >
+                    {fineprint}
+                  </Typography>
+                )}
               </Stack>
             </Stack>
           </Stack>

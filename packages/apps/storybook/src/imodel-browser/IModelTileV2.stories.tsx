@@ -49,7 +49,7 @@ export default {
     onThumbnailClick: { control: false },
     thumbnail: { control: false },
     buttons: { control: false },
-    iModelOptions: { control: false },
+    contextMenuItems: { control: false },
     leftIcon: { control: false },
     badge: { control: false },
     accessToken: { control: false },
@@ -61,27 +61,63 @@ const Template: Story<IModelTileV2Props> = (args) => (
   <IModelTileV2Story {...args} />
 );
 
-export const Primary = Template.bind({});
-Primary.args = {
+export const Default = Template.bind({});
+Default.args = {
+  iModel: {
+    id: "1",
+    displayName: "iModel Name",
+    description: "iModel Description",
+    lastChangesetPushDateTime: "2024-01-01T12:00:00Z",
+  },
+  contextMenuItems: [
+    {
+      key: "option-1",
+      children: "Context Menu Option 1",
+      onClick: (iModel) => action("iModel option 1 clicked")(iModel),
+    },
+    {
+      key: "option-2",
+      children: "Context Menu Option 2",
+      onClick: (iModel) => action("iModel option 2 clicked")(iModel),
+    },
+  ],
+  onThumbnailClick: action("iModel thumbnail/name clicked"),
+  isFavorite: false,
+  addToFavorites: async (iModelId) => {
+    action("iModel add to favorites")(iModelId);
+  },
+  removeFromFavorites: async (iModelId) => {
+    action("iModel remove from favorites")(iModelId);
+  },
+  disabled: false,
+  loading: false,
+  selected: false,
+  badge: <Chip size="small" label="Badge" />,
+  leftIcon: <Icon href={svgPlaceholder} size="regular" />,
+
+  thumbnail: bridgeThumbnail,
+};
+
+export const WithButtons = Template.bind({});
+WithButtons.args = {
   iModel: {
     id: "1",
     displayName: "iModel Name",
     description: "iModel Description",
   },
-  iModelOptions: [
+  contextMenuItems: [
     {
       key: "option-1",
-      children: "Option 1",
+      children: "Context Menu Option 1",
       onClick: (iModel) => action("iModel option 1 clicked")(iModel),
     },
     {
       key: "option-2",
-      children: "Option 2",
+      children: "Context Menu Option 2",
       onClick: (iModel) => action("iModel option 2 clicked")(iModel),
     },
   ],
   onThumbnailClick: action("iModel thumbnail/name clicked"),
-  status: "positive",
   isFavorite: false,
   addToFavorites: async (iModelId) => {
     action("iModel add to favorites")(iModelId);
