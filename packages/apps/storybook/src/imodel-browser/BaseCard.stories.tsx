@@ -316,6 +316,7 @@ Kitchen.args = {
       </IconButton>
     </>
   ),
+  thumbnailBottomLeft: <Chip size="small" label="Featured" color="default" />,
   thumbnailBottomRight: <Chip size="small" label="Trial" color="primary" />,
   actions: (
     <>

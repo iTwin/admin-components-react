@@ -56,6 +56,13 @@
   z-index: 1;
 }
 
+.thumbnailBottomLeft {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  z-index: 1;
+}
+
 .statusIcon {
   display: flex;
   align-items: flex-start;

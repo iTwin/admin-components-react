@@ -61,6 +61,10 @@ export interface BaseCardProps
    * Overlay slot in the bottom-right of the thumbnail (e.g. status badge, chip).
    */
   thumbnailBottomRight?: ReactNode;
+  /**
+   * Overlay slot in the bottom-left of the thumbnail.
+   */
+  thumbnailBottomLeft?: ReactNode;
 
   // ── Header ──────────────────────────────────────────────────────────────────
   /** Primary title of the card. */
@@ -103,6 +107,10 @@ export interface BaseCardProps
 
   /** Indicates whether the card is in a selected state. Applies outline styling. */
   selected?: boolean;
+  /** Indicates whether the card is in a loading state. */
+  loading?: boolean;
+  /** Indicates whether the card is disabled. */
+  disabled?: boolean;
   /** Optional click handler for the card title. */
   onTitleClick?: NonNullable<
     React.ComponentProps<typeof CardActionArea>["onClick"]
@@ -127,6 +135,7 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
       thumbnailTopLeft,
       thumbnailTopRight,
       thumbnailBottomRight,
+      thumbnailBottomLeft,
       title,
       onTitleClick,
       headerRight,
@@ -137,6 +146,8 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
       contextMenuContent,
       contextMenuItems,
       selected,
+      loading,
+      disabled: cardDisabled,
       onContextMenu,
       onDoubleClick,
       slotProps,
@@ -198,21 +209,26 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
           variant="outlined"
           className={classNames(
             styles.baseCard,
-            { [styles.selected]: selected },
+            { [styles.selected]: selected, [styles.disabled]: cardDisabled },
             className
           )}
           sx={[
             {
-              cursor: onDoubleClick ? "pointer" : "default",
+              cursor: cardDisabled
+                ? "not-allowed"
+                : onDoubleClick
+                ? "pointer"
+                : "default",
             },
             ...(Array.isArray(sx) ? sx : sx ? [sx] : []),
           ]}
           onContextMenu={
-            onContextMenu || contextMenuContent || contextMenuItems?.length
+            (onContextMenu || contextMenuContent || contextMenuItems?.length) &&
+            !cardDisabled
               ? handleContextMenu
               : undefined
           }
-          onDoubleClick={onDoubleClick}
+          onDoubleClick={!cardDisabled ? onDoubleClick : undefined}
           {...rest}
         >
           {/* ── Thumbnail area ── */}
@@ -234,6 +250,11 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
               </Box>
             )}
             {thumbnailNode}
+            {thumbnailBottomLeft && (
+              <Box className={styles.thumbnailBottomLeft}>
+                {thumbnailBottomLeft}
+              </Box>
+            )}
             {thumbnailBottomRight && (
               <Box className={styles.thumbnailBottomRight}>
                 {thumbnailBottomRight}
@@ -279,7 +300,7 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
                   ...(slotProps?.header?.sx ?? {}),
                 }}
               >
-                {onTitleClick ? (
+                {onTitleClick && !cardDisabled ? (
                   <CardActionArea
                     onClick={onTitleClick}
                     className={slotProps?.titleAction?.className}

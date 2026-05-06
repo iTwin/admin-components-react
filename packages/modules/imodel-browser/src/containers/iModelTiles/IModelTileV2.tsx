@@ -17,7 +17,7 @@ import {
   BaseCard,
   BaseCardSlotProps,
 } from "../../components/baseCard/BaseCard";
-import { TileFavoriteIcon } from "../../components/tileFavoriteIcon/TileFavoriteIcon";
+import { TileFavoriteIconMUI } from "../../components/tileFavoriteIcon/TileFavoriteIconMUI";
 import { IModelFavoritesContext } from "../../contexts/IModelFavoritesContext";
 import { AccessTokenProvider, ApiOverrides, IModelFull } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
@@ -27,14 +27,14 @@ import styles from "./IModelTile.module.scss";
 
 function TitleStatusIcon({
   status,
-  isLoading,
-  isSelected,
+  loading,
+  selected,
 }: {
   status?: "positive" | "warning" | "negative";
-  isLoading?: boolean;
-  isSelected?: boolean;
+  loading?: boolean;
+  selected?: boolean;
 }) {
-  if (isLoading) {
+  if (loading) {
     return <CircularProgress size={16} sx={{ mr: 0.5, flexShrink: 0 }} />;
   }
 
@@ -47,7 +47,7 @@ function TitleStatusIcon({
       ? "error.main"
       : undefined;
 
-  const icon = isSelected ? svgCheckmark : svgImodel;
+  const icon = selected ? svgCheckmark : svgImodel;
 
   return (
     <Box
@@ -113,11 +113,11 @@ export interface IModelTileV2Props
   removeFromFavorites?(iModelId: string): Promise<void>;
   // ── State ───────────────────────────────────────────────────────────────────
   /** Marks the card as selected */
-  isSelected?: boolean;
+  selected?: boolean;
   /** Shows a loading indicator in the card header */
-  isLoading?: boolean;
+  loading?: boolean;
   /** Applies disabled styling and aria-disabled */
-  isDisabled?: boolean;
+  disabled?: boolean;
   /** Status indicator shown in the card header */
   status?: "positive" | "warning" | "negative" | undefined;
   // ── Thumbnail area ──────────────────────────────────────────────────────────
@@ -127,6 +127,8 @@ export interface IModelTileV2Props
   leftIcon?: React.ReactNode;
   /** Badge shown at the bottom of the thumbnail */
   badge?: React.ReactNode;
+  /** Content shown at the bottom-left of the thumbnail */
+  thumbnailBottomLeft?: React.ReactNode;
   /** Function that returns a badge node for the given iModel */
   getBadge?: (iModel: IModelFull) => React.ReactNode;
   // ── Content ─────────────────────────────────────────────────────────────────
@@ -157,13 +159,14 @@ export const IModelTileV2 = ({
   isFavorite,
   addToFavorites,
   removeFromFavorites,
-  isSelected,
-  isLoading,
-  isDisabled,
+  selected,
+  loading,
+  disabled,
   status,
   thumbnail,
   leftIcon,
   badge,
+  thumbnailBottomLeft,
   getBadge,
   title,
   fineprint,
@@ -214,13 +217,14 @@ export const IModelTileV2 = ({
 
   const favoriteIcon =
     !hideFavoriteIcon && favoriteState?.add && favoriteState?.remove ? (
-      <TileFavoriteIcon
+      <TileFavoriteIconMUI
         isFavorite={favoriteState.isFavorite}
         onAddToFavorites={favoriteState.add}
         onRemoveFromFavorites={favoriteState.remove}
         addLabel={strings.addToFavorites}
         removeLabel={strings.removeFromFavorites}
         className={styles.iModelTileFavoriteIcon}
+        disabled={disabled}
       />
     ) : undefined;
 
@@ -238,8 +242,10 @@ export const IModelTileV2 = ({
 
   return (
     <BaseCard
-      aria-disabled={isDisabled ?? undefined}
+      aria-disabled={disabled ?? undefined}
       className={classNames(styles.iModelTile, className)}
+      disabled={disabled}
+      loading={loading}
       thumbnail={
         thumbnail ?? (
           <IModelThumbnailV2
@@ -251,9 +257,12 @@ export const IModelTileV2 = ({
       }
       thumbnailTopLeft={leftIcon}
       thumbnailTopRight={favoriteIcon}
+      thumbnailBottomLeft={thumbnailBottomLeft}
       thumbnailBottomRight={getBadge?.(iModel) ?? badge}
       title={title ?? iModel.displayName ?? ""}
-      onTitleClick={onThumbnailClick ? () => onThumbnailClick(iModel) : undefined}
+      onTitleClick={
+        onThumbnailClick ? () => onThumbnailClick(iModel) : undefined
+      }
       onContextMenu={onCardContextMenu}
       contextMenuContent={
         hasMoreOptions ? moreOptions ?? moreOptionsBuilt : undefined
@@ -261,14 +270,15 @@ export const IModelTileV2 = ({
       statusIcon={
         <TitleStatusIcon
           status={status}
-          isLoading={isLoading}
-          isSelected={isSelected}
+          loading={loading}
+          selected={selected}
         />
       }
       description={iModel.description ?? ""}
       fineprint={fineprintNode}
       actions={buttons}
       slotProps={slotProps}
+      selected={selected}
       {...rest}
     />
   );

@@ -45,6 +45,15 @@ export default {
         type: "radio",
       },
     },
+    iModel: { control: false },
+    onThumbnailClick: { control: false },
+    thumbnail: { control: false },
+    buttons: { control: false },
+    iModelOptions: { control: false },
+    leftIcon: { control: false },
+    badge: { control: false },
+    accessToken: { control: false },
+    stringOverrides: { control: false },
   },
 } as Meta;
 
@@ -80,9 +89,9 @@ Primary.args = {
   removeFromFavorites: async (iModelId) => {
     action("iModel remove from favorites")(iModelId);
   },
-  isDisabled: false,
-  isLoading: false,
-  isSelected: false,
+  disabled: false,
+  loading: false,
+  selected: false,
   badge: <Chip size="small" label="Badge" />,
   leftIcon: <Icon href={svgPlaceholder} size="regular" />,
   buttons: (
@@ -96,10 +105,4 @@ Primary.args = {
     </>
   ),
   thumbnail: bridgeThumbnail,
-};
-
-export const Favorited = Template.bind({});
-Favorited.args = {
-  ...Primary.args,
-  isFavorite: true,
 };

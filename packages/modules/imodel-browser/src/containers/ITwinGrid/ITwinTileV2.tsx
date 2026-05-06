@@ -3,20 +3,13 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import Box from "@mui/material/Box";
-import Card, { CardProps } from "@mui/material/Card";
-import CardActionArea from "@mui/material/CardActionArea";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import CardHeader from "@mui/material/CardHeader";
+import { CardProps } from "@mui/material/Card";
 import Chip from "@mui/material/Chip";
 import CircularProgress from "@mui/material/CircularProgress";
-import IconButton from "@mui/material/IconButton";
-import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 import svgCheckmark from "@stratakit/icons/checkmark.svg";
 import svgItwin from "@stratakit/icons/itwin.svg";
-import svgMore from "@stratakit/icons/more-vertical.svg";
 import svgStatusError from "@stratakit/icons/status-error.svg";
 import svgStatusSuccess from "@stratakit/icons/status-success.svg";
 import svgStatusWarning from "@stratakit/icons/status-warning.svg";
@@ -24,6 +17,10 @@ import { Icon } from "@stratakit/mui";
 import classNames from "classnames";
 import React from "react";
 
+import {
+  BaseCard,
+  BaseCardSlotProps,
+} from "../../components/baseCard/BaseCard";
 import { TileFavoriteIcon } from "../../components/tileFavoriteIcon/TileFavoriteIcon";
 import { ITwinFull } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
@@ -32,17 +29,17 @@ import styles from "./ITwinTile.module.scss";
 
 function TitleStatusIcon({
   status,
-  isLoading,
-  isSelected,
+  loading,
+  selected,
 }: {
   status?: "positive" | "warning" | "negative";
-  isLoading?: boolean;
-  isSelected?: boolean;
+  loading?: boolean;
+  selected?: boolean;
 }) {
-  if (isLoading) {
+  if (loading) {
     return <CircularProgress size={16} sx={{ mr: 0.5, flexShrink: 0 }} />;
   }
-  if (isSelected) {
+  if (selected) {
     return (
       <Box component="span" sx={{ mr: 0.5, flexShrink: 0, lineHeight: 0 }}>
         <Icon href={svgCheckmark} size="regular" />
@@ -85,7 +82,6 @@ function TitleStatusIcon({
 function buildMenuItems<T>(
   options: ContextMenuBuilderItem<T>[] | undefined,
   value: T,
-  closeMenu: () => void,
   refetchData?: () => void
 ): React.ReactNode[] | undefined {
   return options
@@ -98,7 +94,6 @@ function buildMenuItems<T>(
         disabled={typeof disabled === "function" ? disabled(value) : disabled}
         onClick={(e) => {
           e.stopPropagation();
-          closeMenu();
           onClick?.(value, refetchData);
         }}
       >
@@ -138,11 +133,11 @@ export interface ITwinTileV2Props
   hideFavoriteIcon?: boolean;
   // ── State ───────────────────────────────────────────────────────────────────
   /** Marks the card as selected */
-  isSelected?: boolean;
+  selected?: boolean;
   /** Shows a loading indicator in the card header */
-  isLoading?: boolean;
+  loading?: boolean;
   /** Applies disabled styling and aria-disabled */
-  isDisabled?: boolean;
+  disabled?: boolean;
   /** Status indicator shown in the card header */
   status?: "positive" | "warning" | "negative";
   // ── Thumbnail area ──────────────────────────────────────────────────────────
@@ -152,6 +147,8 @@ export interface ITwinTileV2Props
   leftIcon?: React.ReactNode;
   /** Icon shown in the top-right of the thumbnail (alongside the favorite icon) */
   rightIcon?: React.ReactNode;
+  /** Content shown in the bottom-left of the thumbnail */
+  thumbnailBottomLeft?: React.ReactNode;
   /** Badge shown at the bottom of the thumbnail (overrides auto status badge) */
   badge?: React.ReactNode;
   // ── Content ─────────────────────────────────────────────────────────────────
@@ -165,14 +162,10 @@ export interface ITwinTileV2Props
   moreOptions?: React.ReactNode;
   /** Action buttons rendered in the card footer */
   buttons?: React.ReactNode;
-  /** Additional content rendered inside the card body */
+  /** Additional content rendered below fineprint in the info section */
   children?: React.ReactNode;
   // ── Sub-component customization ─────────────────────────────────────────────
-  slotProps?: {
-    header?: Partial<React.ComponentPropsWithoutRef<typeof CardHeader>>;
-    content?: Partial<React.ComponentPropsWithoutRef<typeof CardContent>>;
-    actions?: Partial<React.ComponentPropsWithoutRef<typeof CardActions>>;
-  };
+  slotProps?: BaseCardSlotProps;
 }
 
 /**
@@ -188,13 +181,14 @@ export const ITwinTileV2 = ({
   removeFromFavorites,
   refetchITwins,
   hideFavoriteIcon,
-  isSelected,
-  isLoading,
-  isDisabled,
+  selected,
+  loading,
+  disabled,
   status,
   thumbnail,
   leftIcon,
   rightIcon,
+  thumbnailBottomLeft,
   badge,
   title,
   description,
@@ -204,11 +198,9 @@ export const ITwinTileV2 = ({
   children,
   slotProps,
   className,
+  onContextMenu: onCardContextMenu,
   ...rest
 }: ITwinTileV2Props) => {
-  const [moreOptionsAnchor, setMoreOptionsAnchor] =
-    React.useState<HTMLElement | null>(null);
-
   const strings = _mergeStrings(
     {
       trialBadge: "Trial",
@@ -220,13 +212,7 @@ export const ITwinTileV2 = ({
   );
 
   const moreOptionsBuilt = React.useMemo(
-    () =>
-      buildMenuItems(
-        iTwinOptions,
-        iTwin,
-        () => setMoreOptionsAnchor(null),
-        refetchITwins
-      ),
+    () => buildMenuItems(iTwinOptions, iTwin, refetchITwins),
     [iTwinOptions, iTwin, refetchITwins]
   );
 
@@ -250,170 +236,100 @@ export const ITwinTileV2 = ({
       />
     ) : null);
 
-  const titleNode = (
-    <Box sx={{ display: "flex", alignItems: "center", minWidth: 0 }}>
-      <TitleStatusIcon
-        status={status}
-        isLoading={isLoading}
-        isSelected={isSelected}
+  const favoriteIcon =
+    !hideFavoriteIcon &&
+    isFavorite !== undefined &&
+    addToFavorites &&
+    removeFromFavorites ? (
+      <TileFavoriteIcon
+        isFavorite={isFavorite}
+        onAddToFavorites={() => addToFavorites(iTwin.id)}
+        onRemoveFromFavorites={() => removeFromFavorites(iTwin.id)}
+        addLabel={strings.addToFavorites}
+        removeLabel={strings.removeFromFavorites}
+        className={classNames(styles.iTwinTileFavoriteIcon, {
+          [styles.hidden]: !isFavorite,
+        })}
       />
-      {onThumbnailClick ? (
-        <CardActionArea
-          nativeButton={false}
-          onClick={() => onThumbnailClick(iTwin)}
-          aria-disabled={isDisabled ?? undefined}
-          data-testid={`iTwin-tile-${iTwin.id}`}
-          sx={{
-            font: "inherit",
-            textAlign: "left",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
-          }}
-        >
-          {title ?? iTwin.displayName}
-        </CardActionArea>
-      ) : (
-        <Box
-          component="span"
-          sx={{
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
-          }}
-        >
-          {title ?? iTwin.displayName}
-        </Box>
-      )}
-    </Box>
-  );
+    ) : undefined;
 
-  return (
-    <Card
-      variant="outlined"
-      aria-disabled={isDisabled ?? undefined}
-      className={classNames(styles.iTwinTile, className)}
-      sx={{
-        width: "fit-content",
-        minWidth: 288,
-        ...rest.sx,
-      }}
-      {...rest}
-    >
-      {/* Thumbnail area */}
-      <Box
-        sx={{
-          position: "relative",
-          height: 140,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          cursor: onThumbnailClick ? "pointer" : "auto",
-          bgcolor: "action.hover",
-          overflow: "hidden",
-        }}
-        onClick={onThumbnailClick ? () => onThumbnailClick(iTwin) : undefined}
-      >
-        {leftIcon && (
-          <Box sx={{ position: "absolute", top: 8, left: 8, zIndex: 1 }}>
-            {leftIcon}
-          </Box>
-        )}
-        <Box
-          sx={{
-            position: "absolute",
-            top: 8,
-            right: 8,
-            zIndex: 1,
-            display: "flex",
-            gap: 0.5,
-          }}
-        >
-          {rightIcon}
-          {!hideFavoriteIcon &&
-            isFavorite !== undefined &&
-            addToFavorites &&
-            removeFromFavorites && (
-              <TileFavoriteIcon
-                isFavorite={isFavorite}
-                onAddToFavorites={() => addToFavorites(iTwin.id)}
-                onRemoveFromFavorites={() => removeFromFavorites(iTwin.id)}
-                addLabel={strings.addToFavorites}
-                removeLabel={strings.removeFromFavorites}
-                className={classNames(styles.iTwinTileFavoriteIcon, {
-                  [styles.hidden]: !isFavorite,
-                })}
-              />
-            )}
-        </Box>
-        {thumbnail ? (
-          <Box sx={{ height: "100%", width: "100%" }}>{thumbnail}</Box>
-        ) : (
-          <Box component="span" sx={{ lineHeight: 0, color: "text.secondary" }}>
-            <Icon href={svgItwin} size="large" />
-          </Box>
-        )}
-        {statusBadge && (
-          <Box sx={{ position: "absolute", bottom: 8, right: 8, zIndex: 1 }}>
-            {statusBadge}
-          </Box>
-        )}
-      </Box>
+  const thumbnailTopRight =
+    rightIcon || favoriteIcon ? (
+      <>
+        {rightIcon}
+        {favoriteIcon}
+      </>
+    ) : undefined;
 
-      {/* Card header — name with status icon */}
-      <CardHeader
-        title={titleNode}
-        titleTypographyProps={{ variant: "subtitle1" }}
-        {...slotProps?.header}
-      />
-
-      {/* Card content — description, more options, fineprint */}
-      <CardContent sx={{ pt: 0 }} {...slotProps?.content}>
-        <Box sx={{ display: "flex", alignItems: "flex-start", gap: 1 }}>
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            sx={{ flex: 1, minWidth: 0 }}
-          >
-            {description ?? iTwin.number ?? ""}
-          </Typography>
-          {hasMoreOptions && (
-            <>
-              <IconButton
-                size="small"
-                aria-label="More options"
-                data-testid={`iTwin-tile-${iTwin.id}-more-options`}
-                onClick={(e) => setMoreOptionsAnchor(e.currentTarget)}
-                sx={{ flexShrink: 0, mt: -0.5 }}
-              >
-                <Icon href={svgMore} size="regular" />
-              </IconButton>
-              <Menu
-                anchorEl={moreOptionsAnchor}
-                open={Boolean(moreOptionsAnchor)}
-                onClose={() => setMoreOptionsAnchor(null)}
-              >
-                {moreOptions ?? moreOptionsBuilt}
-              </Menu>
-            </>
-          )}
-        </Box>
+  const fineprintNode =
+    fineprint || children ? (
+      <>
         {fineprint && (
           <Typography
             variant="caption"
             color="text.secondary"
             component="div"
             data-testid={`iTwin-tile-${iTwin.id}-fineprint`}
-            sx={{ mt: 1 }}
+            sx={{ mt: 0.75 }}
           >
             {fineprint}
           </Typography>
         )}
         {children}
-      </CardContent>
+      </>
+    ) : undefined;
 
-      {/* Footer buttons */}
-      {buttons && <CardActions {...slotProps?.actions}>{buttons}</CardActions>}
-    </Card>
+  return (
+    <BaseCard
+      aria-disabled={disabled ?? undefined}
+      className={classNames(styles.iTwinTile, className)}
+      disabled={disabled}
+      loading={loading}
+      selected={selected}
+      thumbnail={
+        thumbnail ?? (
+          <Box
+            sx={{
+              display: "flex",
+              width: "100%",
+              height: "100%",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Box
+              component="span"
+              sx={{ lineHeight: 0, color: "text.secondary" }}
+            >
+              <Icon href={svgItwin} size="large" />
+            </Box>
+          </Box>
+        )
+      }
+      thumbnailTopLeft={leftIcon}
+      thumbnailTopRight={thumbnailTopRight}
+      thumbnailBottomLeft={thumbnailBottomLeft}
+      thumbnailBottomRight={statusBadge}
+      title={title ?? iTwin.displayName ?? ""}
+      onTitleClick={
+        onThumbnailClick ? () => onThumbnailClick(iTwin) : undefined
+      }
+      onContextMenu={onCardContextMenu}
+      contextMenuContent={
+        hasMoreOptions ? moreOptions ?? moreOptionsBuilt : undefined
+      }
+      statusIcon={
+        <TitleStatusIcon
+          status={status}
+          loading={loading}
+          selected={selected}
+        />
+      }
+      description={description ?? iTwin.number ?? ""}
+      fineprint={fineprintNode}
+      actions={buttons}
+      slotProps={slotProps}
+      {...rest}
+    />
   );
 };
