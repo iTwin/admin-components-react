@@ -11,8 +11,7 @@ import AvatarGroup from "@mui/material/AvatarGroup";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import IconButton from "@mui/material/IconButton";
-import svgMore from "@stratakit/icons/more-vertical.svg";
-import svgStar from "@stratakit/icons/star.svg";
+import svgPin from "@stratakit/icons/pin.svg";
 import svgStatusSuccess from "@stratakit/icons/status-success.svg";
 import svgStatusWarning from "@stratakit/icons/status-warning.svg";
 import svgStatusError from "@stratakit/icons/status-error.svg";
@@ -130,15 +129,7 @@ Everything.args = {
         aria-label="Add to favorites"
         onClick={action("kitchen thumbnail favorite clicked")}
       >
-        <Icon href={svgStar} size="regular" />
-      </IconButton>
-      <IconButton
-        size="small"
-        color="secondary"
-        aria-label="More options"
-        onClick={action("kitchen thumbnail more-options clicked")}
-      >
-        <Icon href={svgMore} size="regular" />
+        <Icon href={svgPin} size="regular" />
       </IconButton>
     </>
   ),
@@ -208,6 +199,9 @@ export const Statuses = () => (
     ))}
   </Box>
 );
+
+export const Loading = Template.bind({});
+Loading.args = { ...baseArgs, loading: true };
 
 export const Selected = Template.bind({});
 Selected.storyName = "Selected state";

@@ -201,9 +201,7 @@ export const ITwinTileMUI = ({
       contextMenuContent={
         hasMoreOptions ? contextMenuContent ?? moreOptionsBuilt : undefined
       }
-      statusIcon={
-        <StatusIcon status={status} loading={loading} selected={selected} />
-      }
+      statusIcon={<StatusIcon status={status} selected={selected} />}
       description={description ?? iTwin.number ?? ""}
       fineprint={fineprint}
       slotProps={slotProps}

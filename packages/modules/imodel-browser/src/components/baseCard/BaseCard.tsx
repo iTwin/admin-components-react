@@ -10,6 +10,7 @@ import CardMedia from "@mui/material/CardMedia";
 import CardActionArea from "@mui/material/CardActionArea";
 import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
+import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Stack from "@mui/material/Stack";
@@ -17,8 +18,11 @@ import { SxProps, Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import classNames from "classnames";
 import React, { type ReactNode } from "react";
+import { Icon } from "@stratakit/mui";
+import svgMoreVertical from "@stratakit/icons/more-vertical.svg";
 
 import styles from "./BaseCard.module.scss";
+import { BaseCardLoading } from "./BaseCardLoading";
 
 interface BaseCardSlotStyleProps {
   className?: string;
@@ -187,9 +191,14 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
       mouseX: number;
       mouseY: number;
     } | null>(null);
+    const [menuAnchorEl, setMenuAnchorEl] = React.useState<HTMLElement | null>(
+      null
+    );
+    const menuOpen = contextMenuPosition !== null || menuAnchorEl !== null;
 
     const closeContextMenu = React.useCallback(() => {
       setContextMenuPosition(null);
+      setMenuAnchorEl(null);
     }, []);
 
     const handleContextMenu = React.useCallback(
@@ -204,6 +213,7 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
         }
 
         event.preventDefault();
+        setMenuAnchorEl(null);
         setContextMenuPosition({
           mouseX: event.clientX - 2,
           mouseY: event.clientY - 4,
@@ -211,6 +221,17 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
       },
       [contextMenuContent, contextMenuItems, onContextMenu]
     );
+
+    const handleMoreButtonClick = React.useCallback(
+      (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.stopPropagation();
+        setContextMenuPosition(null);
+        setMenuAnchorEl(event.currentTarget);
+      },
+      []
+    );
+
+    const hasContextMenu = !!(contextMenuItems?.length ?? contextMenuContent);
 
     if (actions?.length === 1) {
       console.warn(
@@ -241,6 +262,15 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
       </CardActions>
     ) : null;
 
+    if (loading) {
+      return (
+        <BaseCardLoading
+          className={classNames(styles.baseCard, className)}
+          sx={sx}
+        />
+      );
+    }
+
     return (
       <>
         <Card
@@ -262,8 +292,7 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
             ...(Array.isArray(sx) ? sx : sx ? [sx] : []),
           ]}
           onContextMenu={
-            (onContextMenu || contextMenuContent || contextMenuItems?.length) &&
-            !cardDisabled
+            (onContextMenu || hasContextMenu) && !cardDisabled
               ? handleContextMenu
               : undefined
           }
@@ -284,9 +313,23 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
             {thumbnailTopLeft && (
               <Box className={styles.thumbnailTopLeft}>{thumbnailTopLeft}</Box>
             )}
-            {thumbnailTopRight && (
+            {(thumbnailTopRight || hasContextMenu) && (
               <Box className={styles.thumbnailTopRight}>
                 {thumbnailTopRight}
+                {hasContextMenu && !cardDisabled && (
+                  <IconButton
+                    size="small"
+                    aria-label="More options"
+                    onClick={handleMoreButtonClick}
+                    className={styles.moreOptionsButton}
+                    sx={{ bgcolor: "background.paper" }}
+                  >
+                    <Icon
+                      render={<img src={svgMoreVertical} alt="" aria-hidden />}
+                      size="regular"
+                    />
+                  </IconButton>
+                )}
               </Box>
             )}
             {thumbnailNode}
@@ -445,12 +488,13 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
             </Stack>
           </Stack>
         </Card>
-        {(contextMenuItems?.length || contextMenuContent) && (
+        {hasContextMenu && (
           <Menu
-            open={contextMenuPosition !== null}
+            open={menuOpen}
             onClose={closeContextMenu}
             onClick={closeContextMenu}
-            anchorReference="anchorPosition"
+            anchorReference={menuAnchorEl ? "anchorEl" : "anchorPosition"}
+            anchorEl={menuAnchorEl}
             anchorPosition={
               contextMenuPosition !== null
                 ? {
@@ -459,6 +503,8 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
                   }
                 : undefined
             }
+            transformOrigin={{ horizontal: "right", vertical: "top" }}
+            anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
           >
             {contextMenuItems?.length
               ? contextMenuItems.map(({ key, label, disabled, onClick }) => (

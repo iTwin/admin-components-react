@@ -25,7 +25,7 @@ import { useITwinFavorites } from "./useITwinFavorites";
 import { useITwinTableConfig } from "./useITwinTableConfig";
 import { Box } from "@mui/material";
 import { ITwinTileMUI, type ITwinTileMUIProps } from "./ITwinTileMUI";
-import { IModelGhostTileMUI } from "../iModelTiles/IModelGhostTileMUI";
+import { BaseCardLoading } from "../../components/baseCard/BaseCardLoading";
 
 export type IndividualITwinStateHookMUI = (
   iTwin: ITwinFull,
@@ -215,9 +215,9 @@ export const ITwinGridMUI = ({
       >
         {fetchStatus === DataStatus.Fetching ? (
           <>
-            <IModelGhostTileMUI />
-            <IModelGhostTileMUI />
-            <IModelGhostTileMUI />
+            <BaseCardLoading />
+            <BaseCardLoading />
+            <BaseCardLoading />
           </>
         ) : (
           <>
@@ -248,10 +248,10 @@ export const ITwinGridMUI = ({
             {fetchMore ? (
               <>
                 <InView onChange={fetchMore}>
-                  <IModelGhostTileMUI />
+                  <BaseCardLoading />
                 </InView>
-                <IModelGhostTileMUI />
-                <IModelGhostTileMUI />
+                <BaseCardLoading />
+                <BaseCardLoading />
               </>
             ) : null}
           </>

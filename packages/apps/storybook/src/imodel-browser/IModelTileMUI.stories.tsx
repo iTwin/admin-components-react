@@ -7,7 +7,6 @@ import {
   IModelTileMUIProps,
 } from "../../../../modules/imodel-browser/src/containers/iModelTiles/IModelTileMUI";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
 import { Icon } from "@stratakit/mui";
 import svgPlaceholder from "@stratakit/icons/placeholder.svg";

@@ -188,9 +188,7 @@ export const IModelTileMUI = ({
       contextMenuContent={
         hasMoreOptions ? contextMenuContent ?? moreOptionsBuilt : undefined
       }
-      statusIcon={
-        <StatusIcon status={status} loading={loading} selected={selected} />
-      }
+      statusIcon={<StatusIcon status={status} selected={selected} />}
       description={description ?? iModel.description ?? ""}
       fineprint={fineprint}
       actions={actions}
