@@ -38,7 +38,8 @@ export default {
     statusIcon: { control: false },
     fineprint: { control: false },
     // actions: { control: false },
-    onTitleClick: { control: false },
+    onSelect: { control: false },
+    onOpen: { control: false },
     onContextMenu: { control: false },
     onDoubleClick: { control: false },
     status: {
@@ -74,7 +75,8 @@ export const Everything = Template.bind({});
 Everything.storyName = "Everything";
 Everything.args = {
   ...baseArgs,
-  onTitleClick: action("kitchen title clicked"),
+  onSelect: action("kitchen selected"),
+  onOpen: action("kitchen opened"),
   onContextMenu: action("context-menu opened"),
   contextMenuItems: [
     {
@@ -94,14 +96,14 @@ Everything.args = {
     },
   ],
   actions: [
-    { key: "open", label: "Open", onClick: action("kitchen open clicked") },
+    { key: "open", label: "Open", onClick: action("open clicked") },
     {
       key: "share",
       label: "Share",
-      onClick: action("kitchen share clicked"),
+      onClick: action("share clicked"),
     },
   ],
-  onDoubleClick: action("kitchen double-clicked"),
+  onDoubleClick: action("double-clicked"),
   statusIcon: (
     <Box component="span" sx={{ lineHeight: 0, color: "warning.main" }}>
       <Icon href={svgStatusWarning} size="regular" />
@@ -152,11 +154,11 @@ WithSlotProps.storyName = "With slot props";
 WithSlotProps.args = {
   ...baseArgs,
   actions: [
-    { key: "open", label: "Open", onClick: action("kitchen open clicked") },
+    { key: "open", label: "Open", onClick: action("open clicked") },
     {
       key: "share",
       label: "Share",
-      onClick: action("kitchen share clicked"),
+      onClick: action("share clicked"),
     },
   ],
   slotProps: {

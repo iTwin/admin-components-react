@@ -45,8 +45,8 @@ export default {
       },
     },
     iModel: { control: false },
-    onThumbnailClick: { control: false },
-    onTitleClick: { control: false },
+    onSelect: { control: false },
+    onOpen: { control: false },
     thumbnail: { control: false },
     actions: { control: false },
     contextMenuContent: { control: false },
@@ -72,7 +72,8 @@ const baseArgs: IModelTileMUIProps = {
 
   thumbnail: bridgeThumbnail,
 
-  onThumbnailClick: action("iModel thumbnail/name clicked"),
+  onSelect: action("iModel selected"),
+  onOpen: action("iModel opened"),
   isFavorite: false,
   addToFavorites: async (iModelId) => {
     action("iModel add to favorites")(iModelId);

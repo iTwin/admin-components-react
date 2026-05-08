@@ -9,29 +9,16 @@ import {
   ITwinGridMUIProps,
 } from "../../../../modules/imodel-browser/src/containers/ITwinGrid/ITwinGridMUI";
 import { SvgHeart } from "@itwin/itwinui-icons-react";
-import {
-  Code,
-  DropdownButton,
-  IconButton,
-  MenuItemSkeleton,
-} from "@itwin/itwinui-react";
+import { Code, IconButton } from "@itwin/itwinui-react";
 import { Meta, Story } from "@storybook/react/types-6-0";
-import React, { PropsWithChildren } from "react";
-
+import React from "react";
 import {
   accessTokenArgTypes,
   withAccessTokenOverride,
 } from "../utils/storyHelp";
 import { ITwinFull } from "@itwin/imodel-browser-react/src";
-import { actions } from "@storybook/addon-actions";
-import {
-  Button,
-  Chip,
-  MenuItem,
-  Select,
-  Skeleton,
-  Typography,
-} from "@mui/material";
+import { action } from "@storybook/addon-actions";
+import { Chip, MenuItem, Select, Skeleton, Typography } from "@mui/material";
 import { ITwinTileMUI } from "@itwin/imodel-browser-react/src/containers/ITwinGrid/ITwinTileMUI";
 
 export type ITwinTileMUIType = React.ComponentPropsWithoutRef<
@@ -43,26 +30,26 @@ export const ITwinGrid = (props: ITwinGridMUIProps) => (
 );
 
 const accessToken = accessTokenArgTypes.accessToken;
-export default {
-  title: "imodel-browser/ITwinGridMUI",
-  component: ITwinGrid,
-  argTypes: {
-    accessToken,
-  },
-  excludeStories: ["ITwinGrid"],
-} as Meta;
 
 const Template: Story<ITwinGridMUIProps> = withAccessTokenOverride((args) => (
   <ITwinGrid {...args} />
 ));
+
+const baseArgs: ITwinGridMUIProps = {
+  apiOverrides: { serverEnvironmentPrefix: "qa" },
+  viewMode: "tile",
+  onOpen: (iTwin) => action("Open " + iTwin.displayName)(iTwin),
+  onSelect: (iTwin) => action("Select " + iTwin.displayName)(iTwin),
+};
+
 export const Primary = Template.bind({});
 Primary.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
+  ...baseArgs,
 };
 
 export const OverrideCellData = Template.bind({});
 OverrideCellData.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
+  ...baseArgs,
   viewMode: "cells",
   cellOverrides: {
     ITwinNumber: (props) => (
@@ -81,12 +68,13 @@ OverrideCellData.args = {
       </strong>
     ),
     ITwinName: (props) => <i style={{ color: "red" }}>{props.value}</i>,
-    hideColumns: [ITwinCellColumn.LastModified],
+    hideColumns: ["LastModified" as ITwinCellColumn],
   },
 };
 
 export const OverrideApiData = Template.bind({});
 OverrideApiData.args = {
+  ...baseArgs,
   apiOverrides: {
     data: [
       {
@@ -106,37 +94,36 @@ OverrideApiData.args = {
 
 export const IndividualContextMenu = Template.bind({});
 IndividualContextMenu.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
+  ...baseArgs,
   iTwinActions: [
     {
       children: "displayName contains 'R'",
       visible: (iTwin) => iTwin.displayName?.includes("R") ?? false,
       key: "withR",
-      onClick: (iTwin) => actions("Contains R" + iTwin?.displayName),
+      onClick: (iTwin) => action("Contains R" + iTwin?.displayName)(iTwin),
     },
     {
       children: "Add iTwinNumber",
       visible: (iTwin) => !iTwin.number,
       key: "addD",
-      onClick: (iTwin) => actions("Add iTwinNumber to " + iTwin?.displayName),
+      onClick: (iTwin) =>
+        action("Add iTwinNumber to " + iTwin?.displayName)(iTwin),
     },
     {
       children: "Edit iTwinNumber",
       visible: (iTwin) => !!iTwin.number,
       key: "editD",
-      onClick: (iTwin) => actions("Edit iTwinNumber: " + iTwin?.number),
+      onClick: (iTwin) => action("Edit iTwinNumber: " + iTwin?.number)(iTwin),
     },
   ],
 };
 
 export const SimpleTilePropsOverrides = Template.bind({});
 SimpleTilePropsOverrides.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
+  ...baseArgs,
   tileOverrides: {
     status: "negative",
-    thumbnailBottomRight: (
-      <Chip size="small" label="Tile Override" color="primary" />
-    ),
+    badge: <Chip size="small" label="Tile Override" color="primary" />,
   },
 };
 
@@ -182,21 +169,6 @@ const buildMenuItems =
       )}
     </span>
   );
-
-const Pager = (props: PropsWithChildren<{ onClick: () => void }>) => (
-  <span onClick={props.onClick}>
-    <Code
-      style={{
-        width: "calc(100% - 8px)",
-        cursor: "pointer",
-        textAlign: "center",
-      }}
-      key="next10"
-    >
-      {props.children}
-    </Code>
-  </span>
-);
 
 /** Hook used in StatefulPropsOverrides.args, the function itself must be a stable reference as it is a hook. */
 const useIndividualState: IndividualITwinStateHookMUI = (iTwin, props) => {
@@ -262,14 +234,26 @@ const useIndividualState: IndividualITwinStateHookMUI = (iTwin, props) => {
   const tileProps = React.useMemo<Partial<ITwinTileMUIType>>(
     () => ({
       actions:
-        selection && selection.id !== "none" ? (
-          <>
-            <Button key="Create">Create IModel</Button>,
-            <Button key="Open">Open IModel</Button>,
-          </>
-        ) : (
-          <Button key="Create">Create IModel</Button>
-        ),
+        selection && selection.id !== "none"
+          ? [
+              {
+                key: "create",
+                label: "Create IModel",
+                onClick: action("Create IModel clicked"),
+              },
+              {
+                key: "open",
+                label: "Open IModel",
+                onClick: action("Open IModel clicked"),
+              },
+            ]
+          : [
+              {
+                key: "create",
+                label: "Create IModel",
+                onClick: action("Create IModel clicked"),
+              },
+            ],
       additionalContent: (
         <span
           onClick={() => {
@@ -304,8 +288,8 @@ StatefulPropsOverrides.args = {
 export const WithPostProcessCallback: Story<ITwinGridMUIProps> =
   withAccessTokenOverride((args) => {
     const addStartTile = React.useCallback(
-      (iTwins: ITwinFull[], status: typeof DataStatus | undefined) => {
-        if (status !== DataStatus.Complete) {
+      (iTwins: ITwinFull[], status: any) => {
+        if (status !== (DataStatus as any).Complete) {
           return iTwins;
         }
         iTwins.unshift({
@@ -337,3 +321,12 @@ FetchAllSubclasses.args = {
   apiOverrides: { serverEnvironmentPrefix: "qa" },
   iTwinSubClass: "All",
 };
+
+export default {
+  title: "imodel-browser/ITwinGridMUI",
+  component: ITwinGrid,
+  argTypes: {
+    accessToken,
+  },
+  excludeStories: ["ITwinGrid"],
+} as Meta;

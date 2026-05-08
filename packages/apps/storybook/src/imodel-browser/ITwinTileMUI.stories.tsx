@@ -54,7 +54,8 @@ const baseArgs: ITwinTileMUIProps = {
     },
   ],
   thumbnail: bridgeThumbnail,
-  onThumbnailClick: action("iTwin thumbnail/name clicked"),
+  onOpen: action("iTwin opened"),
+  onSelect: action("iTwin selected"),
   addToFavorites: async (iTwinId) => {
     action("iTwin add to favorites")(iTwinId);
   },
@@ -97,8 +98,8 @@ export default {
     },
 
     contextMenuItems: { control: false },
-    onThumbnailClick: { control: false },
-    onTitleClick: { control: false },
+    onSelect: { control: false },
+    onOpen: { control: false },
     thumbnailBottomLeft: { control: false },
     thumbnail: { control: false },
     actions: { control: false },
@@ -140,9 +141,4 @@ MoreOptions.args = {
     { key: "open", label: "Open", onClick: action("iTwin open clicked") },
     { key: "share", label: "Share", onClick: action("iTwin share clicked") },
   ],
-  children: (
-    <Typography variant="body2" color="text.secondary">
-      Additional child content rendered below the fineprint.
-    </Typography>
-  ),
 };

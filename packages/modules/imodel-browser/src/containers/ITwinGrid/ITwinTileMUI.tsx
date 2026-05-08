@@ -25,7 +25,8 @@ export interface ITwinTileMUIProps
     | "headerRight"
     | "statusIcon"
     | "contextMenuItems"
-    | "onDoubleClick"
+    | "onSelect"
+    | "onOpen"
     | "title"
     | "description"
     | "thumbnailBottomRight"
@@ -39,8 +40,10 @@ export interface ITwinTileMUIProps
   iTwin: ITwinFull;
   /** List of options to build for the context menu */
   contextMenuItems?: ContextMenuBuilderItemMUI<ITwinFull>[];
-  /** Function to call on card click — receives the iTwin object */
-  onThumbnailClick?(iTwin: ITwinFull): void;
+  /** Function to call when the card is selected. */
+  onSelect?(iTwin: ITwinFull): void;
+  /** Function to call when the card is opened. */
+  onOpen?(iTwin: ITwinFull): void;
   /** Status to display on the tile — will override iTwin.status if provided, otherwise iTwin.status will be used.  Should be a MUI {@link Chip} */
   badge?: React.ReactNode;
   /** Strings displayed by the component */
@@ -72,7 +75,6 @@ export interface ITwinTileMUIProps
 export const ITwinTileMUI = ({
   iTwin,
   contextMenuItems,
-  onThumbnailClick,
   stringsOverrides,
   isFavorite,
   addToFavorites,
@@ -90,7 +92,8 @@ export const ITwinTileMUI = ({
   title,
   description,
   contextMenuContent,
-  onTitleClick,
+  onSelect,
+  onOpen,
   slotProps,
   className,
   onContextMenu: onCardContextMenu,
@@ -169,10 +172,8 @@ export const ITwinTileMUI = ({
         badge ?? <StatusBadge status={iTwin.status} strings={strings} />
       }
       title={title ?? iTwin.displayName ?? ""}
-      onTitleClick={
-        onTitleClick ??
-        (onThumbnailClick ? () => onThumbnailClick(iTwin) : undefined)
-      }
+      onSelect={onSelect ? (event) => onSelect(iTwin) : undefined}
+      onOpen={onOpen ? (event) => onOpen(iTwin) : undefined}
       onContextMenu={onCardContextMenu}
       contextMenuContent={
         hasMoreOptions ? contextMenuContent ?? moreOptionsBuilt : undefined

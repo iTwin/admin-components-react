@@ -23,7 +23,8 @@ export interface IModelTileMUIProps
     | "headerRight"
     | "statusIcon"
     | "contextMenuItems"
-    | "onDoubleClick"
+    | "onSelect"
+    | "onOpen"
     | "title"
     | "description"
   > {
@@ -35,8 +36,10 @@ export interface IModelTileMUIProps
   iModel: IModelFull;
   /** List of options to build for the context menu */
   contextMenuItems?: ContextMenuBuilderItemMUI<IModelFull>[];
-  /** Function to call on card click — receives the iModel object */
-  onThumbnailClick?(iModel: IModelFull): void;
+  /** Function to call when the card is selected. */
+  onSelect?(iModel: IModelFull): void;
+  /** Function to call when the card is opened. */
+  onOpen?(iModel: IModelFull): void;
   /** Strings displayed by the component */
   stringsOverrides?: {
     /** Accessible text for the hollow star icon to add the iModel to favorites */
@@ -69,7 +72,6 @@ export const IModelTileMUI = ({
   iModel,
   contextMenuItems,
   accessToken,
-  onThumbnailClick,
   apiOverrides,
   stringsOverrides,
   refetchIModels,
@@ -91,7 +93,8 @@ export const IModelTileMUI = ({
   description,
   actions,
   contextMenuContent,
-  onTitleClick,
+  onSelect,
+  onOpen,
   slotProps,
   className,
   onContextMenu: onCardContextMenu,
@@ -180,10 +183,8 @@ export const IModelTileMUI = ({
       thumbnailBottomLeft={thumbnailBottomLeft}
       thumbnailBottomRight={getBadge?.(iModel) ?? thumbnailBottomRight}
       title={title ?? iModel.displayName ?? ""}
-      onTitleClick={
-        onTitleClick ??
-        (onThumbnailClick ? () => onThumbnailClick(iModel) : undefined)
-      }
+      onSelect={onSelect ? (event) => onSelect(iModel) : undefined}
+      onOpen={onOpen ? (event) => onOpen(iModel) : undefined}
       onContextMenu={onCardContextMenu}
       contextMenuContent={
         hasMoreOptions ? contextMenuContent ?? moreOptionsBuilt : undefined

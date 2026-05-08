@@ -7,7 +7,6 @@ import Button from "@mui/material/Button";
 import CardActions from "@mui/material/CardActions";
 import Card, { CardProps } from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
-import CardActionArea from "@mui/material/CardActionArea";
 import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
@@ -128,14 +127,11 @@ export interface BaseCardProps
   /** Indicates whether the card is disabled. */
   disabled?: boolean;
   /** Status indicator used for styling (divider color, etc.) */
-  status?:
-    | "positive"
-    | "warning"
-    | "negative"
-    | undefined /** Optional click handler for the card title. */;
-  onTitleClick?: NonNullable<
-    React.ComponentProps<typeof CardActionArea>["onClick"]
-  >;
+  status?: "positive" | "warning" | "negative" | undefined;
+  /** Optional callback fired when the card is selected. */
+  onSelect?: CardProps["onClick"];
+  /** Optional callback fired when the card should open. */
+  onOpen?: CardProps["onDoubleClick"];
   /** Optional callback fired on right-click of the card. */
   onContextMenu?: CardProps["onContextMenu"];
   /** Optional callback fired on double-click of the card. */
@@ -148,6 +144,10 @@ export interface BaseCardProps
  * Base card component built on MUI Card, following the Bentley Systems navigation card design.
  * Provides a consistent layout with a thumbnail area, header, and content area.
  * Consume this via domain-specific wrappers (IModelTile, ITwinTile, etc.).
+ *
+ * Base card is super customizable. As such, it isn't recommended to use BaseCard directly since
+ * design discipline will go out the window.  Instead, we map some of the placements (e.g. thumbnailTopRight)
+ * to specific uses (e.g. favorite button) in the domain-specific wrappers.
  */
 export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
   (
@@ -158,7 +158,8 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
       thumbnailBottomRight,
       thumbnailBottomLeft,
       title,
-      onTitleClick,
+      onSelect,
+      onOpen,
       headerRight,
       statusIcon,
       description,
@@ -250,7 +251,10 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
           {actions.map(({ key, label, onClick }, index) => (
             <Button
               key={key}
-              onClick={onClick}
+              onClick={(event) => {
+                event.stopPropagation();
+                onClick?.(event);
+              }}
               color={index === 0 ? "primary" : "secondary"}
               size="large"
               variant="contained"
@@ -285,18 +289,19 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
             {
               cursor: cardDisabled
                 ? "not-allowed"
-                : onDoubleClick
+                : onSelect || onOpen
                 ? "pointer"
                 : "default",
             },
             ...(Array.isArray(sx) ? sx : sx ? [sx] : []),
           ]}
+          onClick={!cardDisabled ? onSelect : undefined}
           onContextMenu={
             (onContextMenu || hasContextMenu) && !cardDisabled
               ? handleContextMenu
               : undefined
           }
-          onDoubleClick={!cardDisabled ? onDoubleClick : undefined}
+          onDoubleClick={!cardDisabled ? onOpen : undefined}
           {...rest}
         >
           {/* ── Thumbnail area ── */}
@@ -400,47 +405,20 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
                   ...(slotProps?.header?.sx ?? {}),
                 }}
               >
-                {onTitleClick && !cardDisabled ? (
-                  <CardActionArea
-                    onClick={onTitleClick}
-                    className={slotProps?.titleAction?.className}
-                    sx={{
-                      flex: 1,
-                      minWidth: 0,
-                      textAlign: "left",
-                      borderRadius: 1,
-                      ...(slotProps?.titleAction?.sx ?? {}),
-                    }}
-                  >
-                    <Typography
-                      variant="body1"
-                      component="p"
-                      sx={{
-                        display: "-webkit-box",
-                        WebkitLineClamp: 1,
-                        WebkitBoxOrient: "vertical",
-                        overflow: "hidden",
-                      }}
-                    >
-                      {title}
-                    </Typography>
-                  </CardActionArea>
-                ) : (
-                  <Typography
-                    variant="body1"
-                    component="p"
-                    sx={{
-                      flex: 1,
-                      minWidth: 0,
-                      display: "-webkit-box",
-                      WebkitLineClamp: 1,
-                      WebkitBoxOrient: "vertical",
-                      overflow: "hidden",
-                    }}
-                  >
-                    {title}
-                  </Typography>
-                )}
+                <Typography
+                  variant="body1"
+                  component="p"
+                  sx={{
+                    flex: 1,
+                    minWidth: 0,
+                    display: "-webkit-box",
+                    WebkitLineClamp: 1,
+                    WebkitBoxOrient: "vertical",
+                    overflow: "hidden",
+                  }}
+                >
+                  {title}
+                </Typography>
                 {headerRight && <Box sx={{ flexShrink: 0 }}>{headerRight}</Box>}
               </Stack>
 

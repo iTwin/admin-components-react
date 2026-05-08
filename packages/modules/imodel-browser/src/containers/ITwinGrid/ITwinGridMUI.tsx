@@ -68,8 +68,10 @@ export interface ITwinGridMUIProps {
   requestType?: "favorites" | "recents" | "";
   /** Sub class of iTwin, defaults to Project */
   iTwinSubClass?: ITwinSubClass;
-  /** Thumbnail click handler. */
-  onThumbnailClick?(iTwin: ITwinFull): void;
+  /** Select handler for the iTwin tile. */
+  onSelect?(iTwin: ITwinFull): void;
+  /** Open handler for the iTwin tile. */
+  onOpen?(iTwin: ITwinFull): void;
   /** String/function that configure iTwin filtering behavior.
    * A string will filter on displayed text only ().
    * A function allow filtering on anything, is used in a normal array.filter.
@@ -118,7 +120,8 @@ export const ITwinGridMUI = ({
   apiOverrides,
   filterOptions,
   orderbyOptions,
-  onThumbnailClick,
+  onSelect,
+  onOpen,
   iTwinActions,
   requestType,
   iTwinSubClass,
@@ -130,6 +133,10 @@ export const ITwinGridMUI = ({
   cellOverrides,
   className,
 }: ITwinGridMUIProps) => {
+  const [selectedITwinId, setSelectedITwinId] = React.useState<
+    string | undefined
+  >();
+
   const {
     iTwinFavorites,
     addITwinToFavorites,
@@ -184,7 +191,7 @@ export const ITwinGridMUI = ({
 
   const { columns, onRowClick } = useITwinTableConfig({
     iTwinActions,
-    onThumbnailClick,
+    onThumbnailClick: onSelect,
     strings,
     iTwinFavorites,
     addITwinToFavorites,
@@ -227,7 +234,8 @@ export const ITwinGridMUI = ({
                   accessToken,
                   apiOverrides,
                   filterOptions,
-                  onThumbnailClick,
+                  onSelect,
+                  onOpen,
                   requestType,
                   stringsOverrides,
                   tileOverrides,
@@ -236,7 +244,14 @@ export const ITwinGridMUI = ({
                 key={iTwin.id}
                 iTwin={iTwin}
                 contextMenuItems={iTwinActions}
-                onThumbnailClick={onThumbnailClick}
+                selected={
+                  selectedITwinId === iTwin.id || tileOverrides?.selected
+                }
+                onSelect={() => {
+                  setSelectedITwinId(iTwin.id);
+                  onSelect?.(iTwin);
+                }}
+                onOpen={onOpen ? () => onOpen(iTwin) : undefined}
                 useTileState={useIndividualState}
                 isFavorite={iTwinFavorites.has(iTwin.id)}
                 addToFavorites={addITwinToFavorites}
@@ -274,7 +289,7 @@ export const ITwinGridMUI = ({
         onBottomReached={fetchMore}
         autoResetFilters={false}
         autoResetSortBy={false}
-        bodyProps={{ className: onThumbnailClick ? "row-cursor" : "" }}
+        bodyProps={{ className: onSelect ? "row-cursor" : "" }}
       />
     </ThemeProvider>
   );
