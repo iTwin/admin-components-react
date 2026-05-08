@@ -12,5 +12,6 @@
   },
   "search.exclude": {
     "**/CHANGELOG.md": true
-  }
+  },
+  "js/ts.preferences.autoImportSpecifierExcludeRegexes": ["^@mui/[^/]+$"]
 }
