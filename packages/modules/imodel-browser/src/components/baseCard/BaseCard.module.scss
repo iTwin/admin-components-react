@@ -17,6 +17,25 @@
   }
 }
 
+// center the cardActions in the thumbnail area
+
+.thumbnailArea {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cardActions {
+  position: absolute;
+  opacity: 0;
+  transition: opacity 0.25s ease-out;
+}
+
+.baseCard:hover .cardActions,
+.baseCard:focus-within .cardActions {
+  opacity: 1;
+}
+
 .thumbnailArea {
   position: relative;
   height: 10rem;

@@ -88,7 +88,6 @@ export const ITwinTileMUI = ({
   thumbnailBottomRight,
   title,
   description,
-
   contextMenuContent,
   children,
   onTitleClick,

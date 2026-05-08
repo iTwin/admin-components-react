@@ -117,14 +117,16 @@ MoreOptions.args = {
   },
   thumbnailBottomRight: <Chip size="small" label="Badge" />,
   thumbnailTopLeft: <Icon href={svgPlaceholder} size="regular" />,
-  actions: (
-    <>
-      <Button key="button-1" onClick={action("iModel button 1 clicked")}>
-        Button 1
-      </Button>
-      <Button key="button-2" onClick={action("iModel button 2 clicked")}>
-        Button 2
-      </Button>
-    </>
-  ),
+  actions: [
+    {
+      key: "button-1",
+      label: "Open in Viewer",
+      onClick: action("iModel button 1 clicked"),
+    },
+    {
+      key: "button-2",
+      label: "Open in VR Headset",
+      onClick: action("iModel button 2 clicked"),
+    },
+  ],
 };

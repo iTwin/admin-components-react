@@ -7,7 +7,6 @@ import {
   ITwinTileMUIProps,
 } from "../../../../modules/imodel-browser/src/containers/ITwinGrid/ITwinTileMUI";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
 import Typography from "@mui/material/Typography";
 import { Icon } from "@stratakit/mui";
@@ -101,20 +100,9 @@ Default.args = {
   ...baseArgs,
   status: "positive",
   isFavorite: false,
-
   disabled: false,
   loading: false,
   selected: false,
-  actions: (
-    <>
-      <Button key="button-1" onClick={action("iTwin button 1 clicked")}>
-        Button 1
-      </Button>
-      <Button key="button-2" onClick={action("iTwin button 2 clicked")}>
-        Button 2
-      </Button>
-    </>
-  ),
 };
 
 export const MoreOptions = Template.bind({});
@@ -131,18 +119,10 @@ MoreOptions.args = {
   thumbnailTopRight: <Icon href={svgPlaceholder} size="regular" />,
   thumbnailBottomLeft: <Chip size="small" label="Featured" color="default" />,
   thumbnailBottomRight: <Chip size="small" label="Trial" color="primary" />,
-
-  actions: (
-    <>
-      <Button key="button-1" onClick={action("iTwin button 1 clicked")}>
-        Button 1
-      </Button>
-      <Button key="button-2" onClick={action("iTwin button 2 clicked")}>
-        Button 2
-      </Button>
-    </>
-  ),
-
+  actions: [
+    { key: "open", label: "Open", onClick: action("iTwin open clicked") },
+    { key: "share", label: "Share", onClick: action("iTwin share clicked") },
+  ],
   children: (
     <Typography variant="body2" color="text.secondary">
       Additional child content rendered below the fineprint.

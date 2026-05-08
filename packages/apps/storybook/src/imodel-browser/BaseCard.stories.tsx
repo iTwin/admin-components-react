@@ -9,7 +9,6 @@ import {
 import Avatar from "@mui/material/Avatar";
 import AvatarGroup from "@mui/material/AvatarGroup";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
 import IconButton from "@mui/material/IconButton";
 import svgMore from "@stratakit/icons/more-vertical.svg";
@@ -39,7 +38,7 @@ export default {
     headerRight: { control: false },
     statusIcon: { control: false },
     fineprint: { control: false },
-    actions: { control: false },
+    // actions: { control: false },
     onTitleClick: { control: false },
     onContextMenu: { control: false },
     onDoubleClick: { control: false },
@@ -76,7 +75,6 @@ export const Everything = Template.bind({});
 Everything.storyName = "Everything";
 Everything.args = {
   ...baseArgs,
-
   onTitleClick: action("kitchen title clicked"),
   onContextMenu: action("context-menu opened"),
   contextMenuItems: [
@@ -94,6 +92,14 @@ Everything.args = {
       key: "delete",
       label: "Delete",
       onClick: action("kitchen menu: delete clicked"),
+    },
+  ],
+  actions: [
+    { key: "open", label: "Open", onClick: action("kitchen open clicked") },
+    {
+      key: "share",
+      label: "Share",
+      onClick: action("kitchen share clicked"),
     },
   ],
   onDoubleClick: action("kitchen double-clicked"),
@@ -144,20 +150,6 @@ Everything.args = {
       the footer actions.
     </Typography>
   ),
-  actions: (
-    <>
-      <Button size="small" onClick={action("kitchen open clicked")}>
-        Open
-      </Button>
-      <Button
-        size="small"
-        variant="outlined"
-        onClick={action("kitchen share clicked")}
-      >
-        Share
-      </Button>
-    </>
-  ),
 };
 
 export const WithoutThumbnail = Template.bind({});
@@ -168,20 +160,14 @@ export const WithSlotProps = Template.bind({});
 WithSlotProps.storyName = "With slot props";
 WithSlotProps.args = {
   ...baseArgs,
-  actions: (
-    <>
-      <Button size="small" onClick={action("slot props open clicked")}>
-        Open
-      </Button>
-      <Button
-        size="small"
-        variant="outlined"
-        onClick={action("slot props share clicked")}
-      >
-        Share
-      </Button>
-    </>
-  ),
+  actions: [
+    { key: "open", label: "Open", onClick: action("kitchen open clicked") },
+    {
+      key: "share",
+      label: "Share",
+      onClick: action("kitchen share clicked"),
+    },
+  ],
   slotProps: {
     thumbnail: {
       sx: { height: 160, bgcolor: "grey.100" },

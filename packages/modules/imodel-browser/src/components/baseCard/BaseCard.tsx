@@ -3,10 +3,13 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import Box from "@mui/material/Box";
-import Card, { CardProps } from "@mui/material/Card";
-import CardActionArea from "@mui/material/CardActionArea";
+import Button from "@mui/material/Button";
 import CardActions from "@mui/material/CardActions";
+import Card, { CardProps } from "@mui/material/Card";
+import CardMedia from "@mui/material/CardMedia";
+import CardActionArea from "@mui/material/CardActionArea";
 import Divider from "@mui/material/Divider";
+import Grid from "@mui/material/Grid";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Stack from "@mui/material/Stack";
@@ -30,6 +33,12 @@ export interface BaseCardSlotProps {
   info?: BaseCardSlotStyleProps;
   actions?: BaseCardSlotStyleProps;
   titleAction?: BaseCardSlotStyleProps;
+}
+
+export interface BaseCardActionItem {
+  key: string;
+  label: ReactNode;
+  onClick?: React.MouseEventHandler<HTMLAnchorElement | HTMLButtonElement>;
 }
 
 export interface BaseCardContextMenuItem {
@@ -90,11 +99,12 @@ export interface BaseCardProps
   /** Additional content rendered below the description and above the footer. */
   additionalContent?: ReactNode;
 
-  // ── Footer ───────────────────────────────────────────────────────────────────
   /**
-   * Action buttons rendered in the card footer (`CardActions`).
+   * Action buttons rendered on hover over top of the thumbnail.  By default, these are hidden and only appear on hover.
+   *
+   * The first button will get the "primary" color, and any subsequent buttons will be "secondary".  Consider using no more than 2 buttons, as more may cause layout issues.
    */
-  actions?: ReactNode;
+  actions?: BaseCardActionItem[];
 
   /**
    * Optional right-click context menu content rendered by BaseCard.
@@ -168,7 +178,7 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
   ) => {
     const thumbnailNode =
       typeof thumbnail === "string" ? (
-        <img src={thumbnail} alt="" />
+        <CardMedia component="img" src={thumbnail} alt="" />
       ) : (
         thumbnail
       );
@@ -202,6 +212,35 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
       [contextMenuContent, contextMenuItems, onContextMenu]
     );
 
+    if (actions?.length === 1) {
+      console.warn(
+        `Having a single 'actions' item is a design antipattern. Consider using the 'onClick' prop instead of 'actions' for a single action button.`,
+        actions
+      );
+    }
+
+    const actionButtons = actions?.length ? (
+      <CardActions
+        data-testid="card-action-buttons"
+        className={styles.cardActions}
+        sx={slotProps?.actions?.sx}
+      >
+        <Grid container spacing={2}>
+          {actions.map(({ key, label, onClick }, index) => (
+            <Button
+              key={key}
+              onClick={onClick}
+              color={index === 0 ? "primary" : "secondary"}
+              size="large"
+              variant="contained"
+            >
+              {label}
+            </Button>
+          ))}
+        </Grid>
+      </CardActions>
+    ) : null;
+
     return (
       <>
         <Card
@@ -232,6 +271,7 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
           {...rest}
         >
           {/* ── Thumbnail area ── */}
+
           <Box
             className={classNames(
               styles.thumbnailArea,
@@ -260,6 +300,7 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
                 {thumbnailBottomRight}
               </Box>
             )}
+            {actionButtons}
           </Box>
 
           <Divider
@@ -403,16 +444,6 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
               )}
             </Stack>
           </Stack>
-
-          {/* ── Footer actions ── */}
-          {actions && (
-            <CardActions
-              className={slotProps?.actions?.className}
-              sx={{ pt: 0, ...(slotProps?.actions?.sx ?? {}) }}
-            >
-              {actions}
-            </CardActions>
-          )}
         </Card>
         {(contextMenuItems?.length || contextMenuContent) && (
           <Menu
