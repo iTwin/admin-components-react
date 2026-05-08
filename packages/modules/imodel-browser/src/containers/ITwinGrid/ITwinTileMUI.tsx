@@ -28,6 +28,8 @@ export interface ITwinTileMUIProps
     | "onDoubleClick"
     | "title"
     | "description"
+    | "thumbnailBottomRight"
+    | "thumbnailTopRight"
   > {
   /** Defaults to iTwin.displayName */
   title?: string;
@@ -39,6 +41,8 @@ export interface ITwinTileMUIProps
   contextMenuItems?: ContextMenuBuilderItemMUI<ITwinFull>[];
   /** Function to call on card click — receives the iTwin object */
   onThumbnailClick?(iTwin: ITwinFull): void;
+  /** Status to display on the tile — will override iTwin.status if provided, otherwise iTwin.status will be used.  Should be a MUI {@link Chip} */
+  badge?: React.ReactNode;
   /** Strings displayed by the component */
   stringsOverrides?: {
     /** Badge text for trial iTwins */
@@ -60,8 +64,6 @@ export interface ITwinTileMUIProps
   refetchITwins?: () => void;
   /** Hides the favorite icon when true */
   hideFavoriteIcon?: boolean;
-  /** Additional content rendered below fineprint in the info section */
-  children?: React.ReactNode;
 }
 
 /**
@@ -83,13 +85,11 @@ export const ITwinTileMUI = ({
   status,
   thumbnail,
   thumbnailTopLeft,
-  thumbnailTopRight,
   thumbnailBottomLeft,
-  thumbnailBottomRight,
+  badge,
   title,
   description,
   contextMenuContent,
-  children,
   onTitleClick,
   slotProps,
   className,
@@ -113,24 +113,6 @@ export const ITwinTileMUI = ({
 
   const hasMoreOptions = !!(contextMenuContent ?? moreOptionsBuilt?.length);
 
-  const statusBadge =
-    thumbnailBottomRight ??
-    (iTwin.status && iTwin.status.toLocaleLowerCase() !== "active" ? (
-      <Chip
-        size="small"
-        label={
-          iTwin.status.toLocaleLowerCase() === "inactive"
-            ? strings.inactiveBadge
-            : strings.trialBadge
-        }
-        color={
-          iTwin.status.toLocaleLowerCase() === "inactive"
-            ? "default"
-            : "primary"
-        }
-      />
-    ) : null);
-
   const favoriteIcon =
     !hideFavoriteIcon &&
     isFavorite !== undefined &&
@@ -147,14 +129,6 @@ export const ITwinTileMUI = ({
         })}
         disabled={disabled}
       />
-    ) : undefined;
-
-  const thumbnailTopRightContent =
-    thumbnailTopRight || favoriteIcon ? (
-      <>
-        {thumbnailTopRight}
-        {favoriteIcon}
-      </>
     ) : undefined;
 
   const fineprint = iTwin.lastModifiedDateTime
@@ -189,9 +163,11 @@ export const ITwinTileMUI = ({
         )
       }
       thumbnailTopLeft={thumbnailTopLeft}
-      thumbnailTopRight={thumbnailTopRightContent}
+      thumbnailTopRight={favoriteIcon}
       thumbnailBottomLeft={thumbnailBottomLeft}
-      thumbnailBottomRight={statusBadge}
+      thumbnailBottomRight={
+        badge ?? <StatusBadge status={iTwin.status} strings={strings} />
+      }
       title={title ?? iTwin.displayName ?? ""}
       onTitleClick={
         onTitleClick ??
@@ -209,3 +185,30 @@ export const ITwinTileMUI = ({
     />
   );
 };
+
+function StatusBadge({
+  status,
+  strings,
+}: {
+  status?: string;
+  strings: {
+    trialBadge: string;
+    inactiveBadge: string;
+  };
+}) {
+  if (!status || status.toLocaleLowerCase() === "active") {
+    return null;
+  }
+
+  return (
+    <Chip
+      size="small"
+      label={
+        status.toLocaleLowerCase() === "inactive"
+          ? strings.inactiveBadge
+          : strings.trialBadge
+      }
+      color={status.toLocaleLowerCase() === "inactive" ? "default" : "primary"}
+    />
+  );
+}

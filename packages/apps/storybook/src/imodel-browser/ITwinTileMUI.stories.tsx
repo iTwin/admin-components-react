@@ -15,6 +15,7 @@ import { action } from "@storybook/addon-actions";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
 import bridgeThumbnail from "./bridge.jpg";
+import { ITwinFull } from "@itwin/imodel-browser-react/src";
 
 const InConstrainedContainer = ({
   children,
@@ -28,50 +29,17 @@ export const ITwinTileMUIStory = (props: ITwinTileMUIProps) => (
   </InConstrainedContainer>
 );
 
-export default {
-  title: "imodel-browser/ITwinTileMUI",
-  component: ITwinTileMUIStory,
-  excludeStories: ["ITwinTileMUIStory"],
-  argTypes: {
-    status: {
-      options: ["undefined", "positive", "warning", "negative"],
-      mapping: {
-        undefined: undefined,
-        positive: "positive",
-        warning: "warning",
-        negative: "negative",
-      },
-      control: {
-        type: "radio",
-      },
-    },
-    iTwin: { control: false },
-    contextMenuItems: { control: false },
-    onThumbnailClick: { control: false },
-    onTitleClick: { control: false },
-    thumbnailBottomLeft: { control: false },
-    thumbnail: { control: false },
-    actions: { control: false },
-    contextMenuContent: { control: false },
-    thumbnailTopLeft: { control: false },
-    thumbnailTopRight: { control: false },
-    thumbnailBottomRight: { control: false },
-    children: { control: false },
-    stringsOverrides: { control: false },
-  },
-} as Meta;
-
-const Template: Story<ITwinTileMUIProps> = (args) => (
-  <ITwinTileMUIStory {...args} />
-);
+const baseITwin: ITwinFull = {
+  id: "1",
+  displayName: "iTwin Name",
+  number: "aaaa-bbbb-cccc-dddd",
+  status: "Trial",
+  lastModifiedDateTime: "2024-01-01T12:00:00Z",
+};
 
 const baseArgs: ITwinTileMUIProps = {
   iTwin: {
-    id: "1",
-    displayName: "iTwin Name",
-    number: "aaaa-bbbb-cccc-dddd",
-    status: "Trial",
-    lastModifiedDateTime: "2024-01-01T12:00:00Z",
+    ...baseITwin,
   },
   contextMenuItems: [
     {
@@ -95,10 +63,60 @@ const baseArgs: ITwinTileMUIProps = {
   },
 };
 
+export default {
+  title: "imodel-browser/ITwinTileMUI",
+  component: ITwinTileMUIStory,
+  excludeStories: ["ITwinTileMUIStory"],
+  argTypes: {
+    iTwin: {
+      options: ["Active", "Inactive", "Trial"],
+      mapping: {
+        Active: { ...baseITwin, status: "Active", displayName: "Active iTwin" },
+        Inactive: {
+          ...baseITwin,
+          status: "Inactive",
+          displayName: "Inactive iTwin",
+        },
+        Trial: { ...baseITwin, status: "Trial", displayName: "Trial iTwin" },
+      },
+      control: {
+        type: "select",
+      },
+    },
+    status: {
+      options: ["undefined", "positive", "warning", "negative"],
+      mapping: {
+        undefined: undefined,
+        positive: "positive",
+        warning: "warning",
+        negative: "negative",
+      },
+      control: {
+        type: "radio",
+      },
+    },
+
+    contextMenuItems: { control: false },
+    onThumbnailClick: { control: false },
+    onTitleClick: { control: false },
+    thumbnailBottomLeft: { control: false },
+    thumbnail: { control: false },
+    actions: { control: false },
+    contextMenuContent: { control: false },
+    thumbnailTopLeft: { control: false },
+    thumbnailTopRight: { control: false },
+    children: { control: false },
+    stringsOverrides: { control: false },
+  },
+} as Meta;
+
+const Template: Story<ITwinTileMUIProps> = (args) => (
+  <ITwinTileMUIStory {...args} />
+);
+
 export const Default = Template.bind({});
 Default.args = {
   ...baseArgs,
-  status: "positive",
   isFavorite: false,
   disabled: false,
   loading: false,
@@ -116,9 +134,8 @@ MoreOptions.args = {
   loading: false,
   selected: false,
   thumbnailTopLeft: <Icon href={svgPlaceholder} size="regular" />,
-  thumbnailTopRight: <Icon href={svgPlaceholder} size="regular" />,
   thumbnailBottomLeft: <Chip size="small" label="Featured" color="default" />,
-  thumbnailBottomRight: <Chip size="small" label="Trial" color="primary" />,
+  badge: <Chip size="small" label="Badge override" color="primary" />,
   actions: [
     { key: "open", label: "Open", onClick: action("iTwin open clicked") },
     { key: "share", label: "Share", onClick: action("iTwin share clicked") },
