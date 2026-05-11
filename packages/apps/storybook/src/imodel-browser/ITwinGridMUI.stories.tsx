@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { DataStatus, ITwinCellColumn } from "@itwin/imodel-browser-react";
+import { DataStatus } from "@itwin/imodel-browser-react";
 import {
   ITwinGridMUI as ExternalComponent,
   IndividualITwinStateHookMUI,
@@ -18,8 +18,17 @@ import {
 } from "../utils/storyHelp";
 import { ITwinFull } from "@itwin/imodel-browser-react/src";
 import { action } from "@storybook/addon-actions";
-import { Chip, MenuItem, Select, Skeleton, Typography } from "@mui/material";
+import {
+  Avatar,
+  AvatarGroup,
+  Chip,
+  MenuItem,
+  Select,
+  Skeleton,
+  Typography,
+} from "@mui/material";
 import { ITwinTileMUI } from "@itwin/imodel-browser-react/src/containers/ITwinGrid/ITwinTileMUI";
+import { ITwinCellColumn } from "@itwin/imodel-browser-react/src/types";
 
 export type ITwinTileMUIType = React.ComponentPropsWithoutRef<
   typeof ITwinTileMUI
@@ -68,7 +77,7 @@ OverrideCellData.args = {
       </strong>
     ),
     ITwinName: (props) => <i style={{ color: "red" }}>{props.value}</i>,
-    hideColumns: ["LastModified" as ITwinCellColumn],
+    hideColumns: [ITwinCellColumn.LastModified],
   },
 };
 
@@ -95,6 +104,7 @@ OverrideApiData.args = {
 export const IndividualContextMenu = Template.bind({});
 IndividualContextMenu.args = {
   ...baseArgs,
+
   iTwinActions: [
     {
       children: "displayName contains 'R'",
@@ -124,6 +134,16 @@ SimpleTilePropsOverrides.args = {
   tileOverrides: {
     status: "negative",
     badge: <Chip size="small" label="Tile Override" color="primary" />,
+    headerRight: (
+      <AvatarGroup
+        max={3}
+        sx={{ "& .MuiAvatar-root": { width: 24, height: 24, fontSize: 12 } }}
+      >
+        <Avatar alt="User 1" src="https://i.pravatar.cc/150?img=1" />
+        <Avatar alt="User 2" src="https://i.pravatar.cc/150?img=2" />
+        <Avatar alt="User 3" src="https://i.pravatar.cc/150?img=3" />
+      </AvatarGroup>
+    ),
   },
 };
 
@@ -254,6 +274,11 @@ const useIndividualState: IndividualITwinStateHookMUI = (iTwin, props) => {
                 onClick: action("Create IModel clicked"),
               },
             ],
+      headerRight: (
+        <AvatarGroup max={3}>
+          <Avatar alt="User 3" src="https://i.pravatar.cc/150?img=1" />
+        </AvatarGroup>
+      ),
       additionalContent: (
         <span
           onClick={() => {

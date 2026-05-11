@@ -20,7 +20,6 @@ import { StatusIcon } from "./StatusIcon";
 export interface IModelTileMUIProps
   extends Omit<
     BaseCardProps,
-    | "headerRight"
     | "statusIcon"
     | "contextMenuItems"
     | "onSelect"
