@@ -18,25 +18,27 @@ import {
 } from "../../utils/_buildMenuOptions";
 import styles from "./ITwinTile.module.scss";
 import { StatusIcon } from "./StatusIcon";
+import { ITwinTileProps } from "./ITwinTile";
 
 export interface ITwinTileMUIProps
-  extends Omit<
-    BaseCardProps,
-    | "statusIcon"
-    | "contextMenuItems"
-    | "onSelect"
-    | "onOpen"
-    | "title"
-    | "description"
-    | "thumbnailBottomRight"
-    | "thumbnailTopRight"
-  > {
+  extends Omit<ITwinTileProps, "onThumbnailClick">,
+    Omit<
+      BaseCardProps,
+      | "statusIcon"
+      | "contextMenuItems"
+      | "onSelect"
+      | "onOpen"
+      | "title"
+      | "description"
+      | "thumbnailBottomRight"
+      | "thumbnailTopRight"
+      | "thumbnailTopLeft"
+      | "thumbnailBottomLeft"
+    > {
   /** Defaults to iTwin.displayName */
   title?: string;
   /** If not provided, iTwin number will be used */
   description?: string;
-  /** iTwin to display */
-  iTwin: ITwinFull;
   /** List of options to build for the context menu */
   contextMenuItems?: ContextMenuBuilderItemMUI<ITwinFull>[];
   /** Function to call when the card is selected. */
@@ -44,28 +46,7 @@ export interface ITwinTileMUIProps
   /** Function to call when the card is opened. */
   onOpen?(iTwin: ITwinFull): void;
   /** Status to display on the tile — will override iTwin.status if provided, otherwise iTwin.status will be used.  Should be a MUI {@link Chip} */
-  badge?: React.ReactNode;
-  /** Strings displayed by the component */
-  stringsOverrides?: {
-    /** Badge text for trial iTwins */
-    trialBadge?: string;
-    /** Badge text for inactive iTwins */
-    inactiveBadge?: string;
-    /** Accessible text for the hollow star icon to add the iTwin to favorites */
-    addToFavorites?: string;
-    /** Accessible text for the full star icon to remove the iTwin from favorites */
-    removeFromFavorites?: string;
-  };
-  /** Indicates whether the iTwin is marked as a favorite */
-  isFavorite?: boolean;
-  /** Function to add the iTwin to favorites */
-  addToFavorites?(iTwinId: string): Promise<void>;
-  /** Function to remove the iTwin from favorites */
-  removeFromFavorites?(iTwinId: string): Promise<void>;
-  /** Function to refetch iTwins */
-  refetchITwins?: () => void;
-  /** Hides the favorite icon when true */
-  hideFavoriteIcon?: boolean;
+  getBadge?: (iTwin: ITwinFull) => React.ReactNode;
 }
 
 /**
@@ -85,9 +66,7 @@ export const ITwinTileMUI = ({
   disabled,
   status,
   thumbnail,
-  thumbnailTopLeft,
-  thumbnailBottomLeft,
-  badge,
+  getBadge,
   title,
   description,
   contextMenuContent,
@@ -159,16 +138,16 @@ export const ITwinTileMUI = ({
               component="span"
               sx={{ lineHeight: 0, color: "text.secondary" }}
             >
-              <Icon href={svgItwin} size="large" />
+              <Icon href={svgItwin} size="large" render={undefined} />
             </Box>
           </Box>
         )
       }
-      thumbnailTopLeft={thumbnailTopLeft}
       thumbnailTopRight={favoriteIcon}
-      thumbnailBottomLeft={thumbnailBottomLeft}
       thumbnailBottomRight={
-        badge ?? <StatusBadge status={iTwin.status} strings={strings} />
+        getBadge?.(iTwin) ?? (
+          <StatusBadge status={iTwin.status} strings={strings} />
+        )
       }
       title={title ?? iTwin.displayName ?? ""}
       onSelect={onSelect ? (event) => onSelect(iTwin) : undefined}

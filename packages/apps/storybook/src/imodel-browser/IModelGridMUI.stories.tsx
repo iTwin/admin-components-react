@@ -16,11 +16,12 @@ import {
   additionalData,
   initialData,
 } from "./IModelGridMUI.helpers";
-import { SvgApple, SvgClose, SvgDelete } from "@itwin/itwinui-icons-react";
-import { Code, IconButton, Tile } from "@itwin/itwinui-react";
+import SvgDelete from "@stratakit/icons/delete.svg";
+import SvgApple from "@stratakit/icons/apple.svg";
+import { Icon } from "@stratakit/mui";
+import { IconButton } from "@itwin/itwinui-react";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
-
 import {
   accessTokenArgTypes,
   withAccessTokenOverride,
@@ -30,6 +31,7 @@ import Typography from "@mui/material/Typography";
 import Chip from "@mui/material/Chip";
 import AvatarGroup from "@mui/material/AvatarGroup";
 import Avatar from "@mui/material/Avatar";
+import { action } from "@storybook/addon-actions";
 
 export const IModelGridMUI = (props: IModelGridMUIProps) => (
   <ExternalComponent {...props} />
@@ -46,21 +48,43 @@ const Template: Story<IModelGridMUIProps> = withITwinIdOverride(
   withAccessTokenOverride((args) => <IModelGridMUI {...args} />)
 );
 
-export const Primary = Template.bind({});
-Primary.args = {
+const baseArgs: IModelGridMUIProps = {
   apiOverrides: { serverEnvironmentPrefix: "qa" },
   sortOptions: { sortType: "name", descending: false },
+  onOpen: action("iModel opened"),
+  onSelect: action("iModel selected"),
+  iModelActions: [
+    {
+      key: "open",
+      children: "Open iModel",
+      onClick: (iModel) => {
+        action("Open " + iModel?.displayName)(iModel);
+      },
+    },
+    {
+      key: "details",
+      children: "View details",
+      onClick: (iModel) => action("Details for " + iModel?.displayName)(iModel),
+    },
+  ],
+  // tileOverrides: {
+  //   onOpen: (iModel) => alert("Opened " + iModel.displayName),
+  //   onSelect: (iModel) => action("Selected " + iModel.displayName),
+  // },
 };
+
+export const Primary = Template.bind({});
+Primary.args = { ...baseArgs };
 
 export const PrimaryCell = Template.bind({});
 PrimaryCell.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
+  ...baseArgs,
   viewMode: "cells",
 };
 
 export const OverrideCellData = Template.bind({});
 OverrideCellData.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
+  ...baseArgs,
   viewMode: "cells",
   cellOverrides: {
     name: (props) =>
@@ -116,7 +140,7 @@ export const OverrideApiDataWithLoadMore: Story<IModelGridMUIProps> =
 
 export const IndividualContextMenu = Template.bind({});
 IndividualContextMenu.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
+  ...baseArgs,
   iModelActions: [
     {
       children: "displayName contains 'R'",
@@ -152,7 +176,7 @@ IndividualContextMenu.args = {
 
 export const SimpleTilePropsOverrides = Template.bind({});
 SimpleTilePropsOverrides.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
+  ...baseArgs,
   tileOverrides: {
     getBadge: () => <Chip size="small" label="Tile Override" color="primary" />,
     headerRight: (
@@ -170,50 +194,30 @@ SimpleTilePropsOverrides.args = {
 
 export const StatefulPropsOverrides = Template.bind({});
 StatefulPropsOverrides.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
+  ...baseArgs,
   useIndividualState,
 };
 
-export const WithPostProcessCallback: Story<IModelGridMUIProps> =
-  withITwinIdOverride(
-    withAccessTokenOverride((args) => {
-      const addStartTile = React.useCallback(
-        (iModels: IModelFull[], status?: DataStatus) => {
-          if (status !== DataStatus.Complete) {
-            return iModels;
-          }
+function addStartTileCallback(iModels: IModelFull[], status?: DataStatus) {
+  if (status !== DataStatus.Complete) return iModels;
 
-          iModels.unshift({
-            id: "newiModel",
-            displayName: "New iModel",
-            description: "Click on this tile to create a new iModel",
-            thumbnail:
-              "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/add.svg",
-          });
-          return iModels;
-        },
-        []
-      );
-      return (
-        <div>
-          <Typography sx={{ mb: 2 }}>
-            Property <Code>postProcessCallback</Code> allows modification of the
-            data that is sent to the grid. Here we add a new tile at the start
-            of the list for a 'New iModel' when
-          </Typography>
+  iModels.unshift({
+    id: "prepended",
+    displayName: "Some Prepended iModel",
+    description: "This iModel was added in the postProcessCallback",
+  });
+  return iModels;
+}
 
-          <IModelGridMUI {...args} postProcessCallback={addStartTile} />
-        </div>
-      );
-    })
-  );
+export const WithPostProcessCallback = Template.bind({});
 WithPostProcessCallback.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
+  ...baseArgs,
+  postProcessCallback: addStartTileCallback,
 };
 
 export const DefaultNoStateComponentOverride = Template.bind({});
 DefaultNoStateComponentOverride.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
+  ...baseArgs,
   emptyStateComponent: (
     <div>
       <Typography variant="h6">There are no iModels to show.</Typography>
@@ -223,12 +227,13 @@ DefaultNoStateComponentOverride.args = {
 
 export const DisableAddToRecents = Template.bind({});
 DisableAddToRecents.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
+  ...baseArgs,
   disableAddToRecents: true,
 };
 DisableAddToRecents.argTypes = {
   accessToken: { table: { disable: true } },
-  onThumbnailClick: { table: { disable: true } },
+  onOpen: { table: { disable: true } },
+  onSelect: { table: { disable: true } },
   sortOptions: { table: { disable: true } },
   iModelActions: { table: { disable: true } },
   useIndividualState: { table: { disable: true } },
@@ -247,20 +252,13 @@ DisableAddToRecents.argTypes = {
 
 export const Recents = Template.bind({});
 Recents.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
+  ...baseArgs,
   requestType: "recents",
 };
 
 export const RecentsWithCustomIcon = Template.bind({});
 RecentsWithCustomIcon.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
+  ...baseArgs,
   requestType: "recents",
-  removeFromRecentsIcon: <SvgDelete />,
-};
-
-export const RecentsWithCloseIcon = Template.bind({});
-RecentsWithCloseIcon.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
-  requestType: "recents",
-  removeFromRecentsIcon: <SvgClose />,
+  removeFromRecentsIcon: <Icon href={SvgDelete} />,
 };

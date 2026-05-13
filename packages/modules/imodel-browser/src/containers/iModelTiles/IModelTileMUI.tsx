@@ -16,17 +16,21 @@ import {
 import { IModelThumbnailMUI } from "../iModelThumbnail/IModelThumbnailMUI";
 import styles from "./IModelTile.module.scss";
 import { StatusIcon } from "./StatusIcon";
+import { IModelTileProps } from "./IModelTile";
 
 export interface IModelTileMUIProps
-  extends Omit<
-    BaseCardProps,
-    | "statusIcon"
-    | "contextMenuItems"
-    | "onSelect"
-    | "onOpen"
-    | "title"
-    | "description"
-  > {
+  extends Omit<IModelTileProps, "onThumbnailClick" | "iModelOptions">,
+    Omit<
+      BaseCardProps,
+      | "statusIcon"
+      | "contextMenuItems"
+      | "onSelect"
+      | "onOpen"
+      | "title"
+      | "description"
+      | "thumbnailBottomRight"
+      | "thumbnailTopRight"
+    > {
   /** If not provided, iModel display name will be used */
   title?: string;
   /** If not provided, iModel description will be used */
@@ -84,9 +88,8 @@ export const IModelTileMUI = ({
   status,
   thumbnail,
   thumbnailTopLeft,
-  thumbnailTopRight,
+
   thumbnailBottomLeft,
-  thumbnailBottomRight,
   getBadge,
   title,
   description,
@@ -150,14 +153,6 @@ export const IModelTileMUI = ({
       />
     ) : undefined;
 
-  const thumbnailTopRightContent =
-    thumbnailTopRight || favoriteIcon ? (
-      <>
-        {thumbnailTopRight}
-        {favoriteIcon}
-      </>
-    ) : undefined;
-
   const fineprint = iModel.lastChangesetPushDateTime
     ? new Date(iModel.lastChangesetPushDateTime).toDateString()
     : undefined;
@@ -178,9 +173,9 @@ export const IModelTileMUI = ({
         )
       }
       thumbnailTopLeft={thumbnailTopLeft}
-      thumbnailTopRight={thumbnailTopRightContent}
+      thumbnailTopRight={favoriteIcon}
       thumbnailBottomLeft={thumbnailBottomLeft}
-      thumbnailBottomRight={getBadge?.(iModel) ?? thumbnailBottomRight}
+      thumbnailBottomRight={getBadge?.(iModel)}
       title={title ?? iModel.displayName ?? ""}
       onSelect={onSelect ? (event) => onSelect(iModel) : undefined}
       onOpen={onOpen ? (event) => onOpen(iModel) : undefined}

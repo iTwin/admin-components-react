@@ -27,5 +27,5 @@ export function StatusIcon({
 
   const icon = selected ? svgCheckmark : svgImodel;
 
-  return <Icon href={icon} size="regular" color={color} />;
+  return <Icon href={icon} size="regular" color={color} render={undefined} />;
 }

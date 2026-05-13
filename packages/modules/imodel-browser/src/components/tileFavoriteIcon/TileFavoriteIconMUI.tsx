@@ -12,9 +12,9 @@ export interface TileFavoriteIconProps {
   /** Whether the item is currently favorited */
   isFavorite: boolean;
   /** Callback to add the item to favorites */
-  onAddToFavorites: () => Promise<void>;
+  onAddToFavorites: () => Promise<void> | void;
   /** Callback to remove the item from favorites */
-  onRemoveFromFavorites: () => Promise<void>;
+  onRemoveFromFavorites: () => Promise<void> | void;
   /** Accessible label for adding to favorites */
   addLabel: string;
   /** Accessible label for removing from favorites */
@@ -23,6 +23,8 @@ export interface TileFavoriteIconProps {
   className?: string;
   /** Whether the icon button is disabled */
   disabled?: boolean;
+  /** MUI sx prop for custom styling */
+  sx?: React.ComponentProps<typeof IconButton>["sx"];
 }
 
 /**
@@ -37,6 +39,7 @@ export const TileFavoriteIconMUI = ({
   removeLabel,
   disabled,
   className = "",
+  sx = {},
 }: TileFavoriteIconProps) => {
   return (
     <IconButton
@@ -49,11 +52,13 @@ export const TileFavoriteIconMUI = ({
       disabled={disabled}
       sx={{
         bgcolor: "background.paper",
+        ...sx,
       }}
     >
       <Icon
         href={pinIcon}
         size="regular"
+        render={undefined}
         className={
           isFavorite ? styles.favouriteMUIIcon : styles.notFavouriteMUIIcon
         }

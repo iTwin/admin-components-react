@@ -5,16 +5,9 @@
 import Select from "@mui/material/Select";
 import { type IModelFull } from "../../../../../packages/modules/imodel-browser/src/types";
 import type { IModelTileMUIProps } from "../../../../modules/imodel-browser/src/containers/iModelTiles/IModelTileMUI";
-import {
-  Button,
-  DropdownButton,
-  MenuItem,
-  MenuItemSkeleton,
-  Tile,
-} from "@itwin/itwinui-react";
+import MenuItem from "@mui/material/MenuItem";
 import React from "react";
-
-type TileProps = React.ComponentPropsWithoutRef<typeof Tile>;
+import { action } from "@storybook/addon-actions";
 
 export const initialData: IModelFull[] = [
   {
@@ -106,128 +99,51 @@ export const additionalData: IModelFull[] = [
   },
 ];
 
-/** Function used in useIndividualState */
-const buildMenuItems =
-  (
-    close: () => void,
-    setVersion: React.Dispatch<React.SetStateAction<Version | undefined>>
-  ) =>
-  (v: Version) => (
-    <span
-      onClick={(event) => {
-        event.stopPropagation();
-      }}
-    >
-      {v.id === "loading" ? (
-        <MenuItemSkeleton />
-      ) : (
-        <MenuItem
-          key={v.id}
-          onClick={() => {
-            close();
-            v.id !== "loading" && setVersion(v);
-          }}
-        >
-          {v.displayName}
-        </MenuItem>
-      )}
-    </span>
-  );
-
-interface Version {
-  id: string;
-  displayName: string;
-}
-interface NamedVersionsFetchData {
-  namedVersions: { displayName: string; id: string }[];
-}
-
 /** Hook used in StatefulPropsOverrides.args, the function itself must be a stable reference as it is a hook. */
 export const useIndividualState = (
   iModel: IModelFull,
   props: IModelTileMUIProps
-) => {
-  const [selection, setSelection] = React.useState<Version | undefined>();
-  const [versions, setVersions] = React.useState<Version[] | undefined>();
-  // We delay network call until the user wants to query the data, this could be in an effect
-  // but would automatically trigger for EVERY iModel, causing potentially huge network traffic at startup.
-  const fetchVersionsList = React.useCallback(async () => {
-    try {
-      // Show the skeleton, plus prevent further calls to this function.
-      setVersions([
-        {
-          id: "loading",
-          displayName: "",
-        },
-      ]);
-      // Start the fetch
-      const response = await fetch(
-        `https://${
-          props.apiOverrides?.serverEnvironmentPrefix
-            ? `${props.apiOverrides?.serverEnvironmentPrefix}-`
-            : ""
-        }api.bentley.com/imodels/${iModel.id}/namedversions`,
-        {
-          headers: {
-            Authorization: (props.accessToken as string) ?? "",
-            Prefer: "return=minimal",
-            Accept: "application/vnd.bentley.itwin-platform.v2+json",
-          },
-        }
-      );
-      if (response.ok) {
-        const data: NamedVersionsFetchData = await response.json();
-        setVersions(data.namedVersions);
-        if (data.namedVersions.length === 0) {
-          setSelection({ displayName: "No version created", id: "none" });
-        }
-      }
-    } catch (error) {
-      // If an error occurs, clear the versions so they will be fetched again.
-      setVersions(undefined);
-      console.error(error);
-    }
-  }, [
-    iModel.id,
-    props.accessToken,
-    props.apiOverrides?.serverEnvironmentPrefix,
-  ]);
+): IModelTileMUIProps => {
+  // random versions
+  const versions = React.useMemo(() => {
+    return [
+      { id: "v1", displayName: `${iModel.displayName} v1` },
+      { id: "v2", displayName: `${iModel.displayName} v2` },
+      { id: "v3", displayName: `${iModel.displayName} v3` },
+    ];
+  }, [iModel.displayName]);
+
   // Create a memo of the tileProps we want to override, depending on the state.
-  const tileProps = React.useMemo<Partial<TileProps>>(
+  const tileProps = React.useMemo<Partial<IModelTileMUIProps>>(
     () => ({
-      buttons:
-        versions?.length === 0
-          ? [<Button key="Create">Create version</Button>]
-          : undefined,
+      actions: [
+        {
+          key: "default",
+          label: `Open ${iModel.displayName}`,
+          onClick: () => {},
+        },
+        { key: "vr", label: "Open in VR", onClick: () => {} },
+      ],
       isNew: versions?.length === 0,
       additionalContent: (
-        <span
-          onClick={() => {
-            versions === undefined && fetchVersionsList();
-          }}
-        >
-          <Select
-            label="Select iModel..."
-            displayEmpty
-            value={selection?.id ?? ""}
-          >
-            {versions?.map(buildMenuItems(close, setSelection)) ?? []}
-          </Select>
-        </span>
+        <Select label="Select iModel..." value={versions[1].id}>
+          {versions?.map((v) => (
+            <MenuItem
+              key={v.id}
+              value={v.id}
+              onClick={action(`Selected ${v.id}`)}
+            >
+              {v.displayName}
+            </MenuItem>
+          ))}
+        </Select>
       ),
     }),
-    [fetchVersionsList, selection?.displayName, versions]
+    [iModel?.displayName, versions]
   );
-  // Override the thumbnailClick so it receives the selected version too.
-  // Not great typewise, but it is an example of what someone could do if it was really needed.
-  const onSelect = React.useCallback(
-    (iModel: IModelFull) => {
-      props.onSelect?.(iModel);
-    },
-    [props, selection]
-  );
+
   return {
-    onSelect,
-    tileProps,
+    ...props,
+    ...tileProps,
   };
 };

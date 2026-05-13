@@ -5,19 +5,15 @@
 import { Table, ThemeProvider } from "@itwin/itwinui-react";
 import React from "react";
 import { InView } from "react-intersection-observer";
-
 import Box from "@mui/material/Box";
 import { NoResults } from "../../components/noResults/NoResults";
 import { IModelFavoritesProvider } from "../../contexts/IModelFavoritesContext";
 import {
   AccessTokenProvider,
   ApiOverrides,
-  DataMode,
   DataStatus,
-  IModelCellOverrides,
   IModelFull,
   IModelSortOptions,
-  ViewType,
 } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
 import { ContextMenuBuilderItemMUI } from "../../utils/_buildMenuOptions";
@@ -27,108 +23,36 @@ import {
 } from "../../utils/iModelApi";
 import styles from "./IModelGrid.module.scss";
 import { DEFAULT_PAGE_SIZE, useIModelData } from "./useIModelData";
-import {
-  IModelTableStrings,
-  useIModelTableConfig,
-} from "./useIModelTableConfig";
+import { useIModelTableConfigMUI } from "./useIModelTableConfigMUI";
 import {
   IModelTileMUI,
   IModelTileMUIProps,
 } from "../iModelTiles/IModelTileMUI";
 import { BaseCardLoading } from "../../components/baseCard/BaseCardLoading";
+import { IModelGridProps } from "./IModelGrid";
+import { Icon } from "@stratakit/mui";
 
-export interface IModelGridMUIProps {
-  /**
-   * Access token that requires the `imodels:read` scope. Provide a function that returns the token to prevent the token from expiring. Function must be memoized. */
-  accessToken?: AccessTokenProvider;
-  /** ITwin Id to list the iModels from (mutually exclusive to assetId) */
-  iTwinId?: string | undefined;
-  /** Type of iModels to request - "favorites" for user's favorite iModels, "recents" for recently accessed iModels, or empty string for all iModels */
-  requestType?: "favorites" | "recents" | "";
+export interface IModelGridMUIProps
+  extends Omit<
+    IModelGridProps,
+    | "onThumbnailClick"
+    | "iModelActions"
+    | "useIndividualState"
+    | "tileOverrides"
+  > {
   /** Open handler. Adds iModel to recents when clicked unless disableAddToRecents is true. */
-  onOpen?(iModel: IModelFull): void;
-  /** When true, prevents automatically adding iModels to recents when thumbnail is clicked. Default is false. */
-  disableAddToRecents?: boolean;
-  /** Configure IModel sorting behavior. */
-  sortOptions?: IModelSortOptions;
+  onOpen?: IModelTileMUIProps["onOpen"];
+  onSelect?: IModelTileMUIProps["onSelect"];
   /** List of actions to build for each imodel context menu. */
   iModelActions?: ContextMenuBuilderItemMUI<IModelFull>[];
-  /** Custom icon for the "Remove from recents" context menu action. Only applies when requestType is "recents". */
+  /** Custom icon for the "Remove from recents" context menu action. Only applies when requestType is "recents". Should be a Stratakit Icon component */
   removeFromRecentsIcon?: JSX.Element;
-  /** Function (can be a react hook) that returns state for an iModel, returned values will be applied as props to the IModelTile, overrides IModelGrid provided values */
   useIndividualState?: (
     iModel: IModelFull,
     iModelTileProps: IModelTileMUIProps
   ) => Partial<IModelTileMUIProps>;
   /** Static props to apply over each tile, mainly used for tileProps, overrides IModelGrid provided values */
   tileOverrides?: Partial<IModelTileMUIProps>;
-  /** Strings displayed by the browser */
-  stringsOverrides?: Partial<IModelTableStrings> & {
-    /** Displayed after successful fetch search, but no iModel is returned. */
-    noIModelSearch?: string;
-    /** Displayed after successful fetch, but no iModels are returned. */
-    noIModels?: string;
-    /** Displayed when the component is mounted and there is no iTwin or asset Id. */
-    noContext?: string;
-    /** Displayed when the component is mounted but the accessToken is empty. */
-    noAuthentication?: string;
-    /** Generic message displayed if an error occurs while fetching. */
-    error?: string;
-    /** Displayed on table while loading data. */
-    tableLoadingData?: string;
-    /** Displayed after successful fetch search, but no iModel is returned, along with noIModelSearch text. */
-    noIModelSearchSubtext?: string;
-    /** Displayed in context menu for removing iModel from recents. */
-    removeFromRecents?: string;
-  };
-  /** Object that configures different overrides for the API.
-   * @property `data`: Array of iModels used in the grid.
-   * @property `isLoading`: Loading state when using consumer-provided data.
-   * @property `hasMoreData`: Whether more data is available for infinite scroll (external mode only).
-   * @property `serverEnvironmentPrefix`: Either qa or dev.
-   */
-  apiOverrides?: ApiOverrides<IModelFull[]>;
-  /**
-   * Allow final transformation of the iModel array before display
-   * This function MUST be memoized.
-   */
-  postProcessCallback?: (
-    iModels: IModelFull[],
-    fetchStatus: DataStatus | undefined,
-    searchText: string | undefined
-  ) => IModelFull[];
-  /**Component to show when there is no iModel */
-  emptyStateComponent?: React.ReactNode;
-  /**  Exact name of the iModel to display */
-  searchText?: string;
-  /**iModel view mode */
-  viewMode?: ViewType;
-  /** The maximum number of iModels that can be fetched per request */
-  pageSize?: number;
-  /** Maximum number of iModels to fetch, default is unlimited */
-  maxCount?: number;
-  /** Overrides for cell rendering in cells viewMode */
-  cellOverrides?: IModelCellOverrides;
-  /** Additional class name for the grid structure */
-  className?: string;
-  /**
-   * Specifies how data should be managed.
-   * - 'internal': Package handles data fetching internally (default)
-   * - 'external': Consumer manages data via apiOverrides.data and isLoading.
-   * When using 'external' mode, `accessToken` and `iTwinId` are not required, as the consumer is responsible for data fetching.
-   * Allows for infinite scrolling and data refresh via onLoadMore and onRefetch callbacks.
-   */
-  dataMode?: DataMode;
-  /**
-   * Callback function to load more data when using external data mode.
-   * Only used when dataMode is set to 'external'. This enables infinite scrolling when you provide data directly from your consumer.
-   */
-  onLoadMore?: () => void | Promise<void>;
-  /**
-   * Callback function to refresh data when using external data mode.
-   * Only used when dataMode is set to 'external'.
-   */
-  onRefetch?: () => void | Promise<void>;
 }
 
 /**
@@ -152,6 +76,7 @@ const IModelGridInternal = ({
   iModelActions,
   removeFromRecentsIcon,
   onOpen,
+  onSelect,
   iTwinId,
   sortOptions = { sortType: "name", descending: false },
   requestType,
@@ -213,28 +138,16 @@ const IModelGridInternal = ({
     stringsOverrides
   );
 
-  // Add "Remove from recents" action when viewing recents
   const enhancedIModelActions = React.useMemo(() => {
+    // Add "Remove from recents" action when viewing recents
     if (requestType === "recents") {
-      const removeFromRecentsAction: ContextMenuBuilderItemMUI<IModelFull> = {
-        key: "remove-from-recents",
-        children: strings.removeFromRecents,
-        ...(removeFromRecentsIcon && { icon: removeFromRecentsIcon }),
-        onClick: async (iModel, refetchData) => {
-          if (!iModel || !accessToken) {
-            return;
-          }
-          await removeIModelFromRecents({
-            iModelId: iModel.id,
-            accessToken,
-            serverEnvironmentPrefix: apiOverrides?.serverEnvironmentPrefix,
-          });
-          refetchData?.();
-        },
-      };
-      return iModelActions
-        ? [removeFromRecentsAction, ...iModelActions]
-        : [removeFromRecentsAction];
+      const action = removeFromRecentsAction(
+        strings,
+        accessToken,
+        apiOverrides,
+        removeFromRecentsIcon
+      );
+      return iModelActions ? [action, ...iModelActions] : [action];
     }
     return iModelActions;
   }, [
@@ -287,6 +200,7 @@ const IModelGridInternal = ({
     iModel: IModelFull,
     clickFn: () => void
   ) => {
+    console.log("iModel clicked", iModel);
     try {
       if (!accessToken || disableAddToRecents) {
         clickFn();
@@ -302,10 +216,10 @@ const IModelGridInternal = ({
       // swallow errors to avoid disrupting the UI
       console.error("Failed to add iModel to recents", e);
     }
-    onOpen?.(iModel);
+    clickFn();
   };
 
-  const { columns, onRowClick } = useIModelTableConfig({
+  const { columns, onRowClick } = useIModelTableConfigMUI({
     iModelActions: enhancedIModelActions,
     onOpen: (iModel: IModelFull) =>
       iModelClickAndAddToRecents(iModel, () => onOpen?.(iModel)),
@@ -325,6 +239,10 @@ const IModelGridInternal = ({
   const tileApiOverrides = apiOverrides
     ? { serverEnvironmentPrefix: apiOverrides.serverEnvironmentPrefix }
     : undefined;
+
+  // TODO: this is kind of silly
+  const resolvedOnOpen = tileOverrides?.onOpen ?? onOpen;
+  const resolvedOnSelect = tileOverrides?.onSelect ?? onSelect;
 
   const renderIModelGridStructure = () => {
     return (
@@ -348,13 +266,18 @@ const IModelGridInternal = ({
                 useTileState={useIndividualState}
                 refetchIModels={refetchIModels}
                 {...tileOverrides}
-                onOpen={(e) => {
-                  tileOverrides?.onOpen
-                    ? iModelClickAndAddToRecents(iModel, () =>
-                        tileOverrides?.onOpen?.(e)
-                      )
-                    : undefined;
-                }}
+                onOpen={
+                  resolvedOnOpen
+                    ? () => {
+                        iModelClickAndAddToRecents(iModel, () =>
+                          resolvedOnOpen(iModel)
+                        );
+                      }
+                    : undefined
+                }
+                onSelect={
+                  resolvedOnSelect ? () => resolvedOnSelect(iModel) : undefined
+                }
               />
             ))}
             {fetchMore ? (
@@ -392,7 +315,7 @@ const IModelGridInternal = ({
               autoResetFilters={false}
               autoResetSortBy={false}
               bodyProps={{
-                className: onOpen ? styles.rowCursor : "",
+                className: resolvedOnOpen ? styles.rowCursor : "",
               }}
             />
           </ThemeProvider>
@@ -438,6 +361,7 @@ type IModelHookedTileProps = IModelTileMUIProps & {
   ) => Partial<IModelTileMUIProps>;
 };
 const noOp = () => ({} as Partial<IModelTileMUIProps>);
+
 const IModelHookedTile = (props: IModelHookedTileProps) => {
   const { useTileState = noOp, ...iModelTileProps } = props;
 
@@ -450,5 +374,33 @@ const IModelHookedTile = (props: IModelHookedTileProps) => {
   }
 
   const tileState = useTileState(props.iModel, iModelTileProps);
+
   return <IModelTileMUI {...iModelTileProps} {...tileState} />;
 };
+
+function removeFromRecentsAction(
+  strings: IModelGridProps["stringsOverrides"],
+  accessToken?: AccessTokenProvider,
+  apiOverrides?: ApiOverrides<IModelFull[]>,
+  removeFromRecentsIcon?: JSX.Element
+): ContextMenuBuilderItemMUI<IModelFull> {
+  return {
+    key: "remove-from-recents",
+    children: (
+      <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+        {removeFromRecentsIcon}
+        {strings?.removeFromRecents}
+      </Box>
+    ),
+    onClick: async (iModel, refetchData) => {
+      if (!iModel || !accessToken) return;
+
+      await removeIModelFromRecents({
+        iModelId: iModel.id,
+        accessToken,
+        serverEnvironmentPrefix: apiOverrides?.serverEnvironmentPrefix,
+      });
+      refetchData?.();
+    },
+  };
+}

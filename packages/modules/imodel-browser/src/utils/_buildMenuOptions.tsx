@@ -64,8 +64,9 @@ export const _buildManagedContextMenuOptions: <T>(
 export const buildContextMenuItemsMUI = <T,>(
   options: ContextMenuBuilderItemMUI<T>[] | undefined,
   value: T,
+  closeMenu?: () => void,
   refetchData?: () => void
-): React.ReactNode[] | undefined => {
+): JSX.Element[] | undefined => {
   return options
     ?.filter(({ visible }) =>
       typeof visible === "function" ? visible(value) : visible ?? true
@@ -76,6 +77,7 @@ export const buildContextMenuItemsMUI = <T,>(
         disabled={typeof disabled === "function" ? disabled(value) : disabled}
         onClick={(e: React.MouseEvent) => {
           e.stopPropagation();
+          closeMenu?.();
           onClick?.(value, refetchData);
         }}
       >

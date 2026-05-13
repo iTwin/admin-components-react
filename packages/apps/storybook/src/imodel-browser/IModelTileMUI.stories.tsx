@@ -115,7 +115,7 @@ MoreOptions.args = {
   removeFromFavorites: async (iModelId) => {
     action("iModel remove from favorites")(iModelId);
   },
-  thumbnailBottomRight: <Chip size="small" label="Badge" />,
+  getBadge: () => <Chip size="small" label="Badge" />,
   thumbnailTopLeft: <Icon href={svgPlaceholder} size="regular" />,
   actions: [
     {

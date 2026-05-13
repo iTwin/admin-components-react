@@ -12,21 +12,10 @@ import typescript from "rollup-plugin-typescript2";
 
 import * as packageJson from "./package.json";
 
-const rollupConfig = {
-  input: "src/index.ts",
+const baseConfig = {
   external: Object.keys(packageJson.dependencies).map(
     (dep) => new RegExp(`${dep}(/.*)?`, "g")
   ),
-  output: [
-    {
-      file: packageJson.main,
-      format: "cjs",
-    },
-    {
-      file: packageJson.module,
-      format: "esm",
-    },
-  ],
   plugins: [
     peerDepsExternal(),
     commonjs(),
@@ -48,5 +37,36 @@ const rollupConfig = {
     }),
   ],
 };
+
+const rollupConfig = [
+  {
+    ...baseConfig,
+    input: "src/index.ts",
+    output: [
+      {
+        file: packageJson.main,
+        format: "cjs",
+      },
+      {
+        file: packageJson.module,
+        format: "esm",
+      },
+    ],
+  },
+  {
+    ...baseConfig,
+    input: "src/mui/index.ts",
+    output: [
+      {
+        file: "cjs/src/mui/index.js",
+        format: "cjs",
+      },
+      {
+        file: "esm/src/mui/index.js",
+        format: "esm",
+      },
+    ],
+  },
+];
 
 export default rollupConfig;

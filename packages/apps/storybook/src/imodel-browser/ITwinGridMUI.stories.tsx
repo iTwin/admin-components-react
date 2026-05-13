@@ -28,7 +28,7 @@ import {
   Typography,
 } from "@mui/material";
 import { ITwinTileMUI } from "@itwin/imodel-browser-react/src/containers/ITwinGrid/ITwinTileMUI";
-import { ITwinCellColumn } from "@itwin/imodel-browser-react/src/types";
+import { ITwinCellColumn } from "../../../../modules/imodel-browser/src/types";
 
 export type ITwinTileMUIType = React.ComponentPropsWithoutRef<
   typeof ITwinTileMUI
@@ -133,7 +133,7 @@ SimpleTilePropsOverrides.args = {
   ...baseArgs,
   tileOverrides: {
     status: "negative",
-    badge: <Chip size="small" label="Tile Override" color="primary" />,
+    getBadge: () => <Chip size="small" label="Tile Override" color="primary" />,
     headerRight: (
       <AvatarGroup
         max={3}

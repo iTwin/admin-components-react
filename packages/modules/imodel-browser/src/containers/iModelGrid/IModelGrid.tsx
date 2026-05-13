@@ -50,7 +50,7 @@ export interface IModelGridProps {
   sortOptions?: IModelSortOptions;
   /** List of actions to build for each imodel context menu. */
   iModelActions?: ContextMenuBuilderItem<IModelFull>[];
-  /** Custom icon for the "Remove from recents" context menu action. Only applies when requestType is "recents". */
+  /** Custom icon for the "Remove from recents" context menu action. Only applies when requestType is "recents". Should be a Stratakit Icon component */
   removeFromRecentsIcon?: JSX.Element;
   /** Function (can be a react hook) that returns state for an iModel, returned values will be applied as props to the IModelTile, overrides IModelGrid provided values */
   useIndividualState?: (
