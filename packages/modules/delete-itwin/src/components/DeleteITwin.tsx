@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import "./DeleteITwin.scss";
 
-import SvgWarning from "@itwin/itwinui-icons-react/cjs/icons/StatusWarning";
+import { SvgStatusWarning as SvgWarning } from "@itwin/itwinui-icons-react";
 import {
   Button,
   Modal,

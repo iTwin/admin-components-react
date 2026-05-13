@@ -17,6 +17,9 @@ module.exports = {
   core: {
     builder: 'webpack5',
   },
+  typescript: {
+    reactDocgen: false, // Storybook 6 does not support react-docgen-typescript with Typescript 6 - once we update Storybook this can be restored
+  },
   features: {
     babelModeV7: true,
   },
