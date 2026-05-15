@@ -2,7 +2,7 @@
   "changes": [
     {
       "packageName": "@itwin/imodel-browser-react",
-      "comment": "Remove eslint-config-react-app",
+      "comment": "",
       "type": "patch"
     }
   ],

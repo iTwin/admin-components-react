@@ -2,7 +2,7 @@
   "changes": [
     {
       "packageName": "@itwin/delete-imodel-react",
-      "comment": "Remove eslint-config-react-app",
+      "comment": "",
       "type": "patch"
     }
   ],

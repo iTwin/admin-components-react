@@ -2,7 +2,7 @@
   "changes": [
     {
       "packageName": "@itwin/delete-itwin-react",
-      "comment": "Remove eslint-config-react-app",
+      "comment": "",
       "type": "patch"
     }
   ],
