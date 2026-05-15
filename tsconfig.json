@@ -1,7 +1,6 @@
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "strictNullChecks": true,
     "outDir": "./lib"
   },
   "include": ["**/*.ts*", "**/*.js"]

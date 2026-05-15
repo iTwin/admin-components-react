@@ -3,8 +3,7 @@
   "compilerOptions": {
     "rootDir": "./src",
     "outDir": "./esm",
-    "types": ["jest", "node"],
-    "noUncheckedSideEffectImports": false
+    "types": ["jest", "node"]
   },
   "include": ["./src/**/*.ts*"],
   "exclude": ["cjs", "esm", "node_modules"]
