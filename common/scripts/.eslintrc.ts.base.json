@@ -29,13 +29,21 @@
     "import/prefer-default-export": "off",
     "radix": "off",
     "no-use-before-define": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/explicit-member-accessibility": "off",
     "react/no-unescaped-entities": "off",
     "react/display-name": "off",
     "react/prop-types": "off",
+    "@typescript-eslint/interface-name-prefix": "off",
     "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": [
+      1,
+      { "args": "none", "ignoreRestSiblings": true }
+    ],
 
     "react-hooks/rules-of-hooks": "error",
-
     "array-callback-return": "warn",
     "default-case": ["warn", { "commentPattern": "^no default$" }],
     "eqeqeq": ["warn", "smart"],
@@ -148,16 +156,7 @@
         "allowTaggedTemplates": true
       }
     ],
-    "@typescript-eslint/no-unused-vars": [
-      1,
-      { "args": "none", "ignoreRestSiblings": true }
-    ],
-    "@typescript-eslint/no-useless-constructor": "warn",
 
-    "@typescript-eslint/no-explicit-any": "off",
-    "@typescript-eslint/explicit-function-return-type": "off",
-    "@typescript-eslint/explicit-module-boundary-types": "off",
-    "@typescript-eslint/explicit-member-accessibility": "off",
-    "@typescript-eslint/interface-name-prefix": "off"
+    "@typescript-eslint/no-useless-constructor": "warn"
   }
 }
