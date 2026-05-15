@@ -2,9 +2,15 @@
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
     "rootDir": "./src",
-    "outDir": "./esm",
-    "types": ["jest", "node"]
+    "outDir": "./esm"
   },
   "include": ["./src/**/*.ts*"],
-  "exclude": ["cjs", "esm", "node_modules"]
+  "exclude": [
+    "cjs",
+    "esm",
+    "node_modules",
+    "**/*.test.*",
+    "**/*.spec.*",
+    "**/tests/**"
+  ]
 }
