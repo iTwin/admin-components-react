@@ -3,13 +3,13 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 
-import * as React from "react";
 import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import * as React from "react";
+
 import { ContextMenuBuilderItemMUI } from "../utils/_buildMenuOptions";
-import { actions } from "@itwin/itwinui-react/cjs/react-table/react-table";
-import IconButton from "@mui/material/IconButton";
 
 type Props = {
   menuItems:
@@ -32,8 +32,9 @@ export default function MoreMenu({
   };
 
   const buttonId = React.useId();
-  if (!menuItems || (Array.isArray(menuItems) && menuItems.length === 0))
+  if (!menuItems || (Array.isArray(menuItems) && menuItems.length === 0)) {
     return null;
+  }
 
   console.log("menuItems", { open, menuItems, buttonId });
 
