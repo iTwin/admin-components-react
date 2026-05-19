@@ -124,7 +124,7 @@ importers:
       '@types/react': ^18.3.5
       '@typescript-eslint/eslint-plugin': ^8.0.0
       '@typescript-eslint/parser': ^8.0.0
-      eslint: ^8.3.0
+      eslint: ^8.57.0
       eslint-config-airbnb: ^0.0.4
       eslint-config-prettier: ^6.11.0
       eslint-plugin-import: ^2.22.0
@@ -199,7 +199,7 @@ importers:
       '@types/react': ^18.3.5
       '@typescript-eslint/eslint-plugin': ^8.0.0
       '@typescript-eslint/parser': ^8.0.0
-      eslint: ^8.3.0
+      eslint: ^8.57.0
       eslint-config-airbnb: ^0.0.4
       eslint-config-prettier: ^6.11.0
       eslint-plugin-import: ^2.22.0
@@ -274,7 +274,7 @@ importers:
       '@types/react': ^18.3.5
       '@typescript-eslint/eslint-plugin': ^8.0.0
       '@typescript-eslint/parser': ^8.0.0
-      eslint: ^8.3.0
+      eslint: ^8.57.0
       eslint-config-airbnb: ^0.0.4
       eslint-config-prettier: ^6.11.0
       eslint-plugin-import: ^2.22.0
@@ -355,7 +355,7 @@ importers:
       '@typescript-eslint/parser': ^8.0.0
       babel-eslint: ^10.0.0
       classnames: ^2.2.6
-      eslint: ^8.3.0
+      eslint: ^8.57.0
       eslint-config-airbnb: ^0.0.4
       eslint-config-prettier: ^6.11.0
       eslint-plugin-import: ^2.22.0
@@ -457,7 +457,7 @@ importers:
       '@typescript-eslint/eslint-plugin': ^8.0.0
       '@typescript-eslint/parser': ^8.0.0
       classnames: ^2.2.6
-      eslint: ^8.3.0
+      eslint: ^8.57.0
       eslint-config-airbnb: ^0.0.4
       eslint-config-prettier: ^6.11.0
       eslint-plugin-import: ^2.22.0
