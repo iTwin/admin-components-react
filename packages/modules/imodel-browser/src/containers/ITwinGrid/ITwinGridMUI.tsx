@@ -14,7 +14,7 @@ import { ContextMenuBuilderItemMUI } from "../../utils/_buildMenuOptions";
 import { useITwinData } from "./useITwinData";
 import { useITwinFavorites } from "./useITwinFavorites";
 import { useITwinTableConfig } from "./useITwinTableConfig";
-import { Box } from "@mui/material";
+import Box from "@mui/material/Box";
 import { ITwinTileMUI, type ITwinTileMUIProps } from "./ITwinTileMUI";
 import { BaseCardLoading } from "../../components/baseCard/BaseCardLoading";
 import type { ITwinGridProps, ITwinGridStrings } from "./ITwinGrid";

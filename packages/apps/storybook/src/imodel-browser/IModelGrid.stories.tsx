@@ -340,7 +340,7 @@ const useIndividualState = (iModel: IModelFull, props: IModelTileProps) => {
           ? [<Button key="Create">Create version</Button>]
           : undefined,
       isNew: versions?.length === 0,
-      fineprint: (
+      metadata: (
         <span
           onClick={() => {
             versions === undefined && fetchVersionsList();

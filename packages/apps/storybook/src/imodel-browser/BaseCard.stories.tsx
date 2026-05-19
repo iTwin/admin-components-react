@@ -36,7 +36,7 @@ export default {
     thumbnailBottomRight: { control: false },
     headerRight: { control: false },
     statusIcon: { control: false },
-    fineprint: { control: false },
+    additionalDescription: { control: false },
     // actions: { control: false },
     onSelect: { control: false },
     onOpen: { control: false },
@@ -62,7 +62,7 @@ const Template: Story<BaseCardProps> = (args) => <BaseCardStory {...args} />;
 const baseArgs: BaseCardProps = {
   title: "Main Street Bridge",
   description: "3D model of the Main Street bridge structure and components.",
-  fineprint: "Edited 2000-01-02",
+  additionalDescription: "Edited 2000-01-02",
   thumbnail: bridgeThumbnail,
 };
 
@@ -190,7 +190,7 @@ export const Statuses = () => (
         key={label}
         title="Main Street Bridge"
         description="3D model of the Main Street bridge structure."
-        fineprint="Edited 1/16/2024"
+        additionalDescription="Edited 1/16/2024"
         thumbnail={bridgeThumbnail}
         statusIcon={
           <Box component="span" sx={{ lineHeight: 0, color }}>

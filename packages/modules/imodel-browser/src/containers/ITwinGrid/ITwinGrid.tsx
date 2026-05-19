@@ -22,11 +22,11 @@ import {
 } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
 import { ContextMenuBuilderItem } from "../../utils/_buildMenuOptions";
+import { IModelGhostTile } from "../iModelTiles/IModelGhostTile";
 import { ITwinTile, ITwinTileProps } from "./ITwinTile";
 import { useITwinData } from "./useITwinData";
 import { useITwinFavorites } from "./useITwinFavorites";
 import { useITwinTableConfig } from "./useITwinTableConfig";
-import { BaseCardLoading } from "../../components/baseCard/BaseCardLoading";
 
 export type IndividualITwinStateHook = (
   iTwin: ITwinFull,
@@ -209,9 +209,9 @@ export const ITwinGrid = ({
       <GridStructure className={className}>
         {fetchStatus === DataStatus.Fetching ? (
           <>
-            <BaseCardLoading />
-            <BaseCardLoading />
-            <BaseCardLoading />
+            <IModelGhostTile fullWidth={tileOverrides?.fullWidth} />
+            <IModelGhostTile fullWidth={tileOverrides?.fullWidth} />
+            <IModelGhostTile fullWidth={tileOverrides?.fullWidth} />
           </>
         ) : (
           <>
@@ -242,10 +242,10 @@ export const ITwinGrid = ({
             {fetchMore ? (
               <>
                 <InView onChange={fetchMore}>
-                  <BaseCardLoading />
+                  <IModelGhostTile fullWidth={tileOverrides?.fullWidth} />
                 </InView>
-                <BaseCardLoading />
-                <BaseCardLoading />
+                <IModelGhostTile fullWidth={tileOverrides?.fullWidth} />
+                <IModelGhostTile fullWidth={tileOverrides?.fullWidth} />
               </>
             ) : null}
           </>

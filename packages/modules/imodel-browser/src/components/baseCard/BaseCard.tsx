@@ -19,7 +19,6 @@ import classNames from "classnames";
 import React, { type ReactNode } from "react";
 import { Icon } from "@stratakit/mui";
 import svgMoreVertical from "@stratakit/icons/more-vertical.svg";
-
 import styles from "./BaseCard.module.scss";
 import { BaseCardLoading } from "./BaseCardLoading";
 
@@ -97,7 +96,7 @@ export interface BaseCardProps
   /**
    * Secondary fineprint content rendered below the description.
    */
-  fineprint?: string;
+  additionalDescription?: string;
 
   /** Additional content rendered below the description and above the footer. */
   additionalContent?: ReactNode;
@@ -132,8 +131,6 @@ export interface BaseCardProps
   onSelect?: CardProps["onClick"];
   /** Optional callback fired when the card should open. */
   onOpen?: CardProps["onDoubleClick"];
-  /** Optional callback fired on right-click of the card. */
-  onContextMenu?: CardProps["onContextMenu"];
   /** Optional callback fired on double-click of the card. */
   onDoubleClick?: CardProps["onDoubleClick"];
   /** Props for internal wrapper slots following MUI slotProps conventions. */
@@ -141,11 +138,9 @@ export interface BaseCardProps
 }
 
 /**
- * Base card component built on MUI Card, following the Bentley Systems navigation card design.
- * Provides a consistent layout with a thumbnail area, header, and content area.
- * Consume this via domain-specific wrappers (IModelTile, ITwinTile, etc.).
+ * Base card component built on MUI Card.
  *
- * Base card is super customizable. As such, it isn't recommended to use BaseCard directly since
+ * Base card is very customizable. As such, it isn't recommended to use BaseCard directly since
  * design discipline will go out the window.  Instead, we map some of the placements (e.g. thumbnailTopRight)
  * to specific uses (e.g. favorite button) in the domain-specific wrappers.
  */
@@ -163,7 +158,7 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
       headerRight,
       statusIcon,
       description,
-      fineprint,
+      additionalDescription,
       additionalContent,
       actions,
       contextMenuContent,
@@ -172,7 +167,6 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
       loading,
       disabled: cardDisabled,
       status,
-      onContextMenu,
       onDoubleClick,
       slotProps,
       className,
@@ -204,12 +198,7 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
 
     const handleContextMenu = React.useCallback(
       (event: React.MouseEvent<HTMLDivElement>) => {
-        onContextMenu?.(event);
-
-        if (
-          !(contextMenuItems?.length || contextMenuContent) ||
-          event.defaultPrevented
-        ) {
+        if (!(contextMenuItems?.length || contextMenuContent)) {
           return;
         }
 
@@ -220,7 +209,7 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
           mouseY: event.clientY - 4,
         });
       },
-      [contextMenuContent, contextMenuItems, onContextMenu]
+      [contextMenuContent, contextMenuItems]
     );
 
     const handleMoreButtonClick = React.useCallback(
@@ -285,21 +274,17 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
             { [styles.selected]: selected, [styles.disabled]: cardDisabled },
             className
           )}
-          sx={[
-            {
-              cursor: cardDisabled
-                ? "not-allowed"
-                : onSelect || onOpen
-                ? "pointer"
-                : "default",
-            },
-            ...(Array.isArray(sx) ? sx : sx ? [sx] : []),
-          ]}
+          sx={{
+            cursor: cardDisabled
+              ? "not-allowed"
+              : onSelect || onOpen
+              ? "pointer"
+              : "default",
+            ...sx,
+          }}
           onClick={!cardDisabled ? onSelect : undefined}
           onContextMenu={
-            (onContextMenu || hasContextMenu) && !cardDisabled
-              ? handleContextMenu
-              : undefined
+            !cardDisabled && hasContextMenu ? handleContextMenu : undefined
           }
           onDoubleClick={!cardDisabled ? onOpen : undefined}
           {...rest}
@@ -318,7 +303,7 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
             {thumbnailTopLeft && (
               <Box className={styles.thumbnailTopLeft}>{thumbnailTopLeft}</Box>
             )}
-            {(thumbnailTopRight || hasContextMenu) && (
+            {(thumbnailTopRight ?? hasContextMenu) && (
               <Box className={styles.thumbnailTopRight}>
                 {thumbnailTopRight}
                 {hasContextMenu && !cardDisabled && (
@@ -326,7 +311,6 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
                     size="small"
                     aria-label="More options"
                     onClick={handleMoreButtonClick}
-                    className={styles.moreOptionsButton}
                     sx={{ bgcolor: "background.paper" }}
                   >
                     <Icon
@@ -422,7 +406,7 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
                 {headerRight && <Box sx={{ flexShrink: 0 }}>{headerRight}</Box>}
               </Stack>
 
-              {/* Info: description + fineprint */}
+              {/* Info: description + additionalDescription */}
               <Stack
                 spacing={0.25}
                 className={slotProps?.info?.className}
@@ -443,7 +427,7 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
                     {description}
                   </Typography>
                 )}
-                {fineprint && (
+                {additionalDescription && (
                   <Typography
                     variant="subtitle2"
                     color="secondary"
@@ -456,7 +440,7 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
                       WebkitBoxOrient: "vertical",
                     }}
                   >
-                    {fineprint}
+                    {additionalDescription}
                   </Typography>
                 )}
               </Stack>

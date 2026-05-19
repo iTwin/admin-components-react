@@ -14,6 +14,7 @@ import bridgeThumbnail from "./bridge.jpg";
 import { action } from "@storybook/addon-actions";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
+import Button from "@mui/material/Button";
 
 const InConstrainedContainer = ({
   children,
@@ -108,6 +109,8 @@ MoreOptions.args = {
   ...baseArgs,
   title: "Overridden Title",
   description: "Overriden description",
+  additionalDescription: "Additional description",
+  additionalContent: <Button variant="contained">Additional Content</Button>,
   isFavorite: true,
   addToFavorites: async (iModelId) => {
     action("iModel add to favorites")(iModelId);

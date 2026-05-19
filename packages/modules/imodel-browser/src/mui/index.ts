@@ -28,5 +28,8 @@ export {
   type ITwinTileMUIProps as ITwinTileProps,
 } from "../containers/ITwinGrid/ITwinTileMUI";
 
-export * from "../components/noResults/NoResults";
+export {
+  NoResultsMUI as NoResults,
+  type NoResultsMUIProps as NoResultsProps,
+} from "../components/noResults/NoResultsMUI";
 export * from "../types";

@@ -75,7 +75,6 @@ export const ITwinTileMUI = ({
   onOpen,
   slotProps,
   className,
-  onContextMenu: onCardContextMenu,
   ...rest
 }: ITwinTileMUIProps) => {
   const strings = _mergeStrings(
@@ -113,7 +112,7 @@ export const ITwinTileMUI = ({
       />
     ) : undefined;
 
-  const fineprint = iTwin.lastModifiedDateTime
+  const additionalDescription = iTwin.lastModifiedDateTime
     ? new Date(iTwin.lastModifiedDateTime).toDateString()
     : undefined;
 
@@ -153,13 +152,13 @@ export const ITwinTileMUI = ({
       title={title ?? iTwin.displayName ?? ""}
       onSelect={onSelect ? (event) => onSelect(iTwin) : undefined}
       onOpen={onOpen ? (event) => onOpen(iTwin) : undefined}
-      onContextMenu={onCardContextMenu}
       contextMenuContent={
         hasMoreOptions ? contextMenuContent ?? moreOptionsBuilt : undefined
       }
+      status={status}
       statusIcon={<StatusIcon status={status} selected={selected} />}
       description={description ?? iTwin.number ?? ""}
-      fineprint={fineprint}
+      additionalDescription={additionalDescription}
       slotProps={slotProps}
       {...rest}
     />

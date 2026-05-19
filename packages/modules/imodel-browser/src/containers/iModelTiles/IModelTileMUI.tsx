@@ -66,6 +66,9 @@ export interface IModelTileMUIProps
   removeFromFavorites?(iModelId: string): Promise<void>;
   /** Function that returns a badge node for the given iModel */
   getBadge?: (iModel: IModelFull) => React.ReactNode;
+
+  /** Badge for the given iModel - getBadge will take precedence over this prop */
+  badge?: React.ReactNode;
 }
 
 /**
@@ -88,18 +91,18 @@ export const IModelTileMUI = ({
   status,
   thumbnail,
   thumbnailTopLeft,
-
   thumbnailBottomLeft,
   getBadge,
+  badge,
   title,
   description,
+  additionalDescription,
   actions,
   contextMenuContent,
   onSelect,
   onOpen,
   slotProps,
   className,
-  onContextMenu: onCardContextMenu,
   ...rest
 }: IModelTileMUIProps) => {
   const favoritesContext = React.useContext(IModelFavoritesContext);
@@ -153,9 +156,11 @@ export const IModelTileMUI = ({
       />
     ) : undefined;
 
-  const fineprint = iModel.lastChangesetPushDateTime
-    ? new Date(iModel.lastChangesetPushDateTime).toDateString()
-    : undefined;
+  if (badge && getBadge) {
+    console.warn(
+      "Both badge and getBadge props were provided to IModelTileMUI. The getBadge function will take precedence over the badge prop."
+    );
+  }
 
   return (
     <BaseCard
@@ -175,17 +180,17 @@ export const IModelTileMUI = ({
       thumbnailTopLeft={thumbnailTopLeft}
       thumbnailTopRight={favoriteIcon}
       thumbnailBottomLeft={thumbnailBottomLeft}
-      thumbnailBottomRight={getBadge?.(iModel)}
+      thumbnailBottomRight={getBadge?.(iModel) ?? badge}
       title={title ?? iModel.displayName ?? ""}
       onSelect={onSelect ? (event) => onSelect(iModel) : undefined}
       onOpen={onOpen ? (event) => onOpen(iModel) : undefined}
-      onContextMenu={onCardContextMenu}
       contextMenuContent={
         hasMoreOptions ? contextMenuContent ?? moreOptionsBuilt : undefined
       }
+      status={status}
       statusIcon={<StatusIcon status={status} selected={selected} />}
-      description={description ?? iModel.description ?? ""}
-      fineprint={fineprint}
+      description={iModel.description ?? ""}
+      additionalDescription={additionalDescription}
       actions={actions}
       slotProps={slotProps}
       selected={selected}
