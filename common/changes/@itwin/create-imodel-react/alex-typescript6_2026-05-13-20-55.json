@@ -2,8 +2,8 @@
   "changes": [
     {
       "packageName": "@itwin/create-imodel-react",
-      "comment": "Update to Typescript 6 / Jest 29",
-      "type": "minor"
+      "comment": "",
+      "type": "none"
     }
   ],
   "packageName": "@itwin/create-imodel-react"

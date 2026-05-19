@@ -170,8 +170,8 @@ export function BaseIModelPage(props: BaseIModelProps) {
   ) => {
     setImodel((prevState) => {
       const extent = {
-        northEast: { ...prevState.extent?.northEast },
-        southWest: { ...prevState.extent?.southWest },
+        northEast: { ...prevState.extent?.northEast } ?? {},
+        southWest: { ...prevState.extent?.southWest } ?? {},
       };
       extent[point][coordinate] = value === "" ? undefined : Number(value);
       return { ...prevState, extent: extent as iModelExtent };
