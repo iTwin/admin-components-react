@@ -8,6 +8,7 @@ import svgItwin from "@stratakit/icons/itwin.svg";
 import { Icon } from "@stratakit/mui";
 import classNames from "classnames";
 import React from "react";
+
 import { BaseCard, BaseCardProps } from "../../components/baseCard/BaseCard";
 import { TileFavoriteIconMUI } from "../../components/tileFavoriteIcon/TileFavoriteIconMUI";
 import { ITwinFull } from "../../types";
@@ -16,9 +17,9 @@ import {
   buildContextMenuItemsMUI,
   ContextMenuBuilderItemMUI,
 } from "../../utils/_buildMenuOptions";
+import { ITwinTileProps } from "./ITwinTile";
 import styles from "./ITwinTile.module.scss";
 import { StatusIcon } from "./StatusIcon";
-import { ITwinTileProps } from "./ITwinTile";
 
 export interface ITwinTileMUIProps
   extends Omit<ITwinTileProps, "onThumbnailClick">,
@@ -187,7 +188,6 @@ function StatusBadge({
           ? strings.inactiveBadge
           : strings.trialBadge
       }
-      color={status.toLocaleLowerCase() === "inactive" ? "default" : "primary"}
     />
   );
 }

@@ -2,10 +2,11 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import React from "react";
 import IconButton from "@mui/material/IconButton";
-import { Icon } from "@stratakit/mui";
 import pinIcon from "@stratakit/icons/pin.svg";
+import { Icon } from "@stratakit/mui";
+import React from "react";
+
 import styles from "./TileFavoriteIcon.module.scss";
 
 export interface TileFavoriteIconProps {
@@ -58,7 +59,6 @@ export const TileFavoriteIconMUI = ({
       <Icon
         href={pinIcon}
         size="regular"
-        render={undefined}
         className={
           isFavorite ? styles.favouriteMUIIcon : styles.notFavouriteMUIIcon
         }
