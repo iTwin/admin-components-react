@@ -15,7 +15,8 @@ import svgPin from "@stratakit/icons/pin.svg";
 import svgStatusSuccess from "@stratakit/icons/status-success.svg";
 import svgStatusWarning from "@stratakit/icons/status-warning.svg";
 import svgStatusError from "@stratakit/icons/status-error.svg";
-import bridgeThumbnail from "./bridge.jpg";
+import bridgeThumbnail from "../utils/bridge.jpg";
+import nightThumbnail from "../utils/night.jpg";
 import { Icon } from "@stratakit/mui";
 import { action } from "@storybook/addon-actions";
 import { Meta, Story } from "@storybook/react/types-6-0";
@@ -26,7 +27,17 @@ import {
   type ContextMenuBuilderItemMUI,
 } from "../../../../modules/imodel-browser/src/utils/_buildMenuOptions";
 
-export const BaseCardStory = (props: BaseCardProps) => <BaseCard {...props} />;
+const InConstrainedContainer = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => <Box sx={{ maxWidth: "28rem", width: "100%" }}>{children}</Box>;
+
+export const BaseCardStory = (props: BaseCardProps) => (
+  <InConstrainedContainer>
+    <BaseCard {...props} />
+  </InConstrainedContainer>
+);
 
 export default {
   title: "imodel-browser/BaseCard",
@@ -98,9 +109,7 @@ const contextMenuContent = buildContextMenuItemsMUI(
   () => Promise.resolve()
 );
 
-export const Everything = Template.bind({});
-Everything.storyName = "Everything";
-Everything.args = {
+const everythingArgs: BaseCardProps = {
   ...baseArgs,
   onSelect: action("kitchen selected"),
   onOpen: action("kitchen opened"),
@@ -156,34 +165,35 @@ Everything.args = {
   ),
 };
 
+export const Everything = Template.bind({});
+Everything.storyName = "Everything";
+Everything.args = { ...everythingArgs };
+
 export const WithoutThumbnail = Template.bind({});
 WithoutThumbnail.storyName = "Without thumbnail";
-WithoutThumbnail.args = { ...baseArgs, thumbnail: undefined };
+WithoutThumbnail.args = { ...everythingArgs, thumbnail: undefined };
+
+export const WithDarkThumbnail = Template.bind({});
+WithDarkThumbnail.storyName = "With dark thumbnail";
+WithDarkThumbnail.args = {
+  ...everythingArgs,
+  thumbnail: nightThumbnail,
+};
 
 export const WithSlotProps = Template.bind({});
 WithSlotProps.storyName = "With slot props";
 WithSlotProps.args = {
-  ...baseArgs,
-  actions: [
-    { key: "open", label: "Open", onClick: action("open clicked") },
-    {
-      key: "share",
-      label: "Share",
-      onClick: action("share clicked"),
-    },
-  ],
+  ...everythingArgs,
+
   slotProps: {
     thumbnail: {
-      sx: { height: 160, bgcolor: "grey.100" },
+      sx: { opacity: 0.2 },
     },
     content: {
-      sx: { p: 2.5, pt: 2, gap: 1.5 },
+      sx: { color: "warning.main" },
     },
     divider: {
-      sx: { mx: 2 },
-    },
-    actions: {
-      sx: { px: 2.5, pb: 2 },
+      sx: { borderWidth: 5, borderColor: "success.main" },
     },
   },
 };

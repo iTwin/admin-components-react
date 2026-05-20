@@ -3,14 +3,15 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import {
-  IModelTileMUI,
-  IModelTileMUIProps,
-} from "../../../../modules/imodel-browser/src/containers/iModelTiles/IModelTileMUI";
+  IModelTile as IModelTileMUI,
+  type IModelTileProps as IModelTileMUIProps,
+} from "@itwin/imodel-browser-react/mui";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import { Icon } from "@stratakit/mui";
 import svgPlaceholder from "@stratakit/icons/placeholder.svg";
-import bridgeThumbnail from "./bridge.jpg";
+import bridgeThumbnail from "../utils/bridge.jpg";
+import overpassThumbnail from "../utils/overpass.jpg";
 import { action } from "@storybook/addon-actions";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
@@ -74,13 +75,6 @@ const baseArgs: IModelTileMUIProps = {
 
   onSelect: action("iModel selected"),
   onOpen: action("iModel opened"),
-  isFavorite: false,
-  addToFavorites: async (iModelId) => {
-    action("iModel add to favorites")(iModelId);
-  },
-  removeFromFavorites: async (iModelId) => {
-    action("iModel remove from favorites")(iModelId);
-  },
   disabled: false,
   loading: false,
   selected: false,
@@ -110,13 +104,7 @@ MoreOptions.args = {
   description: "Overriden description",
   additionalDescription: "Additional description",
   additionalContent: <Button variant="contained">Additional Content</Button>,
-  isFavorite: true,
-  addToFavorites: async (iModelId) => {
-    action("iModel add to favorites")(iModelId);
-  },
-  removeFromFavorites: async (iModelId) => {
-    action("iModel remove from favorites")(iModelId);
-  },
+  thumbnail: overpassThumbnail,
   getBadge: () => <Chip size="small" label="Badge" />,
   thumbnailTopLeft: <Icon href={svgPlaceholder} size="regular" />,
   actions: [

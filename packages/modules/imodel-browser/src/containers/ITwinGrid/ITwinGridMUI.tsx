@@ -190,6 +190,7 @@ export const ITwinGridMUI = ({
                 addToFavorites={addITwinToFavorites}
                 removeFromFavorites={removeITwinFromFavorites}
                 refetchITwins={refetchITwins}
+                thumbnail={iTwin.image} // This is a fix for https://github.com/iTwin/admin-components-react/issues/196
                 {...tileOverrides}
               />
             ))}

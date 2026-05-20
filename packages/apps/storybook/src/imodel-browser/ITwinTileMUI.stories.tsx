@@ -3,19 +3,17 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import {
-  ITwinTileMUI,
-  ITwinTileMUIProps,
-} from "../../../../modules/imodel-browser/src/containers/ITwinGrid/ITwinTileMUI";
+  ITwinTile,
+  type ITwinTileProps,
+  type ITwinFull,
+} from "@itwin/imodel-browser-react/mui";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
-import Typography from "@mui/material/Typography";
-import { Icon } from "@stratakit/mui";
-import svgPlaceholder from "@stratakit/icons/placeholder.svg";
 import { action } from "@storybook/addon-actions";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
-import bridgeThumbnail from "./bridge.jpg";
-import { ITwinFull } from "@itwin/imodel-browser-react/src";
+import bridgeThumbnail from "../utils/bridge.jpg";
+import powerThumbnail from "../utils/power.jpg";
 
 const InConstrainedContainer = ({
   children,
@@ -23,9 +21,9 @@ const InConstrainedContainer = ({
   children: React.ReactNode;
 }) => <Box sx={{ maxWidth: "28rem", width: "100%" }}>{children}</Box>;
 
-export const ITwinTileMUIStory = (props: ITwinTileMUIProps) => (
+export const ITwinTileMUIStory = (props: ITwinTileProps) => (
   <InConstrainedContainer>
-    <ITwinTileMUI {...props} />
+    <ITwinTile {...props} />
   </InConstrainedContainer>
 );
 
@@ -35,9 +33,10 @@ const baseITwin: ITwinFull = {
   number: "aaaa-bbbb-cccc-dddd",
   status: "Trial",
   lastModifiedDateTime: "2024-01-01T12:00:00Z",
+  image: bridgeThumbnail,
 };
 
-const baseArgs: ITwinTileMUIProps = {
+const baseArgs: ITwinTileProps = {
   iTwin: {
     ...baseITwin,
   },
@@ -110,7 +109,7 @@ export default {
   },
 } as Meta;
 
-const Template: Story<ITwinTileMUIProps> = (args) => (
+const Template: Story<ITwinTileProps> = (args) => (
   <ITwinTileMUIStory {...args} />
 );
 
@@ -133,9 +132,8 @@ MoreOptions.args = {
   disabled: false,
   loading: false,
   selected: false,
-  thumbnailTopLeft: <Icon href={svgPlaceholder} size="regular" />,
-  thumbnailBottomLeft: <Chip size="small" label="Featured" color="default" />,
-  badge: <Chip size="small" label="Badge override" color="primary" />,
+  thumbnail: powerThumbnail,
+  getBadge: () => <Chip size="small" label="Badge override" color="primary" />,
   actions: [
     { key: "open", label: "Open", onClick: action("iTwin open clicked") },
     { key: "share", label: "Share", onClick: action("iTwin share clicked") },

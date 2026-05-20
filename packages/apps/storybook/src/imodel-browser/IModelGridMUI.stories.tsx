@@ -3,23 +3,20 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import {
-  IModelGridMUI as ExternalComponent,
-  type IModelGridMUIProps,
-} from "../../../../modules/imodel-browser/src/containers/iModelGrid/IModelGridMUI";
-import {
+  IModelGrid as ExternalComponent,
+  type IModelGridProps as IModelGridMUIProps,
   DataStatus,
   type IModelFull,
   IModelCellColumn,
-} from "../../../../../packages/modules/imodel-browser/src/types";
+} from "@itwin/imodel-browser-react/mui";
 import {
   useIndividualState,
   additionalData,
   initialData,
 } from "./IModelGridMUI.helpers";
 import SvgDelete from "@stratakit/icons/delete.svg";
-import SvgApple from "@stratakit/icons/apple.svg";
+import Svg3D from "@stratakit/icons/3d.svg";
 import { Icon } from "@stratakit/mui";
-import { IconButton } from "@itwin/itwinui-react";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
 import {
@@ -30,8 +27,11 @@ import {
 import Typography from "@mui/material/Typography";
 import Chip from "@mui/material/Chip";
 import AvatarGroup from "@mui/material/AvatarGroup";
+import IconButton from "@mui/material/IconButton";
 import Avatar from "@mui/material/Avatar";
 import { action } from "@storybook/addon-actions";
+import bridgeThumbnail from "../utils/bridge.jpg";
+import nightThumbnail from "../utils/night.jpg";
 
 export const IModelGridMUI = (props: IModelGridMUIProps) => (
   <ExternalComponent {...props} />
@@ -90,12 +90,8 @@ OverrideCellData.args = {
     name: (props) =>
       props.value.includes("a") ? (
         <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-          <IconButton
-            aria-label="apple-icon"
-            size="small"
-            styleType="borderless"
-          >
-            <SvgApple />
+          <IconButton aria-label="apple-icon">
+            <Icon href={Svg3D} />
           </IconButton>
           {props.value}
         </div>
@@ -178,7 +174,10 @@ export const SimpleTilePropsOverrides = Template.bind({});
 SimpleTilePropsOverrides.args = {
   ...baseArgs,
   tileOverrides: {
-    getBadge: () => <Chip size="small" label="Tile Override" color="primary" />,
+    thumbnail: bridgeThumbnail,
+    getBadge: () => (
+      <Chip size="small" label="Tile X Override" color="primary" />
+    ),
     headerRight: (
       <AvatarGroup
         max={3}
@@ -205,6 +204,7 @@ function addStartTileCallback(iModels: IModelFull[], status?: DataStatus) {
     id: "prepended",
     displayName: "Some Prepended iModel",
     description: "This iModel was added in the postProcessCallback",
+    thumbnail: nightThumbnail,
   });
   return iModels;
 }

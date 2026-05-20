@@ -3,54 +3,53 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import Select from "@mui/material/Select";
-import { type IModelFull } from "../../../../../packages/modules/imodel-browser/src/types";
-import type { IModelTileMUIProps } from "../../../../modules/imodel-browser/src/containers/iModelTiles/IModelTileMUI";
+import {
+  type IModelFull,
+  type IModelTileProps,
+} from "@itwin/imodel-browser-react/mui";
 import MenuItem from "@mui/material/MenuItem";
 import React from "react";
 import { action } from "@storybook/addon-actions";
+import bridgeThumbnail from "../utils/bridge.jpg";
+import nightThumbnail from "../utils/night.jpg";
+import overpassThumbnail from "../utils/overpass.jpg";
+import powerThumbnail from "../utils/power.jpg";
 
 export const initialData: IModelFull[] = [
   {
     id: "1",
     displayName: "External iModel 1",
     description: "Loaded from external source",
-    thumbnail:
-      "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/activity.svg",
+    thumbnail: bridgeThumbnail,
   },
   {
     id: "2",
     displayName: "External iModel 2",
     description: "Consumer manages pagination",
-    thumbnail:
-      "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/developer.svg",
+    thumbnail: nightThumbnail,
   },
   {
     id: "3",
     displayName: "External iModel 3",
     description: "Pagination demo",
-    thumbnail:
-      "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/folder.svg",
+    thumbnail: overpassThumbnail,
   },
   {
     id: "4",
     displayName: "External iModel 4",
     description: "Initial batch of 6",
-    thumbnail:
-      "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/organization.svg",
   },
   {
     id: "5",
     displayName: "External iModel 5",
     description: "More data",
-    thumbnail:
-      "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/settings.svg",
+    thumbnail: powerThumbnail,
   },
   {
     id: "6",
     displayName: "External iModel 6",
     description: "Last in first batch",
-    thumbnail:
-      "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/tools.svg",
+    thumbnail: bridgeThumbnail,
   },
 ];
 
@@ -59,51 +58,41 @@ export const additionalData: IModelFull[] = [
     id: "7",
     displayName: "External iModel 7",
     description: "Loaded on demand via onLoadMore",
-    thumbnail:
-      "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/folder.svg",
   },
+
   {
     id: "8",
     displayName: "External iModel 8",
     description: "Second batch",
-    thumbnail:
-      "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/organization.svg",
   },
   {
     id: "9",
     displayName: "External iModel 9",
     description: "More paginated data",
-    thumbnail:
-      "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/settings.svg",
+    thumbnail: bridgeThumbnail,
   },
   {
     id: "10",
     displayName: "External iModel 10",
     description: "Second batch item",
-    thumbnail:
-      "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/tools.svg",
   },
   {
     id: "11",
     displayName: "External iModel 11",
     description: "Second batch item",
-    thumbnail:
-      "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/activity.svg",
   },
   {
     id: "12",
     displayName: "External iModel 12",
     description: "Last in second batch",
-    thumbnail:
-      "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/developer.svg",
   },
 ];
 
 /** Hook used in StatefulPropsOverrides.args, the function itself must be a stable reference as it is a hook. */
 export const useIndividualState = (
   iModel: IModelFull,
-  props: IModelTileMUIProps
-): IModelTileMUIProps => {
+  props: IModelTileProps
+): IModelTileProps => {
   // random versions
   const versions = React.useMemo(() => {
     return [
@@ -114,7 +103,7 @@ export const useIndividualState = (
   }, [iModel.displayName]);
 
   // Create a memo of the tileProps we want to override, depending on the state.
-  const tileProps = React.useMemo<Partial<IModelTileMUIProps>>(
+  const tileProps = React.useMemo<Partial<IModelTileProps>>(
     () => ({
       actions: [
         {

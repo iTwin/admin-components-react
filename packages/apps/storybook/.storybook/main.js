@@ -59,6 +59,10 @@ module.exports = {
     });
 
     const packagePaths = {
+      "@itwin/imodel-browser-react/mui": path.resolve(
+        __dirname,
+        "../../../modules/imodel-browser/src/mui"
+      ),
       "@itwin/imodel-browser-react": path.resolve(
         __dirname,
         "../../../modules/imodel-browser/src"

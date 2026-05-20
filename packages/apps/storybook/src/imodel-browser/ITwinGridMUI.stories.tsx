@@ -2,12 +2,14 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { DataStatus } from "@itwin/imodel-browser-react";
 import {
-  ITwinGridMUI as ExternalComponent,
-  IndividualITwinStateHookMUI,
-  ITwinGridMUIProps,
-} from "../../../../modules/imodel-browser/src/containers/ITwinGrid/ITwinGridMUI";
+  ITwinGrid as ExternalComponent,
+  type IndividualITwinStateHook,
+  type ITwinGridProps,
+  ITwinTile,
+  DataStatus,
+  type ITwinFull,
+} from "@itwin/imodel-browser-react/mui";
 import { SvgHeart } from "@itwin/itwinui-icons-react";
 import { Code, IconButton } from "@itwin/itwinui-react";
 import { Meta, Story } from "@storybook/react/types-6-0";
@@ -16,35 +18,33 @@ import {
   accessTokenArgTypes,
   withAccessTokenOverride,
 } from "../utils/storyHelp";
-import { ITwinFull } from "@itwin/imodel-browser-react/src";
 import { action } from "@storybook/addon-actions";
-import {
-  Avatar,
-  AvatarGroup,
-  Chip,
-  MenuItem,
-  Select,
-  Skeleton,
-  Typography,
-} from "@mui/material";
-import { ITwinTileMUI } from "@itwin/imodel-browser-react/src/containers/ITwinGrid/ITwinTileMUI";
-import { ITwinCellColumn } from "../../../../modules/imodel-browser/src/types";
+import Avatar from "@mui/material/Avatar";
+import AvatarGroup from "@mui/material/AvatarGroup";
+import Chip from "@mui/material/Chip";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import Skeleton from "@mui/material/Skeleton";
+import Typography from "@mui/material/Typography";
+import { ITwinCellColumn } from "@itwin/imodel-browser-react";
+import bridgeThumbnail from "../utils/bridge.jpg";
+import powerThumbnail from "../utils/power.jpg";
+import nightThumbnail from "../utils/night.jpg";
+import overpassThumbnail from "../utils/overpass.jpg";
 
-export type ITwinTileMUIType = React.ComponentPropsWithoutRef<
-  typeof ITwinTileMUI
->;
+type ITwinTileType = React.ComponentPropsWithoutRef<typeof ITwinTile>;
 
-export const ITwinGrid = (props: ITwinGridMUIProps) => (
+export const ITwinGrid = (props: ITwinGridProps) => (
   <ExternalComponent {...props} />
 );
 
 const accessToken = accessTokenArgTypes.accessToken;
 
-const Template: Story<ITwinGridMUIProps> = withAccessTokenOverride((args) => (
+const Template: Story<ITwinGridProps> = withAccessTokenOverride((args) => (
   <ITwinGrid {...args} />
 ));
 
-const baseArgs: ITwinGridMUIProps = {
+const baseArgs: ITwinGridProps = {
   apiOverrides: { serverEnvironmentPrefix: "qa" },
   viewMode: "tile",
   onOpen: (iTwin) => action("Open " + iTwin.displayName)(iTwin),
@@ -88,14 +88,28 @@ OverrideApiData.args = {
     data: [
       {
         id: "1",
-        displayName: "Provided iTwin",
+        displayName: "Bridge iTwin",
         number: "No Network Calls",
+        image: bridgeThumbnail,
       },
       {
         id: "2",
-        displayName: "Useful iTwin",
-        number:
-          "Use if the data comes from a different API or needs to be tweaked",
+        displayName: "Power iTwin",
+        number: "aaa-bbb-ccc",
+        image: powerThumbnail,
+      },
+      {
+        id: "3",
+        displayName: "Overpass iTwin",
+        number: "No Network Calls",
+        image: overpassThumbnail,
+      },
+
+      {
+        id: "4",
+        displayName: "Highway iTwin",
+        number: "No Network Calls",
+        image: nightThumbnail,
       },
     ],
   },
@@ -133,6 +147,7 @@ SimpleTilePropsOverrides.args = {
   ...baseArgs,
   tileOverrides: {
     status: "negative",
+    thumbnail: bridgeThumbnail,
     getBadge: () => <Chip size="small" label="Tile Override" color="primary" />,
     headerRight: (
       <AvatarGroup
@@ -191,11 +206,9 @@ const buildMenuItems =
   );
 
 /** Hook used in StatefulPropsOverrides.args, the function itself must be a stable reference as it is a hook. */
-const useIndividualState: IndividualITwinStateHookMUI = (iTwin, props) => {
+const useIndividualState: IndividualITwinStateHook = (iTwin, props) => {
   const [selection, setSelection] = React.useState<IModelMinimal | undefined>();
-  const [links, setLinks] = React.useState<
-    [string | undefined, string | undefined]
-  >([undefined, undefined]);
+
   const [imodels, setIModels] = React.useState<IModelMinimal[] | undefined>();
   // We delay network call until the user wants to query the data, this could be in an effect
   // but would automatically trigger for EVERY project, causing potentially huge network traffic at startup.
@@ -215,7 +228,7 @@ const useIndividualState: IndividualITwinStateHookMUI = (iTwin, props) => {
             displayName: "",
           },
         ]);
-        setLinks([undefined, undefined]);
+
         // Start the fetch
         const response = await fetch(url, {
           headers: {
@@ -226,14 +239,6 @@ const useIndividualState: IndividualITwinStateHookMUI = (iTwin, props) => {
         if (response.ok) {
           const data: IModelsFetchData = await response.json();
           setIModels(data.iModels);
-          setLinks([
-            data._links.prev?.href !== data._links.self.href
-              ? data._links.prev?.href
-              : undefined,
-            data._links.next?.href !== data._links.self.href
-              ? data._links.next?.href
-              : undefined,
-          ]);
           if (data.iModels.length === 0) {
             setSelection({ displayName: "No iModels created", id: "none" });
           }
@@ -251,7 +256,7 @@ const useIndividualState: IndividualITwinStateHookMUI = (iTwin, props) => {
     ]
   );
   // Create a memo of the tileProps we want to override, depending on the state.
-  const tileProps = React.useMemo<Partial<ITwinTileMUIType>>(
+  const tileProps = React.useMemo<Partial<ITwinTileType>>(
     () => ({
       actions:
         selection && selection.id !== "none"
@@ -281,8 +286,8 @@ const useIndividualState: IndividualITwinStateHookMUI = (iTwin, props) => {
       ),
       additionalContent: (
         <span
-          onClick={() => {
-            imodels === undefined && fetchIModelList();
+          onClick={async () => {
+            imodels === undefined && (await fetchIModelList());
           }}
         >
           <Select
@@ -295,7 +300,7 @@ const useIndividualState: IndividualITwinStateHookMUI = (iTwin, props) => {
         </span>
       ),
     }),
-    [selection, imodels, fetchIModelList, links]
+    [selection, imodels, fetchIModelList]
   );
   // TODO: verify
   return {
@@ -310,7 +315,7 @@ StatefulPropsOverrides.args = {
   useIndividualState,
 };
 
-export const WithPostProcessCallback: Story<ITwinGridMUIProps> =
+export const WithPostProcessCallback: Story<ITwinGridProps> =
   withAccessTokenOverride((args) => {
     const addStartTile = React.useCallback(
       (iTwins: ITwinFull[], status: any) => {
