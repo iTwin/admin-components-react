@@ -29,6 +29,7 @@ export interface ITwinTileMUIProps
       | "contextMenuItems"
       | "onSelect"
       | "onOpen"
+      | "onDoubleClick"
       | "title"
       | "description"
       | "thumbnailBottomRight"

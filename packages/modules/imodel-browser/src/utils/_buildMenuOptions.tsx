@@ -18,7 +18,7 @@ export interface ContextMenuBuilderItem<T = any>
 }
 
 /** MUI version of ContextMenuBuilderItem for use with Material-UI MenuItem components.
- * Used by V2 tile components built with BaseCard.
+ * Used by MUI components and passed to the BaseCard.
  */
 export interface ContextMenuBuilderItemMUI<T = any>
   extends Omit<MuiMenuItemProps, "onClick" | "value" | "disabled"> {
@@ -58,7 +58,7 @@ export const _buildManagedContextMenuOptions: <T>(
     });
 };
 
-/** Build MUI MenuItem array for the given options. Used by V2 components with BaseCard.
+/** Build MUI MenuItem array for the given options. Used by MUI components and passed to the BaseCard.
  * @private
  */
 export const buildContextMenuItemsMUI = <T,>(

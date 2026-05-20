@@ -2,28 +2,6 @@
 
 This file tracks migration notes for the MUI/Stratakit components.
 
-## Running change log
-
-### 2026-05-19
-
-- Full public API review of all legacy vs MUI component pairs. Updated prop mapping tables with missing entries, type change details, and behavioral differences.
-- Added sections for `IModelGrid` → `IModelGridMUI` and `ITwinGrid` → `ITwinGridMUI` grid-level API changes.
-- Added `ContextMenuBuilderItem` → `ContextMenuBuilderItemMUI` type migration table.
-- Added `TileFavoriteIcon` → `TileFavoriteIconMUI` prop comparison table.
-- Added "New V2-only components" section documenting `BaseCard`, `BaseCardLoading`, and `IModelThumbnailMUI`.
-- Added "Export status" section listing what's exported vs deep-import-only.
-- Renamed `fineprint` → `additionalDescription` in BaseCard and all tile components.
-- Fixed `status` prop not being forwarded to `BaseCard` from both tile components (divider color was never activating).
-- Removed explicit `onContextMenu` destructuring from tile components; it now flows via `...rest` from `CardProps`.
-- Added `src/mui/index.ts` barrel that re-exports MUI components under legacy-aligned names (e.g. `IModelGrid` = `IModelGridMUI`).
-- Added second rollup entry point for `src/mui/index.ts` producing `cjs/src/mui/index.js` and `esm/src/mui/index.js`.
-
-### 2026-05-06
-
-- Created the initial migration guide comparing legacy `IModelTile` and `ITwinTile` to `IModelTileMUI` and `ITwinTileMUI`.
-- Recorded the current branch-only breaking differences for early V2 adopters: flattened props, MUI-style state prop renames, removed legacy `tileProps`, and changed more-options interaction.
-- Renamed several V2 wrapper aliases to align with `BaseCard`/MUI naming: `buttons` -> `actions`, `moreOptions` -> `contextMenuContent`, `leftIcon` -> `thumbnailTopLeft`, `rightIcon` -> `thumbnailTopRight`, and `badge` -> `thumbnailBottomRight`.
-
 ## Current status
 
 - There is no published package-level breaking change yet for consumers on `main`.
@@ -31,15 +9,14 @@ This file tracks migration notes for the MUI/Stratakit components.
 - A new `src/mui/index.ts` barrel re-exports MUI components under legacy-aligned names (e.g. `IModelGridMUI as IModelGrid`). This is built as a separate rollup entry point.
 - `BaseCard`, `IModelTileMUI`, `ITwinTileMUI`, and related V2 helpers are currently branch-only surfaces.
 
-That means the items below are migration notes for adopters moving from the legacy tile components to the new V2 components, or for a future release that exports V2 publicly.
+That means the items below are migration notes for adopters moving from the legacy tile components to the new MUI components, or for a future release that exports MUI publicly.
 
 ## `IModelTile` -> `IModelTileMUI`
 
 ### High-level changes
 
-- `tileProps` bag is removed. Legacy `tileProps` fields become first-class props on `IModelTileMUI`.
+- `tileProps` fields become first-class props on `IModelTileMUI`.
 - State props are renamed to match MUI conventions (`isSelected` → `selected`, `isLoading` → `loading`, `isDisabled` → `disabled`).
-- The component customization model changes from overriding `Tile.*` internals to using `BaseCard` plus `slotProps`.
 - The legacy inline more-options affordance is replaced by a context menu opened via right-click.
 - Click interaction is split: single `onThumbnailClick` → separate `onSelect` (single-click) and `onOpen` (double-click).
 - Context menu items use `ContextMenuBuilderItemMUI` (MUI `MenuItem`-based) instead of `ContextMenuBuilderItem` (itwinui `MenuItem`-based). The MUI version uses a `children: ReactNode` prop instead of positional children.
@@ -74,20 +51,16 @@ That means the items below are migration notes for adopters moving from the lega
 | `tileProps.isNew`       | None                    | Removed                 | No direct replacement currently. TODO: is this needed                                                                     |
 | `tileProps.onClick`     | None                    | Removed                 | Replaced by `onSelect` / `onOpen` on the tile.                                                                            |
 | `tileProps.children`    | `additionalContent`     | Renamed                 | Via `BaseCardProps`. Rendered below description in the info section.                                                      |
-
-### New MUI props
-
-- `thumbnailTopLeft`:
-- `thumbnailBottomLeft`: New overlay slot in the lower-left thumbnail corner.
-- `isFavorite`, `addToFavorites`, `removeFromFavorites`: Standalone favorite control. When provided, these take precedence over `IModelFavoritesContext`. The callback signature changes from `(iModelId: string) => Promise<void>` (required `Promise`) to `(iModelId: string) => Promise<void> | void` (allows sync or async).
-- `description`: Explicit override; defaults to `iModel.description`.
-- `slotProps`: New `BaseCard` slot styling API (`thumbnail`, `divider`, `content`, `header`, `info`, `actions`, `titleAction` — each accepts `className` and `sx`).
-- `headerRight`, `statusIcon`, `additionalContent`, `onDoubleClick`: Inherited from `BaseCardProps`.
+|                         | `description`           | Added                   | `title` defaults to `iModel.description`.                                                                                 |
+|                         | `thumbnailTopLeft`      | Added                   |                                                                                                                           |
+|                         | `thumbnailBottomLeft`   | Added                   |                                                                                                                           |
+|                         | `slotProps`             | Added                   |                                                                                                                           |
+|                         | `headerRight`           | Added                   |                                                                                                                           |
+|                         | `statusIcon`            | Added                   |                                                                                                                           |
 
 ### Behavior changes
 
 - `contextMenuContent` no longer renders as the legacy visible kebab/menu affordance. In MUI it is passed into `BaseCard`'s context menu and opens on right-click.
-- `additionalDescription` is auto-populated from `iModel.lastChangesetPushDateTime` (formatted as `toDateString()`). Legacy had no automatic date display.
 - `status` is forwarded to `BaseCard` to drive divider color (`"positive"` → success, `"warning"` → warning, `"negative"` → error).
 - When `disabled` is true, `BaseCard` suppresses title click, context menu, and double-click handlers. Legacy only passed `isDisabled` through to `Tile.Wrapper`.
 
@@ -107,11 +80,12 @@ That means the items below are migration notes for adopters moving from the lega
 
 ### Prop mapping
 
-| Legacy `ITwinTile`      | `ITwinTileMUI`                | Change type             | Notes                                                                                                                 |
+| Existing `ITwinTile`    | `ITwinTileMUI`                | Change type             | Notes                                                                                                                 |
 | ----------------------- | ----------------------------- | ----------------------- | --------------------------------------------------------------------------------------------------------------------- |
 | `iTwin`                 | `iTwin`                       | Unchanged               |                                                                                                                       |
 | `iTwinOptions`          | `contextMenuItems`            | Renamed + type changed  | Type changes from `ContextMenuBuilderItem<ITwinFull>[]` to `ContextMenuBuilderItemMUI<ITwinFull>[]`.                  |
 | `onThumbnailClick`      | `onSelect` / `onOpen`         | Split                   | Single callback split into select (single-click) and open (double-click). Both receive the `ITwinFull`.               |
+| `tileProps` object      | Top-level props + `slotProps` | Structural change       | `tileProps` are now top-level and additional customization happens via `slotProps`                                    |
 | `tileProps.isSelected`  | `selected`                    | Renamed                 | Flattened to a top-level prop.                                                                                        |
 | `tileProps.isLoading`   | `loading`                     | Renamed                 | Flattened to a top-level prop.                                                                                        |
 | `tileProps.isDisabled`  | `disabled`                    | Renamed                 | Flattened to a top-level prop.                                                                                        |
@@ -133,25 +107,20 @@ That means the items below are migration notes for adopters moving from the lega
 | `removeFromFavorites`   | `removeFromFavorites`         | Unchanged               |                                                                                                                       |
 | `refetchITwins`         | `refetchITwins`               | Unchanged               |                                                                                                                       |
 | `hideFavoriteIcon`      | `hideFavoriteIcon`            | Unchanged               |                                                                                                                       |
-| `fullWidth`             | None                          | Removed                 | No direct replacement. Grid layout is now CSS grid via parent.                                                        |
-| `tileProps.isNew`       | None                          | Removed                 | No direct replacement currently.                                                                                      |
-| `tileProps.onClick`     | None                          | Removed                 | Replaced by `onSelect` / `onOpen` on the tile.                                                                        |
-| `tileProps` object      | Top-level props + `slotProps` | Structural change       | Consumers must unwrap the nested bag.                                                                                 |
-
-### New MUI-only props
-
-- `thumbnailBottomLeft`: New overlay slot in the lower-left thumbnail corner.
-- `getBadge`: Explicit prop `(iTwin: ITwinFull) => ReactNode`. In legacy, badge rendering was only available via `tileProps.badge`.
-- `description`: Explicit override; defaults to `iTwin.number`.
-- `slotProps`: New `BaseCard` slot styling API (`thumbnail`, `divider`, `content`, `header`, `info`, `actions`, `titleAction` — each accepts `className` and `sx`).
-- `headerRight`, `statusIcon`, `additionalContent`, `onDoubleClick`: Inherited from `BaseCardProps`.
+| `fullWidth`             |                               | Removed                 | No direct replacement. Grid layout is now CSS grid via parent.                                                        |
+| `tileProps.isNew`       |                               | Removed                 | No direct replacement currently.                                                                                      |
+| `tileProps.onClick`     |                               | Removed                 | Replaced by `onSelect` / `onOpen` on the tile.                                                                        |
+|                         | `getBadge`                    | Added                   |                                                                                                                       |
+|                         | `slotProps`                   | Added                   |                                                                                                                       |
+|                         | `headerRight`                 | Added                   |                                                                                                                       |
+|                         | `statusIcon`                  | Added                   |                                                                                                                       |
+| children                | `additionalContent`           | Added                   |                                                                                                                       |
 
 ### Behavior changes
 
 - `contextMenuContent` no longer renders as the legacy visible kebab/menu affordance. In MUI it is passed into `BaseCard`'s context menu and opens on right-click.
 - `additionalDescription` is auto-populated from `iTwin.lastModifiedDateTime` (formatted as `toDateString()`). Legacy had no automatic date display.
 - `status` is forwarded to `BaseCard` to drive divider color.
-- `children` now renders after `fineprint` inside the `BaseCard` info section instead of the legacy `Tile.ContentArea` layout.
 - When `disabled` is true, `BaseCard` suppresses title click, context menu, and double-click handlers. Legacy only passed `isDisabled` through to `Tile.Wrapper`.
 
 ---
@@ -248,6 +217,30 @@ MUI version of `IModelThumbnail`. Same props interface (`iModelId`, `accessToken
 
 ---
 
+## `NoResults` -> `NoResultsMUI`
+
+### High-level changes
+
+- Icons change from itwinui-icons-react (`SvgImodelHollow`, `SvgSearch`) to Stratakit `Icon` with `imodel.svg` / `search.svg`.
+- Text rendering changes from itwinui `Text` to MUI `Typography`.
+- Layout changes from global SCSS classes (`iac-no-results-container`, `iac-no-results`) to MUI `Box` with `sx` props + a CSS module for icon sizing.
+
+### Prop mapping
+
+| `NoResults`      | `NoResultsMUI`   | Change type | Notes                                                     |
+| ---------------- | ---------------- | ----------- | --------------------------------------------------------- |
+| `text`           | `text`           | Unchanged   |                                                           |
+| `subtext`        | `subtext`        | Unchanged   |                                                           |
+| `isSearchResult` | `isSearchResult` | Unchanged   | Defaults to `false`. Switches icon from imodel to search. |
+
+### Behavior changes
+
+- Icon size is set via CSS module class (`5rem × 5rem`) instead of itwinui CSS variables (`--iui-size-2xl`).
+- Text variant changes from itwinui `Text variant="leading"` to MUI `Typography variant="h6"` for the primary text, and `Typography variant="body1"` for subtext.
+- Icon color uses MUI theme path `"text.secondary"` instead of itwinui `--iui-color-icon-muted`.
+
+---
+
 ## Shared migration themes
 
 - Expect a styling migration from `@itwin/itwinui-react` `Tile` primitives to `@mui/material` plus `@stratakit/mui`.
@@ -288,8 +281,10 @@ New entry point that re-exports MUI components under **legacy-aligned names**:
 | `ITwinGridStrings`         | `ITwinGridStrings`            |
 | `ITwinTile`                | `ITwinTileMUI`                |
 | `ITwinTileProps`           | `ITwinTileMUIProps`           |
+| `NoResults`                | `NoResultsMUI`                |
+| `NoResultsProps`           | `NoResultsMUIProps`           |
 
-Also re-exports `NoResults` and all shared types.
+Also re-exports all shared types.
 
 Built via a separate rollup entry point → `cjs/src/mui/index.js` / `esm/src/mui/index.js`.
 

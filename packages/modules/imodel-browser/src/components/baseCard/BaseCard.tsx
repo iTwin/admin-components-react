@@ -113,11 +113,6 @@ export interface BaseCardProps
    * When provided, the menu opens at cursor position on right-click.
    */
   contextMenuContent?: ReactNode;
-  /**
-   * Optional context menu item descriptors rendered by BaseCard.
-   * Prefer this over `contextMenuContent` when calling across package boundaries.
-   */
-  contextMenuItems?: BaseCardContextMenuItem[];
 
   /** Indicates whether the card is in a selected state. Applies outline styling. */
   selected?: boolean;
@@ -162,7 +157,6 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
       additionalContent,
       actions,
       contextMenuContent,
-      contextMenuItems,
       selected,
       loading,
       disabled: cardDisabled,
@@ -198,7 +192,11 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
 
     const handleContextMenu = React.useCallback(
       (event: React.MouseEvent<HTMLDivElement>) => {
-        if (!(contextMenuItems?.length || contextMenuContent)) {
+        console.log("Context menu requested at", {
+          x: event.clientX,
+          y: event.clientY,
+        });
+        if (!contextMenuContent) {
           return;
         }
 
@@ -209,7 +207,7 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
           mouseY: event.clientY - 4,
         });
       },
-      [contextMenuContent, contextMenuItems]
+      [contextMenuContent]
     );
 
     const handleMoreButtonClick = React.useCallback(
@@ -221,7 +219,11 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
       []
     );
 
-    const hasContextMenu = !!(contextMenuItems?.length ?? contextMenuContent);
+    const hasContextMenu = !!contextMenuContent;
+    console.log("Rendering BaseCard with context menu:", {
+      hasContextMenu,
+      contextMenuContent,
+    });
 
     if (actions?.length === 1) {
       console.warn(
@@ -282,12 +284,12 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
               : "default",
             ...sx,
           }}
+          {...rest}
           onClick={!cardDisabled ? onSelect : undefined}
           onContextMenu={
             !cardDisabled && hasContextMenu ? handleContextMenu : undefined
           }
           onDoubleClick={!cardDisabled ? onOpen : undefined}
-          {...rest}
         >
           {/* ── Thumbnail area ── */}
 
@@ -303,7 +305,7 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
             {thumbnailTopLeft && (
               <Box className={styles.thumbnailTopLeft}>{thumbnailTopLeft}</Box>
             )}
-            {(thumbnailTopRight ?? hasContextMenu) && (
+            {(thumbnailTopRight || hasContextMenu) && (
               <Box className={styles.thumbnailTopRight}>
                 {thumbnailTopRight}
                 {hasContextMenu && !cardDisabled && (
@@ -311,7 +313,7 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
                     size="small"
                     aria-label="More options"
                     onClick={handleMoreButtonClick}
-                    sx={{ bgcolor: "background.paper" }}
+                    // sx={{ bgcolor: "background.paper" }} // TODO: how do we make this look good
                   >
                     <Icon
                       render={<img src={svgMoreVertical} alt="" aria-hidden />}
@@ -468,19 +470,7 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
             transformOrigin={{ horizontal: "right", vertical: "top" }}
             anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
           >
-            {contextMenuItems?.length
-              ? contextMenuItems.map(({ key, label, disabled, onClick }) => (
-                  <MenuItem
-                    key={key}
-                    disabled={disabled}
-                    onClick={(event) => {
-                      onClick?.(event);
-                    }}
-                  >
-                    {label}
-                  </MenuItem>
-                ))
-              : contextMenuContent}
+            {contextMenuContent}
           </Menu>
         )}
       </>

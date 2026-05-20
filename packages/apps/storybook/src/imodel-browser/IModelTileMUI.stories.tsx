@@ -50,7 +50,6 @@ export default {
     onOpen: { control: false },
     thumbnail: { control: false },
     actions: { control: false },
-    contextMenuContent: { control: false },
     contextMenuItems: { control: false },
     thumbnailTopLeft: { control: false },
     thumbnailBottomRight: { control: false },

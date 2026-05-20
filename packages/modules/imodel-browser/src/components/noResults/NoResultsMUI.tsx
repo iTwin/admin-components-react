@@ -25,6 +25,7 @@ export const NoResultsMUI = ({
 }: NoResultsMUIProps) => {
   return (
     <Box
+      data-testid="no-results"
       sx={{
         position: "absolute",
         left: "50%",

@@ -38,6 +38,7 @@ export const decorators = [
         theme={theme}
         as={Root}
         future={{ themeBridge: true }}
+        colorScheme={theme}
       >
         <Story />
       </ThemeProvider>

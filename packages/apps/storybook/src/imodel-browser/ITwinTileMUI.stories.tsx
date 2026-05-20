@@ -103,7 +103,6 @@ export default {
     thumbnailBottomLeft: { control: false },
     thumbnail: { control: false },
     actions: { control: false },
-    contextMenuContent: { control: false },
     thumbnailTopLeft: { control: false },
     thumbnailTopRight: { control: false },
     children: { control: false },

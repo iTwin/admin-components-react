@@ -30,6 +30,8 @@ export interface IModelTileMUIProps
       | "description"
       | "thumbnailBottomRight"
       | "thumbnailTopRight"
+      | "onDoubleClick"
+      | "contextMenuContent"
     > {
   /** If not provided, iModel display name will be used */
   title?: string;
@@ -59,11 +61,6 @@ export interface IModelTileMUIProps
   /** Hides the favorite icon when true */
   hideFavoriteIcon?: boolean;
   /** Indicates whether the iModel is marked as a favorite (standalone mode). */
-  isFavorite?: boolean;
-  /** Function to add the iModel to favorites (standalone mode). */
-  addToFavorites?(iModelId: string): Promise<void>;
-  /** Function to remove the iModel from favorites (standalone mode). */
-  removeFromFavorites?(iModelId: string): Promise<void>;
   /** Function that returns a badge node for the given iModel */
   getBadge?: (iModel: IModelFull) => React.ReactNode;
 
@@ -82,9 +79,6 @@ export const IModelTileMUI = ({
   stringsOverrides,
   refetchIModels,
   hideFavoriteIcon,
-  isFavorite,
-  addToFavorites,
-  removeFromFavorites,
   selected,
   loading,
   disabled,
@@ -98,7 +92,6 @@ export const IModelTileMUI = ({
   description,
   additionalDescription,
   actions,
-  contextMenuContent,
   onSelect,
   onOpen,
   slotProps,
@@ -124,31 +117,14 @@ export const IModelTileMUI = ({
       ? { ...(apiOverrides ?? {}), data: iModel.thumbnail }
       : undefined;
 
-  const hasMoreOptions = !!(contextMenuContent ?? moreOptionsBuilt?.length);
-
-  const favoriteState =
-    isFavorite !== undefined
-      ? {
-          isFavorite,
-          add: addToFavorites ? () => addToFavorites(iModel.id) : undefined,
-          remove: removeFromFavorites
-            ? () => removeFromFavorites(iModel.id)
-            : undefined,
-        }
-      : favoritesContext
-      ? {
-          isFavorite: favoritesContext.favorites.has(iModel.id),
-          add: () => favoritesContext.add(iModel.id),
-          remove: () => favoritesContext.remove(iModel.id),
-        }
-      : undefined;
+  const hasMoreOptions = !!moreOptionsBuilt?.length;
 
   const favoriteIcon =
-    !hideFavoriteIcon && favoriteState?.add && favoriteState?.remove ? (
+    !hideFavoriteIcon && favoritesContext ? (
       <TileFavoriteIconMUI
-        isFavorite={favoriteState.isFavorite}
-        onAddToFavorites={favoriteState.add}
-        onRemoveFromFavorites={favoriteState.remove}
+        isFavorite={favoritesContext.favorites.has(iModel.id)}
+        onAddToFavorites={() => favoritesContext.add(iModel.id)}
+        onRemoveFromFavorites={() => favoritesContext.remove(iModel.id)}
         addLabel={strings.addToFavorites}
         removeLabel={strings.removeFromFavorites}
         className={styles.iModelTileFavoriteIcon}
@@ -184,9 +160,7 @@ export const IModelTileMUI = ({
       title={title ?? iModel.displayName ?? ""}
       onSelect={onSelect ? (event) => onSelect(iModel) : undefined}
       onOpen={onOpen ? (event) => onOpen(iModel) : undefined}
-      contextMenuContent={
-        hasMoreOptions ? contextMenuContent ?? moreOptionsBuilt : undefined
-      }
+      contextMenuContent={hasMoreOptions ? moreOptionsBuilt : undefined}
       status={status}
       statusIcon={<StatusIcon status={status} selected={selected} />}
       description={iModel.description ?? ""}

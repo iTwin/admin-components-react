@@ -9,6 +9,8 @@ import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/material/Typography";
 import React, { forwardRef } from "react";
 
+export type BaseCardLoadingProps = CardProps;
+
 export const BaseCardLoading = forwardRef<HTMLDivElement, CardProps>(
   ({ ...props }, ref) => {
     return (

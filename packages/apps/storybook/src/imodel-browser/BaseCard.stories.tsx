@@ -21,6 +21,10 @@ import { action } from "@storybook/addon-actions";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
 import Typography from "@mui/material/Typography";
+import {
+  buildContextMenuItemsMUI,
+  type ContextMenuBuilderItemMUI,
+} from "../../../../modules/imodel-browser/src/utils/_buildMenuOptions";
 
 export const BaseCardStory = (props: BaseCardProps) => <BaseCard {...props} />;
 
@@ -71,6 +75,29 @@ const baseArgs: BaseCardProps = {
 export const Default = Template.bind({});
 Default.args = { ...baseArgs };
 
+const contextMenuItems: ContextMenuBuilderItemMUI[] = [
+  {
+    key: "open",
+    onClick: action("kitchen menu: open clicked"),
+    children: "Open with",
+  },
+  {
+    key: "share",
+    children: "Share",
+    onClick: action("kitchen menu: share clicked"),
+  },
+  {
+    key: "delete",
+    children: "Delete",
+    onClick: action("kitchen menu: delete clicked"),
+  },
+];
+const contextMenuContent = buildContextMenuItemsMUI(
+  contextMenuItems,
+  {} as any,
+  () => Promise.resolve()
+);
+
 export const Everything = Template.bind({});
 Everything.storyName = "Everything";
 Everything.args = {
@@ -78,23 +105,7 @@ Everything.args = {
   onSelect: action("kitchen selected"),
   onOpen: action("kitchen opened"),
   onContextMenu: action("context-menu opened"),
-  contextMenuItems: [
-    {
-      key: "open",
-      label: "Open",
-      onClick: action("kitchen menu: open clicked"),
-    },
-    {
-      key: "share",
-      label: "Share",
-      onClick: action("kitchen menu: share clicked"),
-    },
-    {
-      key: "delete",
-      label: "Delete",
-      onClick: action("kitchen menu: delete clicked"),
-    },
-  ],
+  contextMenuContent,
   actions: [
     { key: "open", label: "Open", onClick: action("open clicked") },
     {

@@ -8,10 +8,12 @@ export {
   IModelGridMUI as IModelGrid,
   type IModelGridMUIProps as IModelGridProps,
 } from "../containers/iModelGrid/IModelGridMUI";
+
 export {
   IModelTileMUI as IModelTile,
   type IModelTileMUIProps as IModelTileProps,
 } from "../containers/iModelTiles/IModelTileMUI";
+
 export {
   IModelThumbnailMUI as IModelThumbnail,
   type IModelThumbnailMUIProps as IModelThumbnailProps,
@@ -23,6 +25,7 @@ export {
   type IndividualITwinStateHookMUI as IndividualITwinStateHook,
   type ITwinGridStrings,
 } from "../containers/ITwinGrid/ITwinGridMUI";
+
 export {
   ITwinTileMUI as ITwinTile,
   type ITwinTileMUIProps as ITwinTileProps,
@@ -32,4 +35,10 @@ export {
   NoResultsMUI as NoResults,
   type NoResultsMUIProps as NoResultsProps,
 } from "../components/noResults/NoResultsMUI";
+
+export {
+  BaseCardLoading as IModelGhostTile,
+  type BaseCardLoadingProps as IModelGhostTileProps,
+} from "../components/baseCard/BaseCardLoading";
+
 export * from "../types";

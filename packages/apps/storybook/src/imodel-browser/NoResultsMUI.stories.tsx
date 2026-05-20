@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import {
   NoResultsMUI as ExternalComponent,
-  NoResultsMUIProps,
+  type NoResultsMUIProps,
 } from "../../../../modules/imodel-browser/src/components/noResults/NoResultsMUI";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
@@ -22,7 +22,9 @@ export default {
 const Template: Story<NoResultsMUIProps> = (args) => <NoResults {...args} />;
 
 export const Primary = Template.bind({});
-Primary.args = {};
+Primary.args = {
+  text: "No iModels available",
+};
 
 export const SearchResults = Template.bind({});
 SearchResults.args = {
@@ -33,5 +35,6 @@ SearchResults.args = {
 
 export const WithSubtext = Template.bind({});
 WithSubtext.args = {
+  text: "No iModels available",
   subtext: "Please check back later.",
 };

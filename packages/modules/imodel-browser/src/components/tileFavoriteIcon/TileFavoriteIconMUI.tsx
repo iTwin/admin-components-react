@@ -52,7 +52,7 @@ export const TileFavoriteIconMUI = ({
       size="small"
       disabled={disabled}
       sx={{
-        bgcolor: "background.paper",
+        // bgcolor: "background.paper", TODO: how do we make this look good
         ...sx,
       }}
     >
