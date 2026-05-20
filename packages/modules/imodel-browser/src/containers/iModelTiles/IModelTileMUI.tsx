@@ -4,7 +4,10 @@
  *--------------------------------------------------------------------------------------------*/
 import classNames from "classnames";
 import React from "react";
-import { BaseCard, BaseCardProps } from "../../components/baseCard/BaseCard";
+import {
+  BaseCard,
+  type BaseCardProps,
+} from "../../components/baseCard/BaseCard";
 import { TileFavoriteIconMUI } from "../../components/tileFavoriteIcon/TileFavoriteIconMUI";
 import { IModelFavoritesContext } from "../../contexts/IModelFavoritesContext";
 import { AccessTokenProvider, ApiOverrides, IModelFull } from "../../types";
@@ -19,7 +22,10 @@ import { StatusIcon } from "./StatusIcon";
 import { IModelTileProps } from "./IModelTile";
 
 export interface IModelTileMUIProps
-  extends Omit<IModelTileProps, "onThumbnailClick" | "iModelOptions">,
+  extends Omit<
+      IModelTileProps,
+      "onThumbnailClick" | "iModelOptions" | "tileProps" | "fullWidth"
+    >,
     Omit<
       BaseCardProps,
       | "statusIcon"
@@ -107,7 +113,7 @@ export const IModelTileMUI = ({
     stringsOverrides
   );
 
-  const moreOptionsBuilt = React.useMemo(
+  const contextMenuContent = React.useMemo(
     () =>
       buildContextMenuItemsMUI(
         contextMenuItems,
@@ -122,8 +128,6 @@ export const IModelTileMUI = ({
     apiOverrides || iModel.thumbnail
       ? { ...(apiOverrides ?? {}), data: iModel.thumbnail }
       : undefined;
-
-  const hasMoreOptions = !!moreOptionsBuilt?.length;
 
   const favoriteIcon =
     !hideFavoriteIcon && favoritesContext ? (
@@ -164,9 +168,9 @@ export const IModelTileMUI = ({
       thumbnailBottomLeft={thumbnailBottomLeft}
       thumbnailBottomRight={getBadge?.(iModel) ?? badge}
       title={title ?? iModel.displayName ?? ""}
-      onSelect={onSelect ? (event) => onSelect(iModel) : undefined}
-      onOpen={onOpen ? (event) => onOpen(iModel) : undefined}
-      contextMenuContent={hasMoreOptions ? moreOptionsBuilt : undefined}
+      onSelect={onSelect ? () => onSelect(iModel) : undefined}
+      onOpen={onOpen ? () => onOpen(iModel) : undefined}
+      contextMenuContent={contextMenuContent}
       status={status}
       statusIcon={<StatusIcon status={status} selected={selected} />}
       description={description ?? iModel.description ?? ""}

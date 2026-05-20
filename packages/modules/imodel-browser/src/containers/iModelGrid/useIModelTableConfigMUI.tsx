@@ -143,7 +143,7 @@ export const useIModelTableConfigMUI = ({
                   close,
                   refetchIModels
                 );
-                return options !== undefined ? options : [];
+                return options ?? [];
               };
 
               return (

@@ -123,8 +123,8 @@ Default.args = {
   selected: false,
 };
 
-export const MoreOptions = Template.bind({});
-MoreOptions.args = {
+export const Extensive = Template.bind({});
+Extensive.args = {
   ...baseArgs,
   status: "warning",
   isFavorite: false,

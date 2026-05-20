@@ -9,7 +9,10 @@ import { Icon } from "@stratakit/mui";
 import classNames from "classnames";
 import React from "react";
 
-import { BaseCard, BaseCardProps } from "../../components/baseCard/BaseCard";
+import {
+  BaseCard,
+  type BaseCardProps,
+} from "../../components/baseCard/BaseCard";
 import { TileFavoriteIconMUI } from "../../components/tileFavoriteIcon/TileFavoriteIconMUI";
 import { ITwinFull } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
@@ -22,7 +25,7 @@ import styles from "./ITwinTile.module.scss";
 import { StatusIcon } from "./StatusIcon";
 
 export interface ITwinTileMUIProps
-  extends Omit<ITwinTileProps, "onThumbnailClick">,
+  extends Omit<ITwinTileProps, "onThumbnailClick" | "tileProps" | "fullWidth">,
     Omit<
       BaseCardProps,
       | "statusIcon"
@@ -35,6 +38,7 @@ export interface ITwinTileMUIProps
       | "thumbnailBottomRight"
       | "thumbnailTopRight"
       | "thumbnailBottomLeft"
+      | "contextMenuContent"
     > {
   /** Defaults to iTwin.displayName */
   title?: string;
@@ -62,7 +66,6 @@ export const ITwinTileMUI = ({
   removeFromFavorites,
   refetchITwins,
   hideFavoriteIcon,
-
   selected,
   loading,
   disabled,
@@ -71,7 +74,6 @@ export const ITwinTileMUI = ({
   getBadge,
   title,
   description,
-  contextMenuContent,
   onSelect,
   onOpen,
   slotProps,
@@ -88,7 +90,7 @@ export const ITwinTileMUI = ({
     stringsOverrides
   );
 
-  const moreOptionsBuilt = React.useMemo(
+  const contextMenuContent = React.useMemo(
     () =>
       buildContextMenuItemsMUI(
         contextMenuItems,
@@ -98,8 +100,6 @@ export const ITwinTileMUI = ({
       ),
     [contextMenuItems, iTwin, refetchITwins]
   );
-
-  const hasMoreOptions = !!(contextMenuContent ?? moreOptionsBuilt?.length);
 
   const favoriteIcon =
     !hideFavoriteIcon &&
@@ -160,9 +160,7 @@ export const ITwinTileMUI = ({
       title={title ?? iTwin.displayName ?? ""}
       onSelect={onSelect ? (event) => onSelect(iTwin) : undefined}
       onOpen={onOpen ? (event) => onOpen(iTwin) : undefined}
-      contextMenuContent={
-        hasMoreOptions ? contextMenuContent ?? moreOptionsBuilt : undefined
-      }
+      contextMenuContent={contextMenuContent}
       status={status}
       statusIcon={<StatusIcon status={status} selected={selected} />}
       description={description ?? iTwin.number ?? ""}

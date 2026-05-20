@@ -97,8 +97,8 @@ Default.args = {
   ...baseArgs,
 };
 
-export const MoreOptions = Template.bind({});
-MoreOptions.args = {
+export const Extensive = Template.bind({});
+Extensive.args = {
   ...baseArgs,
   title: "Overridden Title",
   description: "Overriden description",

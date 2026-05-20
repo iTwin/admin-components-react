@@ -84,6 +84,32 @@ module.exports = {
         "../../../modules/manage-versions/src"
       ),
     };
+    // Ensure TypeScript files from source directories are processed
+    // (needed for both dev and production since some stories use relative imports to source)
+    config.module.rules.push({
+      test: /\.(ts|tsx)$/,
+      include: Object.values(packagePaths),
+      use: [
+        {
+          loader: require.resolve("babel-loader"),
+          options: {
+            presets: [
+              require.resolve("@babel/preset-env"),
+              require.resolve("@babel/preset-react"),
+              require.resolve("@babel/preset-typescript"),
+            ],
+          },
+        },
+      ],
+    });
+
+    // Handle SCSS files from source directories
+    config.module.rules.push({
+      test: /\.scss$/,
+      include: Object.values(packagePaths),
+      use: ["style-loader", "css-loader", "sass-loader"],
+    });
+
     // Enable HMR for local packages in development by aliasing to source directories
     if (configType === "DEVELOPMENT") {
       // Use full source maps to allow VS Code Chrome debugger to map back to TS/TSX sources
@@ -101,31 +127,6 @@ module.exports = {
         ...config.resolve.alias,
         ...packagePaths,
       };
-
-      // Ensure TypeScript files from source directories are processed
-      config.module.rules.push({
-        test: /\.(ts|tsx)$/,
-        include: Object.values(packagePaths),
-        use: [
-          {
-            loader: require.resolve("babel-loader"),
-            options: {
-              presets: [
-                require.resolve("@babel/preset-env"),
-                require.resolve("@babel/preset-react"),
-                require.resolve("@babel/preset-typescript"),
-              ],
-            },
-          },
-        ],
-      });
-
-      // Handle SCSS files from source directories
-      config.module.rules.push({
-        test: /\.scss$/,
-        include: Object.values(packagePaths),
-        use: ["style-loader", "css-loader", "sass-loader"],
-      });
     }
 
     return config;

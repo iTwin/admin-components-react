@@ -3,13 +3,9 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 
-import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
 import * as React from "react";
-
-import { ContextMenuBuilderItemMUI } from "../utils/_buildMenuOptions";
 
 type Props = {
   menuItems:
@@ -35,8 +31,6 @@ export default function MoreMenu({
   if (!menuItems || (Array.isArray(menuItems) && menuItems.length === 0)) {
     return null;
   }
-
-  console.log("menuItems", { open, menuItems, buttonId });
 
   return (
     <>
