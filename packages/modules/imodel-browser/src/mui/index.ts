@@ -41,4 +41,6 @@ export {
   type BaseCardLoadingProps as IModelGhostTileProps,
 } from "../components/baseCard/BaseCardLoading";
 
+export { ContextMenuBuilderItemMUI as ContextMenuBuilderItem } from "../utils/_buildMenuOptions";
+
 export * from "../types";
