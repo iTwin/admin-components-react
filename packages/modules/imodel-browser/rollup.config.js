@@ -29,10 +29,7 @@ const baseConfig = {
     terser(),
     url({
       limit: 10 * 1024, // Adjust the limit as needed (e.g., 10 KB)
-      include: [
-        "**/*.png",
-        "**/.svg", // TODO: can we limit this to Stratakit/icons?
-      ], // Include file extensions you want to handle (e.g., PNG)
+      include: ["**/*.png"], // Include file extensions you want to handle (e.g., PNG)
       emitFiles: true, // Emit the files to the output directory
     }),
   ],

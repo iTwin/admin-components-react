@@ -52,11 +52,9 @@ export default {
     headerRight: { control: false },
     statusIcon: { control: false },
     additionalDescription: { control: false },
-    // actions: { control: false },
-    onSelect: { control: false },
-    onOpen: { control: false },
-    onContextMenu: { control: false },
+    onClick: { control: false },
     onDoubleClick: { control: false },
+    onContextMenu: { control: false },
     status: {
       options: ["undefined", "positive", "warning", "negative"],
       mapping: {
@@ -89,18 +87,18 @@ Default.args = { ...baseArgs };
 const contextMenuItems: ContextMenuBuilderItemMUI[] = [
   {
     key: "open",
-    onClick: action("kitchen menu: open clicked"),
+    onClick: action("menu: open clicked"),
     children: "Open with",
   },
   {
     key: "share",
     children: "Share",
-    onClick: action("kitchen menu: share clicked"),
+    onClick: action("menu: share clicked"),
   },
   {
     key: "delete",
     children: "Delete",
-    onClick: action("kitchen menu: delete clicked"),
+    onClick: action("menu: delete clicked"),
   },
 ];
 const contextMenuContent = buildContextMenuItemsMUI(
@@ -112,8 +110,8 @@ const contextMenuContent = buildContextMenuItemsMUI(
 
 const everythingArgs: BaseCardProps = {
   ...baseArgs,
-  onSelect: action("kitchen selected"),
-  onOpen: action("kitchen opened"),
+  onClick: action("clicked"),
+  onDoubleClick: action("double-clicked "),
   onContextMenu: action("context-menu opened"),
   contextMenuContent,
   actions: [
@@ -124,7 +122,6 @@ const everythingArgs: BaseCardProps = {
       onClick: action("share clicked"),
     },
   ],
-  onDoubleClick: action("double-clicked"),
   statusIcon: (
     <Box component="span" sx={{ lineHeight: 0, color: "warning.main" }}>
       <Icon href={svgStatusWarning} size="regular" />
@@ -150,7 +147,7 @@ const everythingArgs: BaseCardProps = {
         size="small"
         color="secondary"
         aria-label="Add to favorites"
-        onClick={action("kitchen thumbnail favorite clicked")}
+        onClick={action("thumbnail favorite clicked")}
       >
         <Icon href={svgPin} size="regular" />
       </IconButton>

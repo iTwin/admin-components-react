@@ -158,8 +158,8 @@ export const ITwinTileMUI = ({
         )
       }
       title={title ?? iTwin.displayName ?? ""}
-      onSelect={onSelect ? (event) => onSelect(iTwin) : undefined}
-      onOpen={onOpen ? (event) => onOpen(iTwin) : undefined}
+      onClick={onSelect ? (event) => onSelect(iTwin) : undefined}
+      onDoubleClick={onOpen ? (event) => onOpen(iTwin) : undefined}
       contextMenuContent={contextMenuContent}
       status={status}
       statusIcon={<StatusIcon status={status} selected={selected} />}

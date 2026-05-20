@@ -16,8 +16,6 @@ export interface IModelThumbnailMUIProps {
   className?: string;
   /** Id of the iModel to fetch thumbnail for */
   iModelId: string;
-  /** Triggered on the image click, controls pointer */
-  onClick?(iModelId: string): void;
   /* Access token that requires the `imodels:read` scope. */
   accessToken?: AccessTokenProvider;
   /** Object that configures different overrides for the API

@@ -43,7 +43,7 @@ export interface BaseCardActionItem {
 }
 
 export interface BaseCardProps
-  extends Omit<CardProps, "children" | "title" | "onClick"> {
+  extends Omit<CardProps, "children" | "title" | "onClick" | "onSelect"> {
   // ── Thumbnail area ──────────────────────────────────────────────────────────
   /**
    * Main thumbnail content (icon, image, skeleton, custom layout, etc.).
@@ -114,10 +114,8 @@ export interface BaseCardProps
   disabled?: boolean;
   /** Status indicator used for styling (divider color, etc.) */
   status?: "positive" | "warning" | "negative" | undefined;
-  /** Optional callback fired when the card is selected. */
-  onSelect?: CardProps["onClick"];
-  /** Optional callback fired when the card should open. */
-  onOpen?: CardProps["onDoubleClick"];
+  /** Optional callback fired when the card is clicked. */
+  onClick?: CardProps["onClick"];
   /** Optional callback fired on double-click of the card. */
   onDoubleClick?: CardProps["onDoubleClick"];
   /** Props for internal wrapper slots following MUI slotProps conventions. */
@@ -140,8 +138,8 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
       thumbnailBottomRight,
       thumbnailBottomLeft,
       title,
-      onSelect,
-      onOpen,
+      onClick,
+      onDoubleClick,
       headerRight,
       statusIcon,
       description,
@@ -153,7 +151,6 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
       loading,
       disabled: cardDisabled,
       status,
-      onDoubleClick,
       slotProps,
       className,
       sx,
@@ -263,17 +260,17 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
           sx={{
             cursor: cardDisabled
               ? "not-allowed"
-              : onSelect || onOpen
+              : onClick || onDoubleClick
               ? "pointer"
               : "default",
             ...sx,
           }}
           {...rest}
-          onClick={!cardDisabled ? onSelect : undefined}
+          onClick={!cardDisabled ? onClick : undefined}
           onContextMenu={
             !cardDisabled && hasContextMenu ? handleContextMenu : undefined
           }
-          onDoubleClick={!cardDisabled ? onOpen : undefined}
+          onDoubleClick={!cardDisabled ? onDoubleClick : undefined}
         >
           {/* ── Thumbnail area ── */}
 

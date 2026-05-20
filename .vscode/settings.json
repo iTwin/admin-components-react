@@ -13,7 +13,5 @@
   "search.exclude": {
     "**/CHANGELOG.md": true
   },
-  "js/ts.preferences.autoImportSpecifierExcludeRegexes": ["^@mui/[^/]+$"],
-  "js/ts.tsdk.promptToUseWorkspaceVersion": true,
-  "js/ts.tsdk.path": "packages/modules/create-imodel/node_modules/typescript/lib"
+  "js/ts.preferences.autoImportSpecifierExcludeRegexes": ["^@mui/[^/]+$"]
 }

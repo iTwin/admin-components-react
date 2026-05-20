@@ -41,7 +41,6 @@ export default function MoreMenu({
         data-testid={dataTestId}
         onClick={(event) => {
           event.stopPropagation();
-          console.log("clicked more button", { event });
           setAnchorEl(event.currentTarget);
         }}
         size="small"

@@ -71,8 +71,9 @@ export const buildContextMenuItemsMUI = <T,>(
     ?.filter(({ visible }) =>
       typeof visible === "function" ? visible(value) : visible ?? true
     )
-    .map(({ key, onClick, disabled, children }) => (
+    .map(({ key, onClick, disabled, children, ...muiMenuItemProps }) => (
       <MuiMenuItem
+        {...muiMenuItemProps}
         key={key}
         disabled={typeof disabled === "function" ? disabled(value) : disabled}
         onClick={(e: React.MouseEvent) => {

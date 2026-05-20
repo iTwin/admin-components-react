@@ -66,7 +66,6 @@ export interface IModelTileMUIProps
   refetchIModels?: () => void;
   /** Hides the favorite icon when true */
   hideFavoriteIcon?: boolean;
-  /** Indicates whether the iModel is marked as a favorite (standalone mode). */
   /** Function that returns a badge node for the given iModel */
   getBadge?: (iModel: IModelFull) => React.ReactNode;
 
@@ -168,8 +167,8 @@ export const IModelTileMUI = ({
       thumbnailBottomLeft={thumbnailBottomLeft}
       thumbnailBottomRight={getBadge?.(iModel) ?? badge}
       title={title ?? iModel.displayName ?? ""}
-      onSelect={onSelect ? () => onSelect(iModel) : undefined}
-      onOpen={onOpen ? () => onOpen(iModel) : undefined}
+      onClick={onSelect ? () => onSelect(iModel) : undefined}
+      onDoubleClick={onOpen ? () => onOpen(iModel) : undefined}
       contextMenuContent={contextMenuContent}
       status={status}
       statusIcon={<StatusIcon status={status} selected={selected} />}
