@@ -34,7 +34,6 @@ export interface ITwinTileMUIProps
       | "description"
       | "thumbnailBottomRight"
       | "thumbnailTopRight"
-      | "thumbnailTopLeft"
       | "thumbnailBottomLeft"
     > {
   /** Defaults to iTwin.displayName */
@@ -63,6 +62,7 @@ export const ITwinTileMUI = ({
   removeFromFavorites,
   refetchITwins,
   hideFavoriteIcon,
+
   selected,
   loading,
   disabled,
@@ -89,7 +89,13 @@ export const ITwinTileMUI = ({
   );
 
   const moreOptionsBuilt = React.useMemo(
-    () => buildContextMenuItemsMUI(contextMenuItems, iTwin, refetchITwins),
+    () =>
+      buildContextMenuItemsMUI(
+        contextMenuItems,
+        iTwin,
+        undefined,
+        refetchITwins
+      ),
     [contextMenuItems, iTwin, refetchITwins]
   );
 
@@ -140,7 +146,7 @@ export const ITwinTileMUI = ({
               sx={{ lineHeight: 0, color: "text.secondary" }}
             >
               {/* TODO: align this with iModel default thumbnail generation */}
-              <Icon href={svgItwin} size="large" render={undefined} />
+              <Icon href={svgItwin} size="large" />
             </Box>
           </Box>
         )

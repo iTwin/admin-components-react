@@ -30,7 +30,6 @@ import {
 } from "../iModelTiles/IModelTileMUI";
 import { BaseCardLoading } from "../../components/baseCard/BaseCardLoading";
 import { IModelGridProps } from "./IModelGrid";
-import { Icon } from "@stratakit/mui";
 
 export interface IModelGridMUIProps
   extends Omit<
@@ -153,10 +152,10 @@ const IModelGridInternal = ({
   }, [
     requestType,
     iModelActions,
-    strings.removeFromRecents,
+    strings,
     removeFromRecentsIcon,
     accessToken,
-    apiOverrides?.serverEnvironmentPrefix,
+    apiOverrides,
   ]);
 
   const {
@@ -200,7 +199,6 @@ const IModelGridInternal = ({
     iModel: IModelFull,
     clickFn: () => void
   ) => {
-    console.log("iModel clicked", iModel);
     try {
       if (!accessToken || disableAddToRecents) {
         clickFn();
@@ -268,8 +266,8 @@ const IModelGridInternal = ({
                 {...tileOverrides}
                 onOpen={
                   resolvedOnOpen
-                    ? () => {
-                        iModelClickAndAddToRecents(iModel, () =>
+                    ? async () => {
+                        await iModelClickAndAddToRecents(iModel, () =>
                           resolvedOnOpen(iModel)
                         );
                       }

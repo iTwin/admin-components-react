@@ -27,7 +27,7 @@ A new `src/mui/index.ts` barrel re-exports MUI components under legacy-aligned n
 | `tileProps.name`        | `title`                 | Renamed                 | `title` defaults to `iModel.displayName`.                                                                       |
 | `tileProps.thumbnail`   | `thumbnail`             | Moved                   | Flattened to a top-level prop. Legacy defaults to `IModelThumbnail`; V2 defaults to `IModelThumbnailMUI`.       |
 | `tileProps.leftIcon`    | `thumbnailTopLeft`      | Renamed                 | Flattened to a top-level `BaseCard` slot prop.                                                                  |
-| `tileProps.rightIcon`   | `thumbnailTopRight`     | Renamed                 | Shared with the favorite icon. V2 renders the favorite here automatically.                                      |
+| `tileProps.rightIcon`   | None                    | Removed                 | MUI renders the favorite and context menu trigger here automatically.                                           |
 | `tileProps.badge`       | `badge`                 | Renamed                 | Flattened to a top-level prop. Value is placed in `thumbnailBottomRight`.                                       |
 | `tileProps.getBadge`    | `getBadge`              | Moved                   | Flattened to a top-level prop. Return value is placed in `thumbnailBottomRight`. Takes precedence over `badge`. |
 | `tileProps.buttons`     | `actions`               | Renamed + type changed  | Type changes from `ReactNode` to `BaseCardActionItem[]`. Rendered as hover-overlay buttons.                     |
@@ -77,7 +77,7 @@ A new `src/mui/index.ts` barrel re-exports MUI components under legacy-aligned n
 | `tileProps.description` | `description`                 | Moved                   | Flattened; defaults to `iTwin.number`.                                                                                     |
 | `tileProps.thumbnail`   | `thumbnail`                   | Moved                   | Flattened. Default changes from itwinui `SvgItwin` icon to Stratakit `Icon` with `itwin.svg`.                              |
 | `tileProps.leftIcon`    | `thumbnailTopLeft`            | Renamed                 | Flattened to a top-level `BaseCard` slot prop.                                                                             |
-| `tileProps.rightIcon`   | `thumbnailTopRight`           | Renamed                 | Shared with the favorite icon. MUI component renders the favorite here automatically.                                      |
+| `tileProps.rightIcon`   | None                          | Removed                 | MUI renders the favorite and context menu trigger here automatically.                                                      |
 | `tileProps.badge`       | `thumbnailBottomRight`        | Renamed                 | MUI auto-renders a `StatusBadge` here when `iTwin.status` is not "active". Can be overridden via `getBadge`.               |
 | `tileProps.buttons`     | `actions`                     | Renamed + type changed  | Type changes from `ReactNode` to `BaseCardActionItem[]`. Rendered as hover-overlay buttons.                                |
 | `tileProps.moreOptions` | `contextMenuItems`            | Renamed + type changed  | Type changes from `ReactNode` to `ContextMenuBuilderItemMUI<ITwinFull>[]`. Also accepts `contextMenuContent` pass-through. |

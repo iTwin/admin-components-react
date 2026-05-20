@@ -18,7 +18,7 @@ import svgStatusError from "@stratakit/icons/status-error.svg";
 import bridgeThumbnail from "../utils/bridge.jpg";
 import nightThumbnail from "../utils/night.jpg";
 import { Icon } from "@stratakit/mui";
-import { action } from "@storybook/addon-actions";
+import { action, actions } from "@storybook/addon-actions";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
 import Typography from "@mui/material/Typography";
@@ -105,8 +105,9 @@ const contextMenuItems: ContextMenuBuilderItemMUI[] = [
 ];
 const contextMenuContent = buildContextMenuItemsMUI(
   contextMenuItems,
-  {} as any,
-  () => Promise.resolve()
+  { some: "object" } as const,
+  () => actions("closeMenu called"),
+  () => actions("refetch called")
 );
 
 const everythingArgs: BaseCardProps = {

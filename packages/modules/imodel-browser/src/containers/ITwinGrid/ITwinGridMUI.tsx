@@ -180,10 +180,6 @@ export const ITwinGridMUI = ({
                 selected={
                   selectedITwinId === iTwin.id || tileOverrides?.selected
                 }
-                onSelect={() => {
-                  setSelectedITwinId(iTwin.id);
-                  onSelect?.(iTwin);
-                }}
                 onOpen={onOpen ? () => onOpen(iTwin) : undefined}
                 useTileState={useIndividualState}
                 isFavorite={iTwinFavorites.has(iTwin.id)}
@@ -192,11 +188,22 @@ export const ITwinGridMUI = ({
                 refetchITwins={refetchITwins}
                 thumbnail={iTwin.image} // This is a fix for https://github.com/iTwin/admin-components-react/issues/196
                 {...tileOverrides}
+                onSelect={() => {
+                  // ensure we still track the selected state even when we have tileOverrides
+                  setSelectedITwinId(iTwin.id);
+                  tileOverrides?.onSelect
+                    ? tileOverrides.onSelect(iTwin)
+                    : onSelect?.(iTwin);
+                }}
               />
             ))}
             {fetchMore ? (
               <>
-                <InView onChange={fetchMore}>
+                <InView
+                  onChange={(inView) => {
+                    inView && fetchMore();
+                  }}
+                >
                   <BaseCardLoading />
                 </InView>
                 <BaseCardLoading />

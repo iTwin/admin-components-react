@@ -11,7 +11,6 @@ import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
 import Stack from "@mui/material/Stack";
 import type { SxProps, Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
@@ -41,13 +40,6 @@ export interface BaseCardActionItem {
   key: string;
   label: ReactNode;
   onClick?: React.MouseEventHandler<HTMLAnchorElement | HTMLButtonElement>;
-}
-
-export interface BaseCardContextMenuItem {
-  key: string;
-  label: ReactNode;
-  disabled?: boolean;
-  onClick?: React.MouseEventHandler<HTMLLIElement>;
 }
 
 export interface BaseCardProps
@@ -192,10 +184,6 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
 
     const handleContextMenu = React.useCallback(
       (event: React.MouseEvent<HTMLDivElement>) => {
-        console.log("Context menu requested at", {
-          x: event.clientX,
-          y: event.clientY,
-        });
         if (!contextMenuContent) {
           return;
         }
@@ -220,10 +208,6 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
     );
 
     const hasContextMenu = !!contextMenuContent;
-    console.log("Rendering BaseCard with context menu:", {
-      hasContextMenu,
-      contextMenuContent,
-    });
 
     if (actions?.length === 1) {
       console.warn(
@@ -305,7 +289,7 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
             {thumbnailTopLeft && (
               <Box className={styles.thumbnailTopLeft}>{thumbnailTopLeft}</Box>
             )}
-            {(thumbnailTopRight || hasContextMenu) && (
+            {(thumbnailTopRight ?? hasContextMenu) && (
               <Box className={styles.thumbnailTopRight}>
                 {thumbnailTopRight}
                 {hasContextMenu && !cardDisabled && (
@@ -315,10 +299,7 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
                     onClick={handleMoreButtonClick}
                     // sx={{ bgcolor: "background.paper" }} // TODO: how do we make this look good
                   >
-                    <Icon
-                      render={<img src={svgMoreVertical} alt="" aria-hidden />}
-                      size="regular"
-                    />
+                    <Icon href={svgMoreVertical} alt="" size="regular" />
                   </IconButton>
                 )}
               </Box>

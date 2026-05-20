@@ -4,21 +4,16 @@
  *--------------------------------------------------------------------------------------------*/
 import svgMore from "@stratakit/icons/more-vertical.svg"; // TODO: more-horizontal is missing
 import { Icon } from "@stratakit/mui";
-import IconButton from "@mui/material/IconButton";
-
 import React from "react";
 import { useMemo } from "react";
 import { CellProps } from "react-table";
-
 import { useIModelFavoritesContext } from "../../contexts/IModelFavoritesContext";
 import { IModelCellColumn, IModelCellOverrides, IModelFull } from "../../types";
 import MoreMenu from "../../components/MoreMenu";
 import {
   buildContextMenuItemsMUI,
-  ContextMenuBuilderItem,
   ContextMenuBuilderItemMUI,
 } from "../../utils/_buildMenuOptions";
-import Menu from "@mui/material/Menu";
 import { TileFavoriteIconMUI } from "../../components/tileFavoriteIcon/TileFavoriteIconMUI";
 
 export interface IModelTableStrings {

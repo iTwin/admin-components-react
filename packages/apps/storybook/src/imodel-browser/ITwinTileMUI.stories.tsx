@@ -14,6 +14,7 @@ import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
 import bridgeThumbnail from "../utils/bridge.jpg";
 import powerThumbnail from "../utils/power.jpg";
+import Grid from "@mui/material/Grid";
 
 const InConstrainedContainer = ({
   children,
@@ -132,10 +133,19 @@ MoreOptions.args = {
   disabled: false,
   loading: false,
   selected: false,
+  thumbnailTopLeft: (
+    <Chip size="small" label="Thumbnail Top Left" color="secondary" />
+  ),
   thumbnail: powerThumbnail,
   getBadge: () => <Chip size="small" label="Badge override" color="primary" />,
   actions: [
     { key: "open", label: "Open", onClick: action("iTwin open clicked") },
     { key: "share", label: "Share", onClick: action("iTwin share clicked") },
   ],
+  additionalContent: (
+    <Grid spacing={4} sx={{ justifyContent: "space-around" }} container>
+      <Box sx={{ backgroundColor: "divider" }}>Additional Content</Box>
+      <Box sx={{ backgroundColor: "divider" }}>More Content</Box>
+    </Grid>
+  ),
 };

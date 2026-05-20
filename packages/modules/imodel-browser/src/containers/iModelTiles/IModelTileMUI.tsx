@@ -108,7 +108,13 @@ export const IModelTileMUI = ({
   );
 
   const moreOptionsBuilt = React.useMemo(
-    () => buildContextMenuItemsMUI(contextMenuItems, iModel, refetchIModels),
+    () =>
+      buildContextMenuItemsMUI(
+        contextMenuItems,
+        iModel,
+        undefined,
+        refetchIModels
+      ),
     [contextMenuItems, iModel, refetchIModels]
   );
 
@@ -163,7 +169,7 @@ export const IModelTileMUI = ({
       contextMenuContent={hasMoreOptions ? moreOptionsBuilt : undefined}
       status={status}
       statusIcon={<StatusIcon status={status} selected={selected} />}
-      description={iModel.description ?? ""}
+      description={description ?? iModel.description ?? ""}
       additionalDescription={additionalDescription}
       actions={actions}
       slotProps={slotProps}
