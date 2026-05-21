@@ -86,20 +86,38 @@ export const OverrideCellData = Template.bind({});
 OverrideCellData.args = {
   ...baseArgs,
   viewMode: "cells",
-  cellOverrides: {
-    name: (props) =>
-      props.value.includes("a") ? (
-        <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-          <IconButton aria-label="apple-icon">
-            <Icon href={Svg3D} />
-          </IconButton>
-          {props.value}
-        </div>
-      ) : (
-        props.value
-      ),
-    description: (props) => <em>{props.value}</em>,
-    hideColumns: [IModelCellColumn.CreatedDateTime],
+  tableOverrides: {
+    columnOverrides: {
+      [IModelCellColumn.Name]: {
+        renderCell: (params) =>
+          params.formattedValue?.includes("*") ? (
+            <div>
+              {params.formattedValue}{" "}
+              <Typography variant="caption">
+                (redacted number in name)
+              </Typography>
+            </div>
+          ) : (
+            <div>
+              {params.formattedValue}{" "}
+              <Typography variant="caption">(no redactions)</Typography>
+            </div>
+          ),
+        valueFormatter: (value, iModel) => {
+          // replace any numbers with *
+          return iModel.displayName?.replace(/[0-9]/g, "*");
+        },
+      },
+      [IModelCellColumn.Description]: {
+        renderCell: (params) => (
+          <em>
+            Add random number {Math.floor(Math.random() * 100)} to description
+            &quot;{params.value}&quot;
+          </em>
+        ),
+      },
+    },
+    hideColumns: [IModelCellColumn.LastModified],
   },
 };
 
@@ -246,7 +264,7 @@ DisableAddToRecents.argTypes = {
   viewMode: { table: { disable: true } },
   pageSize: { table: { disable: true } },
   maxCount: { table: { disable: true } },
-  cellOverrides: { table: { disable: true } },
+  tableOverrides: { table: { disable: true } },
   className: { table: { disable: true } },
 };
 

@@ -4,17 +4,20 @@
  *--------------------------------------------------------------------------------------------*/
 import "./ITwinGrid.scss";
 
-import { Table, ThemeProvider } from "@itwin/itwinui-react";
 import React from "react";
 import { InView } from "react-intersection-observer";
+import Box from "@mui/material/Box";
 import { NoResults } from "../../components/noResults/NoResults";
-import { DataStatus, type ITwinFull } from "../../types";
+import {
+  DataStatus,
+  type ITwinTableOverridesMUI,
+  type ITwinFull,
+} from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
 import { ContextMenuBuilderItemMUI } from "../../utils/_buildMenuOptions";
 import { useITwinData } from "./useITwinData";
 import { useITwinFavorites } from "./useITwinFavorites";
-import { useITwinTableConfig } from "./useITwinTableConfig";
-import Box from "@mui/material/Box";
+import { ITwinTableMUI } from "./ITwinTableMUI";
 import { ITwinTileMUI, type ITwinTileMUIProps } from "./ITwinTileMUI";
 import { BaseCardLoading } from "../../components/baseCard/BaseCardLoading";
 import type { ITwinGridProps, ITwinGridStrings } from "./ITwinGrid";
@@ -31,7 +34,12 @@ export { ITwinGridStrings };
 export interface ITwinGridMUIProps
   extends Omit<
     ITwinGridProps,
-    "onThumbnailClick" | "iTwinActions" | "tileOverrides" | "useIndividualState"
+    | "onThumbnailClick"
+    | "iTwinActions"
+    | "tileOverrides"
+    | "useIndividualState"
+    | "cellOverrides"
+    | "tableOverrides"
   > {
   /** Select handler for the iTwin tile. */
   onSelect?(iTwin: ITwinFull): void;
@@ -43,6 +51,8 @@ export interface ITwinGridMUIProps
   useIndividualState?: IndividualITwinStateHookMUI;
   /** Static props to apply over each tile, mainly used for tileProps, overrides ITwinGrid provided values */
   tileOverrides?: Partial<ITwinTileMUIProps>;
+  /** Overrides for table column definitions and visibility in cells viewMode */
+  tableOverrides?: ITwinTableOverridesMUI;
 }
 
 /**
@@ -63,7 +73,7 @@ export const ITwinGridMUI = ({
   useIndividualState,
   postProcessCallback,
   viewMode,
-  cellOverrides,
+  tableOverrides,
   className,
 }: ITwinGridMUIProps) => {
   const [selectedITwinId, setSelectedITwinId] = React.useState<
@@ -121,17 +131,6 @@ export const ITwinGridMUI = ({
       postProcessCallback?.([...fetchedItwins], fetchStatus) ?? fetchedItwins,
     [postProcessCallback, fetchedItwins, fetchStatus]
   );
-
-  const { columns, onRowClick } = useITwinTableConfig({
-    iTwinActions,
-    onThumbnailClick: onSelect,
-    strings,
-    iTwinFavorites,
-    addITwinToFavorites,
-    removeITwinFromFavorites,
-    refetchITwins,
-    cellOverrides,
-  } as any); // TODO: types
 
   const noResultsText = {
     [DataStatus.Fetching]: "",
@@ -215,24 +214,19 @@ export const ITwinGridMUI = ({
       </Box>
     )
   ) : (
-    <ThemeProvider theme="inherit">
-      <Table<{ [P in keyof ITwinFull]: ITwinFull[P] }>
-        columns={columns}
-        data={iTwins}
-        onRowClick={onRowClick}
-        emptyTableContent={
-          fetchStatus === DataStatus.Fetching
-            ? strings.tableLoadingData
-            : strings.noITwins
-        }
-        isLoading={fetchStatus === DataStatus.Fetching}
-        isSortable
-        onBottomReached={fetchMore}
-        autoResetFilters={false}
-        autoResetSortBy={false}
-        bodyProps={{ className: onSelect ? "row-cursor" : "" }}
-      />
-    </ThemeProvider>
+    <ITwinTableMUI
+      iTwins={iTwins}
+      iTwinActions={iTwinActions}
+      onOpen={onOpen}
+      strings={strings}
+      iTwinFavorites={iTwinFavorites}
+      addITwinToFavorites={addITwinToFavorites}
+      removeITwinFromFavorites={removeITwinFromFavorites}
+      refetchITwins={refetchITwins}
+      tableOverrides={tableOverrides}
+      isLoading={fetchStatus === DataStatus.Fetching}
+      fetchMore={fetchMore}
+    />
   );
 };
 

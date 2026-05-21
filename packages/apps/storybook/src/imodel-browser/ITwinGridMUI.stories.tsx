@@ -9,6 +9,7 @@ import {
   ITwinTile,
   DataStatus,
   type ITwinFull,
+  ITwinCellColumn,
 } from "@itwin/imodel-browser-react/mui";
 import { SvgHeart } from "@itwin/itwinui-icons-react";
 import { Code, IconButton } from "@itwin/itwinui-react";
@@ -26,11 +27,11 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/material/Typography";
-import { ITwinCellColumn } from "@itwin/imodel-browser-react";
 import bridgeThumbnail from "../utils/bridge.jpg";
 import powerThumbnail from "../utils/power.jpg";
 import nightThumbnail from "../utils/night.jpg";
 import overpassThumbnail from "../utils/overpass.jpg";
+import Box from "@mui/material/Box";
 
 type ITwinTileType = React.ComponentPropsWithoutRef<typeof ITwinTile>;
 
@@ -56,27 +57,43 @@ Primary.args = {
   ...baseArgs,
 };
 
-export const OverrideCellData = Template.bind({});
-OverrideCellData.args = {
+export const TableView = Template.bind({});
+TableView.args = {
   ...baseArgs,
   viewMode: "cells",
-  cellOverrides: {
-    ITwinNumber: (props) => (
-      <strong>
-        <IconButton
-          size="small"
-          styleType="borderless"
-          onClick={(e) => {
-            e.stopPropagation();
-            console.log("Icon Clicked");
-          }}
-        >
-          <SvgHeart />
-        </IconButton>{" "}
-        {props.value}
-      </strong>
-    ),
-    ITwinName: (props) => <i style={{ color: "red" }}>{props.value}</i>,
+};
+
+export const TableViewWithOverrides = Template.bind({});
+TableViewWithOverrides.args = {
+  ...baseArgs,
+  viewMode: "cells",
+  tableOverrides: {
+    columnOverrides: {
+      [ITwinCellColumn.Number]: {
+        renderCell: (params) => (
+          <div>
+            <IconButton
+              size="small"
+              styleType="borderless"
+              onClick={(e) => {
+                e.stopPropagation();
+                action("Icon Clicked")();
+              }}
+            >
+              <SvgHeart />
+            </IconButton>{" "}
+            {params.formattedValue}
+          </div>
+        ),
+      },
+      [ITwinCellColumn.Name]: {
+        renderCell: (params) => (
+          <Box sx={{ display: "inline-block", transform: "rotate(180deg)" }}>
+            {params.value}
+          </Box>
+        ),
+      },
+    },
     hideColumns: [ITwinCellColumn.LastModified],
   },
 };
@@ -134,7 +151,7 @@ IndividualContextMenu.args = {
         action("Add iTwinNumber to " + iTwin?.displayName)(iTwin),
     },
     {
-      children: "Edit iTwinNumber",
+      children: (iTwin) => `Edit iTwin ${iTwin.displayName}`,
       visible: (iTwin) => !!iTwin.number,
       key: "editD",
       onClick: (iTwin) => action("Edit iTwinNumber: " + iTwin?.number)(iTwin),

@@ -21,9 +21,12 @@ export interface ContextMenuBuilderItem<T = any>
  * Used by MUI components and passed to the BaseCard.
  */
 export interface ContextMenuBuilderItemMUI<T = any>
-  extends Omit<MuiMenuItemProps, "onClick" | "value" | "disabled"> {
+  extends Omit<
+    MuiMenuItemProps,
+    "onClick" | "value" | "disabled" | "children"
+  > {
   key: string;
-  children: React.ReactNode;
+  children: React.ReactNode | ((value: T) => React.ReactNode);
   visible?: boolean | ((value: T) => boolean);
   onClick?: ((value?: T, refetchData?: () => void) => void) | undefined;
   disabled?: MuiMenuItemProps["disabled"] | ((value: T) => boolean);
@@ -82,7 +85,7 @@ export const buildContextMenuItemsMUI = <T,>(
           onClick?.(value, refetchData);
         }}
       >
-        {children}
+        {typeof children === "function" ? children(value) : children}
       </MuiMenuItem>
     ));
 };

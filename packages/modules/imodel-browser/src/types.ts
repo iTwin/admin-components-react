@@ -3,6 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 
+import { GridColDef } from "@mui/x-data-grid";
 import { CellProps } from "react-table";
 
 /** Full representation of the iModel. */
@@ -140,6 +141,15 @@ export type IModelCellOverrides = {
   hideColumns?: IModelCellColumn[];
 };
 
+export type IModelTableOverridesMUI = {
+  /** Per-column overrides merged onto the default column definitions. */
+  columnOverrides?: Partial<
+    Record<IModelCellColumn, Partial<GridColDef<IModelFull>>>
+  >;
+  /** Columns to hide from the table. */
+  hideColumns?: IModelCellColumn[];
+};
+
 /* Supported ITwin cell columns */
 export enum ITwinCellColumn {
   Favorite = "Favorite",
@@ -152,6 +162,15 @@ export type ITwinCellOverrides = {
   ITwinNumber?: (cellData: CellProps<ITwinFull>) => React.ReactNode;
   ITwinName?: (cellData: CellProps<ITwinFull>) => React.ReactNode;
   LastModified?: (cellData: CellProps<ITwinFull>) => React.ReactNode;
+  hideColumns?: ITwinCellColumn[];
+};
+
+export type ITwinTableOverridesMUI = {
+  /** Per-column overrides merged onto the default column definitions. */
+  columnOverrides?: Partial<
+    Record<ITwinCellColumn, Partial<GridColDef<ITwinFull>>>
+  >;
+  /** Columns to hide from the table. */
   hideColumns?: ITwinCellColumn[];
 };
 

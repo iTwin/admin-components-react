@@ -123,7 +123,7 @@ A new `src/mui/index.ts` barrel re-exports MUI components under legacy-aligned n
 
 ### Behavior changes
 
-- The "cells" (table) view mode still uses itwinui `Table` component with `ThemeProvider theme="inherit"`. This has not been migrated to MUI yet.
+- The "cells" (table) view mode uses MUI X DataGrid (Community edition) via `IModelTableMUI`. See [cellOverrides → tableOverrides migration](#celloverrides--tableoverrides-migration) below.
 - Infinite scroll loading indicators use `BaseCardLoading` instead of `IModelGhostTile`.
 - The grid manages `resolvedOnOpen` / `resolvedOnSelect` from `tileOverrides` to allow overrides to take effect properly.
 
@@ -153,7 +153,7 @@ A new `src/mui/index.ts` barrel re-exports MUI components under legacy-aligned n
 
 ### Behavior changes
 
-- TODO: The "cells" (table) view mode still uses itwinui `Table` with `useITwinTableConfig`.
+- The "cells" (table) view mode uses MUI X DataGrid (Community edition) via `ITwinTableMUI`. See [cellOverrides → tableOverrides migration](#celloverrides--tableoverrides-migration) below.
 - Selection state is tracked internally — calling `onSelect` also sets `selectedITwinId`, which highlights the tile via `selected` prop.
 
 ---
@@ -164,7 +164,7 @@ A new `src/mui/index.ts` barrel re-exports MUI components under legacy-aligned n
 | ---------- | ------------------------------------------------------ | ---------------------------------------------- | ----------------------------------------------- |
 | Extends    | `Omit<itwinui MenuItemProps, "onClick" \| ...>`        | `Omit<MUI MenuItemProps, "onClick" \| ...>`    | Base type changes from itwinui to MUI MenuItem. |
 | `key`      | `string`                                               | `string`                                       | Unchanged.                                      |
-| `children` | Positional (via itwinui `MenuItem`)                    | `children: ReactNode` (explicit, **required**) | Must be provided explicitly for MUI.            |
+| `children` | Positional (via itwinui `MenuItem`)                    | `ReactNode \| ((value: T) => ReactNode)` (explicit, **required**) | Must be provided explicitly. Accepts a render function to generate content per-item (e.g. `(iTwin) => \`View ${iTwin.displayName}\``). |
 | `visible`  | `boolean \| ((value: T) => boolean)`                   | Same                                           | Unchanged.                                      |
 | `onClick`  | `((value?: T, refetchData?: () => void) => void)`      | Same                                           | Unchanged.                                      |
 | `disabled` | `MenuItemProps["disabled"] \| ((value: T) => boolean)` | Same (MUI `MenuItemProps["disabled"]`)         | Unchanged behavior, different base type.        |
@@ -232,10 +232,86 @@ This allows consumers to swap imports from the legacy barrel to the MUI barrel w
 - `BaseCard` (internal building block)
 - `TileFavoriteIconMUI` (internal)
 
+---
+
+## cellOverrides → tableOverrides migration
+
+The legacy `cellOverrides` API (used by `IModelGrid` and `ITwinGrid`) passes react-table `CellProps` render functions per column. The MUI variants replace this with a `tableOverrides` prop using a MUI-native API.
+
+### Shape change
+
+Legacy (`IModelCellOverrides` / `ITwinCellOverrides`):
+
+```ts
+cellOverrides: {
+  name: (cellProps: CellProps<IModelFull>) => <div>{cellProps.value}</div>,
+  description: (cellProps) => <em>{cellProps.value}</em>,
+  hideColumns: [IModelCellColumn.LastModified],
+}
+```
+
+MUI (`IModelTableOverridesMUI` / `ITwinTableOverridesMUI`):
+
+```ts
+tableOverrides: {
+  columnOverrides: {
+    [IModelCellColumn.Name]: {
+      renderCell: (params) => <div>{params.value}</div>,
+    },
+    [IModelCellColumn.Description]: {
+      renderCell: (params) => <em>{params.value}</em>,
+      sortable: false,
+    },
+  },
+  hideColumns: [IModelCellColumn.LastModified],
+}
+```
+
+### Key differences
+
+| Aspect                 | Legacy                                                                  | MUI                                                                                                 |
+| ---------------------- | ----------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| Override shape         | Flat keys (`name`, `description`, `lastModified`) with render functions | `columnOverrides` record keyed by `IModelCellColumn` / `ITwinCellColumn` enum                       |
+| Render function params | react-table `CellProps<T>` (`{ value, row: { original } }`)             | MUI `GridRenderCellParams<T>` (`{ value, row, formattedValue, ... }`)                               |
+| Override scope         | Render function only                                                    | Any `GridColDef` property (`renderCell`, `valueFormatter`, `width`, `sortable`, `headerName`, etc.) |
+| Hide columns           | `hideColumns: CellColumn[]` (same)                                      | `hideColumns: CellColumn[]` (same)                                                                  |
+| Prop name              | `cellOverrides`                                                         | `tableOverrides`                                                                                    |
+| Type safety            | `as any` shims needed internally                                        | Fully typed — overrides are `Partial<GridColDef<T>>`                                                |
+
+### Column enum mapping
+
+**IModel columns** (`IModelCellColumn`):
+
+| Legacy key                         | Enum value                                                           | DataGrid field              |
+| ---------------------------------- | -------------------------------------------------------------------- | --------------------------- |
+| (favorites)                        | `IModelCellColumn.Favorite`                                          | `id`                        |
+| `name`                             | `IModelCellColumn.Name`                                              | `name`                      |
+| `description`                      | `IModelCellColumn.Description`                                       | `description`               |
+| `lastModified` / `createdDateTime` | `IModelCellColumn.LastModified` / `IModelCellColumn.CreatedDateTime` | `lastChangesetPushDateTime` |
+| (options)                          | `IModelCellColumn.Options`                                           | `actions`                   |
+
+**ITwin columns** (`ITwinCellColumn`):
+
+| Legacy key     | Enum value                     | DataGrid field         |
+| -------------- | ------------------------------ | ---------------------- |
+| (favorites)    | `ITwinCellColumn.Favorite`     | `id`                   |
+| `ITwinNumber`  | `ITwinCellColumn.Number`       | `number`               |
+| `ITwinName`    | `ITwinCellColumn.Name`         | `displayName`          |
+| `LastModified` | `ITwinCellColumn.LastModified` | `lastModifiedDateTime` |
+| (options)      | `ITwinCellColumn.Options`      | `actions`              |
+
+### Table component details
+
+- Component: MUI X DataGrid (Community/free edition, `@mui/x-data-grid`)
+- Localization: Bentley-specific strings mapped to DataGrid `localeText` prop (`noRowsLabel`, `noResultsOverlayLabel`). MUI pagination chrome uses MUI defaults — host app can localize via `ThemeProvider` + MUI locale pack.
+- Built-in features: Pagination, column sorting, column resize.
+- Row click: Fires `onOpen` callback with the clicked iModel/iTwin.
+
+---
+
 ## TODO
 
 - Rename `iTwinActions` and `iModelActions` to contextMenu?
 - Do we need a replacement for `isNew` and `fullWidth`?
 - Fix fallback icons - rendered differently currently
-- Table view
 - Verify icons on top of different colour thumbnails

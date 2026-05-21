@@ -2,17 +2,17 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { Table, ThemeProvider } from "@itwin/itwinui-react";
 import React from "react";
 import { InView } from "react-intersection-observer";
 import Box from "@mui/material/Box";
 import { NoResults } from "../../components/noResults/NoResults";
 import { IModelFavoritesProvider } from "../../contexts/IModelFavoritesContext";
 import {
-  AccessTokenProvider,
-  ApiOverrides,
+  type AccessTokenProvider,
+  type ApiOverrides,
   DataStatus,
-  IModelFull,
+  type IModelTableOverridesMUI,
+  type IModelFull,
   IModelSortOptions,
 } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
@@ -21,15 +21,14 @@ import {
   addIModelToRecents,
   removeIModelFromRecents,
 } from "../../utils/iModelApi";
-import styles from "./IModelGrid.module.scss";
 import { DEFAULT_PAGE_SIZE, useIModelData } from "./useIModelData";
-import { useIModelTableConfigMUI } from "./useIModelTableConfigMUI";
+import { IModelTableMUI } from "./IModelTableMUI";
 import {
   IModelTileMUI,
-  IModelTileMUIProps,
+  type IModelTileMUIProps,
 } from "../iModelTiles/IModelTileMUI";
 import { BaseCardLoading } from "../../components/baseCard/BaseCardLoading";
-import { IModelGridProps } from "./IModelGrid";
+import type { IModelGridProps } from "./IModelGrid";
 
 export interface IModelGridMUIProps
   extends Omit<
@@ -38,6 +37,8 @@ export interface IModelGridMUIProps
     | "iModelActions"
     | "useIndividualState"
     | "tileOverrides"
+    | "cellOverrides"
+    | "tableOverrides"
   > {
   /** Open handler. Adds iModel to recents when clicked unless disableAddToRecents is true. */
   onOpen?: IModelTileMUIProps["onOpen"];
@@ -52,6 +53,7 @@ export interface IModelGridMUIProps
   ) => Partial<IModelTileMUIProps>;
   /** Static props to apply over each tile, mainly used for tileProps, overrides IModelGrid provided values */
   tileOverrides?: Partial<IModelTileMUIProps>;
+  tableOverrides?: IModelTableOverridesMUI;
 }
 
 /**
@@ -88,7 +90,7 @@ const IModelGridInternal = ({
   viewMode,
   pageSize,
   maxCount,
-  cellOverrides,
+  tableOverrides,
   className,
   onLoadMore,
   onRefetch,
@@ -217,15 +219,6 @@ const IModelGridInternal = ({
     clickFn();
   };
 
-  const { columns, onRowClick } = useIModelTableConfigMUI({
-    iModelActions: enhancedIModelActions,
-    onOpen: (iModel: IModelFull) =>
-      iModelClickAndAddToRecents(iModel, () => onOpen?.(iModel)),
-    strings,
-    refetchIModels,
-    cellOverrides,
-  });
-
   const noResultsText = {
     [DataStatus.Fetching]: "",
     [DataStatus.Complete]: strings.noIModels,
@@ -297,26 +290,23 @@ const IModelGridInternal = ({
             )}
           </Box>
         ) : (
-          <ThemeProvider theme="inherit">
-            <Table<{ [P in keyof IModelFull]: IModelFull[P] }>
-              columns={columns}
-              data={iModels}
-              onRowClick={onRowClick}
-              emptyTableContent={
-                fetchStatus === DataStatus.Fetching
-                  ? strings.tableLoadingData
-                  : strings.noIModelSearch
-              }
-              isLoading={fetchStatus === DataStatus.Fetching}
-              isSortable
-              onBottomReached={fetchMore}
-              autoResetFilters={false}
-              autoResetSortBy={false}
-              bodyProps={{
-                className: resolvedOnOpen ? styles.rowCursor : "",
-              }}
-            />
-          </ThemeProvider>
+          <IModelTableMUI
+            iModels={iModels}
+            iModelActions={enhancedIModelActions}
+            onOpen={
+              resolvedOnOpen
+                ? (iModel: IModelFull) =>
+                    iModelClickAndAddToRecents(iModel, () =>
+                      resolvedOnOpen(iModel)
+                    )
+                : undefined
+            }
+            strings={strings}
+            refetchIModels={refetchIModels}
+            tableOverrides={tableOverrides}
+            isLoading={fetchStatus === DataStatus.Fetching}
+            fetchMore={fetchMore}
+          />
         )}
       </>
     );
