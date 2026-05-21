@@ -24,13 +24,4 @@ export const withAccessTokenOverride: <
 export const withITwinIdOverride: <T extends { iTwinId?: string | undefined }>(
   story: Story<T>
 ) => Story<T> = (Story) => (args, context) =>
-  Story(
-    {
-      ...args,
-      iTwinId:
-        args.iTwinId ??
-        context.globals.iTwinId ??
-        "23a67b97-30b3-4cdb-82c0-752edd10606b",
-    },
-    context
-  );
+  Story({ ...args, iTwinId: args.iTwinId ?? context.globals.iTwinId }, context);
