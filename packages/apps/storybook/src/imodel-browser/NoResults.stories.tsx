@@ -6,7 +6,7 @@ import {
   NoResults as ExternalComponent,
   NoResultsProps,
 } from "@itwin/imodel-browser-react";
-import { Meta, Story } from "@storybook/react/types-6-0";
+import type { Meta, StoryFn } from "storybook";
 import React from "react";
 
 export const NoResults = (props: NoResultsProps) => (
@@ -19,7 +19,7 @@ export default {
   excludeStories: ["NoResults"],
 } as Meta;
 
-const Template: Story<NoResultsProps> = (args) => <NoResults {...args} />;
+const Template: StoryFn<NoResultsProps> = (args) => <NoResults {...args} />;
 
 export const Primary = Template.bind({});
 Primary.args = {};

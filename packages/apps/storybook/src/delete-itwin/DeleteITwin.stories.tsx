@@ -7,9 +7,8 @@ import {
   DeleteITwinProps,
 } from "@itwin/delete-itwin-react";
 import { Button } from "@itwin/itwinui-react";
-import { useState } from "@storybook/addons";
-import { Meta, Story } from "@storybook/react/types-6-0";
-import React from "react";
+import type { Meta, StoryFn } from "storybook";
+import React, { useState } from "react";
 
 import {
   accessTokenArgTypes,
@@ -27,7 +26,7 @@ export default {
   argTypes: accessTokenArgTypes,
 } as Meta;
 
-export const Primary: Story<DeleteITwinProps> = withAccessTokenOverride(
+export const Primary: StoryFn<DeleteITwinProps> = withAccessTokenOverride(
   (args) => {
     const [showDialog, setShowDialog] = useState(false);
 

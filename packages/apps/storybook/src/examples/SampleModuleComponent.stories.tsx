@@ -7,7 +7,7 @@ import {
   IModelThumbnail as ExternalComponent,
   IModelThumbnailProps,
 } from "@itwin/imodel-browser-react";
-import { Meta, Story } from "@storybook/react/types-6-0";
+import type { Meta, StoryFn } from "storybook";
 import React from "react";
 
 /**
@@ -37,7 +37,7 @@ export default {
 } as Meta;
 
 // 5. Use the created component in the story template, the props documentation will appear "normal"
-const Template: Story<IModelThumbnailProps> = (args) => (
+const Template: StoryFn<IModelThumbnailProps> = (args) => (
   <IModelThumbnail {...args} />
 );
 

@@ -6,7 +6,7 @@ import {
   UpdateIModel as ExternalComponent,
   UpdateIModelProps,
 } from "@itwin/create-imodel-react";
-import { Meta, Story } from "@storybook/react/types-6-0";
+import type { Meta, StoryFn } from "storybook";
 import React from "react";
 
 import {
@@ -37,7 +37,7 @@ export default {
 const root = document.getElementById("root") as HTMLElement;
 root.style.height = "90vh";
 
-export const Update: Story<UpdateIModelProps> = withAccessTokenOverride(
+export const Update: StoryFn<UpdateIModelProps> = withAccessTokenOverride(
   (args) => {
     return <UpdateIModel {...args} />;
   }

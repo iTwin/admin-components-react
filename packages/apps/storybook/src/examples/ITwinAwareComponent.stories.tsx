@@ -3,7 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 
-import { Meta, Story } from "@storybook/react/types-6-0";
+import type { Meta, StoryFn } from "storybook";
 import React from "react";
 
 import { withITwinIdOverride } from "../utils/storyHelp";
@@ -17,7 +17,7 @@ export default {
   component: ITwinAwareComponent,
 } as Meta;
 
-const Template: Story<ITwinAwareComponentProps> = withITwinIdOverride(
+const Template: StoryFn<ITwinAwareComponentProps> = withITwinIdOverride(
   (args) => {
     return <ITwinAwareComponent {...args} />;
   }

@@ -21,7 +21,7 @@ import {
   Text,
   Tile,
 } from "@itwin/itwinui-react";
-import { Meta, Story } from "@storybook/react/types-6-0";
+import type { Meta, StoryFn } from "storybook";
 import React, { PropsWithChildren } from "react";
 
 import {
@@ -45,7 +45,7 @@ export default {
   excludeStories: ["ITwinGrid"],
 } as Meta;
 
-const Template: Story<ITwinGridProps> = withAccessTokenOverride((args) => (
+const Template: StoryFn<ITwinGridProps> = withAccessTokenOverride((args) => (
   <ITwinGrid {...args} />
 ));
 export const Primary = Template.bind({});
@@ -300,7 +300,7 @@ StatefulPropsOverrides.args = {
   useIndividualState,
 };
 
-export const WithPostProcessCallback: Story<ITwinGridProps> =
+export const WithPostProcessCallback: StoryFn<ITwinGridProps> =
   withAccessTokenOverride((args) => {
     const addStartTile = React.useCallback(
       (iTwins: ITwinFull[], status: DataStatus | undefined) => {

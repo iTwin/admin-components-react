@@ -1,9 +1,9 @@
 /*---------------------------------------------------------------------------------------------
-* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
-* See LICENSE.md in the project root for license terms and full copyright notice.
-*--------------------------------------------------------------------------------------------*/
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
 
-import { Meta, Story } from "@storybook/react/types-6-0";
+import type { Meta, StoryFn } from "storybook";
 import React from "react";
 
 import {
@@ -18,9 +18,11 @@ export default {
   argTypes: accessTokenArgTypes,
 } as Meta;
 
-const Template: Story<AuthenticatedProps> = withAccessTokenOverride((args) => {
-  return <Authentiated {...args} />;
-});
+const Template: StoryFn<AuthenticatedProps> = withAccessTokenOverride(
+  (args) => {
+    return <Authentiated {...args} />;
+  }
+);
 
 export const Primary = Template.bind({});
 Primary.args = {};

@@ -12,7 +12,7 @@ import {
   UploadImage,
 } from "@itwin/create-imodel-react";
 import { LabeledInput, LabeledSelect } from "@itwin/itwinui-react";
-import { Meta, Story } from "@storybook/react/types-6-0";
+import type { Meta, StoryFn } from "storybook";
 import React from "react";
 
 import {
@@ -38,14 +38,14 @@ export default {
 const root = document.getElementById("root") as HTMLElement;
 root.style.height = "90vh";
 
-export const Create: Story<CreateIModelProps> = withAccessTokenOverride(
+export const Create: StoryFn<CreateIModelProps> = withAccessTokenOverride(
   (args) => {
     return <CreateIModel {...args} />;
   }
 );
 
-export const WithExtentMap: Story<CreateIModelProps> = withAccessTokenOverride(
-  (args) => {
+export const WithExtentMap: StoryFn<CreateIModelProps> =
+  withAccessTokenOverride((args) => {
     return (
       <CreateIModel
         {...args}
@@ -62,10 +62,9 @@ export const WithExtentMap: Story<CreateIModelProps> = withAccessTokenOverride(
         }
       />
     );
-  }
-);
+  });
 
-export const CreateIModelCustomized: Story<CreateIModelProps> =
+export const CreateIModelCustomized: StoryFn<CreateIModelProps> =
   withAccessTokenOverride((args) => {
     return (
       <CreateIModel {...args}>

@@ -5,9 +5,15 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { ClientRequestContext } from "@bentley/bentleyjs-core";
 import { BrowserAuthorizationClient } from "@bentley/frontend-authorization-client";
-import addons, { types } from "@storybook/addons";
-import { useAddonState, useGlobals, useParameter } from "@storybook/api";
-import { IconButton, Icons, Loader, WithTooltip } from "@storybook/components";
+import {
+  addons,
+  types,
+  useAddonState,
+  useGlobals,
+  useParameter,
+} from "storybook/manager-api";
+import { Button, WithTooltip } from "storybook/internal/components";
+import { AlertIcon, KeyIcon, LockIcon } from "@storybook/icons";
 import React, { useRef, useState } from "react";
 
 addons.register("auth/toolbar", () => {
@@ -102,38 +108,29 @@ addons.register("auth/toolbar", () => {
                 {clientIdMissing
                   ? `No client Id configured: clientId must be provided in 'authClientConfig' parameter in preview.js`
                   : buildMissing
-                  ? `${redirectURI} not found: "storybook-auth-addon" is likely not built, run "rush build"`
-                  : state.loading
-                  ? "Authenticating..."
-                  : globals.accessToken
-                  ? `Authenticated: ${state.email}, click to sign off`
-                  : `Authenticate`}
+                    ? `${redirectURI} not found: "storybook-auth-addon" is likely not built, run "rush build"`
+                    : state.loading
+                      ? "Authenticating..."
+                      : globals.accessToken
+                        ? `Authenticated: ${state.email}, click to sign off`
+                        : `Authenticate`}
               </div>
             );
           }}
         >
-          <IconButton
-            active={globals.accessToken}
-            onClick={() => authenticate()}
-          >
+          <Button active={globals.accessToken} onClick={() => authenticate()}>
             {buildMissing || clientIdMissing ? (
-              <Icons icon={"alert"} style={{ color: "#FF4400" }} />
+              <AlertIcon style={{ color: "#FF4400" }} />
             ) : state.loading ? (
               <div style={{ width: 16, position: "relative" }}>
-                <Loader
-                  size={16}
-                  style={{
-                    borderLeftColor: "currentColor",
-                    borderBottomColor: "currentColor",
-                    borderRightColor: "currentColor",
-                    borderTopColor: "rgba(0,0,0,0)",
-                  }}
-                />
+                <span>...</span>
               </div>
+            ) : globals.accessToken ? (
+              <LockIcon />
             ) : (
-              <Icons icon={globals.accessToken ? "lock" : "key"} />
+              <KeyIcon />
             )}
-          </IconButton>
+          </Button>
         </WithTooltip>
       );
     },

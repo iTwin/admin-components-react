@@ -22,7 +22,7 @@ import {
   Text,
   Tile,
 } from "@itwin/itwinui-react";
-import { Meta, Story } from "@storybook/react/types-6-0";
+import type { Meta, StoryFn } from "storybook";
 import React from "react";
 
 import {
@@ -44,7 +44,7 @@ export default {
   excludeStories: ["IModelGrid"],
 } as Meta;
 
-const Template: Story<IModelGridProps> = withITwinIdOverride(
+const Template: StoryFn<IModelGridProps> = withITwinIdOverride(
   withAccessTokenOverride((args) => <IModelGrid {...args} />)
 );
 
@@ -85,7 +85,7 @@ OverrideCellData.args = {
   },
 };
 
-export const OverrideApiDataWithLoadMore: Story<IModelGridProps> =
+export const OverrideApiDataWithLoadMore: StoryFn<IModelGridProps> =
   withITwinIdOverride(
     withAccessTokenOverride((args) => {
       const initialData: IModelFull[] = [
@@ -379,7 +379,7 @@ StatefulPropsOverrides.args = {
   useIndividualState,
 };
 
-export const WithPostProcessCallback: Story<IModelGridProps> =
+export const WithPostProcessCallback: StoryFn<IModelGridProps> =
   withITwinIdOverride(
     withAccessTokenOverride((args) => {
       const [filter, setFilter] = React.useState("");

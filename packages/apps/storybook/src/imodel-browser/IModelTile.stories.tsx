@@ -5,7 +5,7 @@
 import { IModelTile as C, IModelTileProps } from "@itwin/imodel-browser-react";
 import { SvgImodel, SvgPlaceholder } from "@itwin/itwinui-icons-react";
 import { Badge, Button } from "@itwin/itwinui-react";
-import { Meta, Story } from "@storybook/react/types-6-0";
+import type { Meta, StoryFn } from "storybook";
 import React from "react";
 
 export const IModelTile = (props: IModelTileProps) => <C {...props} />;
@@ -16,7 +16,7 @@ export default {
   excludeStories: ["IModelTile"],
 } as Meta;
 
-const Template: Story<IModelTileProps> = (args) => <IModelTile {...args} />;
+const Template: StoryFn<IModelTileProps> = (args) => <IModelTile {...args} />;
 
 export const Primary = Template.bind({});
 Primary.args = {

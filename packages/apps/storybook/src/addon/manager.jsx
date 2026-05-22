@@ -3,15 +3,19 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 /* eslint-disable react-hooks/rules-of-hooks */
-import addons, { types } from "@storybook/addons";
-import { useAddonState, useArgTypes, useGlobals } from "@storybook/api";
 import {
-  IconButton,
-  Icons,
-  Loader,
+  addons,
+  types,
+  useAddonState,
+  useArgTypes,
+  useGlobals,
+} from "storybook/manager-api";
+import {
+  Button,
   TooltipLinkList,
   WithTooltip,
-} from "@storybook/components";
+} from "storybook/internal/components";
+import { BookIcon } from "@storybook/icons";
 import React from "react";
 
 addons.register("project/toolbar", () => {
@@ -47,20 +51,7 @@ addons.register("project/toolbar", () => {
               {
                 displayName: (
                   <div style={{ display: "flex", gap: 4 }}>
-                    <div
-                      style={{ width: 16, height: 16, position: "relative" }}
-                    >
-                      <Loader
-                        size={16}
-                        style={{
-                          borderLeftColor: "currentColor",
-                          borderBottomColor: "currentColor",
-                          borderRightColor: "currentColor",
-                          borderTopColor: "rgba(0,0,0,0)",
-                        }}
-                      />
-                    </div>
-                    <span>Fetching favorites</span>
+                    <span>Fetching favorites...</span>
                   </div>
                 ),
               },
@@ -117,7 +108,7 @@ addons.register("project/toolbar", () => {
             return <TooltipLinkList links={buildLinks(onHide)} />;
           }}
         >
-          <IconButton
+          <Button
             active={globals.iTwinId}
             title={`Favorite projects${
               globals.iTwinId ? " (click to unselect)" : ""
@@ -125,8 +116,8 @@ addons.register("project/toolbar", () => {
             onMouseEnter={() => fetchProjects()}
             onClick={() => updateGlobals({ iTwinId: "" })}
           >
-            <Icons icon={"book"} />
-          </IconButton>
+            <BookIcon />
+          </Button>
         </WithTooltip>
       ) : null;
     },
