@@ -30,11 +30,15 @@ export const parameters = {
 
 export const initialGlobals = {
   accessToken: "",
+  iTwinId: "",
 };
 
 export const globalTypes = {
   accessToken: {
     description: "OAuth access token set by the auth toolbar addon",
+  },
+  iTwinId: {
+    description: "iTwin ID selected via the project toolbar addon",
   },
 };
 

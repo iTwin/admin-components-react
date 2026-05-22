@@ -11,11 +11,11 @@ import {
   useGlobals,
 } from "storybook/manager-api";
 import {
-  Button,
+  IconButton,
   TooltipLinkList,
   WithTooltip,
 } from "storybook/internal/components";
-import { BookIcon } from "@storybook/icons";
+import { SvgItwin } from "@itwin/itwinui-icons-react";
 import React from "react";
 
 addons.register("project/toolbar", () => {
@@ -101,23 +101,24 @@ addons.register("project/toolbar", () => {
 
       return withITwinId && globals.accessToken ? (
         <WithTooltip
-          placement="top"
-          trigger="hover"
-          closeOnClick
+          placement="bottom"
+          trigger="click"
+          closeOnOutsideClick
+          onVisibleChange={(visible) => {
+            if (visible) fetchProjects();
+          }}
           tooltip={({ onHide }) => {
             return <TooltipLinkList links={buildLinks(onHide)} />;
           }}
         >
-          <Button
-            active={globals.iTwinId}
+          <IconButton
+            active={!!globals.iTwinId}
             title={`Favorite projects${
               globals.iTwinId ? " (click to unselect)" : ""
             }`}
-            onMouseEnter={() => fetchProjects()}
-            onClick={() => updateGlobals({ iTwinId: "" })}
           >
-            <BookIcon />
-          </Button>
+            <SvgItwin />
+          </IconButton>
         </WithTooltip>
       ) : null;
     },

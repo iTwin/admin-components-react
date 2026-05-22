@@ -40,7 +40,10 @@ export const IModelGrid = (props: IModelGridProps) => (
 export default {
   title: "imodel-browser/IModelGrid",
   component: IModelGrid,
-  argTypes: accessTokenArgTypes,
+  argTypes: {
+    ...accessTokenArgTypes,
+    iTwinId: { description: "iTwin ID to load iModels from" },
+  },
   excludeStories: ["IModelGrid"],
 } as Meta;
 

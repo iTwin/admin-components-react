@@ -12,7 +12,7 @@ import {
   useGlobals,
   useParameter,
 } from "storybook/manager-api";
-import { Button, WithTooltip } from "storybook/internal/components";
+import { IconButton, WithTooltip } from "storybook/internal/components";
 import { AlertIcon, KeyIcon, LockIcon } from "@storybook/icons";
 import React, { useRef, useState } from "react";
 
@@ -118,7 +118,13 @@ addons.register("auth/toolbar", () => {
             );
           }}
         >
-          <Button active={globals.accessToken} onClick={() => authenticate()}>
+          <IconButton
+            active={!!globals.accessToken}
+            title={
+              globals.accessToken ? "Sign out" : "Sign in with OAuth"
+            }
+            onClick={() => authenticate()}
+          >
             {buildMissing || clientIdMissing ? (
               <AlertIcon style={{ color: "#FF4400" }} />
             ) : state.loading ? (
@@ -130,7 +136,7 @@ addons.register("auth/toolbar", () => {
             ) : (
               <KeyIcon />
             )}
-          </Button>
+          </IconButton>
         </WithTooltip>
       );
     },
