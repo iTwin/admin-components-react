@@ -7,7 +7,7 @@ import {
   IModelThumbnail as ExternalComponent,
   IModelThumbnailProps,
 } from "@itwin/imodel-browser-react";
-import type { Meta, StoryFn } from "storybook";
+import type { Meta, StoryFn } from "@storybook/react-webpack5";
 import React from "react";
 
 /**

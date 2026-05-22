@@ -8,7 +8,7 @@ import {
   ManageVersionsProps,
 } from "@itwin/manage-versions-react";
 import { action } from "storybook/actions";
-import type { Meta, StoryFn } from "storybook";
+import type { Meta, StoryFn } from "@storybook/react-webpack5";
 import React from "react";
 
 import {

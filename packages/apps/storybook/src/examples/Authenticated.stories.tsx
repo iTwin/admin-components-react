@@ -3,7 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 
-import type { Meta, StoryFn } from "storybook";
+import type { Meta, StoryFn } from "@storybook/react-webpack5";
 import React from "react";
 
 import {

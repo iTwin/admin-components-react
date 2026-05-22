@@ -7,7 +7,7 @@ import {
   DeleteITwinProps,
 } from "@itwin/delete-itwin-react";
 import { Button } from "@itwin/itwinui-react";
-import type { Meta, StoryFn } from "storybook";
+import type { Meta, StoryFn } from "@storybook/react-webpack5";
 import React, { useState } from "react";
 
 import {

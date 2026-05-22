@@ -5,7 +5,7 @@
 import { IModelTile as C, IModelTileProps } from "@itwin/imodel-browser-react";
 import { SvgImodel, SvgPlaceholder } from "@itwin/itwinui-icons-react";
 import { Badge, Button } from "@itwin/itwinui-react";
-import type { Meta, StoryFn } from "storybook";
+import type { Meta, StoryFn } from "@storybook/react-webpack5";
 import React from "react";
 
 export const IModelTile = (props: IModelTileProps) => <C {...props} />;

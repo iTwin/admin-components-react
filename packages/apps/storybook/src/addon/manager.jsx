@@ -104,8 +104,8 @@ addons.register("project/toolbar", () => {
           placement="bottom"
           trigger="click"
           closeOnOutsideClick
-          onVisibleChange={(visible) => {
-            if (visible) fetchProjects();
+          onVisibleChange={async (visible) => {
+            if (visible) await fetchProjects();
           }}
           tooltip={({ onHide }) => {
             return <TooltipLinkList links={buildLinks(onHide)} />;
