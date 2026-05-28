@@ -22,6 +22,7 @@ export interface TileFavoriteIconProps {
   className?: string;
   /** Whether the icon button is disabled */
   disabled?: boolean;
+  sx?: React.ComponentProps<typeof ThumbnailIconButton>["sx"];
 }
 
 /**
@@ -36,6 +37,7 @@ export const TileFavoriteIconMUI = ({
   removeLabel,
   disabled,
   className = "",
+  sx,
 }: TileFavoriteIconProps) => {
   return (
     <ThumbnailIconButton
@@ -46,6 +48,7 @@ export const TileFavoriteIconMUI = ({
       className={className}
       size="small"
       disabled={disabled}
+      sx={sx}
     >
       <Icon href={pinIcon} size="regular" />
     </ThumbnailIconButton>

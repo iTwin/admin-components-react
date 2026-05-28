@@ -15,6 +15,7 @@ import React from "react";
 import bridgeThumbnail from "../utils/bridge.jpg";
 import powerThumbnail from "../utils/power.jpg";
 import Grid from "@mui/material/Grid";
+import { DefaultThumbnail } from "../../../../modules/imodel-browser/src/containers/ITwinGrid/ITwinTileMUI";
 
 const InConstrainedContainer = ({
   children,
@@ -121,6 +122,12 @@ Default.args = {
   disabled: false,
   loading: false,
   selected: false,
+};
+
+export const NoThumbnail = Template.bind({});
+NoThumbnail.args = {
+  ...baseArgs,
+  thumbnail: <DefaultThumbnail />,
 };
 
 export const Extensive = Template.bind({});

@@ -2,13 +2,10 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import svgItwin from "@stratakit/icons/itwin.svg";
-import { Icon } from "@stratakit/mui";
 import classNames from "classnames";
 import React from "react";
-
 import {
   BaseCard,
   type BaseCardProps,
@@ -23,6 +20,7 @@ import {
 import { ITwinTileProps } from "./ITwinTile";
 import styles from "./ITwinTile.module.scss";
 import { StatusIcon } from "./StatusIcon";
+import CardMedia from "@mui/material/CardMedia";
 
 export interface ITwinTileMUIProps
   extends Omit<ITwinTileProps, "onThumbnailClick" | "tileProps" | "fullWidth">,
@@ -80,6 +78,7 @@ export const ITwinTileMUI = ({
   className,
   ...rest
 }: ITwinTileMUIProps) => {
+  console.log("thumbnail is", thumbnail);
   const strings = _mergeStrings(
     {
       trialBadge: "Trial",
@@ -130,27 +129,7 @@ export const ITwinTileMUI = ({
       disabled={disabled}
       loading={loading}
       selected={selected}
-      thumbnail={
-        thumbnail ?? (
-          <Box
-            sx={{
-              display: "flex",
-              width: "100%",
-              height: "100%",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Box
-              component="span"
-              sx={{ lineHeight: 0, color: "textSecondary" }}
-            >
-              {/* TODO: align this with iModel default thumbnail generation */}
-              <Icon href={svgItwin} size="large" />
-            </Box>
-          </Box>
-        )
-      }
+      thumbnail={thumbnail ?? <DefaultThumbnail />}
       thumbnailTopRight={favoriteIcon}
       thumbnailBottomRight={
         getBadge?.(iTwin) ?? (
@@ -170,6 +149,10 @@ export const ITwinTileMUI = ({
     />
   );
 };
+
+export function DefaultThumbnail() {
+  return <CardMedia src={svgItwin} component="img" />;
+}
 
 function StatusBadge({
   status,

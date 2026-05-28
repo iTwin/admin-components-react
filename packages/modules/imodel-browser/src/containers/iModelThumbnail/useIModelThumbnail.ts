@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { useEffect, useState } from "react";
 
-import defaultIModelThumbnail from "../../images/default-thumbnail.png";
+import svgIModel from "@stratakit/icons/imodel.svg";
 import { AccessTokenProvider, ApiOverrides } from "../../types";
 import { _getAPIServer } from "../../utils/_apiOverrides";
 
@@ -57,7 +57,7 @@ export const useIModelThumbnail = (
         const thumbnail: string = response.ok
           ? await response.arrayBuffer().then(convertArrayBufferToUrlBase64PNG)
           : response.status === 404
-          ? defaultIModelThumbnail
+          ? svgIModel
           : await response.text().then((errorText) => {
               throw new Error(errorText);
             });
