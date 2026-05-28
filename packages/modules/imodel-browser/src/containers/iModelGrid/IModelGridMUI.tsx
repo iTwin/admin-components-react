@@ -250,6 +250,7 @@ const IModelGridInternal = ({
               gridTemplateColumns: "repeat(auto-fill, minmax(22.5rem, 1fr))",
             }}
             className={className}
+            data-testid="itwin-grid"
           >
             {iModels?.map((iModel) => (
               <IModelHookedTile
@@ -314,6 +315,7 @@ const IModelGridInternal = ({
             tableOverrides={tableOverrides}
             isLoading={fetchStatus === DataStatus.Fetching}
             fetchMore={fetchMore}
+            data-testid="itwin-table"
           />
         )}
       </>

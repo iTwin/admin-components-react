@@ -177,6 +177,7 @@ export const IModelTileMUI = ({
       actions={actions}
       slotProps={slotProps}
       selected={selected}
+      data-testid={`imodel-tile-${iModel.id}`}
       {...rest}
     />
   );

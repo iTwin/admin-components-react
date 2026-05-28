@@ -206,7 +206,7 @@ export const ITwinGrid = ({
     iTwins.length === 0 && noResultsText ? (
       <NoResults text={noResultsText} />
     ) : (
-      <GridStructure className={className}>
+      <GridStructure className={className} data-testid="itwin-grid">
         {fetchStatus === DataStatus.Fetching ? (
           <>
             <IModelGhostTile fullWidth={tileOverrides?.fullWidth} />
@@ -269,6 +269,7 @@ export const ITwinGrid = ({
         autoResetFilters={false}
         autoResetSortBy={false}
         bodyProps={{ className: onThumbnailClick ? "row-cursor" : "" }}
+        data-testid="itwin-table"
       />
     </ThemeProvider>
   );

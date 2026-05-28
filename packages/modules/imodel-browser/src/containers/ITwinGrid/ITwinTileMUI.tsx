@@ -145,6 +145,7 @@ export const ITwinTileMUI = ({
       description={description ?? iTwin.number ?? ""}
       additionalDescription={additionalDescription}
       slotProps={slotProps}
+      data-testid={`itwin-tile-${iTwin.id}`}
       {...rest}
     />
   );
