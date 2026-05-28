@@ -10,7 +10,6 @@ import Avatar from "@mui/material/Avatar";
 import AvatarGroup from "@mui/material/AvatarGroup";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
-import IconButton from "@mui/material/IconButton";
 import svgPin from "@stratakit/icons/pin.svg";
 import svgStatusSuccess from "@stratakit/icons/status-success.svg";
 import svgStatusWarning from "@stratakit/icons/status-warning.svg";
@@ -26,6 +25,7 @@ import {
   buildContextMenuItemsMUI,
   type ContextMenuBuilderItemMUI,
 } from "../../../../modules/imodel-browser/src/utils/_buildMenuOptions";
+import { ThumbnailIconButton } from "../../../../modules/imodel-browser/src/components/baseCard/ThumbnailIconButton";
 
 const InConstrainedContainer = ({
   children,
@@ -142,16 +142,14 @@ const everythingArgs: BaseCardProps = {
   ),
   thumbnailTopLeft: <Chip size="small" label="iModel" color="secondary" />,
   thumbnailTopRight: (
-    <>
-      <IconButton
-        size="small"
-        color="secondary"
-        aria-label="Add to favorites"
-        onClick={action("thumbnail favorite clicked")}
-      >
-        <Icon href={svgPin} size="regular" />
-      </IconButton>
-    </>
+    <ThumbnailIconButton
+      size="small"
+      color="secondary"
+      aria-label="Add to favorites"
+      onClick={action("thumbnail favorite clicked")}
+    >
+      <Icon href={svgPin} size="regular" />
+    </ThumbnailIconButton>
   ),
   thumbnailBottomLeft: <Chip size="small" label="Featured" color="default" />,
   thumbnailBottomRight: <Chip size="small" label="Trial" color="primary" />,

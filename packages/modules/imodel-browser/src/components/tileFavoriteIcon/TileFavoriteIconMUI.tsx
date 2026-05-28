@@ -2,12 +2,10 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import IconButton from "@mui/material/IconButton";
 import pinIcon from "@stratakit/icons/pin.svg";
 import { Icon } from "@stratakit/mui";
 import React from "react";
-
-import styles from "./TileFavoriteIcon.module.scss";
+import { ThumbnailIconButton } from "../baseCard/ThumbnailIconButton";
 
 export interface TileFavoriteIconProps {
   /** Whether the item is currently favorited */
@@ -24,8 +22,6 @@ export interface TileFavoriteIconProps {
   className?: string;
   /** Whether the icon button is disabled */
   disabled?: boolean;
-  /** MUI sx prop for custom styling */
-  sx?: React.ComponentProps<typeof IconButton>["sx"];
 }
 
 /**
@@ -40,10 +36,9 @@ export const TileFavoriteIconMUI = ({
   removeLabel,
   disabled,
   className = "",
-  sx = {},
 }: TileFavoriteIconProps) => {
   return (
-    <IconButton
+    <ThumbnailIconButton
       aria-label={isFavorite ? removeLabel : addLabel}
       onClick={async () => {
         isFavorite ? await onRemoveFromFavorites() : await onAddToFavorites();
@@ -51,18 +46,8 @@ export const TileFavoriteIconMUI = ({
       className={className}
       size="small"
       disabled={disabled}
-      sx={{
-        // bgcolor: "background.paper", TODO: how do we make this look good
-        ...sx,
-      }}
     >
-      <Icon
-        href={pinIcon}
-        size="regular"
-        className={
-          isFavorite ? styles.favouriteMUIIcon : styles.notFavouriteMUIIcon
-        }
-      />
-    </IconButton>
+      <Icon href={pinIcon} size="regular" />
+    </ThumbnailIconButton>
   );
 };

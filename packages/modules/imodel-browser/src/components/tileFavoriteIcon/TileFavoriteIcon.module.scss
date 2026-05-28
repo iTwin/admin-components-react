@@ -14,12 +14,3 @@
     background-color: var(--iui-color-background);
   }
 }
-
-// TODO: couldn't make this work in `sx` prop
-.favouriteMUIIcon {
-  color: var(--stratakit-color-icon-neutral-primary);
-}
-
-.notFavouriteMUIIcon {
-  color: var(--stratakit-color-icon-neutral-disabled);
-}

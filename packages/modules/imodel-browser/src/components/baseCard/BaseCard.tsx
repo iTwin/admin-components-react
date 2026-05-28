@@ -9,7 +9,6 @@ import Card, { CardProps } from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
 import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
-import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import Stack from "@mui/material/Stack";
 import type { SxProps, Theme } from "@mui/material/styles";
@@ -20,6 +19,7 @@ import { Icon } from "@stratakit/mui";
 import svgMoreVertical from "@stratakit/icons/more-vertical.svg";
 import styles from "./BaseCard.module.scss";
 import { BaseCardLoading } from "./BaseCardLoading";
+import { ThumbnailIconButton } from "./ThumbnailIconButton";
 
 interface BaseCardSlotStyleProps {
   className?: string;
@@ -258,11 +258,7 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
             className
           )}
           sx={{
-            cursor: cardDisabled
-              ? "not-allowed"
-              : onClick || onDoubleClick
-              ? "pointer"
-              : "default",
+            cursor: cardDisabled ? "not-allowed" : "default",
             ...sx,
           }}
           {...rest}
@@ -290,14 +286,12 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
               <Box className={styles.thumbnailTopRight}>
                 {thumbnailTopRight}
                 {hasContextMenu && !cardDisabled && (
-                  <IconButton
-                    size="small"
+                  <ThumbnailIconButton
                     aria-label="More options"
                     onClick={handleMoreButtonClick}
-                    // sx={{ bgcolor: "background.paper" }} // TODO: how do we make this look good
                   >
                     <Icon href={svgMoreVertical} alt="" size="regular" />
-                  </IconButton>
+                  </ThumbnailIconButton>
                 )}
               </Box>
             )}

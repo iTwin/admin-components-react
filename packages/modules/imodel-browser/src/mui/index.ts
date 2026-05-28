@@ -42,5 +42,6 @@ export {
 } from "../components/baseCard/BaseCardLoading";
 
 export { ContextMenuBuilderItemMUI as ContextMenuBuilderItem } from "../utils/_buildMenuOptions";
+export { ThumbnailIconButton } from "../components/baseCard/ThumbnailIconButton";
 
 export * from "../types";

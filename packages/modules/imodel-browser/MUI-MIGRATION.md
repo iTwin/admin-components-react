@@ -165,6 +165,7 @@ A new `src/mui/index.ts` barrel re-exports MUI components under legacy-aligned n
 | Extends    | `Omit<itwinui MenuItemProps, "onClick" \| ...>`        | `Omit<MUI MenuItemProps, "onClick" \| ...>`                       | Base type changes from itwinui to MUI MenuItem.                                                                                        |
 | `key`      | `string`                                               | `string`                                                          | Unchanged.                                                                                                                             |
 | `children` | Positional (via itwinui `MenuItem`)                    | `ReactNode \| ((value: T) => ReactNode)` (explicit, **required**) | Must be provided explicitly. Accepts a render function to generate content per-item (e.g. `(iTwin) => \`View ${iTwin.displayName}\``). |
+| `icon`     | Inherited from itwinui `MenuItem`                      | `ReactNode?`                                                      | **New explicit prop.** Optional icon rendered before `children`. When provided, the menu item gets flex alignment automatically.        |
 | `visible`  | `boolean \| ((value: T) => boolean)`                   | Same                                                              | Unchanged.                                                                                                                             |
 | `onClick`  | `((value?: T, refetchData?: () => void) => void)`      | Same                                                              | Unchanged.                                                                                                                             |
 | `disabled` | `MenuItemProps["disabled"] \| ((value: T) => boolean)` | Same (MUI `MenuItemProps["disabled"]`)                            | Unchanged behavior, different base type.                                                                                               |
@@ -220,6 +221,7 @@ New entry point that re-exports MUI components under **legacy-aligned names**:
 | `IModelGhostTile`          | `BaseCardLoading`             |
 | `IModelGhostTileProps`     | `BaseCardLoadingProps`        |
 | `ContextMenuBuilderItem`   | `ContextMenuBuilderItemMUI`   |
+| `ThumbnailIconButton`      | `ThumbnailIconButton`         |
 
 Also re-exports all shared types.
 
@@ -231,6 +233,10 @@ This allows consumers to swap imports from the legacy barrel to the MUI barrel w
 
 - `BaseCard` (internal building block)
 - `TileFavoriteIconMUI` (internal)
+
+### New exports (no legacy equivalent)
+
+- `ThumbnailIconButton` — styled MUI `IconButton` with translucent background and backdrop blur, intended for use in thumbnail overlay slots (`thumbnailTopLeft`, `thumbnailTopRight`, etc.).
 
 ---
 
