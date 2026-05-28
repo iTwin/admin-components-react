@@ -4,6 +4,9 @@
  *--------------------------------------------------------------------------------------------*/
 import type { StorybookConfig } from "@storybook/react-webpack5";
 import path from "path";
+import { fileURLToPath } from "url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const config: StorybookConfig = {
   core: {
@@ -35,23 +38,23 @@ const config: StorybookConfig = {
 
     const packagePaths: Record<string, string> = {
       "@itwin/imodel-browser-react": path.resolve(
-        import.meta.dirname,
+        __dirname,
         "../../../modules/imodel-browser/src"
       ),
       "@itwin/create-imodel-react": path.resolve(
-        import.meta.dirname,
+        __dirname,
         "../../../modules/create-imodel/src"
       ),
       "@itwin/delete-imodel-react": path.resolve(
-        import.meta.dirname,
+        __dirname,
         "../../../modules/delete-imodel/src"
       ),
       "@itwin/delete-itwin-react": path.resolve(
-        import.meta.dirname,
+        __dirname,
         "../../../modules/delete-itwin/src"
       ),
       "@itwin/manage-versions-react": path.resolve(
-        import.meta.dirname,
+        __dirname,
         "../../../modules/manage-versions/src"
       ),
     };
@@ -71,7 +74,7 @@ const config: StorybookConfig = {
         absoluteResourcePath: string;
       }) => {
         // Derive repo root (four levels up from .storybook: ../../../../)
-        const repoRoot = path.resolve(import.meta.dirname, "../../../../");
+        const repoRoot = path.resolve(__dirname, "../../../../");
         const relPath = path
           .relative(repoRoot, info.absoluteResourcePath)
           .replace(/\\/g, "/");
