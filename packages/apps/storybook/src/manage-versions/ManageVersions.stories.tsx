@@ -11,10 +11,7 @@ import { action } from "storybook/actions";
 import type { Meta, StoryFn } from "@storybook/react-webpack5";
 import React from "react";
 
-import {
-  accessTokenArgTypes,
-  withAccessTokenOverride,
-} from "../utils/storyHelp";
+import { accessTokenArgTypes } from "../utils/storyHelp";
 
 export const ManageVersions = (props: ManageVersionsProps) => (
   <ExternalComponent {...props} />
@@ -34,9 +31,9 @@ export default {
   },
 } as Meta;
 
-const Template: StoryFn<ManageVersionsProps> = withAccessTokenOverride((args) => (
+const Template: StoryFn<ManageVersionsProps> = (args) => (
   <ManageVersions {...args} />
-));
+);
 
 export const Primary = Template.bind({});
 Primary.args = {

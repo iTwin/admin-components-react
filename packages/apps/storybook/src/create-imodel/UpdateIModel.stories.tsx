@@ -9,10 +9,7 @@ import {
 import type { Meta, StoryFn } from "@storybook/react-webpack5";
 import React from "react";
 
-import {
-  accessTokenArgTypes,
-  withAccessTokenOverride,
-} from "../utils/storyHelp";
+import { accessTokenArgTypes } from "../utils/storyHelp";
 
 function base64ToArrayBuffer(base64: string) {
   const binary = window.atob(base64);
@@ -32,16 +29,18 @@ export default {
   component: UpdateIModel,
   excludeStories: ["UpdateIModel"],
   argTypes: accessTokenArgTypes,
+  decorators: [
+    (Story) => (
+      <div style={{ height: "90vh" }}>
+        <Story />
+      </div>
+    ),
+  ],
 } as Meta;
 
-const root = document.getElementById("root") as HTMLElement;
-root.style.height = "90vh";
-
-export const Update: StoryFn<UpdateIModelProps> = withAccessTokenOverride(
-  (args) => {
-    return <UpdateIModel {...args} />;
-  }
-);
+export const Update: StoryFn<UpdateIModelProps> = (args) => {
+  return <UpdateIModel {...args} />;
+};
 
 Update.args = {
   apiOverrides: { serverEnvironmentPrefix: "dev" },

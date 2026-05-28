@@ -6,10 +6,7 @@
 import type { Meta, StoryFn } from "@storybook/react-webpack5";
 import React from "react";
 
-import {
-  accessTokenArgTypes,
-  withAccessTokenOverride,
-} from "../utils/storyHelp";
+import { accessTokenArgTypes } from "../utils/storyHelp";
 import { Authentiated, AuthenticatedProps } from "./Authenticated";
 
 export default {
@@ -18,11 +15,9 @@ export default {
   argTypes: accessTokenArgTypes,
 } as Meta;
 
-const Template: StoryFn<AuthenticatedProps> = withAccessTokenOverride(
-  (args) => {
-    return <Authentiated {...args} />;
-  }
-);
+const Template: StoryFn<AuthenticatedProps> = (args) => {
+  return <Authentiated {...args} />;
+};
 
 export const Primary = Template.bind({});
 Primary.args = {};

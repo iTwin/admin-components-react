@@ -24,10 +24,7 @@ import {
 import type { Meta, StoryFn } from "@storybook/react-webpack5";
 import React, { PropsWithChildren } from "react";
 
-import {
-  accessTokenArgTypes,
-  withAccessTokenOverride,
-} from "../utils/storyHelp";
+import { accessTokenArgTypes } from "../utils/storyHelp";
 
 type TileProps = React.ComponentPropsWithoutRef<typeof Tile>;
 
@@ -45,9 +42,7 @@ export default {
   excludeStories: ["ITwinGrid"],
 } as Meta;
 
-const Template: StoryFn<ITwinGridProps> = withAccessTokenOverride((args) => (
-  <ITwinGrid {...args} />
-));
+const Template: StoryFn<ITwinGridProps> = (args) => <ITwinGrid {...args} />;
 export const Primary = Template.bind({});
 Primary.args = {
   apiOverrides: { serverEnvironmentPrefix: "qa" },
@@ -147,28 +142,27 @@ const buildMenuItems =
     close: () => void,
     setVersion: React.Dispatch<React.SetStateAction<IModelMinimal | undefined>>
   ) =>
-  (v: IModelMinimal) =>
-    (
-      <span
-        onClick={(event) => {
-          event.stopPropagation();
-        }}
-      >
-        {v.id === "loading" ? (
-          <MenuItemSkeleton />
-        ) : (
-          <MenuItem
-            key={v.id}
-            onClick={() => {
-              close();
-              v.id !== "loading" && setVersion(v);
-            }}
-          >
-            {v.displayName}
-          </MenuItem>
-        )}
-      </span>
-    );
+  (v: IModelMinimal) => (
+    <span
+      onClick={(event) => {
+        event.stopPropagation();
+      }}
+    >
+      {v.id === "loading" ? (
+        <MenuItemSkeleton />
+      ) : (
+        <MenuItem
+          key={v.id}
+          onClick={() => {
+            close();
+            v.id !== "loading" && setVersion(v);
+          }}
+        >
+          {v.displayName}
+        </MenuItem>
+      )}
+    </span>
+  );
 
 const Pager = (props: PropsWithChildren<{ onClick: () => void }>) => (
   <span onClick={props.onClick}>
@@ -300,34 +294,33 @@ StatefulPropsOverrides.args = {
   useIndividualState,
 };
 
-export const WithPostProcessCallback: StoryFn<ITwinGridProps> =
-  withAccessTokenOverride((args) => {
-    const addStartTile = React.useCallback(
-      (iTwins: ITwinFull[], status: DataStatus | undefined) => {
-        if (status !== DataStatus.Complete) {
-          return iTwins;
-        }
-        iTwins.unshift({
-          id: "newProject",
-          displayName: "New Project",
-          number: "Click on this tile to create a new ITwin",
-        });
+export const WithPostProcessCallback: StoryFn<ITwinGridProps> = (args) => {
+  const addStartTile = React.useCallback(
+    (iTwins: ITwinFull[], status: DataStatus | undefined) => {
+      if (status !== DataStatus.Complete) {
         return iTwins;
-      },
-      []
-    );
-    return (
-      <div>
-        <Text variant="title">Description</Text>
-        <Text as="p" variant="body">
-          Property <Code>postProcessCallback</Code> allows modification of the
-          data that is sent to the grid, here, we add a new tile at the start of
-          the list for a 'New Project'.
-        </Text>
-        <ITwinGrid {...args} postProcessCallback={addStartTile} />
-      </div>
-    );
-  });
+      }
+      iTwins.unshift({
+        id: "newProject",
+        displayName: "New Project",
+        number: "Click on this tile to create a new ITwin",
+      });
+      return iTwins;
+    },
+    []
+  );
+  return (
+    <div>
+      <Text variant="title">Description</Text>
+      <Text as="p" variant="body">
+        Property <Code>postProcessCallback</Code> allows modification of the
+        data that is sent to the grid, here, we add a new tile at the start of
+        the list for a 'New Project'.
+      </Text>
+      <ITwinGrid {...args} postProcessCallback={addStartTile} />
+    </div>
+  );
+};
 WithPostProcessCallback.args = {
   apiOverrides: { serverEnvironmentPrefix: "qa" },
 };

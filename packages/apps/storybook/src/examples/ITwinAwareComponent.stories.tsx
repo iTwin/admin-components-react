@@ -6,7 +6,6 @@
 import type { Meta, StoryFn } from "@storybook/react-webpack5";
 import React from "react";
 
-import { withITwinIdOverride } from "../utils/storyHelp";
 import {
   ITwinAwareComponent,
   ITwinAwareComponentProps,
@@ -17,11 +16,9 @@ export default {
   component: ITwinAwareComponent,
 } as Meta;
 
-const Template: StoryFn<ITwinAwareComponentProps> = withITwinIdOverride(
-  (args) => {
-    return <ITwinAwareComponent {...args} />;
-  }
-);
+const Template: StoryFn<ITwinAwareComponentProps> = (args) => {
+  return <ITwinAwareComponent {...args} />;
+};
 
 export const Primary = Template.bind({});
 Primary.args = {};

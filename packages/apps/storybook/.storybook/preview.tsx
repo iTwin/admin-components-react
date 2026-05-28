@@ -8,6 +8,12 @@ import { useDarkMode } from "storybook-dark-mode";
 import { darkTheme, lightTheme } from "./itwinTheme";
 import "@itwin/itwinui-react/styles.css";
 import React from "react";
+import { addons } from "storybook/preview-api";
+
+const ITWIN_ID_EVENT = "project/toolbar/set-itwin-id";
+const ACCESS_TOKEN_EVENT = "auth/toolbar/set-access-token";
+let _currentITwinId = "";
+let _currentAccessToken = "";
 
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
@@ -28,24 +34,49 @@ export const parameters = {
   layout: "fullscreen",
 };
 
-export const initialGlobals = {
-  accessToken: "",
-  iTwinId: "",
-};
+export const initialGlobals = {};
 
-export const globalTypes = {
-  accessToken: {
-    description: "OAuth access token set by the auth toolbar addon",
-  },
-  iTwinId: {
-    description: "iTwin ID selected via the project toolbar addon",
-  },
-};
+export const globalTypes = {};
 
 export const decorators = [
-  (Story: React.ComponentType) => {
+  (
+    Story: React.ComponentType,
+    context: {
+      globals: Record<string, string>;
+      args: Record<string, unknown>;
+      argTypes: Record<string, unknown>;
+    }
+  ) => {
     const isDark = useDarkMode();
     const theme = isDark ? "dark" : "light";
+    const [iTwinId, setITwinId] = React.useState(_currentITwinId);
+    const [accessToken, setAccessToken] = React.useState(_currentAccessToken);
+
+    React.useEffect(() => {
+      const channel = addons.getChannel();
+      const handleITwinId = (id: string) => {
+        _currentITwinId = id;
+        setITwinId(id);
+      };
+      const handleAccessToken = (token: string) => {
+        _currentAccessToken = token;
+        setAccessToken(token);
+      };
+      channel.on(ITWIN_ID_EVENT, handleITwinId);
+      channel.on(ACCESS_TOKEN_EVENT, handleAccessToken);
+      return () => {
+        channel.off(ITWIN_ID_EVENT, handleITwinId);
+        channel.off(ACCESS_TOKEN_EVENT, handleAccessToken);
+      };
+    }, []);
+
+    // Inject globals into args for components that accept them
+    if ("accessToken" in context.argTypes && accessToken) {
+      context.args.accessToken = accessToken;
+    }
+    if ("iTwinId" in context.argTypes && iTwinId) {
+      context.args.iTwinId = iTwinId;
+    }
 
     return (
       <ThemeProvider

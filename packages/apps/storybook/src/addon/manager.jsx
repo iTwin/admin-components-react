@@ -8,7 +8,6 @@ import {
   types,
   useAddonState,
   useArgTypes,
-  useGlobals,
 } from "storybook/manager-api";
 import {
   IconButton,
@@ -18,6 +17,9 @@ import {
 import { SvgItwin } from "@itwin/itwinui-icons-react";
 import React from "react";
 
+const ITWIN_ID_EVENT = "project/toolbar/set-itwin-id";
+const ACCESS_TOKEN_EVENT = "auth/toolbar/set-access-token";
+
 addons.register("project/toolbar", () => {
   addons.add("project-toolbar-addon/toolbar", {
     title: "Project Selection toolbar",
@@ -26,18 +28,32 @@ addons.register("project/toolbar", () => {
     //👇 Shows the Toolbar UI element if either the Canvas or Docs tab is active
     match: ({ viewMode }) => !!viewMode?.match(/^(story|docs)$/),
     render: () => {
-      const [globals, updateGlobals] = useGlobals();
       const { iTwinId: withITwinId } = useArgTypes();
+      const channel = addons.getChannel();
 
       const [state, setState] = useAddonState("project/toolbar", {
         mustLoad: true,
         projects: [],
+        accessToken: "",
       });
+      const [selectedId, setSelectedId] = useAddonState(
+        "project/toolbar/selected",
+        ""
+      );
+
+      React.useEffect(() => {
+        const handler = (token) => {
+          setState((prev) => ({ ...prev, accessToken: token, mustLoad: true }));
+        };
+        channel.on(ACCESS_TOKEN_EVENT, handler);
+        return () => channel.off(ACCESS_TOKEN_EVENT, handler);
+      }, [channel, setState]);
 
       const fetchProjects = React.useCallback(async () => {
-        if (!state.mustLoad || !globals.accessToken) {
-          if (!globals.accessToken) {
+        if (!state.mustLoad || !state.accessToken) {
+          if (!state.accessToken) {
             setState({
+              ...state,
               mustLoad: true,
               projects: [{ displayName: "Authentication required" }],
             });
@@ -47,6 +63,7 @@ addons.register("project/toolbar", () => {
 
         try {
           setState({
+            ...state,
             projects: [
               {
                 displayName: (
@@ -60,7 +77,7 @@ addons.register("project/toolbar", () => {
           const response = await fetch(
             "https://qa-api.bentley.com/itwins/favorites?subClass=Project",
             {
-              headers: { Authorization: globals.accessToken },
+              headers: { Authorization: state.accessToken },
             }
           );
           if (response.ok) {
@@ -75,12 +92,12 @@ addons.register("project/toolbar", () => {
                   "'Favorite' a project in CONNECT (QA) to show it here, refresh this page to see the results",
               });
             }
-            setState({ projects: projects });
+            setState({ ...state, projects: projects });
           }
         } catch (e) {
           console.error("Error", e);
         }
-      }, [state.mustLoad, globals.accessToken, setState]);
+      }, [state.mustLoad, state.accessToken, setState]);
 
       const buildLinks = React.useCallback(
         (onHide) =>
@@ -89,17 +106,17 @@ addons.register("project/toolbar", () => {
             id: project.id,
             title: project.displayName,
             onClick: () => {
-              updateGlobals({
-                iTwinId: globals.iTwinId === project.id ? "" : project.id,
-              });
+              const newId = selectedId === project.id ? "" : project.id;
+              setSelectedId(newId);
+              channel.emit(ITWIN_ID_EVENT, newId);
               onHide();
             },
-            active: globals.iTwinId === project.id,
+            active: selectedId === project.id,
           })),
-        [state.projects, globals.iTwinId, updateGlobals]
+        [state.projects, selectedId, setSelectedId, channel]
       );
 
-      return withITwinId && globals.accessToken ? (
+      return withITwinId && state.accessToken ? (
         <WithTooltip
           placement="bottom"
           trigger="click"
@@ -112,9 +129,9 @@ addons.register("project/toolbar", () => {
           }}
         >
           <IconButton
-            active={!!globals.iTwinId}
+            active={!!selectedId}
             title={`Favorite projects${
-              globals.iTwinId ? " (click to unselect)" : ""
+              selectedId ? " (click to unselect)" : ""
             }`}
           >
             <SvgItwin />

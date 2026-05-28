@@ -10,10 +10,7 @@ import { Button } from "@itwin/itwinui-react";
 import type { Meta, StoryFn } from "@storybook/react-webpack5";
 import React, { useState } from "react";
 
-import {
-  accessTokenArgTypes,
-  withAccessTokenOverride,
-} from "../utils/storyHelp";
+import { accessTokenArgTypes } from "../utils/storyHelp";
 
 export const DeleteIModel = (props: DeleteIModelProps) => (
   <ExternalComponent {...props} />
@@ -26,26 +23,24 @@ export default {
   argTypes: accessTokenArgTypes,
 } as Meta;
 
-export const Primary: StoryFn<DeleteIModelProps> = withAccessTokenOverride(
-  (args) => {
-    const [showDialog, setShowDialog] = useState(false);
+export const Primary: StoryFn<DeleteIModelProps> = (args) => {
+  const [showDialog, setShowDialog] = useState(false);
 
-    return (
-      <>
-        <Button onClick={() => setShowDialog(true)}>Delete an iModel</Button>
-        {showDialog && (
-          <DeleteIModel
-            {...args}
-            onClose={() => {
-              args.onClose?.();
-              setShowDialog(false);
-            }}
-          />
-        )}
-      </>
-    );
-  }
-);
+  return (
+    <>
+      <Button onClick={() => setShowDialog(true)}>Delete an iModel</Button>
+      {showDialog && (
+        <DeleteIModel
+          {...args}
+          onClose={() => {
+            args.onClose?.();
+            setShowDialog(false);
+          }}
+        />
+      )}
+    </>
+  );
+};
 
 Primary.args = {
   imodel: {

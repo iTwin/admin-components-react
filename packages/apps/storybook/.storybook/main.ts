@@ -22,7 +22,7 @@ const config: StorybookConfig = {
     options: {},
   },
   typescript: {
-    reactDocgen: "react-docgen",
+    reactDocgen: "react-docgen-typescript",
   },
   staticDirs: ["../../../modules/storybook-auth-addon/build"],
   webpackFinal: async (config, { configType }) => {

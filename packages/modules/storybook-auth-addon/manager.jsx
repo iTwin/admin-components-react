@@ -9,12 +9,13 @@ import {
   addons,
   types,
   useAddonState,
-  useGlobals,
   useParameter,
 } from "storybook/manager-api";
 import { IconButton, WithTooltip } from "storybook/internal/components";
 import { AlertIcon, KeyIcon, LockIcon } from "@storybook/icons";
 import React, { useRef, useState } from "react";
+
+const ACCESS_TOKEN_EVENT = "auth/toolbar/set-access-token";
 
 addons.register("auth/toolbar", () => {
   addons.add("auth-toolbar-addon/toolbar", {
@@ -24,11 +25,12 @@ addons.register("auth/toolbar", () => {
     //👇 Shows the Toolbar UI element if either the Canvas or Docs tab is active
     match: ({ viewMode }) => !!viewMode?.match(/^(story|docs)$/),
     render: () => {
-      const [globals, updateGlobals] = useGlobals();
+      const channel = addons.getChannel();
       const redirectURI = `${window.location.origin}${window.location.pathname}signin-oidc.html`;
       const [state, setState] = useAddonState("auth/toolbar", {
         loading: false,
         email: "",
+        accessToken: "",
       });
       const authClientConfig = useParameter("authClientConfig", {});
       const client = useRef(null);
@@ -61,8 +63,8 @@ addons.register("auth/toolbar", () => {
             });
             client.current.onUserStateChanged.addListener((accessToken) => {
               if (!accessToken) {
-                updateGlobals({ accessToken: "" });
-                setState({ loading: false });
+                setState({ loading: false, email: "", accessToken: "" });
+                channel.emit(ACCESS_TOKEN_EVENT, "");
                 return;
               }
               let tokenString = accessToken.toTokenString();
@@ -74,12 +76,12 @@ addons.register("auth/toolbar", () => {
               } catch (e) {
                 email = "Email parsing failed";
               }
-              updateGlobals({ accessToken: tokenString });
-              setState({ loading: false, email });
+              setState({ loading: false, email, accessToken: tokenString });
+              channel.emit(ACCESS_TOKEN_EVENT, tokenString);
             });
           }
           const context = new ClientRequestContext();
-          if (!globals.accessToken) {
+          if (!state.accessToken) {
             await client.current.signInPopup(context);
           } else {
             await client.current.signOutPopup(context).catch(() => {
@@ -111,7 +113,7 @@ addons.register("auth/toolbar", () => {
                     ? `${redirectURI} not found: "storybook-auth-addon" is likely not built, run "rush build"`
                     : state.loading
                       ? "Authenticating..."
-                      : globals.accessToken
+                      : state.accessToken
                         ? `Authenticated: ${state.email}, click to sign off`
                         : `Authenticate`}
               </div>
@@ -119,10 +121,8 @@ addons.register("auth/toolbar", () => {
           }}
         >
           <IconButton
-            active={!!globals.accessToken}
-            title={
-              globals.accessToken ? "Sign out" : "Sign in with OAuth"
-            }
+            active={!!state.accessToken}
+            title={state.accessToken ? "Sign out" : "Sign in with OAuth"}
             onClick={() => authenticate()}
           >
             {buildMissing || clientIdMissing ? (
@@ -131,7 +131,7 @@ addons.register("auth/toolbar", () => {
               <div style={{ width: 16, position: "relative" }}>
                 <span>...</span>
               </div>
-            ) : globals.accessToken ? (
+            ) : state.accessToken ? (
               <LockIcon />
             ) : (
               <KeyIcon />
