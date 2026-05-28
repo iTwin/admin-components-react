@@ -10,6 +10,8 @@ import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import { Icon } from "@stratakit/mui";
 import svgPlaceholder from "@stratakit/icons/placeholder.svg";
+import SvgShare from "@stratakit/icons/share.svg";
+import SvgDelete from "@stratakit/icons/delete.svg";
 import bridgeThumbnail from "../utils/bridge.jpg";
 import overpassThumbnail from "../utils/overpass.jpg";
 import { action } from "@storybook/addon-actions";
@@ -81,11 +83,13 @@ const baseArgs: IModelTileMUIProps = {
   contextMenuItems: [
     {
       key: "option-1",
+      icon: <Icon href={SvgShare} size="small" />,
       children: "Context Menu Option 1",
       onClick: (iModel) => action("iModel option 1 clicked")(iModel),
     },
     {
       key: "option-2",
+      icon: <Icon href={SvgDelete} size="small" />,
       children: "Context Menu Option 2",
       onClick: (iModel) => action("iModel option 2 clicked")(iModel),
     },

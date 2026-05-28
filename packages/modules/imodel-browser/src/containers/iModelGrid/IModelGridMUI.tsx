@@ -382,12 +382,8 @@ function removeFromRecentsAction(
 ): ContextMenuBuilderItemMUI<IModelFull> {
   return {
     key: "remove-from-recents",
-    children: (
-      <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-        {removeFromRecentsIcon}
-        {strings?.removeFromRecents}
-      </Box>
-    ),
+    icon: removeFromRecentsIcon,
+    children: strings?.removeFromRecents,
     onClick: async (iModel, refetchData) => {
       if (!iModel || !accessToken) return;
 

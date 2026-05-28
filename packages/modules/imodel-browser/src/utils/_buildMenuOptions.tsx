@@ -27,6 +27,8 @@ export interface ContextMenuBuilderItemMUI<T = any>
   > {
   key: string;
   children: React.ReactNode | ((value: T) => React.ReactNode);
+  /** Optional icon rendered before the children. */
+  icon?: React.ReactNode;
   visible?: boolean | ((value: T) => boolean);
   onClick?: ((value?: T, refetchData?: () => void) => void) | undefined;
   disabled?: MuiMenuItemProps["disabled"] | ((value: T) => boolean);
@@ -74,7 +76,7 @@ export const buildContextMenuItemsMUI = <T,>(
     ?.filter(({ visible }) =>
       typeof visible === "function" ? visible(value) : visible ?? true
     )
-    .map(({ key, onClick, disabled, children, ...muiMenuItemProps }) => (
+    .map(({ key, onClick, disabled, icon, children, ...muiMenuItemProps }) => (
       <MuiMenuItem
         {...muiMenuItemProps}
         key={key}
@@ -84,7 +86,16 @@ export const buildContextMenuItemsMUI = <T,>(
           closeMenu?.();
           onClick?.(value, refetchData);
         }}
+        {...(icon && {
+          sx: {
+            display: "flex",
+            alignItems: "center",
+            gap: 1,
+            ...(muiMenuItemProps.sx as object),
+          },
+        })}
       >
+        {icon}
         {typeof children === "function" ? children(value) : children}
       </MuiMenuItem>
     ));
