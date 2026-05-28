@@ -14,7 +14,7 @@
 
   &.selected {
     outline: 2px solid;
-    outline-color: var(--mui-palette-primary-main);
+    outline-color: var(--stratakit-mui-palette-primary-main);
   }
 }
 
@@ -40,7 +40,7 @@
 .thumbnailArea {
   position: relative;
   height: 10rem;
-  background-color: var(--mui-palette-action-hover);
+  background-color: var(--stratakit-mui-palette-action-hover);
   overflow: hidden;
   flex-shrink: 0;
 

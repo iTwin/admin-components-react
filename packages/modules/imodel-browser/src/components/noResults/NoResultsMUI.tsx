@@ -50,7 +50,7 @@ export const NoResultsMUI = ({
         <Icon
           href={isSearchResult ? svgSearch : svgImodel}
           size="large"
-          color="text.secondary"
+          color="textSecondary"
           className={styles.muiIcon}
         />
         <Typography variant="h6">{text}</Typography>

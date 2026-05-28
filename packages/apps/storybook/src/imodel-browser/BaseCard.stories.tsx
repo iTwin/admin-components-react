@@ -154,7 +154,7 @@ const everythingArgs: BaseCardProps = {
   thumbnailBottomLeft: <Chip size="small" label="Featured" color="default" />,
   thumbnailBottomRight: <Chip size="small" label="Trial" color="primary" />,
   additionalContent: (
-    <Typography variant="body2" color="text.secondary">
+    <Typography variant="body2" color="textSecondary">
       This is some additional content rendered below the description and above
       the footer actions.
     </Typography>

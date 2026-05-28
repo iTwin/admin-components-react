@@ -389,7 +389,7 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
                 {description && (
                   <Typography
                     variant="body2"
-                    color="text.secondary"
+                    color="textSecondary"
                     component="p"
                     sx={{
                       display: "-webkit-box",

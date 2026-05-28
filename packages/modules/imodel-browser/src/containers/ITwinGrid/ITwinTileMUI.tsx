@@ -143,7 +143,7 @@ export const ITwinTileMUI = ({
           >
             <Box
               component="span"
-              sx={{ lineHeight: 0, color: "text.secondary" }}
+              sx={{ lineHeight: 0, color: "textSecondary" }}
             >
               {/* TODO: align this with iModel default thumbnail generation */}
               <Icon href={svgItwin} size="large" />
