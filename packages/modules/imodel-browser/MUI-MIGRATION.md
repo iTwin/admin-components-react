@@ -160,14 +160,14 @@ A new `src/mui/index.ts` barrel re-exports MUI components under legacy-aligned n
 
 ## `ContextMenuBuilderItem` -> `ContextMenuBuilderItemMUI`
 
-| Property   | `ContextMenuBuilderItem`                               | `ContextMenuBuilderItemMUI`                    | Notes                                           |
-| ---------- | ------------------------------------------------------ | ---------------------------------------------- | ----------------------------------------------- |
-| Extends    | `Omit<itwinui MenuItemProps, "onClick" \| ...>`        | `Omit<MUI MenuItemProps, "onClick" \| ...>`    | Base type changes from itwinui to MUI MenuItem. |
-| `key`      | `string`                                               | `string`                                       | Unchanged.                                      |
+| Property   | `ContextMenuBuilderItem`                               | `ContextMenuBuilderItemMUI`                                       | Notes                                                                                                                                  |
+| ---------- | ------------------------------------------------------ | ----------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| Extends    | `Omit<itwinui MenuItemProps, "onClick" \| ...>`        | `Omit<MUI MenuItemProps, "onClick" \| ...>`                       | Base type changes from itwinui to MUI MenuItem.                                                                                        |
+| `key`      | `string`                                               | `string`                                                          | Unchanged.                                                                                                                             |
 | `children` | Positional (via itwinui `MenuItem`)                    | `ReactNode \| ((value: T) => ReactNode)` (explicit, **required**) | Must be provided explicitly. Accepts a render function to generate content per-item (e.g. `(iTwin) => \`View ${iTwin.displayName}\``). |
-| `visible`  | `boolean \| ((value: T) => boolean)`                   | Same                                           | Unchanged.                                      |
-| `onClick`  | `((value?: T, refetchData?: () => void) => void)`      | Same                                           | Unchanged.                                      |
-| `disabled` | `MenuItemProps["disabled"] \| ((value: T) => boolean)` | Same (MUI `MenuItemProps["disabled"]`)         | Unchanged behavior, different base type.        |
+| `visible`  | `boolean \| ((value: T) => boolean)`                   | Same                                                              | Unchanged.                                                                                                                             |
+| `onClick`  | `((value?: T, refetchData?: () => void) => void)`      | Same                                                              | Unchanged.                                                                                                                             |
+| `disabled` | `MenuItemProps["disabled"] \| ((value: T) => boolean)` | Same (MUI `MenuItemProps["disabled"]`)                            | Unchanged behavior, different base type.                                                                                               |
 
 ---
 

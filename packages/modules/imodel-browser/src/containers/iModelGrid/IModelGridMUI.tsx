@@ -97,6 +97,10 @@ const IModelGridInternal = ({
   dataMode = "internal",
   disableAddToRecents = false,
 }: IModelGridMUIProps) => {
+  const [selectedIModelId, setSelectedIModelId] = React.useState<
+    string | undefined
+  >();
+
   const [sort, setSort] = React.useState<IModelSortOptions>(sortOptions);
 
   React.useEffect(() => {
@@ -257,6 +261,9 @@ const IModelGridInternal = ({
                 useTileState={useIndividualState}
                 refetchIModels={refetchIModels}
                 {...tileOverrides}
+                selected={
+                  selectedIModelId === iModel.id || tileOverrides?.selected
+                }
                 onOpen={
                   resolvedOnOpen
                     ? async () => {
@@ -266,9 +273,10 @@ const IModelGridInternal = ({
                       }
                     : undefined
                 }
-                onSelect={
-                  resolvedOnSelect ? () => resolvedOnSelect(iModel) : undefined
-                }
+                onSelect={() => {
+                  setSelectedIModelId(iModel.id);
+                  resolvedOnSelect?.(iModel);
+                }}
               />
             ))}
             {fetchMore ? (
