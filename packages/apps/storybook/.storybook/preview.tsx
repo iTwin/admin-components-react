@@ -36,7 +36,7 @@ export const parameters = {
 
 export const decorators = [
   (
-    Story: React.ComponentType,
+    Story: React.ComponentType<{ args?: Record<string, unknown> }>,
     context: {
       globals: Record<string, string>;
       args: Record<string, unknown>;
@@ -66,12 +66,12 @@ export const decorators = [
       };
     }, []);
 
-    // Inject globals into args for components that accept them
-    if ("accessToken" in context.argTypes && accessToken) {
-      context.args.accessToken = accessToken;
+    const injectedArgs: Record<string, unknown> = {};
+    if ("accessToken" in context.argTypes) {
+      injectedArgs.accessToken = accessToken;
     }
-    if ("iTwinId" in context.argTypes && iTwinId) {
-      context.args.iTwinId = iTwinId;
+    if ("iTwinId" in context.argTypes) {
+      injectedArgs.iTwinId = iTwinId;
     }
 
     return (
@@ -83,7 +83,9 @@ export const decorators = [
         }}
         theme={theme}
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        children={(<Story />) as any}
+        children={
+          (<Story args={{ ...context.args, ...injectedArgs }} />) as any
+        }
       />
     );
   },
