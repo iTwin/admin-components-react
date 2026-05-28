@@ -33,7 +33,7 @@ importers:
       '@types/react': ^18.3.5
       '@types/react-dom': ^18.3.0
       '@typescript-eslint/eslint-plugin': ^8.0.0
-      '@typescript-eslint/parser': ^8.0.0
+      '@typescript-eslint/parser': ^8.57.0
       babel-eslint: ^10.0.0
       babel-loader: ^8.2.5
       css-loader: ^6.7.0
@@ -113,7 +113,7 @@ importers:
       '@types/node': ^14.14.35
       '@types/react': ^18.3.5
       '@typescript-eslint/eslint-plugin': ^8.0.0
-      '@typescript-eslint/parser': ^8.0.0
+      '@typescript-eslint/parser': ^8.57.0
       eslint: ^8.57.0
       eslint-config-airbnb: ^0.0.4
       eslint-config-prettier: ^6.11.0
@@ -188,7 +188,7 @@ importers:
       '@types/node': ^14.14.35
       '@types/react': ^18.3.5
       '@typescript-eslint/eslint-plugin': ^8.0.0
-      '@typescript-eslint/parser': ^8.0.0
+      '@typescript-eslint/parser': ^8.57.0
       eslint: ^8.57.0
       eslint-config-airbnb: ^0.0.4
       eslint-config-prettier: ^6.11.0
@@ -263,7 +263,7 @@ importers:
       '@types/node': ^14.14.35
       '@types/react': ^18.3.5
       '@typescript-eslint/eslint-plugin': ^8.0.0
-      '@typescript-eslint/parser': ^8.0.0
+      '@typescript-eslint/parser': ^8.57.0
       eslint: ^8.57.0
       eslint-config-airbnb: ^0.0.4
       eslint-config-prettier: ^6.11.0
@@ -342,7 +342,7 @@ importers:
       '@types/react-dom': ^18.3.0
       '@types/react-table': ~7.7.14
       '@typescript-eslint/eslint-plugin': ^8.0.0
-      '@typescript-eslint/parser': ^8.0.0
+      '@typescript-eslint/parser': ^8.57.0
       babel-eslint: ^10.0.0
       classnames: ^2.2.6
       eslint: ^8.57.0
@@ -445,7 +445,7 @@ importers:
       '@types/react-dom': ^18.3.0
       '@types/react-table': ~7.7.14
       '@typescript-eslint/eslint-plugin': ^8.0.0
-      '@typescript-eslint/parser': ^8.0.0
+      '@typescript-eslint/parser': ^8.57.0
       classnames: ^2.2.6
       eslint: ^8.57.0
       eslint-config-airbnb: ^0.0.4
@@ -524,7 +524,7 @@ importers:
       '@types/react': ^18.3.5
       '@types/react-dom': ^18.3.0
       '@typescript-eslint/eslint-plugin': ^8.0.0
-      '@typescript-eslint/parser': ^8.0.0
+      '@typescript-eslint/parser': ^8.57.0
       babel-eslint: ^10.0.0
       eslint: ^8.3.0
       eslint-config-airbnb: ^0.0.4
@@ -573,7 +573,7 @@ importers:
   ../scripts:
     specifiers:
       '@typescript-eslint/eslint-plugin': ^8.0.0
-      '@typescript-eslint/parser': ^8.0.0
+      '@typescript-eslint/parser': ^8.57.0
       babel-eslint: ^10.0.0
       eslint: ^8.3.0
       eslint-config-airbnb: ^0.0.4
