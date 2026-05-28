@@ -40,20 +40,24 @@ addons.register("project/toolbar", () => {
         "project/toolbar/selected",
         ""
       );
+      const [accessToken, setAccessToken] = useAddonState(
+        "project/toolbar/accessToken",
+        ""
+      );
 
       React.useEffect(() => {
         const handler = (token) => {
-          setState((prev) => ({ ...prev, accessToken: token, mustLoad: true }));
+          setAccessToken(token);
+          setState({ mustLoad: true, projects: [] });
         };
         channel.on(ACCESS_TOKEN_EVENT, handler);
         return () => channel.off(ACCESS_TOKEN_EVENT, handler);
-      }, [channel, setState]);
+      }, [channel, setState, setAccessToken]);
 
       const fetchProjects = React.useCallback(async () => {
-        if (!state.mustLoad || !state.accessToken) {
-          if (!state.accessToken) {
+        if (!state.mustLoad || !accessToken) {
+          if (!accessToken) {
             setState({
-              ...state,
               mustLoad: true,
               projects: [{ displayName: "Authentication required" }],
             });
@@ -63,7 +67,6 @@ addons.register("project/toolbar", () => {
 
         try {
           setState({
-            ...state,
             projects: [
               {
                 displayName: (
@@ -77,7 +80,7 @@ addons.register("project/toolbar", () => {
           const response = await fetch(
             "https://qa-api.bentley.com/itwins/favorites?subClass=Project",
             {
-              headers: { Authorization: state.accessToken },
+              headers: { Authorization: accessToken },
             }
           );
           if (response.ok) {
@@ -92,12 +95,12 @@ addons.register("project/toolbar", () => {
                   "'Favorite' a project in CONNECT (QA) to show it here, refresh this page to see the results",
               });
             }
-            setState({ ...state, projects: projects });
+            setState({ projects: projects });
           }
         } catch (e) {
           console.error("Error", e);
         }
-      }, [state.mustLoad, state.accessToken, setState]);
+      }, [state.mustLoad, accessToken, setState]);
 
       const buildLinks = React.useCallback(
         (onHide) =>
@@ -116,7 +119,7 @@ addons.register("project/toolbar", () => {
         [state.projects, selectedId, setSelectedId, channel]
       );
 
-      return withITwinId && state.accessToken ? (
+      return withITwinId && accessToken ? (
         <WithTooltip
           placement="bottom"
           trigger="click"

@@ -34,10 +34,6 @@ export const parameters = {
   layout: "fullscreen",
 };
 
-export const initialGlobals = {};
-
-export const globalTypes = {};
-
 export const decorators = [
   (
     Story: React.ComponentType,
