@@ -20,9 +20,7 @@ const ACCESS_TOKEN_EVENT = "auth/toolbar/set-access-token";
 addons.register("auth/toolbar", () => {
   addons.add("auth-toolbar-addon/toolbar", {
     title: "OIDC Authentication toolbar",
-    //👇 Sets the type of UI element in Storybook
     type: types.TOOL,
-    //👇 Shows the Toolbar UI element if either the Canvas or Docs tab is active
     match: ({ viewMode }) => !!viewMode?.match(/^(story|docs)$/),
     render: () => {
       const channel = addons.getChannel();
@@ -73,7 +71,7 @@ addons.register("auth/toolbar", () => {
                 email = JSON.parse(
                   atob(tokenString.split(" ")[1]?.split(".")[1])
                 ).email;
-              } catch (e) {
+              } catch {
                 email = "Email parsing failed";
               }
               setState({ loading: false, email, accessToken: tokenString });
@@ -88,7 +86,7 @@ addons.register("auth/toolbar", () => {
               // Intentionally a noop, user closing the window is not an issue.
             });
           }
-        } catch (e) {
+        } catch {
           setState({ loading: false });
         }
       };

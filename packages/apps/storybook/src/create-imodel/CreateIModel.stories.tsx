@@ -14,8 +14,7 @@ import {
 import { LabeledInput, LabeledSelect } from "@itwin/itwinui-react";
 import type { Meta, StoryFn } from "@storybook/react-webpack5";
 import React from "react";
-
-import { accessTokenArgTypes } from "../utils/storyHelp";
+import { iTwinAndAccessTokenArgTypes } from "../utils/storyHelp";
 
 export const CreateIModel = (props: CreateIModelProps) => (
   <ExternalComponent {...props} />
@@ -25,7 +24,7 @@ export default {
   title: "create-imodel/CreateIModel",
   component: CreateIModel,
   excludeStories: ["CreateIModel"],
-  argTypes: accessTokenArgTypes,
+  argTypes: iTwinAndAccessTokenArgTypes,
   args: {
     apiOverrides: { serverEnvironmentPrefix: "dev" },
   },
@@ -61,7 +60,7 @@ export const WithExtentMap: StoryFn<CreateIModelProps> = (args) => {
   );
 };
 
-export const CreateIModelCustomized: StoryFn<CreateIModelProps> = (args) => {
+export const Customized: StoryFn<CreateIModelProps> = (args) => {
   return (
     <CreateIModel {...args}>
       <div

@@ -23,7 +23,6 @@ import {
 } from "@itwin/itwinui-react";
 import type { Meta, StoryFn } from "@storybook/react-webpack5";
 import React, { PropsWithChildren } from "react";
-
 import { accessTokenArgTypes } from "../utils/storyHelp";
 
 type TileProps = React.ComponentPropsWithoutRef<typeof Tile>;
@@ -32,13 +31,10 @@ export const ITwinGrid = (props: ITwinGridProps) => (
   <ExternalComponent {...props} />
 );
 
-const accessToken = accessTokenArgTypes.accessToken;
 export default {
   title: "imodel-browser/ITwinGrid",
   component: ITwinGrid,
-  argTypes: {
-    accessToken,
-  },
+  argTypes: accessTokenArgTypes,
   excludeStories: ["ITwinGrid"],
 } as Meta;
 

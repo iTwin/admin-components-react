@@ -24,8 +24,7 @@ import {
 } from "@itwin/itwinui-react";
 import type { Meta, StoryFn } from "@storybook/react-webpack5";
 import React from "react";
-
-import { accessTokenArgTypes } from "../utils/storyHelp";
+import { iTwinAndAccessTokenArgTypes } from "../utils/storyHelp";
 
 type TileProps = React.ComponentPropsWithoutRef<typeof Tile>;
 
@@ -36,10 +35,7 @@ export const IModelGrid = (props: IModelGridProps) => (
 export default {
   title: "imodel-browser/IModelGrid",
   component: IModelGrid,
-  argTypes: {
-    ...accessTokenArgTypes,
-    iTwinId: { description: "iTwin ID to load iModels from" },
-  },
+  argTypes: iTwinAndAccessTokenArgTypes,
   excludeStories: ["IModelGrid"],
 } as Meta;
 
@@ -337,7 +333,7 @@ const useIndividualState = (iModel: IModelFull, props: IModelTileProps) => {
       metadata: (
         <span
           onClick={() => {
-            versions === undefined && fetchVersionsList();
+            versions === undefined && void fetchVersionsList();
           }}
         >
           <DropdownButton
