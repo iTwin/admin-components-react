@@ -11,7 +11,7 @@ import {
   useAddonState,
   useParameter,
 } from "storybook/manager-api";
-import { ToggleButton, WithTooltip } from "storybook/internal/components";
+import { IconButton, WithTooltip } from "storybook/internal/components";
 import { AlertIcon, KeyIcon, LockIcon } from "@storybook/icons";
 import React, { useRef, useState } from "react";
 
@@ -120,9 +120,9 @@ addons.register("auth/toolbar", () => {
             );
           }}
         >
-          <ToggleButton
-            pressed={!!state.accessToken}
-            ariaLabel={state.accessToken ? "Sign out" : "Sign in with OAuth"}
+          <IconButton
+            active={!!state.accessToken}
+            title={state.accessToken ? "Sign out" : "Sign in with OAuth"}
             onClick={() => authenticate()}
           >
             {buildMissing || clientIdMissing ? (
@@ -136,7 +136,7 @@ addons.register("auth/toolbar", () => {
             ) : (
               <KeyIcon />
             )}
-          </ToggleButton>
+          </IconButton>
         </WithTooltip>
       );
     },

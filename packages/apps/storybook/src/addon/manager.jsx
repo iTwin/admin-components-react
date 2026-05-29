@@ -10,8 +10,8 @@ import {
   useArgTypes,
 } from "storybook/manager-api";
 import {
-  ActionList,
-  ToggleButton,
+  IconButton,
+  TooltipLinkList,
   WithTooltip,
 } from "storybook/internal/components";
 import { SvgItwin } from "@itwin/itwinui-icons-react";
@@ -128,38 +128,17 @@ addons.register("project/toolbar", () => {
             if (visible) await fetchProjects();
           }}
           tooltip={({ onHide }) => {
-            const links = buildLinks(onHide);
-            return (
-              <ActionList>
-                {links.map((link) => (
-                  <ActionList.Item
-                    key={link.key}
-                    active={link.active}
-                    as="button"
-                    onClick={link.onClick}
-                    style={{
-                      width: "100%",
-                      textAlign: "left",
-                      background: "transparent",
-                      border: "none",
-                      cursor: "pointer",
-                    }}
-                  >
-                    {link.title}
-                  </ActionList.Item>
-                ))}
-              </ActionList>
-            );
+            return <TooltipLinkList links={buildLinks(onHide)} />;
           }}
         >
-          <ToggleButton
-            pressed={!!selectedId}
-            ariaLabel={`Favorite projects${
+          <IconButton
+            active={!!selectedId}
+            title={`Favorite projects${
               selectedId ? " (click to unselect)" : ""
             }`}
           >
             <SvgItwin />
-          </ToggleButton>
+          </IconButton>
         </WithTooltip>
       ) : null;
     },
