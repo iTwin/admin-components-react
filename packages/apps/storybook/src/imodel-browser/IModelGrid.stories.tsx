@@ -22,7 +22,7 @@ import {
   Text,
   Tile,
 } from "@itwin/itwinui-react";
-import type { Meta, StoryFn } from "@storybook/react-webpack5";
+import type { Meta, StoryObj } from "@storybook/react-webpack5";
 import React from "react";
 import { iTwinAndAccessTokenArgTypes } from "../utils/storyHelp";
 
@@ -36,49 +36,48 @@ export default {
   title: "imodel-browser/IModelGrid",
   component: IModelGrid,
   argTypes: iTwinAndAccessTokenArgTypes,
+  args: { apiOverrides: { serverEnvironmentPrefix: "qa" } },
   excludeStories: ["IModelGrid"],
 } as Meta;
 
-const Template: StoryFn<IModelGridProps> = (args) => <IModelGrid {...args} />;
-
-export const Primary = Template.bind({});
-Primary.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
-  sortOptions: { sortType: "name", descending: false },
-};
-
-export const PrimaryCell = Template.bind({});
-PrimaryCell.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
-  viewMode: "cells",
-};
-
-export const OverrideCellData = Template.bind({});
-OverrideCellData.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
-  viewMode: "cells",
-  cellOverrides: {
-    name: (props) =>
-      props.value.includes("a") ? (
-        <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-          <IconButton
-            aria-label="apple-icon"
-            size="small"
-            styleType="borderless"
-          >
-            <SvgApple />
-          </IconButton>
-          {props.value}
-        </div>
-      ) : (
-        props.value
-      ),
-    description: (props) => <em>{props.value}</em>,
-    hideColumns: [IModelCellColumn.CreatedDateTime],
+export const Primary: StoryObj<typeof IModelGrid> = {
+  args: {
+    sortOptions: { sortType: "name", descending: false },
   },
 };
 
-export const OverrideApiDataWithLoadMore: StoryFn<IModelGridProps> = (args) => {
+export const PrimaryCell: StoryObj<typeof IModelGrid> = {
+  args: {
+    viewMode: "cells",
+  },
+};
+
+export const OverrideCellData: StoryObj<typeof IModelGrid> = {
+  args: {
+    viewMode: "cells",
+    cellOverrides: {
+      name: (props) =>
+        props.value.includes("a") ? (
+          <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+            <IconButton
+              aria-label="apple-icon"
+              size="small"
+              styleType="borderless"
+            >
+              <SvgApple />
+            </IconButton>
+            {props.value}
+          </div>
+        ) : (
+          props.value
+        ),
+      description: (props) => <em>{props.value}</em>,
+      hideColumns: [IModelCellColumn.CreatedDateTime],
+    },
+  },
+};
+
+const OverrideApiDataWithLoadMoreRender = (args: IModelGridProps) => {
   const initialData: IModelFull[] = [
     {
       id: "1",
@@ -195,48 +194,53 @@ export const OverrideApiDataWithLoadMore: StoryFn<IModelGridProps> = (args) => {
   );
 };
 
-export const IndividualContextMenu = Template.bind({});
-IndividualContextMenu.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
-  iModelActions: [
-    {
-      children: "displayName contains 'R'",
-      visible: (iModel) => iModel.displayName?.includes("R") ?? false,
-      key: "withR",
-      onClick: (iModel) => alert("Contains R: " + iModel?.displayName),
-    },
-    {
-      children: "Add description",
-      visible: (iModel) => !iModel.description,
-      key: "addD",
-      onClick: (iModel) => alert("Add description: " + iModel?.displayName),
-    },
-    {
-      children: "Edit description",
-      visible: (iModel) => !!iModel.description,
-      key: "editD",
-      onClick: (iModel) => alert("Edit description: " + iModel?.displayName),
-    },
-  ],
+export const OverrideApiDataWithLoadMore: StoryObj<typeof IModelGrid> = {
+  render: (args) => <OverrideApiDataWithLoadMoreRender {...args} />,
 };
 
-export const DisabledContextMenu = Template.bind({});
-DisabledContextMenu.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
-  iModelActions: [
-    {
-      children: "Disabled if name contains 'T'",
-      disabled: (iModel) => iModel.displayName?.includes("T") ?? false,
-      key: "withT",
-      onClick: (iModel) => alert("Does not contain T: " + iModel?.displayName),
-    },
-  ],
+export const IndividualContextMenu: StoryObj<typeof IModelGrid> = {
+  args: {
+    iModelActions: [
+      {
+        children: "displayName contains 'R'",
+        visible: (iModel) => iModel.displayName?.includes("R") ?? false,
+        key: "withR",
+        onClick: (iModel) => alert("Contains R: " + iModel?.displayName),
+      },
+      {
+        children: "Add description",
+        visible: (iModel) => !iModel.description,
+        key: "addD",
+        onClick: (iModel) => alert("Add description: " + iModel?.displayName),
+      },
+      {
+        children: "Edit description",
+        visible: (iModel) => !!iModel.description,
+        key: "editD",
+        onClick: (iModel) => alert("Edit description: " + iModel?.displayName),
+      },
+    ],
+  },
 };
 
-export const SimpleTilePropsOverrides = Template.bind({});
-SimpleTilePropsOverrides.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
-  tileOverrides: { tileProps: { style: { width: "100%" } } },
+export const DisabledContextMenu: StoryObj<typeof IModelGrid> = {
+  args: {
+    iModelActions: [
+      {
+        children: "Disabled if name contains 'T'",
+        disabled: (iModel) => iModel.displayName?.includes("T") ?? false,
+        key: "withT",
+        onClick: (iModel) =>
+          alert("Does not contain T: " + iModel?.displayName),
+      },
+    ],
+  },
+};
+
+export const SimpleTilePropsOverrides: StoryObj<typeof IModelGrid> = {
+  args: {
+    tileOverrides: { tileProps: { style: { width: "100%" } } },
+  },
 };
 
 interface Version {
@@ -362,13 +366,13 @@ const useIndividualState = (iModel: IModelFull, props: IModelTileProps) => {
   };
 };
 
-export const StatefulPropsOverrides = Template.bind({});
-StatefulPropsOverrides.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
-  useIndividualState,
+export const StatefulPropsOverrides: StoryObj<typeof IModelGrid> = {
+  args: {
+    useIndividualState,
+  },
 };
 
-export const WithPostProcessCallback: StoryFn<IModelGridProps> = (args) => {
+const WithPostProcessCallbackRender = (args: IModelGridProps) => {
   const [filter, setFilter] = React.useState("");
   const filterOrAddStartTile = React.useCallback(
     (iModels: IModelFull[], status?: DataStatus) => {
@@ -414,60 +418,61 @@ export const WithPostProcessCallback: StoryFn<IModelGridProps> = (args) => {
     </div>
   );
 };
-WithPostProcessCallback.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
+
+export const WithPostProcessCallback: StoryObj<typeof IModelGrid> = {
+  render: (args) => <WithPostProcessCallbackRender {...args} />,
 };
 
-export const DefaultNoStateComponentOverride = Template.bind({});
-DefaultNoStateComponentOverride.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
-  emptyStateComponent: (
-    <div>
-      <Text variant="title">There are no iModels to show.</Text>
-    </div>
-  ),
+export const DefaultNoStateComponentOverride: StoryObj<typeof IModelGrid> = {
+  args: {
+    emptyStateComponent: (
+      <div>
+        <Text variant="title">There are no iModels to show.</Text>
+      </div>
+    ),
+  },
 };
 
-export const DisableAddToRecents = Template.bind({});
-DisableAddToRecents.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
-  disableAddToRecents: true,
-};
-DisableAddToRecents.argTypes = {
-  accessToken: { table: { disable: true } },
-  onThumbnailClick: { table: { disable: true } },
-  sortOptions: { table: { disable: true } },
-  iModelActions: { table: { disable: true } },
-  useIndividualState: { table: { disable: true } },
-  tileOverrides: { table: { disable: true } },
-  stringsOverrides: { table: { disable: true } },
-  apiOverrides: { table: { disable: true } },
-  postProcessCallback: { table: { disable: true } },
-  emptyStateComponent: { table: { disable: true } },
-  searchText: { table: { disable: true } },
-  viewMode: { table: { disable: true } },
-  pageSize: { table: { disable: true } },
-  maxCount: { table: { disable: true } },
-  cellOverrides: { table: { disable: true } },
-  className: { table: { disable: true } },
-};
-
-export const Recents = Template.bind({});
-Recents.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
-  requestType: "recents",
+export const DisableAddToRecents: StoryObj<typeof IModelGrid> = {
+  args: {
+    disableAddToRecents: true,
+  },
+  argTypes: {
+    accessToken: { table: { disable: true } },
+    onThumbnailClick: { table: { disable: true } },
+    sortOptions: { table: { disable: true } },
+    iModelActions: { table: { disable: true } },
+    useIndividualState: { table: { disable: true } },
+    tileOverrides: { table: { disable: true } },
+    stringsOverrides: { table: { disable: true } },
+    apiOverrides: { table: { disable: true } },
+    postProcessCallback: { table: { disable: true } },
+    emptyStateComponent: { table: { disable: true } },
+    searchText: { table: { disable: true } },
+    viewMode: { table: { disable: true } },
+    pageSize: { table: { disable: true } },
+    maxCount: { table: { disable: true } },
+    cellOverrides: { table: { disable: true } },
+    className: { table: { disable: true } },
+  },
 };
 
-export const RecentsWithCustomIcon = Template.bind({});
-RecentsWithCustomIcon.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
-  requestType: "recents",
-  removeFromRecentsIcon: <SvgDelete />,
+export const Recents: StoryObj<typeof IModelGrid> = {
+  args: {
+    requestType: "recents",
+  },
 };
 
-export const RecentsWithCloseIcon = Template.bind({});
-RecentsWithCloseIcon.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
-  requestType: "recents",
-  removeFromRecentsIcon: <SvgClose />,
+export const RecentsWithCustomIcon: StoryObj<typeof IModelGrid> = {
+  args: {
+    requestType: "recents",
+    removeFromRecentsIcon: <SvgDelete />,
+  },
+};
+
+export const RecentsWithCloseIcon: StoryObj<typeof IModelGrid> = {
+  args: {
+    requestType: "recents",
+    removeFromRecentsIcon: <SvgClose />,
+  },
 };

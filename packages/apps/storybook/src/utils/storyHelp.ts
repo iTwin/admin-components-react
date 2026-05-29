@@ -7,8 +7,8 @@ const ACCESS_TOKEN_DEFAULT_VALUE =
   "In this storybook, this is provided by clicking on the key in the toolbar";
 export const accessTokenArgTypes = {
   accessToken: {
-    defaultValue: ACCESS_TOKEN_DEFAULT_VALUE,
     control: { type: "text" },
+    table: { defaultValue: { summary: ACCESS_TOKEN_DEFAULT_VALUE } },
   },
 };
 
@@ -17,8 +17,8 @@ const ITWIN_ID_DEFAULT_VALUE =
 export const iTwinIdArgTypes = {
   iTwinId: {
     description: "iTwin ID to load data from",
-    defaultValue: ITWIN_ID_DEFAULT_VALUE,
     control: { type: "text" },
+    table: { defaultValue: { summary: ITWIN_ID_DEFAULT_VALUE } },
   },
 };
 

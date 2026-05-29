@@ -8,7 +8,7 @@ import {
   ManageVersionsProps,
 } from "@itwin/manage-versions-react";
 import { action } from "storybook/actions";
-import type { Meta, StoryFn } from "@storybook/react-webpack5";
+import type { Meta, StoryObj } from "@storybook/react-webpack5";
 import React from "react";
 import { accessTokenArgTypes } from "../utils/storyHelp";
 
@@ -22,21 +22,19 @@ export default {
   excludeStories: ["ManageVersions"],
   argTypes: {
     ...accessTokenArgTypes,
-    log: { defaultValue: action("Error logged. "), control: { disable: true } },
-    onViewClick: {
-      defaultValue: action("View Named Version clicked"),
-      control: { disable: true },
-    },
+    log: { control: { disable: true } },
+    onViewClick: { control: { disable: true } },
+  },
+  args: {
+    log: action("Error logged."),
+    onViewClick: action("View Named Version clicked"),
   },
 } as Meta;
 
-const Template: StoryFn<ManageVersionsProps> = (args) => (
-  <ManageVersions {...args} />
-);
-
-export const Primary = Template.bind({});
-Primary.args = {
-  apiOverrides: {
-    serverEnvironmentPrefix: "qa",
+export const Primary: StoryObj<typeof ManageVersions> = {
+  args: {
+    apiOverrides: {
+      serverEnvironmentPrefix: "qa",
+    },
   },
 };

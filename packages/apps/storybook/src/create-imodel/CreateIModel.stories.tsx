@@ -5,20 +5,16 @@
 
 import {
   ButtonBar,
-  CreateIModel as ExternalComponent,
+  CreateIModel,
   CreateIModelProps,
   IModelDescription,
   IModelName,
   UploadImage,
 } from "@itwin/create-imodel-react";
 import { LabeledInput, LabeledSelect } from "@itwin/itwinui-react";
-import type { Meta, StoryFn } from "@storybook/react-webpack5";
+import type { Meta, StoryObj } from "@storybook/react-webpack5";
 import React from "react";
 import { iTwinAndAccessTokenArgTypes } from "../utils/storyHelp";
-
-export const CreateIModel = (props: CreateIModelProps) => (
-  <ExternalComponent {...props} />
-);
 
 export default {
   title: "create-imodel/CreateIModel",
@@ -37,12 +33,10 @@ export default {
   ],
 } as Meta;
 
-export const Create: StoryFn<CreateIModelProps> = (args) => {
-  return <CreateIModel {...args} />;
-};
+export const Create: StoryObj<typeof CreateIModel> = {};
 
-export const WithExtentMap: StoryFn<CreateIModelProps> = (args) => {
-  return (
+export const WithExtentMap: StoryObj<typeof CreateIModel> = {
+  render: (args) => (
     <CreateIModel
       {...args}
       extentComponent={
@@ -57,11 +51,11 @@ export const WithExtentMap: StoryFn<CreateIModelProps> = (args) => {
         ></iframe>
       }
     />
-  );
+  ),
 };
 
-export const Customized: StoryFn<CreateIModelProps> = (args) => {
-  return (
+export const Customized: StoryObj<typeof CreateIModel> = {
+  render: (args) => (
     <CreateIModel {...args}>
       <div
         style={{
@@ -95,5 +89,5 @@ export const Customized: StoryFn<CreateIModelProps> = (args) => {
         <ButtonBar />
       </div>
     </CreateIModel>
-  );
+  ),
 };

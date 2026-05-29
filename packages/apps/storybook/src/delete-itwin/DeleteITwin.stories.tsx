@@ -2,18 +2,11 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import {
-  DeleteITwin as ExternalComponent,
-  DeleteITwinProps,
-} from "@itwin/delete-itwin-react";
+import { DeleteITwin, DeleteITwinProps } from "@itwin/delete-itwin-react";
 import { Button } from "@itwin/itwinui-react";
-import type { Meta, StoryFn } from "@storybook/react-webpack5";
+import type { Meta, StoryObj } from "@storybook/react-webpack5";
 import React, { useState } from "react";
 import { accessTokenArgTypes } from "../utils/storyHelp";
-
-export const DeleteITwin = (props: DeleteITwinProps) => (
-  <ExternalComponent {...props} />
-);
 
 export default {
   title: "delete-twin/DeleteITwin",
@@ -22,7 +15,7 @@ export default {
   argTypes: accessTokenArgTypes,
 } as Meta;
 
-export const Primary: StoryFn<DeleteITwinProps> = (args) => {
+const PrimaryRender = (args: DeleteITwinProps) => {
   const [showDialog, setShowDialog] = useState(false);
 
   return (
@@ -41,10 +34,13 @@ export const Primary: StoryFn<DeleteITwinProps> = (args) => {
   );
 };
 
-Primary.args = {
-  iTwin: {
-    id: "5469e5fc-7edc-4769-a69b-311cf707f6e1",
-    displayName: "Example iTwin",
+export const Primary: StoryObj<typeof DeleteITwin> = {
+  render: (args) => <PrimaryRender {...args} />,
+  args: {
+    iTwin: {
+      id: "5469e5fc-7edc-4769-a69b-311cf707f6e1",
+      displayName: "Example iTwin",
+    },
+    apiOverrides: { serverEnvironmentPrefix: "dev" },
   },
-  apiOverrides: { serverEnvironmentPrefix: "dev" },
 };

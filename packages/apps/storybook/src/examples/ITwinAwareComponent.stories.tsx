@@ -3,22 +3,12 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 
-import type { Meta, StoryFn } from "@storybook/react-webpack5";
-import React from "react";
-
-import {
-  ITwinAwareComponent,
-  ITwinAwareComponentProps,
-} from "./ITwinAwareComponent";
+import type { Meta, StoryObj } from "@storybook/react-webpack5";
+import { ITwinAwareComponent } from "./ITwinAwareComponent";
 
 export default {
   title: "Example/ITwin Aware",
   component: ITwinAwareComponent,
 } as Meta;
 
-const Template: StoryFn<ITwinAwareComponentProps> = (args) => {
-  return <ITwinAwareComponent {...args} />;
-};
-
-export const Primary = Template.bind({});
-Primary.args = {};
+export const Primary: StoryObj<typeof ITwinAwareComponent> = {};

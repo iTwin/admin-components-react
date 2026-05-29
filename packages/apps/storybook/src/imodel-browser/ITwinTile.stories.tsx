@@ -3,7 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { ITwinTile as C, ITwinTileProps } from "@itwin/imodel-browser-react";
-import type { Meta, StoryFn } from "@storybook/react-webpack5";
+import type { Meta, StoryObj } from "@storybook/react-webpack5";
 import React from "react";
 
 export const ITwinTile = (props: ITwinTileProps) => <C {...props} />;
@@ -14,12 +14,11 @@ export default {
   excludeStories: ["ITwinTile"],
 } as Meta;
 
-const Template: StoryFn<ITwinTileProps> = (args) => <ITwinTile {...args} />;
-
-export const Primary = Template.bind({});
-Primary.args = {
-  iTwin: {
-    id: "1",
-    displayName: "iTwin Name",
+export const Primary: StoryObj<typeof ITwinTile> = {
+  args: {
+    iTwin: {
+      id: "1",
+      displayName: "iTwin Name",
+    },
   },
 };

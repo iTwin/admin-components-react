@@ -3,11 +3,9 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 
-import type { Meta, StoryFn } from "@storybook/react-webpack5";
-import React from "react";
-
+import type { Meta, StoryObj } from "@storybook/react-webpack5";
 import { accessTokenArgTypes } from "../utils/storyHelp";
-import { Authentiated, AuthenticatedProps } from "./Authenticated";
+import { Authentiated } from "./Authenticated";
 
 export default {
   title: "Example/Authenticated",
@@ -15,9 +13,4 @@ export default {
   argTypes: accessTokenArgTypes,
 } as Meta;
 
-const Template: StoryFn<AuthenticatedProps> = (args) => {
-  return <Authentiated {...args} />;
-};
-
-export const Primary = Template.bind({});
-Primary.args = {};
+export const Primary: StoryObj<typeof Authentiated> = {};
