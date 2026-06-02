@@ -105,22 +105,6 @@
     "strict": ["warn", "never"],
     "use-isnan": "warn",
 
-    "no-restricted-imports": [
-      "error",
-      {
-        "paths": [
-          {
-            "name": "@mui/material",
-            "message": "Import from a specific subpath (e.g. @mui/material/Box)."
-          },
-          {
-            "name": "@mui/system",
-            "message": "Import from a specific subpath (e.g. @mui/system/useTheme)."
-          }
-        ]
-      }
-    ],
-
     "import/first": "error",
     "import/no-amd": "error",
     "import/no-anonymous-default-export": "warn",
