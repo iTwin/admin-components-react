@@ -22,6 +22,7 @@ import { ITwinTileMUI, type ITwinTileMUIProps } from "./ITwinTileMUI";
 import { BaseCardLoading } from "../../components/baseCard/BaseCardLoading";
 import type { ITwinGridProps, ITwinGridStrings } from "./ITwinGrid";
 
+/** @alpha */
 export type IndividualITwinStateHookMUI = (
   iTwin: ITwinFull,
   iTwinTileProps: ITwinTileMUIProps & {
@@ -29,8 +30,10 @@ export type IndividualITwinStateHookMUI = (
   }
 ) => Partial<ITwinTileMUIProps>;
 
+/** @alpha */
 export { ITwinGridStrings };
 
+/** @alpha */
 export interface ITwinGridMUIProps
   extends Omit<
     ITwinGridProps,
@@ -57,6 +60,7 @@ export interface ITwinGridMUIProps
 
 /**
  * Component that will allow displaying a grid of iTwins, given a requestType
+ * @alpha
  */
 export const ITwinGridMUI = ({
   accessToken,

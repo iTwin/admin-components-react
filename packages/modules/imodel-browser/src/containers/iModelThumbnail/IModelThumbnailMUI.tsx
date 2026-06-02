@@ -12,6 +12,7 @@ import { useInView } from "react-intersection-observer";
 import { AccessTokenProvider, ApiOverrides } from "../../types";
 import { useIModelThumbnail } from "./useIModelThumbnail";
 
+/** @alpha */
 export interface IModelThumbnailMUIProps {
   className?: string;
   /** Id of the iModel to fetch thumbnail for */
@@ -25,7 +26,10 @@ export interface IModelThumbnailMUIProps {
   apiOverrides?: ApiOverrides<string>;
 }
 
-/** Clickable iModel thumbnail, fetched from the servers — MUI (Stratakit/MUI migration target) */
+/**
+ * Clickable iModel thumbnail, fetched from the servers — MUI (Stratakit/MUI migration target)
+ * @alpha
+ */
 export const IModelThumbnailMUI = ({
   iModelId,
   accessToken,

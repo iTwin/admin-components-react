@@ -147,28 +147,27 @@ const buildMenuItems =
     close: () => void,
     setVersion: React.Dispatch<React.SetStateAction<IModelMinimal | undefined>>
   ) =>
-  (v: IModelMinimal) =>
-    (
-      <span
-        onClick={(event) => {
-          event.stopPropagation();
-        }}
-      >
-        {v.id === "loading" ? (
-          <MenuItemSkeleton />
-        ) : (
-          <MenuItem
-            key={v.id}
-            onClick={() => {
-              close();
-              v.id !== "loading" && setVersion(v);
-            }}
-          >
-            {v.displayName}
-          </MenuItem>
-        )}
-      </span>
-    );
+  (v: IModelMinimal) => (
+    <span
+      onClick={(event) => {
+        event.stopPropagation();
+      }}
+    >
+      {v.id === "loading" ? (
+        <MenuItemSkeleton />
+      ) : (
+        <MenuItem
+          key={v.id}
+          onClick={() => {
+            close();
+            v.id !== "loading" && setVersion(v);
+          }}
+        >
+          {v.displayName}
+        </MenuItem>
+      )}
+    </span>
+  );
 
 const Pager = (props: PropsWithChildren<{ onClick: () => void }>) => (
   <span onClick={props.onClick}>

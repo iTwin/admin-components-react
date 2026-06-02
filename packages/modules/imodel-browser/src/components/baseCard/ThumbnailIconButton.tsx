@@ -9,6 +9,7 @@ import React from "react";
  * MUI {@link IconButton} with custom styling to allow it to be placed on top of thumbnail images.
  *
  * Used for "favorites" and "more options" on iModel/iTwin tiles and also available to consumers using the thumbnail slots.
+ * @alpha
  */
 export function ThumbnailIconButton(
   props: React.ComponentProps<typeof IconButton>

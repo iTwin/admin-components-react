@@ -19,12 +19,14 @@ export interface ContextMenuBuilderItem<T = any>
 
 /** MUI version of ContextMenuBuilderItem for use with Material-UI MenuItem components.
  * Used by MUI components and passed to the BaseCard.
+ * @alpha
  */
 export interface ContextMenuBuilderItemMUI<T = any>
   extends Omit<
     MuiMenuItemProps,
     "onClick" | "value" | "disabled" | "children"
   > {
+  sourceAppId?: string;
   key: string;
   children: React.ReactNode | ((value: T) => React.ReactNode);
   /** Optional icon rendered before the children. */

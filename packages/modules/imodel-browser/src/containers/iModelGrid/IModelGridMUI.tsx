@@ -30,6 +30,7 @@ import {
 import { BaseCardLoading } from "../../components/baseCard/BaseCardLoading";
 import type { IModelGridProps } from "./IModelGrid";
 
+/** @alpha */
 export interface IModelGridMUIProps
   extends Omit<
     IModelGridProps,
@@ -58,6 +59,7 @@ export interface IModelGridMUIProps
 
 /**
  * Component that will allow displaying a grid of iModels, given a contextId
+ * @alpha
  */
 export const IModelGridMUI = (props: IModelGridMUIProps) => {
   return (

@@ -22,6 +22,7 @@ import styles from "./ITwinTile.module.scss";
 import { StatusIcon } from "./StatusIcon";
 import CardMedia from "@mui/material/CardMedia";
 
+/** @alpha */
 export interface ITwinTileMUIProps
   extends Omit<ITwinTileProps, "onThumbnailClick" | "tileProps" | "fullWidth">,
     Omit<
@@ -54,6 +55,7 @@ export interface ITwinTileMUIProps
 
 /**
  * Representation of an iTwin — V2 (Stratakit/MUI)
+ * @alpha
  */
 export const ITwinTileMUI = ({
   iTwin,

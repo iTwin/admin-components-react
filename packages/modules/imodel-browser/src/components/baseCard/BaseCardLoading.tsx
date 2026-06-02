@@ -9,8 +9,10 @@ import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/material/Typography";
 import React, { forwardRef } from "react";
 
+/** @alpha */
 export type BaseCardLoadingProps = CardProps;
 
+/** @alpha */
 export const BaseCardLoading = forwardRef<HTMLDivElement, CardProps>(
   ({ ...props }, ref) => {
     return (

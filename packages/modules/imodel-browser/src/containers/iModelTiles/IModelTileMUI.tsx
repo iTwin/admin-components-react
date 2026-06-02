@@ -21,6 +21,7 @@ import styles from "./IModelTile.module.scss";
 import { StatusIcon } from "./StatusIcon";
 import { IModelTileProps } from "./IModelTile";
 
+/** @alpha */
 export interface IModelTileMUIProps
   extends Omit<
       IModelTileProps,
@@ -75,6 +76,7 @@ export interface IModelTileMUIProps
 
 /**
  * Representation of an IModel — V2 (Stratakit/MUI)
+ * @alpha
  */
 export const IModelTileMUI = ({
   iModel,

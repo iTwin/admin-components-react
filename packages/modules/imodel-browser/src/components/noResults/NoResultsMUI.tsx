@@ -10,6 +10,7 @@ import Typography from "@mui/material/Typography";
 import React from "react";
 import styles from "./NoResultsMUI.module.scss";
 
+/** @alpha */
 export interface NoResultsMUIProps {
   /** Displayed text */
   text: string;
@@ -17,7 +18,10 @@ export interface NoResultsMUIProps {
   isSearchResult?: boolean;
 }
 
-/** Pre-formatted empty result page (MUI version) */
+/**
+ * Pre-formatted empty result page (MUI version)
+ * @alpha
+ */
 export const NoResultsMUI = ({
   text,
   subtext,
