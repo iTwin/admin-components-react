@@ -19,12 +19,12 @@
     },
     "./mui": {
       "import": {
-        "types": "./esm/src/mui/index.d.ts",
-        "default": "./esm/src/mui/index.js"
+        "types": "./esm/mui/index.d.ts",
+        "default": "./esm/mui/index.js"
       },
       "require": {
-        "types": "./cjs/src/mui/index.d.ts",
-        "default": "./cjs/src/mui/index.js"
+        "types": "./cjs/mui/index.d.ts",
+        "default": "./cjs/mui/index.js"
       }
     }
   },

@@ -16,10 +16,22 @@ const baseConfig = {
   external: Object.keys(packageJson.dependencies).map(
     (dep) => new RegExp(`${dep}(/.*)?`, "g")
   ),
-  plugins: [
+};
+
+// Each rollup entry needs its own plugin instances to avoid shared state.
+// The `declaration` flag controls .d.ts emission — only the first entry
+// should emit declarations, because rollup-plugin-typescript2 compiles the
+// full tsconfig include set for every entry, and a second emit overwrites
+// the correct mui/index.d.ts with the legacy barrel's declarations.
+function createPlugins({ declaration = true } = {}) {
+  return [
     peerDepsExternal(),
     commonjs(),
-    typescript(),
+    typescript({
+      tsconfigOverride: declaration
+        ? {}
+        : { compilerOptions: { declaration: false, declarationMap: false } },
+    }),
     svgr(),
     postcss({
       use: {
@@ -32,12 +44,14 @@ const baseConfig = {
       include: ["**/*.png"], // Include file extensions you want to handle (e.g., PNG)
       emitFiles: true, // Emit the files to the output directory
     }),
-  ],
-};
+  ];
+}
 
 const rollupConfig = [
+  // Legacy barrel — emits JS + declarations for the entire project
   {
     ...baseConfig,
+    plugins: createPlugins(),
     input: "src/index.ts",
     output: [
       {
@@ -50,16 +64,18 @@ const rollupConfig = [
       },
     ],
   },
+  // MUI barrel — JS only, declarations already emitted by the first entry
   {
     ...baseConfig,
+    plugins: createPlugins({ declaration: false }),
     input: "src/mui/index.ts",
     output: [
       {
-        file: "cjs/src/mui/index.js",
+        file: "cjs/mui/index.js",
         format: "cjs",
       },
       {
-        file: "esm/src/mui/index.js",
+        file: "esm/mui/index.js",
         format: "esm",
       },
     ],
