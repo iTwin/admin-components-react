@@ -312,7 +312,7 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
                 justifyContent: "center",
                 alignItems: "center",
                 position: "relative",
-                height: "10rem",
+                aspectRatio: "16 / 10",
                 backgroundColor: "var(--stratakit-mui-palette-action-hover)",
                 overflow: "hidden",
                 flexShrink: 0,
