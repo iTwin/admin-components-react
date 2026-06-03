@@ -369,7 +369,7 @@ importers:
       '@types/react-dom': ^18.3.0
       '@types/react-table': ~7.7.14
       '@typescript-eslint/eslint-plugin': ^8.0.0
-      '@typescript-eslint/parser': ^8.0.0
+      '@typescript-eslint/parser': ^8.57.0
       babel-eslint: ^10.0.0
       classnames: ^2.2.6
       eslint: ^8.57.0
@@ -396,7 +396,7 @@ importers:
       rollup: ^2.42.4
       rollup-plugin-peer-deps-external: ^2.2.4
       rollup-plugin-postcss: ^4.0.0
-      rollup-plugin-typescript2: ^0.36.0
+      rollup-plugin-typescript2: ^0.37.0
       sass: ^1.69.5
       stylelint: ^13.6.1
       stylelint-config-prettier: ^8.0.2
@@ -453,7 +453,7 @@ importers:
       rollup: 2.79.2
       rollup-plugin-peer-deps-external: 2.2.4_rollup@2.79.2
       rollup-plugin-postcss: 4.0.2_postcss@8.4.31
-      rollup-plugin-typescript2: 0.36.0_tagg7wrwek5xwloewiroaieqza
+      rollup-plugin-typescript2: 0.37.0_tagg7wrwek5xwloewiroaieqza
       sass: 1.86.3
       stylelint: 13.13.1
       stylelint-config-prettier: 8.0.2_stylelint@13.13.1
@@ -15966,21 +15966,6 @@ packages:
       rollup: 2.79.2
       serialize-javascript: 4.0.0
       terser: 5.39.0
-    dev: true
-
-  /rollup-plugin-typescript2/0.36.0_tagg7wrwek5xwloewiroaieqza:
-    resolution: {integrity: sha512-NB2CSQDxSe9+Oe2ahZbf+B4bh7pHwjV5L+RSYpCu7Q5ROuN94F9b6ioWwKfz3ueL3KTtmX4o2MUH2cgHDIEUsw==}
-    peerDependencies:
-      rollup: '>=1.26.3'
-      typescript: '>=2.4.0'
-    dependencies:
-      '@rollup/pluginutils': 4.2.1
-      find-cache-dir: 3.3.2
-      fs-extra: 10.1.0
-      rollup: 2.79.2
-      semver: 7.7.1
-      tslib: 2.8.1
-      typescript: 6.0.3
     dev: true
 
   /rollup-plugin-typescript2/0.37.0_tagg7wrwek5xwloewiroaieqza:
