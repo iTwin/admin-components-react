@@ -19,6 +19,10 @@ import svgMoreVertical from "@stratakit/icons/more-vertical.svg";
 import { BaseCardLoading } from "./BaseCardLoading";
 import { ThumbnailIconButton } from "./ThumbnailIconButton";
 
+/** Flatten an optional SxProps value into spreadable array elements. */
+const spreadSx = (sx: SxProps<Theme> | undefined) =>
+  Array.isArray(sx) ? sx : sx ? [sx] : [];
+
 interface BaseCardSlotStyleProps {
   className?: string;
   sx?: SxProps<Theme>;
@@ -29,9 +33,9 @@ export interface BaseCardSlotProps {
   divider?: BaseCardSlotStyleProps;
   content?: BaseCardSlotStyleProps;
   header?: BaseCardSlotStyleProps;
+  title?: BaseCardSlotStyleProps;
   info?: BaseCardSlotStyleProps;
   actions?: BaseCardSlotStyleProps;
-  titleAction?: BaseCardSlotStyleProps;
 }
 
 export interface BaseCardActionItem {
@@ -126,6 +130,8 @@ export interface BaseCardProps
  * Base card is very customizable. As such, it isn't recommended to use BaseCard directly since
  * design discipline will go out the window.  Instead, we map some of the placements (e.g. thumbnailTopRight)
  * to specific uses (e.g. favorite button) in the domain-specific wrappers.
+ *
+ * @alpha
  */
 export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
   (
@@ -150,6 +156,7 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
       disabled: cardDisabled,
       status,
       slotProps,
+
       className,
       sx,
       ...rest
@@ -215,12 +222,14 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
       <CardActions
         data-testid="card-action-buttons"
         className="BaseCard-cardActions"
-        sx={{
-          position: "absolute",
-          opacity: 0,
-          transition: "opacity 0.25s ease-out",
-          ...slotProps?.actions?.sx,
-        }}
+        sx={[
+          {
+            position: "absolute",
+            opacity: 0,
+            transition: "opacity 0.25s ease-out",
+          },
+          ...spreadSx(slotProps?.actions?.sx),
+        ]}
       >
         <Grid container spacing={2}>
           {actions.map(({ key, label, onClick }, index) => (
@@ -245,15 +254,17 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
       return (
         <BaseCardLoading
           className={className}
-          sx={{
-            overflow: "hidden",
-            minWidth: "18rem",
-            minHeight: "15rem",
-            display: "flex",
-            flexDirection: "column",
-            userSelect: "none",
-            ...sx,
-          }}
+          sx={[
+            {
+              overflow: "hidden",
+              minWidth: "18rem",
+              minHeight: "15rem",
+              display: "flex",
+              flexDirection: "column",
+              userSelect: "none",
+            },
+            ...spreadSx(sx),
+          ]}
         />
       );
     }
@@ -264,23 +275,26 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
           ref={ref}
           variant="outlined"
           className={className}
-          sx={{
-            overflow: "hidden",
-            minWidth: "18rem",
-            minHeight: "15rem",
-            display: "flex",
-            flexDirection: "column",
-            userSelect: "none",
-            cursor: cardDisabled ? "not-allowed" : "default",
-            ...(selected && {
-              outline: "2px solid",
-              outlineColor: "var(--stratakit-mui-palette-primary-main)",
-            }),
-            "&:hover .BaseCard-cardActions, &:focus-within .BaseCard-cardActions": {
-              opacity: 1,
+          sx={[
+            {
+              overflow: "hidden",
+              minWidth: "18rem",
+              minHeight: "15rem",
+              display: "flex",
+              flexDirection: "column",
+              userSelect: "none",
+              cursor: cardDisabled ? "not-allowed" : "default",
+              ...(selected && {
+                outline: "2px solid",
+                outlineColor: "var(--stratakit-color-border-accent-strong)",
+              }),
+              "&:hover .BaseCard-cardActions, &:focus-within .BaseCard-cardActions":
+                {
+                  opacity: 1,
+                },
             },
-            ...sx,
-          }}
+            ...spreadSx(sx),
+          ]}
           {...rest}
           onClick={!cardDisabled ? onClick : undefined}
           onContextMenu={
@@ -292,23 +306,25 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
 
           <Box
             className={slotProps?.thumbnail?.className}
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              position: "relative",
-              height: "10rem",
-              backgroundColor: "var(--stratakit-mui-palette-action-hover)",
-              overflow: "hidden",
-              flexShrink: 0,
-              "& > img, & > video": {
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                display: "block",
+            sx={[
+              {
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                position: "relative",
+                height: "10rem",
+                backgroundColor: "var(--stratakit-mui-palette-action-hover)",
+                overflow: "hidden",
+                flexShrink: 0,
+                "& > img, & > video": {
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  display: "block",
+                },
               },
-              ...(slotProps?.thumbnail?.sx ?? {}),
-            }}
+              ...spreadSx(slotProps?.thumbnail?.sx),
+            ]}
           >
             {thumbnailTopLeft && (
               <Box sx={{ position: "absolute", top: 8, left: 8, zIndex: 1 }}>
@@ -316,7 +332,17 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
               </Box>
             )}
             {(thumbnailTopRight ?? hasContextMenu) && (
-              <Box sx={{ position: "absolute", top: 8, right: 8, zIndex: 1, display: "flex", gap: "4px" }}>
+              <Box
+                sx={{
+                  position: "absolute",
+                  top: 8,
+                  right: 8,
+                  zIndex: 1,
+                  display: "flex",
+                  gap: "4px",
+                  mixBlendMode: "difference",
+                }}
+              >
                 {thumbnailTopRight}
                 {hasContextMenu && !cardDisabled && (
                   <ThumbnailIconButton
@@ -335,7 +361,9 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
               </Box>
             )}
             {thumbnailBottomRight && (
-              <Box sx={{ position: "absolute", bottom: 8, right: 8, zIndex: 1 }}>
+              <Box
+                sx={{ position: "absolute", bottom: 8, right: 8, zIndex: 1 }}
+              >
                 {thumbnailBottomRight}
               </Box>
             )}
@@ -344,17 +372,19 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
 
           <Divider
             className={slotProps?.divider?.className}
-            sx={{
-              borderColor:
-                status === "positive"
-                  ? "success.main"
-                  : status === "warning"
-                  ? "warning.main"
-                  : status === "negative"
-                  ? "error.main"
-                  : undefined,
-              ...(slotProps?.divider?.sx ?? {}),
-            }}
+            sx={[
+              {
+                borderColor:
+                  status === "positive"
+                    ? "success.main"
+                    : status === "warning"
+                    ? "warning.main"
+                    : status === "negative"
+                    ? "error.main"
+                    : undefined,
+              },
+              ...spreadSx(slotProps?.divider?.sx),
+            ]}
           />
 
           {/* ── Content area ── */}
@@ -362,12 +392,14 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
             direction="row"
             spacing={1}
             className={slotProps?.content?.className}
-            sx={{
-              p: 2,
-              pt: 1.5,
-              alignItems: "flex-start",
-              ...(slotProps?.content?.sx ?? {}),
-            }}
+            sx={[
+              {
+                p: 2,
+                pt: 1.5,
+                alignItems: "flex-start",
+              },
+              ...spreadSx(slotProps?.content?.sx),
+            ]}
           >
             {statusIcon && (
               <Box
@@ -389,24 +421,30 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
               <Stack
                 direction="row"
                 className={slotProps?.header?.className}
-                sx={{
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  gap: 1,
-                  ...(slotProps?.header?.sx ?? {}),
-                }}
+                sx={[
+                  {
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    gap: 1,
+                  },
+                  ...spreadSx(slotProps?.header?.sx),
+                ]}
               >
                 <Typography
                   variant="body1"
                   component="p"
-                  sx={{
-                    flex: 1,
-                    minWidth: 0,
-                    display: "-webkit-box",
-                    WebkitLineClamp: 1,
-                    WebkitBoxOrient: "vertical",
-                    overflow: "hidden",
-                  }}
+                  className={slotProps?.title?.className}
+                  sx={[
+                    {
+                      flex: 1,
+                      minWidth: 0,
+                      display: "-webkit-box",
+                      WebkitLineClamp: 1,
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden",
+                    },
+                    ...spreadSx(slotProps?.title?.sx),
+                  ]}
                 >
                   {title}
                 </Typography>
@@ -417,7 +455,7 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
               <Stack
                 spacing={0.25}
                 className={slotProps?.info?.className}
-                sx={{ ...(slotProps?.info?.sx ?? {}) }}
+                sx={slotProps?.info?.sx}
               >
                 {description && (
                   <Typography

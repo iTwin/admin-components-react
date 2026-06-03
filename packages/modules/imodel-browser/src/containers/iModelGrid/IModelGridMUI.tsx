@@ -58,7 +58,11 @@ export interface IModelGridMUIProps
 }
 
 /**
- * Component that will allow displaying a grid of iModels, given a contextId
+ * Component to display a grid or table of iModels within a given iTwin.
+ *
+ * This is the Stratakit/MUI version of the IModelGrid. It is still under active development and may have breaking changes.
+ *
+ * Feedback is most welcome.
  * @alpha
  */
 export const IModelGridMUI = (props: IModelGridMUIProps) => {

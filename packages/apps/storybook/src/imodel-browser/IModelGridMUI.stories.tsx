@@ -15,7 +15,6 @@ import {
   initialData,
 } from "./IModelGridMUI.helpers";
 import SvgDelete from "@stratakit/icons/delete.svg";
-import Svg3D from "@stratakit/icons/3d.svg";
 import { Icon } from "@stratakit/mui";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
@@ -27,7 +26,6 @@ import {
 import Typography from "@mui/material/Typography";
 import Chip from "@mui/material/Chip";
 import AvatarGroup from "@mui/material/AvatarGroup";
-import IconButton from "@mui/material/IconButton";
 import Avatar from "@mui/material/Avatar";
 import { action } from "@storybook/addon-actions";
 import bridgeThumbnail from "../utils/bridge.jpg";

@@ -19,12 +19,10 @@ export function ThumbnailIconButton(
       {...props}
       size="small"
       sx={{
-        bgcolor: "var(--stratakit-color-bg-mono-transparent)",
-        backdropFilter: "blur(0.5rem)",
-        WebkitBackdropFilter: "blur(0.5rem)",
-        mixBlendMode: "exclusion",
+        bgcolor: "rgba(255, 255, 255, 0.2)",
+        color: "rgba(0,0,0, 0.2)",
         "&:hover": {
-          bgcolor: "var(--stratakit-color-bg-mono-transparent)",
+          bgcolor: "rgba(255, 255, 255, 0.4)",
         },
         ...props.sx,
       }}

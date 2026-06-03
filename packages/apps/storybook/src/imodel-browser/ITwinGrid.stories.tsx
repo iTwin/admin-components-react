@@ -256,8 +256,8 @@ const useIndividualState: IndividualITwinStateHook = (iTwin, props) => {
           : [<Button key="Create">Create IModel</Button>],
       metadata: (
         <span
-          onClick={() => {
-            imodels === undefined && fetchIModelList();
+          onClick={async () => {
+            imodels === undefined && (await fetchIModelList());
           }}
         >
           <DropdownButton

@@ -83,13 +83,13 @@ const baseArgs: IModelTileMUIProps = {
   contextMenuItems: [
     {
       key: "option-1",
-      icon: <Icon href={SvgShare} size="small" />,
+      icon: <Icon href={SvgShare} size="regular" />,
       children: "Context Menu Option 1",
       onClick: (iModel) => action("iModel option 1 clicked")(iModel),
     },
     {
       key: "option-2",
-      icon: <Icon href={SvgDelete} size="small" />,
+      icon: <Icon href={SvgDelete} size="regular" />,
       children: "Context Menu Option 2",
       onClick: (iModel) => action("iModel option 2 clicked")(iModel),
     },
