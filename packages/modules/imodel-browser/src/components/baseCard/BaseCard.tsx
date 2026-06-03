@@ -13,11 +13,9 @@ import Menu from "@mui/material/Menu";
 import Stack from "@mui/material/Stack";
 import type { SxProps, Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import classNames from "classnames";
 import React, { type ReactNode } from "react";
 import { Icon } from "@stratakit/mui";
 import svgMoreVertical from "@stratakit/icons/more-vertical.svg";
-import styles from "./BaseCard.module.scss";
 import { BaseCardLoading } from "./BaseCardLoading";
 import { ThumbnailIconButton } from "./ThumbnailIconButton";
 
@@ -216,8 +214,13 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
     const actionButtons = actions?.length ? (
       <CardActions
         data-testid="card-action-buttons"
-        className={styles.cardActions}
-        sx={slotProps?.actions?.sx}
+        className="BaseCard-cardActions"
+        sx={{
+          position: "absolute",
+          opacity: 0,
+          transition: "opacity 0.25s ease-out",
+          ...slotProps?.actions?.sx,
+        }}
       >
         <Grid container spacing={2}>
           {actions.map(({ key, label, onClick }, index) => (
@@ -241,8 +244,16 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
     if (loading) {
       return (
         <BaseCardLoading
-          className={classNames(styles.baseCard, className)}
-          sx={sx}
+          className={className}
+          sx={{
+            overflow: "hidden",
+            minWidth: "18rem",
+            minHeight: "15rem",
+            display: "flex",
+            flexDirection: "column",
+            userSelect: "none",
+            ...sx,
+          }}
         />
       );
     }
@@ -252,13 +263,22 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
         <Card
           ref={ref}
           variant="outlined"
-          className={classNames(
-            styles.baseCard,
-            { [styles.selected]: selected, [styles.disabled]: cardDisabled },
-            className
-          )}
+          className={className}
           sx={{
+            overflow: "hidden",
+            minWidth: "18rem",
+            minHeight: "15rem",
+            display: "flex",
+            flexDirection: "column",
+            userSelect: "none",
             cursor: cardDisabled ? "not-allowed" : "default",
+            ...(selected && {
+              outline: "2px solid",
+              outlineColor: "var(--stratakit-mui-palette-primary-main)",
+            }),
+            "&:hover .BaseCard-cardActions, &:focus-within .BaseCard-cardActions": {
+              opacity: 1,
+            },
             ...sx,
           }}
           {...rest}
@@ -271,19 +291,32 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
           {/* ── Thumbnail area ── */}
 
           <Box
-            className={classNames(
-              styles.thumbnailArea,
-              slotProps?.thumbnail?.className
-            )}
+            className={slotProps?.thumbnail?.className}
             sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              position: "relative",
+              height: "10rem",
+              backgroundColor: "var(--stratakit-mui-palette-action-hover)",
+              overflow: "hidden",
+              flexShrink: 0,
+              "& > img, & > video": {
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                display: "block",
+              },
               ...(slotProps?.thumbnail?.sx ?? {}),
             }}
           >
             {thumbnailTopLeft && (
-              <Box className={styles.thumbnailTopLeft}>{thumbnailTopLeft}</Box>
+              <Box sx={{ position: "absolute", top: 8, left: 8, zIndex: 1 }}>
+                {thumbnailTopLeft}
+              </Box>
             )}
             {(thumbnailTopRight ?? hasContextMenu) && (
-              <Box className={styles.thumbnailTopRight}>
+              <Box sx={{ position: "absolute", top: 8, right: 8, zIndex: 1, display: "flex", gap: "4px" }}>
                 {thumbnailTopRight}
                 {hasContextMenu && !cardDisabled && (
                   <ThumbnailIconButton
@@ -297,12 +330,12 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
             )}
             {thumbnailNode}
             {thumbnailBottomLeft && (
-              <Box className={styles.thumbnailBottomLeft}>
+              <Box sx={{ position: "absolute", bottom: 8, left: 8, zIndex: 1 }}>
                 {thumbnailBottomLeft}
               </Box>
             )}
             {thumbnailBottomRight && (
-              <Box className={styles.thumbnailBottomRight}>
+              <Box sx={{ position: "absolute", bottom: 8, right: 8, zIndex: 1 }}>
                 {thumbnailBottomRight}
               </Box>
             )}

@@ -2,7 +2,6 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import classNames from "classnames";
 import React from "react";
 import {
   BaseCard,
@@ -17,7 +16,6 @@ import {
   ContextMenuBuilderItemMUI,
 } from "../../utils/_buildMenuOptions";
 import { IModelThumbnailMUI } from "../iModelThumbnail/IModelThumbnailMUI";
-import styles from "./IModelTile.module.scss";
 import { StatusIcon } from "./StatusIcon";
 import { IModelTileProps } from "./IModelTile";
 
@@ -138,7 +136,7 @@ export const IModelTileMUI = ({
         onRemoveFromFavorites={() => favoritesContext.remove(iModel.id)}
         addLabel={strings.addToFavorites}
         removeLabel={strings.removeFromFavorites}
-        className={styles.iModelTileFavoriteIcon}
+        className="IModelTile-favoriteIcon"
         disabled={disabled}
       />
     ) : undefined;
@@ -152,7 +150,12 @@ export const IModelTileMUI = ({
   return (
     <BaseCard
       aria-disabled={disabled ?? undefined}
-      className={classNames(styles.iModelTile, className)}
+      className={className}
+      sx={{
+        "&:hover .IModelTile-favoriteIcon": {
+          display: "flex",
+        },
+      }}
       disabled={disabled}
       loading={loading}
       thumbnail={

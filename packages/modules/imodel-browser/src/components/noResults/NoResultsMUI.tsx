@@ -8,7 +8,6 @@ import { Icon } from "@stratakit/mui";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import React from "react";
-import styles from "./NoResultsMUI.module.scss";
 
 /** @alpha */
 export interface NoResultsMUIProps {
@@ -55,7 +54,7 @@ export const NoResultsMUI = ({
           href={isSearchResult ? svgSearch : svgImodel}
           size="large"
           color="textSecondary"
-          className={styles.muiIcon}
+          style={{ width: "5rem", height: "5rem" }}
         />
         <Typography variant="h6">{text}</Typography>
         {subtext && <Typography variant="body1">{subtext}</Typography>}

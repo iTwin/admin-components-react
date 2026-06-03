@@ -4,7 +4,6 @@
  *--------------------------------------------------------------------------------------------*/
 import Chip from "@mui/material/Chip";
 import svgItwin from "@stratakit/icons/itwin.svg";
-import classNames from "classnames";
 import React from "react";
 import {
   BaseCard,
@@ -18,7 +17,6 @@ import {
   ContextMenuBuilderItemMUI,
 } from "../../utils/_buildMenuOptions";
 import { ITwinTileProps } from "./ITwinTile";
-import styles from "./ITwinTile.module.scss";
 import { StatusIcon } from "./StatusIcon";
 import CardMedia from "@mui/material/CardMedia";
 
@@ -113,9 +111,10 @@ export const ITwinTileMUI = ({
         onRemoveFromFavorites={() => removeFromFavorites(iTwin.id)}
         addLabel={strings.addToFavorites}
         removeLabel={strings.removeFromFavorites}
-        className={classNames(styles.iTwinTileFavoriteIcon, {
-          [styles.hidden]: !isFavorite,
-        })}
+        className="ITwinTile-favoriteIcon"
+        sx={{
+          ...(!isFavorite && { display: "none" }),
+        }}
         disabled={disabled}
       />
     ) : undefined;
@@ -127,7 +126,12 @@ export const ITwinTileMUI = ({
   return (
     <BaseCard
       aria-disabled={disabled ?? undefined}
-      className={classNames(styles.iTwinTile, className)}
+      className={className}
+      sx={{
+        "&:hover .ITwinTile-favoriteIcon": {
+          display: "flex",
+        },
+      }}
       disabled={disabled}
       loading={loading}
       selected={selected}
