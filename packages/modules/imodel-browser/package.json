@@ -43,12 +43,7 @@
   "dependencies": {
     "@itwin/itwinui-icons-react": "^2.9.0",
     "classnames": "^2.2.6",
-    "react-intersection-observer": "^8.31.1",
-    "@stratakit/mui": "~0.4.1",
-    "@stratakit/icons": "~0.3.1",
-    "@mui/system": "~9.0.0",
-    "@mui/material": "~9.0.0",
-    "@mui/x-data-grid": "~9.3.0"
+    "react-intersection-observer": "^8.31.1"
   },
   "devDependencies": {
     "@itwin/itwinui-react": "^3.19.4",
@@ -101,6 +96,11 @@
   },
   "peerDependencies": {
     "@itwin/itwinui-react": "~3.17.3",
+    "@mui/material": "~9.0.0",
+    "@mui/system": "~9.0.0",
+    "@mui/x-data-grid": "~9.3.0",
+    "@stratakit/icons": "~0.3.1",
+    "@stratakit/mui": "~0.4.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   }
