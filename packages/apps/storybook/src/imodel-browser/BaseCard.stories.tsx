@@ -225,3 +225,11 @@ Loading.args = { ...baseArgs, loading: true };
 export const Selected = Template.bind({});
 Selected.storyName = "Selected state";
 Selected.args = { ...baseArgs, selected: true };
+
+export const LongTitle = Template.bind({});
+LongTitle.storyName = "Long title";
+LongTitle.args = {
+  ...baseArgs,
+  title:
+    "This is a very long title that should truncate automagically with an ellipsis at the end",
+};

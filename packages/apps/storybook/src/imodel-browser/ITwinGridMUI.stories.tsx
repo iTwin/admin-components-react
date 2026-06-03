@@ -369,6 +369,15 @@ FetchAllSubclasses.args = {
   iTwinSubClass: "All",
 };
 
+export const NoResultsWithDefaultEmptyState = Template.bind({});
+NoResultsWithDefaultEmptyState.args = {
+  ...baseArgs,
+  apiOverrides: { serverEnvironmentPrefix: "qa" },
+  postProcessCallback: (iModels, status) => {
+    return [];
+  },
+};
+
 export default {
   title: "imodel-browser/ITwinGridMUI",
   component: ITwinGrid,

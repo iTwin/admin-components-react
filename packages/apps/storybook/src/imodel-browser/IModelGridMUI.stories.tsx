@@ -278,3 +278,12 @@ RecentsWithCustomIcon.args = {
   requestType: "recents",
   removeFromRecentsIcon: <Icon href={SvgDelete} />,
 };
+
+export const NoResultsWithDefaultEmptyState = Template.bind({});
+NoResultsWithDefaultEmptyState.args = {
+  ...baseArgs,
+  apiOverrides: { serverEnvironmentPrefix: "qa" },
+  postProcessCallback: (iModels, status) => {
+    return [];
+  },
+};
