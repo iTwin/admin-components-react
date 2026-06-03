@@ -4,6 +4,46 @@ This file tracks migration notes for the MUI/Stratakit components.
 
 A new `src/mui/index.ts` barrel re-exports MUI components under legacy-aligned names (e.g. `IModelGridMUI as IModelGrid`). This is built as a separate rollup entry point.
 
+## Styling approach
+
+All MUI components use **inline `sx` props** instead of CSS module (`.module.scss`) files. This avoids injecting `<style>` tags at runtime, which are blocked by Content Security Policy (CSP) in Electron-hosted apps.
+
+The legacy (itwinui) components retain their SCSS modules — only the `*MUI` variants were converted.
+
+### `spreadSx` helper
+
+MUI's `SxProps<Theme>` can be an object, a function, or an array. You cannot object-spread an array-form `SxProps`, and you cannot array-spread `undefined`. BaseCard defines a helper used across all sx merge sites:
+
+```ts
+const spreadSx = (sx: SxProps<Theme> | undefined) =>
+  Array.isArray(sx) ? sx : sx ? [sx] : [];
+```
+
+Usage:
+
+```tsx
+<Card sx={[{ border: 1 }, ...spreadSx(slotProps?.content?.sx)]}>
+```
+
+This matches the [MUI docs pattern](https://mui.com/system/getting-started/the-sx-prop/#passing-the-sx-prop) but adds an `undefined` guard since slotProps are deeply optional.
+
+### `@stratakit/mui` Icon caveat
+
+The Stratakit `Icon` component does **not** accept an `sx` prop. Use the `style` prop for inline sizing:
+
+```tsx
+<Icon href={svgItwin} style={{ width: "5rem", height: "5rem" }} />
+```
+
+## Dependencies
+
+MUI packages must appear in **both** `peerDependencies` and `devDependencies` in library packages:
+
+- `peerDependencies` — tells consumers they must provide these packages.
+- `devDependencies` — provides type resolution and build tooling locally.
+
+`rollup-plugin-peer-deps-external` handles externalizing peer deps at build time. The storybook app package also needs MUI packages in `devDependencies` so types resolve at dev time.
+
 ## `IModelTile` -> `IModelTileMUI`
 
 - `tileProps` fields become first-class props on `IModelTileMUI`.
@@ -317,7 +357,10 @@ tableOverrides: {
 
 ## TODO
 
-- Rename `iTwinActions` and `iModelActions` to contextMenu?
+- Rename `iTwinActions` and `iModelActions` to `contextMenuItems`?
 - Do we need a replacement for `isNew` and `fullWidth`?
-- Fix fallback icons - rendered differently currently
-- Verify icons on top of different colour thumbnails
+- Fix fallback icons — rendered differently currently
+- Verify icons on top of different-colour thumbnails
+- Investigate infinite scroll for MUI X DataGrid table view (Pro edition supports `onRowsScrollEnd`; Community does not)
+- BaseCardLoading: calculate thumbnail size dynamically instead of hard-coding
+- BaseCardLoading: i18n for loading text

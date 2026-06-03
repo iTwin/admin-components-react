@@ -281,8 +281,14 @@ const IModelGridInternal = ({
                     : undefined
                 }
                 onSelect={() => {
-                  setSelectedIModelId(iModel.id);
-                  resolvedOnSelect?.(iModel);
+                  if (selectedIModelId === iModel.id && resolvedOnOpen) {
+                    void iModelClickAndAddToRecents(iModel, () =>
+                      resolvedOnOpen(iModel)
+                    );
+                  } else {
+                    setSelectedIModelId(iModel.id);
+                    resolvedOnSelect?.(iModel);
+                  }
                 }}
               />
             ))}

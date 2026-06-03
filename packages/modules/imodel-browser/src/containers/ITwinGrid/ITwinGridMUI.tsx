@@ -192,11 +192,14 @@ export const ITwinGridMUI = ({
                 thumbnail={iTwin.image} // This is a fix for https://github.com/iTwin/admin-components-react/issues/196
                 {...tileOverrides}
                 onSelect={() => {
-                  // ensure we still track the selected state even when we have tileOverrides
-                  setSelectedITwinId(iTwin.id);
-                  tileOverrides?.onSelect
-                    ? tileOverrides.onSelect(iTwin)
-                    : onSelect?.(iTwin);
+                  if (selectedITwinId === iTwin.id && onOpen) {
+                    onOpen(iTwin);
+                  } else {
+                    setSelectedITwinId(iTwin.id);
+                    tileOverrides?.onSelect
+                      ? tileOverrides.onSelect(iTwin)
+                      : onSelect?.(iTwin);
+                  }
                 }}
               />
             ))}
