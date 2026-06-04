@@ -18,6 +18,8 @@ import { Icon } from "@stratakit/mui";
 import svgMoreVertical from "@stratakit/icons/more-vertical.svg";
 import { BaseCardLoading } from "./BaseCardLoading";
 import { ThumbnailIconButton } from "./ThumbnailIconButton";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import type { SvgThumbnail } from "./SvgThumbnail";
 
 /** Flatten an optional SxProps value into spreadable array elements. */
 const spreadSx = (sx: SxProps<Theme> | undefined) =>
@@ -48,8 +50,12 @@ export interface BaseCardProps
   extends Omit<CardProps, "children" | "title" | "onClick" | "onSelect"> {
   // ── Thumbnail area ──────────────────────────────────────────────────────────
   /**
-   * Main thumbnail content (icon, image, skeleton, custom layout, etc.).
+   * Main thumbnail content.
+   *
    * When a string URL is provided, BaseCard renders an image with default cover styling.
+   *
+   * To use a Stratakit SVG as a thumbnail, pass an {@link SvgThumbnail} to get proper styling and layout.
+   *
    * Leave undefined to render an empty reserved thumbnail area.
    */
   thumbnail?: ReactNode;
@@ -128,8 +134,7 @@ export interface BaseCardProps
  * Base card component built on MUI Card.
  *
  * Base card is very customizable. As such, it isn't recommended to use BaseCard directly since
- * design discipline will go out the window.  Instead, we map some of the placements (e.g. thumbnailTopRight)
- * to specific uses (e.g. favorite button) in the domain-specific wrappers.
+ * design discipline will go out the window.  Prefer to build specific card components for your use case on top of BaseCard.
  *
  * @alpha
  */

@@ -15,7 +15,9 @@ import React from "react";
 import bridgeThumbnail from "../utils/bridge.jpg";
 import powerThumbnail from "../utils/power.jpg";
 import Grid from "@mui/material/Grid";
+import svgMagnet from "@stratakit/icons/magnet.svg";
 import { DefaultThumbnail } from "../../../../modules/imodel-browser/src/containers/ITwinGrid/ITwinTileMUI";
+import { SvgThumbnail } from "@itwin/imodel-browser-react/mui";
 
 const InConstrainedContainer = ({
   children,
@@ -131,10 +133,10 @@ DefaultThumbnailStory.args = {
 };
 DefaultThumbnailStory.storyName = "Default Thumbnail";
 
-export const NoThumbnail = Template.bind({});
-NoThumbnail.args = {
+export const CustomSvgThumbnail = Template.bind({});
+CustomSvgThumbnail.args = {
   ...baseArgs,
-  thumbnail: undefined,
+  thumbnail: <SvgThumbnail src={svgMagnet} />,
 };
 
 export const Extensive = Template.bind({});

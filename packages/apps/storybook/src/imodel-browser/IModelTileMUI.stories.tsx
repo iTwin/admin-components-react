@@ -5,6 +5,7 @@
 import {
   IModelTile as IModelTileMUI,
   type IModelTileProps as IModelTileMUIProps,
+  SvgThumbnail,
 } from "@itwin/imodel-browser-react/mui";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
@@ -18,6 +19,7 @@ import { action } from "@storybook/addon-actions";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
 import Button from "@mui/material/Button";
+import svgRoad from "@stratakit/icons/road.svg";
 
 const InConstrainedContainer = ({
   children,
@@ -129,4 +131,10 @@ export const NoThumbnail = Template.bind({});
 NoThumbnail.args = {
   ...baseArgs,
   thumbnail: undefined,
+};
+
+export const CustomSvgThumbnail = Template.bind({});
+CustomSvgThumbnail.args = {
+  ...baseArgs,
+  thumbnail: <SvgThumbnail src={svgRoad} />,
 };
