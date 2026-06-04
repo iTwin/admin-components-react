@@ -350,6 +350,7 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
                 {hasContextMenu && !cardDisabled && (
                   <ThumbnailIconButton
                     aria-label="More options"
+                    data-testid="show-context-menu-button"
                     onClick={handleMoreButtonClick}
                     icon={svgMoreVertical}
                   />
@@ -434,7 +435,7 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
               >
                 <Typography
                   variant="body1"
-                  component="p"
+                  component="h2"
                   className={slotProps?.title?.className}
                   sx={[
                     {
