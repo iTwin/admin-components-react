@@ -1,12 +1,20 @@
 import IconButton from "@mui/material/IconButton";
+import type { SxProps, Theme } from "@mui/material/styles";
 import React from "react";
+export interface ThumbnailIconButtonProps extends Pick<React.ComponentProps<typeof IconButton>, "onClick" | "disabled" | "aria-label" | "className"> {
+    /**
+     * URL of the icon SVG (typically an import from `@stratakit/icons`).
+     */
+    icon: string;
+    muted?: boolean;
+    sx?: SxProps<Theme>;
+}
 /**
- * MUI {@link IconButton} with custom styling to allow it to be placed on top of thumbnail images.
- *
- * Used for "favorites" and "more options" on iModel/iTwin tiles and also available to consumers using the thumbnail slots.
+ * Icon button intended for overlaying on top of a thumbnail image
+ * (e.g. favorites, more-options menu).
  * @alpha
  */
-export declare function ThumbnailIconButton(props: React.ComponentProps<typeof IconButton>): React.JSX.Element;
+export declare function ThumbnailIconButton(props: ThumbnailIconButtonProps): React.JSX.Element;
 export declare namespace ThumbnailIconButton {
     var displayName: string;
 }
