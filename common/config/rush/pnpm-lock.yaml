@@ -371,6 +371,7 @@ importers:
       '@typescript-eslint/eslint-plugin': ^8.0.0
       '@typescript-eslint/parser': ^8.57.0
       babel-eslint: ^10.0.0
+      cjs: ^0.0.11
       classnames: ^2.2.6
       eslint: ^8.57.0
       eslint-config-airbnb: ^0.0.4
@@ -381,6 +382,7 @@ importers:
       eslint-plugin-react: ^7.20.3
       eslint-plugin-react-hooks: ^4.0.7
       eslint-plugin-simple-import-sort: ^5.0.3
+      esm: ^3.2.25
       identity-obj-proxy: ^3.0.0
       jest: ^29.7.0
       jest-environment-jsdom: ^29.7.0
@@ -408,7 +410,9 @@ importers:
       typescript: ~6.0.3
     dependencies:
       '@itwin/itwinui-icons-react': 2.10.0_nnrd3gsncyragczmpvfhocinkq
+      cjs: 0.0.11
       classnames: 2.5.1
+      esm: 3.2.25
       react-intersection-observer: 8.34.0_react@18.3.1
     devDependencies:
       '@itwin/itwinui-react': 3.19.4_nnrd3gsncyragczmpvfhocinkq
@@ -7773,6 +7777,12 @@ packages:
     resolution: {integrity: sha512-9z8TZaGM1pfswYeXrUpzPrkx8UnWYdhJclsiYMm6x/w5+nN+8Tf/LnAgfLGQCm59qAOxU8WwHEq2vNwF6i4j+Q==}
     dev: true
 
+  /cjs/0.0.11:
+    resolution: {integrity: sha512-aLndk8BnpIOy/ZxmLGCNTSFoLm0+OyZDtxNCV6jUBHBkLICanUAlkIGtnaQrCBMYTebOmWHNg8+vxtaYZ8LSfA==}
+    dependencies:
+      sync-channel: 0.0.6
+    dev: false
+
   /class-utils/0.3.6:
     resolution: {integrity: sha512-qOhPa/Fj7s6TY8H8esGu5QNpMMQxz79h+urzrNYN6mn+9BnxlDGf5QZ+XeCDsxSjPqsSR56XOZOJmpeurnLMeg==}
     engines: {node: '>=0.10.0'}
@@ -9708,6 +9718,11 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /esm/3.2.25:
+    resolution: {integrity: sha512-U1suiZ2oDVWv4zPO56S0NcR5QriEahGtdN2OR6FiOG4WJvcjBVFB0qI4+eKoWFH483PKGuLuu6V8Z4T5g63UVA==}
+    engines: {node: '>=6'}
+    dev: false
 
   /esniff/2.0.1:
     resolution: {integrity: sha512-kTUIGKQ/mDPFoJ0oVfcmyJn4iBDRptjNVIzwIFR7tqWXdVI9xfA2RMwY/gbSpJG3lkdWNEjLap/NqVHZiJsdfg==}
@@ -17236,6 +17251,10 @@ packages:
       has-symbols: 1.1.0
       object.getownpropertydescriptors: 2.1.8
     dev: true
+
+  /sync-channel/0.0.6:
+    resolution: {integrity: sha512-rjHHukZeQW3hGgwMuOkrITv1e87nxuAKRGgwPNtCmS3Az+YdO826hBy1IDjRsTXKGc2WDWUaDU5Zx8uodXWwgg==}
+    dev: false
 
   /synchronous-promise/2.0.17:
     resolution: {integrity: sha512-AsS729u2RHUfEra9xJrE39peJcc2stq2+poBXX8bcM08Y6g9j/i/PUzwNQqkaJde7Ntg1TO7bSREbR5sdosQ+g==}
