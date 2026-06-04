@@ -41,7 +41,7 @@ export {
   type BaseCardLoadingProps as IModelGhostTileProps,
 } from "../components/baseCard/BaseCardLoading";
 
-export { ContextMenuBuilderItemMUI as ContextMenuBuilderItem } from "../utils/_buildMenuOptions";
+export type { ContextMenuBuilderItemMUI as ContextMenuBuilderItem } from "../utils/_buildMenuOptions";
 export { ThumbnailIconButton } from "../components/baseCard/ThumbnailIconButton";
 export { SvgThumbnail } from "../components/baseCard/SvgThumbnail";
 

@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "strictNullChecks": true,
-    "types": ["@stratakit/mui"],
     "paths": {
       "@itwin/imodel-browser-react/mui": [
         "../../modules/imodel-browser/src/mui/index.ts"
