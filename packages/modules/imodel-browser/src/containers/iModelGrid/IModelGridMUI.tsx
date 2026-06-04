@@ -23,6 +23,7 @@ import {
 } from "../../utils/iModelApi";
 import { DEFAULT_PAGE_SIZE, useIModelData } from "./useIModelData";
 import { IModelTableMUI } from "./IModelTableMUI";
+import { clientSideIModelSort } from "./clientSideIModelSort";
 import {
   IModelTileMUI,
   type IModelTileMUIProps,
@@ -190,12 +191,20 @@ const IModelGridInternal = ({
     onRefetch,
   });
 
-  const iModels = React.useMemo(
-    () =>
+  const iModels = React.useMemo(() => {
+    const processed =
       postProcessCallback?.([...fetchediModels], fetchStatus, searchText) ??
-      fetchediModels,
-    [postProcessCallback, fetchediModels, fetchStatus, searchText]
-  );
+      fetchediModels;
+    return clientSideIModelSort(processed, { viewMode, requestType, sort });
+  }, [
+    postProcessCallback,
+    fetchediModels,
+    fetchStatus,
+    searchText,
+    viewMode,
+    requestType,
+    sort,
+  ]);
 
   React.useEffect(() => {
     if (
