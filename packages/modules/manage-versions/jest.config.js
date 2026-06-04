@@ -5,16 +5,7 @@
 module.exports = {
   roots: ["<rootDir>/src"],
   transform: {
-    "^.+\\.(ts|tsx)$": [
-      "ts-jest",
-      {
-        tsconfig: {
-          module: "CommonJS",
-          moduleResolution: "Node10",
-          types: ["jest", "node"],
-        },
-      },
-    ],
+    "^.+\\.(ts|tsx)$": "ts-jest",
   },
   transformIgnorePatterns: [
     "[/\\\\]node_modules[/\\\\](?!@bentley/ui).+\\.(js|jsx|ts|tsx)$",

@@ -1,16 +1,33 @@
 {
-  "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
-    "rootDir": "./src",
-    "outDir": "./esm"
+    "target": "ES2020",
+    "lib": [
+        "dom",
+        "dom.iterable",
+        "esnext"
+    ],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "jsx": "react",
+    "declaration": true,
+    "sourceMap": true,
+    "inlineSources": true,
+    "outDir": "./esm",
+    "downlevelIteration": true,
+    "allowJs": true
   },
-  "include": ["./src/**/*.ts*"],
+  "include": [
+    "./src/**/*.ts*"
+  ],
   "exclude": [
     "cjs",
     "esm",
-    "node_modules",
-    "**/*.test.*",
-    "**/*.spec.*",
-    "**/tests/**"
+    "node_modules"
   ]
 }
