@@ -14,7 +14,6 @@ import Stack from "@mui/material/Stack";
 import type { SxProps, Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React, { type ReactNode } from "react";
-import { Icon } from "@stratakit/mui";
 import svgMoreVertical from "@stratakit/icons/more-vertical.svg";
 import { BaseCardLoading } from "./BaseCardLoading";
 import { ThumbnailIconButton } from "./ThumbnailIconButton";
@@ -345,7 +344,6 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
                   zIndex: 1,
                   display: "flex",
                   gap: "4px",
-                  mixBlendMode: "difference",
                 }}
               >
                 {thumbnailTopRight}
@@ -353,9 +351,8 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
                   <ThumbnailIconButton
                     aria-label="More options"
                     onClick={handleMoreButtonClick}
-                  >
-                    <Icon href={svgMoreVertical} alt="" size="regular" />
-                  </ThumbnailIconButton>
+                    icon={svgMoreVertical}
+                  />
                 )}
               </Box>
             )}

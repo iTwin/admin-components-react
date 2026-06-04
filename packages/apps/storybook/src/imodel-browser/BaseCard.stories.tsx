@@ -144,14 +144,19 @@ const everythingArgs: BaseCardProps = {
   ),
   thumbnailTopLeft: <Chip size="small" label="iModel" color="secondary" />,
   thumbnailTopRight: (
-    <ThumbnailIconButton
-      size="small"
-      color="secondary"
-      aria-label="Add to favorites"
-      onClick={action("thumbnail favorite clicked")}
-    >
-      <Icon href={svgPin} size="regular" />
-    </ThumbnailIconButton>
+    <>
+      <ThumbnailIconButton
+        aria-label="Add to favorites"
+        onClick={action("thumbnail favorite clicked")}
+        icon={svgPin}
+      />
+      <ThumbnailIconButton
+        aria-label="Muted icon button"
+        onClick={action("muted clicked")}
+        icon={svgPin}
+        muted
+      />
+    </>
   ),
   thumbnailBottomLeft: <Chip size="small" label="Featured" color="default" />,
   thumbnailBottomRight: <Chip size="small" label="Trial" color="primary" />,
