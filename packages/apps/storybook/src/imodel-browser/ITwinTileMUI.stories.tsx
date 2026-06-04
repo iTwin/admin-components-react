@@ -124,10 +124,17 @@ Default.args = {
   selected: false,
 };
 
+export const DefaultThumbnailStory = Template.bind({});
+DefaultThumbnailStory.args = {
+  ...baseArgs,
+  thumbnail: <DefaultThumbnail />,
+};
+DefaultThumbnailStory.storyName = "Default Thumbnail";
+
 export const NoThumbnail = Template.bind({});
 NoThumbnail.args = {
   ...baseArgs,
-  thumbnail: <DefaultThumbnail />,
+  thumbnail: undefined,
 };
 
 export const Extensive = Template.bind({});
