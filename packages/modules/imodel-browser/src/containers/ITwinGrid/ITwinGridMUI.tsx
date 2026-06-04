@@ -249,7 +249,7 @@ const ITwinHookedTile = (props: ITwinHookedTileProps) => {
 
   if (hookIdentity.current !== useTileState) {
     throw new Error(
-      "Even when used in a prop, useTilePropsForIModel identity must remain stable as it is used as a hook."
+      "Even when used in a prop, useIndividualState identity must remain stable as it is used as a hook."
     );
   }
 

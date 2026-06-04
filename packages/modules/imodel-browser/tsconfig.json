@@ -2,8 +2,7 @@
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
     "rootDir": "./src",
-    "outDir": "./esm",
-    "types": ["@stratakit/mui"]
+    "outDir": "./esm"
   },
   "include": ["./src/**/*.ts*"],
   "exclude": [

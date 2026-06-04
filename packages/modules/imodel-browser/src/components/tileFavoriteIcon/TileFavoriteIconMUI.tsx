@@ -3,7 +3,6 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import pinIcon from "@stratakit/icons/pin.svg";
-import { Icon } from "@stratakit/mui";
 import React from "react";
 import { ThumbnailIconButton } from "../baseCard/ThumbnailIconButton";
 
@@ -46,11 +45,9 @@ export const TileFavoriteIconMUI = ({
         isFavorite ? await onRemoveFromFavorites() : await onAddToFavorites();
       }}
       className={className}
-      size="small"
       disabled={disabled}
       sx={sx}
-    >
-      <Icon href={pinIcon} size="regular" />
-    </ThumbnailIconButton>
+      icon={pinIcon}
+    />
   );
 };
