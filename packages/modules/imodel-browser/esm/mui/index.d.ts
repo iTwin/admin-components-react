@@ -7,4 +7,5 @@ export { NoResultsMUI as NoResults, type NoResultsMUIProps as NoResultsProps, } 
 export { BaseCardLoading as IModelGhostTile, type BaseCardLoadingProps as IModelGhostTileProps, } from "../components/baseCard/BaseCardLoading";
 export { ContextMenuBuilderItemMUI as ContextMenuBuilderItem } from "../utils/_buildMenuOptions";
 export { ThumbnailIconButton } from "../components/baseCard/ThumbnailIconButton";
+export { SvgThumbnail } from "../components/baseCard/SvgThumbnail";
 export * from "../types";
