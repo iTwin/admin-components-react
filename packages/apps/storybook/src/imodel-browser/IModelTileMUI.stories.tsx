@@ -124,3 +124,9 @@ Extensive.args = {
     },
   ],
 };
+
+export const NoThumbnail = Template.bind({});
+NoThumbnail.args = {
+  ...baseArgs,
+  thumbnail: undefined,
+};
