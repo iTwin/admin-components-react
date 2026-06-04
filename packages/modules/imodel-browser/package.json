@@ -42,9 +42,7 @@
   ],
   "dependencies": {
     "@itwin/itwinui-icons-react": "^2.9.0",
-    "cjs": "^0.0.11",
     "classnames": "^2.2.6",
-    "esm": "^3.2.25",
     "react-intersection-observer": "^8.31.1"
   },
   "devDependencies": {

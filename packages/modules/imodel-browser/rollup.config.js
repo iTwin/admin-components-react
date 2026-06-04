@@ -18,11 +18,6 @@ const baseConfig = {
   ),
 };
 
-// Each rollup entry needs its own plugin instances to avoid shared state.
-// The `declaration` flag controls .d.ts emission — only the first entry
-// should emit declarations, because rollup-plugin-typescript2 compiles the
-// full tsconfig include set for every entry, and a second emit overwrites
-// the correct mui/index.d.ts with the legacy barrel's declarations.
 function createPlugins({ declaration = true } = {}) {
   return [
     peerDepsExternal(),
@@ -48,7 +43,7 @@ function createPlugins({ declaration = true } = {}) {
 }
 
 const rollupConfig = [
-  // Legacy barrel — emits JS + declarations for the entire project
+  // Default/itwinui barrel — emits JS + declarations for the entire project
   {
     ...baseConfig,
     plugins: createPlugins(),
