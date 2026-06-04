@@ -18,7 +18,7 @@ import {
 } from "../../utils/_buildMenuOptions";
 import { ITwinTileProps } from "./ITwinTile";
 import { StatusIcon } from "./StatusIcon";
-import CardMedia from "@mui/material/CardMedia";
+import { SvgThumbnail } from "../../components/baseCard/SvgThumbnail";
 
 /** @alpha */
 export interface ITwinTileMUIProps
@@ -158,7 +158,7 @@ export const ITwinTileMUI = ({
 };
 
 export function DefaultThumbnail() {
-  return <CardMedia src={svgItwin} component="img" />;
+  return <SvgThumbnail src={svgItwin} />;
 }
 
 function StatusBadge({

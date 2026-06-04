@@ -14,6 +14,7 @@ import svgPin from "@stratakit/icons/pin.svg";
 import svgStatusSuccess from "@stratakit/icons/status-success.svg";
 import svgStatusWarning from "@stratakit/icons/status-warning.svg";
 import svgStatusError from "@stratakit/icons/status-error.svg";
+import svgGeo from "@stratakit/icons/geospatial-features.svg";
 import bridgeThumbnail from "../utils/bridge.jpg";
 import nightThumbnail from "../utils/night.jpg";
 import { Icon } from "@stratakit/mui";
@@ -26,6 +27,7 @@ import {
   type ContextMenuBuilderItemMUI,
 } from "../../../../modules/imodel-browser/src/utils/_buildMenuOptions";
 import { ThumbnailIconButton } from "../../../../modules/imodel-browser/src/components/baseCard/ThumbnailIconButton";
+import { SvgThumbnail } from "@itwin/imodel-browser-react/mui";
 
 const InConstrainedContainer = ({
   children,
@@ -218,6 +220,13 @@ export const Statuses = () => (
     ))}
   </Box>
 );
+
+export const WithSvgThumbnail = Template.bind({});
+WithSvgThumbnail.storyName = "With SVG thumbnail";
+WithSvgThumbnail.args = {
+  ...baseArgs,
+  thumbnail: <SvgThumbnail src={svgGeo} />,
+};
 
 export const Loading = Template.bind({});
 Loading.args = { ...baseArgs, loading: true };

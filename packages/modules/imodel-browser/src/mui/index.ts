@@ -43,5 +43,6 @@ export {
 
 export { ContextMenuBuilderItemMUI as ContextMenuBuilderItem } from "../utils/_buildMenuOptions";
 export { ThumbnailIconButton } from "../components/baseCard/ThumbnailIconButton";
+export { SvgThumbnail } from "../components/baseCard/SvgThumbnail";
 
 export * from "../types";
