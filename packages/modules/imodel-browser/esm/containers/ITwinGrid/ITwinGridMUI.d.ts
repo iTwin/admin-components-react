@@ -2,16 +2,18 @@ import "./ITwinGrid.scss";
 import React from "react";
 import { type ITwinTableOverridesMUI, type ITwinFull } from "../../types";
 import { ContextMenuBuilderItemMUI } from "../../utils/_buildMenuOptions";
-import { type ITwinTileMUIProps } from "./ITwinTileMUI";
+import { type ITwinTilePropsMUI } from "./ITwinTileMUI";
 import type { ITwinGridProps, ITwinGridStrings } from "./ITwinGrid";
 /** @alpha */
-export type IndividualITwinStateHookMUI = (iTwin: ITwinFull, iTwinTileProps: ITwinTileMUIProps & {
-    gridProps: ITwinGridMUIProps;
-}) => Partial<ITwinTileMUIProps>;
+export type IndividualITwinStateHookMUI = (iTwin: ITwinFull, iTwinTileProps: ITwinTilePropsMUI & {
+    gridProps: ITwinGridPropsMUI;
+}) => Partial<ITwinTilePropsMUI>;
 /** @alpha */
-export { ITwinGridStrings };
+export interface ITwinGridStringsMUI extends ITwinGridStrings {
+    moreOptions: string;
+}
 /** @alpha */
-export interface ITwinGridMUIProps extends Omit<ITwinGridProps, "onThumbnailClick" | "iTwinActions" | "tileOverrides" | "useIndividualState" | "cellOverrides" | "tableOverrides"> {
+export interface ITwinGridPropsMUI extends Omit<ITwinGridProps, "onThumbnailClick" | "iTwinActions" | "tileOverrides" | "useIndividualState" | "cellOverrides" | "tableOverrides" | "stringsOverrides"> {
     /** Select handler for the iTwin tile. */
     onSelect?(iTwin: ITwinFull): void;
     /** Open handler for the iTwin tile. */
@@ -21,12 +23,14 @@ export interface ITwinGridMUIProps extends Omit<ITwinGridProps, "onThumbnailClic
     /** Function (can be a react hook) that returns state for an iTwin, returned values will be applied as props to the iTwinTile, overrides ITwinGrid provided values */
     useIndividualState?: IndividualITwinStateHookMUI;
     /** Static props to apply over each tile, mainly used for tileProps, overrides ITwinGrid provided values */
-    tileOverrides?: Partial<ITwinTileMUIProps>;
+    tileOverrides?: Partial<ITwinTilePropsMUI>;
     /** Overrides for table column definitions and visibility in cells viewMode */
     tableOverrides?: ITwinTableOverridesMUI;
+    /** Localized string overrides - falls back to default English strings if not provided */
+    stringsOverrides?: Partial<ITwinGridStringsMUI>;
 }
 /**
  * Component that will allow displaying a grid of iTwins, given a requestType
  * @alpha
  */
-export declare const ITwinGridMUI: ({ accessToken, apiOverrides, filterOptions, orderbyOptions, onSelect, onOpen, iTwinActions, requestType, iTwinSubClass, stringsOverrides, tileOverrides, useIndividualState, postProcessCallback, viewMode, tableOverrides, className, }: ITwinGridMUIProps) => React.JSX.Element;
+export declare const ITwinGridMUI: ({ accessToken, apiOverrides, filterOptions, orderbyOptions, onSelect, onOpen, iTwinActions, requestType, iTwinSubClass, stringsOverrides, tileOverrides, useIndividualState, postProcessCallback, viewMode, tableOverrides, className, }: ITwinGridPropsMUI) => React.JSX.Element;

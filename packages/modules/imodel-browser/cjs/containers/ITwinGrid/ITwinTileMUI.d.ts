@@ -4,7 +4,7 @@ import { ITwinFull } from "../../types";
 import { ContextMenuBuilderItemMUI } from "../../utils/_buildMenuOptions";
 import { ITwinTileProps } from "./ITwinTile";
 /** @alpha */
-export interface ITwinTileMUIProps extends Omit<ITwinTileProps, "onThumbnailClick" | "tileProps" | "fullWidth">, Omit<BaseCardProps, "statusIcon" | "contextMenuItems" | "onSelect" | "onOpen" | "onDoubleClick" | "title" | "description" | "thumbnailBottomRight" | "thumbnailTopRight" | "thumbnailBottomLeft" | "contextMenuContent"> {
+export interface ITwinTilePropsMUI extends Omit<ITwinTileProps, "onThumbnailClick" | "tileProps" | "fullWidth">, Omit<BaseCardProps, "statusIcon" | "contextMenuItems" | "onSelect" | "onOpen" | "onDoubleClick" | "title" | "description" | "thumbnailBottomRight" | "thumbnailTopRight" | "thumbnailBottomLeft" | "contextMenuContent"> {
     /** Defaults to iTwin.displayName */
     title?: string;
     /** If not provided, iTwin number will be used */
@@ -22,5 +22,5 @@ export interface ITwinTileMUIProps extends Omit<ITwinTileProps, "onThumbnailClic
  * Representation of an iTwin — V2 (Stratakit/MUI)
  * @alpha
  */
-export declare const ITwinTileMUI: ({ iTwin, contextMenuItems, stringsOverrides, isFavorite, addToFavorites, removeFromFavorites, refetchITwins, hideFavoriteIcon, selected, loading, disabled, status, thumbnail, getBadge, title, description, onSelect, onOpen, slotProps, className, ...rest }: ITwinTileMUIProps) => React.JSX.Element;
+export declare const ITwinTileMUI: ({ iTwin, contextMenuItems, stringsOverrides, isFavorite, addToFavorites, removeFromFavorites, refetchITwins, hideFavoriteIcon, selected, loading, disabled, status, thumbnail, getBadge, title, description, onSelect, onOpen, slotProps, className, ...rest }: ITwinTilePropsMUI) => React.JSX.Element;
 export declare function DefaultThumbnail(): React.JSX.Element;

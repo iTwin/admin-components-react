@@ -55,9 +55,9 @@ export interface BaseCardProps extends Omit<CardProps, "children" | "title" | "o
      */
     headerRight?: ReactNode;
     /**
-     * Optional icon rendered to the left of the entire content area.  Pass just an `<Icon>` component.
+     * Optional icon rendered to the left of the entire content area.
      */
-    statusIcon?: ReactNode;
+    statusIconHref?: string;
     /** Short description rendered below the title. */
     description?: string;
     /**

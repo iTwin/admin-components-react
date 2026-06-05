@@ -10,6 +10,7 @@ export interface IModelTableMUIStrings {
     noIModelSearch: string;
     addToFavorites: string;
     removeFromFavorites: string;
+    moreOptions: string;
 }
 export interface IModelTableMUIProps {
     iModels: IModelFull[];

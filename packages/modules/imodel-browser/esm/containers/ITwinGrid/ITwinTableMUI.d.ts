@@ -10,6 +10,7 @@ export interface ITwinTableMUIStrings {
     noITwins: string;
     addToFavorites: string;
     removeFromFavorites: string;
+    moreOptions: string;
 }
 export interface ITwinTableMUIProps {
     iTwins: ITwinFull[];
