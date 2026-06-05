@@ -211,14 +211,10 @@ export const ITwinGridMUI = ({
                 thumbnail={iTwin.image} // This is a fix for https://github.com/iTwin/admin-components-react/issues/196
                 {...tileOverrides}
                 onSelect={() => {
-                  if (selectedITwinId === iTwin.id && onOpen) {
-                    onOpen(iTwin);
-                  } else {
-                    setSelectedITwinId(iTwin.id);
-                    tileOverrides?.onSelect
-                      ? tileOverrides.onSelect(iTwin)
-                      : onSelect?.(iTwin);
-                  }
+                  setSelectedITwinId(iTwin.id);
+                  tileOverrides?.onSelect
+                    ? tileOverrides.onSelect(iTwin)
+                    : onSelect?.(iTwin);
                 }}
               />
             ))}

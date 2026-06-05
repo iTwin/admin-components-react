@@ -131,7 +131,6 @@ export const ITwinTileMUI = ({
 
   return (
     <BaseCard
-      aria-disabled={disabled ?? undefined}
       className={className}
       sx={{
         "&:hover .ITwinTile-favoriteIcon": {
@@ -155,7 +154,7 @@ export const ITwinTileMUI = ({
       status={status}
       statusIconHref={selected ? svgCheckmark : svgItwin}
       description={description ?? iTwin.number ?? ""}
-      additionalDescription={additionalDescription}
+      subheader={additionalDescription}
       slotProps={slotProps}
       data-testid={`itwin-tile-${iTwin.id}`}
       stringsOverrides={stringsOverrides}

@@ -98,7 +98,7 @@ export const IModelTileMUI = ({
   badge,
   title,
   description,
-  additionalDescription,
+  subheader,
   actions,
   onSelect,
   onOpen,
@@ -153,7 +153,6 @@ export const IModelTileMUI = ({
 
   return (
     <BaseCard
-      aria-disabled={disabled ?? undefined}
       className={className}
       sx={{
         "&:hover .IModelTile-favoriteIcon": {
@@ -182,7 +181,7 @@ export const IModelTileMUI = ({
       status={status}
       statusIconHref={selected ? svgCheckmark : svgImodel}
       description={description ?? iModel.description ?? ""}
-      additionalDescription={additionalDescription}
+      subheader={subheader}
       actions={actions}
       slotProps={slotProps}
       selected={selected}
