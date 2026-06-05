@@ -19,6 +19,7 @@ import { BaseCardLoading } from "./BaseCardLoading";
 import { ThumbnailIconButton } from "./ThumbnailIconButton";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type { SvgThumbnail } from "./SvgThumbnail";
+import { StatusIcon } from "./StatusIcon";
 
 /** Flatten an optional SxProps value into spreadable array elements. */
 const spreadSx = (sx: SxProps<Theme> | undefined) =>
@@ -87,9 +88,9 @@ export interface BaseCardProps
   headerRight?: ReactNode;
 
   /**
-   * Optional icon rendered to the left of the entire content area.  Pass just an `<Icon>` component.
+   * Optional icon rendered to the left of the entire content area.
    */
-  statusIcon?: ReactNode;
+  statusIconHref?: string;
   /** Short description rendered below the title. */
   description?: string;
   /**
@@ -149,7 +150,7 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
       onClick,
       onDoubleClick,
       headerRight,
-      statusIcon,
+      statusIconHref,
       description,
       additionalDescription,
       additionalContent,
@@ -404,18 +405,15 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
               ...spreadSx(slotProps?.content?.sx),
             ]}
           >
-            {statusIcon && (
+            {statusIconHref && (
               <Box
                 sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
                   width: "1.5rem",
                   height: "1.5rem",
                 }}
                 data-testid="status-icon"
               >
-                {statusIcon}
+                <StatusIcon href={statusIconHref} status={status} />
               </Box>
             )}
 

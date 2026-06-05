@@ -175,7 +175,7 @@ MUI packages must appear in **both** `peerDependencies` and `devDependencies` in
 
 - Click interaction split: `onThumbnailClick` → `onOpen` + `onSelect`.
 - Context menu items use `ContextMenuBuilderItemMUI` instead of `ContextMenuBuilderItem`.
-- Grid tile type: `useIndividualState` and `tileOverrides` operate on `ITwinTileMUIProps` instead of `ITwinTileProps`.
+- Grid tile type: `useIndividualState` and `tileOverrides` operate on `ITwinTilePropsMUI` instead of `ITwinTileProps`.
 - Loading placeholders: `IModelGhostTile` → `BaseCardLoading`.
 - Grid container: `GridStructure` wrapper → MUI `Box` with CSS grid (`repeat(auto-fill, minmax(22.5rem, 1fr))`).
 - Adds internal selection tracking (`selectedITwinId` state) — not present in legacy.
@@ -187,8 +187,8 @@ MUI packages must appear in **both** `peerDependencies` and `devDependencies` in
 | -------------------- | --------------------- | ------------ | -------------------------------------------------------------------- |
 | `onThumbnailClick`   | `onOpen` / `onSelect` | Split        |                                                                      |
 | `iTwinActions`       | `iTwinActions`        | Type changed | TODO: maybe rename to contextMenuItems?                              |
-| `useIndividualState` | `useIndividualState`  | Type changed | `ITwinTileProps` → `ITwinTileMUIProps`                               |
-| `tileOverrides`      | `tileOverrides`       | Type changed | `Partial<ITwinTileProps>` → `Partial<ITwinTileMUIProps>`.            |
+| `useIndividualState` | `useIndividualState`  | Type changed | `ITwinTileProps` → `ITwinTilePropsMUI`                               |
+| `tileOverrides`      | `tileOverrides`       | Type changed | `Partial<ITwinTileProps>` → `Partial<ITwinTilePropsMUI>`.            |
 | All other props      | Same                  | Unchanged    | `accessToken`, `requestType`, `iTwinSubClass`, etc... are unchanged. |
 
 ### Behavior changes
@@ -251,11 +251,11 @@ New entry point that re-exports MUI components under **legacy-aligned names**:
 | `IModelThumbnail`          | `IModelThumbnailMUI`          |
 | `IModelThumbnailProps`     | `IModelThumbnailMUIProps`     |
 | `ITwinGrid`                | `ITwinGridMUI`                |
-| `ITwinGridProps`           | `ITwinGridMUIProps`           |
+| `ITwinGridProps`           | `ITwinGridPropsMUI`           |
 | `IndividualITwinStateHook` | `IndividualITwinStateHookMUI` |
 | `ITwinGridStrings`         | `ITwinGridStrings`            |
 | `ITwinTile`                | `ITwinTileMUI`                |
-| `ITwinTileProps`           | `ITwinTileMUIProps`           |
+| `ITwinTileProps`           | `ITwinTilePropsMUI`           |
 | `NoResults`                | `NoResultsMUI`                |
 | `NoResultsProps`           | `NoResultsMUIProps`           |
 | `IModelGhostTile`          | `BaseCardLoading`             |

@@ -29,6 +29,7 @@ export interface IModelTableMUIStrings {
   noIModelSearch: string;
   addToFavorites: string;
   removeFromFavorites: string;
+  moreOptions: string;
 }
 
 export interface IModelTableMUIProps {
@@ -138,6 +139,7 @@ export const IModelTableMUI = ({
             <MoreMenu
               menuItems={moreOptions}
               data-testid={`iModel-row-${params.row.id}-more-options`}
+              label={strings.moreOptions}
               prompt={<Icon href={svgMore} />}
             />
           );

@@ -3,7 +3,6 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import Chip from "@mui/material/Chip";
-import svgItwin from "@stratakit/icons/itwin.svg";
 import React from "react";
 import {
   BaseCard,
@@ -17,11 +16,12 @@ import {
   ContextMenuBuilderItemMUI,
 } from "../../utils/_buildMenuOptions";
 import { ITwinTileProps } from "./ITwinTile";
-import { StatusIcon } from "./StatusIcon";
 import { SvgThumbnail } from "../../components/baseCard/SvgThumbnail";
+import svgCheckmark from "@stratakit/icons/checkmark.svg";
+import svgItwin from "@stratakit/icons/itwin.svg";
 
 /** @alpha */
-export interface ITwinTileMUIProps
+export interface ITwinTilePropsMUI
   extends Omit<ITwinTileProps, "onThumbnailClick" | "tileProps" | "fullWidth">,
     Omit<
       BaseCardProps,
@@ -77,7 +77,7 @@ export const ITwinTileMUI = ({
   slotProps,
   className,
   ...rest
-}: ITwinTileMUIProps) => {
+}: ITwinTilePropsMUI) => {
   console.log("thumbnail is", thumbnail);
   const strings = _mergeStrings(
     {
@@ -147,7 +147,7 @@ export const ITwinTileMUI = ({
       onDoubleClick={onOpen ? (event) => onOpen(iTwin) : undefined}
       contextMenuContent={contextMenuContent}
       status={status}
-      statusIcon={<StatusIcon status={status} selected={selected} />}
+      statusIconHref={selected ? svgCheckmark : svgItwin}
       description={description ?? iTwin.number ?? ""}
       additionalDescription={additionalDescription}
       slotProps={slotProps}

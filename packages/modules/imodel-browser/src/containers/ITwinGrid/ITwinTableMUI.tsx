@@ -27,6 +27,7 @@ export interface ITwinTableMUIStrings {
   noITwins: string;
   addToFavorites: string;
   removeFromFavorites: string;
+  moreOptions: string;
 }
 
 export interface ITwinTableMUIProps {
@@ -137,6 +138,7 @@ export const ITwinTableMUI = ({
               menuItems={moreOptions}
               data-testid={`iTwin-row-${params.row.id}-more-options`}
               prompt={<Icon href={svgMore} />}
+              label={strings.moreOptions}
             />
           );
         },

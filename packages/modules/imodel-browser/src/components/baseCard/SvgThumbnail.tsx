@@ -28,8 +28,7 @@ export const SvgThumbnail = React.forwardRef<
 >(({ src, sx: sxOverride }, ref) => {
   return (
     <CardMedia
-      component="img"
-      src={src}
+      image={src}
       ref={ref}
       sx={[
         (theme) => ({

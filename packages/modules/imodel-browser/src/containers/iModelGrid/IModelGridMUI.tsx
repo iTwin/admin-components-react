@@ -146,6 +146,7 @@ const IModelGridInternal = ({
       addToFavorites: "Add to favorites",
       removeFromFavorites: "Remove from favorites",
       removeFromRecents: "Remove from recents",
+      moreOptions: "More options",
     },
     stringsOverrides
   );

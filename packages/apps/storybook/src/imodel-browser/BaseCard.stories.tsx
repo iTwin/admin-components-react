@@ -17,7 +17,6 @@ import svgStatusError from "@stratakit/icons/status-error.svg";
 import svgGeo from "@stratakit/icons/geospatial-features.svg";
 import bridgeThumbnail from "../utils/bridge.jpg";
 import nightThumbnail from "../utils/night.jpg";
-import { Icon } from "@stratakit/mui";
 import { action, actions } from "@storybook/addon-actions";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
@@ -52,7 +51,7 @@ export default {
     thumbnailTopRight: { control: false },
     thumbnailBottomRight: { control: false },
     headerRight: { control: false },
-    statusIcon: { control: false },
+    statusIconHref: { control: false },
     additionalDescription: { control: false },
     onClick: { control: false },
     onDoubleClick: { control: false },
@@ -124,11 +123,7 @@ const everythingArgs: BaseCardProps = {
       onClick: action("share clicked"),
     },
   ],
-  statusIcon: (
-    <Box component="span" sx={{ lineHeight: 0, color: "warning.main" }}>
-      <Icon href={svgStatusWarning} size="regular" />
-    </Box>
-  ),
+  statusIconHref: svgStatusWarning,
   headerRight: (
     <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
       <Chip size="small" label="Owned" variant="outlined" />
@@ -202,25 +197,28 @@ WithSlotProps.args = {
 };
 
 export const Statuses = () => (
-  <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
+  <Box
+    sx={{
+      display: "grid",
+      gap: 2,
+      gridTemplateColumns: "repeat(auto-fill, minmax(22.5rem, 1fr))",
+    }}
+  >
     {(
       [
-        { label: "Positive", icon: svgStatusSuccess, color: "success.main" },
-        { label: "Warning", icon: svgStatusWarning, color: "warning.main" },
-        { label: "Negative", icon: svgStatusError, color: "error.main" },
+        { label: "Positive", icon: svgStatusSuccess, status: "positive" },
+        { label: "Warning", icon: svgStatusWarning, status: "warning" },
+        { label: "Negative", icon: svgStatusError, status: "negative" },
       ] as const
-    ).map(({ label, icon, color }) => (
+    ).map(({ label, icon, status }) => (
       <BaseCard
         key={label}
         title="Main Street Bridge"
         description="3D model of the Main Street bridge structure."
         additionalDescription="Edited 1/16/2024"
         thumbnail={bridgeThumbnail}
-        statusIcon={
-          <Box component="span" sx={{ lineHeight: 0, color }}>
-            <Icon href={icon} size="regular" />
-          </Box>
-        }
+        statusIconHref={icon}
+        status={status}
       />
     ))}
   </Box>

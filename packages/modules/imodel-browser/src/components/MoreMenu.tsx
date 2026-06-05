@@ -14,11 +14,18 @@ type Props = {
     | React.JSX.Element;
   prompt: React.ReactNode;
   "data-testid"?: string;
+  label: string;
 };
+/**
+ * More menu component for MUI
+ *
+ * @alpha
+ */
 
 export default function MoreMenu({
   menuItems,
   prompt,
+  label,
   "data-testid": dataTestId,
 }: Props) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -39,6 +46,7 @@ export default function MoreMenu({
         aria-haspopup="true"
         aria-expanded={open ? "true" : "false"}
         data-testid={dataTestId}
+        label={label}
         onClick={(event) => {
           event.stopPropagation();
           setAnchorEl(event.currentTarget);

@@ -16,8 +16,9 @@ import {
   ContextMenuBuilderItemMUI,
 } from "../../utils/_buildMenuOptions";
 import { IModelThumbnailMUI } from "../iModelThumbnail/IModelThumbnailMUI";
-import { StatusIcon } from "./StatusIcon";
 import { IModelTileProps } from "./IModelTile";
+import svgImodel from "@stratakit/icons/imodel.svg";
+import svgCheckmark from "@stratakit/icons/checkmark.svg";
 
 /** @alpha */
 export interface IModelTileMUIProps
@@ -176,7 +177,7 @@ export const IModelTileMUI = ({
       onDoubleClick={onOpen ? () => onOpen(iModel) : undefined}
       contextMenuContent={contextMenuContent}
       status={status}
-      statusIcon={<StatusIcon status={status} selected={selected} />}
+      statusIconHref={selected ? svgCheckmark : svgImodel}
       description={description ?? iModel.description ?? ""}
       additionalDescription={additionalDescription}
       actions={actions}
