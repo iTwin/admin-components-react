@@ -234,7 +234,8 @@ DefaultNoStateComponentOverride.args = {
   ...baseArgs,
   emptyStateComponent: (
     <div>
-      <Typography variant="h6" render={<span />}>
+      {/* eslint-disable-next-line jsx-a11y/heading-has-content */}
+      <Typography variant="h2" render={<h2 />}>
         There are no iModels to show.
       </Typography>
     </div>

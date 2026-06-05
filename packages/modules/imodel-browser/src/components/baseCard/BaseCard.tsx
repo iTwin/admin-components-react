@@ -17,15 +17,13 @@ import type { SxProps, Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React, { type ReactNode } from "react";
 import svgMoreVertical from "@stratakit/icons/more-vertical.svg";
+import { spreadSx } from "../../utils/spreadSx";
 import { BaseCardLoading } from "./BaseCardLoading";
 import { ThumbnailIconButton } from "./ThumbnailIconButton";
+import { BaseCardThumbnailArea } from "./BaseCardThumbnailArea";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type { SvgThumbnail } from "./SvgThumbnail";
 import { StatusIcon } from "./StatusIcon";
-
-/** Flatten an optional SxProps value into spreadable array elements. */
-const spreadSx = (sx: SxProps<Theme> | undefined) =>
-  Array.isArray(sx) ? sx : sx ? [sx] : [];
 
 interface BaseCardSlotStyleProps {
   className?: string;
@@ -306,7 +304,7 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
               userSelect: "none",
               cursor: cardDisabled ? "not-allowed" : "default",
               ...(selected && {
-                outline: "2px solid",
+                outlineStyle: "solid",
                 outlineColor: "var(--stratakit-color-border-accent-strong)",
               }),
               "&:hover .BaseCard-cardActions, &:focus-within .BaseCard-cardActions":
@@ -328,19 +326,9 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
         >
           {/* ── Thumbnail area ── */}
 
-          <Box
+          <BaseCardThumbnailArea
             className={slotProps?.thumbnail?.className}
-            sx={[
-              {
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                position: "relative",
-                aspectRatio: "16 / 10",
-                overflow: "hidden",
-              },
-              ...spreadSx(slotProps?.thumbnail?.sx),
-            ]}
+            sx={slotProps?.thumbnail?.sx}
           >
             {thumbnailTopLeft && (
               <Box sx={{ position: "absolute", top: 8, left: 8, zIndex: 1 }}>
@@ -385,7 +373,7 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
               </Box>
             )}
             {actionButtons}
-          </Box>
+          </BaseCardThumbnailArea>
 
           <Divider
             className={slotProps?.divider?.className}

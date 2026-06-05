@@ -56,7 +56,8 @@ export const NoResultsMUI = ({
           color="textSecondary"
           style={{ width: "5rem", height: "5rem" }}
         />
-        <Typography variant="h6" render={<span />}>
+        {/* eslint-disable-next-line jsx-a11y/heading-has-content */}
+        <Typography variant="h6" render={<h2 />}>
           {text}
         </Typography>
         {subtext && <Typography variant="body1">{subtext}</Typography>}

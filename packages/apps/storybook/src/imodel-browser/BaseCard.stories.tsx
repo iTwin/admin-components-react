@@ -199,10 +199,13 @@ WithSlotProps.args = {
       sx: { opacity: 0.2 },
     },
     content: {
-      sx: { color: "warning.main" },
+      sx: { color: "var(--stratakit-color-border-attention-base)" },
     },
     divider: {
-      sx: { borderWidth: 5, borderColor: "success.main" },
+      sx: {
+        borderWidth: 5,
+        borderColor: "var(--stratakit-color-border-positive-base)",
+      },
     },
   },
 };
