@@ -72,6 +72,18 @@ export default {
   component: ITwinTileMUIStory,
   excludeStories: ["ITwinTileMUIStory"],
   argTypes: {
+    status: {
+      options: ["undefined", "positive", "warning", "negative"],
+      mapping: {
+        undefined: undefined,
+        positive: "positive",
+        warning: "warning",
+        negative: "negative",
+      },
+      control: {
+        type: "radio",
+      },
+    },
     iTwin: {
       options: ["Active", "Inactive", "Trial"],
       mapping: {
@@ -87,19 +99,6 @@ export default {
         type: "select",
       },
     },
-    status: {
-      options: ["undefined", "positive", "warning", "negative"],
-      mapping: {
-        undefined: undefined,
-        positive: "positive",
-        warning: "warning",
-        negative: "negative",
-      },
-      control: {
-        type: "radio",
-      },
-    },
-
     contextMenuItems: { control: false },
     onSelect: { control: false },
     onOpen: { control: false },

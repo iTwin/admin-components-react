@@ -18,23 +18,25 @@ import { ContextMenuBuilderItemMUI } from "../../utils/_buildMenuOptions";
 import { useITwinData } from "./useITwinData";
 import { useITwinFavorites } from "./useITwinFavorites";
 import { ITwinTableMUI } from "./ITwinTableMUI";
-import { ITwinTileMUI, type ITwinTileMUIProps } from "./ITwinTileMUI";
+import { ITwinTileMUI, type ITwinTilePropsMUI } from "./ITwinTileMUI";
 import { BaseCardLoading } from "../../components/baseCard/BaseCardLoading";
 import type { ITwinGridProps, ITwinGridStrings } from "./ITwinGrid";
 
 /** @alpha */
 export type IndividualITwinStateHookMUI = (
   iTwin: ITwinFull,
-  iTwinTileProps: ITwinTileMUIProps & {
-    gridProps: ITwinGridMUIProps;
+  iTwinTileProps: ITwinTilePropsMUI & {
+    gridProps: ITwinGridPropsMUI;
   }
-) => Partial<ITwinTileMUIProps>;
+) => Partial<ITwinTilePropsMUI>;
 
 /** @alpha */
-export { ITwinGridStrings };
+interface ITwinGridStringsMUI extends ITwinGridStrings {
+  moreOptions: string;
+}
 
 /** @alpha */
-export interface ITwinGridMUIProps
+export interface ITwinGridPropsMUI
   extends Omit<
     ITwinGridProps,
     | "onThumbnailClick"
@@ -43,6 +45,7 @@ export interface ITwinGridMUIProps
     | "useIndividualState"
     | "cellOverrides"
     | "tableOverrides"
+    | "stringsOverrides"
   > {
   /** Select handler for the iTwin tile. */
   onSelect?(iTwin: ITwinFull): void;
@@ -53,9 +56,11 @@ export interface ITwinGridMUIProps
   /** Function (can be a react hook) that returns state for an iTwin, returned values will be applied as props to the iTwinTile, overrides ITwinGrid provided values */
   useIndividualState?: IndividualITwinStateHookMUI;
   /** Static props to apply over each tile, mainly used for tileProps, overrides ITwinGrid provided values */
-  tileOverrides?: Partial<ITwinTileMUIProps>;
+  tileOverrides?: Partial<ITwinTilePropsMUI>;
   /** Overrides for table column definitions and visibility in cells viewMode */
   tableOverrides?: ITwinTableOverridesMUI;
+  /** Localized string overrides - falls back to default English strings if not provided */
+  stringsOverrides?: Partial<ITwinGridStringsMUI>;
 }
 
 /**
@@ -79,7 +84,7 @@ export const ITwinGridMUI = ({
   viewMode,
   tableOverrides,
   className,
-}: ITwinGridMUIProps) => {
+}: ITwinGridPropsMUI) => {
   const [selectedITwinId, setSelectedITwinId] = React.useState<
     string | undefined
   >();
@@ -111,6 +116,7 @@ export const ITwinGridMUI = ({
       error: "An error occurred",
       addToFavorites: "Add to favorites",
       removeFromFavorites: "Remove from favorites",
+      moreOptions: "More options",
     },
     stringsOverrides
   );
@@ -237,11 +243,11 @@ export const ITwinGridMUI = ({
   );
 };
 
-type ITwinHookedTileProps = ITwinTileMUIProps & {
-  gridProps: ITwinGridMUIProps;
+type ITwinHookedTileProps = ITwinTilePropsMUI & {
+  gridProps: ITwinGridPropsMUI;
   useTileState?: IndividualITwinStateHookMUI;
 };
-const noOp = () => ({} as Partial<ITwinTileMUIProps>);
+const noOp = () => ({} as Partial<ITwinTilePropsMUI>);
 const ITwinHookedTile = (props: ITwinHookedTileProps) => {
   const { useTileState = noOp, ...iTwinTileProps } = props;
 

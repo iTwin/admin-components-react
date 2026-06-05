@@ -2,29 +2,35 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import svgCheckmark from "@stratakit/icons/checkmark.svg";
-import svgImodel from "@stratakit/icons/imodel.svg";
+import Box from "@mui/material/Box";
 import { Icon } from "@stratakit/mui";
 import React from "react";
 
-/** Status icon displayed to the left of the title on iModelTileMUI */
+/**
+ * Status icon displayed to the left of the title on BaseCard components
+ *
+ * @alpha
+ */
 export function StatusIcon({
   status,
-  selected,
+  href,
 }: {
+  // TODO: should these line up with Stratakit color names?
   status?: "positive" | "warning" | "negative";
-  selected?: boolean;
+  href?: string;
 }) {
   const color =
     status === "positive"
-      ? "success.main"
+      ? "var(--stratakit-color-icon-positive-base)"
       : status === "warning"
-      ? "warning.main"
+      ? "var(--stratakit-color-icon-attention-base)"
       : status === "negative"
-      ? "error.main"
+      ? "var(--stratakit-color-icon-critical-base)"
       : undefined;
 
-  const icon = selected ? svgCheckmark : svgImodel;
-
-  return <Icon href={icon} size="regular" color={color} />;
+  return (
+    <Box sx={{ color }}>
+      <Icon href={href} size="large" />
+    </Box>
+  );
 }

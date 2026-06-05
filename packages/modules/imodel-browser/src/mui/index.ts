@@ -21,14 +21,14 @@ export {
 
 export {
   ITwinGridMUI as ITwinGrid,
-  type ITwinGridMUIProps as ITwinGridProps,
+  type ITwinGridPropsMUI as ITwinGridProps,
   type IndividualITwinStateHookMUI as IndividualITwinStateHook,
   type ITwinGridStrings,
 } from "../containers/ITwinGrid/ITwinGridMUI";
 
 export {
   ITwinTileMUI as ITwinTile,
-  type ITwinTileMUIProps as ITwinTileProps,
+  type ITwinTilePropsMUI as ITwinTileProps,
 } from "../containers/ITwinGrid/ITwinTileMUI";
 
 export {

@@ -47,8 +47,7 @@ export const IModelThumbnailMUI = ({
   );
   return thumbnail ? (
     <CardMedia
-      component="img"
-      src={thumbnail}
+      image={thumbnail}
       ref={ref}
       className={classNames("iac-thumbnail", className)}
       sx={{ height: "100%" }}
