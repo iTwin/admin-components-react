@@ -149,11 +149,9 @@ Extensive.args = {
   disabled: false,
   loading: false,
   selected: false,
-  thumbnailTopLeft: (
-    <Chip size="small" label="Thumbnail Top Left" color="secondary" />
-  ),
+  thumbnailTopLeft: <Chip size="small" label="Thumbnail Top Left" />,
   thumbnail: powerThumbnail,
-  getBadge: () => <Chip size="small" label="Badge override" color="primary" />,
+  getBadge: () => <Chip size="small" label="Badge override" />,
   actions: [
     { key: "open", label: "Open", onClick: action("iTwin open clicked") },
     { key: "share", label: "Share", onClick: action("iTwin share clicked") },

@@ -142,7 +142,7 @@ const everythingArgs: BaseCardProps = {
       </AvatarGroup>
     </Box>
   ),
-  thumbnailTopLeft: <Chip size="small" label="iModel" color="secondary" />,
+  thumbnailTopLeft: <Chip size="small" label="iModel" />,
   thumbnailTopRight: (
     <>
       <ThumbnailIconButton
@@ -158,8 +158,8 @@ const everythingArgs: BaseCardProps = {
       />
     </>
   ),
-  thumbnailBottomLeft: <Chip size="small" label="Featured" color="default" />,
-  thumbnailBottomRight: <Chip size="small" label="Trial" color="primary" />,
+  thumbnailBottomLeft: <Chip size="small" label="Featured" />,
+  thumbnailBottomRight: <Chip size="small" label="Trial" />,
   additionalContent: (
     <Typography variant="body2" color="textSecondary">
       This is some additional content rendered below the description and above
