@@ -165,7 +165,7 @@ SimpleTilePropsOverrides.args = {
   tileOverrides: {
     status: "negative",
     thumbnail: bridgeThumbnail,
-    getBadge: () => <Chip size="small" label="Tile Override" color="primary" />,
+    getBadge: () => <Chip size="small" label="Tile Override" />,
     headerRight: (
       <AvatarGroup
         max={3}
