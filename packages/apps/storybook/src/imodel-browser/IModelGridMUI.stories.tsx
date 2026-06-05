@@ -234,7 +234,9 @@ DefaultNoStateComponentOverride.args = {
   ...baseArgs,
   emptyStateComponent: (
     <div>
-      <Typography variant="h6">There are no iModels to show.</Typography>
+      <Typography variant="h6" render={<span />}>
+        There are no iModels to show.
+      </Typography>
     </div>
   ),
 };
@@ -283,5 +285,65 @@ NoResultsWithDefaultEmptyState.args = {
   apiOverrides: { serverEnvironmentPrefix: "qa" },
   postProcessCallback: (iModels, status) => {
     return [];
+  },
+};
+
+export const StringsOverrideGrid = Template.bind({});
+StringsOverrideGrid.args = {
+  ...baseArgs,
+  iModelActions: [
+    {
+      children: "Some action",
+      key: "something",
+      onClick: (iModel) => action("clicked " + iModel?.displayName)(iModel),
+    },
+  ],
+  stringsOverrides: {
+    moreOptions: "Fleiri valkostir",
+    addToFavorites: "Bæta við eftirlæti",
+    removeFromFavorites: "Fjarlægja úr eftirlætum",
+    tableColumnName: "Heiti iModel",
+    tableColumnDescription: "Lýsing iModel",
+    tableColumnLastModified: "Síðast breytt",
+    noRowsLabel: "Engar raðir",
+    noResultsOverlayLabel: "Engar niðurstöður fundust.",
+    paginationRowsPerPage: "Raðir á síðu:",
+    footerRowSelected: (count: number) =>
+      count !== 1
+        ? `${count.toLocaleString()} raðir valdar`
+        : `${count.toLocaleString()} röð valin`,
+    footerTotalVisibleRows: (visibleCount: number, totalCount: number) =>
+      `${visibleCount.toLocaleString()} af ${totalCount.toLocaleString()}`,
+  },
+};
+
+export const StringsOverrideTable = Template.bind({});
+StringsOverrideTable.args = {
+  ...baseArgs,
+  viewMode: "cells",
+
+  iModelActions: [
+    {
+      children: "Some action",
+      key: "something",
+      onClick: (iModel) => action("clicked " + iModel?.displayName)(iModel),
+    },
+  ],
+  stringsOverrides: {
+    moreOptions: "Fleiri valkostir",
+    addToFavorites: "Bæta við eftirlæti",
+    removeFromFavorites: "Fjarlægja úr eftirlætum",
+    tableColumnName: "Heiti iModel",
+    tableColumnDescription: "Lýsing iModel",
+    tableColumnLastModified: "Síðast breytt",
+    noRowsLabel: "Engar raðir",
+    noResultsOverlayLabel: "Engar niðurstöður fundust.",
+    paginationRowsPerPage: "Raðir á síðu:",
+    footerRowSelected: (count: number) =>
+      count !== 1
+        ? `${count.toLocaleString()} raðir valdar`
+        : `${count.toLocaleString()} röð valin`,
+    footerTotalVisibleRows: (visibleCount: number, totalCount: number) =>
+      `${visibleCount.toLocaleString()} af ${totalCount.toLocaleString()}`,
   },
 };

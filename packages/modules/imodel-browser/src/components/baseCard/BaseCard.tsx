@@ -128,6 +128,10 @@ export interface BaseCardProps
   onDoubleClick?: CardProps["onDoubleClick"];
   /** Props for internal wrapper slots following MUI slotProps conventions. */
   slotProps?: BaseCardSlotProps;
+
+  stringsOverrides?: {
+    moreOptions?: string;
+  };
 }
 
 /**
@@ -161,7 +165,7 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
       disabled: cardDisabled,
       status,
       slotProps,
-
+      stringsOverrides,
       className,
       sx,
       ...rest
@@ -350,7 +354,7 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
                 {thumbnailTopRight}
                 {hasContextMenu && !cardDisabled && (
                   <ThumbnailIconButton
-                    aria-label="More options"
+                    label={stringsOverrides?.moreOptions ?? "More options"}
                     data-testid="show-context-menu-button"
                     onClick={handleMoreButtonClick}
                     icon={svgMoreVertical}
@@ -462,7 +466,6 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
                   <Typography
                     variant="body2"
                     color="textSecondary"
-                    component="p"
                     sx={{
                       display: "-webkit-box",
                       WebkitLineClamp: 2,
@@ -477,7 +480,6 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
                   <Typography
                     variant="subtitle2"
                     color="secondary"
-                    component="p"
                     sx={{
                       overflow: "hidden",
                       textOverflow: "ellipsis",

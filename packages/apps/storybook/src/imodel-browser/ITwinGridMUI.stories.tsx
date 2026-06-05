@@ -378,6 +378,114 @@ NoResultsWithDefaultEmptyState.args = {
   },
 };
 
+export const StringsOverrideGrid = Template.bind({});
+StringsOverrideGrid.args = {
+  ...baseArgs,
+  apiOverrides: {
+    data: [
+      {
+        id: "1",
+        displayName: "Bridge iTwin",
+        number: "1111-2222-3333-4444",
+        image: bridgeThumbnail,
+        status: "Trial",
+      },
+      {
+        id: "2",
+        displayName: "Power iTwin",
+        number: "2222-3333-4444-5555",
+        image: powerThumbnail,
+        status: "Inactive",
+      },
+      {
+        id: "3",
+        displayName: "Highway iTwin",
+        number: "3333-4444-5555-6666",
+        image: nightThumbnail,
+      },
+    ],
+  },
+  iTwinActions: [
+    {
+      children: "Some action",
+      key: "something",
+      onClick: (iTwin) => action("clicked " + iTwin?.displayName)(iTwin),
+    },
+  ],
+  stringsOverrides: {
+    moreOptions: "Flere muligheder",
+    trialBadge: "Prøveversion",
+    inactiveBadge: "Inaktiv",
+    addToFavorites: "Føj til favoritter",
+    removeFromFavorites: "Fjern fra favoritter",
+    noRowsLabel: "Ingen rækker",
+    noResultsOverlayLabel: "Ingen resultater fundet.",
+    footerRowSelected: (count: number) =>
+      count !== 1
+        ? `${count.toLocaleString()} rækker valgt`
+        : `${count.toLocaleString()} række valgt`,
+    footerTotalVisibleRows: (visibleCount: number, totalCount: number) =>
+      `${visibleCount.toLocaleString()} af ${totalCount.toLocaleString()}`,
+    paginationRowsPerPage: "Rækker per side:",
+  },
+};
+
+export const StringsOverrideTable = Template.bind({});
+StringsOverrideTable.args = {
+  ...baseArgs,
+  viewMode: "cells",
+  apiOverrides: {
+    data: [
+      {
+        id: "1",
+        displayName: "Bridge iTwin",
+        number: "1111-2222-3333-4444",
+        image: bridgeThumbnail,
+        status: "Trial",
+      },
+      {
+        id: "2",
+        displayName: "Power iTwin",
+        number: "2222-3333-4444-5555",
+        image: powerThumbnail,
+        status: "Inactive",
+      },
+      {
+        id: "3",
+        displayName: "Highway iTwin",
+        number: "3333-4444-5555-6666",
+        image: nightThumbnail,
+      },
+    ],
+  },
+  iTwinActions: [
+    {
+      children: "Some action",
+      key: "something",
+      onClick: (iTwin) => action("clicked " + iTwin?.displayName)(iTwin),
+    },
+  ],
+  stringsOverrides: {
+    moreOptions: "Flere muligheder",
+    trialBadge: "Prøveversion",
+    inactiveBadge: "Inaktiv",
+    addToFavorites: "Føj til favoritter",
+    removeFromFavorites: "Fjern fra favoritter",
+    tableColumnName: "iTwin Navn",
+    tableColumnDescription: "iTwin Beskrivelse",
+    tableColumnLastModified: "Sidst ændret",
+    noRowsLabel: "Ingen rækker",
+    noResultsOverlayLabel: "Ingen resultater fundet.",
+    footerRowSelected: (count: number) =>
+      count !== 1
+        ? `${count.toLocaleString()} rækker valgt`
+        : `${count.toLocaleString()} række valgt`,
+    footerTotalVisibleRows: (visibleCount: number, totalCount: number) =>
+      `${visibleCount.toLocaleString()} af ${totalCount.toLocaleString()}`,
+    paginationRowsPerPage: "Rækker per side:",
+  },
+};
+
 export default {
   title: "imodel-browser/ITwinGridMUI",
   component: ITwinGrid,

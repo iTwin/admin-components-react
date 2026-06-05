@@ -57,6 +57,8 @@ export interface IModelTileMUIProps
     addToFavorites?: string;
     /** Accessible text for the full star icon to remove the iModel from favorites */
     removeFromFavorites?: string;
+
+    moreOptions?: string;
   };
   /** Access token for fetching the thumbnail */
   accessToken?: AccessTokenProvider;
@@ -109,6 +111,7 @@ export const IModelTileMUI = ({
     {
       addToFavorites: "Add to favorites",
       removeFromFavorites: "Remove from favorites",
+      moreOptions: "More options",
     },
     stringsOverrides
   );
@@ -183,6 +186,7 @@ export const IModelTileMUI = ({
       actions={actions}
       slotProps={slotProps}
       selected={selected}
+      stringsOverrides={stringsOverrides}
       data-testid={`imodel-tile-${iModel.id}`}
       {...rest}
     />

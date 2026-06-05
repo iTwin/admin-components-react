@@ -49,6 +49,13 @@ export interface ITwinTilePropsMUI
   onOpen?(iTwin: ITwinFull): void;
   /** Status to display on the tile — will override iTwin.status if provided, otherwise iTwin.status will be used.  Should be a MUI {@link Chip} */
   getBadge?: (iTwin: ITwinFull) => React.ReactNode;
+  stringsOverrides?: {
+    trialBadge?: string;
+    inactiveBadge?: string;
+    addToFavorites?: string;
+    removeFromFavorites?: string;
+    moreOptions?: string;
+  };
 }
 
 /**
@@ -78,7 +85,6 @@ export const ITwinTileMUI = ({
   className,
   ...rest
 }: ITwinTilePropsMUI) => {
-  console.log("thumbnail is", thumbnail);
   const strings = _mergeStrings(
     {
       trialBadge: "Trial",
@@ -152,6 +158,7 @@ export const ITwinTileMUI = ({
       additionalDescription={additionalDescription}
       slotProps={slotProps}
       data-testid={`itwin-tile-${iTwin.id}`}
+      stringsOverrides={stringsOverrides}
       {...rest}
     />
   );

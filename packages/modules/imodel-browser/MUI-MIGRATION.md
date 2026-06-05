@@ -349,9 +349,51 @@ tableOverrides: {
 ### Table component details
 
 - Component: MUI X DataGrid (Community/free edition, `@mui/x-data-grid`)
-- Localization: Bentley-specific strings mapped to DataGrid `localeText` prop (`noRowsLabel`, `noResultsOverlayLabel`). MUI pagination chrome uses MUI defaults — host app can localize via `ThemeProvider` + MUI locale pack.
+- Localization: DataGrid locale text is overridable via `stringsOverrides` — see [DataGrid locale text overrides](#datagrid-locale-text-overrides) below.
 - Built-in features: Pagination, column sorting, column resize.
 - Row click: Fires `onOpen` callback with the clicked iModel/iTwin.
+
+---
+
+## DataGrid locale text overrides
+
+The MUI table views (`IModelTableMUI`, `ITwinTableMUI`) expose five DataGrid locale text keys through `stringsOverrides`, alongside the existing custom string keys. This lets consumers localize the DataGrid chrome without needing a separate MUI locale pack or `ThemeProvider`.
+
+### Supported keys
+
+The keys are picked from `GRID_DEFAULT_LOCALE_TEXT` via a shared `MuiDataGridStrings` type:
+
+| Key                        | Type                                                 | Default (English)                |
+| -------------------------- | ---------------------------------------------------- | -------------------------------- |
+| `noRowsLabel`              | `string`                                             | `"No rows"`                      |
+| `noResultsOverlayLabel`    | `string`                                             | `"No results found."`           |
+| `paginationRowsPerPage`    | `string`                                             | `"Rows per page:"`              |
+| `footerRowSelected`        | `(count: number) => ReactNode`                       | `"${count} row(s) selected"`    |
+| `footerTotalVisibleRows`   | `(visibleCount: number, totalCount: number) => ReactNode` | `"${visibleCount} of ${totalCount}"` |
+
+### Usage
+
+```tsx
+<IModelGridMUI
+  stringsOverrides={{
+    // custom strings
+    tableColumnName: "Heiti iModel",
+    tableColumnDescription: "Lýsing iModel",
+    // DataGrid locale strings
+    noRowsLabel: "Engar raðir",
+    paginationRowsPerPage: "Raðir á síðu:",
+    footerRowSelected: (count) =>
+      count !== 1 ? `${count} raðir valdar` : `${count} röð valin`,
+    footerTotalVisibleRows: (visibleCount, totalCount) =>
+      `${visibleCount} af ${totalCount}`,
+  }}
+/>
+```
+
+### Implementation notes
+
+- The `_mergeStrings` utility uses `Record<string, unknown>` (not `Record<string, string>`) to support function-typed values. `NoInfer<T>` on the overrides parameter prevents TypeScript from widening the generic to an index signature.
+- Default values for the DataGrid keys are sourced from `GRID_DEFAULT_LOCALE_TEXT` at the grid component level (`IModelGridMUI`, `ITwinGridMUI`), then merged with consumer overrides and passed to the table component's `localeText` prop.
 
 ---
 
