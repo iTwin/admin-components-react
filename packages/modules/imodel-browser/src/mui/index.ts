@@ -23,7 +23,7 @@ export {
   ITwinGridMUI as ITwinGrid,
   type ITwinGridPropsMUI as ITwinGridProps,
   type IndividualITwinStateHookMUI as IndividualITwinStateHook,
-  type ITwinGridStrings,
+  type ITwinGridStringsMUI as ITwinGridStrings,
 } from "../containers/ITwinGrid/ITwinGridMUI";
 
 export {

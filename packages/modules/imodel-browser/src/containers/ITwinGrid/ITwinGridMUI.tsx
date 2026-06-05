@@ -31,7 +31,7 @@ export type IndividualITwinStateHookMUI = (
 ) => Partial<ITwinTilePropsMUI>;
 
 /** @alpha */
-interface ITwinGridStringsMUI extends ITwinGridStrings {
+export interface ITwinGridStringsMUI extends ITwinGridStrings {
   moreOptions: string;
 }
 
