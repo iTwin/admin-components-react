@@ -22,14 +22,9 @@ import {
   Text,
   Tile,
 } from "@itwin/itwinui-react";
-import { Meta, Story } from "@storybook/react/types-6-0";
+import type { Meta, StoryObj } from "@storybook/react-webpack5";
 import React from "react";
-
-import {
-  accessTokenArgTypes,
-  withAccessTokenOverride,
-  withITwinIdOverride,
-} from "../utils/storyHelp";
+import { iTwinAndAccessTokenArgTypes } from "../utils/storyHelp";
 
 type TileProps = React.ComponentPropsWithoutRef<typeof Tile>;
 
@@ -40,213 +35,212 @@ export const IModelGrid = (props: IModelGridProps) => (
 export default {
   title: "imodel-browser/IModelGrid",
   component: IModelGrid,
-  argTypes: accessTokenArgTypes,
+  argTypes: iTwinAndAccessTokenArgTypes,
+  args: { apiOverrides: { serverEnvironmentPrefix: "qa" } },
   excludeStories: ["IModelGrid"],
 } as Meta;
 
-const Template: Story<IModelGridProps> = withITwinIdOverride(
-  withAccessTokenOverride((args) => <IModelGrid {...args} />)
-);
-
-export const Primary = Template.bind({});
-Primary.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
-  sortOptions: { sortType: "name", descending: false },
-};
-
-export const PrimaryCell = Template.bind({});
-PrimaryCell.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
-  viewMode: "cells",
-};
-
-export const OverrideCellData = Template.bind({});
-OverrideCellData.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
-  viewMode: "cells",
-  cellOverrides: {
-    name: (props) =>
-      props.value.includes("a") ? (
-        <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-          <IconButton
-            aria-label="apple-icon"
-            size="small"
-            styleType="borderless"
-          >
-            <SvgApple />
-          </IconButton>
-          {props.value}
-        </div>
-      ) : (
-        props.value
-      ),
-    description: (props) => <em>{props.value}</em>,
-    hideColumns: [IModelCellColumn.CreatedDateTime],
+export const Primary: StoryObj<typeof IModelGrid> = {
+  args: {
+    sortOptions: { sortType: "name", descending: false },
   },
 };
 
-export const OverrideApiDataWithLoadMore: Story<IModelGridProps> =
-  withITwinIdOverride(
-    withAccessTokenOverride((args) => {
-      const initialData: IModelFull[] = [
-        {
-          id: "1",
-          displayName: "External iModel 1",
-          description: "Loaded from external source",
-          thumbnail:
-            "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/activity.svg",
-        },
-        {
-          id: "2",
-          displayName: "External iModel 2",
-          description: "Consumer manages pagination",
-          thumbnail:
-            "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/developer.svg",
-        },
-        {
-          id: "3",
-          displayName: "External iModel 3",
-          description: "Pagination demo",
-          thumbnail:
-            "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/folder.svg",
-        },
-        {
-          id: "4",
-          displayName: "External iModel 4",
-          description: "Initial batch of 6",
-          thumbnail:
-            "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/organization.svg",
-        },
-        {
-          id: "5",
-          displayName: "External iModel 5",
-          description: "More data",
-          thumbnail:
-            "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/settings.svg",
-        },
-        {
-          id: "6",
-          displayName: "External iModel 6",
-          description: "Last in first batch",
-          thumbnail:
-            "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/tools.svg",
-        },
-      ];
+export const PrimaryCell: StoryObj<typeof IModelGrid> = {
+  args: {
+    viewMode: "cells",
+  },
+};
 
-      const [data, setData] = React.useState<IModelFull[]>(initialData);
-      const [isLoading, setIsLoading] = React.useState(false);
-      const [hasMore, setHasMore] = React.useState(true);
+export const OverrideCellData: StoryObj<typeof IModelGrid> = {
+  args: {
+    viewMode: "cells",
+    cellOverrides: {
+      name: (props) =>
+        props.value.includes("a") ? (
+          <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+            <IconButton
+              aria-label="apple-icon"
+              size="small"
+              styleType="borderless"
+            >
+              <SvgApple />
+            </IconButton>
+            {props.value}
+          </div>
+        ) : (
+          props.value
+        ),
+      description: (props) => <em>{props.value}</em>,
+      hideColumns: [IModelCellColumn.CreatedDateTime],
+    },
+  },
+};
 
-      const handleLoadMore = React.useCallback(async () => {
-        setIsLoading(true);
-        // Simulate network delay
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-        setData((prev) => [
-          ...prev,
-          {
-            id: "7",
-            displayName: "External iModel 7",
-            description: "Loaded on demand via onLoadMore",
-            thumbnail:
-              "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/folder.svg",
-          },
-          {
-            id: "8",
-            displayName: "External iModel 8",
-            description: "Second batch",
-            thumbnail:
-              "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/organization.svg",
-          },
-          {
-            id: "9",
-            displayName: "External iModel 9",
-            description: "More paginated data",
-            thumbnail:
-              "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/settings.svg",
-          },
-          {
-            id: "10",
-            displayName: "External iModel 10",
-            description: "Second batch item",
-            thumbnail:
-              "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/tools.svg",
-          },
-          {
-            id: "11",
-            displayName: "External iModel 11",
-            description: "Second batch item",
-            thumbnail:
-              "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/activity.svg",
-          },
-          {
-            id: "12",
-            displayName: "External iModel 12",
-            description: "Last in second batch",
-            thumbnail:
-              "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/developer.svg",
-          },
-        ]);
-        setHasMore(false);
-        setIsLoading(false);
-      }, []);
+const OverrideApiDataWithLoadMoreRender = (args: IModelGridProps) => {
+  const initialData: IModelFull[] = [
+    {
+      id: "1",
+      displayName: "External iModel 1",
+      description: "Loaded from external source",
+      thumbnail:
+        "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/activity.svg",
+    },
+    {
+      id: "2",
+      displayName: "External iModel 2",
+      description: "Consumer manages pagination",
+      thumbnail:
+        "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/developer.svg",
+    },
+    {
+      id: "3",
+      displayName: "External iModel 3",
+      description: "Pagination demo",
+      thumbnail:
+        "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/folder.svg",
+    },
+    {
+      id: "4",
+      displayName: "External iModel 4",
+      description: "Initial batch of 6",
+      thumbnail:
+        "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/organization.svg",
+    },
+    {
+      id: "5",
+      displayName: "External iModel 5",
+      description: "More data",
+      thumbnail:
+        "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/settings.svg",
+    },
+    {
+      id: "6",
+      displayName: "External iModel 6",
+      description: "Last in first batch",
+      thumbnail:
+        "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/tools.svg",
+    },
+  ];
 
-      return (
-        <IModelGrid
-          {...args}
-          dataMode="external"
-          apiOverrides={{
-            data,
-            isLoading,
-            hasMoreData: hasMore,
-          }}
-          onLoadMore={handleLoadMore}
-        />
-      );
-    })
+  const [data, setData] = React.useState<IModelFull[]>(initialData);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [hasMore, setHasMore] = React.useState(true);
+
+  const handleLoadMore = React.useCallback(async () => {
+    setIsLoading(true);
+    // Simulate network delay
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    setData((prev) => [
+      ...prev,
+      {
+        id: "7",
+        displayName: "External iModel 7",
+        description: "Loaded on demand via onLoadMore",
+        thumbnail:
+          "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/folder.svg",
+      },
+      {
+        id: "8",
+        displayName: "External iModel 8",
+        description: "Second batch",
+        thumbnail:
+          "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/organization.svg",
+      },
+      {
+        id: "9",
+        displayName: "External iModel 9",
+        description: "More paginated data",
+        thumbnail:
+          "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/settings.svg",
+      },
+      {
+        id: "10",
+        displayName: "External iModel 10",
+        description: "Second batch item",
+        thumbnail:
+          "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/tools.svg",
+      },
+      {
+        id: "11",
+        displayName: "External iModel 11",
+        description: "Second batch item",
+        thumbnail:
+          "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/activity.svg",
+      },
+      {
+        id: "12",
+        displayName: "External iModel 12",
+        description: "Last in second batch",
+        thumbnail:
+          "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/developer.svg",
+      },
+    ]);
+    setHasMore(false);
+    setIsLoading(false);
+  }, []);
+
+  return (
+    <IModelGrid
+      {...args}
+      dataMode="external"
+      apiOverrides={{
+        data,
+        isLoading,
+        hasMoreData: hasMore,
+      }}
+      onLoadMore={handleLoadMore}
+    />
   );
-
-export const IndividualContextMenu = Template.bind({});
-IndividualContextMenu.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
-  iModelActions: [
-    {
-      children: "displayName contains 'R'",
-      visible: (iModel) => iModel.displayName?.includes("R") ?? false,
-      key: "withR",
-      onClick: (iModel) => alert("Contains R: " + iModel?.displayName),
-    },
-    {
-      children: "Add description",
-      visible: (iModel) => !iModel.description,
-      key: "addD",
-      onClick: (iModel) => alert("Add description: " + iModel?.displayName),
-    },
-    {
-      children: "Edit description",
-      visible: (iModel) => !!iModel.description,
-      key: "editD",
-      onClick: (iModel) => alert("Edit description: " + iModel?.displayName),
-    },
-  ],
 };
 
-export const DisabledContextMenu = Template.bind({});
-DisabledContextMenu.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
-  iModelActions: [
-    {
-      children: "Disabled if name contains 'T'",
-      disabled: (iModel) => iModel.displayName?.includes("T") ?? false,
-      key: "withT",
-      onClick: (iModel) => alert("Does not contain T: " + iModel?.displayName),
-    },
-  ],
+export const OverrideApiDataWithLoadMore: StoryObj<typeof IModelGrid> = {
+  render: (args) => <OverrideApiDataWithLoadMoreRender {...args} />,
 };
 
-export const SimpleTilePropsOverrides = Template.bind({});
-SimpleTilePropsOverrides.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
-  tileOverrides: { tileProps: { style: { width: "100%" } } },
+export const IndividualContextMenu: StoryObj<typeof IModelGrid> = {
+  args: {
+    iModelActions: [
+      {
+        children: "displayName contains 'R'",
+        visible: (iModel) => iModel.displayName?.includes("R") ?? false,
+        key: "withR",
+        onClick: (iModel) => alert("Contains R: " + iModel?.displayName),
+      },
+      {
+        children: "Add description",
+        visible: (iModel) => !iModel.description,
+        key: "addD",
+        onClick: (iModel) => alert("Add description: " + iModel?.displayName),
+      },
+      {
+        children: "Edit description",
+        visible: (iModel) => !!iModel.description,
+        key: "editD",
+        onClick: (iModel) => alert("Edit description: " + iModel?.displayName),
+      },
+    ],
+  },
+};
+
+export const DisabledContextMenu: StoryObj<typeof IModelGrid> = {
+  args: {
+    iModelActions: [
+      {
+        children: "Disabled if name contains 'T'",
+        disabled: (iModel) => iModel.displayName?.includes("T") ?? false,
+        key: "withT",
+        onClick: (iModel) =>
+          alert("Does not contain T: " + iModel?.displayName),
+      },
+    ],
+  },
+};
+
+export const SimpleTilePropsOverrides: StoryObj<typeof IModelGrid> = {
+  args: {
+    tileOverrides: { tileProps: { style: { width: "100%" } } },
+  },
 };
 
 interface Version {
@@ -263,28 +257,27 @@ const buildMenuItems =
     close: () => void,
     setVersion: React.Dispatch<React.SetStateAction<Version | undefined>>
   ) =>
-  (v: Version) =>
-    (
-      <span
-        onClick={(event) => {
-          event.stopPropagation();
-        }}
-      >
-        {v.id === "loading" ? (
-          <MenuItemSkeleton />
-        ) : (
-          <MenuItem
-            key={v.id}
-            onClick={() => {
-              close();
-              v.id !== "loading" && setVersion(v);
-            }}
-          >
-            {v.displayName}
-          </MenuItem>
-        )}
-      </span>
-    );
+  (v: Version) => (
+    <span
+      onClick={(event) => {
+        event.stopPropagation();
+      }}
+    >
+      {v.id === "loading" ? (
+        <MenuItemSkeleton />
+      ) : (
+        <MenuItem
+          key={v.id}
+          onClick={() => {
+            close();
+            v.id !== "loading" && setVersion(v);
+          }}
+        >
+          {v.displayName}
+        </MenuItem>
+      )}
+    </span>
+  );
 
 /** Hook used in StatefulPropsOverrides.args, the function itself must be a stable reference as it is a hook. */
 const useIndividualState = (iModel: IModelFull, props: IModelTileProps) => {
@@ -344,7 +337,7 @@ const useIndividualState = (iModel: IModelFull, props: IModelTileProps) => {
       metadata: (
         <span
           onClick={() => {
-            versions === undefined && fetchVersionsList();
+            versions === undefined && void fetchVersionsList();
           }}
         >
           <DropdownButton
@@ -373,115 +366,113 @@ const useIndividualState = (iModel: IModelFull, props: IModelTileProps) => {
   };
 };
 
-export const StatefulPropsOverrides = Template.bind({});
-StatefulPropsOverrides.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
-  useIndividualState,
+export const StatefulPropsOverrides: StoryObj<typeof IModelGrid> = {
+  args: {
+    useIndividualState,
+  },
 };
 
-export const WithPostProcessCallback: Story<IModelGridProps> =
-  withITwinIdOverride(
-    withAccessTokenOverride((args) => {
-      const [filter, setFilter] = React.useState("");
-      const filterOrAddStartTile = React.useCallback(
-        (iModels: IModelFull[], status?: DataStatus) => {
-          if (status !== DataStatus.Complete) {
-            return iModels;
-          }
-          const filterText = filter.toLocaleLowerCase().trim();
-          if (filterText) {
-            return iModels.filter((iModel) =>
-              iModel.displayName?.toLocaleLowerCase().includes(filterText)
-            );
-          }
-          iModels.unshift({
-            id: "newiModel",
-            displayName: "New iModel",
-            description: "Click on this tile to create a new iModel",
-            thumbnail:
-              "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/add.svg",
-          });
-          return iModels;
-        },
-        [filter]
-      );
-      return (
-        <div>
-          <Text variant="title">Description</Text>
-          <Text as="p" variant="body">
-            Property <Code>postProcessCallback</Code> allows modification of the
-            data that is sent to the grid, here, we either apply a filter, or
-            add a new tile at the start of the list for a 'New iModel' when
-            there is no filter defined.
-          </Text>
-          <LabeledInput
-            label={"Name filter"}
-            onChange={(event) => {
-              const {
-                target: { value },
-              } = event;
-              setFilter(value);
-            }}
-          />
-          <IModelGrid {...args} postProcessCallback={filterOrAddStartTile} />
-        </div>
-      );
-    })
+const WithPostProcessCallbackRender = (args: IModelGridProps) => {
+  const [filter, setFilter] = React.useState("");
+  const filterOrAddStartTile = React.useCallback(
+    (iModels: IModelFull[], status?: DataStatus) => {
+      if (status !== DataStatus.Complete) {
+        return iModels;
+      }
+      const filterText = filter.toLocaleLowerCase().trim();
+      if (filterText) {
+        return iModels.filter((iModel) =>
+          iModel.displayName?.toLocaleLowerCase().includes(filterText)
+        );
+      }
+      iModels.unshift({
+        id: "newiModel",
+        displayName: "New iModel",
+        description: "Click on this tile to create a new iModel",
+        thumbnail:
+          "https://unpkg.com/@bentley/icons-generic@1.0.34/icons/add.svg",
+      });
+      return iModels;
+    },
+    [filter]
   );
-WithPostProcessCallback.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
-};
-
-export const DefaultNoStateComponentOverride = Template.bind({});
-DefaultNoStateComponentOverride.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
-  emptyStateComponent: (
+  return (
     <div>
-      <Text variant="title">There are no iModels to show.</Text>
+      <Text variant="title">Description</Text>
+      <Text as="p" variant="body">
+        Property <Code>postProcessCallback</Code> allows modification of the
+        data that is sent to the grid, here, we either apply a filter, or add a
+        new tile at the start of the list for a 'New iModel' when there is no
+        filter defined.
+      </Text>
+      <LabeledInput
+        label={"Name filter"}
+        onChange={(event) => {
+          const {
+            target: { value },
+          } = event;
+          setFilter(value);
+        }}
+      />
+      <IModelGrid {...args} postProcessCallback={filterOrAddStartTile} />
     </div>
-  ),
+  );
 };
 
-export const DisableAddToRecents = Template.bind({});
-DisableAddToRecents.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
-  disableAddToRecents: true,
-};
-DisableAddToRecents.argTypes = {
-  accessToken: { table: { disable: true } },
-  onThumbnailClick: { table: { disable: true } },
-  sortOptions: { table: { disable: true } },
-  iModelActions: { table: { disable: true } },
-  useIndividualState: { table: { disable: true } },
-  tileOverrides: { table: { disable: true } },
-  stringsOverrides: { table: { disable: true } },
-  apiOverrides: { table: { disable: true } },
-  postProcessCallback: { table: { disable: true } },
-  emptyStateComponent: { table: { disable: true } },
-  searchText: { table: { disable: true } },
-  viewMode: { table: { disable: true } },
-  pageSize: { table: { disable: true } },
-  maxCount: { table: { disable: true } },
-  cellOverrides: { table: { disable: true } },
-  className: { table: { disable: true } },
+export const WithPostProcessCallback: StoryObj<typeof IModelGrid> = {
+  render: (args) => <WithPostProcessCallbackRender {...args} />,
 };
 
-export const Recents = Template.bind({});
-Recents.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
-  requestType: "recents",
+export const DefaultNoStateComponentOverride: StoryObj<typeof IModelGrid> = {
+  args: {
+    emptyStateComponent: (
+      <div>
+        <Text variant="title">There are no iModels to show.</Text>
+      </div>
+    ),
+  },
 };
 
-export const RecentsWithCustomIcon = Template.bind({});
-RecentsWithCustomIcon.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
-  requestType: "recents",
-  removeFromRecentsIcon: <SvgDelete />,
+export const DisableAddToRecents: StoryObj<typeof IModelGrid> = {
+  args: {
+    disableAddToRecents: true,
+  },
+  argTypes: {
+    accessToken: { table: { disable: true } },
+    onThumbnailClick: { table: { disable: true } },
+    sortOptions: { table: { disable: true } },
+    iModelActions: { table: { disable: true } },
+    useIndividualState: { table: { disable: true } },
+    tileOverrides: { table: { disable: true } },
+    stringsOverrides: { table: { disable: true } },
+    apiOverrides: { table: { disable: true } },
+    postProcessCallback: { table: { disable: true } },
+    emptyStateComponent: { table: { disable: true } },
+    searchText: { table: { disable: true } },
+    viewMode: { table: { disable: true } },
+    pageSize: { table: { disable: true } },
+    maxCount: { table: { disable: true } },
+    cellOverrides: { table: { disable: true } },
+    className: { table: { disable: true } },
+  },
 };
 
-export const RecentsWithCloseIcon = Template.bind({});
-RecentsWithCloseIcon.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
-  requestType: "recents",
-  removeFromRecentsIcon: <SvgClose />,
+export const Recents: StoryObj<typeof IModelGrid> = {
+  args: {
+    requestType: "recents",
+  },
+};
+
+export const RecentsWithCustomIcon: StoryObj<typeof IModelGrid> = {
+  args: {
+    requestType: "recents",
+    removeFromRecentsIcon: <SvgDelete />,
+  },
+};
+
+export const RecentsWithCloseIcon: StoryObj<typeof IModelGrid> = {
+  args: {
+    requestType: "recents",
+    removeFromRecentsIcon: <SvgClose />,
+  },
 };
