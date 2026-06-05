@@ -164,7 +164,7 @@ export const ITwinTileMUI = ({
 };
 
 export function DefaultThumbnail() {
-  return <SvgThumbnail src={svgItwin} />;
+  return <SvgThumbnail src={`${svgItwin}#icon-large`} />;
 }
 
 function StatusBadge({

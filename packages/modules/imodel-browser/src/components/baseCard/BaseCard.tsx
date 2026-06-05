@@ -337,7 +337,6 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
                 alignItems: "center",
                 position: "relative",
                 aspectRatio: "16 / 10",
-                backgroundColor: "var(--stratakit-mui-palette-action-hover)",
                 overflow: "hidden",
               },
               ...spreadSx(slotProps?.thumbnail?.sx),
