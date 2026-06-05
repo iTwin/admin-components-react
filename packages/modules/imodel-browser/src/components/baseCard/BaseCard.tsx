@@ -393,11 +393,11 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
               {
                 borderColor:
                   status === "positive"
-                    ? "success.main"
+                    ? "var(--stratakit-color-border-positive-base)"
                     : status === "warning"
-                    ? "warning.main"
+                    ? "var(--stratakit-color-border-attention-base)"
                     : status === "negative"
-                    ? "error.main"
+                    ? "var(--stratakit-color-border-critical-base)"
                     : undefined,
               },
               ...spreadSx(slotProps?.divider?.sx),
