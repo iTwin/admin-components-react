@@ -108,7 +108,7 @@ Extensive.args = {
   ...baseArgs,
   title: "Overridden Title",
   description: "Overriden description",
-  additionalDescription: "Additional description",
+  subheader: "Additional description",
   additionalContent: <Button variant="contained">Additional Content</Button>,
   thumbnail: overpassThumbnail,
   getBadge: () => <Chip size="small" label="Badge" />,

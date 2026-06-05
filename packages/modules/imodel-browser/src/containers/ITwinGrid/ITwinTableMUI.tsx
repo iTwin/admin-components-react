@@ -4,7 +4,12 @@
  *--------------------------------------------------------------------------------------------*/
 import svgMore from "@stratakit/icons/more-vertical.svg";
 import { Icon } from "@stratakit/mui";
-import { DataGrid, GridColDef, GridRowParams } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridColDef,
+  GRID_DEFAULT_LOCALE_TEXT,
+  GridRowParams,
+} from "@mui/x-data-grid";
 import React from "react";
 import {
   ITwinCellColumn,
@@ -18,7 +23,17 @@ import {
 } from "../../utils/_buildMenuOptions";
 import { TileFavoriteIconMUI } from "../../components/tileFavoriteIcon/TileFavoriteIconMUI";
 
-export interface ITwinTableMUIStrings {
+// strings from data grid that we need to override in addition to our custom strings
+type MuiDataGridStrings = Pick<
+  typeof GRID_DEFAULT_LOCALE_TEXT,
+  | "noRowsLabel"
+  | "noResultsOverlayLabel"
+  | "footerRowSelected"
+  | "footerTotalVisibleRows"
+  | "paginationRowsPerPage"
+>;
+
+export interface ITwinTableMUIStrings extends MuiDataGridStrings {
   tableColumnName: string;
   tableColumnDescription: string;
   tableColumnLastModified: string;
@@ -180,13 +195,14 @@ export const ITwinTableMUI = ({
       }}
       pageSizeOptions={[25, 50, 100]}
       localeText={{
-        noRowsLabel: strings.noITwins,
-        noResultsOverlayLabel: strings.noITwins,
+        noRowsLabel: strings.noRowsLabel,
+        noResultsOverlayLabel: strings.noResultsOverlayLabel,
+        footerRowSelected: strings.footerRowSelected,
+        footerTotalVisibleRows: strings.footerTotalVisibleRows,
+        paginationRowsPerPage: strings.paginationRowsPerPage,
       }}
       sx={{
-        border: "none",
         // prevent individual cells from showing focus outlines
-
         "& .MuiDataGrid-cell:focus": {
           outline: "none",
         },

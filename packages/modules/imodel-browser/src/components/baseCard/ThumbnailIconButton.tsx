@@ -13,7 +13,12 @@ const spreadSx = (sx: SxProps<Theme> | undefined) =>
 export interface ThumbnailIconButtonProps
   extends Pick<
     React.ComponentProps<typeof IconButton>,
-    "onClick" | "disabled" | "aria-label" | "className"
+    | "onClick"
+    | "disabled"
+    | "label"
+    | "className"
+    | "aria-haspopup"
+    | "aria-expanded"
   > {
   /**
    * URL of the icon SVG (typically an import from `@stratakit/icons`).

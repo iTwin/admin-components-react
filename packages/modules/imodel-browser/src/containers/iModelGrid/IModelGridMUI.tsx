@@ -22,7 +22,7 @@ import {
   removeIModelFromRecents,
 } from "../../utils/iModelApi";
 import { DEFAULT_PAGE_SIZE, useIModelData } from "./useIModelData";
-import { IModelTableMUI } from "./IModelTableMUI";
+import { IModelTableMUI, type IModelTableMUIStrings } from "./IModelTableMUI";
 import { clientSideIModelSort } from "./clientSideIModelSort";
 import {
   IModelTileMUI,
@@ -56,6 +56,7 @@ export interface IModelGridMUIProps
   /** Static props to apply over each tile, mainly used for tileProps, overrides IModelGrid provided values */
   tileOverrides?: Partial<IModelTileMUIProps>;
   tableOverrides?: IModelTableOverridesMUI;
+  stringsOverrides?: Partial<IModelTableMUIStrings>;
 }
 
 /**
@@ -147,6 +148,18 @@ const IModelGridInternal = ({
       removeFromFavorites: "Remove from favorites",
       removeFromRecents: "Remove from recents",
       moreOptions: "More options",
+      noRowsLabel: "No rows",
+      noResultsOverlayLabel: "No results found.",
+      paginationRowsPerPage: "Rows per page:",
+      footerRowSelected: (count: number): React.ReactNode =>
+        count !== 1
+          ? `${count.toLocaleString()} rows selected`
+          : `${count.toLocaleString()} row selected`,
+      footerTotalVisibleRows: (
+        visibleCount: number,
+        totalCount: number
+      ): React.ReactNode =>
+        `${visibleCount.toLocaleString()} of ${totalCount.toLocaleString()}`,
     },
     stringsOverrides
   );
@@ -277,6 +290,7 @@ const IModelGridInternal = ({
                 apiOverrides={tileApiOverrides}
                 useTileState={useIndividualState}
                 refetchIModels={refetchIModels}
+                stringsOverrides={stringsOverrides}
                 {...tileOverrides}
                 selected={
                   selectedIModelId === iModel.id || tileOverrides?.selected
@@ -291,14 +305,8 @@ const IModelGridInternal = ({
                     : undefined
                 }
                 onSelect={() => {
-                  if (selectedIModelId === iModel.id && resolvedOnOpen) {
-                    void iModelClickAndAddToRecents(iModel, () =>
-                      resolvedOnOpen(iModel)
-                    );
-                  } else {
-                    setSelectedIModelId(iModel.id);
-                    resolvedOnSelect?.(iModel);
-                  }
+                  setSelectedIModelId(iModel.id);
+                  resolvedOnSelect?.(iModel);
                 }}
               />
             ))}

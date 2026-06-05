@@ -76,7 +76,7 @@ const Template: Story<BaseCardProps> = (args) => <BaseCardStory {...args} />;
 const baseArgs: BaseCardProps = {
   title: "Main Street Bridge",
   description: "3D model of the Main Street bridge structure and components.",
-  additionalDescription: "Edited 2000-01-02",
+  subheader: "Edited 2000-01-02",
   thumbnail: bridgeThumbnail,
 };
 
@@ -178,6 +178,17 @@ WithDarkThumbnail.args = {
   thumbnail: nightThumbnail,
 };
 
+export const WithoutContent = Template.bind({});
+WithoutContent.storyName = "Without content";
+WithoutContent.args = {
+  ...everythingArgs,
+  title: "Main Street Bridge",
+  description: undefined,
+  subheader: undefined,
+  thumbnail: bridgeThumbnail,
+  additionalContent: undefined,
+};
+
 export const WithSlotProps = Template.bind({});
 WithSlotProps.storyName = "With slot props";
 WithSlotProps.args = {
@@ -215,7 +226,7 @@ export const Statuses = () => (
         key={label}
         title="Main Street Bridge"
         description="3D model of the Main Street bridge structure."
-        additionalDescription="Edited 1/16/2024"
+        subheader="Edited 1/16/2024"
         thumbnail={bridgeThumbnail}
         statusIconHref={icon}
         status={status}

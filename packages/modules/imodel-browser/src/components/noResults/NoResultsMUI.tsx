@@ -56,7 +56,9 @@ export const NoResultsMUI = ({
           color="textSecondary"
           style={{ width: "5rem", height: "5rem" }}
         />
-        <Typography variant="h6">{text}</Typography>
+        <Typography variant="h6" render={<span />}>
+          {text}
+        </Typography>
         {subtext && <Typography variant="body1">{subtext}</Typography>}
       </Box>
     </Box>

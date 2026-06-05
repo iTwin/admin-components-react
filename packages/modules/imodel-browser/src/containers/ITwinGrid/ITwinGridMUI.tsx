@@ -17,7 +17,7 @@ import { _mergeStrings } from "../../utils/_apiOverrides";
 import { ContextMenuBuilderItemMUI } from "../../utils/_buildMenuOptions";
 import { useITwinData } from "./useITwinData";
 import { useITwinFavorites } from "./useITwinFavorites";
-import { ITwinTableMUI } from "./ITwinTableMUI";
+import { ITwinTableMUI, type ITwinTableMUIStrings } from "./ITwinTableMUI";
 import { ITwinTileMUI, type ITwinTilePropsMUI } from "./ITwinTileMUI";
 import { BaseCardLoading } from "../../components/baseCard/BaseCardLoading";
 import type { ITwinGridProps, ITwinGridStrings } from "./ITwinGrid";
@@ -31,9 +31,9 @@ export type IndividualITwinStateHookMUI = (
 ) => Partial<ITwinTilePropsMUI>;
 
 /** @alpha */
-export interface ITwinGridStringsMUI extends ITwinGridStrings {
-  moreOptions: string;
-}
+export interface ITwinGridStringsMUI
+  extends ITwinGridStrings,
+    ITwinTableMUIStrings {}
 
 /** @alpha */
 export interface ITwinGridPropsMUI
@@ -117,6 +117,18 @@ export const ITwinGridMUI = ({
       addToFavorites: "Add to favorites",
       removeFromFavorites: "Remove from favorites",
       moreOptions: "More options",
+      noRowsLabel: "No rows",
+      noResultsOverlayLabel: "No results found.",
+      paginationRowsPerPage: "Rows per page:",
+      footerRowSelected: (count: number): React.ReactNode =>
+        count !== 1
+          ? `${count.toLocaleString()} rows selected`
+          : `${count.toLocaleString()} row selected`,
+      footerTotalVisibleRows: (
+        visibleCount: number,
+        totalCount: number
+      ): React.ReactNode =>
+        `${visibleCount.toLocaleString()} of ${totalCount.toLocaleString()}`,
     },
     stringsOverrides
   );
@@ -195,17 +207,14 @@ export const ITwinGridMUI = ({
                 addToFavorites={addITwinToFavorites}
                 removeFromFavorites={removeITwinFromFavorites}
                 refetchITwins={refetchITwins}
+                stringsOverrides={stringsOverrides}
                 thumbnail={iTwin.image} // This is a fix for https://github.com/iTwin/admin-components-react/issues/196
                 {...tileOverrides}
                 onSelect={() => {
-                  if (selectedITwinId === iTwin.id && onOpen) {
-                    onOpen(iTwin);
-                  } else {
-                    setSelectedITwinId(iTwin.id);
-                    tileOverrides?.onSelect
-                      ? tileOverrides.onSelect(iTwin)
-                      : onSelect?.(iTwin);
-                  }
+                  setSelectedITwinId(iTwin.id);
+                  tileOverrides?.onSelect
+                    ? tileOverrides.onSelect(iTwin)
+                    : onSelect?.(iTwin);
                 }}
               />
             ))}
@@ -260,5 +269,7 @@ const ITwinHookedTile = (props: ITwinHookedTileProps) => {
   }
 
   const tileState = useTileState(props.iTwin, iTwinTileProps);
-  return <ITwinTileMUI {...iTwinTileProps} {...tileState} />;
+  // gridProps aren't used by ITwinTileMUI but are passed to useIndividualState
+  const { gridProps, ...tileProps } = props;
+  return <ITwinTileMUI {...tileProps} {...tileState} />;
 };

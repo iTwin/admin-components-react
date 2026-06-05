@@ -4,7 +4,12 @@
  *--------------------------------------------------------------------------------------------*/
 import svgMore from "@stratakit/icons/more-vertical.svg";
 import { Icon } from "@stratakit/mui";
-import { DataGrid, GridColDef, GridRowParams } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridColDef,
+  GRID_DEFAULT_LOCALE_TEXT,
+  GridRowParams,
+} from "@mui/x-data-grid";
 import React from "react";
 
 import { useIModelFavoritesContext } from "../../contexts/IModelFavoritesContext";
@@ -20,7 +25,16 @@ import {
 } from "../../utils/_buildMenuOptions";
 import { TileFavoriteIconMUI } from "../../components/tileFavoriteIcon/TileFavoriteIconMUI";
 
-export interface IModelTableMUIStrings {
+type MuiDataGridStrings = Pick<
+  typeof GRID_DEFAULT_LOCALE_TEXT,
+  | "noRowsLabel"
+  | "noResultsOverlayLabel"
+  | "footerRowSelected"
+  | "footerTotalVisibleRows"
+  | "paginationRowsPerPage"
+>;
+
+export interface IModelTableMUIStrings extends MuiDataGridStrings {
   tableColumnName: string;
   tableColumnDescription: string;
   tableColumnLastModified: string;
@@ -180,8 +194,11 @@ export const IModelTableMUI = ({
       }}
       pageSizeOptions={[25, 50, 100]}
       localeText={{
-        noRowsLabel: strings.noIModelSearch,
-        noResultsOverlayLabel: strings.noIModelSearch,
+        noRowsLabel: strings.noRowsLabel,
+        noResultsOverlayLabel: strings.noResultsOverlayLabel,
+        footerRowSelected: strings.footerRowSelected,
+        footerTotalVisibleRows: strings.footerTotalVisibleRows,
+        paginationRowsPerPage: strings.paginationRowsPerPage,
       }}
       sx={{
         // prevent individual cells from showing focus outlines

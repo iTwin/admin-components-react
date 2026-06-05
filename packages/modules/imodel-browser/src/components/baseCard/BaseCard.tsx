@@ -6,6 +6,8 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CardActions from "@mui/material/CardActions";
 import Card, { CardProps } from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
 import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
@@ -96,7 +98,14 @@ export interface BaseCardProps
   /**
    * Secondary fineprint content rendered below the description.
    */
-  additionalDescription?: string;
+  subheader?: string;
+
+  /**
+   * Alt text for the thumbnail image when `thumbnail` is a string URL.
+   * Defaults to empty string (decorative). Provide a meaningful value
+   * when the image conveys information not available in the title.
+   */
+  thumbnailAlt?: string;
 
   /** Additional content rendered below the description and above the footer. */
   additionalContent?: ReactNode;
@@ -128,6 +137,10 @@ export interface BaseCardProps
   onDoubleClick?: CardProps["onDoubleClick"];
   /** Props for internal wrapper slots following MUI slotProps conventions. */
   slotProps?: BaseCardSlotProps;
+
+  stringsOverrides?: {
+    moreOptions?: string;
+  };
 }
 
 /**
@@ -152,7 +165,8 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
       headerRight,
       statusIconHref,
       description,
-      additionalDescription,
+      subheader,
+      thumbnailAlt,
       additionalContent,
       actions,
       contextMenuContent,
@@ -161,16 +175,18 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
       disabled: cardDisabled,
       status,
       slotProps,
-
+      stringsOverrides,
       className,
       sx,
       ...rest
     },
     ref
   ) => {
+    const titleId = React.useId();
+
     const thumbnailNode =
       typeof thumbnail === "string" ? (
-        <CardMedia component="img" src={thumbnail} alt="" />
+        <CardMedia component="img" src={thumbnail} alt={thumbnailAlt ?? ""} />
       ) : (
         thumbnail
       );
@@ -300,6 +316,9 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
             },
             ...spreadSx(sx),
           ]}
+          aria-labelledby={titleId}
+          aria-selected={selected ?? undefined}
+          aria-disabled={cardDisabled ?? undefined}
           {...rest}
           onClick={!cardDisabled ? onClick : undefined}
           onContextMenu={
@@ -320,13 +339,6 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
                 aspectRatio: "16 / 10",
                 backgroundColor: "var(--stratakit-mui-palette-action-hover)",
                 overflow: "hidden",
-                flexShrink: 0,
-                "& > img, & > video": {
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  display: "block",
-                },
               },
               ...spreadSx(slotProps?.thumbnail?.sx),
             ]}
@@ -350,8 +362,10 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
                 {thumbnailTopRight}
                 {hasContextMenu && !cardDisabled && (
                   <ThumbnailIconButton
-                    aria-label="More options"
+                    label={stringsOverrides?.moreOptions ?? "More options"}
                     data-testid="show-context-menu-button"
+                    aria-haspopup="true"
+                    aria-expanded={menuOpen}
                     onClick={handleMoreButtonClick}
                     icon={svgMoreVertical}
                   />
@@ -392,110 +406,72 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
           />
 
           {/* ── Content area ── */}
-          <Stack
-            direction="row"
-            spacing={1}
-            className={slotProps?.content?.className}
-            sx={[
-              {
-                p: 2,
-                pt: 1.5,
-                alignItems: "flex-start",
-              },
-              ...spreadSx(slotProps?.content?.sx),
-            ]}
-          >
-            {statusIconHref && (
-              <Box
-                sx={{
-                  width: "1.5rem",
-                  height: "1.5rem",
-                }}
-                data-testid="status-icon"
-              >
-                <StatusIcon href={statusIconHref} status={status} />
-              </Box>
-            )}
-
-            <Stack sx={{ flexDirection: "column", gap: 0.5, flex: 1 }}>
-              {/* Header row: title + optional right slot */}
-              <Stack
-                direction="row"
-                className={slotProps?.header?.className}
-                sx={[
-                  {
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    gap: 1,
-                  },
-                  ...spreadSx(slotProps?.header?.sx),
-                ]}
-              >
-                <Typography
-                  variant="body1"
-                  component="h2"
-                  className={slotProps?.title?.className}
-                  sx={[
-                    {
-                      flex: 1,
-                      minWidth: 0,
-                      display: "-webkit-box",
-                      WebkitLineClamp: 1,
-                      WebkitBoxOrient: "vertical",
-                      overflow: "hidden",
-                    },
-                    ...spreadSx(slotProps?.title?.sx),
-                  ]}
+          <CardHeader
+            avatar={
+              statusIconHref ? (
+                <Box
+                  sx={{ width: "1.5rem", height: "1.5rem" }}
+                  data-testid="status-icon"
                 >
-                  {title}
-                </Typography>
-                {headerRight && <Box sx={{ flexShrink: 0 }}>{headerRight}</Box>}
-              </Stack>
+                  <StatusIcon href={statusIconHref} status={status} />
+                </Box>
+              ) : undefined
+            }
+            title={title}
+            action={
+              headerRight ? (
+                <Box sx={{ flexShrink: 0 }}>{headerRight}</Box>
+              ) : undefined
+            }
+            subheader={subheader}
+            className={slotProps?.header?.className}
+            sx={[
+              { alignItems: "flex-start" },
+              ...spreadSx(slotProps?.header?.sx),
+            ]}
+            slotProps={{
+              title: {
+                component: "h2",
+                id: titleId,
+                sx: [
+                  {
+                    flex: 1,
+                    minWidth: 0,
+                    display: "-webkit-box",
+                    WebkitLineClamp: 1,
+                    WebkitBoxOrient: "vertical",
+                    overflow: "hidden",
+                  },
+                  ...spreadSx(slotProps?.title?.sx),
+                ],
+              },
+            }}
+          />
 
-              {/* Info: description + additionalDescription */}
+          {description ?? additionalContent ? (
+            <CardContent
+              className={slotProps?.content?.className}
+              sx={slotProps?.content?.sx}
+            >
               <Stack
-                spacing={0.25}
                 className={slotProps?.info?.className}
                 sx={slotProps?.info?.sx}
               >
                 {description && (
-                  <Typography
-                    variant="body2"
-                    color="textSecondary"
-                    component="p"
-                    sx={{
-                      display: "-webkit-box",
-                      WebkitLineClamp: 2,
-                      WebkitBoxOrient: "vertical",
-                      overflow: "hidden",
-                    }}
-                  >
+                  <Typography variant="body2" color="textSecondary">
                     {description}
-                  </Typography>
-                )}
-                {additionalDescription && (
-                  <Typography
-                    variant="subtitle2"
-                    color="secondary"
-                    component="p"
-                    sx={{
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      display: "-webkit-box",
-                      WebkitLineClamp: 1,
-                      WebkitBoxOrient: "vertical",
-                    }}
-                  >
-                    {additionalDescription}
                   </Typography>
                 )}
               </Stack>
               {additionalContent && (
                 <Box sx={{ mt: 1 }}>{additionalContent}</Box>
               )}
-            </Stack>
-          </Stack>
+            </CardContent>
+          ) : (
+            <CardContent sx={{ pt: 0 }} />
+          )}
         </Card>
+
         {hasContextMenu && (
           <Menu
             open={menuOpen}
