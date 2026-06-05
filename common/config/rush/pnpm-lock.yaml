@@ -353,13 +353,13 @@ importers:
     specifiers:
       '@itwin/itwinui-icons-react': ^2.9.0
       '@itwin/itwinui-react': ^3.19.4
-      '@mui/material': ~9.0.0
-      '@mui/system': ~9.0.0
-      '@mui/x-data-grid': ~9.3.0
+      '@mui/material': ^9.0.0
+      '@mui/system': ^9.0.0
+      '@mui/x-data-grid': ^9.3.0
       '@rollup/plugin-commonjs': ~17.1.0
       '@rollup/plugin-url': ^8.0.1
-      '@stratakit/icons': ~0.3.1
-      '@stratakit/mui': ~0.4.1
+      '@stratakit/icons': ^0.3.1
+      '@stratakit/mui': ^0.4.1
       '@svgr/rollup': ^5.5.0
       '@testing-library/jest-dom': ^6.6.3
       '@testing-library/react': ^11.1.0
