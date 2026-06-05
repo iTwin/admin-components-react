@@ -1,6 +1,7 @@
 import React from "react";
 import { type IModelTableOverridesMUI, type IModelFull } from "../../types";
 import { ContextMenuBuilderItemMUI } from "../../utils/_buildMenuOptions";
+import { type IModelTableMUIStrings } from "./IModelTableMUI";
 import { type IModelTileMUIProps } from "../iModelTiles/IModelTileMUI";
 import type { IModelGridProps } from "./IModelGrid";
 /** @alpha */
@@ -16,6 +17,7 @@ export interface IModelGridMUIProps extends Omit<IModelGridProps, "onThumbnailCl
     /** Static props to apply over each tile, mainly used for tileProps, overrides IModelGrid provided values */
     tileOverrides?: Partial<IModelTileMUIProps>;
     tableOverrides?: IModelTableOverridesMUI;
+    stringsOverrides?: Partial<IModelTableMUIStrings>;
 }
 /**
  * Component to display a grid or table of iModels within a given iTwin.

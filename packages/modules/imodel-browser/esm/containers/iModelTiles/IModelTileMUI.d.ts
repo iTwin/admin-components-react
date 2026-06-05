@@ -23,6 +23,7 @@ export interface IModelTileMUIProps extends Omit<IModelTileProps, "onThumbnailCl
         addToFavorites?: string;
         /** Accessible text for the full star icon to remove the iModel from favorites */
         removeFromFavorites?: string;
+        moreOptions?: string;
     };
     /** Access token for fetching the thumbnail */
     accessToken?: AccessTokenProvider;
@@ -41,4 +42,4 @@ export interface IModelTileMUIProps extends Omit<IModelTileProps, "onThumbnailCl
  * Representation of an IModel — V2 (Stratakit/MUI)
  * @alpha
  */
-export declare const IModelTileMUI: ({ iModel, contextMenuItems, accessToken, apiOverrides, stringsOverrides, refetchIModels, hideFavoriteIcon, selected, loading, disabled, status, thumbnail, thumbnailTopLeft, thumbnailBottomLeft, getBadge, badge, title, description, additionalDescription, actions, onSelect, onOpen, slotProps, className, ...rest }: IModelTileMUIProps) => React.JSX.Element;
+export declare const IModelTileMUI: ({ iModel, contextMenuItems, accessToken, apiOverrides, stringsOverrides, refetchIModels, hideFavoriteIcon, selected, loading, disabled, status, thumbnail, thumbnailTopLeft, thumbnailBottomLeft, getBadge, badge, title, description, subheader, actions, onSelect, onOpen, slotProps, className, ...rest }: IModelTileMUIProps) => React.JSX.Element;

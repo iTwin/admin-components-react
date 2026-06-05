@@ -63,7 +63,13 @@ export interface BaseCardProps extends Omit<CardProps, "children" | "title" | "o
     /**
      * Secondary fineprint content rendered below the description.
      */
-    additionalDescription?: string;
+    subheader?: string;
+    /**
+     * Alt text for the thumbnail image when `thumbnail` is a string URL.
+     * Defaults to empty string (decorative). Provide a meaningful value
+     * when the image conveys information not available in the title.
+     */
+    thumbnailAlt?: string;
     /** Additional content rendered below the description and above the footer. */
     additionalContent?: ReactNode;
     /**
@@ -91,6 +97,9 @@ export interface BaseCardProps extends Omit<CardProps, "children" | "title" | "o
     onDoubleClick?: CardProps["onDoubleClick"];
     /** Props for internal wrapper slots following MUI slotProps conventions. */
     slotProps?: BaseCardSlotProps;
+    stringsOverrides?: {
+        moreOptions?: string;
+    };
 }
 /**
  * Base card component built on MUI Card.

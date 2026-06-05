@@ -17,6 +17,13 @@ export interface ITwinTilePropsMUI extends Omit<ITwinTileProps, "onThumbnailClic
     onOpen?(iTwin: ITwinFull): void;
     /** Status to display on the tile — will override iTwin.status if provided, otherwise iTwin.status will be used.  Should be a MUI {@link Chip} */
     getBadge?: (iTwin: ITwinFull) => React.ReactNode;
+    stringsOverrides?: {
+        trialBadge?: string;
+        inactiveBadge?: string;
+        addToFavorites?: string;
+        removeFromFavorites?: string;
+        moreOptions?: string;
+    };
 }
 /**
  * Representation of an iTwin — V2 (Stratakit/MUI)

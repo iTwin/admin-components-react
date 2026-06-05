@@ -8,6 +8,4 @@ export declare const _getAPIServer: (serverEnvironmentPrefix?: "dev" | "qa" | ""
  * @param overrides Potentially incomplete string object
  * @returns
  */
-export declare const _mergeStrings: <T extends {
-    [key: string]: string;
-}>(defaults: T, overrides: Partial<T> | undefined) => T;
+export declare const _mergeStrings: <T extends Record<string, unknown>>(defaults: T, overrides: Partial<NoInfer<T>> | undefined) => T;

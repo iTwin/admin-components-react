@@ -2,6 +2,7 @@ import "./ITwinGrid.scss";
 import React from "react";
 import { type ITwinTableOverridesMUI, type ITwinFull } from "../../types";
 import { ContextMenuBuilderItemMUI } from "../../utils/_buildMenuOptions";
+import { type ITwinTableMUIStrings } from "./ITwinTableMUI";
 import { type ITwinTilePropsMUI } from "./ITwinTileMUI";
 import type { ITwinGridProps, ITwinGridStrings } from "./ITwinGrid";
 /** @alpha */
@@ -9,8 +10,7 @@ export type IndividualITwinStateHookMUI = (iTwin: ITwinFull, iTwinTileProps: ITw
     gridProps: ITwinGridPropsMUI;
 }) => Partial<ITwinTilePropsMUI>;
 /** @alpha */
-export interface ITwinGridStringsMUI extends ITwinGridStrings {
-    moreOptions: string;
+export interface ITwinGridStringsMUI extends ITwinGridStrings, ITwinTableMUIStrings {
 }
 /** @alpha */
 export interface ITwinGridPropsMUI extends Omit<ITwinGridProps, "onThumbnailClick" | "iTwinActions" | "tileOverrides" | "useIndividualState" | "cellOverrides" | "tableOverrides" | "stringsOverrides"> {

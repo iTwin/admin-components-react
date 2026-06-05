@@ -1,7 +1,9 @@
+import { GRID_DEFAULT_LOCALE_TEXT } from "@mui/x-data-grid";
 import React from "react";
 import { type IModelTableOverridesMUI, type IModelFull } from "../../types";
 import { ContextMenuBuilderItemMUI } from "../../utils/_buildMenuOptions";
-export interface IModelTableMUIStrings {
+type MuiDataGridStrings = Pick<typeof GRID_DEFAULT_LOCALE_TEXT, "noRowsLabel" | "noResultsOverlayLabel" | "footerRowSelected" | "footerTotalVisibleRows" | "paginationRowsPerPage">;
+export interface IModelTableMUIStrings extends MuiDataGridStrings {
     tableColumnName: string;
     tableColumnDescription: string;
     tableColumnLastModified: string;
@@ -27,3 +29,4 @@ export interface IModelTableMUIProps {
  * Table view for iModels using MUI X DataGrid (Community edition).
  */
 export declare const IModelTableMUI: ({ iModels, iModelActions, onOpen, strings, refetchIModels, tableOverrides: { columnOverrides, hideColumns }, isLoading, fetchMore, }: IModelTableMUIProps) => React.JSX.Element;
+export {};
