@@ -155,10 +155,5 @@ Extensive.args = {
     { key: "open", label: "Open", onClick: action("iTwin open clicked") },
     { key: "share", label: "Share", onClick: action("iTwin share clicked") },
   ],
-  additionalContent: (
-    <Grid spacing={4} sx={{ justifyContent: "space-around" }} container>
-      <Box sx={{ backgroundColor: "divider" }}>Additional Content</Box>
-      <Box sx={{ backgroundColor: "divider" }}>More Content</Box>
-    </Grid>
-  ),
+  additionalContent: <Chip label="Additional Content Zone" />,
 };
