@@ -250,22 +250,20 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
           ...spreadSx(slotProps?.actions?.sx),
         ]}
       >
-        <Grid container spacing={2}>
-          {actions.map(({ key, label, onClick }, index) => (
-            <Button
-              key={key}
-              onClick={(event) => {
-                event.stopPropagation();
-                onClick?.(event);
-              }}
-              color={index === 0 ? "primary" : "secondary"}
-              size="large"
-              variant="contained"
-            >
-              {label}
-            </Button>
-          ))}
-        </Grid>
+        {actions.map(({ key, label, onClick }, index) => (
+          <Button
+            key={key}
+            onClick={(event) => {
+              event.stopPropagation();
+              onClick?.(event);
+            }}
+            color={index === 0 ? "primary" : "secondary"}
+            size="large"
+            variant="contained"
+          >
+            {label}
+          </Button>
+        ))}
       </CardActions>
     ) : null;
 

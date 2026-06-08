@@ -41,6 +41,8 @@ export interface IModelGridMUIProps
     | "tileOverrides"
     | "cellOverrides"
     | "tableOverrides"
+    | "status"
+    | "additionalContent"
   > {
   /** Open handler. Adds iModel to recents when clicked unless disableAddToRecents is true. */
   onOpen?: IModelTileMUIProps["onOpen"];

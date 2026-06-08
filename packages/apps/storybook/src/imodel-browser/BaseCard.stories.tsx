@@ -252,6 +252,10 @@ export const Selected = Template.bind({});
 Selected.storyName = "Selected state";
 Selected.args = { ...baseArgs, selected: true };
 
+export const Disabled = Template.bind({});
+Disabled.storyName = "Disabled state";
+Disabled.args = { ...baseArgs, disabled: true };
+
 export const LongTitle = Template.bind({});
 LongTitle.storyName = "Long title";
 LongTitle.args = {

@@ -46,6 +46,8 @@ export interface ITwinGridPropsMUI
     | "cellOverrides"
     | "tableOverrides"
     | "stringsOverrides"
+    | "status"
+    | "additionalContent"
   > {
   /** Select handler for the iTwin tile. */
   onSelect?(iTwin: ITwinFull): void;
