@@ -251,21 +251,19 @@ const IModelGridInternal = ({
     iModel: IModelFull,
     clickFn: () => void
   ) => {
-    try {
-      if (!accessToken || disableAddToRecents) {
-        clickFn();
-        return;
-      }
+    if (!accessToken || disableAddToRecents) {
+      clickFn();
+      return;
+    }
 
-      void addIModelToRecents({
-        iModelId: iModel.id,
-        accessToken,
-        serverEnvironmentPrefix: apiOverrides?.serverEnvironmentPrefix,
-      });
-    } catch (e) {
+    void addIModelToRecents({
+      iModelId: iModel.id,
+      accessToken,
+      serverEnvironmentPrefix: apiOverrides?.serverEnvironmentPrefix,
+    }).catch((e) => {
       // swallow errors to avoid disrupting the UI
       console.error("Failed to add iModel to recents", e);
-    }
+    });
     clickFn();
   };
 
@@ -443,7 +441,7 @@ function removeFromRecentsAction(
   return {
     key: "remove-from-recents",
     icon: removeFromRecentsIcon,
-    children: strings?.removeFromRecents ?? "Remove from recents",
+    label: strings?.removeFromRecents ?? "Remove from recents",
     onClick: async (iModel, refetchData) => {
       if (!iModel || !accessToken) {
         return;

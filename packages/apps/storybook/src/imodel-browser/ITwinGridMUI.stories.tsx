@@ -66,12 +66,12 @@ TableView.args = {
   viewMode: "cells",
   moreActions: [
     {
-      children: "Some action",
+      label: "Some action",
       key: "something",
       onClick: (iTwin) => action("clicked " + iTwin?.displayName)(iTwin),
     },
     {
-      children: "Some other action",
+      label: "Some other action",
       key: "something-else",
       onClick: (iTwin) =>
         action("clicked something else " + iTwin?.displayName)(iTwin),
@@ -153,20 +153,20 @@ IndividualContextMenu.args = {
   ...baseArgs,
   moreActions: [
     {
-      children: "displayName contains 'R'",
+      label: "displayName contains 'R'",
       visible: (iTwin) => iTwin.displayName?.includes("R") ?? false,
       key: "withR",
       onClick: (iTwin) => action("Contains R" + iTwin?.displayName)(iTwin),
     },
     {
-      children: "Add iTwinNumber",
+      label: "Add iTwinNumber",
       visible: (iTwin) => !iTwin.number,
       key: "addD",
       onClick: (iTwin) =>
         action("Add iTwinNumber to " + iTwin?.displayName)(iTwin),
     },
     {
-      children: (iTwin) => `Edit iTwin ${iTwin.displayName}`,
+      label: (iTwin) => `Edit iTwin ${iTwin.displayName}`,
       visible: (iTwin) => !!iTwin.number,
       key: "editD",
       onClick: (iTwin) => action("Edit iTwinNumber: " + iTwin?.number)(iTwin),
@@ -315,7 +315,7 @@ StringsOverrideGrid.args = {
   },
   moreActions: [
     {
-      children: "Some action",
+      label: "Some action",
       key: "something",
       onClick: (iTwin) => action("clicked " + iTwin?.displayName)(iTwin),
     },
@@ -368,7 +368,7 @@ StringsOverrideTable.args = {
   },
   moreActions: [
     {
-      children: "Some action",
+      label: "Some action",
       key: "something",
       onClick: (iTwin) => action("clicked " + iTwin?.displayName)(iTwin),
     },

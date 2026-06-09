@@ -87,13 +87,13 @@ const baseArgs: IModelTileMUIProps = {
     {
       key: "option-1",
       icon: SvgShare,
-      children: "More Actions Option 1",
+      label: "More Actions Option 1",
       onClick: (iModel) => action("action 1 clicked")(iModel),
     },
     {
       key: "option-2",
       icon: SvgDelete,
-      children: "More Actions Option 2",
+      label: "More Actions Option 2",
       onClick: (iModel) => action("action 2 clicked")(iModel),
     },
   ],

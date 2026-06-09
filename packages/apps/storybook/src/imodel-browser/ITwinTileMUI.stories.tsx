@@ -54,13 +54,13 @@ const baseArgs: ITwinTileProps = {
   moreActions: [
     {
       key: "option-1",
-      children: "Option 1",
+      label: "Option 1",
       icon: svgMagnet,
       onClick: (iTwin) => action("iTwin option 1 clicked")(iTwin),
     },
     {
       key: "option-2",
-      children: "Option 2",
+      label: "Option 2",
       onClick: (iTwin) => action("iTwin option 2 clicked")(iTwin),
     },
   ],

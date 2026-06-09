@@ -111,9 +111,9 @@ export const IModelTileMUI = ({
         ?.filter(({ visible }) =>
           typeof visible === "function" ? visible(iModel) : visible ?? true
         )
-        .map(({ key, children, icon, onClick, disabled }) => ({
+        .map(({ key, label, icon, onClick, disabled }) => ({
           key,
-          label: typeof children === "function" ? children(iModel) : children,
+          label: typeof label === "function" ? label(iModel) : label,
           icon,
           onClick: onClick ? () => onClick(iModel, refetchIModels) : undefined,
           disabled:

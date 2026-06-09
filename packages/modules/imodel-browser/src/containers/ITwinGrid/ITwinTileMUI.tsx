@@ -90,9 +90,9 @@ export const ITwinTileMUI = ({
         ?.filter(({ visible }) =>
           typeof visible === "function" ? visible(iTwin) : visible ?? true
         )
-        .map(({ key, children, icon, onClick, disabled }) => ({
+        .map(({ key, label, icon, onClick, disabled }) => ({
           key,
-          label: typeof children === "function" ? children(iTwin) : children,
+          label: typeof label === "function" ? label(iTwin) : label,
           icon,
           onClick: onClick ? () => onClick(iTwin, refetchITwins) : undefined,
           disabled: typeof disabled === "function" ? disabled(iTwin) : disabled,

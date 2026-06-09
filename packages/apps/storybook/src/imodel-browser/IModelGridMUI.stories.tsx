@@ -59,14 +59,14 @@ const baseArgs: IModelGridMUIProps = {
   moreActions: [
     {
       key: "open",
-      children: "Open iModel",
+      label: "Open iModel",
       onClick: (iModel) => {
         action("Open " + iModel?.displayName)(iModel);
       },
     },
     {
       key: "details",
-      children: "View details",
+      label: "View details",
       onClick: (iModel) => action("Details for " + iModel?.displayName)(iModel),
     },
   ],
@@ -154,8 +154,8 @@ export const OverrideApiDataWithLoadMore: Story<IModelGridMUIProps> =
     })
   );
 
-export const IndividualContextMenu = Template.bind({});
-IndividualContextMenu.args = {
+export const ContextualActions = Template.bind({});
+ContextualActions.args = {
   ...baseArgs,
   actions: [
     {
@@ -167,7 +167,7 @@ IndividualContextMenu.args = {
   ],
   moreActions: [
     {
-      children: "displayName contains 'R'",
+      label: "displayName contains 'R'",
       visible: (iModel: IModelFull) =>
         iModel.displayName?.toLowerCase().includes("r") ?? false,
       key: "withR",
@@ -175,7 +175,7 @@ IndividualContextMenu.args = {
         alert("Contains R: " + iModel?.displayName),
     },
     {
-      children: "Disabled if name contains 'T'",
+      label: "Disabled if name contains 'T'",
       disabled: (iModel: IModelFull) =>
         iModel.displayName?.toLowerCase().includes("t") ?? false,
       key: "withT",
@@ -183,13 +183,13 @@ IndividualContextMenu.args = {
         alert("Does not contain T: " + iModel?.displayName),
     },
     {
-      children: "Add description",
+      label: "Add description",
       key: "addD",
       onClick: (iModel: IModelFull | undefined) =>
         alert("Add description: " + iModel?.displayName),
     },
     {
-      children: "Edit description",
+      label: "Edit description",
       visible: (iModel: IModelFull) => !!iModel.description,
       key: "editD",
       onClick: (iModel: IModelFull | undefined) =>
@@ -304,7 +304,7 @@ StringsOverrideGrid.args = {
   ...baseArgs,
   moreActions: [
     {
-      children: "Some action",
+      label: "Some action",
       key: "something",
       onClick: (iModel) => action("clicked " + iModel?.displayName)(iModel),
     },
@@ -335,7 +335,7 @@ StringsOverrideTable.args = {
 
   moreActions: [
     {
-      children: "Some action",
+      label: "Some action",
       key: "something",
       onClick: (iModel) => action("clicked " + iModel?.displayName)(iModel),
     },

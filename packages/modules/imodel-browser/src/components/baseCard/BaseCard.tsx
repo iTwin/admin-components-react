@@ -11,7 +11,6 @@ import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
 import Divider from "@mui/material/Divider";
-import type { SxProps, Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import svgMoreVertical from "@stratakit/icons/more-vertical.svg";
 import { Icon } from "@stratakit/mui";
@@ -170,7 +169,12 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
 
     const thumbnailNode =
       typeof thumbnail === "string" ? (
-        <CardMedia component="img" src={thumbnail} alt={thumbnailAlt ?? ""} />
+        <CardMedia
+          image={thumbnail}
+          role="img"
+          aria-label={thumbnailAlt ?? ""}
+          sx={{ height: "100%", backgroundSize: "cover" }}
+        />
       ) : (
         thumbnail
       );
@@ -216,7 +220,8 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
           {...rest}
           className={className}
           aria-labelledby={titleId}
-          inert={cardDisabled ? "true" : undefined}
+          // `inert` is not yet in React 18's DOM typings; spread it in until React 19 types land.
+          {...(cardDisabled ? ({ inert: "" } as Record<string, unknown>) : {})}
           onContextMenu={
             !cardDisabled && hasContextMenu ? handleContextMenu : undefined
           }
@@ -293,7 +298,7 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
                       ? singleAction.onClick
                       : undefined
                   }
-                  disabled={cardDisabled ?? singleAction.disabled}
+                  disabled={cardDisabled ? true : singleAction.disabled}
                 >
                   {title}
                 </CardActionArea>
@@ -347,17 +352,15 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
 
           {multipleActions && (
             <CardActions>
-              {multipleActions.map(
-                ({ key, label, onClick, disabled }, index) => (
-                  <Button
-                    key={key}
-                    onClick={onClick}
-                    disabled={cardDisabled ?? disabled}
-                  >
-                    {label}
-                  </Button>
-                )
-              )}
+              {multipleActions.map(({ key, label, onClick, disabled }) => (
+                <Button
+                  key={key}
+                  onClick={onClick}
+                  disabled={cardDisabled ? true : disabled}
+                >
+                  {label}
+                </Button>
+              ))}
             </CardActions>
           )}
         </Card>
