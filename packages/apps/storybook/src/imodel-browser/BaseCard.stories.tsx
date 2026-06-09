@@ -219,4 +219,60 @@ LongTitle.args = {
   ...baseArgs,
   title:
     "This is a very long title that should truncate automagically with an ellipsis at the end",
+  moreActions: [
+    {
+      key: "open",
+      label: "Open with",
+      onClick: action("menu: open clicked"),
+      icon: svgGeo,
+    },
+  ],
+};
+
+export const OpenSitePlus = Template.bind({});
+OpenSitePlus.storyName = "OpenSite+ iModel style";
+OpenSitePlus.args = {
+  ...baseArgs,
+  title: "OpenSite+ iModel",
+  subheader: "Modified 2026-01-01",
+  description:
+    "This card mimics the design of OpenSite+ iModel cards with an AvatarGroup in the top left, a pin/favorite button in the top right, and no dedicated action buttons below the description.",
+  onContextMenu: action("context-menu opened"),
+  moreActions: [
+    {
+      key: "open",
+      label: "Open with",
+      onClick: action("menu: open with clicked"),
+      icon: svgGeo,
+    },
+    { key: "share", label: "Share", onClick: action("menu: share clicked") },
+    { key: "delete", label: "Delete", onClick: action("menu: delete clicked") },
+  ],
+  actions: [
+    {
+      key: "open",
+      label: "Open",
+      onClick: action("default open action clicked"),
+    },
+  ],
+  statusIconHref: undefined,
+  thumbnailTopLeft: (
+    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+      <AvatarGroup max={3}>
+        <Avatar alt="User 1" src="https://i.pravatar.cc/150?img=1" />
+        <Avatar alt="User 2" src="https://i.pravatar.cc/150?img=2" />
+        <Avatar alt="User 3" src="https://i.pravatar.cc/150?img=3" />
+      </AvatarGroup>
+    </Box>
+  ),
+
+  thumbnailTopRight: (
+    <>
+      <ThumbnailIconButton
+        aria-label="Add to favorites"
+        onClick={action("thumbnail favorite clicked")}
+        icon={svgPin}
+      />
+    </>
+  ),
 };
