@@ -3,14 +3,11 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import Box from "@mui/material/Box";
-import type { SxProps, Theme } from "@mui/material/styles";
 import React from "react";
-import { spreadSx } from "../../utils/spreadSx";
 
 export interface BaseCardThumbnailAreaProps {
   children?: React.ReactNode;
   className?: string;
-  sx?: SxProps<Theme>;
 }
 
 /**
@@ -20,7 +17,6 @@ export interface BaseCardThumbnailAreaProps {
 export function BaseCardThumbnailArea({
   children,
   className,
-  sx,
 }: BaseCardThumbnailAreaProps) {
   return (
     <Box
@@ -34,7 +30,6 @@ export function BaseCardThumbnailArea({
           aspectRatio: "16 / 10",
           overflow: "hidden",
         },
-        ...spreadSx(sx),
       ]}
     >
       {children}

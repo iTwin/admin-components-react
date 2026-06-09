@@ -42,7 +42,6 @@ export default {
   component: BaseCardStory,
   excludeStories: ["BaseCardStory"],
   argTypes: {
-    slotProps: { control: false },
     thumbnail: { control: false },
     thumbnailTopLeft: { control: false },
     thumbnailTopRight: { control: false },
@@ -88,16 +87,6 @@ const everythingArgs: BaseCardProps = {
   description:
     "When there is more than one `action` prop they will be rendered as buttons in the footer of the card and the whole card is not clickable.",
   onContextMenu: action("context-menu opened"),
-  moreActions: [
-    {
-      key: "open",
-      label: "Open with",
-      onClick: action("menu: open clicked"),
-      icon: svgGeo,
-    },
-    { key: "share", label: "Share", onClick: action("menu: share clicked") },
-    { key: "delete", label: "Delete", onClick: action("menu: delete clicked") },
-  ],
   actions: [
     { key: "open", label: "Open", onClick: action("open action clicked") },
     { key: "share", label: "Share", onClick: action("share action clicked") },
@@ -108,6 +97,24 @@ const everythingArgs: BaseCardProps = {
       disabled: true,
     },
   ],
+  moreActions: [
+    {
+      key: "open",
+      label: "Open with",
+      onClick: action("menu: open clicked"),
+      icon: svgGeo,
+    },
+    { key: "share", label: "Share", onClick: action("menu: share clicked") },
+    { key: "delete", label: "Delete", onClick: action("menu: delete clicked") },
+    {
+      key: "disabled",
+      label: "Disabled option",
+      onClick: action("menu: disabled clicked"),
+      disabled: true,
+      icon: svgSave,
+    },
+  ],
+
   statusIconHref: svgStatusWarning,
   thumbnailTopLeft: (
     <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
@@ -162,27 +169,6 @@ WithoutContent.args = {
   description: undefined,
   subheader: undefined,
   thumbnail: bridgeThumbnail,
-};
-
-export const WithSlotProps = Template.bind({});
-WithSlotProps.storyName = "With slot props";
-WithSlotProps.args = {
-  ...everythingArgs,
-
-  slotProps: {
-    thumbnail: {
-      sx: { opacity: 0.2 },
-    },
-    content: {
-      sx: { color: "var(--stratakit-color-border-attention-base)" },
-    },
-    divider: {
-      sx: {
-        borderWidth: 5,
-        borderColor: "var(--stratakit-color-border-positive-base)",
-      },
-    },
-  },
 };
 
 export const Statuses = () => (

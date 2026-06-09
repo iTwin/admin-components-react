@@ -303,47 +303,60 @@ const IModelGridInternal = ({
       <>
         {viewMode !== "cells" ? (
           <Box
+            component="ul"
             sx={{
               display: "grid",
               gap: 2,
               gridTemplateColumns: "repeat(auto-fill, minmax(22.5rem, 1fr))",
+              listStyle: "none",
+              p: 0,
+              m: 0,
             }}
             className={className}
             data-testid="itwin-grid"
           >
             {iModels?.map((iModel) => (
-              <IModelHookedTile
-                key={iModel.id}
-                iModel={iModel}
-                moreActions={enhancedMoreActions}
-                accessToken={accessToken}
-                apiOverrides={tileApiOverrides}
-                useTileState={useIndividualState}
-                refetchIModels={refetchIModels}
-                stringsOverrides={stringsOverrides}
-                {...tileOverrides}
-                actions={
-                  actions
-                    ? withRecentsTracking(iModel, actions(iModel))
-                    : undefined
-                }
-              />
+              <li key={iModel.id}>
+                <IModelHookedTile
+                  iModel={iModel}
+                  moreActions={enhancedMoreActions}
+                  accessToken={accessToken}
+                  apiOverrides={tileApiOverrides}
+                  useTileState={useIndividualState}
+                  refetchIModels={refetchIModels}
+                  stringsOverrides={stringsOverrides}
+                  {...tileOverrides}
+                  actions={
+                    actions
+                      ? withRecentsTracking(iModel, actions(iModel))
+                      : undefined
+                  }
+                />
+              </li>
             ))}
             {fetchMore ? (
-              <InView
-                onChange={(inView) => {
-                  inView && fetchStatus !== DataStatus.Fetching && fetchMore();
-                }}
-              >
-                {({ ref }) => {
-                  return <BaseCardLoading ref={ref} />;
-                }}
-              </InView>
+              <li>
+                <InView
+                  onChange={(inView) => {
+                    inView &&
+                      fetchStatus !== DataStatus.Fetching &&
+                      fetchMore();
+                  }}
+                >
+                  {({ ref }) => {
+                    return <BaseCardLoading ref={ref} />;
+                  }}
+                </InView>
+              </li>
             ) : null}
             {fetchStatus === DataStatus.Fetching && (
               <>
-                <BaseCardLoading />
-                <BaseCardLoading />
+                <li>
+                  <BaseCardLoading />
+                </li>
+                <li>
+                  <BaseCardLoading />
+                </li>
               </>
             )}
           </Box>

@@ -27,6 +27,7 @@ export interface TileFavoriteIconProps {
    * where the row itself provides contrast).
    */
   transparent?: boolean;
+  tabIndex?: number;
 }
 
 /**
@@ -36,7 +37,7 @@ export interface TileFavoriteIconProps {
  * revealing it on hover / focus-within by targeting the `.favoriteIcon` class.
  * Always visible when favorited.
  */
-export const TileFavoriteIconMUI = ({
+export const FavoriteIconMUI = ({
   isFavorite,
   onAddToFavorites,
   onRemoveFromFavorites,
@@ -45,11 +46,13 @@ export const TileFavoriteIconMUI = ({
   disabled,
   className = "",
   transparent,
+  tabIndex,
 }: TileFavoriteIconProps) => {
   return (
     <ThumbnailIconButton
       aria-label={isFavorite ? removeLabel : addLabel}
       aria-pressed={isFavorite}
+      tabIndex={tabIndex}
       onClick={async () => {
         isFavorite ? await onRemoveFromFavorites() : await onAddToFavorites();
       }}

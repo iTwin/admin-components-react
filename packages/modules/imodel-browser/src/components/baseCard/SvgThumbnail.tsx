@@ -30,6 +30,8 @@ export const SvgThumbnail = React.forwardRef<
     <CardMedia
       image={src}
       ref={ref}
+      role="presentation"
+      aria-hidden="true"
       sx={[
         (theme) => ({
           objectFit: "contain",

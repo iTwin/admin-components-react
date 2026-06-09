@@ -8,8 +8,8 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import * as React from "react";
 import { Icon } from "@stratakit/mui";
+import * as React from "react";
 
 export interface MoreMenuItem {
   key: string;
@@ -29,6 +29,7 @@ interface Props {
   prompt: React.ReactNode;
   label: string;
   "data-testid"?: string;
+  tabIndex?: number;
 }
 
 /**
@@ -40,7 +41,7 @@ interface Props {
  * @alpha
  */
 const MoreMenuMUI = React.forwardRef<MoreMenuHandle, Props>(
-  ({ items, prompt, label, "data-testid": dataTestId }, ref) => {
+  ({ items, prompt, label, "data-testid": dataTestId, tabIndex }, ref) => {
     const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
     const [contextMenuPosition, setContextMenuPosition] = React.useState<{
       mouseX: number;
@@ -79,6 +80,7 @@ const MoreMenuMUI = React.forwardRef<MoreMenuHandle, Props>(
           aria-expanded={menuOpen ? "true" : "false"}
           data-testid={dataTestId}
           aria-label={label}
+          tabIndex={tabIndex}
           onClick={(event) => {
             setContextMenuPosition(null);
             setAnchorEl(event.currentTarget);
@@ -100,7 +102,6 @@ const MoreMenuMUI = React.forwardRef<MoreMenuHandle, Props>(
           }
           open={menuOpen}
           onClose={handleClose}
-          onClick={handleClose}
           transformOrigin={{ horizontal: "right", vertical: "top" }}
           anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
           slotProps={{
@@ -111,7 +112,14 @@ const MoreMenuMUI = React.forwardRef<MoreMenuHandle, Props>(
           }}
         >
           {items.map(({ key, label: itemLabel, icon, onClick, disabled }) => (
-            <MenuItem key={key} disabled={disabled} onClick={() => onClick?.()}>
+            <MenuItem
+              key={key}
+              disabled={disabled}
+              onClick={() => {
+                onClick?.();
+                handleClose();
+              }}
+            >
               {icon && (
                 <ListItemIcon>
                   <Icon href={icon} />

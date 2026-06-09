@@ -10,7 +10,7 @@ import {
   type BaseCardProps,
   BaseCard,
 } from "../../components/baseCard/BaseCard";
-import { TileFavoriteIconMUI } from "../../components/tileFavoriteIcon/TileFavoriteIconMUI";
+import { FavoriteIconMUI } from "../../components/tileFavoriteIcon/FavoriteIconMUI";
 import { IModelFavoritesContext } from "../../contexts/IModelFavoritesContext";
 import { AccessTokenProvider, ApiOverrides, IModelFull } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
@@ -91,7 +91,7 @@ export const IModelTileMUI = ({
   description,
   subheader,
   actions,
-  slotProps,
+
   className,
   ...rest
 }: IModelTileMUIProps) => {
@@ -130,7 +130,7 @@ export const IModelTileMUI = ({
   const isFavorite = favoritesContext?.favorites.has(iModel.id) ?? false;
   const favoriteIcon =
     !hideFavoriteIcon && favoritesContext ? (
-      <TileFavoriteIconMUI
+      <FavoriteIconMUI
         isFavorite={isFavorite}
         onAddToFavorites={() => favoritesContext.add(iModel.id)}
         onRemoveFromFavorites={() => favoritesContext.remove(iModel.id)}
@@ -176,7 +176,6 @@ export const IModelTileMUI = ({
       statusIconHref={svgImodel}
       description={description ?? iModel.description ?? ""}
       subheader={subheader}
-      slotProps={slotProps}
       stringsOverrides={stringsOverrides}
       data-testid={`imodel-tile-${iModel.id}`}
       {...rest}

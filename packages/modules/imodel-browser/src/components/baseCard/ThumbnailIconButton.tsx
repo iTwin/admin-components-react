@@ -14,6 +14,7 @@ export interface ThumbnailIconButtonProps
     | "disabled"
     | "label"
     | "className"
+    | "tabIndex"
     | "aria-haspopup"
     | "aria-expanded"
     | "aria-pressed"
@@ -27,6 +28,9 @@ export interface ThumbnailIconButtonProps
   sx?: SxProps<Theme>;
 }
 
+const activeBgColor = "var(--stratakit-color-bg-positive-muted)";
+const mutedBgColor = "var(--stratakit-color-bg-neutral-muted)";
+
 /**
  * Icon button intended for overlaying on top of a thumbnail image
  * (e.g. favorites, more-options menu).
@@ -34,9 +38,7 @@ export interface ThumbnailIconButtonProps
  */
 export function ThumbnailIconButton(props: ThumbnailIconButtonProps) {
   const { sx, icon, muted, onClick, ...rest } = props;
-  const bgcolor = muted
-    ? "var(--stratakit-color-bg-neutral-muted)"
-    : "var(--stratakit-color-bg-positive-muted)";
+  const bgcolor = muted ? mutedBgColor : activeBgColor;
 
   return (
     <IconButton
@@ -50,7 +52,7 @@ export function ThumbnailIconButton(props: ThumbnailIconButtonProps) {
         {
           bgcolor,
           "&:hover": {
-            bgcolor: "var(--stratakit-color-bg-positive-muted)",
+            bgcolor: activeBgColor,
           },
         },
         ...(Array.isArray(sx) ? sx : sx ? [sx] : []),

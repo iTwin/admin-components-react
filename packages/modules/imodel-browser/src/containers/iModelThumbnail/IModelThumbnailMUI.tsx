@@ -49,6 +49,8 @@ export const IModelThumbnailMUI = ({
     <CardMedia
       image={thumbnail}
       ref={ref}
+      role="presentation"
+      aria-hidden="true"
       className={classNames("iac-thumbnail", className)}
       sx={{ height: "100%" }}
     />
@@ -56,6 +58,7 @@ export const IModelThumbnailMUI = ({
     <Skeleton
       variant="rectangular"
       ref={ref}
+      aria-hidden="true"
       sx={{ height: "100%", width: "100%", minHeight: 140 }}
     />
   );

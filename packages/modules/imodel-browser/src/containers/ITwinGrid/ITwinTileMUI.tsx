@@ -12,7 +12,7 @@ import {
   BaseCard,
 } from "../../components/baseCard/BaseCard";
 import { SvgThumbnail } from "../../components/baseCard/SvgThumbnail";
-import { TileFavoriteIconMUI } from "../../components/tileFavoriteIcon/TileFavoriteIconMUI";
+import { FavoriteIconMUI } from "../../components/tileFavoriteIcon/FavoriteIconMUI";
 import { ITwinFull } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
 import { ContextMenuBuilderItemMUI } from "../../utils/_buildMenuOptions";
@@ -71,7 +71,6 @@ export const ITwinTileMUI = ({
   title,
   description,
   actions,
-  slotProps,
   className,
   ...rest
 }: ITwinTilePropsMUI) => {
@@ -106,7 +105,7 @@ export const ITwinTileMUI = ({
     isFavorite !== undefined &&
     addToFavorites &&
     removeFromFavorites ? (
-      <TileFavoriteIconMUI
+      <FavoriteIconMUI
         isFavorite={isFavorite}
         onAddToFavorites={() => addToFavorites(iTwin.id)}
         onRemoveFromFavorites={() => removeFromFavorites(iTwin.id)}
@@ -144,7 +143,6 @@ export const ITwinTileMUI = ({
       statusIconHref={svgItwin}
       description={description ?? iTwin.number ?? ""}
       subheader={additionalDescription}
-      slotProps={slotProps}
       data-testid={`itwin-tile-${iTwin.id}`}
       stringsOverrides={stringsOverrides}
       {...rest}

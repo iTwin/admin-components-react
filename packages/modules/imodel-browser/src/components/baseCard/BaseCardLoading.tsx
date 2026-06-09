@@ -8,6 +8,7 @@ import CardHeader from "@mui/material/CardHeader";
 import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/material/Typography";
 import React, { forwardRef } from "react";
+
 import { BaseCardThumbnailArea } from "./BaseCardThumbnailArea";
 
 /** @alpha */
@@ -17,7 +18,13 @@ export type BaseCardLoadingProps = CardProps;
 export const BaseCardLoading = forwardRef<HTMLDivElement, CardProps>(
   ({ ...props }, ref) => {
     return (
-      <Card ref={ref} variant="outlined" {...props}>
+      <Card
+        ref={ref}
+        variant="outlined"
+        aria-busy="true"
+        aria-label="Loading"
+        {...props}
+      >
         <BaseCardThumbnailArea>
           <Skeleton
             variant="rectangular"
@@ -27,7 +34,6 @@ export const BaseCardLoading = forwardRef<HTMLDivElement, CardProps>(
         <CardHeader
           title={
             <Skeleton variant="text">
-              {/* TODO: i18n */}
               {/* eslint-disable-next-line jsx-a11y/heading-has-content */}
               <Typography variant="h2" render={<h2 />} />
             </Skeleton>

@@ -13,7 +13,7 @@ import React from "react";
 
 import { type BaseCardActionItem } from "../../components/baseCard/BaseCard";
 import MoreMenuMUI from "../../components/MoreMenuMUI";
-import { TileFavoriteIconMUI } from "../../components/tileFavoriteIcon/TileFavoriteIconMUI";
+import { FavoriteIconMUI } from "../../components/tileFavoriteIcon/FavoriteIconMUI";
 import {
   type ITwinTableOverridesMUI,
   ITwinCellColumn,
@@ -92,7 +92,7 @@ export const ITwinTableMUI = ({
         renderCell: (params) => {
           const isFavorite = iTwinFavorites.has(params.value);
           return (
-            <TileFavoriteIconMUI
+            <FavoriteIconMUI
               isFavorite={isFavorite}
               addLabel={strings.addToFavorites}
               removeLabel={strings.removeFromFavorites}
@@ -101,6 +101,7 @@ export const ITwinTableMUI = ({
                 removeITwinFromFavorites(params.value)
               }
               transparent
+              tabIndex={params.tabIndex}
             />
           );
         },
@@ -156,6 +157,7 @@ export const ITwinTableMUI = ({
               data-testid={`iTwin-row-${params.row.id}-more-options`}
               prompt={<Icon href={svgMore} />}
               label={strings.moreOptions}
+              tabIndex={params.tabIndex}
             />
           );
         },
@@ -182,6 +184,20 @@ export const ITwinTableMUI = ({
       loading={isLoading}
       onRowClick={
         actions ? (params) => actions(params.row)[0]?.onClick?.() : undefined
+      }
+      onCellKeyDown={
+        actions
+          ? (params, event) => {
+              if (
+                (event.key === "Enter" || event.key === " ") &&
+                params.field !== "id" &&
+                params.field !== "actions"
+              ) {
+                event.preventDefault();
+                actions(params.row)[0]?.onClick?.();
+              }
+            }
+          : undefined
       }
       disableRowSelectionOnClick
       disableMultipleRowSelection

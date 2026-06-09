@@ -4,19 +4,19 @@
  *--------------------------------------------------------------------------------------------*/
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import Card, { CardProps } from "@mui/material/Card";
 import CardActionArea from "@mui/material/CardActionArea";
 import CardActions from "@mui/material/CardActions";
-import Card, { CardProps } from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
 import Divider from "@mui/material/Divider";
-import Stack from "@mui/material/Stack";
 import type { SxProps, Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import React, { type ReactNode } from "react";
 import svgMoreVertical from "@stratakit/icons/more-vertical.svg";
 import { Icon } from "@stratakit/mui";
+import React, { type ReactNode } from "react";
+
 import { spreadSx } from "../../utils/spreadSx";
 import MoreMenuMUI, {
   type MoreMenuHandle,
@@ -24,24 +24,9 @@ import MoreMenuMUI, {
 } from "../MoreMenuMUI";
 import { BaseCardLoading } from "./BaseCardLoading";
 import { BaseCardThumbnailArea } from "./BaseCardThumbnailArea";
+import { StatusIcon } from "./StatusIcon";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type { SvgThumbnail } from "./SvgThumbnail";
-import { StatusIcon } from "./StatusIcon";
-
-interface BaseCardSlotStyleProps {
-  className?: string;
-  sx?: SxProps<Theme>;
-}
-
-export interface BaseCardSlotProps {
-  thumbnail?: BaseCardSlotStyleProps;
-  divider?: BaseCardSlotStyleProps;
-  content?: BaseCardSlotStyleProps;
-  header?: BaseCardSlotStyleProps;
-  title?: BaseCardSlotStyleProps;
-  info?: BaseCardSlotStyleProps;
-  actions?: BaseCardSlotStyleProps;
-}
 
 /** @deprecated Use `MoreMenuItem` from `../MoreMenu` instead. */
 export type BaseCardMoreActionItem = MoreMenuItem;
@@ -130,13 +115,19 @@ export interface BaseCardProps
   disabled?: boolean;
   /** Status indicator used for styling (divider color, etc.) */
   status?: "positive" | "warning" | "negative" | undefined;
-  /** Props for internal wrapper slots following MUI slotProps conventions. */
-  slotProps?: BaseCardSlotProps;
 
   stringsOverrides?: {
     moreOptions?: string;
   };
 }
+
+const baseCardSx = {
+  overflow: "hidden",
+  minWidth: "18rem",
+  minHeight: "15rem",
+  display: "flex",
+  flexDirection: "column",
+};
 
 /**
  * Base card component built on MUI Card.
@@ -165,7 +156,7 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
       loading,
       disabled: cardDisabled,
       status,
-      slotProps,
+
       stringsOverrides,
       className,
       sx,
@@ -183,7 +174,6 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
       );
 
     const moreMenuRef = React.useRef<MoreMenuHandle>(null);
-
     const handleContextMenu = React.useCallback(
       (event: React.MouseEvent<HTMLDivElement>) => {
         if (!moreActions?.length) {
@@ -208,17 +198,7 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
       return (
         <BaseCardLoading
           className={className}
-          sx={[
-            {
-              overflow: "hidden",
-              minWidth: "18rem",
-              minHeight: "15rem",
-              display: "flex",
-              flexDirection: "column",
-              userSelect: "none",
-            },
-            ...spreadSx(sx),
-          ]}
+          sx={{ ...baseCardSx, ...spreadSx(sx) }}
         />
       );
     }
@@ -228,32 +208,24 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
         <Card
           ref={ref}
           variant="outlined"
+          {...rest}
           className={className}
+          aria-labelledby={titleId}
+          inert={cardDisabled ? "true" : undefined}
+          onContextMenu={
+            !cardDisabled && hasContextMenu ? handleContextMenu : undefined
+          }
           sx={[
             {
-              overflow: "hidden",
-              minWidth: "18rem",
-              minHeight: "15rem",
-              display: "flex",
-              flexDirection: "column",
-              userSelect: "none",
+              ...baseCardSx,
               cursor: cardDisabled ? "not-allowed" : "default",
             },
             ...spreadSx(sx),
           ]}
-          aria-labelledby={titleId}
-          aria-disabled={cardDisabled ?? undefined}
-          {...rest}
-          onContextMenu={
-            !cardDisabled && hasContextMenu ? handleContextMenu : undefined
-          }
         >
           {/* ── Thumbnail area ── */}
 
-          <BaseCardThumbnailArea
-            className={slotProps?.thumbnail?.className}
-            sx={slotProps?.thumbnail?.sx}
-          >
+          <BaseCardThumbnailArea>
             {thumbnailTopLeft && (
               <Box sx={{ position: "absolute", top: 8, left: 8, zIndex: 1 }}>
                 {thumbnailTopLeft}
@@ -289,32 +261,23 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
           </BaseCardThumbnailArea>
 
           <Divider
-            className={slotProps?.divider?.className}
-            sx={[
-              {
-                borderColor:
-                  status === "positive"
-                    ? "var(--stratakit-color-border-positive-base)"
-                    : status === "warning"
-                    ? "var(--stratakit-color-border-attention-base)"
-                    : status === "negative"
-                    ? "var(--stratakit-color-border-critical-base)"
-                    : undefined,
-              },
-              ...spreadSx(slotProps?.divider?.sx),
-            ]}
+            role="presentation"
+            sx={{
+              borderColor:
+                status === "positive"
+                  ? "var(--stratakit-color-border-positive-base)"
+                  : status === "warning"
+                  ? "var(--stratakit-color-border-attention-base)"
+                  : status === "negative"
+                  ? "var(--stratakit-color-border-critical-base)"
+                  : undefined,
+            }}
           />
 
-          {/* ── Content area ── */}
           <CardHeader
             avatar={
               statusIconHref ? (
-                <Box
-                  sx={{ width: "1.5rem", height: "1.5rem" }}
-                  data-testid="status-icon"
-                >
-                  <StatusIcon href={statusIconHref} status={status} />
-                </Box>
+                <StatusIcon href={statusIconHref} status={status} />
               ) : undefined
             }
             title={
@@ -345,11 +308,7 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
               ) : undefined
             }
             subheader={subheader}
-            className={slotProps?.header?.className}
-            sx={[
-              { alignItems: "flex-start" },
-              ...spreadSx(slotProps?.header?.sx),
-            ]}
+            sx={[{ alignItems: "flex-start" }]}
             slotProps={{
               title: {
                 component: "h2",
@@ -363,27 +322,19 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
                     WebkitBoxOrient: "vertical",
                     overflow: "hidden",
                   },
-                  ...spreadSx(slotProps?.title?.sx),
                 ],
+              },
+              subheader: {
+                component: "h3",
               },
             }}
           />
 
           {description ? (
-            <CardContent
-              className={slotProps?.content?.className}
-              sx={slotProps?.content?.sx}
-            >
-              <Stack
-                className={slotProps?.info?.className}
-                sx={slotProps?.info?.sx}
-              >
-                {description && (
-                  <Typography variant="body2" color="textSecondary">
-                    {description}
-                  </Typography>
-                )}
-              </Stack>
+            <CardContent data-testid="card-description">
+              <Typography variant="body2" color="textSecondary">
+                {description}
+              </Typography>
             </CardContent>
           ) : (
             <CardContent sx={{ pt: 0 }} />

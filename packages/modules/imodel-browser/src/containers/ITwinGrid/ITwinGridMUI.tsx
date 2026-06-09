@@ -176,58 +176,75 @@ export const ITwinGridMUI = ({
       <NoResults text={noResultsText} />
     ) : (
       <Box
+        component="ul"
         sx={{
           display: "grid",
           gap: 2,
           gridTemplateColumns: "repeat(auto-fill, minmax(22.5rem, 1fr))",
+          listStyle: "none",
+          p: 0,
+          m: 0,
         }}
         className={className}
       >
         {fetchStatus === DataStatus.Fetching ? (
           <>
-            <BaseCardLoading />
-            <BaseCardLoading />
-            <BaseCardLoading />
+            <li>
+              <BaseCardLoading />
+            </li>
+            <li>
+              <BaseCardLoading />
+            </li>
+            <li>
+              <BaseCardLoading />
+            </li>
           </>
         ) : (
           <>
             {iTwins?.map((iTwin) => (
-              <ITwinHookedTile
-                gridProps={{
-                  accessToken,
-                  apiOverrides,
-                  filterOptions,
-                  actions,
-                  requestType,
-                  stringsOverrides,
-                  tileOverrides,
-                  useIndividualState,
-                }}
-                key={iTwin.id}
-                iTwin={iTwin}
-                moreActions={moreActions}
-                actions={actions ? actions(iTwin) : undefined}
-                useTileState={useIndividualState}
-                isFavorite={iTwinFavorites.has(iTwin.id)}
-                addToFavorites={addITwinToFavorites}
-                removeFromFavorites={removeITwinFromFavorites}
-                refetchITwins={refetchITwins}
-                stringsOverrides={stringsOverrides}
-                thumbnail={iTwin.image} // This is a fix for https://github.com/iTwin/admin-components-react/issues/196
-                {...tileOverrides}
-              />
+              <li key={iTwin.id}>
+                <ITwinHookedTile
+                  gridProps={{
+                    accessToken,
+                    apiOverrides,
+                    filterOptions,
+                    actions,
+                    requestType,
+                    stringsOverrides,
+                    tileOverrides,
+                    useIndividualState,
+                  }}
+                  iTwin={iTwin}
+                  moreActions={moreActions}
+                  actions={actions ? actions(iTwin) : undefined}
+                  useTileState={useIndividualState}
+                  isFavorite={iTwinFavorites.has(iTwin.id)}
+                  addToFavorites={addITwinToFavorites}
+                  removeFromFavorites={removeITwinFromFavorites}
+                  refetchITwins={refetchITwins}
+                  stringsOverrides={stringsOverrides}
+                  thumbnail={iTwin.image} // This is a fix for https://github.com/iTwin/admin-components-react/issues/196
+                  {...tileOverrides}
+                />
+              </li>
             ))}
             {fetchMore ? (
               <>
-                <InView
-                  onChange={(inView) => {
-                    inView && fetchMore();
-                  }}
-                >
+                <li>
+                  <InView
+                    onChange={(inView) => {
+                      inView && fetchMore();
+                    }}
+                  >
+                    <BaseCardLoading />
+                  </InView>
+                </li>
+                <li>
                   <BaseCardLoading />
-                </InView>
-                <BaseCardLoading />
-                <BaseCardLoading />
+                </li>
+                <li>
+                  <BaseCardLoading />
+                </li>
               </>
             ) : null}
           </>

@@ -13,7 +13,7 @@ import React from "react";
 
 import { type BaseCardActionItem } from "../../components/baseCard/BaseCard";
 import MoreMenuMUI from "../../components/MoreMenuMUI";
-import { TileFavoriteIconMUI } from "../../components/tileFavoriteIcon/TileFavoriteIconMUI";
+import { FavoriteIconMUI } from "../../components/tileFavoriteIcon/FavoriteIconMUI";
 import { useIModelFavoritesContext } from "../../contexts/IModelFavoritesContext";
 import {
   type IModelFull,
@@ -88,7 +88,7 @@ export const IModelTableMUI = ({
         renderCell: (params) => {
           const isFavorite = favoritesContext?.favorites.has(params.value);
           return (
-            <TileFavoriteIconMUI
+            <FavoriteIconMUI
               isFavorite={!!isFavorite}
               addLabel={strings.addToFavorites}
               removeLabel={strings.removeFromFavorites}
@@ -97,6 +97,7 @@ export const IModelTableMUI = ({
                 favoritesContext?.remove?.(params.value)
               }
               transparent
+              tabIndex={params.tabIndex}
             />
           );
         },
@@ -156,6 +157,7 @@ export const IModelTableMUI = ({
               data-testid={`iModel-row-${params.row.id}-more-options`}
               label={strings.moreOptions}
               prompt={<Icon href={svgMore} />}
+              tabIndex={params.tabIndex}
             />
           );
         },
@@ -180,6 +182,20 @@ export const IModelTableMUI = ({
       loading={isLoading}
       onRowClick={
         actions ? (params) => actions(params.row)[0]?.onClick?.() : undefined
+      }
+      onCellKeyDown={
+        actions
+          ? (params, event) => {
+              if (
+                (event.key === "Enter" || event.key === " ") &&
+                params.field !== "id" &&
+                params.field !== "actions"
+              ) {
+                event.preventDefault();
+                actions(params.row)[0]?.onClick?.();
+              }
+            }
+          : undefined
       }
       disableRowSelectionOnClick
       disableMultipleRowSelection
