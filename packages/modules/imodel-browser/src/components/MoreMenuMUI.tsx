@@ -81,6 +81,9 @@ const MoreMenuMUI = React.forwardRef<MoreMenuHandle, Props>(
           aria-label={label}
           tabIndex={tabIndex}
           onClick={(event) => {
+            // Prevent the click from bubbling to an ancestor handler
+            // (e.g. DataGrid row click / card action) when opening the menu.
+            event.stopPropagation();
             setContextMenuPosition(null);
             setAnchorEl(event.currentTarget);
           }}
