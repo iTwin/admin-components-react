@@ -154,7 +154,6 @@ export const IModelTableMUI = ({
           return (
             <MoreMenuMUI
               items={items}
-              data-testid={`iModel-row-${params.row.id}-more-options`}
               label={strings.moreOptions}
               prompt={<Icon href={svgMore} />}
               tabIndex={params.tabIndex}

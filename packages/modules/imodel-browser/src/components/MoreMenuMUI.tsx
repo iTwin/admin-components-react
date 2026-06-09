@@ -28,7 +28,7 @@ interface Props {
   items: MoreMenuItem[];
   prompt: React.ReactNode;
   label: string;
-  "data-testid"?: string;
+
   tabIndex?: number;
 }
 
@@ -41,7 +41,7 @@ interface Props {
  * @alpha
  */
 const MoreMenuMUI = React.forwardRef<MoreMenuHandle, Props>(
-  ({ items, prompt, label, "data-testid": dataTestId, tabIndex }, ref) => {
+  ({ items, prompt, label, tabIndex }, ref) => {
     const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
     const [contextMenuPosition, setContextMenuPosition] = React.useState<{
       mouseX: number;
@@ -78,7 +78,6 @@ const MoreMenuMUI = React.forwardRef<MoreMenuHandle, Props>(
           id={buttonId}
           aria-haspopup="true"
           aria-expanded={menuOpen ? "true" : "false"}
-          data-testid={dataTestId}
           aria-label={label}
           tabIndex={tabIndex}
           onClick={(event) => {
@@ -86,6 +85,7 @@ const MoreMenuMUI = React.forwardRef<MoreMenuHandle, Props>(
             setAnchorEl(event.currentTarget);
           }}
           size="small"
+          data-testid="more-options-button"
         >
           {prompt}
         </IconButton>
@@ -110,6 +110,7 @@ const MoreMenuMUI = React.forwardRef<MoreMenuHandle, Props>(
               dense: true,
             },
           }}
+          data-testid="more-options-menu"
         >
           {items.map(({ key, label: itemLabel, icon, onClick, disabled }) => (
             <MenuItem

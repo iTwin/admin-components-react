@@ -154,7 +154,6 @@ export const ITwinTableMUI = ({
           return (
             <MoreMenuMUI
               items={items}
-              data-testid={`iTwin-row-${params.row.id}-more-options`}
               prompt={<Icon href={svgMore} />}
               label={strings.moreOptions}
               tabIndex={params.tabIndex}
