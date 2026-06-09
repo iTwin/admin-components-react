@@ -15,7 +15,6 @@ import {
   initialData,
 } from "./IModelGridMUI.helpers";
 import SvgDelete from "@stratakit/icons/delete.svg";
-import { Icon } from "@stratakit/mui";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
 import {
@@ -50,8 +49,7 @@ const baseArgs: IModelGridMUIProps = {
   apiOverrides: { serverEnvironmentPrefix: "qa" },
   sortOptions: { sortType: "name", descending: false },
   onOpen: action("iModel opened"),
-  onSelect: action("iModel selected"),
-  iModelActions: [
+  moreActions: [
     {
       key: "open",
       children: "Open iModel",
@@ -153,7 +151,7 @@ export const OverrideApiDataWithLoadMore: Story<IModelGridMUIProps> =
 export const IndividualContextMenu = Template.bind({});
 IndividualContextMenu.args = {
   ...baseArgs,
-  iModelActions: [
+  moreActions: [
     {
       children: "displayName contains 'R'",
       visible: (iModel: IModelFull) =>
@@ -192,11 +190,8 @@ SimpleTilePropsOverrides.args = {
   tileOverrides: {
     thumbnail: bridgeThumbnail,
     getBadge: () => <Chip size="small" label="Tile X Override" />,
-    headerRight: (
-      <AvatarGroup
-        max={3}
-        sx={{ "& .MuiAvatar-root": { width: 24, height: 24, fontSize: 12 } }}
-      >
+    thumbnailTopLeft: (
+      <AvatarGroup max={3}>
         <Avatar alt="User 1" src="https://i.pravatar.cc/150?img=1" />
         <Avatar alt="User 2" src="https://i.pravatar.cc/150?img=2" />
         <Avatar alt="User 3" src="https://i.pravatar.cc/150?img=3" />
@@ -250,9 +245,8 @@ DisableAddToRecents.args = {
 DisableAddToRecents.argTypes = {
   accessToken: { table: { disable: true } },
   onOpen: { table: { disable: true } },
-  onSelect: { table: { disable: true } },
   sortOptions: { table: { disable: true } },
-  iModelActions: { table: { disable: true } },
+  moreActions: { table: { disable: true } },
   useIndividualState: { table: { disable: true } },
   tileOverrides: { table: { disable: true } },
   stringsOverrides: { table: { disable: true } },
@@ -277,7 +271,7 @@ export const RecentsWithCustomIcon = Template.bind({});
 RecentsWithCustomIcon.args = {
   ...baseArgs,
   requestType: "recents",
-  removeFromRecentsIcon: <Icon href={SvgDelete} />,
+  removeFromRecentsIcon: SvgDelete,
 };
 
 export const NoResultsWithDefaultEmptyState = Template.bind({});
@@ -292,7 +286,7 @@ NoResultsWithDefaultEmptyState.args = {
 export const StringsOverrideGrid = Template.bind({});
 StringsOverrideGrid.args = {
   ...baseArgs,
-  iModelActions: [
+  moreActions: [
     {
       children: "Some action",
       key: "something",
@@ -323,7 +317,7 @@ StringsOverrideTable.args = {
   ...baseArgs,
   viewMode: "cells",
 
-  iModelActions: [
+  moreActions: [
     {
       children: "Some action",
       key: "something",

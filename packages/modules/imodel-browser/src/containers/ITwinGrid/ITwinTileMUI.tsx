@@ -6,18 +6,15 @@ import Chip from "@mui/material/Chip";
 import React from "react";
 import {
   BaseCard,
+  type BaseCardMoreActionItem,
   type BaseCardProps,
 } from "../../components/baseCard/BaseCard";
 import { TileFavoriteIconMUI } from "../../components/tileFavoriteIcon/TileFavoriteIconMUI";
 import { ITwinFull } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
-import {
-  buildContextMenuItemsMUI,
-  ContextMenuBuilderItemMUI,
-} from "../../utils/_buildMenuOptions";
+import { ContextMenuBuilderItemMUI } from "../../utils/_buildMenuOptions";
 import { ITwinTileProps } from "./ITwinTile";
 import { SvgThumbnail } from "../../components/baseCard/SvgThumbnail";
-import svgCheckmark from "@stratakit/icons/checkmark.svg";
 import svgItwin from "@stratakit/icons/itwin.svg";
 
 /** @alpha */
@@ -26,27 +23,21 @@ export interface ITwinTilePropsMUI
     Omit<
       BaseCardProps,
       | "statusIcon"
-      | "contextMenuItems"
       | "onSelect"
       | "onOpen"
-      | "onDoubleClick"
       | "title"
       | "description"
       | "thumbnailBottomRight"
       | "thumbnailTopRight"
       | "thumbnailBottomLeft"
-      | "contextMenuContent"
+      | "moreActions"
     > {
   /** Defaults to iTwin.displayName */
   title?: string;
   /** If not provided, iTwin number will be used */
   description?: string;
-  /** List of options to build for the context menu */
-  contextMenuItems?: ContextMenuBuilderItemMUI<ITwinFull>[];
-  /** Function to call when the card is selected. */
-  onSelect?(iTwin: ITwinFull): void;
-  /** Function to call when the card is opened. */
-  onOpen?(iTwin: ITwinFull): void;
+  /** Items for the three-dot context menu */
+  moreActions?: ContextMenuBuilderItemMUI<ITwinFull>[];
   /** Status to display on the tile — will override iTwin.status if provided, otherwise iTwin.status will be used.  Should be a MUI {@link Chip} */
   getBadge?: (iTwin: ITwinFull) => React.ReactNode;
   stringsOverrides?: {
@@ -64,14 +55,13 @@ export interface ITwinTilePropsMUI
  */
 export const ITwinTileMUI = ({
   iTwin,
-  contextMenuItems,
+  moreActions: moreActionItems,
   stringsOverrides,
   isFavorite,
   addToFavorites,
   removeFromFavorites,
   refetchITwins,
   hideFavoriteIcon,
-  selected,
   loading,
   disabled,
   status,
@@ -79,8 +69,7 @@ export const ITwinTileMUI = ({
   getBadge,
   title,
   description,
-  onSelect,
-  onOpen,
+  actions,
   slotProps,
   className,
   ...rest
@@ -95,15 +84,20 @@ export const ITwinTileMUI = ({
     stringsOverrides
   );
 
-  const contextMenuContent = React.useMemo(
+  const moreActions: BaseCardMoreActionItem[] | undefined = React.useMemo(
     () =>
-      buildContextMenuItemsMUI(
-        contextMenuItems,
-        iTwin,
-        undefined,
-        refetchITwins
-      ),
-    [contextMenuItems, iTwin, refetchITwins]
+      moreActionItems
+        ?.filter(({ visible }) =>
+          typeof visible === "function" ? visible(iTwin) : visible ?? true
+        )
+        .map(({ key, children, icon, onClick, disabled }) => ({
+          key,
+          label: typeof children === "function" ? children(iTwin) : children,
+          icon,
+          onClick: onClick ? () => onClick(iTwin, refetchITwins) : undefined,
+          disabled: typeof disabled === "function" ? disabled(iTwin) : disabled,
+        })),
+    [moreActionItems, iTwin, refetchITwins]
   );
 
   const favoriteIcon =
@@ -139,7 +133,6 @@ export const ITwinTileMUI = ({
       }}
       disabled={disabled}
       loading={loading}
-      selected={selected}
       thumbnail={thumbnail ?? <DefaultThumbnail />}
       thumbnailTopRight={favoriteIcon}
       thumbnailBottomRight={
@@ -148,11 +141,10 @@ export const ITwinTileMUI = ({
         )
       }
       title={title ?? iTwin.displayName ?? ""}
-      onClick={onSelect ? (event) => onSelect(iTwin) : undefined}
-      onDoubleClick={onOpen ? (event) => onOpen(iTwin) : undefined}
-      contextMenuContent={contextMenuContent}
+      actions={actions}
+      moreActions={moreActions}
       status={status}
-      statusIconHref={selected ? svgCheckmark : svgItwin}
+      statusIconHref={svgItwin}
       description={description ?? iTwin.number ?? ""}
       subheader={additionalDescription}
       slotProps={slotProps}

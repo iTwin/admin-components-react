@@ -14,7 +14,6 @@ import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
 import bridgeThumbnail from "../utils/bridge.jpg";
 import powerThumbnail from "../utils/power.jpg";
-import Grid from "@mui/material/Grid";
 import svgMagnet from "@stratakit/icons/magnet.svg";
 import { DefaultThumbnail } from "../../../../modules/imodel-browser/src/containers/ITwinGrid/ITwinTileMUI";
 import { SvgThumbnail } from "@itwin/imodel-browser-react/mui";
@@ -44,10 +43,18 @@ const baseArgs: ITwinTileProps = {
   iTwin: {
     ...baseITwin,
   },
-  contextMenuItems: [
+  actions: [
+    {
+      key: "open",
+      label: "Open",
+      onClick: action("default iTwin tile action"),
+    },
+  ],
+  moreActions: [
     {
       key: "option-1",
       children: "Option 1",
+      icon: svgMagnet,
       onClick: (iTwin) => action("iTwin option 1 clicked")(iTwin),
     },
     {
@@ -57,8 +64,6 @@ const baseArgs: ITwinTileProps = {
     },
   ],
   thumbnail: bridgeThumbnail,
-  onOpen: action("iTwin opened"),
-  onSelect: action("iTwin selected"),
   addToFavorites: async (iTwinId) => {
     action("iTwin add to favorites")(iTwinId);
   },
@@ -99,7 +104,7 @@ export default {
         type: "select",
       },
     },
-    contextMenuItems: { control: false },
+    moreActions: { control: false },
     onSelect: { control: false },
     onOpen: { control: false },
     thumbnailBottomLeft: { control: false },
@@ -122,7 +127,24 @@ Default.args = {
   isFavorite: false,
   disabled: false,
   loading: false,
-  selected: false,
+};
+
+export const Extensive = Template.bind({});
+Extensive.args = {
+  ...baseArgs,
+  status: "warning",
+  isFavorite: true,
+  title: "Overridden Title",
+  description: "Overriden description",
+  disabled: false,
+  loading: false,
+  thumbnailTopLeft: <Chip size="small" label="Thumbnail Top Left" />,
+  thumbnail: powerThumbnail,
+  getBadge: () => <Chip size="small" label="Badge override" />,
+  actions: [
+    { key: "open", label: "Open", onClick: action("iTwin open clicked") },
+    { key: "share", label: "Share", onClick: action("iTwin share clicked") },
+  ],
 };
 
 export const DefaultThumbnailStory = Template.bind({});
@@ -136,24 +158,4 @@ export const CustomSvgThumbnail = Template.bind({});
 CustomSvgThumbnail.args = {
   ...baseArgs,
   thumbnail: <SvgThumbnail src={svgMagnet} />,
-};
-
-export const Extensive = Template.bind({});
-Extensive.args = {
-  ...baseArgs,
-  status: "warning",
-  isFavorite: false,
-  title: "Overridden Title",
-  description: "Overriden description",
-  disabled: false,
-  loading: false,
-  selected: false,
-  thumbnailTopLeft: <Chip size="small" label="Thumbnail Top Left" />,
-  thumbnail: powerThumbnail,
-  getBadge: () => <Chip size="small" label="Badge override" />,
-  actions: [
-    { key: "open", label: "Open", onClick: action("iTwin open clicked") },
-    { key: "share", label: "Share", onClick: action("iTwin share clicked") },
-  ],
-  additionalContent: <Chip label="Additional Content Zone" />,
 };

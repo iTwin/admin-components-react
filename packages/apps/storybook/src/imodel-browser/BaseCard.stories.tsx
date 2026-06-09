@@ -17,14 +17,10 @@ import svgStatusError from "@stratakit/icons/status-error.svg";
 import svgGeo from "@stratakit/icons/geospatial-features.svg";
 import bridgeThumbnail from "../utils/bridge.jpg";
 import nightThumbnail from "../utils/night.jpg";
-import { action, actions } from "@storybook/addon-actions";
+import { action } from "@storybook/addon-actions";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
 import Typography from "@mui/material/Typography";
-import {
-  buildContextMenuItemsMUI,
-  type ContextMenuBuilderItemMUI,
-} from "../../../../modules/imodel-browser/src/utils/_buildMenuOptions";
 import { ThumbnailIconButton } from "../../../../modules/imodel-browser/src/components/baseCard/ThumbnailIconButton";
 import { SvgThumbnail } from "@itwin/imodel-browser-react/mui";
 
@@ -50,11 +46,9 @@ export default {
     thumbnailTopLeft: { control: false },
     thumbnailTopRight: { control: false },
     thumbnailBottomRight: { control: false },
-    headerRight: { control: false },
+
     statusIconHref: { control: false },
     additionalDescription: { control: false },
-    onClick: { control: false },
-    onDoubleClick: { control: false },
     onContextMenu: { control: false },
     status: {
       options: ["undefined", "positive", "warning", "negative"],
@@ -78,6 +72,9 @@ const baseArgs: BaseCardProps = {
   description: "3D model of the Main Street bridge structure and components.",
   subheader: "Edited 2000-01-02",
   thumbnail: bridgeThumbnail,
+  actions: [
+    { key: "open", label: "Open", onClick: action("default action clicked") },
+  ],
 };
 
 // ── Stories ──────────────────────────────────────────────────────────────────
@@ -85,59 +82,43 @@ const baseArgs: BaseCardProps = {
 export const Default = Template.bind({});
 Default.args = { ...baseArgs };
 
-const contextMenuItems: ContextMenuBuilderItemMUI[] = [
-  {
-    key: "open",
-    onClick: action("menu: open clicked"),
-    children: "Open with",
-  },
-  {
-    key: "share",
-    children: "Share",
-    onClick: action("menu: share clicked"),
-  },
-  {
-    key: "delete",
-    children: "Delete",
-    onClick: action("menu: delete clicked"),
-  },
-];
-const contextMenuContent = buildContextMenuItemsMUI(
-  contextMenuItems,
-  { some: "object" } as const,
-  () => actions("closeMenu called"),
-  () => actions("refetch called")
-);
-
 const everythingArgs: BaseCardProps = {
   ...baseArgs,
-  onClick: action("clicked"),
-  onDoubleClick: action("double-clicked "),
+  description:
+    "When there is more than one `action` prop they will be rendered as buttons in the footer of the card and the whole card is not clickable.",
   onContextMenu: action("context-menu opened"),
-  contextMenuContent,
-  actions: [
-    { key: "open", label: "Open", onClick: action("open clicked") },
+  moreActions: [
     {
-      key: "share",
-      label: "Share",
-      onClick: action("share clicked"),
+      key: "open",
+      label: "Open with",
+      onClick: action("menu: open clicked"),
+      icon: svgGeo,
+    },
+    { key: "share", label: "Share", onClick: action("menu: share clicked") },
+    { key: "delete", label: "Delete", onClick: action("menu: delete clicked") },
+  ],
+  actions: [
+    { key: "open", label: "Open", onClick: action("open action clicked") },
+    { key: "share", label: "Share", onClick: action("share action clicked") },
+    {
+      key: "disabled",
+      label: "Disabled",
+      onClick: action("disabled action clicked"),
+      disabled: true,
     },
   ],
   statusIconHref: svgStatusWarning,
-  headerRight: (
+  thumbnailTopLeft: (
     <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-      <Chip size="small" label="Owned" variant="outlined" />
-      <AvatarGroup
-        max={3}
-        sx={{ "& .MuiAvatar-root": { width: 24, height: 24, fontSize: 12 } }}
-      >
+      <Chip size="small" label="Top Left" />
+      <AvatarGroup max={3}>
         <Avatar alt="User 1" src="https://i.pravatar.cc/150?img=1" />
         <Avatar alt="User 2" src="https://i.pravatar.cc/150?img=2" />
         <Avatar alt="User 3" src="https://i.pravatar.cc/150?img=3" />
       </AvatarGroup>
     </Box>
   ),
-  thumbnailTopLeft: <Chip size="small" label="iModel" />,
+
   thumbnailTopRight: (
     <>
       <ThumbnailIconButton
@@ -153,14 +134,8 @@ const everythingArgs: BaseCardProps = {
       />
     </>
   ),
-  thumbnailBottomLeft: <Chip size="small" label="Featured" />,
-  thumbnailBottomRight: <Chip size="small" label="Trial" />,
-  additionalContent: (
-    <Typography variant="body2" color="textSecondary">
-      This is some additional content rendered below the description and above
-      the footer actions.
-    </Typography>
-  ),
+  thumbnailBottomLeft: <Chip size="small" label="Bottom left" />,
+  thumbnailBottomRight: <Chip size="small" label="Bottom right" />,
 };
 
 export const Everything = Template.bind({});
@@ -186,7 +161,6 @@ WithoutContent.args = {
   description: undefined,
   subheader: undefined,
   thumbnail: bridgeThumbnail,
-  additionalContent: undefined,
 };
 
 export const WithSlotProps = Template.bind({});
@@ -247,10 +221,6 @@ WithSvgThumbnail.args = {
 
 export const Loading = Template.bind({});
 Loading.args = { ...baseArgs, loading: true };
-
-export const Selected = Template.bind({});
-Selected.storyName = "Selected state";
-Selected.args = { ...baseArgs, selected: true };
 
 export const Disabled = Template.bind({});
 Disabled.storyName = "Disabled state";

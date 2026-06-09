@@ -5,20 +5,17 @@
 import React from "react";
 import {
   BaseCard,
+  type BaseCardMoreActionItem,
   type BaseCardProps,
 } from "../../components/baseCard/BaseCard";
 import { TileFavoriteIconMUI } from "../../components/tileFavoriteIcon/TileFavoriteIconMUI";
 import { IModelFavoritesContext } from "../../contexts/IModelFavoritesContext";
 import { AccessTokenProvider, ApiOverrides, IModelFull } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
-import {
-  buildContextMenuItemsMUI,
-  ContextMenuBuilderItemMUI,
-} from "../../utils/_buildMenuOptions";
+import { ContextMenuBuilderItemMUI } from "../../utils/_buildMenuOptions";
 import { IModelThumbnailMUI } from "../iModelThumbnail/IModelThumbnailMUI";
 import { IModelTileProps } from "./IModelTile";
 import svgImodel from "@stratakit/icons/imodel.svg";
-import svgCheckmark from "@stratakit/icons/checkmark.svg";
 
 /** @alpha */
 export interface IModelTileMUIProps
@@ -29,15 +26,13 @@ export interface IModelTileMUIProps
     Omit<
       BaseCardProps,
       | "statusIcon"
-      | "contextMenuItems"
       | "onSelect"
       | "onOpen"
       | "title"
       | "description"
       | "thumbnailBottomRight"
       | "thumbnailTopRight"
-      | "onDoubleClick"
-      | "contextMenuContent"
+      | "moreActions"
     > {
   /** If not provided, iModel display name will be used */
   title?: string;
@@ -45,12 +40,8 @@ export interface IModelTileMUIProps
   description?: string;
   /** iModel to display */
   iModel: IModelFull;
-  /** List of options to build for the context menu */
-  contextMenuItems?: ContextMenuBuilderItemMUI<IModelFull>[];
-  /** Function to call when the card is selected. */
-  onSelect?(iModel: IModelFull): void;
-  /** Function to call when the card is opened. */
-  onOpen?(iModel: IModelFull): void;
+  /** Items for the three-dot context menu */
+  moreActions?: ContextMenuBuilderItemMUI<IModelFull>[];
   /** Strings displayed by the component */
   stringsOverrides?: {
     /** Accessible text for the hollow star icon to add the iModel to favorites */
@@ -81,13 +72,12 @@ export interface IModelTileMUIProps
  */
 export const IModelTileMUI = ({
   iModel,
-  contextMenuItems,
+  moreActions: moreActionItems,
   accessToken,
   apiOverrides,
   stringsOverrides,
   refetchIModels,
   hideFavoriteIcon,
-  selected,
   loading,
   disabled,
   status,
@@ -100,8 +90,6 @@ export const IModelTileMUI = ({
   description,
   subheader,
   actions,
-  onSelect,
-  onOpen,
   slotProps,
   className,
   ...rest
@@ -116,15 +104,21 @@ export const IModelTileMUI = ({
     stringsOverrides
   );
 
-  const contextMenuContent = React.useMemo(
+  const moreActions: BaseCardMoreActionItem[] | undefined = React.useMemo(
     () =>
-      buildContextMenuItemsMUI(
-        contextMenuItems,
-        iModel,
-        undefined,
-        refetchIModels
-      ),
-    [contextMenuItems, iModel, refetchIModels]
+      moreActionItems
+        ?.filter(({ visible }) =>
+          typeof visible === "function" ? visible(iModel) : visible ?? true
+        )
+        .map(({ key, children, icon, onClick, disabled }) => ({
+          key,
+          label: typeof children === "function" ? children(iModel) : children,
+          icon,
+          onClick: onClick ? () => onClick(iModel, refetchIModels) : undefined,
+          disabled:
+            typeof disabled === "function" ? disabled(iModel) : disabled,
+        })),
+    [moreActionItems, iModel, refetchIModels]
   );
 
   const thumbnailApiOverride =
@@ -175,16 +169,13 @@ export const IModelTileMUI = ({
       thumbnailBottomLeft={thumbnailBottomLeft}
       thumbnailBottomRight={getBadge?.(iModel) ?? badge}
       title={title ?? iModel.displayName ?? ""}
-      onClick={onSelect ? () => onSelect(iModel) : undefined}
-      onDoubleClick={onOpen ? () => onOpen(iModel) : undefined}
-      contextMenuContent={contextMenuContent}
+      actions={actions}
+      moreActions={moreActions}
       status={status}
-      statusIconHref={selected ? svgCheckmark : svgImodel}
+      statusIconHref={svgImodel}
       description={description ?? iModel.description ?? ""}
       subheader={subheader}
-      actions={actions}
       slotProps={slotProps}
-      selected={selected}
       stringsOverrides={stringsOverrides}
       data-testid={`imodel-tile-${iModel.id}`}
       {...rest}

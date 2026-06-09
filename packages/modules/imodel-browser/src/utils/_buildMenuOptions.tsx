@@ -28,9 +28,9 @@ export interface ContextMenuBuilderItemMUI<T = any>
   > {
   sourceAppId?: string;
   key: string;
-  children: React.ReactNode | ((value: T) => React.ReactNode);
-  /** Optional icon rendered before the children. */
-  icon?: React.ReactNode;
+  children: string | ((value: T) => string);
+  /** SVG href for a Stratakit Icon rendered before the children. */
+  icon?: string;
   visible?: boolean | ((value: T) => boolean);
   onClick?: ((value?: T, refetchData?: () => void) => void) | undefined;
   disabled?: MuiMenuItemProps["disabled"] | ((value: T) => boolean);
@@ -65,40 +65,26 @@ export const _buildManagedContextMenuOptions: <T>(
     });
 };
 
-/** Build MUI MenuItem array for the given options. Used by MUI components and passed to the BaseCard.
+/**
+ * Resolve `ContextMenuBuilderItemMUI<T>[]` for a specific value into
+ * `MoreMenuItem[]` tuples suitable for the `<MoreMenu>` component.
  * @private
  */
-export const buildContextMenuItemsMUI = <T,>(
-  options: ContextMenuBuilderItemMUI<T>[] | undefined,
+export const resolveContextMenuItemsMUI = <T,>(
+  items: ContextMenuBuilderItemMUI<T>[],
   value: T,
-  closeMenu?: () => void,
   refetchData?: () => void
-): JSX.Element[] | undefined => {
-  return options
-    ?.filter(({ visible }) =>
+): import("../components/MoreMenuMUI").MoreMenuItem[] => {
+  return items
+    .filter(({ visible }) =>
       typeof visible === "function" ? visible(value) : visible ?? true
     )
-    .map(({ key, onClick, disabled, icon, children, ...muiMenuItemProps }) => (
-      <MuiMenuItem
-        {...muiMenuItemProps}
-        key={key}
-        disabled={typeof disabled === "function" ? disabled(value) : disabled}
-        onClick={(e: React.MouseEvent) => {
-          e.stopPropagation();
-          closeMenu?.();
-          onClick?.(value, refetchData);
-        }}
-        {...(icon && {
-          sx: {
-            display: "flex",
-            alignItems: "center",
-            gap: 1,
-            ...(muiMenuItemProps.sx as object),
-          },
-        })}
-      >
-        {icon}
-        {typeof children === "function" ? children(value) : children}
-      </MuiMenuItem>
-    ));
+    .map(({ key, onClick, disabled, icon, children }) => ({
+      key,
+      label: typeof children === "function" ? children(value) : children,
+      icon,
+      disabled:
+        typeof disabled === "function" ? disabled(value) : disabled ?? false,
+      onClick: onClick ? () => onClick(value, refetchData) : undefined,
+    }));
 };

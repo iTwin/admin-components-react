@@ -18,9 +18,9 @@ import {
   type IModelTableOverridesMUI,
   type IModelFull,
 } from "../../types";
-import MoreMenu from "../../components/MoreMenu";
+import MoreMenuMUI from "../../components/MoreMenuMUI";
 import {
-  buildContextMenuItemsMUI,
+  resolveContextMenuItemsMUI,
   ContextMenuBuilderItemMUI,
 } from "../../utils/_buildMenuOptions";
 import { TileFavoriteIconMUI } from "../../components/tileFavoriteIcon/TileFavoriteIconMUI";
@@ -48,7 +48,7 @@ export interface IModelTableMUIStrings extends MuiDataGridStrings {
 
 export interface IModelTableMUIProps {
   iModels: IModelFull[];
-  iModelActions?: ContextMenuBuilderItemMUI<IModelFull>[];
+  moreActions?: ContextMenuBuilderItemMUI<IModelFull>[];
   onOpen?: (iModel: IModelFull) => void;
   strings: IModelTableMUIStrings;
   refetchIModels: () => void;
@@ -66,7 +66,7 @@ export interface IModelTableMUIProps {
  */
 export const IModelTableMUI = ({
   iModels,
-  iModelActions,
+  moreActions,
   onOpen,
   strings,
   refetchIModels,
@@ -139,19 +139,15 @@ export const IModelTableMUI = ({
         width: 50,
         disableColumnMenu: true,
         renderCell: (params) => {
-          if (!iModelActions || iModelActions.length === 0) return null;
-          const moreOptions = (close: () => void) => {
-            const options = buildContextMenuItemsMUI(
-              iModelActions,
-              params.row,
-              close,
-              refetchIModels
-            );
-            return options ?? [];
-          };
+          if (!moreActions || moreActions.length === 0) return null;
+          const items = resolveContextMenuItemsMUI(
+            moreActions,
+            params.row,
+            refetchIModels
+          );
           return (
-            <MoreMenu
-              menuItems={moreOptions}
+            <MoreMenuMUI
+              items={items}
               data-testid={`iModel-row-${params.row.id}-more-options`}
               label={strings.moreOptions}
               prompt={<Icon href={svgMore} />}
@@ -168,7 +164,7 @@ export const IModelTableMUI = ({
     favoritesContext,
     columnOverrides,
     hideColumns,
-    iModelActions,
+    moreActions,
     refetchIModels,
   ]);
 

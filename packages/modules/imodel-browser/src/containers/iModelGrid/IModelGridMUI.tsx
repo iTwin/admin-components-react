@@ -42,15 +42,14 @@ export interface IModelGridMUIProps
     | "cellOverrides"
     | "tableOverrides"
     | "status"
-    | "additionalContent"
+    | "removeFromRecentsIcon"
   > {
   /** Open handler. Adds iModel to recents when clicked unless disableAddToRecents is true. */
-  onOpen?: IModelTileMUIProps["onOpen"];
-  onSelect?: IModelTileMUIProps["onSelect"];
+  onOpen?(iModel: IModelFull): void;
   /** List of actions to build for each imodel context menu. */
-  iModelActions?: ContextMenuBuilderItemMUI<IModelFull>[];
-  /** Custom icon for the "Remove from recents" context menu action. Only applies when requestType is "recents". Should be a Stratakit Icon component */
-  removeFromRecentsIcon?: JSX.Element;
+  moreActions?: ContextMenuBuilderItemMUI<IModelFull>[];
+  /** Custom icon for the "Remove from recents" context menu action. Only applies when requestType is "recents". Should be a Stratakit SVG href. */
+  removeFromRecentsIcon?: string;
   useIndividualState?: (
     iModel: IModelFull,
     iModelTileProps: IModelTileMUIProps
@@ -84,10 +83,9 @@ export const IModelGridMUI = (props: IModelGridMUIProps) => {
 const IModelGridInternal = ({
   accessToken,
   apiOverrides,
-  iModelActions,
+  moreActions,
   removeFromRecentsIcon,
   onOpen,
-  onSelect,
   iTwinId,
   sortOptions = { sortType: "name", descending: false },
   requestType,
@@ -107,10 +105,6 @@ const IModelGridInternal = ({
   dataMode = "internal",
   disableAddToRecents = false,
 }: IModelGridMUIProps) => {
-  const [selectedIModelId, setSelectedIModelId] = React.useState<
-    string | undefined
-  >();
-
   const [sort, setSort] = React.useState<IModelSortOptions>(sortOptions);
 
   React.useEffect(() => {
@@ -166,7 +160,7 @@ const IModelGridInternal = ({
     stringsOverrides
   );
 
-  const enhancedIModelActions = React.useMemo(() => {
+  const enhancedMoreActions = React.useMemo(() => {
     // Add "Remove from recents" action when viewing recents
     if (requestType === "recents") {
       const action = removeFromRecentsAction(
@@ -175,12 +169,12 @@ const IModelGridInternal = ({
         apiOverrides,
         removeFromRecentsIcon
       );
-      return iModelActions ? [action, ...iModelActions] : [action];
+      return moreActions ? [action, ...moreActions] : [action];
     }
-    return iModelActions;
+    return moreActions;
   }, [
     requestType,
-    iModelActions,
+    moreActions,
     strings,
     removeFromRecentsIcon,
     accessToken,
@@ -267,8 +261,7 @@ const IModelGridInternal = ({
     : undefined;
 
   // TODO: this is kind of silly
-  const resolvedOnOpen = tileOverrides?.onOpen ?? onOpen;
-  const resolvedOnSelect = tileOverrides?.onSelect ?? onSelect;
+  const resolvedOnOpen = onOpen;
 
   const renderIModelGridStructure = () => {
     return (
@@ -287,29 +280,28 @@ const IModelGridInternal = ({
               <IModelHookedTile
                 key={iModel.id}
                 iModel={iModel}
-                contextMenuItems={enhancedIModelActions}
+                moreActions={enhancedMoreActions}
                 accessToken={accessToken}
                 apiOverrides={tileApiOverrides}
                 useTileState={useIndividualState}
                 refetchIModels={refetchIModels}
                 stringsOverrides={stringsOverrides}
                 {...tileOverrides}
-                selected={
-                  selectedIModelId === iModel.id || tileOverrides?.selected
-                }
-                onOpen={
+                actions={
                   resolvedOnOpen
-                    ? async () => {
-                        await iModelClickAndAddToRecents(iModel, () =>
-                          resolvedOnOpen(iModel)
-                        );
-                      }
+                    ? [
+                        {
+                          key: "open",
+                          label: iModel.displayName ?? "",
+                          onClick: async () => {
+                            await iModelClickAndAddToRecents(iModel, () =>
+                              resolvedOnOpen(iModel)
+                            );
+                          },
+                        },
+                      ]
                     : undefined
                 }
-                onSelect={() => {
-                  setSelectedIModelId(iModel.id);
-                  resolvedOnSelect?.(iModel);
-                }}
               />
             ))}
             {fetchMore ? (
@@ -333,7 +325,7 @@ const IModelGridInternal = ({
         ) : (
           <IModelTableMUI
             iModels={iModels}
-            iModelActions={enhancedIModelActions}
+            moreActions={enhancedMoreActions}
             onOpen={
               resolvedOnOpen
                 ? (iModel: IModelFull) =>
@@ -412,12 +404,12 @@ function removeFromRecentsAction(
   strings: IModelGridProps["stringsOverrides"],
   accessToken?: AccessTokenProvider,
   apiOverrides?: ApiOverrides<IModelFull[]>,
-  removeFromRecentsIcon?: JSX.Element
+  removeFromRecentsIcon?: string
 ): ContextMenuBuilderItemMUI<IModelFull> {
   return {
     key: "remove-from-recents",
     icon: removeFromRecentsIcon,
-    children: strings?.removeFromRecents,
+    children: strings?.removeFromRecents ?? "Remove from recents",
     onClick: async (iModel, refetchData) => {
       if (!iModel || !accessToken) return;
 

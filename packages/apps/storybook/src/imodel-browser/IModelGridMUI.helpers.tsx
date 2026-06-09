@@ -93,16 +93,6 @@ export const useIndividualState = (
   iModel: IModelFull,
   props: IModelTileProps
 ): IModelTileProps => {
-  // random versions
-  const versions = React.useMemo(() => {
-    return [
-      { id: "v1", displayName: `${iModel.displayName} v1` },
-      { id: "v2", displayName: `${iModel.displayName} v2` },
-      { id: "v3", displayName: `${iModel.displayName} v3` },
-    ];
-  }, [iModel.displayName]);
-
-  // Create a memo of the tileProps we want to override, depending on the state.
   const tileProps = React.useMemo<Partial<IModelTileProps>>(
     () => ({
       actions: [
@@ -113,22 +103,8 @@ export const useIndividualState = (
         },
         { key: "vr", label: "Open in VR", onClick: () => {} },
       ],
-      isNew: versions?.length === 0,
-      additionalContent: (
-        <Select label="Select iModel..." value={versions[1].id}>
-          {versions?.map((v) => (
-            <MenuItem
-              key={v.id}
-              value={v.id}
-              onClick={action(`Selected ${v.id}`)}
-            >
-              {v.displayName}
-            </MenuItem>
-          ))}
-        </Select>
-      ),
     }),
-    [iModel?.displayName, versions]
+    [iModel?.displayName]
   );
 
   return {

@@ -16,9 +16,9 @@ import {
   type ITwinTableOverridesMUI,
   ITwinFull,
 } from "../../types";
-import MoreMenu from "../../components/MoreMenu";
+import MoreMenuMUI from "../../components/MoreMenuMUI";
 import {
-  buildContextMenuItemsMUI,
+  resolveContextMenuItemsMUI,
   ContextMenuBuilderItemMUI,
 } from "../../utils/_buildMenuOptions";
 import { TileFavoriteIconMUI } from "../../components/tileFavoriteIcon/TileFavoriteIconMUI";
@@ -47,7 +47,7 @@ export interface ITwinTableMUIStrings extends MuiDataGridStrings {
 
 export interface ITwinTableMUIProps {
   iTwins: ITwinFull[];
-  iTwinActions?: ContextMenuBuilderItemMUI<ITwinFull>[];
+  moreActions?: ContextMenuBuilderItemMUI<ITwinFull>[];
   onOpen?: (iTwin: ITwinFull) => void;
   strings: ITwinTableMUIStrings;
   iTwinFavorites: Set<string>;
@@ -68,7 +68,7 @@ export interface ITwinTableMUIProps {
  */
 export const ITwinTableMUI = ({
   iTwins,
-  iTwinActions,
+  moreActions,
   onOpen,
   strings,
   iTwinFavorites,
@@ -138,19 +138,15 @@ export const ITwinTableMUI = ({
         width: 65,
         disableColumnMenu: true,
         renderCell: (params) => {
-          if (!iTwinActions || iTwinActions.length === 0) return null;
-          const moreOptions = (close: () => void) => {
-            const options = buildContextMenuItemsMUI(
-              iTwinActions,
-              params.row,
-              close,
-              refetchITwins
-            );
-            return options ?? [];
-          };
+          if (!moreActions || moreActions.length === 0) return null;
+          const items = resolveContextMenuItemsMUI(
+            moreActions,
+            params.row,
+            refetchITwins
+          );
           return (
-            <MoreMenu
-              menuItems={moreOptions}
+            <MoreMenuMUI
+              items={items}
               data-testid={`iTwin-row-${params.row.id}-more-options`}
               prompt={<Icon href={svgMore} />}
               label={strings.moreOptions}
@@ -169,7 +165,7 @@ export const ITwinTableMUI = ({
     removeITwinFromFavorites,
     columnOverrides,
     hideColumns,
-    iTwinActions,
+    moreActions,
     refetchITwins,
   ]);
 

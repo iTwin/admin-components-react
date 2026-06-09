@@ -47,14 +47,11 @@ export interface ITwinGridPropsMUI
     | "tableOverrides"
     | "stringsOverrides"
     | "status"
-    | "additionalContent"
   > {
-  /** Select handler for the iTwin tile. */
-  onSelect?(iTwin: ITwinFull): void;
   /** Open handler for the iTwin tile. */
   onOpen?(iTwin: ITwinFull): void;
   /** List of actions to build for each iTwin context menu. */
-  iTwinActions?: ContextMenuBuilderItemMUI<ITwinFull>[];
+  moreActions?: ContextMenuBuilderItemMUI<ITwinFull>[];
   /** Function (can be a react hook) that returns state for an iTwin, returned values will be applied as props to the iTwinTile, overrides ITwinGrid provided values */
   useIndividualState?: IndividualITwinStateHookMUI;
   /** Static props to apply over each tile, mainly used for tileProps, overrides ITwinGrid provided values */
@@ -74,9 +71,8 @@ export const ITwinGridMUI = ({
   apiOverrides,
   filterOptions,
   orderbyOptions,
-  onSelect,
   onOpen,
-  iTwinActions,
+  moreActions,
   requestType,
   iTwinSubClass,
   stringsOverrides,
@@ -87,10 +83,6 @@ export const ITwinGridMUI = ({
   tableOverrides,
   className,
 }: ITwinGridPropsMUI) => {
-  const [selectedITwinId, setSelectedITwinId] = React.useState<
-    string | undefined
-  >();
-
   const {
     iTwinFavorites,
     addITwinToFavorites,
@@ -190,7 +182,6 @@ export const ITwinGridMUI = ({
                   accessToken,
                   apiOverrides,
                   filterOptions,
-                  onSelect,
                   onOpen,
                   requestType,
                   stringsOverrides,
@@ -199,11 +190,18 @@ export const ITwinGridMUI = ({
                 }}
                 key={iTwin.id}
                 iTwin={iTwin}
-                contextMenuItems={iTwinActions}
-                selected={
-                  selectedITwinId === iTwin.id || tileOverrides?.selected
+                moreActions={moreActions}
+                actions={
+                  onOpen
+                    ? [
+                        {
+                          key: "open",
+                          label: iTwin.displayName ?? "",
+                          onClick: () => onOpen(iTwin),
+                        },
+                      ]
+                    : undefined
                 }
-                onOpen={onOpen ? () => onOpen(iTwin) : undefined}
                 useTileState={useIndividualState}
                 isFavorite={iTwinFavorites.has(iTwin.id)}
                 addToFavorites={addITwinToFavorites}
@@ -212,12 +210,6 @@ export const ITwinGridMUI = ({
                 stringsOverrides={stringsOverrides}
                 thumbnail={iTwin.image} // This is a fix for https://github.com/iTwin/admin-components-react/issues/196
                 {...tileOverrides}
-                onSelect={() => {
-                  setSelectedITwinId(iTwin.id);
-                  tileOverrides?.onSelect
-                    ? tileOverrides.onSelect(iTwin)
-                    : onSelect?.(iTwin);
-                }}
               />
             ))}
             {fetchMore ? (
@@ -240,7 +232,7 @@ export const ITwinGridMUI = ({
   ) : (
     <ITwinTableMUI
       iTwins={iTwins}
-      iTwinActions={iTwinActions}
+      moreActions={moreActions}
       onOpen={onOpen}
       strings={strings}
       iTwinFavorites={iTwinFavorites}
