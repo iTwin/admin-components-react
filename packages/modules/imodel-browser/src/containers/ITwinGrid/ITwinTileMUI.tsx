@@ -3,19 +3,20 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import Chip from "@mui/material/Chip";
+import svgItwin from "@stratakit/icons/itwin.svg";
 import React from "react";
+
 import {
-  BaseCard,
   type BaseCardMoreActionItem,
   type BaseCardProps,
+  BaseCard,
 } from "../../components/baseCard/BaseCard";
+import { SvgThumbnail } from "../../components/baseCard/SvgThumbnail";
 import { TileFavoriteIconMUI } from "../../components/tileFavoriteIcon/TileFavoriteIconMUI";
 import { ITwinFull } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
 import { ContextMenuBuilderItemMUI } from "../../utils/_buildMenuOptions";
 import { ITwinTileProps } from "./ITwinTile";
-import { SvgThumbnail } from "../../components/baseCard/SvgThumbnail";
-import svgItwin from "@stratakit/icons/itwin.svg";
 
 /** @alpha */
 export interface ITwinTilePropsMUI
@@ -111,10 +112,6 @@ export const ITwinTileMUI = ({
         onRemoveFromFavorites={() => removeFromFavorites(iTwin.id)}
         addLabel={strings.addToFavorites}
         removeLabel={strings.removeFromFavorites}
-        className="ITwinTile-favoriteIcon"
-        sx={{
-          ...(!isFavorite && { display: "none" }),
-        }}
         disabled={disabled}
       />
     ) : undefined;
@@ -127,8 +124,8 @@ export const ITwinTileMUI = ({
     <BaseCard
       className={className}
       sx={{
-        "&:hover .ITwinTile-favoriteIcon": {
-          display: "flex",
+        "&:hover .favoriteIcon, &:focus-within .favoriteIcon": {
+          opacity: 1,
         },
       }}
       disabled={disabled}

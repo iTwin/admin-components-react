@@ -96,7 +96,7 @@ export const IModelTableMUI = ({
               onRemoveFromFavorites={() =>
                 favoritesContext?.remove?.(params.value)
               }
-              sx={{ bgcolor: "transparent" }}
+              transparent
             />
           );
         },
@@ -204,6 +204,11 @@ export const IModelTableMUI = ({
         "& .MuiDataGrid-cell:focus-within": {
           outline: "none",
         },
+        // reveal unfavorited icon on row hover or keyboard focus
+        "& .MuiDataGrid-row:hover .favoriteIcon, & .MuiDataGrid-row:focus-within .favoriteIcon":
+          {
+            opacity: 1,
+          },
         ...(actions && {
           "& .MuiDataGrid-row": {
             cursor: "pointer",

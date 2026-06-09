@@ -2,11 +2,13 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+import svgImodel from "@stratakit/icons/imodel.svg";
 import React from "react";
+
 import {
-  BaseCard,
   type BaseCardMoreActionItem,
   type BaseCardProps,
+  BaseCard,
 } from "../../components/baseCard/BaseCard";
 import { TileFavoriteIconMUI } from "../../components/tileFavoriteIcon/TileFavoriteIconMUI";
 import { IModelFavoritesContext } from "../../contexts/IModelFavoritesContext";
@@ -15,7 +17,6 @@ import { _mergeStrings } from "../../utils/_apiOverrides";
 import { ContextMenuBuilderItemMUI } from "../../utils/_buildMenuOptions";
 import { IModelThumbnailMUI } from "../iModelThumbnail/IModelThumbnailMUI";
 import { IModelTileProps } from "./IModelTile";
-import svgImodel from "@stratakit/icons/imodel.svg";
 
 /** @alpha */
 export interface IModelTileMUIProps
@@ -126,15 +127,15 @@ export const IModelTileMUI = ({
       ? { ...(apiOverrides ?? {}), data: iModel.thumbnail }
       : undefined;
 
+  const isFavorite = favoritesContext?.favorites.has(iModel.id) ?? false;
   const favoriteIcon =
     !hideFavoriteIcon && favoritesContext ? (
       <TileFavoriteIconMUI
-        isFavorite={favoritesContext.favorites.has(iModel.id)}
+        isFavorite={isFavorite}
         onAddToFavorites={() => favoritesContext.add(iModel.id)}
         onRemoveFromFavorites={() => favoritesContext.remove(iModel.id)}
         addLabel={strings.addToFavorites}
         removeLabel={strings.removeFromFavorites}
-        className="IModelTile-favoriteIcon"
         disabled={disabled}
       />
     ) : undefined;
@@ -149,8 +150,8 @@ export const IModelTileMUI = ({
     <BaseCard
       className={className}
       sx={{
-        "&:hover .IModelTile-favoriteIcon": {
-          display: "flex",
+        "&:hover .favoriteIcon, &:focus-within .favoriteIcon": {
+          opacity: 1,
         },
       }}
       disabled={disabled}

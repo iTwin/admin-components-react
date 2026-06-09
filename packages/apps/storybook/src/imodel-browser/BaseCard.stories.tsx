@@ -2,27 +2,28 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import {
-  BaseCard,
-  BaseCardProps,
-} from "../../../../modules/imodel-browser/src/components/baseCard/BaseCard";
+import { SvgThumbnail } from "@itwin/imodel-browser-react/mui";
 import Avatar from "@mui/material/Avatar";
 import AvatarGroup from "@mui/material/AvatarGroup";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
-import svgPin from "@stratakit/icons/pin.svg";
-import svgStatusSuccess from "@stratakit/icons/status-success.svg";
-import svgStatusWarning from "@stratakit/icons/status-warning.svg";
-import svgStatusError from "@stratakit/icons/status-error.svg";
-import svgGeo from "@stratakit/icons/geospatial-features.svg";
-import bridgeThumbnail from "../utils/bridge.jpg";
-import nightThumbnail from "../utils/night.jpg";
 import { action } from "@storybook/addon-actions";
 import { Meta, Story } from "@storybook/react/types-6-0";
+import svgGeo from "@stratakit/icons/geospatial-features.svg";
+import svgPin from "@stratakit/icons/pin.svg";
+import svgSave from "@stratakit/icons/save.svg";
+import svgStatusError from "@stratakit/icons/status-error.svg";
+import svgStatusSuccess from "@stratakit/icons/status-success.svg";
+import svgStatusWarning from "@stratakit/icons/status-warning.svg";
 import React from "react";
-import Typography from "@mui/material/Typography";
+
+import {
+  BaseCard,
+  BaseCardProps,
+} from "../../../../modules/imodel-browser/src/components/baseCard/BaseCard";
 import { ThumbnailIconButton } from "../../../../modules/imodel-browser/src/components/baseCard/ThumbnailIconButton";
-import { SvgThumbnail } from "@itwin/imodel-browser-react/mui";
+import bridgeThumbnail from "../utils/bridge.jpg";
+import nightThumbnail from "../utils/night.jpg";
 
 const InConstrainedContainer = ({
   children,
@@ -129,7 +130,7 @@ const everythingArgs: BaseCardProps = {
       <ThumbnailIconButton
         aria-label="Muted icon button"
         onClick={action("muted clicked")}
-        icon={svgPin}
+        icon={svgSave}
         muted
       />
     </>
