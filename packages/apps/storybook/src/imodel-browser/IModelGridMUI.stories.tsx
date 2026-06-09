@@ -3,33 +3,33 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import {
-  IModelGrid as ExternalComponent,
+  type IModelFull,
   type IModelGridProps as IModelGridMUIProps,
   DataStatus,
-  type IModelFull,
   IModelCellColumn,
+  IModelGrid as ExternalComponent,
 } from "@itwin/imodel-browser-react/mui";
-import {
-  useIndividualState,
-  additionalData,
-  initialData,
-} from "./IModelGridMUI.helpers";
-import SvgDelete from "@stratakit/icons/delete.svg";
-import { Icon } from "@stratakit/mui";
+import Avatar from "@mui/material/Avatar";
+import AvatarGroup from "@mui/material/AvatarGroup";
+import Chip from "@mui/material/Chip";
+import Typography from "@mui/material/Typography";
+import { action } from "@storybook/addon-actions";
 import { Meta, Story } from "@storybook/react/types-6-0";
+import SvgDelete from "@stratakit/icons/delete.svg";
 import React from "react";
+
+import bridgeThumbnail from "../utils/bridge.jpg";
+import nightThumbnail from "../utils/night.jpg";
 import {
   accessTokenArgTypes,
   withAccessTokenOverride,
   withITwinIdOverride,
 } from "../utils/storyHelp";
-import Typography from "@mui/material/Typography";
-import Chip from "@mui/material/Chip";
-import AvatarGroup from "@mui/material/AvatarGroup";
-import Avatar from "@mui/material/Avatar";
-import { action } from "@storybook/addon-actions";
-import bridgeThumbnail from "../utils/bridge.jpg";
-import nightThumbnail from "../utils/night.jpg";
+import {
+  additionalData,
+  initialData,
+  useIndividualState,
+} from "./IModelGridMUI.helpers";
 
 export const IModelGridMUI = (props: IModelGridMUIProps) => (
   <ExternalComponent {...props} />
@@ -49,25 +49,29 @@ const Template: Story<IModelGridMUIProps> = withITwinIdOverride(
 const baseArgs: IModelGridMUIProps = {
   apiOverrides: { serverEnvironmentPrefix: "qa" },
   sortOptions: { sortType: "name", descending: false },
-  onOpen: action("iModel opened"),
-  onSelect: action("iModel selected"),
-  iModelActions: [
+  actions: [
     {
       key: "open",
-      children: "Open iModel",
+      label: (iModel) => iModel.displayName ?? "",
+      onClick: (iModel) => action("iModel opened")(iModel),
+    },
+  ],
+  moreActions: [
+    {
+      key: "open",
+      label: "Open iModel",
       onClick: (iModel) => {
         action("Open " + iModel?.displayName)(iModel);
       },
     },
     {
       key: "details",
-      children: "View details",
+      label: "View details",
       onClick: (iModel) => action("Details for " + iModel?.displayName)(iModel),
     },
   ],
   // tileOverrides: {
-  //   onOpen: (iModel) => alert("Opened " + iModel.displayName),
-  //   onSelect: (iModel) => action("Selected " + iModel.displayName),
+  //   actions: (iModel) => [{ key: "open", label: iModel.displayName, onClick: () => alert("Opened " + iModel.displayName) }],
   // },
 };
 
@@ -150,12 +154,20 @@ export const OverrideApiDataWithLoadMore: Story<IModelGridMUIProps> =
     })
   );
 
-export const IndividualContextMenu = Template.bind({});
-IndividualContextMenu.args = {
+export const ContextualActions = Template.bind({});
+ContextualActions.args = {
   ...baseArgs,
-  iModelActions: [
+  actions: [
     {
-      children: "displayName contains 'R'",
+      key: "withR",
+      label: "displayName contains 'R'",
+      visible: (iModel) =>
+        iModel.displayName?.toLowerCase().includes("r") ?? false,
+    },
+  ],
+  moreActions: [
+    {
+      label: "displayName contains 'R'",
       visible: (iModel: IModelFull) =>
         iModel.displayName?.toLowerCase().includes("r") ?? false,
       key: "withR",
@@ -163,7 +175,7 @@ IndividualContextMenu.args = {
         alert("Contains R: " + iModel?.displayName),
     },
     {
-      children: "Disabled if name contains 'T'",
+      label: "Disabled if name contains 'T'",
       disabled: (iModel: IModelFull) =>
         iModel.displayName?.toLowerCase().includes("t") ?? false,
       key: "withT",
@@ -171,13 +183,13 @@ IndividualContextMenu.args = {
         alert("Does not contain T: " + iModel?.displayName),
     },
     {
-      children: "Add description",
+      label: "Add description",
       key: "addD",
       onClick: (iModel: IModelFull | undefined) =>
         alert("Add description: " + iModel?.displayName),
     },
     {
-      children: "Edit description",
+      label: "Edit description",
       visible: (iModel: IModelFull) => !!iModel.description,
       key: "editD",
       onClick: (iModel: IModelFull | undefined) =>
@@ -192,11 +204,8 @@ SimpleTilePropsOverrides.args = {
   tileOverrides: {
     thumbnail: bridgeThumbnail,
     getBadge: () => <Chip size="small" label="Tile X Override" />,
-    headerRight: (
-      <AvatarGroup
-        max={3}
-        sx={{ "& .MuiAvatar-root": { width: 24, height: 24, fontSize: 12 } }}
-      >
+    thumbnailTopLeft: (
+      <AvatarGroup max={3}>
         <Avatar alt="User 1" src="https://i.pravatar.cc/150?img=1" />
         <Avatar alt="User 2" src="https://i.pravatar.cc/150?img=2" />
         <Avatar alt="User 3" src="https://i.pravatar.cc/150?img=3" />
@@ -212,7 +221,9 @@ StatefulPropsOverrides.args = {
 };
 
 function addStartTileCallback(iModels: IModelFull[], status?: DataStatus) {
-  if (status !== DataStatus.Complete) return iModels;
+  if (status !== DataStatus.Complete) {
+    return iModels;
+  }
 
   iModels.unshift({
     id: "prepended",
@@ -234,7 +245,8 @@ DefaultNoStateComponentOverride.args = {
   ...baseArgs,
   emptyStateComponent: (
     <div>
-      <Typography variant="h6" render={<span />}>
+      {/* eslint-disable-next-line jsx-a11y/heading-has-content */}
+      <Typography variant="h2" render={<h2 />}>
         There are no iModels to show.
       </Typography>
     </div>
@@ -248,10 +260,9 @@ DisableAddToRecents.args = {
 };
 DisableAddToRecents.argTypes = {
   accessToken: { table: { disable: true } },
-  onOpen: { table: { disable: true } },
-  onSelect: { table: { disable: true } },
+  actions: { table: { disable: true } },
   sortOptions: { table: { disable: true } },
-  iModelActions: { table: { disable: true } },
+  moreActions: { table: { disable: true } },
   useIndividualState: { table: { disable: true } },
   tileOverrides: { table: { disable: true } },
   stringsOverrides: { table: { disable: true } },
@@ -276,7 +287,7 @@ export const RecentsWithCustomIcon = Template.bind({});
 RecentsWithCustomIcon.args = {
   ...baseArgs,
   requestType: "recents",
-  removeFromRecentsIcon: <Icon href={SvgDelete} />,
+  removeFromRecentsIcon: SvgDelete,
 };
 
 export const NoResultsWithDefaultEmptyState = Template.bind({});
@@ -291,9 +302,9 @@ NoResultsWithDefaultEmptyState.args = {
 export const StringsOverrideGrid = Template.bind({});
 StringsOverrideGrid.args = {
   ...baseArgs,
-  iModelActions: [
+  moreActions: [
     {
-      children: "Some action",
+      label: "Some action",
       key: "something",
       onClick: (iModel) => action("clicked " + iModel?.displayName)(iModel),
     },
@@ -322,9 +333,9 @@ StringsOverrideTable.args = {
   ...baseArgs,
   viewMode: "cells",
 
-  iModelActions: [
+  moreActions: [
     {
-      children: "Some action",
+      label: "Some action",
       key: "something",
       onClick: (iModel) => action("clicked " + iModel?.displayName)(iModel),
     },

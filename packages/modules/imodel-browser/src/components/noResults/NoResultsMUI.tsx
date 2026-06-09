@@ -2,11 +2,11 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import svgImodel from "@stratakit/icons/imodel.svg";
 import svgSearch from "@stratakit/icons/search.svg";
 import { Icon } from "@stratakit/mui";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 import React from "react";
 
 /** @alpha */
@@ -53,10 +53,14 @@ export const NoResultsMUI = ({
         <Icon
           href={isSearchResult ? svgSearch : svgImodel}
           size="large"
-          color="textSecondary"
-          style={{ width: "5rem", height: "5rem" }}
+          style={{
+            width: "5rem",
+            height: "5rem",
+            color: "var(--stratakit-color-text-muted)",
+          }}
         />
-        <Typography variant="h6" render={<span />}>
+        {/* eslint-disable-next-line jsx-a11y/heading-has-content */}
+        <Typography variant="h6" render={<h2 />}>
           {text}
         </Typography>
         {subtext && <Typography variant="body1">{subtext}</Typography>}

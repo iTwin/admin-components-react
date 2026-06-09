@@ -48,7 +48,6 @@
   "devDependencies": {
     "@itwin/itwinui-react": "^3.19.4",
     "@mui/material": "^9.0.0",
-    "@mui/system": "^9.0.0",
     "@mui/x-data-grid": "^9.3.0",
     "@rollup/plugin-commonjs": "~17.1.0",
     "@rollup/plugin-url": "^8.0.1",
@@ -102,11 +101,24 @@
   "peerDependencies": {
     "@itwin/itwinui-react": "~3.17.3",
     "@mui/material": "^9.0.0",
-    "@mui/system": "^9.0.0",
     "@mui/x-data-grid": "^9.3.0",
     "@stratakit/icons": "^0.3.1",
     "@stratakit/mui": "^0.4.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
+  },
+  "peerDependenciesMeta": {
+    "@mui/material": {
+      "optional": true
+    },
+    "@mui/x-data-grid": {
+      "optional": true
+    },
+    "@stratakit/icons": {
+      "optional": true
+    },
+    "@stratakit/mui": {
+      "optional": true
+    }
   }
 }

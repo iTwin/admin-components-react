@@ -2,31 +2,28 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import {
-  BaseCard,
-  BaseCardProps,
-} from "../../../../modules/imodel-browser/src/components/baseCard/BaseCard";
+import { SvgThumbnail } from "@itwin/imodel-browser-react/mui";
 import Avatar from "@mui/material/Avatar";
 import AvatarGroup from "@mui/material/AvatarGroup";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
+import { action } from "@storybook/addon-actions";
+import { Meta, Story } from "@storybook/react/types-6-0";
+import svgGeo from "@stratakit/icons/geospatial-features.svg";
 import svgPin from "@stratakit/icons/pin.svg";
+import svgSave from "@stratakit/icons/save.svg";
+import svgStatusError from "@stratakit/icons/status-error.svg";
 import svgStatusSuccess from "@stratakit/icons/status-success.svg";
 import svgStatusWarning from "@stratakit/icons/status-warning.svg";
-import svgStatusError from "@stratakit/icons/status-error.svg";
-import svgGeo from "@stratakit/icons/geospatial-features.svg";
+import React from "react";
+
+import {
+  BaseCard,
+  BaseCardProps,
+} from "../../../../modules/imodel-browser/src/components/baseCard/BaseCard";
+import { ThumbnailIconButton } from "../../../../modules/imodel-browser/src/components/baseCard/ThumbnailIconButton";
 import bridgeThumbnail from "../utils/bridge.jpg";
 import nightThumbnail from "../utils/night.jpg";
-import { action, actions } from "@storybook/addon-actions";
-import { Meta, Story } from "@storybook/react/types-6-0";
-import React from "react";
-import Typography from "@mui/material/Typography";
-import {
-  buildContextMenuItemsMUI,
-  type ContextMenuBuilderItemMUI,
-} from "../../../../modules/imodel-browser/src/utils/_buildMenuOptions";
-import { ThumbnailIconButton } from "../../../../modules/imodel-browser/src/components/baseCard/ThumbnailIconButton";
-import { SvgThumbnail } from "@itwin/imodel-browser-react/mui";
 
 const InConstrainedContainer = ({
   children,
@@ -45,16 +42,13 @@ export default {
   component: BaseCardStory,
   excludeStories: ["BaseCardStory"],
   argTypes: {
-    slotProps: { control: false },
     thumbnail: { control: false },
     thumbnailTopLeft: { control: false },
     thumbnailTopRight: { control: false },
     thumbnailBottomRight: { control: false },
-    headerRight: { control: false },
+
     statusIconHref: { control: false },
     additionalDescription: { control: false },
-    onClick: { control: false },
-    onDoubleClick: { control: false },
     onContextMenu: { control: false },
     status: {
       options: ["undefined", "positive", "warning", "negative"],
@@ -78,6 +72,9 @@ const baseArgs: BaseCardProps = {
   description: "3D model of the Main Street bridge structure and components.",
   subheader: "Edited 2000-01-02",
   thumbnail: bridgeThumbnail,
+  actions: [
+    { key: "open", label: "Open", onClick: action("default action clicked") },
+  ],
 };
 
 // ── Stories ──────────────────────────────────────────────────────────────────
@@ -85,59 +82,51 @@ const baseArgs: BaseCardProps = {
 export const Default = Template.bind({});
 Default.args = { ...baseArgs };
 
-const contextMenuItems: ContextMenuBuilderItemMUI[] = [
-  {
-    key: "open",
-    onClick: action("menu: open clicked"),
-    children: "Open with",
-  },
-  {
-    key: "share",
-    children: "Share",
-    onClick: action("menu: share clicked"),
-  },
-  {
-    key: "delete",
-    children: "Delete",
-    onClick: action("menu: delete clicked"),
-  },
-];
-const contextMenuContent = buildContextMenuItemsMUI(
-  contextMenuItems,
-  { some: "object" } as const,
-  () => actions("closeMenu called"),
-  () => actions("refetch called")
-);
-
 const everythingArgs: BaseCardProps = {
   ...baseArgs,
-  onClick: action("clicked"),
-  onDoubleClick: action("double-clicked "),
+  description:
+    "When there is more than one `action` prop they will be rendered as buttons in the footer of the card and the whole card is not clickable.",
   onContextMenu: action("context-menu opened"),
-  contextMenuContent,
   actions: [
-    { key: "open", label: "Open", onClick: action("open clicked") },
+    { key: "open", label: "Open", onClick: action("open action clicked") },
+    { key: "share", label: "Share", onClick: action("share action clicked") },
     {
-      key: "share",
-      label: "Share",
-      onClick: action("share clicked"),
+      key: "disabled",
+      label: "Disabled",
+      onClick: action("disabled action clicked"),
+      disabled: true,
     },
   ],
+  moreActions: [
+    {
+      key: "open",
+      label: "Open with",
+      onClick: action("menu: open clicked"),
+      icon: svgGeo,
+    },
+    { key: "share", label: "Share", onClick: action("menu: share clicked") },
+    { key: "delete", label: "Delete", onClick: action("menu: delete clicked") },
+    {
+      key: "disabled",
+      label: "Disabled option",
+      onClick: action("menu: disabled clicked"),
+      disabled: true,
+      icon: svgSave,
+    },
+  ],
+
   statusIconHref: svgStatusWarning,
-  headerRight: (
+  thumbnailTopLeft: (
     <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-      <Chip size="small" label="Owned" variant="outlined" />
-      <AvatarGroup
-        max={3}
-        sx={{ "& .MuiAvatar-root": { width: 24, height: 24, fontSize: 12 } }}
-      >
+      <Chip size="small" label="Top Left" />
+      <AvatarGroup max={3}>
         <Avatar alt="User 1" src="https://i.pravatar.cc/150?img=1" />
         <Avatar alt="User 2" src="https://i.pravatar.cc/150?img=2" />
         <Avatar alt="User 3" src="https://i.pravatar.cc/150?img=3" />
       </AvatarGroup>
     </Box>
   ),
-  thumbnailTopLeft: <Chip size="small" label="iModel" />,
+
   thumbnailTopRight: (
     <>
       <ThumbnailIconButton
@@ -148,19 +137,13 @@ const everythingArgs: BaseCardProps = {
       <ThumbnailIconButton
         aria-label="Muted icon button"
         onClick={action("muted clicked")}
-        icon={svgPin}
+        icon={svgSave}
         muted
       />
     </>
   ),
-  thumbnailBottomLeft: <Chip size="small" label="Featured" />,
-  thumbnailBottomRight: <Chip size="small" label="Trial" />,
-  additionalContent: (
-    <Typography variant="body2" color="textSecondary">
-      This is some additional content rendered below the description and above
-      the footer actions.
-    </Typography>
-  ),
+  thumbnailBottomLeft: <Chip size="small" label="Bottom left" />,
+  thumbnailBottomRight: <Chip size="small" label="Bottom right" />,
 };
 
 export const Everything = Template.bind({});
@@ -186,25 +169,6 @@ WithoutContent.args = {
   description: undefined,
   subheader: undefined,
   thumbnail: bridgeThumbnail,
-  additionalContent: undefined,
-};
-
-export const WithSlotProps = Template.bind({});
-WithSlotProps.storyName = "With slot props";
-WithSlotProps.args = {
-  ...everythingArgs,
-
-  slotProps: {
-    thumbnail: {
-      sx: { opacity: 0.2 },
-    },
-    content: {
-      sx: { color: "warning.main" },
-    },
-    divider: {
-      sx: { borderWidth: 5, borderColor: "success.main" },
-    },
-  },
 };
 
 export const Statuses = () => (
@@ -245,9 +209,9 @@ WithSvgThumbnail.args = {
 export const Loading = Template.bind({});
 Loading.args = { ...baseArgs, loading: true };
 
-export const Selected = Template.bind({});
-Selected.storyName = "Selected state";
-Selected.args = { ...baseArgs, selected: true };
+export const Disabled = Template.bind({});
+Disabled.storyName = "Disabled state";
+Disabled.args = { ...baseArgs, disabled: true };
 
 export const LongTitle = Template.bind({});
 LongTitle.storyName = "Long title";

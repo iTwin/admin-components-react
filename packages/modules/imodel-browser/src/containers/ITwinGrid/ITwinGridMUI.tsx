@@ -4,23 +4,28 @@
  *--------------------------------------------------------------------------------------------*/
 import "./ITwinGrid.scss";
 
+import Box from "@mui/material/Box";
 import React from "react";
 import { InView } from "react-intersection-observer";
-import Box from "@mui/material/Box";
+
+import { BaseCardLoading } from "../../components/baseCard/BaseCardLoading";
 import { NoResults } from "../../components/noResults/NoResults";
 import {
-  DataStatus,
-  type ITwinTableOverridesMUI,
   type ITwinFull,
+  type ITwinTableOverridesMUI,
+  DataStatus,
 } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
-import { ContextMenuBuilderItemMUI } from "../../utils/_buildMenuOptions";
+import {
+  type ActionsBuilderItemMUI,
+  MoreActionsMenuBuilderItemMUI,
+  resolveActionItemsMUI,
+} from "../../utils/_buildMenuOptions";
+import type { ITwinGridProps, ITwinGridStrings } from "./ITwinGrid";
+import { type ITwinTableMUIStrings, ITwinTableMUI } from "./ITwinTableMUI";
+import { type ITwinTilePropsMUI, ITwinTileMUI } from "./ITwinTileMUI";
 import { useITwinData } from "./useITwinData";
 import { useITwinFavorites } from "./useITwinFavorites";
-import { ITwinTableMUI, type ITwinTableMUIStrings } from "./ITwinTableMUI";
-import { ITwinTileMUI, type ITwinTilePropsMUI } from "./ITwinTileMUI";
-import { BaseCardLoading } from "../../components/baseCard/BaseCardLoading";
-import type { ITwinGridProps, ITwinGridStrings } from "./ITwinGrid";
 
 /** @alpha */
 export type IndividualITwinStateHookMUI = (
@@ -46,13 +51,25 @@ export interface ITwinGridPropsMUI
     | "cellOverrides"
     | "tableOverrides"
     | "stringsOverrides"
+    | "status"
+    | "onOpen"
   > {
-  /** Select handler for the iTwin tile. */
-  onSelect?(iTwin: ITwinFull): void;
-  /** Open handler for the iTwin tile. */
-  onOpen?(iTwin: ITwinFull): void;
+  /**
+   * Factory that returns actions for a given iTwin.
+   *
+   * - **Single action** — the tile title becomes a clickable link; a table row click fires the action.
+   * - **Multiple actions** — rendered as buttons in the tile footer; the first action still drives table row click.
+   *
+   * @example
+   * ```tsx
+   * actions={[
+   *   { key: "open", label: (iTwin) => iTwin.displayName, onClick: (iTwin) => navigate(`/itwins/${iTwin.id}`) },
+   * ]}
+   * ```
+   */
+  actions?: ActionsBuilderItemMUI<ITwinFull>[];
   /** List of actions to build for each iTwin context menu. */
-  iTwinActions?: ContextMenuBuilderItemMUI<ITwinFull>[];
+  moreActions?: MoreActionsMenuBuilderItemMUI<ITwinFull>[];
   /** Function (can be a react hook) that returns state for an iTwin, returned values will be applied as props to the iTwinTile, overrides ITwinGrid provided values */
   useIndividualState?: IndividualITwinStateHookMUI;
   /** Static props to apply over each tile, mainly used for tileProps, overrides ITwinGrid provided values */
@@ -72,9 +89,8 @@ export const ITwinGridMUI = ({
   apiOverrides,
   filterOptions,
   orderbyOptions,
-  onSelect,
-  onOpen,
-  iTwinActions,
+  actions,
+  moreActions,
   requestType,
   iTwinSubClass,
   stringsOverrides,
@@ -85,10 +101,6 @@ export const ITwinGridMUI = ({
   tableOverrides,
   className,
 }: ITwinGridPropsMUI) => {
-  const [selectedITwinId, setSelectedITwinId] = React.useState<
-    string | undefined
-  >();
-
   const {
     iTwinFavorites,
     addITwinToFavorites,
@@ -167,68 +179,77 @@ export const ITwinGridMUI = ({
       <NoResults text={noResultsText} />
     ) : (
       <Box
+        component="ul"
         sx={{
           display: "grid",
           gap: 2,
           gridTemplateColumns: "repeat(auto-fill, minmax(22.5rem, 1fr))",
+          listStyle: "none",
+          p: 0,
+          m: 0,
         }}
         className={className}
       >
         {fetchStatus === DataStatus.Fetching ? (
           <>
-            <BaseCardLoading />
-            <BaseCardLoading />
-            <BaseCardLoading />
+            <li>
+              <BaseCardLoading />
+            </li>
+            <li>
+              <BaseCardLoading />
+            </li>
+            <li>
+              <BaseCardLoading />
+            </li>
           </>
         ) : (
           <>
             {iTwins?.map((iTwin) => (
-              <ITwinHookedTile
-                gridProps={{
-                  accessToken,
-                  apiOverrides,
-                  filterOptions,
-                  onSelect,
-                  onOpen,
-                  requestType,
-                  stringsOverrides,
-                  tileOverrides,
-                  useIndividualState,
-                }}
-                key={iTwin.id}
-                iTwin={iTwin}
-                contextMenuItems={iTwinActions}
-                selected={
-                  selectedITwinId === iTwin.id || tileOverrides?.selected
-                }
-                onOpen={onOpen ? () => onOpen(iTwin) : undefined}
-                useTileState={useIndividualState}
-                isFavorite={iTwinFavorites.has(iTwin.id)}
-                addToFavorites={addITwinToFavorites}
-                removeFromFavorites={removeITwinFromFavorites}
-                refetchITwins={refetchITwins}
-                stringsOverrides={stringsOverrides}
-                thumbnail={iTwin.image} // This is a fix for https://github.com/iTwin/admin-components-react/issues/196
-                {...tileOverrides}
-                onSelect={() => {
-                  setSelectedITwinId(iTwin.id);
-                  tileOverrides?.onSelect
-                    ? tileOverrides.onSelect(iTwin)
-                    : onSelect?.(iTwin);
-                }}
-              />
+              <li key={iTwin.id}>
+                <ITwinHookedTile
+                  gridProps={{
+                    accessToken,
+                    apiOverrides,
+                    filterOptions,
+                    actions,
+                    requestType,
+                    stringsOverrides,
+                    tileOverrides,
+                    useIndividualState,
+                  }}
+                  iTwin={iTwin}
+                  moreActions={moreActions}
+                  actions={
+                    actions ? resolveActionItemsMUI(actions, iTwin) : undefined
+                  }
+                  useTileState={useIndividualState}
+                  isFavorite={iTwinFavorites.has(iTwin.id)}
+                  addToFavorites={addITwinToFavorites}
+                  removeFromFavorites={removeITwinFromFavorites}
+                  refetchITwins={refetchITwins}
+                  stringsOverrides={stringsOverrides}
+                  thumbnail={iTwin.image} // This is a fix for https://github.com/iTwin/admin-components-react/issues/196
+                  {...tileOverrides}
+                />
+              </li>
             ))}
             {fetchMore ? (
               <>
-                <InView
-                  onChange={(inView) => {
-                    inView && fetchMore();
-                  }}
-                >
+                <li>
+                  <InView
+                    onChange={(inView) => {
+                      inView && fetchMore();
+                    }}
+                  >
+                    <BaseCardLoading />
+                  </InView>
+                </li>
+                <li>
                   <BaseCardLoading />
-                </InView>
-                <BaseCardLoading />
-                <BaseCardLoading />
+                </li>
+                <li>
+                  <BaseCardLoading />
+                </li>
               </>
             ) : null}
           </>
@@ -238,8 +259,12 @@ export const ITwinGridMUI = ({
   ) : (
     <ITwinTableMUI
       iTwins={iTwins}
-      iTwinActions={iTwinActions}
-      onOpen={onOpen}
+      moreActions={moreActions}
+      actions={
+        actions
+          ? (iTwin: ITwinFull) => resolveActionItemsMUI(actions, iTwin)
+          : undefined
+      }
       strings={strings}
       iTwinFavorites={iTwinFavorites}
       addITwinToFavorites={addITwinToFavorites}

@@ -2,23 +2,21 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+import svgImodel from "@stratakit/icons/imodel.svg";
 import React from "react";
+
 import {
-  BaseCard,
+  type BaseCardMoreActionItem,
   type BaseCardProps,
+  BaseCard,
 } from "../../components/baseCard/BaseCard";
-import { TileFavoriteIconMUI } from "../../components/tileFavoriteIcon/TileFavoriteIconMUI";
+import { FavoriteIconMUI } from "../../components/tileFavoriteIcon/FavoriteIconMUI";
 import { IModelFavoritesContext } from "../../contexts/IModelFavoritesContext";
 import { AccessTokenProvider, ApiOverrides, IModelFull } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
-import {
-  buildContextMenuItemsMUI,
-  ContextMenuBuilderItemMUI,
-} from "../../utils/_buildMenuOptions";
+import { MoreActionsMenuBuilderItemMUI } from "../../utils/_buildMenuOptions";
 import { IModelThumbnailMUI } from "../iModelThumbnail/IModelThumbnailMUI";
 import { IModelTileProps } from "./IModelTile";
-import svgImodel from "@stratakit/icons/imodel.svg";
-import svgCheckmark from "@stratakit/icons/checkmark.svg";
 
 /** @alpha */
 export interface IModelTileMUIProps
@@ -29,15 +27,13 @@ export interface IModelTileMUIProps
     Omit<
       BaseCardProps,
       | "statusIcon"
-      | "contextMenuItems"
       | "onSelect"
       | "onOpen"
       | "title"
       | "description"
       | "thumbnailBottomRight"
       | "thumbnailTopRight"
-      | "onDoubleClick"
-      | "contextMenuContent"
+      | "moreActions"
     > {
   /** If not provided, iModel display name will be used */
   title?: string;
@@ -45,12 +41,8 @@ export interface IModelTileMUIProps
   description?: string;
   /** iModel to display */
   iModel: IModelFull;
-  /** List of options to build for the context menu */
-  contextMenuItems?: ContextMenuBuilderItemMUI<IModelFull>[];
-  /** Function to call when the card is selected. */
-  onSelect?(iModel: IModelFull): void;
-  /** Function to call when the card is opened. */
-  onOpen?(iModel: IModelFull): void;
+  /** Items for the three-dot context menu */
+  moreActions?: MoreActionsMenuBuilderItemMUI<IModelFull>[];
   /** Strings displayed by the component */
   stringsOverrides?: {
     /** Accessible text for the hollow star icon to add the iModel to favorites */
@@ -81,13 +73,12 @@ export interface IModelTileMUIProps
  */
 export const IModelTileMUI = ({
   iModel,
-  contextMenuItems,
+  moreActions: moreActionItems,
   accessToken,
   apiOverrides,
   stringsOverrides,
   refetchIModels,
   hideFavoriteIcon,
-  selected,
   loading,
   disabled,
   status,
@@ -100,9 +91,7 @@ export const IModelTileMUI = ({
   description,
   subheader,
   actions,
-  onSelect,
-  onOpen,
-  slotProps,
+
   className,
   ...rest
 }: IModelTileMUIProps) => {
@@ -116,15 +105,21 @@ export const IModelTileMUI = ({
     stringsOverrides
   );
 
-  const contextMenuContent = React.useMemo(
+  const moreActions: BaseCardMoreActionItem[] | undefined = React.useMemo(
     () =>
-      buildContextMenuItemsMUI(
-        contextMenuItems,
-        iModel,
-        undefined,
-        refetchIModels
-      ),
-    [contextMenuItems, iModel, refetchIModels]
+      moreActionItems
+        ?.filter(({ visible }) =>
+          typeof visible === "function" ? visible(iModel) : visible ?? true
+        )
+        .map(({ key, label, icon, onClick, disabled }) => ({
+          key,
+          label: typeof label === "function" ? label(iModel) : label,
+          icon,
+          onClick: onClick ? () => onClick(iModel, refetchIModels) : undefined,
+          disabled:
+            typeof disabled === "function" ? disabled(iModel) : disabled,
+        })),
+    [moreActionItems, iModel, refetchIModels]
   );
 
   const thumbnailApiOverride =
@@ -132,15 +127,15 @@ export const IModelTileMUI = ({
       ? { ...(apiOverrides ?? {}), data: iModel.thumbnail }
       : undefined;
 
+  const isFavorite = favoritesContext?.favorites.has(iModel.id) ?? false;
   const favoriteIcon =
     !hideFavoriteIcon && favoritesContext ? (
-      <TileFavoriteIconMUI
-        isFavorite={favoritesContext.favorites.has(iModel.id)}
+      <FavoriteIconMUI
+        isFavorite={isFavorite}
         onAddToFavorites={() => favoritesContext.add(iModel.id)}
         onRemoveFromFavorites={() => favoritesContext.remove(iModel.id)}
         addLabel={strings.addToFavorites}
         removeLabel={strings.removeFromFavorites}
-        className="IModelTile-favoriteIcon"
         disabled={disabled}
       />
     ) : undefined;
@@ -155,8 +150,8 @@ export const IModelTileMUI = ({
     <BaseCard
       className={className}
       sx={{
-        "&:hover .IModelTile-favoriteIcon": {
-          display: "flex",
+        "&:hover .favoriteIcon, &:focus-within .favoriteIcon": {
+          opacity: 1,
         },
       }}
       disabled={disabled}
@@ -175,16 +170,12 @@ export const IModelTileMUI = ({
       thumbnailBottomLeft={thumbnailBottomLeft}
       thumbnailBottomRight={getBadge?.(iModel) ?? badge}
       title={title ?? iModel.displayName ?? ""}
-      onClick={onSelect ? () => onSelect(iModel) : undefined}
-      onDoubleClick={onOpen ? () => onOpen(iModel) : undefined}
-      contextMenuContent={contextMenuContent}
+      actions={actions}
+      moreActions={moreActions}
       status={status}
-      statusIconHref={selected ? svgCheckmark : svgImodel}
+      statusIconHref={svgImodel}
       description={description ?? iModel.description ?? ""}
       subheader={subheader}
-      actions={actions}
-      slotProps={slotProps}
-      selected={selected}
       stringsOverrides={stringsOverrides}
       data-testid={`imodel-tile-${iModel.id}`}
       {...rest}

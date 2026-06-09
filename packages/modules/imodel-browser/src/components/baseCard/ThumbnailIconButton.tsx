@@ -14,8 +14,11 @@ export interface ThumbnailIconButtonProps
     | "disabled"
     | "label"
     | "className"
+    | "tabIndex"
     | "aria-haspopup"
     | "aria-expanded"
+    | "aria-pressed"
+    | "aria-label"
   > {
   /**
    * URL of the icon SVG (typically an import from `@stratakit/icons`).
@@ -25,6 +28,9 @@ export interface ThumbnailIconButtonProps
   sx?: SxProps<Theme>;
 }
 
+const activeBgColor = "var(--stratakit-color-bg-positive-muted)";
+const mutedBgColor = "var(--stratakit-color-bg-neutral-muted)";
+
 /**
  * Icon button intended for overlaying on top of a thumbnail image
  * (e.g. favorites, more-options menu).
@@ -32,6 +38,8 @@ export interface ThumbnailIconButtonProps
  */
 export function ThumbnailIconButton(props: ThumbnailIconButtonProps) {
   const { sx, icon, muted, onClick, ...rest } = props;
+  const bgcolor = muted ? mutedBgColor : activeBgColor;
+
   return (
     <IconButton
       {...rest}
@@ -40,7 +48,15 @@ export function ThumbnailIconButton(props: ThumbnailIconButtonProps) {
         onClick?.(event);
       }}
       size="small"
-      sx={sx}
+      sx={[
+        {
+          bgcolor,
+          "&:hover": {
+            bgcolor: activeBgColor,
+          },
+        },
+        ...(Array.isArray(sx) ? sx : sx ? [sx] : []),
+      ]}
     >
       <Icon href={icon} />
     </IconButton>

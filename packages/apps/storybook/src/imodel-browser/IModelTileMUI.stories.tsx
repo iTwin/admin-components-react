@@ -3,23 +3,23 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import {
-  IModelTile as IModelTileMUI,
   type IModelTileProps as IModelTileMUIProps,
+  IModelTile as IModelTileMUI,
   SvgThumbnail,
 } from "@itwin/imodel-browser-react/mui";
+import Avatar from "@mui/material/Avatar";
+import AvatarGroup from "@mui/material/AvatarGroup";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
-import { Icon } from "@stratakit/mui";
-import svgPlaceholder from "@stratakit/icons/placeholder.svg";
-import SvgShare from "@stratakit/icons/share.svg";
-import SvgDelete from "@stratakit/icons/delete.svg";
-import bridgeThumbnail from "../utils/bridge.jpg";
-import overpassThumbnail from "../utils/overpass.jpg";
 import { action } from "@storybook/addon-actions";
 import { Meta, Story } from "@storybook/react/types-6-0";
-import React from "react";
-import Button from "@mui/material/Button";
+import SvgDelete from "@stratakit/icons/delete.svg";
 import svgRoad from "@stratakit/icons/road.svg";
+import SvgShare from "@stratakit/icons/share.svg";
+import React from "react";
+
+import bridgeThumbnail from "../utils/bridge.jpg";
+import overpassThumbnail from "../utils/overpass.jpg";
 
 const InConstrainedContainer = ({
   children,
@@ -51,11 +51,9 @@ export default {
       },
     },
     iModel: { control: false },
-    onSelect: { control: false },
-    onOpen: { control: false },
     thumbnail: { control: false },
     actions: { control: false },
-    contextMenuItems: { control: false },
+    moreActions: { control: false },
     thumbnailTopLeft: { control: false },
     thumbnailBottomRight: { control: false },
     accessToken: { control: false },
@@ -76,24 +74,27 @@ const baseArgs: IModelTileMUIProps = {
   },
 
   thumbnail: bridgeThumbnail,
-
-  onSelect: action("iModel selected"),
-  onOpen: action("iModel opened"),
+  actions: [
+    {
+      key: "open",
+      label: "iModel Name",
+      onClick: action("iModel opened"),
+    },
+  ],
   disabled: false,
   loading: false,
-  selected: false,
-  contextMenuItems: [
+  moreActions: [
     {
       key: "option-1",
-      icon: <Icon href={SvgShare} size="regular" />,
-      children: "Context Menu Option 1",
-      onClick: (iModel) => action("iModel option 1 clicked")(iModel),
+      icon: SvgShare,
+      label: "More Actions Option 1",
+      onClick: (iModel) => action("action 1 clicked")(iModel),
     },
     {
       key: "option-2",
-      icon: <Icon href={SvgDelete} size="regular" />,
-      children: "Context Menu Option 2",
-      onClick: (iModel) => action("iModel option 2 clicked")(iModel),
+      icon: SvgDelete,
+      label: "More Actions Option 2",
+      onClick: (iModel) => action("action 2 clicked")(iModel),
     },
   ],
 };
@@ -109,20 +110,25 @@ Extensive.args = {
   title: "Overridden Title",
   description: "Overriden description",
   subheader: "Additional description",
-  additionalContent: <Button variant="contained">Additional Content</Button>,
   thumbnail: overpassThumbnail,
   getBadge: () => <Chip size="small" label="Badge" />,
-  thumbnailTopLeft: <Icon href={svgPlaceholder} size="regular" />,
+  thumbnailTopLeft: (
+    <AvatarGroup max={3}>
+      <Avatar alt="User 1" src="https://i.pravatar.cc/150?img=1" />
+      <Avatar alt="User 2" src="https://i.pravatar.cc/150?img=2" />
+      <Avatar alt="User 3" src="https://i.pravatar.cc/150?img=3" />
+    </AvatarGroup>
+  ),
   actions: [
     {
-      key: "button-1",
-      label: "Open in Viewer",
-      onClick: action("iModel button 1 clicked"),
+      key: "open",
+      label: "Open in App",
+      onClick: action("iModel opened"),
     },
     {
-      key: "button-2",
+      key: "vr",
       label: "Open in VR Headset",
-      onClick: action("iModel button 2 clicked"),
+      onClick: action("VR Headset clicked"),
     },
   ],
 };

@@ -4,48 +4,39 @@
  *--------------------------------------------------------------------------------------------*/
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import CardActions from "@mui/material/CardActions";
 import Card, { CardProps } from "@mui/material/Card";
+import CardActionArea from "@mui/material/CardActionArea";
+import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
 import Divider from "@mui/material/Divider";
-import Grid from "@mui/material/Grid";
-import Menu from "@mui/material/Menu";
-import Stack from "@mui/material/Stack";
-import type { SxProps, Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import React, { type ReactNode } from "react";
 import svgMoreVertical from "@stratakit/icons/more-vertical.svg";
+import { Icon } from "@stratakit/mui";
+import React, { type ReactNode } from "react";
+
+import { spreadSx } from "../../utils/spreadSx";
+import MoreMenuMUI, {
+  type MoreMenuHandle,
+  type MoreMenuItem,
+} from "../MoreMenuMUI";
 import { BaseCardLoading } from "./BaseCardLoading";
-import { ThumbnailIconButton } from "./ThumbnailIconButton";
+import { BaseCardThumbnailArea } from "./BaseCardThumbnailArea";
+import { StatusIcon } from "./StatusIcon";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type { SvgThumbnail } from "./SvgThumbnail";
-import { StatusIcon } from "./StatusIcon";
 
-/** Flatten an optional SxProps value into spreadable array elements. */
-const spreadSx = (sx: SxProps<Theme> | undefined) =>
-  Array.isArray(sx) ? sx : sx ? [sx] : [];
-
-interface BaseCardSlotStyleProps {
-  className?: string;
-  sx?: SxProps<Theme>;
-}
-
-export interface BaseCardSlotProps {
-  thumbnail?: BaseCardSlotStyleProps;
-  divider?: BaseCardSlotStyleProps;
-  content?: BaseCardSlotStyleProps;
-  header?: BaseCardSlotStyleProps;
-  title?: BaseCardSlotStyleProps;
-  info?: BaseCardSlotStyleProps;
-  actions?: BaseCardSlotStyleProps;
-}
+/** @deprecated Use `MoreMenuItem` from `../MoreMenu` instead. */
+export type BaseCardMoreActionItem = MoreMenuItem;
 
 export interface BaseCardActionItem {
   key: string;
-  label: ReactNode;
-  onClick?: React.MouseEventHandler<HTMLAnchorElement | HTMLButtonElement>;
+  label: string;
+  onClick?: () => void;
+  /** When false, the action is excluded. Defaults to true. */
+  visible?: boolean;
+  disabled?: boolean;
 }
 
 export interface BaseCardProps
@@ -84,12 +75,6 @@ export interface BaseCardProps
   title: string;
 
   /**
-   * Optional slot to the right of the title in the header row
-   * (e.g. status chip, icon button, AvatarGroup).
-   */
-  headerRight?: ReactNode;
-
-  /**
    * Optional icon rendered to the left of the entire content area.
    */
   statusIconHref?: string;
@@ -107,41 +92,43 @@ export interface BaseCardProps
    */
   thumbnailAlt?: string;
 
-  /** Additional content rendered below the description and above the footer. */
-  additionalContent?: ReactNode;
-
   /**
-   * Action buttons rendered on hover over top of the thumbnail.  By default, these are hidden and only appear on hover.
+   * Primary card actions.
    *
-   * The first button will get the "primary" color, and any subsequent buttons will be "secondary".  Consider using no more than 2 buttons, as more may cause layout issues.
+   * When a single action is provided, the card title becomes a clickable
+   * {@link CardActionArea} wired to that action.
+   *
+   * When multiple actions are provided, they are rendered as buttons in a
+   * {@link CardActions} row below the card content.
    */
   actions?: BaseCardActionItem[];
 
   /**
-   * Optional right-click context menu content rendered by BaseCard.
-   * When provided, the menu opens at cursor position on right-click.
+   * Items rendered in the three-dot context menu in the card header.
+   * When provided, a three-dot icon button appears in the header action slot
+   * and these items are rendered as menu items.
    */
-  contextMenuContent?: ReactNode;
+  moreActions?: MoreMenuItem[];
 
-  /** Indicates whether the card is in a selected state. Applies outline styling. */
-  selected?: boolean;
   /** Indicates whether the card is in a loading state. */
   loading?: boolean;
   /** Indicates whether the card is disabled. */
   disabled?: boolean;
   /** Status indicator used for styling (divider color, etc.) */
   status?: "positive" | "warning" | "negative" | undefined;
-  /** Optional callback fired when the card is clicked. */
-  onClick?: CardProps["onClick"];
-  /** Optional callback fired on double-click of the card. */
-  onDoubleClick?: CardProps["onDoubleClick"];
-  /** Props for internal wrapper slots following MUI slotProps conventions. */
-  slotProps?: BaseCardSlotProps;
 
   stringsOverrides?: {
     moreOptions?: string;
   };
 }
+
+const baseCardSx = {
+  overflow: "hidden",
+  minWidth: "18rem",
+  minHeight: "15rem",
+  display: "flex",
+  flexDirection: "column",
+};
 
 /**
  * Base card component built on MUI Card.
@@ -160,21 +147,17 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
       thumbnailBottomRight,
       thumbnailBottomLeft,
       title,
-      onClick,
-      onDoubleClick,
-      headerRight,
+
       statusIconHref,
       description,
       subheader,
       thumbnailAlt,
-      additionalContent,
       actions,
-      contextMenuContent,
-      selected,
+      moreActions,
       loading,
       disabled: cardDisabled,
       status,
-      slotProps,
+
       stringsOverrides,
       className,
       sx,
@@ -186,106 +169,45 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
 
     const thumbnailNode =
       typeof thumbnail === "string" ? (
-        <CardMedia component="img" src={thumbnail} alt={thumbnailAlt ?? ""} />
+        <CardMedia
+          image={thumbnail}
+          role="img"
+          aria-label={thumbnailAlt ?? ""}
+          sx={{ height: "100%", backgroundSize: "cover" }}
+        />
       ) : (
         thumbnail
       );
 
-    const [contextMenuPosition, setContextMenuPosition] = React.useState<{
-      mouseX: number;
-      mouseY: number;
-    } | null>(null);
-    const [menuAnchorEl, setMenuAnchorEl] = React.useState<HTMLElement | null>(
-      null
-    );
-    const menuOpen = contextMenuPosition !== null || menuAnchorEl !== null;
-
-    const closeContextMenu = React.useCallback(() => {
-      setContextMenuPosition(null);
-      setMenuAnchorEl(null);
-    }, []);
-
+    const moreMenuRef = React.useRef<MoreMenuHandle>(null);
     const handleContextMenu = React.useCallback(
       (event: React.MouseEvent<HTMLDivElement>) => {
-        if (!contextMenuContent) {
+        if (!moreActions?.length) {
           return;
         }
 
         event.preventDefault();
-        setMenuAnchorEl(null);
-        setContextMenuPosition({
+        moreMenuRef.current?.openAtPosition({
           mouseX: event.clientX - 2,
           mouseY: event.clientY - 4,
         });
       },
-      [contextMenuContent]
+      [moreActions]
     );
 
-    const handleMoreButtonClick = React.useCallback(
-      (event: React.MouseEvent<HTMLButtonElement>) => {
-        event.stopPropagation();
-        setContextMenuPosition(null);
-        setMenuAnchorEl(event.currentTarget);
-      },
-      []
-    );
+    const hasContextMenu = !!moreActions?.length;
 
-    const hasContextMenu = !!contextMenuContent;
-
-    if (actions?.length === 1) {
-      console.warn(
-        `Having a single 'actions' item is a design antipattern. Consider using the 'onClick' prop instead of 'actions' for a single action button.`,
-        actions
-      );
-    }
-
-    const actionButtons = actions?.length ? (
-      <CardActions
-        data-testid="card-action-buttons"
-        className="BaseCard-cardActions"
-        sx={[
-          {
-            position: "absolute",
-            opacity: 0,
-            transition: "opacity 0.25s ease-out",
-          },
-          ...spreadSx(slotProps?.actions?.sx),
-        ]}
-      >
-        <Grid container spacing={2}>
-          {actions.map(({ key, label, onClick }, index) => (
-            <Button
-              key={key}
-              onClick={(event) => {
-                event.stopPropagation();
-                onClick?.(event);
-              }}
-              color={index === 0 ? "primary" : "secondary"}
-              size="large"
-              variant="contained"
-            >
-              {label}
-            </Button>
-          ))}
-        </Grid>
-      </CardActions>
-    ) : null;
+    const visibleActions = actions?.filter(({ visible }) => visible ?? true);
+    const singleAction =
+      visibleActions?.length === 1 ? visibleActions[0] : undefined;
+    const multipleActions =
+      visibleActions && visibleActions.length > 1 ? visibleActions : undefined;
 
     if (loading) {
       return (
         <BaseCardLoading
           className={className}
-          sx={[
-            {
-              overflow: "hidden",
-              minWidth: "18rem",
-              minHeight: "15rem",
-              display: "flex",
-              flexDirection: "column",
-              userSelect: "none",
-            },
-            ...spreadSx(sx),
-          ]}
+          sx={{ ...baseCardSx, ...spreadSx(sx) }}
         />
       );
     }
@@ -295,59 +217,31 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
         <Card
           ref={ref}
           variant="outlined"
-          className={className}
-          sx={[
-            {
-              overflow: "hidden",
-              minWidth: "18rem",
-              minHeight: "15rem",
-              display: "flex",
-              flexDirection: "column",
-              userSelect: "none",
-              cursor: cardDisabled ? "not-allowed" : "default",
-              ...(selected && {
-                outline: "2px solid",
-                outlineColor: "var(--stratakit-color-border-accent-strong)",
-              }),
-              "&:hover .BaseCard-cardActions, &:focus-within .BaseCard-cardActions":
-                {
-                  opacity: 1,
-                },
-            },
-            ...spreadSx(sx),
-          ]}
-          aria-labelledby={titleId}
-          aria-selected={selected ?? undefined}
-          aria-disabled={cardDisabled ?? undefined}
           {...rest}
-          onClick={!cardDisabled ? onClick : undefined}
+          className={className}
+          aria-labelledby={titleId}
+          // `inert` is not yet in React 18's DOM typings; spread it in until React 19 types land.
+          {...(cardDisabled ? ({ inert: "" } as Record<string, unknown>) : {})}
           onContextMenu={
             !cardDisabled && hasContextMenu ? handleContextMenu : undefined
           }
-          onDoubleClick={!cardDisabled ? onDoubleClick : undefined}
+          sx={[
+            {
+              ...baseCardSx,
+              cursor: cardDisabled ? "not-allowed" : "default",
+            },
+            ...spreadSx(sx),
+          ]}
         >
           {/* ── Thumbnail area ── */}
 
-          <Box
-            className={slotProps?.thumbnail?.className}
-            sx={[
-              {
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                position: "relative",
-                aspectRatio: "16 / 10",
-                overflow: "hidden",
-              },
-              ...spreadSx(slotProps?.thumbnail?.sx),
-            ]}
-          >
+          <BaseCardThumbnailArea>
             {thumbnailTopLeft && (
               <Box sx={{ position: "absolute", top: 8, left: 8, zIndex: 1 }}>
                 {thumbnailTopLeft}
               </Box>
             )}
-            {(thumbnailTopRight ?? hasContextMenu) && (
+            {thumbnailTopRight && (
               <Box
                 sx={{
                   position: "absolute",
@@ -359,16 +253,6 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
                 }}
               >
                 {thumbnailTopRight}
-                {hasContextMenu && !cardDisabled && (
-                  <ThumbnailIconButton
-                    label={stringsOverrides?.moreOptions ?? "More options"}
-                    data-testid="show-context-menu-button"
-                    aria-haspopup="true"
-                    aria-expanded={menuOpen}
-                    onClick={handleMoreButtonClick}
-                    icon={svgMoreVertical}
-                  />
-                )}
               </Box>
             )}
             {thumbnailNode}
@@ -384,50 +268,57 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
                 {thumbnailBottomRight}
               </Box>
             )}
-            {actionButtons}
-          </Box>
+          </BaseCardThumbnailArea>
 
           <Divider
-            className={slotProps?.divider?.className}
-            sx={[
-              {
-                borderColor:
-                  status === "positive"
-                    ? "var(--stratakit-color-border-positive-base)"
-                    : status === "warning"
-                    ? "var(--stratakit-color-border-attention-base)"
-                    : status === "negative"
-                    ? "var(--stratakit-color-border-critical-base)"
-                    : undefined,
-              },
-              ...spreadSx(slotProps?.divider?.sx),
-            ]}
+            role="presentation"
+            sx={{
+              borderColor:
+                status === "positive"
+                  ? "var(--stratakit-color-border-positive-base)"
+                  : status === "warning"
+                  ? "var(--stratakit-color-border-attention-base)"
+                  : status === "negative"
+                  ? "var(--stratakit-color-border-critical-base)"
+                  : undefined,
+            }}
           />
 
-          {/* ── Content area ── */}
           <CardHeader
             avatar={
               statusIconHref ? (
-                <Box
-                  sx={{ width: "1.5rem", height: "1.5rem" }}
-                  data-testid="status-icon"
-                >
-                  <StatusIcon href={statusIconHref} status={status} />
-                </Box>
+                <StatusIcon href={statusIconHref} status={status} />
               ) : undefined
             }
-            title={title}
+            title={
+              singleAction ? (
+                <CardActionArea
+                  onClick={
+                    !cardDisabled && !singleAction.disabled
+                      ? singleAction.onClick
+                      : undefined
+                  }
+                  disabled={cardDisabled ? true : singleAction.disabled}
+                >
+                  {title}
+                </CardActionArea>
+              ) : (
+                title
+              )
+            }
             action={
-              headerRight ? (
-                <Box sx={{ flexShrink: 0 }}>{headerRight}</Box>
+              hasContextMenu && !cardDisabled ? (
+                <MoreMenuMUI
+                  ref={moreMenuRef}
+                  items={moreActions!}
+                  label={stringsOverrides?.moreOptions ?? "More options"}
+                  prompt={<Icon href={svgMoreVertical} />}
+                  data-testid="show-context-menu-button"
+                />
               ) : undefined
             }
             subheader={subheader}
-            className={slotProps?.header?.className}
-            sx={[
-              { alignItems: "flex-start" },
-              ...spreadSx(slotProps?.header?.sx),
-            ]}
+            sx={[{ alignItems: "flex-start" }]}
             slotProps={{
               title: {
                 component: "h2",
@@ -441,57 +332,38 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
                     WebkitBoxOrient: "vertical",
                     overflow: "hidden",
                   },
-                  ...spreadSx(slotProps?.title?.sx),
                 ],
+              },
+              subheader: {
+                component: "h3",
               },
             }}
           />
 
-          {description ?? additionalContent ? (
-            <CardContent
-              className={slotProps?.content?.className}
-              sx={slotProps?.content?.sx}
-            >
-              <Stack
-                className={slotProps?.info?.className}
-                sx={slotProps?.info?.sx}
-              >
-                {description && (
-                  <Typography variant="body2" color="textSecondary">
-                    {description}
-                  </Typography>
-                )}
-              </Stack>
-              {additionalContent && (
-                <Box sx={{ mt: 1 }}>{additionalContent}</Box>
-              )}
+          {description ? (
+            <CardContent data-testid="card-description">
+              <Typography variant="body2" color="textSecondary">
+                {description}
+              </Typography>
             </CardContent>
           ) : (
             <CardContent sx={{ pt: 0 }} />
           )}
-        </Card>
 
-        {hasContextMenu && (
-          <Menu
-            open={menuOpen}
-            onClose={closeContextMenu}
-            onClick={closeContextMenu}
-            anchorReference={menuAnchorEl ? "anchorEl" : "anchorPosition"}
-            anchorEl={menuAnchorEl}
-            anchorPosition={
-              contextMenuPosition !== null
-                ? {
-                    top: contextMenuPosition.mouseY,
-                    left: contextMenuPosition.mouseX,
-                  }
-                : undefined
-            }
-            transformOrigin={{ horizontal: "right", vertical: "top" }}
-            anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-          >
-            {contextMenuContent}
-          </Menu>
-        )}
+          {multipleActions && (
+            <CardActions>
+              {multipleActions.map(({ key, label, onClick, disabled }) => (
+                <Button
+                  key={key}
+                  onClick={onClick}
+                  disabled={cardDisabled ? true : disabled}
+                >
+                  {label}
+                </Button>
+              ))}
+            </CardActions>
+          )}
+        </Card>
       </>
     );
   }

@@ -2,26 +2,27 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import svgMore from "@stratakit/icons/more-vertical.svg";
-import { Icon } from "@stratakit/mui";
 import {
   DataGrid,
-  GridColDef,
   GRID_DEFAULT_LOCALE_TEXT,
-  GridRowParams,
+  GridColDef,
 } from "@mui/x-data-grid";
+import svgMore from "@stratakit/icons/more-vertical.svg";
+import { Icon } from "@stratakit/mui";
 import React from "react";
+
+import { type BaseCardActionItem } from "../../components/baseCard/BaseCard";
+import MoreMenuMUI from "../../components/MoreMenuMUI";
+import { FavoriteIconMUI } from "../../components/tileFavoriteIcon/FavoriteIconMUI";
 import {
-  ITwinCellColumn,
   type ITwinTableOverridesMUI,
+  ITwinCellColumn,
   ITwinFull,
 } from "../../types";
-import MoreMenu from "../../components/MoreMenu";
 import {
-  buildContextMenuItemsMUI,
-  ContextMenuBuilderItemMUI,
+  MoreActionsMenuBuilderItemMUI,
+  resolveContextMenuItemsMUI,
 } from "../../utils/_buildMenuOptions";
-import { TileFavoriteIconMUI } from "../../components/tileFavoriteIcon/TileFavoriteIconMUI";
 
 // strings from data grid that we need to override in addition to our custom strings
 type MuiDataGridStrings = Pick<
@@ -47,8 +48,9 @@ export interface ITwinTableMUIStrings extends MuiDataGridStrings {
 
 export interface ITwinTableMUIProps {
   iTwins: ITwinFull[];
-  iTwinActions?: ContextMenuBuilderItemMUI<ITwinFull>[];
-  onOpen?: (iTwin: ITwinFull) => void;
+  moreActions?: MoreActionsMenuBuilderItemMUI<ITwinFull>[];
+  /** Factory that returns per-row actions. The first action drives row click. */
+  actions?: (iTwin: ITwinFull) => BaseCardActionItem[];
   strings: ITwinTableMUIStrings;
   iTwinFavorites: Set<string>;
   addITwinToFavorites: (iTwinId: string) => Promise<void>;
@@ -68,8 +70,8 @@ export interface ITwinTableMUIProps {
  */
 export const ITwinTableMUI = ({
   iTwins,
-  iTwinActions,
-  onOpen,
+  moreActions,
+  actions,
   strings,
   iTwinFavorites,
   addITwinToFavorites,
@@ -90,7 +92,7 @@ export const ITwinTableMUI = ({
         renderCell: (params) => {
           const isFavorite = iTwinFavorites.has(params.value);
           return (
-            <TileFavoriteIconMUI
+            <FavoriteIconMUI
               isFavorite={isFavorite}
               addLabel={strings.addToFavorites}
               removeLabel={strings.removeFromFavorites}
@@ -98,7 +100,8 @@ export const ITwinTableMUI = ({
               onRemoveFromFavorites={() =>
                 removeITwinFromFavorites(params.value)
               }
-              sx={{ bgcolor: "transparent" }}
+              transparent
+              tabIndex={params.tabIndex}
             />
           );
         },
@@ -126,7 +129,9 @@ export const ITwinTableMUI = ({
         width: 200,
         disableColumnMenu: true,
         valueFormatter: (value: string) => {
-          if (!value) return "";
+          if (!value) {
+            return "";
+          }
           return new Date(value).toLocaleDateString();
         },
         ...columnOverrides[ITwinCellColumn.LastModified],
@@ -138,22 +143,20 @@ export const ITwinTableMUI = ({
         width: 65,
         disableColumnMenu: true,
         renderCell: (params) => {
-          if (!iTwinActions || iTwinActions.length === 0) return null;
-          const moreOptions = (close: () => void) => {
-            const options = buildContextMenuItemsMUI(
-              iTwinActions,
-              params.row,
-              close,
-              refetchITwins
-            );
-            return options ?? [];
-          };
+          if (!moreActions || moreActions.length === 0) {
+            return null;
+          }
+          const items = resolveContextMenuItemsMUI(
+            moreActions,
+            params.row,
+            refetchITwins
+          );
           return (
-            <MoreMenu
-              menuItems={moreOptions}
-              data-testid={`iTwin-row-${params.row.id}-more-options`}
+            <MoreMenuMUI
+              items={items}
               prompt={<Icon href={svgMore} />}
               label={strings.moreOptions}
+              tabIndex={params.tabIndex}
             />
           );
         },
@@ -169,23 +172,32 @@ export const ITwinTableMUI = ({
     removeITwinFromFavorites,
     columnOverrides,
     hideColumns,
-    iTwinActions,
+    moreActions,
     refetchITwins,
   ]);
-
-  const handleRowClick = React.useCallback(
-    (params: GridRowParams<ITwinFull>) => {
-      onOpen?.(params.row);
-    },
-    [onOpen]
-  );
 
   return (
     <DataGrid<ITwinFull>
       rows={iTwins}
       columns={columns}
       loading={isLoading}
-      onRowClick={onOpen ? handleRowClick : undefined}
+      onRowClick={
+        actions ? (params) => actions(params.row)[0]?.onClick?.() : undefined
+      }
+      onCellKeyDown={
+        actions
+          ? (params, event) => {
+              if (
+                (event.key === "Enter" || event.key === " ") &&
+                params.field !== "id" &&
+                params.field !== "actions"
+              ) {
+                event.preventDefault();
+                actions(params.row)[0]?.onClick?.();
+              }
+            }
+          : undefined
+      }
       disableRowSelectionOnClick
       disableMultipleRowSelection
       disableColumnSelector
@@ -210,7 +222,12 @@ export const ITwinTableMUI = ({
         "& .MuiDataGrid-cell:focus-within": {
           outline: "none",
         },
-        ...(onOpen && {
+        // reveal unfavorited icon on row hover or keyboard focus
+        "& .MuiDataGrid-row:hover .favoriteIcon, & .MuiDataGrid-row:focus-within .favoriteIcon":
+          {
+            opacity: 1,
+          },
+        ...(actions && {
           "& .MuiDataGrid-row": {
             cursor: "pointer",
           },

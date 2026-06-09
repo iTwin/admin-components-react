@@ -2,28 +2,28 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import svgMore from "@stratakit/icons/more-vertical.svg";
-import { Icon } from "@stratakit/mui";
 import {
   DataGrid,
-  GridColDef,
   GRID_DEFAULT_LOCALE_TEXT,
-  GridRowParams,
+  GridColDef,
 } from "@mui/x-data-grid";
+import svgMore from "@stratakit/icons/more-vertical.svg";
+import { Icon } from "@stratakit/mui";
 import React from "react";
 
+import { type BaseCardActionItem } from "../../components/baseCard/BaseCard";
+import MoreMenuMUI from "../../components/MoreMenuMUI";
+import { FavoriteIconMUI } from "../../components/tileFavoriteIcon/FavoriteIconMUI";
 import { useIModelFavoritesContext } from "../../contexts/IModelFavoritesContext";
 import {
-  IModelCellColumn,
-  type IModelTableOverridesMUI,
   type IModelFull,
+  type IModelTableOverridesMUI,
+  IModelCellColumn,
 } from "../../types";
-import MoreMenu from "../../components/MoreMenu";
 import {
-  buildContextMenuItemsMUI,
-  ContextMenuBuilderItemMUI,
+  MoreActionsMenuBuilderItemMUI,
+  resolveContextMenuItemsMUI,
 } from "../../utils/_buildMenuOptions";
-import { TileFavoriteIconMUI } from "../../components/tileFavoriteIcon/TileFavoriteIconMUI";
 
 type MuiDataGridStrings = Pick<
   typeof GRID_DEFAULT_LOCALE_TEXT,
@@ -48,8 +48,9 @@ export interface IModelTableMUIStrings extends MuiDataGridStrings {
 
 export interface IModelTableMUIProps {
   iModels: IModelFull[];
-  iModelActions?: ContextMenuBuilderItemMUI<IModelFull>[];
-  onOpen?: (iModel: IModelFull) => void;
+  moreActions?: MoreActionsMenuBuilderItemMUI<IModelFull>[];
+  /** Factory that returns per-row actions. The first action drives row click. */
+  actions?: (iModel: IModelFull) => BaseCardActionItem[];
   strings: IModelTableMUIStrings;
   refetchIModels: () => void;
   tableOverrides?: IModelTableOverridesMUI;
@@ -66,8 +67,8 @@ export interface IModelTableMUIProps {
  */
 export const IModelTableMUI = ({
   iModels,
-  iModelActions,
-  onOpen,
+  moreActions,
+  actions,
   strings,
   refetchIModels,
   tableOverrides: { columnOverrides = {}, hideColumns = [] } = {},
@@ -87,7 +88,7 @@ export const IModelTableMUI = ({
         renderCell: (params) => {
           const isFavorite = favoritesContext?.favorites.has(params.value);
           return (
-            <TileFavoriteIconMUI
+            <FavoriteIconMUI
               isFavorite={!!isFavorite}
               addLabel={strings.addToFavorites}
               removeLabel={strings.removeFromFavorites}
@@ -95,7 +96,8 @@ export const IModelTableMUI = ({
               onRemoveFromFavorites={() =>
                 favoritesContext?.remove?.(params.value)
               }
-              sx={{ bgcolor: "transparent" }}
+              transparent
+              tabIndex={params.tabIndex}
             />
           );
         },
@@ -126,7 +128,9 @@ export const IModelTableMUI = ({
           valueGetter: (value: string | null | undefined, row: IModelFull) =>
             row.lastChangesetPushDateTime ?? row.createdDateTime ?? "",
           valueFormatter: (value: string) => {
-            if (!value) return "";
+            if (!value) {
+              return "";
+            }
             return new Date(value).toLocaleDateString();
           },
           disableColumnMenu: true,
@@ -139,22 +143,20 @@ export const IModelTableMUI = ({
         width: 50,
         disableColumnMenu: true,
         renderCell: (params) => {
-          if (!iModelActions || iModelActions.length === 0) return null;
-          const moreOptions = (close: () => void) => {
-            const options = buildContextMenuItemsMUI(
-              iModelActions,
-              params.row,
-              close,
-              refetchIModels
-            );
-            return options ?? [];
-          };
+          if (!moreActions || moreActions.length === 0) {
+            return null;
+          }
+          const items = resolveContextMenuItemsMUI(
+            moreActions,
+            params.row,
+            refetchIModels
+          );
           return (
-            <MoreMenu
-              menuItems={moreOptions}
-              data-testid={`iModel-row-${params.row.id}-more-options`}
+            <MoreMenuMUI
+              items={items}
               label={strings.moreOptions}
               prompt={<Icon href={svgMore} />}
+              tabIndex={params.tabIndex}
             />
           );
         },
@@ -168,23 +170,32 @@ export const IModelTableMUI = ({
     favoritesContext,
     columnOverrides,
     hideColumns,
-    iModelActions,
+    moreActions,
     refetchIModels,
   ]);
-
-  const handleRowClick = React.useCallback(
-    (params: GridRowParams<IModelFull>) => {
-      onOpen?.(params.row);
-    },
-    [onOpen]
-  );
 
   return (
     <DataGrid<IModelFull>
       rows={iModels}
       columns={columns}
       loading={isLoading}
-      onRowClick={onOpen ? handleRowClick : undefined}
+      onRowClick={
+        actions ? (params) => actions(params.row)[0]?.onClick?.() : undefined
+      }
+      onCellKeyDown={
+        actions
+          ? (params, event) => {
+              if (
+                (event.key === "Enter" || event.key === " ") &&
+                params.field !== "id" &&
+                params.field !== "actions"
+              ) {
+                event.preventDefault();
+                actions(params.row)[0]?.onClick?.();
+              }
+            }
+          : undefined
+      }
       disableRowSelectionOnClick
       disableMultipleRowSelection
       disableColumnSelector
@@ -208,7 +219,12 @@ export const IModelTableMUI = ({
         "& .MuiDataGrid-cell:focus-within": {
           outline: "none",
         },
-        ...(onOpen && {
+        // reveal unfavorited icon on row hover or keyboard focus
+        "& .MuiDataGrid-row:hover .favoriteIcon, & .MuiDataGrid-row:focus-within .favoriteIcon":
+          {
+            opacity: 1,
+          },
+        ...(actions && {
           "& .MuiDataGrid-row": {
             cursor: "pointer",
           },

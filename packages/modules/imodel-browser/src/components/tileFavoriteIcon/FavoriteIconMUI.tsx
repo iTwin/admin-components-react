@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import pinIcon from "@stratakit/icons/pin.svg";
 import React from "react";
+
 import { ThumbnailIconButton } from "../baseCard/ThumbnailIconButton";
 
 export interface TileFavoriteIconProps {
@@ -21,14 +22,22 @@ export interface TileFavoriteIconProps {
   className?: string;
   /** Whether the icon button is disabled */
   disabled?: boolean;
-  sx?: React.ComponentProps<typeof ThumbnailIconButton>["sx"];
+  /**
+   * When true, removes the overlay background (e.g. for use in table rows
+   * where the row itself provides contrast).
+   */
+  transparent?: boolean;
+  tabIndex?: number;
 }
 
 /**
- * Reusable favorite icon button for Tile components
- * Shows a star icon that can be clicked to add/remove from favorites
+ * Reusable favorite icon button for Tile and Table components.
+ *
+ * Hidden (`opacity: 0`) when not favorited — the parent is responsible for
+ * revealing it on hover / focus-within by targeting the `.favoriteIcon` class.
+ * Always visible when favorited.
  */
-export const TileFavoriteIconMUI = ({
+export const FavoriteIconMUI = ({
   isFavorite,
   onAddToFavorites,
   onRemoveFromFavorites,
@@ -36,18 +45,30 @@ export const TileFavoriteIconMUI = ({
   removeLabel,
   disabled,
   className = "",
-  sx,
+  transparent,
+  tabIndex,
 }: TileFavoriteIconProps) => {
   return (
     <ThumbnailIconButton
       aria-label={isFavorite ? removeLabel : addLabel}
+      aria-pressed={isFavorite}
+      tabIndex={tabIndex}
       onClick={async () => {
         isFavorite ? await onRemoveFromFavorites() : await onAddToFavorites();
       }}
-      className={className}
+      className={`favoriteIcon${isFavorite ? " isFavorite" : ""}${
+        className ? " " + className : ""
+      }`}
       disabled={disabled}
-      sx={sx}
+      muted={!isFavorite}
       icon={pinIcon}
+      sx={{
+        ...(!isFavorite && { opacity: 0 }),
+        ...(transparent && {
+          bgcolor: "transparent",
+          "&:hover": { bgcolor: "transparent" },
+        }),
+      }}
     />
   );
 };

@@ -7,7 +7,7 @@ import { Icon } from "@stratakit/mui";
 import React from "react";
 
 /**
- * Status icon displayed to the left of the title on BaseCard components
+ * Status icon displayed in the `avatar` slot to the left of the CardHeader on BaseCard components.
  *
  * @alpha
  */
@@ -29,7 +29,13 @@ export function StatusIcon({
       : undefined;
 
   return (
-    <Box sx={{ color }}>
+    <Box
+      sx={{ width: "1.5rem", height: "1.5rem", color }}
+      role="img"
+      aria-label={status ? `${status} status` : undefined}
+      aria-hidden={status ? undefined : "true"}
+      data-testid="status-icon"
+    >
       <Icon href={href} size="large" />
     </Box>
   );

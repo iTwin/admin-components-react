@@ -3,35 +3,33 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import {
-  ITwinGrid as ExternalComponent,
   type IndividualITwinStateHook,
-  type ITwinGridProps,
-  ITwinTile,
-  DataStatus,
   type ITwinFull,
+  type ITwinGridProps,
+  DataStatus,
   ITwinCellColumn,
+  ITwinGrid as ExternalComponent,
+  ITwinTile,
 } from "@itwin/imodel-browser-react/mui";
 import { SvgHeart } from "@itwin/itwinui-icons-react";
 import { Code, IconButton } from "@itwin/itwinui-react";
+import Avatar from "@mui/material/Avatar";
+import AvatarGroup from "@mui/material/AvatarGroup";
+import Box from "@mui/material/Box";
+import Chip from "@mui/material/Chip";
+import Typography from "@mui/material/Typography";
+import { action } from "@storybook/addon-actions";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
+
+import bridgeThumbnail from "../utils/bridge.jpg";
+import nightThumbnail from "../utils/night.jpg";
+import overpassThumbnail from "../utils/overpass.jpg";
+import powerThumbnail from "../utils/power.jpg";
 import {
   accessTokenArgTypes,
   withAccessTokenOverride,
 } from "../utils/storyHelp";
-import { action } from "@storybook/addon-actions";
-import Avatar from "@mui/material/Avatar";
-import AvatarGroup from "@mui/material/AvatarGroup";
-import Chip from "@mui/material/Chip";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
-import Skeleton from "@mui/material/Skeleton";
-import Typography from "@mui/material/Typography";
-import bridgeThumbnail from "../utils/bridge.jpg";
-import powerThumbnail from "../utils/power.jpg";
-import nightThumbnail from "../utils/night.jpg";
-import overpassThumbnail from "../utils/overpass.jpg";
-import Box from "@mui/material/Box";
 
 type ITwinTileType = React.ComponentPropsWithoutRef<typeof ITwinTile>;
 
@@ -48,8 +46,13 @@ const Template: Story<ITwinGridProps> = withAccessTokenOverride((args) => (
 const baseArgs: ITwinGridProps = {
   apiOverrides: { serverEnvironmentPrefix: "qa" },
   viewMode: "tile",
-  onOpen: (iTwin) => action("Open " + iTwin.displayName)(iTwin),
-  onSelect: (iTwin) => action("Select " + iTwin.displayName)(iTwin),
+  actions: [
+    {
+      key: "open",
+      label: (iTwin) => iTwin.displayName ?? "",
+      onClick: (iTwin) => action("Open " + iTwin.displayName)(iTwin),
+    },
+  ],
 };
 
 export const Primary = Template.bind({});
@@ -61,6 +64,19 @@ export const TableView = Template.bind({});
 TableView.args = {
   ...baseArgs,
   viewMode: "cells",
+  moreActions: [
+    {
+      label: "Some action",
+      key: "something",
+      onClick: (iTwin) => action("clicked " + iTwin?.displayName)(iTwin),
+    },
+    {
+      label: "Some other action",
+      key: "something-else",
+      onClick: (iTwin) =>
+        action("clicked something else " + iTwin?.displayName)(iTwin),
+    },
+  ],
 };
 
 export const TableViewWithOverrides = Template.bind({});
@@ -135,23 +151,22 @@ OverrideApiData.args = {
 export const IndividualContextMenu = Template.bind({});
 IndividualContextMenu.args = {
   ...baseArgs,
-
-  iTwinActions: [
+  moreActions: [
     {
-      children: "displayName contains 'R'",
+      label: "displayName contains 'R'",
       visible: (iTwin) => iTwin.displayName?.includes("R") ?? false,
       key: "withR",
       onClick: (iTwin) => action("Contains R" + iTwin?.displayName)(iTwin),
     },
     {
-      children: "Add iTwinNumber",
+      label: "Add iTwinNumber",
       visible: (iTwin) => !iTwin.number,
       key: "addD",
       onClick: (iTwin) =>
         action("Add iTwinNumber to " + iTwin?.displayName)(iTwin),
     },
     {
-      children: (iTwin) => `Edit iTwin ${iTwin.displayName}`,
+      label: (iTwin) => `Edit iTwin ${iTwin.displayName}`,
       visible: (iTwin) => !!iTwin.number,
       key: "editD",
       onClick: (iTwin) => action("Edit iTwinNumber: " + iTwin?.number)(iTwin),
@@ -166,11 +181,8 @@ SimpleTilePropsOverrides.args = {
     status: "negative",
     thumbnail: bridgeThumbnail,
     getBadge: () => <Chip size="small" label="Tile Override" />,
-    headerRight: (
-      <AvatarGroup
-        max={3}
-        sx={{ "& .MuiAvatar-root": { width: 24, height: 24, fontSize: 12 } }}
-      >
+    thumbnailTopLeft: (
+      <AvatarGroup max={3}>
         <Avatar alt="User 1" src="https://i.pravatar.cc/150?img=1" />
         <Avatar alt="User 2" src="https://i.pravatar.cc/150?img=2" />
         <Avatar alt="User 3" src="https://i.pravatar.cc/150?img=3" />
@@ -192,134 +204,30 @@ interface IModelsFetchData {
   };
 }
 
-/** Function used in useIndividualState */
-const buildMenuItems =
-  (
-    close: () => void,
-    setVersion: React.Dispatch<React.SetStateAction<IModelMinimal | undefined>>
-  ) =>
-  (v: IModelMinimal) => (
-    <span
-      onClick={(event) => {
-        event.stopPropagation();
-      }}
-    >
-      {v.id === "loading" ? (
-        <MenuItem>
-          <Skeleton variant="rectangular" width="100%" height={24} />
-        </MenuItem>
-      ) : (
-        <MenuItem
-          key={v.id}
-          onClick={() => {
-            close();
-            v.id !== "loading" && setVersion(v);
-          }}
-        >
-          {v.displayName}
-        </MenuItem>
-      )}
-    </span>
-  );
-
-/** Hook used in StatefulPropsOverrides.args, the function itself must be a stable reference as it is a hook. */
 const useIndividualState: IndividualITwinStateHook = (iTwin, props) => {
-  const [selection, setSelection] = React.useState<IModelMinimal | undefined>();
-
-  const [imodels, setIModels] = React.useState<IModelMinimal[] | undefined>();
-  // We delay network call until the user wants to query the data, this could be in an effect
-  // but would automatically trigger for EVERY project, causing potentially huge network traffic at startup.
-  const fetchIModelList = React.useCallback(
-    async (
-      url = `https://${
-        props.gridProps.apiOverrides?.serverEnvironmentPrefix
-          ? `${props.gridProps.apiOverrides?.serverEnvironmentPrefix}-`
-          : ""
-      }api.bentley.com/imodels/?iTwinId=${iTwin.id}&$top=10`
-    ) => {
-      try {
-        // Show the skeleton, plus prevent further calls to this function.
-        setIModels([
-          {
-            id: "loading",
-            displayName: "",
-          },
-        ]);
-
-        // Start the fetch
-        const response = await fetch(url, {
-          headers: {
-            Authorization: (props.gridProps.accessToken as string) ?? "",
-            Prefer: "return=minimal",
-          },
-        });
-        if (response.ok) {
-          const data: IModelsFetchData = await response.json();
-          setIModels(data.iModels);
-          if (data.iModels.length === 0) {
-            setSelection({ displayName: "No iModels created", id: "none" });
-          }
-        }
-      } catch (error) {
-        // If an error occurs, clear the versions so they will be fetched again.
-        setIModels(undefined);
-        console.error(error);
-      }
-    },
-    [
-      iTwin.id,
-      props.gridProps.accessToken,
-      props.gridProps.apiOverrides?.serverEnvironmentPrefix,
-    ]
-  );
-  // Create a memo of the tileProps we want to override, depending on the state.
   const tileProps = React.useMemo<Partial<ITwinTileType>>(
     () => ({
-      actions:
-        selection && selection.id !== "none"
-          ? [
-              {
-                key: "create",
-                label: "Create IModel",
-                onClick: action("Create IModel clicked"),
-              },
-              {
-                key: "open",
-                label: "Open IModel",
-                onClick: action("Open IModel clicked"),
-              },
-            ]
-          : [
-              {
-                key: "create",
-                label: "Create IModel",
-                onClick: action("Create IModel clicked"),
-              },
-            ],
-      headerRight: (
+      actions: [
+        {
+          key: "create",
+          label: "Create IModel",
+          onClick: action("Create IModel clicked"),
+        },
+        {
+          key: "open",
+          label: "Open IModel",
+          onClick: action("Open IModel clicked"),
+        },
+      ],
+      thumbnailTopLeft: (
         <AvatarGroup max={3}>
           <Avatar alt="User 3" src="https://i.pravatar.cc/150?img=1" />
         </AvatarGroup>
       ),
-      additionalContent: (
-        <span
-          onClick={async () => {
-            imodels === undefined && (await fetchIModelList());
-          }}
-        >
-          <Select
-            label="Select iModel..."
-            displayEmpty
-            value={selection?.id ?? ""}
-          >
-            {imodels?.map(buildMenuItems(() => {}, setSelection)) ?? []}
-          </Select>
-        </span>
-      ),
     }),
-    [selection, imodels, fetchIModelList]
+    []
   );
-  // TODO: verify
+
   return {
     ...props,
     ...tileProps,
@@ -405,9 +313,9 @@ StringsOverrideGrid.args = {
       },
     ],
   },
-  iTwinActions: [
+  moreActions: [
     {
-      children: "Some action",
+      label: "Some action",
       key: "something",
       onClick: (iTwin) => action("clicked " + iTwin?.displayName)(iTwin),
     },
@@ -458,9 +366,9 @@ StringsOverrideTable.args = {
       },
     ],
   },
-  iTwinActions: [
+  moreActions: [
     {
-      children: "Some action",
+      label: "Some action",
       key: "something",
       onClick: (iTwin) => action("clicked " + iTwin?.displayName)(iTwin),
     },
