@@ -3,32 +3,33 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import {
-  IModelGrid as ExternalComponent,
+  type IModelFull,
   type IModelGridProps as IModelGridMUIProps,
   DataStatus,
-  type IModelFull,
   IModelCellColumn,
+  IModelGrid as ExternalComponent,
 } from "@itwin/imodel-browser-react/mui";
-import {
-  useIndividualState,
-  additionalData,
-  initialData,
-} from "./IModelGridMUI.helpers";
-import SvgDelete from "@stratakit/icons/delete.svg";
+import Avatar from "@mui/material/Avatar";
+import AvatarGroup from "@mui/material/AvatarGroup";
+import Chip from "@mui/material/Chip";
+import Typography from "@mui/material/Typography";
+import { action } from "@storybook/addon-actions";
 import { Meta, Story } from "@storybook/react/types-6-0";
+import SvgDelete from "@stratakit/icons/delete.svg";
 import React from "react";
+
+import bridgeThumbnail from "../utils/bridge.jpg";
+import nightThumbnail from "../utils/night.jpg";
 import {
   accessTokenArgTypes,
   withAccessTokenOverride,
   withITwinIdOverride,
 } from "../utils/storyHelp";
-import Typography from "@mui/material/Typography";
-import Chip from "@mui/material/Chip";
-import AvatarGroup from "@mui/material/AvatarGroup";
-import Avatar from "@mui/material/Avatar";
-import { action } from "@storybook/addon-actions";
-import bridgeThumbnail from "../utils/bridge.jpg";
-import nightThumbnail from "../utils/night.jpg";
+import {
+  additionalData,
+  initialData,
+  useIndividualState,
+} from "./IModelGridMUI.helpers";
 
 export const IModelGridMUI = (props: IModelGridMUIProps) => (
   <ExternalComponent {...props} />
@@ -48,7 +49,13 @@ const Template: Story<IModelGridMUIProps> = withITwinIdOverride(
 const baseArgs: IModelGridMUIProps = {
   apiOverrides: { serverEnvironmentPrefix: "qa" },
   sortOptions: { sortType: "name", descending: false },
-  onOpen: action("iModel opened"),
+  actions: (iModel) => [
+    {
+      key: "open",
+      label: iModel.displayName ?? "",
+      onClick: () => action("iModel opened")(iModel),
+    },
+  ],
   moreActions: [
     {
       key: "open",
@@ -64,8 +71,7 @@ const baseArgs: IModelGridMUIProps = {
     },
   ],
   // tileOverrides: {
-  //   onOpen: (iModel) => alert("Opened " + iModel.displayName),
-  //   onSelect: (iModel) => action("Selected " + iModel.displayName),
+  //   actions: (iModel) => [{ key: "open", label: iModel.displayName, onClick: () => alert("Opened " + iModel.displayName) }],
   // },
 };
 
@@ -207,7 +213,9 @@ StatefulPropsOverrides.args = {
 };
 
 function addStartTileCallback(iModels: IModelFull[], status?: DataStatus) {
-  if (status !== DataStatus.Complete) return iModels;
+  if (status !== DataStatus.Complete) {
+    return iModels;
+  }
 
   iModels.unshift({
     id: "prepended",
@@ -244,7 +252,7 @@ DisableAddToRecents.args = {
 };
 DisableAddToRecents.argTypes = {
   accessToken: { table: { disable: true } },
-  onOpen: { table: { disable: true } },
+  actions: { table: { disable: true } },
   sortOptions: { table: { disable: true } },
   moreActions: { table: { disable: true } },
   useIndividualState: { table: { disable: true } },

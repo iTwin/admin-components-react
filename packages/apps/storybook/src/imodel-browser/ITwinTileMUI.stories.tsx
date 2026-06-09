@@ -3,20 +3,21 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import {
-  ITwinTile,
-  type ITwinTileProps,
   type ITwinFull,
+  type ITwinTileProps,
+  ITwinTile,
 } from "@itwin/imodel-browser-react/mui";
+import { SvgThumbnail } from "@itwin/imodel-browser-react/mui";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import { action } from "@storybook/addon-actions";
 import { Meta, Story } from "@storybook/react/types-6-0";
+import svgMagnet from "@stratakit/icons/magnet.svg";
 import React from "react";
+
+import { DefaultThumbnail } from "../../../../modules/imodel-browser/src/containers/ITwinGrid/ITwinTileMUI";
 import bridgeThumbnail from "../utils/bridge.jpg";
 import powerThumbnail from "../utils/power.jpg";
-import svgMagnet from "@stratakit/icons/magnet.svg";
-import { DefaultThumbnail } from "../../../../modules/imodel-browser/src/containers/ITwinGrid/ITwinTileMUI";
-import { SvgThumbnail } from "@itwin/imodel-browser-react/mui";
 
 const InConstrainedContainer = ({
   children,
@@ -106,7 +107,6 @@ export default {
     },
     moreActions: { control: false },
     onSelect: { control: false },
-    onOpen: { control: false },
     thumbnailBottomLeft: { control: false },
     thumbnail: { control: false },
     actions: { control: false },

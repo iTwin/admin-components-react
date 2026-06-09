@@ -4,23 +4,25 @@
  *--------------------------------------------------------------------------------------------*/
 import "./ITwinGrid.scss";
 
+import Box from "@mui/material/Box";
 import React from "react";
 import { InView } from "react-intersection-observer";
-import Box from "@mui/material/Box";
+
+import { type BaseCardActionItem } from "../../components/baseCard/BaseCard";
+import { BaseCardLoading } from "../../components/baseCard/BaseCardLoading";
 import { NoResults } from "../../components/noResults/NoResults";
 import {
-  DataStatus,
-  type ITwinTableOverridesMUI,
   type ITwinFull,
+  type ITwinTableOverridesMUI,
+  DataStatus,
 } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
 import { ContextMenuBuilderItemMUI } from "../../utils/_buildMenuOptions";
+import type { ITwinGridProps, ITwinGridStrings } from "./ITwinGrid";
+import { type ITwinTableMUIStrings, ITwinTableMUI } from "./ITwinTableMUI";
+import { type ITwinTilePropsMUI, ITwinTileMUI } from "./ITwinTileMUI";
 import { useITwinData } from "./useITwinData";
 import { useITwinFavorites } from "./useITwinFavorites";
-import { ITwinTableMUI, type ITwinTableMUIStrings } from "./ITwinTableMUI";
-import { ITwinTileMUI, type ITwinTilePropsMUI } from "./ITwinTileMUI";
-import { BaseCardLoading } from "../../components/baseCard/BaseCardLoading";
-import type { ITwinGridProps, ITwinGridStrings } from "./ITwinGrid";
 
 /** @alpha */
 export type IndividualITwinStateHookMUI = (
@@ -47,9 +49,22 @@ export interface ITwinGridPropsMUI
     | "tableOverrides"
     | "stringsOverrides"
     | "status"
+    | "onOpen"
   > {
-  /** Open handler for the iTwin tile. */
-  onOpen?(iTwin: ITwinFull): void;
+  /**
+   * Factory that returns actions for a given iTwin.
+   *
+   * - **Single action** — the tile title becomes a clickable link; a table row click fires the action.
+   * - **Multiple actions** — rendered as buttons in the tile footer; the first action still drives table row click.
+   *
+   * @example
+   * ```tsx
+   * actions={(iTwin) => [
+   *   { key: "open", label: iTwin.displayName, onClick: () => navigate(`/itwins/${iTwin.id}`) },
+   * ]}
+   * ```
+   */
+  actions?: (iTwin: ITwinFull) => BaseCardActionItem[];
   /** List of actions to build for each iTwin context menu. */
   moreActions?: ContextMenuBuilderItemMUI<ITwinFull>[];
   /** Function (can be a react hook) that returns state for an iTwin, returned values will be applied as props to the iTwinTile, overrides ITwinGrid provided values */
@@ -71,7 +86,7 @@ export const ITwinGridMUI = ({
   apiOverrides,
   filterOptions,
   orderbyOptions,
-  onOpen,
+  actions,
   moreActions,
   requestType,
   iTwinSubClass,
@@ -182,7 +197,7 @@ export const ITwinGridMUI = ({
                   accessToken,
                   apiOverrides,
                   filterOptions,
-                  onOpen,
+                  actions,
                   requestType,
                   stringsOverrides,
                   tileOverrides,
@@ -191,17 +206,7 @@ export const ITwinGridMUI = ({
                 key={iTwin.id}
                 iTwin={iTwin}
                 moreActions={moreActions}
-                actions={
-                  onOpen
-                    ? [
-                        {
-                          key: "open",
-                          label: iTwin.displayName ?? "",
-                          onClick: () => onOpen(iTwin),
-                        },
-                      ]
-                    : undefined
-                }
+                actions={actions ? actions(iTwin) : undefined}
                 useTileState={useIndividualState}
                 isFavorite={iTwinFavorites.has(iTwin.id)}
                 addToFavorites={addITwinToFavorites}
@@ -233,7 +238,7 @@ export const ITwinGridMUI = ({
     <ITwinTableMUI
       iTwins={iTwins}
       moreActions={moreActions}
-      onOpen={onOpen}
+      actions={actions}
       strings={strings}
       iTwinFavorites={iTwinFavorites}
       addITwinToFavorites={addITwinToFavorites}

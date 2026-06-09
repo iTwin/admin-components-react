@@ -2,28 +2,28 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import svgMore from "@stratakit/icons/more-vertical.svg";
-import { Icon } from "@stratakit/mui";
 import {
   DataGrid,
-  GridColDef,
   GRID_DEFAULT_LOCALE_TEXT,
-  GridRowParams,
+  GridColDef,
 } from "@mui/x-data-grid";
+import svgMore from "@stratakit/icons/more-vertical.svg";
+import { Icon } from "@stratakit/mui";
 import React from "react";
 
+import { type BaseCardActionItem } from "../../components/baseCard/BaseCard";
+import MoreMenuMUI from "../../components/MoreMenuMUI";
+import { TileFavoriteIconMUI } from "../../components/tileFavoriteIcon/TileFavoriteIconMUI";
 import { useIModelFavoritesContext } from "../../contexts/IModelFavoritesContext";
 import {
-  IModelCellColumn,
-  type IModelTableOverridesMUI,
   type IModelFull,
+  type IModelTableOverridesMUI,
+  IModelCellColumn,
 } from "../../types";
-import MoreMenuMUI from "../../components/MoreMenuMUI";
 import {
-  resolveContextMenuItemsMUI,
   ContextMenuBuilderItemMUI,
+  resolveContextMenuItemsMUI,
 } from "../../utils/_buildMenuOptions";
-import { TileFavoriteIconMUI } from "../../components/tileFavoriteIcon/TileFavoriteIconMUI";
 
 type MuiDataGridStrings = Pick<
   typeof GRID_DEFAULT_LOCALE_TEXT,
@@ -49,7 +49,8 @@ export interface IModelTableMUIStrings extends MuiDataGridStrings {
 export interface IModelTableMUIProps {
   iModels: IModelFull[];
   moreActions?: ContextMenuBuilderItemMUI<IModelFull>[];
-  onOpen?: (iModel: IModelFull) => void;
+  /** Factory that returns per-row actions. The first action drives row click. */
+  actions?: (iModel: IModelFull) => BaseCardActionItem[];
   strings: IModelTableMUIStrings;
   refetchIModels: () => void;
   tableOverrides?: IModelTableOverridesMUI;
@@ -67,7 +68,7 @@ export interface IModelTableMUIProps {
 export const IModelTableMUI = ({
   iModels,
   moreActions,
-  onOpen,
+  actions,
   strings,
   refetchIModels,
   tableOverrides: { columnOverrides = {}, hideColumns = [] } = {},
@@ -126,7 +127,9 @@ export const IModelTableMUI = ({
           valueGetter: (value: string | null | undefined, row: IModelFull) =>
             row.lastChangesetPushDateTime ?? row.createdDateTime ?? "",
           valueFormatter: (value: string) => {
-            if (!value) return "";
+            if (!value) {
+              return "";
+            }
             return new Date(value).toLocaleDateString();
           },
           disableColumnMenu: true,
@@ -139,7 +142,9 @@ export const IModelTableMUI = ({
         width: 50,
         disableColumnMenu: true,
         renderCell: (params) => {
-          if (!moreActions || moreActions.length === 0) return null;
+          if (!moreActions || moreActions.length === 0) {
+            return null;
+          }
           const items = resolveContextMenuItemsMUI(
             moreActions,
             params.row,
@@ -168,19 +173,14 @@ export const IModelTableMUI = ({
     refetchIModels,
   ]);
 
-  const handleRowClick = React.useCallback(
-    (params: GridRowParams<IModelFull>) => {
-      onOpen?.(params.row);
-    },
-    [onOpen]
-  );
-
   return (
     <DataGrid<IModelFull>
       rows={iModels}
       columns={columns}
       loading={isLoading}
-      onRowClick={onOpen ? handleRowClick : undefined}
+      onRowClick={
+        actions ? (params) => actions(params.row)[0]?.onClick?.() : undefined
+      }
       disableRowSelectionOnClick
       disableMultipleRowSelection
       disableColumnSelector
@@ -204,7 +204,7 @@ export const IModelTableMUI = ({
         "& .MuiDataGrid-cell:focus-within": {
           outline: "none",
         },
-        ...(onOpen && {
+        ...(actions && {
           "& .MuiDataGrid-row": {
             cursor: "pointer",
           },

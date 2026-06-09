@@ -3,22 +3,23 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import {
-  IModelTile as IModelTileMUI,
   type IModelTileProps as IModelTileMUIProps,
+  IModelTile as IModelTileMUI,
   SvgThumbnail,
 } from "@itwin/imodel-browser-react/mui";
+import Avatar from "@mui/material/Avatar";
+import AvatarGroup from "@mui/material/AvatarGroup";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
-import SvgShare from "@stratakit/icons/share.svg";
-import SvgDelete from "@stratakit/icons/delete.svg";
-import bridgeThumbnail from "../utils/bridge.jpg";
-import overpassThumbnail from "../utils/overpass.jpg";
 import { action } from "@storybook/addon-actions";
 import { Meta, Story } from "@storybook/react/types-6-0";
-import React from "react";
+import SvgDelete from "@stratakit/icons/delete.svg";
 import svgRoad from "@stratakit/icons/road.svg";
-import AvatarGroup from "@mui/material/AvatarGroup";
-import Avatar from "@mui/material/Avatar";
+import SvgShare from "@stratakit/icons/share.svg";
+import React from "react";
+
+import bridgeThumbnail from "../utils/bridge.jpg";
+import overpassThumbnail from "../utils/overpass.jpg";
 
 const InConstrainedContainer = ({
   children,
@@ -50,7 +51,6 @@ export default {
       },
     },
     iModel: { control: false },
-    onOpen: { control: false },
     thumbnail: { control: false },
     actions: { control: false },
     moreActions: { control: false },

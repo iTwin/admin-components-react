@@ -3,34 +3,33 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import {
-  ITwinGrid as ExternalComponent,
   type IndividualITwinStateHook,
-  type ITwinGridProps,
-  ITwinTile,
-  DataStatus,
   type ITwinFull,
+  type ITwinGridProps,
+  DataStatus,
   ITwinCellColumn,
+  ITwinGrid as ExternalComponent,
+  ITwinTile,
 } from "@itwin/imodel-browser-react/mui";
 import { SvgHeart } from "@itwin/itwinui-icons-react";
 import { Code, IconButton } from "@itwin/itwinui-react";
+import Avatar from "@mui/material/Avatar";
+import AvatarGroup from "@mui/material/AvatarGroup";
+import Box from "@mui/material/Box";
+import Chip from "@mui/material/Chip";
+import Typography from "@mui/material/Typography";
+import { action } from "@storybook/addon-actions";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
+
+import bridgeThumbnail from "../utils/bridge.jpg";
+import nightThumbnail from "../utils/night.jpg";
+import overpassThumbnail from "../utils/overpass.jpg";
+import powerThumbnail from "../utils/power.jpg";
 import {
   accessTokenArgTypes,
   withAccessTokenOverride,
 } from "../utils/storyHelp";
-import { action } from "@storybook/addon-actions";
-import Avatar from "@mui/material/Avatar";
-import AvatarGroup from "@mui/material/AvatarGroup";
-import Chip from "@mui/material/Chip";
-import MenuItem from "@mui/material/MenuItem";
-import Skeleton from "@mui/material/Skeleton";
-import Typography from "@mui/material/Typography";
-import bridgeThumbnail from "../utils/bridge.jpg";
-import powerThumbnail from "../utils/power.jpg";
-import nightThumbnail from "../utils/night.jpg";
-import overpassThumbnail from "../utils/overpass.jpg";
-import Box from "@mui/material/Box";
 
 type ITwinTileType = React.ComponentPropsWithoutRef<typeof ITwinTile>;
 
@@ -47,7 +46,13 @@ const Template: Story<ITwinGridProps> = withAccessTokenOverride((args) => (
 const baseArgs: ITwinGridProps = {
   apiOverrides: { serverEnvironmentPrefix: "qa" },
   viewMode: "tile",
-  onOpen: (iTwin) => action("Open " + iTwin.displayName)(iTwin),
+  actions: (iTwin) => [
+    {
+      key: "open",
+      label: iTwin.displayName ?? "",
+      onClick: () => action("Open " + iTwin.displayName)(iTwin),
+    },
+  ],
 };
 
 export const Primary = Template.bind({});
@@ -59,6 +64,19 @@ export const TableView = Template.bind({});
 TableView.args = {
   ...baseArgs,
   viewMode: "cells",
+  moreActions: [
+    {
+      children: "Some action",
+      key: "something",
+      onClick: (iTwin) => action("clicked " + iTwin?.displayName)(iTwin),
+    },
+    {
+      children: "Some other action",
+      key: "something-else",
+      onClick: (iTwin) =>
+        action("clicked something else " + iTwin?.displayName)(iTwin),
+    },
+  ],
 };
 
 export const TableViewWithOverrides = Template.bind({});
