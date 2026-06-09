@@ -1,1 +1,1655 @@
-import{Text as e,ThemeProvider as t,Tile as i,IconButton as o,MenuItem as r,DropdownMenu as n,Table as a,Badge as s}from"@itwin/itwinui-react";import l,{useState as c,useCallback as d,useEffect as m,forwardRef as u,useMemo as v}from"react";import{useInView as f,InView as h}from"react-intersection-observer";import p from"classnames";import{SvgSearch as w,SvgImodelHollow as T,SvgStar as b,SvgStarHollow as E,SvgMore as g,SvgItwin as F}from"@itwin/itwinui-icons-react";import C from"@stratakit/icons/imodel.svg";function y(e,t){void 0===t&&(t={});var i=t.insertAt;if(e&&"undefined"!=typeof document){var o=document.head||document.getElementsByTagName("head")[0],r=document.createElement("style");r.type="text/css","top"===i&&o.firstChild?o.insertBefore(r,o.firstChild):o.appendChild(r),r.styleSheet?r.styleSheet.cssText=e:r.appendChild(document.createTextNode(e))}}y(".iac-grid-structure{display:grid;justify-content:space-between;grid-template-columns:repeat(auto-fill, minmax(288px, 1fr));grid-auto-rows:min-content;padding:calc(22px - 3px) calc(var(--responsive-grid-margin, 64px) - 3px);gap:var(--responsive-grid-gutter, 24px);overflow:hidden;margin:3px}.iac-grid-structure>*{display:inline-flex}");const M=e=>l.createElement("div",{...e,className:p("iac-grid-structure",e.className)});y(".iac-no-results-container{position:absolute;left:50%;top:50%;transform:translate(-50%, -50%);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;margin:1em}.iac-no-results-container .iac-no-results{display:flex;flex-direction:column;align-items:center;gap:var(--iui-size-2xs)}.iac-no-results-container .iac-no-results>svg{height:var(--iui-size-2xl);width:var(--iui-size-2xl);fill:var(--iui-color-icon-muted);margin-bottom:var(--iui-size-2xs)}");const I=({text:t,subtext:i,isSearchResult:o=!1})=>l.createElement("div",{className:"iac-no-results-container"},l.createElement("div",{className:"iac-no-results"},o?l.createElement(w,null):l.createElement(T,null),l.createElement(e,{variant:"leading"},t),i&&l.createElement(e,null,i))),k=e=>`https://${e?`${e}-`:""}api.bentley.com`,x=(e,t)=>t?Object.keys(t).reduce(((e,i)=>((t[i]??e[i])!==e[i]&&(e[i]=t[i]),e)),{...e}):{...e};const S=(e,t,i,o)=>{const[r,n]=c(new Set),a=d((async e=>{if(t&&e&&""!==e)try{await async function(e){const{iModelId:t,accessToken:i,serverEnvironmentPrefix:o}=e,r="function"==typeof i?await i():i,n=`${k(o)}/imodels/favorites/${t}`,a=await fetch(n,{method:"PUT",headers:{authorization:r,Accept:"application/vnd.bentley.itwin-platform.v2+json"}});if(!a||200!==a.status&&204!==a.status)throw new Error(`Failed to add iModel ${t} to favorites`)}({iModelId:e,accessToken:t,serverEnvironmentPrefix:i}),n((t=>new Set([...t,e])))}catch(e){console.error(e)}}),[t,i]),s=d((async e=>{if(t&&e&&""!==e)try{await async function(e){const{iModelId:t,accessToken:i,serverEnvironmentPrefix:o}=e,r="function"==typeof i?await i():i,n=`${k(o)}/imodels/favorites/${t}`,a=await fetch(n,{method:"DELETE",headers:{authorization:r,Accept:"application/vnd.bentley.itwin-platform.v2+json"}});if(!a||200!==a.status&&204!==a.status)throw new Error(`Failed to remove iModel ${t} from favorites`)}({iModelId:e,accessToken:t,serverEnvironmentPrefix:i}),n((t=>{const i=new Set(t);return i.delete(e),i}))}catch(e){console.error(e)}}),[t,i]);return m((()=>{const r=new AbortController;return(async r=>{try{if(o||!e||!t)return void n(new Set);const a=await async function(e){const{iTwinId:t,accessToken:i,serverEnvironmentPrefix:o,abortSignal:r}=e,n="function"==typeof i?await i():i,a=`${k(o)}/imodels/favorites?iTwinId=${t}`,s=await fetch(a,{headers:{authorization:n,Accept:"application/vnd.bentley.itwin-platform.v2+json"},signal:r});if(r?.aborted)throw new Error("The fetch request was aborted by the cleanup function.");if(!s)throw new Error(`Failed to fetch iModels favorites from ${a}.\nNo response.`);if(200!==s.status)throw new Error(`Failed to fetch iModels favorites from ${a}.\nStatus: ${s.status}`);return(await s.json()).iModels}({iTwinId:e,accessToken:t,serverEnvironmentPrefix:i,abortSignal:r});n(new Set(a.map((e=>e.id))))}catch(e){if(e instanceof Error&&"AbortError"===e.name)return;console.error(e)}})(r.signal),()=>{r.abort()}}),[o,e,t,i]),{iModelFavorites:r,addIModelToFavorites:a,removeIModelFromFavorites:s}},$=l.createContext(void 0),_=({iTwinId:e,accessToken:t,serverEnvironmentPrefix:i,children:o,disabled:r})=>{const{iModelFavorites:n,addIModelToFavorites:a,removeIModelFromFavorites:s}=S(e,t,"dev"===i||"qa"===i?i:void 0,r),c=l.useMemo((()=>({favorites:n,add:a,remove:s})),[n,a,s]);return l.createElement($.Provider,{value:c},o)},N=()=>{const e=l.useContext($);return e||console.warn("useIModelFavoritesContext must be used within IModelFavoritesProvider"),e};var A,P,R;!function(e){e.Fetching="fetching",e.Complete="complete",e.FetchFailed="error_fetchFailed",e.TokenRequired="error_tokenRequired",e.ContextRequired="error_contextRequired"}(A||(A={})),function(e){e.Favorite="Favorite",e.Name="name",e.Description="description",e.LastModified="lastChangesetPushDateTime",e.CreatedDateTime="createdDateTime",e.Options="options"}(P||(P={})),function(e){e.Favorite="Favorite",e.Number="ITwinNumber",e.Name="ITwinName",e.LastModified="LastModified",e.Options="options"}(R||(R={}));const L=u((({fullWidth:o,...r},n)=>l.createElement(t,{ref:n,theme:"inherit",...r},l.createElement(i.Wrapper,{style:o?{width:"100%"}:void 0},l.createElement(i.ThumbnailArea,null,l.createElement(e,{isSkeleton:!0},"Skeleton")),l.createElement(i.Name,null,l.createElement(e,{isSkeleton:!0,variant:"leading"},"Skeleton Name")),l.createElement(i.ContentArea,null,l.createElement(i.Description,null,l.createElement(e,{isSkeleton:!0,variant:"title"},"Skeleton Description")))))));var O="TileFavoriteIcon-module_favoriteIconButton__pJaA0";y(".TileFavoriteIcon-module_favoriteIconButton__pJaA0{padding-inline:var(--iui-button-padding-block);background-color:rgb(from var(--iui-color-background-hover) r g b/0.7)}.TileFavoriteIcon-module_favoriteIconButton__pJaA0:hover{background-color:var(--iui-color-background-hover)}.TileFavoriteIcon-module_favoriteIconButton__pJaA0:active{background-color:var(--iui-color-background)}");const D=({isFavorite:e,onAddToFavorites:t,onRemoveFromFavorites:i,addLabel:r,removeLabel:n,className:a=""})=>l.createElement(o,{"aria-label":e?n:r,onClick:async()=>{e?await i():await t()},className:`${O} ${a}`,styleType:"borderless"},e?l.createElement(b,null):l.createElement(E,null)),W=(e,t,i,o)=>e?.filter?.((({visible:e})=>"function"==typeof e?e(t):e??!0)).map((({key:e,visible:n,onClick:a,disabled:s,...c})=>l.createElement(r,{...c,disabled:"function"==typeof s?s(t):s,onClick:e=>{e?.stopPropagation(),i?.(),a?.(t,o)},key:e})));function B(e){const t=new Uint8Array(e);if(!t||0===t.length)throw new Error("Expected an image to be returned from the query");return`data:image/png;base64,${btoa(t.reduce(((e,t)=>e+String.fromCharCode(t)),""))}`}const q=({iModelId:t,accessToken:o,apiOverrides:r,className:n})=>{const{ref:a,inView:s}=f({triggerOnce:!0,skip:!!r?.data}),d=((e,t,i)=>{const[o,r]=c();return m((()=>{if(i?.data)return void r(i.data);const n=new AbortController;if(!o&&t&&e){const o=async()=>{const o={signal:n.signal,headers:{Authorization:"function"==typeof t?await t():t,Accept:"application/vnd.bentley.itwin-platform.v2+json",Prefer:"return=representation"}},a=await fetch(`${k(i?.serverEnvironmentPrefix)}/imodels/${e}/thumbnail`,o),s=a.ok?await a.arrayBuffer().then(B):404===a.status?C:await a.text().then((e=>{throw new Error(e)}));r(s)};o().catch((t=>{"AbortError"!==t.name&&console.error("Thumbnail download error","Thumbnail Fetch",{iModelId:e,e:t})}))}return()=>{n.abort()}}),[t,e,o,i?.data,i?.serverEnvironmentPrefix]),o})(t,s?o:void 0,r);return d?l.createElement(i.ThumbnailPicture,{url:d,ref:a,className:p("iac-thumbnail",n)}):l.createElement(e,{as:"p",variant:"body",ref:a,isSkeleton:!0,style:{height:"100%",width:"100%",margin:0}})};var j="IModelTile-module_fullWidth__JK5-H",z="IModelTile-module_iModelTileFavoriteIcon__Y7UWb",H="IModelTile-module_hidden__RP9E4",U="IModelTile-module_iModelTile__GdDYw";y(".IModelTile-module_fullWidth__JK5-H{width:100%}.IModelTile-module_iModelTileFavoriteIcon__Y7UWb.IModelTile-module_hidden__RP9E4{display:none}.IModelTile-module_iModelTile__GdDYw:hover .IModelTile-module_iModelTileFavoriteIcon__Y7UWb{display:flex}");const G=({iModel:e,iModelOptions:t,accessToken:o,onThumbnailClick:r,apiOverrides:n,tileProps:a,stringsOverrides:s,refetchIModels:c,fullWidth:d,hideFavoriteIcon:m})=>{const{name:u,status:v,isNew:f,isLoading:h,isSelected:p,thumbnail:w,badge:T,getBadge:b,leftIcon:E,rightIcon:g,buttons:F,moreOptions:C,isDisabled:y,onClick:M,metadata:I,className:k="",...S}=a??{},$=N(),_=x({addToFavorites:"Add to favorites",removeFromFavorites:"Remove from favorites"},s),A=l.useMemo((()=>W(t,e,void 0,c)),[t,e,c]),P=n||e.thumbnail?{...n??{},data:e.thumbnail}:void 0;return l.createElement(i.Wrapper,{key:e.id,isNew:f,isSelected:p,isLoading:h,status:v,isDisabled:y,className:`${U} ${d?j:""} ${k}`,...S},l.createElement(i.Name,null,l.createElement(i.NameIcon,null),l.createElement(i.NameLabel,{onClick:t=>M?.(t)??r?.(e),"aria-disabled":y,"data-testid":`iModel-tile-${e.id}-name-label`},u??e.displayName)),l.createElement(i.ThumbnailArea,null,E&&l.createElement(i.TypeIndicator,null,E),l.createElement(i.QuickAction,null,g,!m&&$&&l.createElement(D,{isFavorite:$.favorites.has(e.id),onAddToFavorites:()=>$.add(e.id),onRemoveFromFavorites:()=>$.remove(e.id),addLabel:_.addToFavorites,removeLabel:_.removeFromFavorites,className:`${z} ${!$.favorites.has(e.id)&&H}`})),w?l.createElement(i.ThumbnailPicture,null,w):l.createElement(q,{iModelId:e.id,accessToken:o,apiOverrides:P}),(b||T)&&l.createElement(i.BadgeContainer,null,b?.(e)??T)),l.createElement(i.ContentArea,null,l.createElement(i.Action,{onClick:t=>M?.(t)??r?.(e),"aria-disabled":y,"data-testid":`iModel-tile-${e.id}-action`},l.createElement(i.Description,null,e?.description??"")),(C||A)&&l.createElement(i.MoreOptions,{"data-testid":`iModel-tile-${e.id}-more-options`},C??A),I&&l.createElement(i.Metadata,{"data-testid":`iModel-tile-${e.id}-metadata`},I)),F&&l.createElement(i.Buttons,null,F))};var J="IModelGrid-module_rowCursor__Ay8md";y(".IModelGrid-module_rowCursor__Ay8md div[role=row]{cursor:pointer}");const V=({requestType:e="",iTwinId:t,accessToken:i,sortOptions:o,apiOverrides:r,searchText:n,pageSize:a=100,maxCount:s,dataMode:c,onLoadMore:d,onRefetch:u})=>{const[v,f]=l.useState(!0),[h,p]=l.useState([]),[w,T]=l.useState(),[b,E]=l.useState(0),[g,F]=l.useState(!0),[C,y]=l.useState(void 0),M=o&&["name","createdDateTime"].includes(o.sortType)?o.sortType:void 0,[I,k]=l.useState(o&&{...o}),x=o?.descending,S=((e,t,i=!0)=>{const o="function"!=typeof t?t?.sortType:void 0,r="function"!=typeof t?t?.descending??!1:void 0,n="function"==typeof t?t:void 0;return l.useMemo((()=>{if(!i)return e;if(n)return[...e].sort(n);if(!function(e){return!!e&&["displayName","name","description","initialized","createdDateTime"].includes(e)}(o))return e;const t=[...e].sort(((e,t)=>{const i=e[o],r=t[o];return"boolean"==typeof i||"boolean"==typeof r||i===r?((e,t)=>e===t?0:e?-1:1)(i,r):i&&r?((e,t)=>e.localeCompare(t))(i,r):((e,t)=>e||t?e?-1:1:0)(i,r)}));return r?t.reverse():t}),[i,n,o,e,r])})(h,o,"recents"!==e),$=l.useMemo((()=>{if(!n?.trim()||"recents"!==e&&"favorites"!==e)return S;const t=n.toLowerCase();return S.filter((e=>(e.name?.toLowerCase().includes(t)??!1)||(e.description?.toLowerCase().includes(t)??!1)))}),[S,n,e]),_=o?.descending!==I?.descending||o?.sortType!==I?.sortType;_&&k(o),m((()=>()=>C?.abort()),[C]);const N=l.useCallback((()=>{"external"!==c&&(T(A.Fetching),p([]),E(0),F(!0),f(!0))}),[c]),P=l.useCallback((()=>{"external"!==c&&!v&&w!==A.Fetching&&w!==A.TokenRequired&&w!==A.ContextRequired&&g&&(E((e=>e+1)),f(!0))}),[c,v,w,g]);return l.useEffect((()=>{"external"!==c&&"recents"!==e&&"favorites"!==e&&N()}),[c,t,i,o?.descending,o?.sortType,r?.data,r?.serverEnvironmentPrefix,n,a,s,e,N]),l.useEffect((()=>{"external"!==c&&("recents"!==e&&"favorites"!==e||N())}),[c,t,i,o?.descending,o?.sortType,r?.data,r?.serverEnvironmentPrefix,a,s,e,N]),l.useEffect((()=>{if("external"===c||!v)return;if(f(!1),C?.abort(),y(void 0),!i||!t)return T(i?A.ContextRequired:A.TokenRequired),void p([]);if(_&&!g)return void T(A.Complete);T(A.Fetching);const{abortController:o,fetchIModels:l}=Y(t,i,M,x??!1,b,n,a,s,r?.serverEnvironmentPrefix,e);y(o),l().then((({iModels:e,morePagesAvailable:t})=>{F(t),p((t=>0===b?[...e]:[...t,...e])),T(A.Complete)})).catch((e=>{"AbortError"!==e.name&&(p([]),F(!1),T(A.FetchFailed),console.error(e))}))}),[c,C,i,r?.data,r?.serverEnvironmentPrefix,h,t,s,a,g,v,b,e,n,_,x,M]),"external"===c?{iModels:r?.data??[],status:r?.isLoading?A.Fetching:A.Complete,fetchMore:r?.hasMoreData&&!r.isLoading?d:void 0,refetchIModels:u??(()=>{})}:{iModels:$,status:w,fetchMore:g?P:void 0,refetchIModels:N}},Y=(e,t,i,o,r,n,a=100,s,l,c="")=>{const d=`?iTwinId=${encodeURIComponent(e)}`,m=i?`&$orderBy=${encodeURIComponent(i)} ${o?"desc":"asc"}`:"",u=r*a;if(void 0!==s&&u>=s){return{abortController:new AbortController,fetchIModels:async()=>({iModels:[],morePagesAvailable:!1})}}const v=["favorites","recents"].includes(c)?c:"",f=s?Math.min(a,s-u):a,h=`&$skip=${u}&$top=${f}`,p=n?.trim()&&!["favorites","recents"].includes(c)?`&$search=${encodeURIComponent(n)}`:"",w=new AbortController,T=`${k(l)}/imodels/${v}${d}${m}${h}${p}`;return{abortController:w,fetchIModels:async()=>{const e={signal:w.signal,headers:{Authorization:"function"==typeof t?await t():t,Prefer:"return=representation",Accept:"application/vnd.bentley.itwin-platform.v2+json"}},i=await fetch(T,e);if(!i.ok)throw new Error(await i.text());const o=await i.json(),n=r*a+o.iModels.length;return{iModels:o.iModels,morePagesAvailable:!(n===s||o.iModels.length<f)}}}},K=e=>l.createElement(_,{iTwinId:e.iTwinId,accessToken:e.accessToken,serverEnvironmentPrefix:e.apiOverrides?.serverEnvironmentPrefix,disabled:e.tileOverrides?.hideFavoriteIcon},l.createElement(Q,{...e})),Q=({accessToken:e,apiOverrides:i,iModelActions:r,removeFromRecentsIcon:s,onThumbnailClick:c,iTwinId:d,sortOptions:m={sortType:"name",descending:!1},requestType:u,stringsOverrides:f,tileOverrides:p,useIndividualState:w,postProcessCallback:T,emptyStateComponent:F,searchText:C,viewMode:y,pageSize:S,maxCount:$,cellOverrides:_,className:R,onLoadMore:O,onRefetch:D,dataMode:B="internal",disableAddToRecents:q=!1})=>{const[j,z]=l.useState(m);l.useEffect((()=>{z("cells"===y?{sortType:"name",descending:!1}:{sortType:m.sortType,descending:m.descending})}),[m.descending,m.sortType,y]);const H=x({tableColumnFavorites:"",tableColumnName:"Name",tableColumnDescription:"Description",tableColumnLastModified:"Last Modified",tableLoadingData:"Loading...",noIModelSearch:"No results found",noIModelSearchSubtext:"Try adjusting your search by using fewer or more general terms.",noIModels:"recents"===u?"There are no recent iModels.":"favorites"===u?"There are no favorite iModels.":"There are no iModels in this iTwin.",noContext:"No context provided",noAuthentication:"No access token provided",error:"An error occurred",addToFavorites:"Add to favorites",removeFromFavorites:"Remove from favorites",removeFromRecents:"Remove from recents"},f),U=l.useMemo((()=>{if("recents"===u){const t={key:"remove-from-recents",children:H.removeFromRecents,...s&&{icon:s},onClick:async(t,o)=>{t&&e&&(await async function(e){const{iModelId:t,accessToken:i,serverEnvironmentPrefix:o}=e;try{if(!i)return;const e="function"==typeof i?await i():i,r=`${k(o)}/imodels/recents/${encodeURIComponent(t)}`;await fetch(r,{method:"DELETE",headers:{authorization:e,Accept:"application/vnd.bentley.itwin-platform.v2+json"}})}catch(e){console.error("Failed to remove iModel from recents",e)}}({iModelId:t.id,accessToken:e,serverEnvironmentPrefix:i?.serverEnvironmentPrefix}),o?.())}};return r?[t,...r]:[t]}return r}),[u,r,H.removeFromRecents,s,e,i?.serverEnvironmentPrefix]),{iModels:G,status:Y,fetchMore:K,refetchIModels:Q}=V({requestType:u,accessToken:e,apiOverrides:i,iTwinId:d,sortOptions:j,searchText:C,maxCount:$,pageSize:S,viewMode:y,dataMode:B,onLoadMore:O,onRefetch:D}),X=l.useMemo((()=>T?.([...G],Y,C)??G),[T,G,Y,C]);l.useEffect((()=>{X.length<(S??100)&&K&&Y!==A.Fetching&&K()}),[X.length,S,K,Y]);const ee=async(t,o)=>{try{if(!e||q)return void o();!async function(e){const{iModelId:t,accessToken:i,serverEnvironmentPrefix:o}=e;try{if(!i)return;const e="function"==typeof i?await i():i,r=`${k(o)}/imodels/recents/${encodeURIComponent(t)}`;fetch(r,{method:"POST",headers:{authorization:e,Accept:"application/vnd.bentley.itwin-platform.v2+json"}})}catch(e){console.error("Failed to add iModel to recents",e)}}({iModelId:t.id,accessToken:e,serverEnvironmentPrefix:i?.serverEnvironmentPrefix})}catch(e){console.error("Failed to add iModel to recents",e)}c?.(t)},{columns:te,onRowClick:ie}=(({iModelActions:e,onThumbnailClick:t,strings:i,refetchIModels:r,cellOverrides:a={}})=>{const s=N();return{onRowClick:(e,i)=>{const o=i.original;o&&t?.(o)},columns:v((()=>[{Header:"Table",columns:[{id:P.Favorite,Header:i.tableColumnFavorites,accessor:"id",disableSortBy:!0,width:70,Cell:e=>{const t=s?.favorites.has(e.value);return l.createElement(o,{styleType:"borderless","aria-label":t?i.removeFromFavorites:i.addToFavorites,onClick:async i=>{i.stopPropagation(),t?await(s?.remove?.(e.value)):await(s?.add?.(e.value))}},t?l.createElement(b,null):l.createElement(E,null))}},{id:P.Name,Header:i.tableColumnName,accessor:"name",maxWidth:350,Cell:e=>l.createElement("div",{"data-tip":e.row.original.name},a.name?a.name(e):l.createElement("span",null,e.value))},{id:P.Description,Header:i.tableColumnDescription,accessor:"description",disableSortBy:!0,Cell:e=>l.createElement("div",{"data-tip":e.row.original.description},a.description?a.description(e):l.createElement("span",null,e.value))},{id:P.LastModified,Header:i.tableColumnLastModified,accessor:e=>e.lastChangesetPushDateTime??e.createdDateTime??"",maxWidth:350,Cell:e=>{const t=e.data[e.row.index].lastChangesetPushDateTime??e.data[e.row.index].createdDateTime,i=a.lastModified??a.createdDateTime;return i?i(e):t?new Date(t).toDateString():""}},{id:P.Options,disableSortBy:!0,maxWidth:65,Cell:t=>e&&e.length>0?l.createElement(n,{menuItems:i=>{const o=W(e,t.row.original,i,r);return void 0!==o?o:[]},onClick:e=>{e.stopPropagation()}},l.createElement(o,{"data-testid":`iModel-row-${t.row.original.id}-more-options`,styleType:"borderless","aria-label":"More options",className:"iac-options-icon",onClick:e=>{e.stopPropagation()}},l.createElement(g,null))):null}].filter((({id:e})=>!(a.hideColumns?.includes(e)||e===P.LastModified&&a.hideColumns?.includes(P.CreatedDateTime))))}]),[i.tableColumnFavorites,i.tableColumnName,i.tableColumnDescription,i.tableColumnLastModified,i.addToFavorites,i.removeFromFavorites,s,a,e,r])}})({iModelActions:U,onThumbnailClick:e=>ee(e,(()=>c?.(e))),strings:H,refetchIModels:Q,cellOverrides:_}),oe={[A.Fetching]:"",[A.Complete]:H.noIModels,[A.FetchFailed]:H.error,[A.TokenRequired]:H.noAuthentication,[A.ContextRequired]:H.noContext}[Y??A.Fetching],re=i?{serverEnvironmentPrefix:i.serverEnvironmentPrefix}:void 0;return!C&&0===X.length&&oe===H.noIModels&&F?l.createElement(l.Fragment,null,F):!C&&0===X.length&&oe?l.createElement(I,{text:oe}):C&&0===X.length&&Y!==A.Fetching?l.createElement(I,{text:H.noIModelSearch,subtext:H.noIModelSearchSubtext,isSearchResult:!0}):l.createElement(l.Fragment,null,"cells"!==y?l.createElement(M,{className:R},X?.map((t=>l.createElement(Z,{key:t.id,iModel:t,iModelOptions:U,accessToken:e,onThumbnailClick:e=>ee(e,(()=>c?.(e))),apiOverrides:re,useTileState:w,refetchIModels:Q,...p,tileProps:p?{...p.tileProps,onClick:p.tileProps?.onClick?e=>ee(t,(()=>p.tileProps?.onClick?.(e))):void 0}:void 0}))),K?l.createElement(h,{onChange:e=>{e&&Y!==A.Fetching&&K()}},(({ref:e})=>l.createElement(L,{ref:e,fullWidth:p?.fullWidth}))):null,Y===A.Fetching&&l.createElement(l.Fragment,null,l.createElement(L,{fullWidth:p?.fullWidth}),l.createElement(L,{fullWidth:p?.fullWidth}))):l.createElement(t,{theme:"inherit"},l.createElement(a,{columns:te,data:X,onRowClick:ie,emptyTableContent:Y===A.Fetching?H.tableLoadingData:H.noIModelSearch,isLoading:Y===A.Fetching,isSortable:!0,onBottomReached:K,autoResetFilters:!1,autoResetSortBy:!1,bodyProps:{className:c?J:""}})))},X=()=>({}),Z=e=>{const{useTileState:t=X,...i}=e;if(l.useRef(t).current!==t)throw new Error("Even when used in a prop, useTilePropsForIModel identity must remain stable as it is used as a hook.");const o=t(e.iModel,i);return l.createElement(G,{...i,...o})};y(".iac-iTwinCell{display:flex;flex-direction:column;justify-content:center;overflow:hidden}.iac-iTwinCell>*{overflow:hidden;text-overflow:ellipsis;max-width:100%}.row-cursor div[role=row]{cursor:pointer}");var ee="ITwinTile-module_fullWidth__VGOS7",te="ITwinTile-module_iTwinTileFavoriteIcon__VwBgT",ie="ITwinTile-module_hidden__8-9tG",oe="ITwinTile-module_iTwinTile__EDkIT";y(".ITwinTile-module_fullWidth__VGOS7{width:100%}.ITwinTile-module_iTwinTileFavoriteIcon__VwBgT.ITwinTile-module_hidden__8-9tG{display:none}.ITwinTile-module_iTwinTile__EDkIT:hover .ITwinTile-module_iTwinTileFavoriteIcon__VwBgT{display:flex}");const re=({iTwin:e,iTwinOptions:o,onThumbnailClick:r,tileProps:n,stringsOverrides:a,isFavorite:c,addToFavorites:d,removeFromFavorites:m,refetchITwins:u,fullWidth:v,hideFavoriteIcon:f})=>{const{name:h,description:p,status:w,isNew:T,isLoading:b,isSelected:E,thumbnail:g,badge:C,leftIcon:y,rightIcon:M,buttons:I,metadata:k,moreOptions:S,children:$,isDisabled:_,onClick:N,className:A="",...P}=n??{},R=x({trialBadge:"Trial",inactiveBadge:"Inactive",addToFavorites:"Add to favorites",removeFromFavorites:"Remove from favorites"},a),L=l.useMemo((()=>W(o,e,void 0,u)),[o,e,u]);return l.createElement(t,{theme:"inherit"},l.createElement(i.Wrapper,{key:e.id,isNew:T,isSelected:E,isLoading:b,status:w,isDisabled:_,className:`${oe} ${v?ee:""} ${A}`,...P},l.createElement(i.Name,null,(w||T||b||E)&&l.createElement(i.NameIcon,null),l.createElement(i.NameLabel,null,l.createElement(i.Action,{onClick:t=>N?.(t)??r?.(e),"aria-disabled":_,"data-testid":`iTwin-tile-${e.id}`},h??e.displayName))),l.createElement(i.ThumbnailArea,null,y&&l.createElement(i.TypeIndicator,null,y),l.createElement(i.QuickAction,null,M,!f&&void 0!==c&&d&&m&&l.createElement(D,{isFavorite:c,onAddToFavorites:()=>d(e.id),onRemoveFromFavorites:()=>m(e.id),addLabel:R.addToFavorites,removeLabel:R.removeFromFavorites,className:`${te} ${!c&&ie}`})),l.createElement(i.BadgeContainer,null,C??(e.status&&"active"!==e.status.toLocaleLowerCase()&&l.createElement(s,{backgroundColor:"inactive"===e.status.toLocaleLowerCase()?"oak":"steelblue"},"inactive"===e.status.toLocaleLowerCase()?R.inactiveBadge:R.trialBadge))),l.createElement(i.ThumbnailPicture,{style:{cursor:r?"pointer":"auto"}},g??l.createElement(F,null))),l.createElement(i.ContentArea,null,l.createElement(i.Description,null,p??e.number??""),k&&l.createElement(i.Metadata,{"data-testid":`iTwin-tile-${e.id}-metadata`},k),$,(S||L)&&l.createElement(i.MoreOptions,{"data-testid":`iTwin-tile-${e.id}-more-options`},S??L)),I&&l.createElement(i.Buttons,null,I)))},ne=({requestType:e="",iTwinSubClass:t="Project",accessToken:i,apiOverrides:o,filterOptions:r,orderbyOptions:n,shouldRefetchFavorites:a,resetShouldRefetchFavorites:s})=>{const c=o?.data,d=o?.serverEnvironmentPrefix,[m,u]=l.useState([]),[v,f]=l.useState(),h=((e,t)=>{const i=t?.toLocaleLowerCase()??"";return l.useMemo((()=>i?e.filter((e=>(e.displayName?.toLocaleLowerCase()??"").includes(i)||(e.number?.toLocaleLowerCase()??"").includes(i))):e),[i,e])})(m,r),[p,w]=l.useState(0),[T,b]=l.useState(!0),E=l.useCallback((()=>{f(A.Fetching),u([]),w(0),b(!0)}),[]),g=l.useCallback((()=>{w((e=>e+1))}),[]),F=l.useRef(T);return F.current=T,l.useEffect((()=>{!F.current&&["favorites","recents"].includes(e)||E()}),[r,e,E]),l.useEffect((()=>{E()}),[i,e,t,n,c,d,E]),l.useEffect((()=>{if(!T)return;if(c)return u(c),f(A.Complete),void b(!1);if(!i)return f(A.TokenRequired),void u([]);0===p&&f(A.Fetching);const o=new AbortController,l=["favorites","recents"].includes(e)?e:"",m=`?subClass=${"All"===t?"":t}`,v=`&$skip=${100*p}&$top=100`,h=["favorites","recents"].includes(e)||!r?"":`&$search=${encodeURIComponent(String(r).trim())}`,w=["favorites","recents"].includes(e)||!n?"":`&$orderby=${encodeURIComponent(String(n).trim())}`,E=`${k(d)}/itwins/${l}${m}${v}${h}${w}`;return(async()=>{const t={signal:o.signal,headers:{"Cache-Control":"favorites"===e&&a?"no-cache":"",Authorization:"function"==typeof i?await i():i,Accept:"application/vnd.bentley.itwin-platform.v1+json",Prefer:"return=representation"}},r=await fetch(E,t),n=r.ok?await r.json():await r.text().then((e=>{throw new Error(e)}));f(A.Complete),"favorites"===e&&s?.(),100!==n.iTwins.length&&b(!1),u((e=>0===p?n.iTwins:[...e,...n.iTwins]))})().catch((e=>{"AbortError"!==e.name&&(u([]),f(A.FetchFailed),console.error(e))})),()=>{o.abort()}}),[i,e,c,d,r,n,p,T,t,a,s]),{iTwins:h,status:v,fetchMore:T?g:void 0,refetchITwins:E}},ae="The fetch request was aborted by the cleanup function.",se=({accessToken:e,apiOverrides:i,filterOptions:r,orderbyOptions:s,onThumbnailClick:u,iTwinActions:f,requestType:p,iTwinSubClass:w,stringsOverrides:T,tileOverrides:F,useIndividualState:C,postProcessCallback:y,viewMode:S,cellOverrides:$,className:_})=>{const{iTwinFavorites:N,addITwinToFavorites:P,removeITwinFromFavorites:O,shouldRefetchFavorites:D,resetShouldRefetchFavorites:B}=((e,t)=>{const[i,o]=c(new Set),[r,n]=c(!1),a=d((async i=>{if(!e||!i||""===i)return;const r=`${k(t)}/itwins/favorites/${i}`;try{const t=await fetch(r,{method:"POST",headers:{authorization:"function"==typeof e?await e():e,Accept:"application/vnd.bentley.itwin-platform.v1+json"}});if(!t||200!==t.status&&204!==t.status)throw new Error(`Failed to add iTwin ${i} to favorites`);o((e=>new Set([...e,i]))),n(!0)}catch(e){console.error(e)}}),[e,t]),s=d((async i=>{if(!e||!i||""===i)return;const r=`${k(t)}/itwins/favorites/${i}`;try{const t=await fetch(r,{method:"DELETE",headers:{authorization:"function"==typeof e?await e():e,Accept:"application/vnd.bentley.itwin-platform.v1+json"}});if(!t||200!==t.status&&204!==t.status)throw new Error(`Failed to remove iTwin ${i} to favorites`);o((e=>{const t=new Set(e);return t.delete(i),t})),n(!0)}catch(e){console.error(e)}}),[e,t]),l=d((async i=>{if(!e)return[];const o=`${k(t)}/itwins/favorites?subClass=Project`,n=await fetch(o,{headers:{"Cache-Control":r?"no-cache":"",authorization:"function"==typeof e?await e():e,Accept:"application/vnd.bentley.itwin-platform.v1+json"},signal:i});if(i?.aborted)throw new Error(ae);if(!n)throw new Error(`Failed to fetch iTwin favorites from ${o}.\nNo response.`);if(200!==n.status)throw new Error(`Failed to fetch iTwin favorites from ${o}.\nStatus: ${n.status}`);return(await n.json()).iTwins}),[e,t,r]),u=d((()=>{n(!1)}),[]);return m((()=>{const e=new AbortController;return(async e=>{try{const t=await l(e);o(new Set(t.map((e=>e.id))))}catch(e){if(e===ae||e instanceof Error&&"AbortError"===e.name)return;console.error(e)}})(e.signal),()=>{e.abort()}}),[l]),{iTwinFavorites:i,addITwinToFavorites:a,removeITwinFromFavorites:s,shouldRefetchFavorites:r,resetShouldRefetchFavorites:u}})(e,i?.serverEnvironmentPrefix),q=x({tableColumnFavorites:"",tableColumnName:"iTwin Number",tableColumnDescription:"iTwin Name",tableColumnLastModified:"Last Modified",tableLoadingData:"Loading...",trialBadge:"Trial",inactiveBadge:"Inactive",noITwins:"recents"===p?"No recent iTwins.":"favorites"===p?"No favorite iTwins.":"No iTwin found.",noAuthentication:"No access token provided",error:"An error occurred",addToFavorites:"Add to favorites",removeFromFavorites:"Remove from favorites"},T),{iTwins:j,status:z,fetchMore:H,refetchITwins:U}=ne({requestType:p,iTwinSubClass:w,accessToken:e,apiOverrides:i,filterOptions:r,orderbyOptions:s,shouldRefetchFavorites:D,resetShouldRefetchFavorites:B}),G=l.useMemo((()=>y?.([...j],z)??j),[y,j,z]),{columns:J,onRowClick:V}=(({iTwinActions:e,onThumbnailClick:t,strings:i,iTwinFavorites:r,addITwinToFavorites:a,removeITwinFromFavorites:s,refetchITwins:c,cellOverrides:d={}})=>({onRowClick:(e,i)=>{const o=i.original;o&&t?.(o)},columns:v((()=>[{Header:"Table",columns:[{id:R.Favorite,Header:i.tableColumnFavorites,accessor:"id",disableSortBy:!0,width:70,Cell:e=>{const t=r.has(e.value);return l.createElement(o,{styleType:"borderless","aria-label":t?i.addToFavorites:i.removeFromFavorites,onClick:async i=>{i.stopPropagation(),t?await s(e.value):await a(e.value)}},t?l.createElement(b,null):l.createElement(E,null))}},{id:R.Number,Header:i.tableColumnName,accessor:"number",maxWidth:350,Cell:e=>l.createElement("div",{"data-tip":e.row.original.number,className:"iac-iTwinCell"},d.ITwinNumber?d.ITwinNumber(e):l.createElement("span",null,e.value))},{id:R.Name,Header:i.tableColumnDescription,accessor:"displayName",maxWidth:350,Cell:e=>l.createElement("div",{"data-tip":e.row.original.displayName,className:"iac-iTwinCell"},d.ITwinName?d.ITwinName(e):l.createElement("span",null,e.value))},{id:R.LastModified,Header:i.tableColumnLastModified,accessor:"lastModifiedDateTime",Cell:e=>{const t=e.data[e.row.index].lastModifiedDateTime;return d.LastModified?d.LastModified(e):t?new Date(t).toDateString():""}},{id:R.Options,disableSortBy:!0,maxWidth:65,Cell:t=>e&&e.length>0?l.createElement(n,{menuItems:i=>{const o=W(e,t.row.original,i,c);return void 0!==o?o:[]}},l.createElement(o,{"data-testid":`iTwin-row-${t.row.original.id}-more-options`,styleType:"borderless","aria-label":"More options",className:"iac-options-icon",onClick:e=>{e.stopPropagation()}},l.createElement(g,null))):null}].filter((e=>!d.hideColumns?.includes(e.id)))}]),[i.tableColumnFavorites,i.tableColumnName,i.tableColumnDescription,i.tableColumnLastModified,i.addToFavorites,i.removeFromFavorites,r,s,a,d,e,c])}))({iTwinActions:f,onThumbnailClick:u,strings:q,iTwinFavorites:N,addITwinToFavorites:P,removeITwinFromFavorites:O,refetchITwins:U,cellOverrides:$}),Y={[A.Fetching]:"",[A.Complete]:q.noITwins,[A.FetchFailed]:q.error,[A.TokenRequired]:q.noAuthentication,[A.ContextRequired]:""}[z??A.Fetching];return"cells"!==S?0===G.length&&Y?l.createElement(I,{text:Y}):l.createElement(M,{className:_},z===A.Fetching?l.createElement(l.Fragment,null,l.createElement(L,{fullWidth:F?.fullWidth}),l.createElement(L,{fullWidth:F?.fullWidth}),l.createElement(L,{fullWidth:F?.fullWidth})):l.createElement(l.Fragment,null,G?.map((t=>l.createElement(ce,{gridProps:{accessToken:e,apiOverrides:i,filterOptions:r,onThumbnailClick:u,requestType:p,stringsOverrides:T,tileOverrides:F,useIndividualState:C},key:t.id,iTwin:t,iTwinOptions:f,onThumbnailClick:u,useTileState:C,isFavorite:N.has(t.id),addToFavorites:P,removeFromFavorites:O,refetchITwins:U,...F}))),H?l.createElement(l.Fragment,null,l.createElement(h,{onChange:H},l.createElement(L,{fullWidth:F?.fullWidth})),l.createElement(L,{fullWidth:F?.fullWidth}),l.createElement(L,{fullWidth:F?.fullWidth})):null)):l.createElement(t,{theme:"inherit"},l.createElement(a,{columns:J,data:G,onRowClick:V,emptyTableContent:z===A.Fetching?q.tableLoadingData:q.noITwins,isLoading:z===A.Fetching,isSortable:!0,onBottomReached:H,autoResetFilters:!1,autoResetSortBy:!1,bodyProps:{className:u?"row-cursor":""}}))},le=()=>({}),ce=e=>{const{useTileState:t=le,...i}=e;if(l.useRef(t).current!==t)throw new Error("Even when used in a prop, useTilePropsForIModel identity must remain stable as it is used as a hook.");const o=t(e.iTwin,i);return l.createElement(re,{...i,...o})};export{A as DataStatus,P as IModelCellColumn,L as IModelGhostTile,K as IModelGrid,q as IModelThumbnail,G as IModelTile,R as ITwinCellColumn,se as ITwinGrid,re as ITwinTile,I as NoResults};
+import { Text, ThemeProvider, Tile, IconButton, MenuItem, DropdownMenu, Table, Badge } from '@itwin/itwinui-react';
+import React, { useState, useCallback, useEffect, forwardRef, useMemo } from 'react';
+import { useInView, InView } from 'react-intersection-observer';
+import classNames from 'classnames';
+import { SvgSearch, SvgImodelHollow, SvgStar, SvgStarHollow, SvgMore, SvgItwin } from '@itwin/itwinui-icons-react';
+import svgIModel from '@stratakit/icons/imodel.svg';
+
+function styleInject(css, ref) {
+  if ( ref === void 0 ) ref = {};
+  var insertAt = ref.insertAt;
+
+  if (!css || typeof document === 'undefined') { return; }
+
+  var head = document.head || document.getElementsByTagName('head')[0];
+  var style = document.createElement('style');
+  style.type = 'text/css';
+
+  if (insertAt === 'top') {
+    if (head.firstChild) {
+      head.insertBefore(style, head.firstChild);
+    } else {
+      head.appendChild(style);
+    }
+  } else {
+    head.appendChild(style);
+  }
+
+  if (style.styleSheet) {
+    style.styleSheet.cssText = css;
+  } else {
+    style.appendChild(document.createTextNode(css));
+  }
+}
+
+var css_248z$6 = ".iac-grid-structure{display:grid;justify-content:space-between;grid-template-columns:repeat(auto-fill, minmax(288px, 1fr));grid-auto-rows:min-content;padding:calc(22px - 3px) calc(var(--responsive-grid-margin, 64px) - 3px);gap:var(--responsive-grid-gutter, 24px);overflow:hidden;margin:3px}.iac-grid-structure>*{display:inline-flex}";
+styleInject(css_248z$6);
+
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+/** Browser container structure */
+const GridStructure = (props) => {
+    return (React.createElement("div", { ...props, className: classNames("iac-grid-structure", props.className) }));
+};
+
+var css_248z$5 = ".iac-no-results-container{position:absolute;left:50%;top:50%;transform:translate(-50%, -50%);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;margin:1em}.iac-no-results-container .iac-no-results{display:flex;flex-direction:column;align-items:center;gap:var(--iui-size-2xs)}.iac-no-results-container .iac-no-results>svg{height:var(--iui-size-2xl);width:var(--iui-size-2xl);fill:var(--iui-color-icon-muted);margin-bottom:var(--iui-size-2xs)}";
+styleInject(css_248z$5);
+
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+/** Pre-formatted empty result page */
+const NoResults = ({ text, subtext, isSearchResult = false, }) => {
+    return (React.createElement("div", { className: "iac-no-results-container" },
+        React.createElement("div", { className: "iac-no-results" },
+            isSearchResult ? React.createElement(SvgSearch, null) : React.createElement(SvgImodelHollow, null),
+            React.createElement(Text, { variant: "leading" }, text),
+            subtext && React.createElement(Text, null, subtext))));
+};
+
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+/** Build APIM server url out of overrides
+ * @private
+ */
+const _getAPIServer = (serverEnvironmentPrefix) => `https://${serverEnvironmentPrefix ? `${serverEnvironmentPrefix}-` : ""}api.bentley.com`;
+/**
+ * Merge 2 objects without overriding keys with undefined or null values.
+ * @param defaults Complete string object
+ * @param overrides Potentially incomplete string object
+ * @returns
+ */
+const _mergeStrings = (defaults, overrides) => !overrides
+    ? { ...defaults }
+    : Object.keys(overrides).reduce((red, val) => {
+        if ((overrides[val] ?? red[val]) !== red[val]) {
+            red[val] = overrides[val];
+        }
+        return red;
+    }, { ...defaults });
+
+async function addIModelToRecents(options) {
+    const { iModelId, accessToken, serverEnvironmentPrefix } = options;
+    try {
+        if (!accessToken) {
+            return;
+        }
+        const token = typeof accessToken === "function" ? await accessToken() : accessToken;
+        const url = `${_getAPIServer(serverEnvironmentPrefix)}/imodels/recents/${encodeURIComponent(iModelId)}`;
+        // fire-and-forget POST to record recents; swallow errors so UI isn't disrupted
+        void fetch(url, {
+            method: "POST",
+            headers: {
+                authorization: token,
+                Accept: "application/vnd.bentley.itwin-platform.v2+json",
+            },
+        });
+    }
+    catch (e) {
+        // keep parity with previous behavior where errors were swallowed
+        // Log for diagnostics
+        // eslint-disable-next-line no-console
+        console.error("Failed to add iModel to recents", e);
+    }
+}
+async function removeIModelFromRecents(options) {
+    const { iModelId, accessToken, serverEnvironmentPrefix } = options;
+    try {
+        if (!accessToken) {
+            return;
+        }
+        const token = typeof accessToken === "function" ? await accessToken() : accessToken;
+        const url = `${_getAPIServer(serverEnvironmentPrefix)}/imodels/recents/${encodeURIComponent(iModelId)}`;
+        await fetch(url, {
+            method: "DELETE",
+            headers: {
+                authorization: token,
+                Accept: "application/vnd.bentley.itwin-platform.v2+json",
+            },
+        });
+    }
+    catch (e) {
+        // keep parity with previous behavior where errors were swallowed
+        // Log for diagnostics
+        // eslint-disable-next-line no-console
+        console.error("Failed to remove iModel from recents", e);
+    }
+}
+async function getIModelFavorites(options) {
+    const { iTwinId, accessToken, serverEnvironmentPrefix, abortSignal } = options;
+    const token = typeof accessToken === "function" ? await accessToken() : accessToken;
+    const url = `${_getAPIServer(serverEnvironmentPrefix)}/imodels/favorites?iTwinId=${iTwinId}`;
+    const result = await fetch(url, {
+        headers: {
+            authorization: token,
+            Accept: "application/vnd.bentley.itwin-platform.v2+json",
+        },
+        signal: abortSignal,
+    });
+    if (abortSignal?.aborted) {
+        throw new Error("The fetch request was aborted by the cleanup function.");
+    }
+    if (!result) {
+        throw new Error(`Failed to fetch iModels favorites from ${url}.\nNo response.`);
+    }
+    if (result.status !== 200) {
+        throw new Error(`Failed to fetch iModels favorites from ${url}.\nStatus: ${result.status}`);
+    }
+    const response = await result.json();
+    return response.iModels;
+}
+async function addIModelToFavorites(options) {
+    const { iModelId, accessToken, serverEnvironmentPrefix } = options;
+    const token = typeof accessToken === "function" ? await accessToken() : accessToken;
+    const url = `${_getAPIServer(serverEnvironmentPrefix)}/imodels/favorites/${iModelId}`;
+    const result = await fetch(url, {
+        method: "PUT",
+        headers: {
+            authorization: token,
+            Accept: "application/vnd.bentley.itwin-platform.v2+json",
+        },
+    });
+    if (!result || (result.status !== 200 && result.status !== 204)) {
+        throw new Error(`Failed to add iModel ${iModelId} to favorites`);
+    }
+}
+async function removeIModelFromFavorites(options) {
+    const { iModelId, accessToken, serverEnvironmentPrefix } = options;
+    const token = typeof accessToken === "function" ? await accessToken() : accessToken;
+    const url = `${_getAPIServer(serverEnvironmentPrefix)}/imodels/favorites/${iModelId}`;
+    const result = await fetch(url, {
+        method: "DELETE",
+        headers: {
+            authorization: token,
+            Accept: "application/vnd.bentley.itwin-platform.v2+json",
+        },
+    });
+    if (!result || (result.status !== 200 && result.status !== 204)) {
+        throw new Error(`Failed to remove iModel ${iModelId} from favorites`);
+    }
+}
+
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+/**
+ * Custom hook to manage iModel favorites.
+ * @param iTwinId - The ID of the iTwin for which to fetch favorites.
+ * @param accessToken - Access token that requires the `itwin-platform` scope. Provide a function that returns the token to prevent the token from expiring.
+ * @param serverEnvironmentPrefix - Optional server environment prefix.
+ * @param disabled - Optional flag to disable fetching of the favorites in the hook.
+ * @returns An object containing:
+ * - {Set<string>} iModelFavorites - A set of iModel IDs that are marked as favorites.
+ * - {function} addIModelToFavorites - A function to add an iModel to favorites.
+ * - {function} removeIModelFromFavorites - A function to remove an iModel from favorites.
+ */
+const useIModelFavorites = (iTwinId, accessToken, serverEnvironmentPrefix, disabled) => {
+    const [iModelFavorites, setIModelFavorites] = useState(new Set());
+    /**
+     * Adds an iModel to the favorites.
+     * @param {string} iModelId - The ID of the iModel to add to favorites.
+     * @returns {Promise<void>}
+     */
+    const addIModelToFavorites$1 = useCallback(async (iModelId) => {
+        if (!accessToken || !iModelId || iModelId === "") {
+            return;
+        }
+        try {
+            await addIModelToFavorites({
+                iModelId,
+                accessToken,
+                serverEnvironmentPrefix,
+            });
+            setIModelFavorites((prev) => new Set([...prev, iModelId]));
+        }
+        catch (error) {
+            console.error(error);
+        }
+    }, [accessToken, serverEnvironmentPrefix]);
+    /**
+     * Removes an iModel from the favorites.
+     * @param {string} iModelId - The ID of the iModel to remove from favorites.
+     * @returns {Promise<void>}
+     */
+    const removeIModelFromFavorites$1 = useCallback(async (iModelId) => {
+        if (!accessToken || !iModelId || iModelId === "") {
+            return;
+        }
+        try {
+            await removeIModelFromFavorites({
+                iModelId,
+                accessToken,
+                serverEnvironmentPrefix,
+            });
+            setIModelFavorites((prev) => {
+                const newFavorites = new Set(prev);
+                newFavorites.delete(iModelId);
+                return newFavorites;
+            });
+        }
+        catch (error) {
+            console.error(error);
+        }
+    }, [accessToken, serverEnvironmentPrefix]);
+    useEffect(() => {
+        const controller = new AbortController();
+        /**
+         * Fetches iTwin favorites and updates the state.
+         * @param {AbortSignal} [abortSignal] - Optional abort signal to cancel the fetch request.
+         */
+        const fetchIModelFavorites = async (abortSignal) => {
+            try {
+                if (disabled || !iTwinId || !accessToken) {
+                    setIModelFavorites(new Set());
+                    return;
+                }
+                const favorites = await getIModelFavorites({
+                    iTwinId,
+                    accessToken,
+                    serverEnvironmentPrefix,
+                    abortSignal,
+                });
+                setIModelFavorites(new Set(favorites.map((favorite) => favorite.id)));
+            }
+            catch (error) {
+                if (error instanceof Error && error.name === "AbortError") {
+                    return;
+                }
+                console.error(error);
+            }
+        };
+        void fetchIModelFavorites(controller.signal);
+        return () => {
+            controller.abort();
+        };
+    }, [disabled, iTwinId, accessToken, serverEnvironmentPrefix]);
+    return {
+        iModelFavorites,
+        addIModelToFavorites: addIModelToFavorites$1,
+        removeIModelFromFavorites: removeIModelFromFavorites$1,
+    };
+};
+
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+const IModelFavoritesContext = React.createContext(undefined);
+const IModelFavoritesProvider = ({ iTwinId, accessToken, serverEnvironmentPrefix, children, disabled, }) => {
+    const { iModelFavorites, addIModelToFavorites, removeIModelFromFavorites } = useIModelFavorites(iTwinId, accessToken, serverEnvironmentPrefix === "dev" || serverEnvironmentPrefix === "qa"
+        ? serverEnvironmentPrefix
+        : undefined, disabled);
+    const value = React.useMemo(() => ({
+        favorites: iModelFavorites,
+        add: addIModelToFavorites,
+        remove: removeIModelFromFavorites,
+    }), [iModelFavorites, addIModelToFavorites, removeIModelFromFavorites]);
+    return (React.createElement(IModelFavoritesContext.Provider, { value: value }, children));
+};
+const useIModelFavoritesContext = () => {
+    const ctx = React.useContext(IModelFavoritesContext);
+    if (!ctx) {
+        console.warn("useIModelFavoritesContext must be used within IModelFavoritesProvider");
+    }
+    return ctx;
+};
+
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+var DataStatus;
+(function (DataStatus) {
+    DataStatus["Fetching"] = "fetching";
+    DataStatus["Complete"] = "complete";
+    DataStatus["FetchFailed"] = "error_fetchFailed";
+    DataStatus["TokenRequired"] = "error_tokenRequired";
+    DataStatus["ContextRequired"] = "error_contextRequired";
+})(DataStatus || (DataStatus = {}));
+/* Supported IModel cell columns */
+var IModelCellColumn;
+(function (IModelCellColumn) {
+    IModelCellColumn["Favorite"] = "Favorite";
+    IModelCellColumn["Name"] = "name";
+    IModelCellColumn["Description"] = "description";
+    IModelCellColumn["LastModified"] = "lastChangesetPushDateTime";
+    /** @deprecated Since 4.1.0. Use `LastModified` instead. */
+    IModelCellColumn["CreatedDateTime"] = "createdDateTime";
+    IModelCellColumn["Options"] = "options";
+})(IModelCellColumn || (IModelCellColumn = {}));
+/* Supported ITwin cell columns */
+var ITwinCellColumn;
+(function (ITwinCellColumn) {
+    ITwinCellColumn["Favorite"] = "Favorite";
+    ITwinCellColumn["Number"] = "ITwinNumber";
+    ITwinCellColumn["Name"] = "ITwinName";
+    ITwinCellColumn["LastModified"] = "LastModified";
+    ITwinCellColumn["Options"] = "options";
+})(ITwinCellColumn || (ITwinCellColumn = {}));
+
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+/**
+ * Representation of a Ghost IModel
+ */
+const IModelGhostTile = forwardRef(({ fullWidth, ...props }, ref) => {
+    return (React.createElement(ThemeProvider, { ref: ref, theme: "inherit", ...props },
+        React.createElement(Tile.Wrapper, { style: fullWidth ? { width: "100%" } : undefined },
+            React.createElement(Tile.ThumbnailArea, null,
+                React.createElement(Text, { isSkeleton: true }, "Skeleton")),
+            React.createElement(Tile.Name, null,
+                React.createElement(Text, { isSkeleton: true, variant: "leading" }, "Skeleton Name")),
+            React.createElement(Tile.ContentArea, null,
+                React.createElement(Tile.Description, null,
+                    React.createElement(Text, { isSkeleton: true, variant: "title" }, "Skeleton Description"))))));
+});
+
+var css_248z$4 = ".TileFavoriteIcon-module_favoriteIconButton__pJaA0{padding-inline:var(--iui-button-padding-block);background-color:rgb(from var(--iui-color-background-hover) r g b/0.7)}.TileFavoriteIcon-module_favoriteIconButton__pJaA0:hover{background-color:var(--iui-color-background-hover)}.TileFavoriteIcon-module_favoriteIconButton__pJaA0:active{background-color:var(--iui-color-background)}";
+var styles$3 = {"favoriteIconButton":"TileFavoriteIcon-module_favoriteIconButton__pJaA0"};
+styleInject(css_248z$4);
+
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+/**
+ * Reusable favorite icon button for Tile components
+ * Shows a star icon that can be clicked to add/remove from favorites
+ */
+const TileFavoriteIcon = ({ isFavorite, onAddToFavorites, onRemoveFromFavorites, addLabel, removeLabel, className = "", }) => {
+    return (React.createElement(IconButton, { "aria-label": isFavorite ? removeLabel : addLabel, onClick: async () => {
+            isFavorite ? await onRemoveFromFavorites() : await onAddToFavorites();
+        }, className: `${styles$3.favoriteIconButton} ${className}`, styleType: "borderless" }, isFavorite ? React.createElement(SvgStar, null) : React.createElement(SvgStarHollow, null)));
+};
+
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+/** Build MenuItem array for the value for each provided options
+ * @private
+ */
+const _buildManagedContextMenuOptions = (options, value, closeMenu, refetchData) => {
+    return options
+        ?.filter?.(({ visible }) => {
+        return typeof visible === "function" ? visible(value) : visible ?? true;
+    })
+        .map(({ key, visible, onClick, disabled, ...contextMenuProps }) => {
+        return (React.createElement(MenuItem, { ...contextMenuProps, disabled: typeof disabled === "function" ? disabled(value) : disabled, onClick: (e) => {
+                e?.stopPropagation();
+                closeMenu?.();
+                onClick?.(value, refetchData);
+            }, key: key }));
+    });
+};
+
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+/** Convert buffer response to URL format: data:image/png;base64 */
+function convertArrayBufferToUrlBase64PNG(buffer) {
+    const byteArray = new Uint8Array(buffer);
+    if (!byteArray || byteArray.length === 0) {
+        throw new Error("Expected an image to be returned from the query");
+    }
+    const base64Data = btoa(byteArray.reduce((acc, byte) => acc + String.fromCharCode(byte), ""));
+    return `data:image/png;base64,${base64Data}`;
+}
+/** Use cached thumbnail or upload thumbnail from server */
+const useIModelThumbnail = (iModelId, accessToken, apiOverrides) => {
+    const [thumbnail, setThumbnail] = useState();
+    useEffect(() => {
+        if (apiOverrides?.data) {
+            setThumbnail(apiOverrides.data);
+            return;
+        }
+        const abortController = new AbortController();
+        if (!thumbnail && accessToken && iModelId) {
+            const makeFetchRequest = async () => {
+                const options = {
+                    signal: abortController.signal,
+                    headers: {
+                        Authorization: typeof accessToken === "function"
+                            ? await accessToken()
+                            : accessToken,
+                        Accept: "application/vnd.bentley.itwin-platform.v2+json",
+                        Prefer: "return=representation",
+                    },
+                };
+                const response = await fetch(`${_getAPIServer(apiOverrides?.serverEnvironmentPrefix)}/imodels/${iModelId}/thumbnail`, options);
+                const thumbnail = response.ok
+                    ? await response.arrayBuffer().then(convertArrayBufferToUrlBase64PNG)
+                    : response.status === 404
+                        ? svgIModel
+                        : await response.text().then((errorText) => {
+                            throw new Error(errorText);
+                        });
+                setThumbnail(thumbnail);
+            };
+            makeFetchRequest().catch((e) => {
+                if (e.name === "AbortError") {
+                    // Aborting because unmounting is not an error, swallow.
+                    return;
+                }
+                console.error("Thumbnail download error", "Thumbnail Fetch", {
+                    iModelId,
+                    e,
+                });
+            });
+        }
+        return () => {
+            abortController.abort();
+        };
+    }, [
+        accessToken,
+        iModelId,
+        thumbnail,
+        apiOverrides?.data,
+        apiOverrides?.serverEnvironmentPrefix,
+    ]);
+    return thumbnail;
+};
+
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+/** Clickable iModel thumbnail, fetched from the servers */
+const IModelThumbnail = ({ iModelId, accessToken, apiOverrides, className, }) => {
+    const { ref, inView } = useInView({
+        triggerOnce: true,
+        skip: !!apiOverrides?.data,
+    });
+    const thumbnail = useIModelThumbnail(iModelId, inView ? accessToken : undefined, apiOverrides);
+    return thumbnail ? (React.createElement(Tile.ThumbnailPicture, { url: thumbnail, ref: ref, className: classNames("iac-thumbnail", className) })) : (React.createElement(Text, { as: "p", variant: "body", ref: ref, isSkeleton: true, style: { height: "100%", width: "100%", margin: 0 } }));
+};
+
+var css_248z$3 = ".IModelTile-module_fullWidth__JK5-H{width:100%}.IModelTile-module_iModelTileFavoriteIcon__Y7UWb.IModelTile-module_hidden__RP9E4{display:none}.IModelTile-module_iModelTile__GdDYw:hover .IModelTile-module_iModelTileFavoriteIcon__Y7UWb{display:flex}";
+var styles$2 = {"fullWidth":"IModelTile-module_fullWidth__JK5-H","iModelTileFavoriteIcon":"IModelTile-module_iModelTileFavoriteIcon__Y7UWb","hidden":"IModelTile-module_hidden__RP9E4","iModelTile":"IModelTile-module_iModelTile__GdDYw"};
+styleInject(css_248z$3);
+
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+/**
+ * Representation of an IModel
+ */
+const IModelTile = ({ iModel, iModelOptions, accessToken, onThumbnailClick, apiOverrides, tileProps, stringsOverrides, refetchIModels, fullWidth, hideFavoriteIcon, }) => {
+    const { name, status, isNew, isLoading, isSelected, thumbnail, badge, getBadge, leftIcon, rightIcon, buttons, moreOptions, isDisabled, onClick: tilePropsOnClick, metadata, className = "", ...rest } = tileProps ?? {};
+    const favoritesContext = useIModelFavoritesContext();
+    const strings = _mergeStrings({
+        addToFavorites: "Add to favorites",
+        removeFromFavorites: "Remove from favorites",
+    }, stringsOverrides);
+    const moreOptionsBuilt = React.useMemo(() => _buildManagedContextMenuOptions(iModelOptions, iModel, undefined, refetchIModels), [iModelOptions, iModel, refetchIModels]);
+    const thumbnailApiOverride = apiOverrides || iModel.thumbnail
+        ? {
+            ...(apiOverrides ?? {}),
+            data: iModel.thumbnail,
+        }
+        : undefined;
+    return (React.createElement(Tile.Wrapper, { key: iModel.id, isNew: isNew, isSelected: isSelected, isLoading: isLoading, status: status, isDisabled: isDisabled, className: `${styles$2.iModelTile} ${fullWidth ? styles$2.fullWidth : ""} ${className}`, ...rest },
+        React.createElement(Tile.Name, null,
+            React.createElement(Tile.NameIcon, null),
+            React.createElement(Tile.NameLabel, { onClick: (e) => tilePropsOnClick?.(e) ?? onThumbnailClick?.(iModel), "aria-disabled": isDisabled, "data-testid": `iModel-tile-${iModel.id}-name-label` }, name ?? iModel.displayName)),
+        React.createElement(Tile.ThumbnailArea, null,
+            leftIcon && React.createElement(Tile.TypeIndicator, null, leftIcon),
+            React.createElement(Tile.QuickAction, null,
+                rightIcon,
+                !hideFavoriteIcon && favoritesContext && (React.createElement(TileFavoriteIcon, { isFavorite: favoritesContext.favorites.has(iModel.id), onAddToFavorites: () => favoritesContext.add(iModel.id), onRemoveFromFavorites: () => favoritesContext.remove(iModel.id), addLabel: strings.addToFavorites, removeLabel: strings.removeFromFavorites, className: `${styles$2.iModelTileFavoriteIcon} ${!favoritesContext.favorites.has(iModel.id) && styles$2.hidden}` }))),
+            thumbnail ? (React.createElement(Tile.ThumbnailPicture, null, thumbnail)) : (React.createElement(IModelThumbnail, { iModelId: iModel.id, accessToken: accessToken, apiOverrides: thumbnailApiOverride })),
+            (getBadge || badge) && (React.createElement(Tile.BadgeContainer, null, getBadge?.(iModel) ?? badge))),
+        React.createElement(Tile.ContentArea, null,
+            React.createElement(Tile.Action, { onClick: (e) => tilePropsOnClick?.(e) ?? onThumbnailClick?.(iModel), "aria-disabled": isDisabled, "data-testid": `iModel-tile-${iModel.id}-action` },
+                React.createElement(Tile.Description, null, iModel?.description ?? "")),
+            (moreOptions || moreOptionsBuilt) && (React.createElement(Tile.MoreOptions, { "data-testid": `iModel-tile-${iModel.id}-more-options` }, moreOptions ?? moreOptionsBuilt)),
+            metadata && (React.createElement(Tile.Metadata, { "data-testid": `iModel-tile-${iModel.id}-metadata` }, metadata))),
+        buttons && React.createElement(Tile.Buttons, null, buttons)));
+};
+
+var css_248z$2 = ".IModelGrid-module_rowCursor__Ay8md div[role=row]{cursor:pointer}";
+var styles$1 = {"rowCursor":"IModelGrid-module_rowCursor__Ay8md"};
+styleInject(css_248z$2);
+
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+/** Runtime check that we are not fed invalid sort type */
+function isSupportedSortType(sortType) {
+    return (!!sortType &&
+        [
+            "displayName",
+            "name",
+            "description",
+            "initialized",
+            "createdDateTime",
+        ].includes(sortType));
+}
+const sortEitherEmptyValues = (a, b) => (!a && !b ? 0 : !a ? 1 : -1);
+const sortBooleanOrEqualValues = (a, b) => (a === b ? 0 : a ? -1 : 1);
+const sortStringValues = (a, b) => a.localeCompare(b);
+const useIModelSort = (iModels, options, 
+// needed to account for limitation of react hooks
+enableSort = true) => {
+    const sortType = typeof options !== "function" ? options?.sortType : undefined;
+    const descending = typeof options !== "function" ? options?.descending ?? false : undefined;
+    const sortFn = typeof options === "function" ? options : undefined;
+    return React.useMemo(() => {
+        if (!enableSort) {
+            return iModels;
+        }
+        if (sortFn) {
+            return [...iModels].sort(sortFn);
+        }
+        if (!isSupportedSortType(sortType)) {
+            return iModels;
+        }
+        const sorted = [...iModels].sort((iModelA, iModelB) => {
+            const a = iModelA[sortType];
+            const b = iModelB[sortType];
+            if (typeof a === "boolean" || typeof b === "boolean" || a === b) {
+                return sortBooleanOrEqualValues(a, b);
+            }
+            if (!a || !b) {
+                return sortEitherEmptyValues(a, b);
+            }
+            // Look this file history on gitHub for dateTimeStringValuesSorting on "createdDateTime"
+            return sortStringValues(a, b);
+        });
+        return descending ? sorted.reverse() : sorted;
+    }, [enableSort, sortFn, sortType, iModels, descending]);
+};
+
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+const DEFAULT_PAGE_SIZE = 100;
+const useIModelData = ({ requestType = "", iTwinId, accessToken, sortOptions, apiOverrides, searchText, pageSize = DEFAULT_PAGE_SIZE, maxCount, dataMode, onLoadMore, onRefetch, }) => {
+    const [needsUpdate, setNeedsUpdate] = React.useState(true);
+    const [iModels, setIModels] = React.useState([]);
+    const [status, setStatus] = React.useState();
+    const [page, setPage] = React.useState(0);
+    const [morePagesAvailable, setMorePagesAvailable] = React.useState(true);
+    const [abortController, setAbortController] = React.useState(undefined);
+    const sortType = sortOptions && ["name", "createdDateTime"].includes(sortOptions.sortType)
+        ? sortOptions.sortType
+        : undefined; //Only available sort-by API at the moment.
+    const [previousSortOptions, setPreviousSortOptions] = React.useState(sortOptions && { ...sortOptions });
+    const sortDescending = sortOptions?.descending;
+    const sortedIModels = useIModelSort(iModels, sortOptions, requestType !== "recents");
+    // For recents and favorites, apply client-side filtering based on searchText
+    const filteredIModels = React.useMemo(() => {
+        if (!searchText?.trim() ||
+            (requestType !== "recents" && requestType !== "favorites")) {
+            return sortedIModels;
+        }
+        const lowerSearchText = searchText.toLowerCase();
+        return sortedIModels.filter((iModel) => (iModel.name?.toLowerCase().includes(lowerSearchText) ?? false) ||
+            (iModel.description?.toLowerCase().includes(lowerSearchText) ?? false));
+    }, [sortedIModels, searchText, requestType]);
+    const sortChanged = sortOptions?.descending !== previousSortOptions?.descending ||
+        sortOptions?.sortType !== previousSortOptions?.sortType;
+    if (sortChanged) {
+        setPreviousSortOptions(sortOptions);
+    }
+    // cleanup the abort controller when unmounting
+    useEffect(() => () => abortController?.abort(), [abortController]);
+    const reset = React.useCallback(() => {
+        if (dataMode === "external") {
+            return;
+        }
+        setStatus(DataStatus.Fetching);
+        setIModels([]);
+        setPage(0);
+        setMorePagesAvailable(true);
+        setNeedsUpdate(true);
+    }, [dataMode]);
+    const fetchMore = React.useCallback(() => {
+        if (dataMode === "external") {
+            return;
+        }
+        if (needsUpdate ||
+            status === DataStatus.Fetching ||
+            status === DataStatus.TokenRequired ||
+            status === DataStatus.ContextRequired ||
+            !morePagesAvailable) {
+            return;
+        }
+        setPage((page) => page + 1);
+        setNeedsUpdate(true);
+    }, [dataMode, needsUpdate, status, morePagesAvailable]);
+    React.useEffect(() => {
+        if (dataMode === "external") {
+            return;
+        }
+        // start from scratch when any external state changes
+        if (requestType !== "recents" && requestType !== "favorites") {
+            reset();
+        }
+    }, [
+        dataMode,
+        iTwinId,
+        accessToken,
+        sortOptions?.descending,
+        sortOptions?.sortType,
+        apiOverrides?.data,
+        apiOverrides?.serverEnvironmentPrefix,
+        searchText,
+        pageSize,
+        maxCount,
+        requestType,
+        reset,
+    ]);
+    React.useEffect(() => {
+        if (dataMode === "external") {
+            return;
+        }
+        // start from scratch when any external state changes
+        if (requestType === "recents" || requestType === "favorites") {
+            reset();
+        }
+    }, [
+        dataMode,
+        iTwinId,
+        accessToken,
+        sortOptions?.descending,
+        sortOptions?.sortType,
+        apiOverrides?.data,
+        apiOverrides?.serverEnvironmentPrefix,
+        pageSize,
+        maxCount,
+        requestType,
+        reset,
+    ]);
+    // Main function
+    React.useEffect(() => {
+        if (dataMode === "external" || !needsUpdate) {
+            return;
+        }
+        setNeedsUpdate(false);
+        abortController?.abort();
+        setAbortController(undefined);
+        if (!accessToken || !iTwinId) {
+            setStatus(!accessToken ? DataStatus.TokenRequired : DataStatus.ContextRequired);
+            setIModels([]);
+            return;
+        }
+        // If sort changes but we already have all the data, let client side sorting do its job
+        if (sortChanged && !morePagesAvailable) {
+            setStatus(DataStatus.Complete);
+            return;
+        }
+        // Otherwise, fetch from server
+        setStatus(DataStatus.Fetching);
+        const { abortController: newAbortController, fetchIModels } = createFetchIModelsFn(iTwinId, accessToken, sortType, sortDescending ?? false, page, searchText, pageSize, maxCount, apiOverrides?.serverEnvironmentPrefix, requestType);
+        setAbortController(newAbortController);
+        fetchIModels()
+            .then(({ iModels, morePagesAvailable }) => {
+            setMorePagesAvailable(morePagesAvailable);
+            setIModels((prev) => page === 0 ? [...iModels] : [...prev, ...iModels]);
+            setStatus(DataStatus.Complete);
+        })
+            .catch((e) => {
+            if (e.name === "AbortError") {
+                // Aborting because unmounting is not an error, swallow.
+                return;
+            }
+            setIModels([]);
+            setMorePagesAvailable(false);
+            setStatus(DataStatus.FetchFailed);
+            console.error(e);
+        });
+    }, [
+        dataMode,
+        abortController,
+        accessToken,
+        apiOverrides?.data,
+        apiOverrides?.serverEnvironmentPrefix,
+        iModels,
+        iTwinId,
+        maxCount,
+        pageSize,
+        morePagesAvailable,
+        needsUpdate,
+        page,
+        requestType,
+        searchText,
+        sortChanged,
+        sortDescending,
+        sortType,
+    ]);
+    if (dataMode === "external") {
+        return {
+            iModels: apiOverrides?.data ?? [],
+            status: apiOverrides?.isLoading
+                ? DataStatus.Fetching
+                : DataStatus.Complete,
+            fetchMore: apiOverrides?.hasMoreData && !apiOverrides.isLoading
+                ? onLoadMore
+                : undefined,
+            refetchIModels: onRefetch ??
+                (() => {
+                    // No-op in external mode - consumer handles refetch
+                }),
+        };
+    }
+    return {
+        iModels: filteredIModels,
+        status,
+        fetchMore: morePagesAvailable ? fetchMore : undefined,
+        refetchIModels: reset,
+    };
+};
+const createFetchIModelsFn = (iTwinId, accessToken, sortType, sortDescending, page, searchText, pageSize = DEFAULT_PAGE_SIZE, maxCount, serverEnvironmentPrefix, requestType = "") => {
+    const selection = `?iTwinId=${encodeURIComponent(iTwinId)}`;
+    const sorting = sortType
+        ? `&$orderBy=${encodeURIComponent(sortType)} ${sortDescending ? "desc" : "asc"}`
+        : "";
+    const skip = page * pageSize;
+    if (maxCount !== undefined && skip >= maxCount) {
+        const abortController = new AbortController();
+        return {
+            abortController,
+            fetchIModels: async () => ({
+                iModels: [],
+                morePagesAvailable: false,
+            }),
+        };
+    }
+    const endpoint = ["favorites", "recents"].includes(requestType)
+        ? requestType
+        : "";
+    const top = maxCount ? Math.min(pageSize, maxCount - skip) : pageSize;
+    const paging = `&$skip=${skip}&$top=${top}`;
+    // Only apply server-side search for non-recents and non-favorites requests
+    const searching = searchText?.trim() && !["favorites", "recents"].includes(requestType)
+        ? `&$search=${encodeURIComponent(searchText)}`
+        : "";
+    const abortController = new AbortController();
+    const url = `${_getAPIServer(serverEnvironmentPrefix)}/imodels/${endpoint}${selection}${sorting}${paging}${searching}`;
+    const doFetchRequest = async () => {
+        const options = {
+            signal: abortController.signal,
+            headers: {
+                Authorization: typeof accessToken === "function" ? await accessToken() : accessToken,
+                Prefer: "return=representation",
+                Accept: "application/vnd.bentley.itwin-platform.v2+json",
+            },
+        };
+        const response = await fetch(url, options);
+        if (!response.ok) {
+            throw new Error(await response.text());
+        }
+        const result = await response.json();
+        const totalLocalIModels = page * pageSize + result.iModels.length;
+        return {
+            iModels: result.iModels,
+            morePagesAvailable: !(totalLocalIModels === maxCount || result.iModels.length < top),
+        };
+    };
+    return {
+        abortController,
+        fetchIModels: doFetchRequest,
+    };
+};
+
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+const useIModelTableConfig = ({ iModelActions, onThumbnailClick, strings, refetchIModels, cellOverrides = {}, }) => {
+    const favoritesContext = useIModelFavoritesContext();
+    const onRowClick = (_, row) => {
+        const iModel = row.original;
+        if (!iModel) {
+            return;
+        }
+        onThumbnailClick?.(iModel);
+    };
+    const columns = useMemo(() => [
+        {
+            Header: "Table",
+            columns: [
+                {
+                    id: IModelCellColumn.Favorite,
+                    Header: strings.tableColumnFavorites,
+                    accessor: "id",
+                    disableSortBy: true,
+                    width: 70,
+                    Cell: (props) => {
+                        const isFavorite = favoritesContext?.favorites.has(props.value);
+                        return (React.createElement(IconButton, { styleType: "borderless", "aria-label": isFavorite
+                                ? strings.removeFromFavorites
+                                : strings.addToFavorites, onClick: async (e) => {
+                                e.stopPropagation();
+                                isFavorite
+                                    ? await favoritesContext?.remove?.(props.value)
+                                    : await favoritesContext?.add?.(props.value);
+                            } }, isFavorite ? React.createElement(SvgStar, null) : React.createElement(SvgStarHollow, null)));
+                    },
+                },
+                {
+                    id: IModelCellColumn.Name,
+                    Header: strings.tableColumnName,
+                    accessor: "name",
+                    maxWidth: 350,
+                    Cell: (props) => (React.createElement("div", { "data-tip": props.row.original.name }, cellOverrides.name ? (cellOverrides.name(props)) : (React.createElement("span", null, props.value)))),
+                },
+                {
+                    id: IModelCellColumn.Description,
+                    Header: strings.tableColumnDescription,
+                    accessor: "description",
+                    disableSortBy: true,
+                    Cell: (props) => (React.createElement("div", { "data-tip": props.row.original.description }, cellOverrides.description ? (cellOverrides.description(props)) : (React.createElement("span", null, props.value)))),
+                },
+                {
+                    id: IModelCellColumn.LastModified,
+                    Header: strings.tableColumnLastModified,
+                    accessor: (row) => row.lastChangesetPushDateTime ?? row.createdDateTime ?? "",
+                    maxWidth: 350,
+                    Cell: (props) => {
+                        const date = props.data[props.row.index].lastChangesetPushDateTime ??
+                            props.data[props.row.index].createdDateTime;
+                        const lastModifiedOverride = cellOverrides.lastModified ?? cellOverrides.createdDateTime;
+                        return lastModifiedOverride
+                            ? lastModifiedOverride(props)
+                            : date
+                                ? new Date(date).toDateString()
+                                : "";
+                    },
+                },
+                {
+                    id: IModelCellColumn.Options,
+                    disableSortBy: true,
+                    maxWidth: 65,
+                    Cell: (props) => {
+                        const moreOptions = (close) => {
+                            const options = _buildManagedContextMenuOptions(iModelActions, props.row.original, close, refetchIModels);
+                            return options !== undefined ? options : [];
+                        };
+                        return iModelActions && iModelActions.length > 0 ? (React.createElement(DropdownMenu, { menuItems: moreOptions, onClick: (e) => {
+                                e.stopPropagation();
+                            } },
+                            React.createElement(IconButton, { "data-testid": `iModel-row-${props.row.original.id}-more-options`, styleType: "borderless", "aria-label": "More options", className: "iac-options-icon", onClick: (e) => {
+                                    e.stopPropagation();
+                                } },
+                                React.createElement(SvgMore, null)))) : null;
+                    },
+                },
+            ].filter(({ id }) => !cellOverrides.hideColumns?.includes(id) &&
+                // Support deprecated CreatedDateTime alias for the LastModified column
+                !(id === IModelCellColumn.LastModified &&
+                    cellOverrides.hideColumns?.includes(IModelCellColumn.CreatedDateTime))),
+        },
+    ], [
+        strings.tableColumnFavorites,
+        strings.tableColumnName,
+        strings.tableColumnDescription,
+        strings.tableColumnLastModified,
+        strings.addToFavorites,
+        strings.removeFromFavorites,
+        favoritesContext,
+        cellOverrides,
+        iModelActions,
+        refetchIModels,
+    ]);
+    return {
+        onRowClick,
+        columns,
+    };
+};
+
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+/**
+ * Component that will allow displaying a grid of iModels, given a contextId
+ */
+const IModelGrid = (props) => {
+    return (React.createElement(IModelFavoritesProvider, { iTwinId: props.iTwinId, accessToken: props.accessToken, serverEnvironmentPrefix: props.apiOverrides?.serverEnvironmentPrefix, disabled: props.tileOverrides?.hideFavoriteIcon },
+        React.createElement(IModelGridInternal, { ...props })));
+};
+const IModelGridInternal = ({ accessToken, apiOverrides, iModelActions, removeFromRecentsIcon, onThumbnailClick, iTwinId, sortOptions = { sortType: "name", descending: false }, requestType, stringsOverrides, tileOverrides, useIndividualState, postProcessCallback, emptyStateComponent, searchText, viewMode, pageSize, maxCount, cellOverrides, className, onLoadMore, onRefetch, dataMode = "internal", disableAddToRecents = false, }) => {
+    const [sort, setSort] = React.useState(sortOptions);
+    React.useEffect(() => {
+        setSort(viewMode === "cells"
+            ? {
+                sortType: "name",
+                descending: false,
+            }
+            : {
+                sortType: sortOptions.sortType,
+                descending: sortOptions.descending,
+            });
+    }, [sortOptions.descending, sortOptions.sortType, viewMode]);
+    const strings = _mergeStrings({
+        tableColumnFavorites: "",
+        tableColumnName: "Name",
+        tableColumnDescription: "Description",
+        tableColumnLastModified: "Last Modified",
+        tableLoadingData: "Loading...",
+        noIModelSearch: "No results found",
+        noIModelSearchSubtext: "Try adjusting your search by using fewer or more general terms.",
+        noIModels: requestType === "recents"
+            ? "There are no recent iModels."
+            : requestType === "favorites"
+                ? "There are no favorite iModels."
+                : "There are no iModels in this iTwin.",
+        noContext: "No context provided",
+        noAuthentication: "No access token provided",
+        error: "An error occurred",
+        addToFavorites: "Add to favorites",
+        removeFromFavorites: "Remove from favorites",
+        removeFromRecents: "Remove from recents",
+    }, stringsOverrides);
+    // Add "Remove from recents" action when viewing recents
+    const enhancedIModelActions = React.useMemo(() => {
+        if (requestType === "recents") {
+            const removeFromRecentsAction = {
+                key: "remove-from-recents",
+                children: strings.removeFromRecents,
+                ...(removeFromRecentsIcon && { icon: removeFromRecentsIcon }),
+                onClick: async (iModel, refetchData) => {
+                    if (!iModel || !accessToken) {
+                        return;
+                    }
+                    await removeIModelFromRecents({
+                        iModelId: iModel.id,
+                        accessToken,
+                        serverEnvironmentPrefix: apiOverrides?.serverEnvironmentPrefix,
+                    });
+                    refetchData?.();
+                },
+            };
+            return iModelActions
+                ? [removeFromRecentsAction, ...iModelActions]
+                : [removeFromRecentsAction];
+        }
+        return iModelActions;
+    }, [
+        requestType,
+        iModelActions,
+        strings.removeFromRecents,
+        removeFromRecentsIcon,
+        accessToken,
+        apiOverrides?.serverEnvironmentPrefix,
+    ]);
+    const { iModels: fetchediModels, status: fetchStatus, fetchMore, refetchIModels, } = useIModelData({
+        requestType,
+        accessToken,
+        apiOverrides,
+        iTwinId,
+        sortOptions: sort,
+        searchText,
+        maxCount,
+        pageSize,
+        viewMode,
+        dataMode,
+        onLoadMore,
+        onRefetch,
+    });
+    const iModels = React.useMemo(() => postProcessCallback?.([...fetchediModels], fetchStatus, searchText) ??
+        fetchediModels, [postProcessCallback, fetchediModels, fetchStatus, searchText]);
+    React.useEffect(() => {
+        if (iModels.length < (pageSize ?? DEFAULT_PAGE_SIZE) &&
+            fetchMore &&
+            fetchStatus !== DataStatus.Fetching) {
+            fetchMore();
+        }
+    }, [iModels.length, pageSize, fetchMore, fetchStatus]);
+    const iModelClickAndAddToRecents = async (iModel, clickFn) => {
+        try {
+            if (!accessToken || disableAddToRecents) {
+                clickFn();
+                return;
+            }
+            void addIModelToRecents({
+                iModelId: iModel.id,
+                accessToken,
+                serverEnvironmentPrefix: apiOverrides?.serverEnvironmentPrefix,
+            });
+        }
+        catch (e) {
+            // swallow errors to avoid disrupting the UI
+            console.error("Failed to add iModel to recents", e);
+        }
+        onThumbnailClick?.(iModel);
+    };
+    const { columns, onRowClick } = useIModelTableConfig({
+        iModelActions: enhancedIModelActions,
+        onThumbnailClick: (iModel) => iModelClickAndAddToRecents(iModel, () => onThumbnailClick?.(iModel)),
+        strings,
+        refetchIModels,
+        cellOverrides,
+    });
+    const noResultsText = {
+        [DataStatus.Fetching]: "",
+        [DataStatus.Complete]: strings.noIModels,
+        [DataStatus.FetchFailed]: strings.error,
+        [DataStatus.TokenRequired]: strings.noAuthentication,
+        [DataStatus.ContextRequired]: strings.noContext,
+    }[fetchStatus ?? DataStatus.Fetching];
+    const tileApiOverrides = apiOverrides
+        ? { serverEnvironmentPrefix: apiOverrides.serverEnvironmentPrefix }
+        : undefined;
+    const renderIModelGridStructure = () => {
+        return (React.createElement(React.Fragment, null, viewMode !== "cells" ? (React.createElement(GridStructure, { className: className },
+            iModels?.map((iModel) => (React.createElement(IModelHookedTile, { key: iModel.id, iModel: iModel, iModelOptions: enhancedIModelActions, accessToken: accessToken, onThumbnailClick: (iModel) => iModelClickAndAddToRecents(iModel, () => onThumbnailClick?.(iModel)), apiOverrides: tileApiOverrides, useTileState: useIndividualState, refetchIModels: refetchIModels, ...tileOverrides, tileProps: tileOverrides
+                    ? {
+                        ...tileOverrides.tileProps,
+                        onClick: tileOverrides.tileProps?.onClick
+                            ? (e) => iModelClickAndAddToRecents(iModel, () => tileOverrides.tileProps?.onClick?.(e))
+                            : undefined,
+                    }
+                    : undefined }))),
+            fetchMore ? (React.createElement(InView, { onChange: (inView) => {
+                    inView && fetchStatus !== DataStatus.Fetching && fetchMore();
+                } }, ({ ref }) => {
+                return (React.createElement(IModelGhostTile, { ref: ref, fullWidth: tileOverrides?.fullWidth }));
+            })) : null,
+            fetchStatus === DataStatus.Fetching && (React.createElement(React.Fragment, null,
+                React.createElement(IModelGhostTile, { fullWidth: tileOverrides?.fullWidth }),
+                React.createElement(IModelGhostTile, { fullWidth: tileOverrides?.fullWidth }))))) : (React.createElement(ThemeProvider, { theme: "inherit" },
+            React.createElement(Table, { columns: columns, data: iModels, onRowClick: onRowClick, emptyTableContent: fetchStatus === DataStatus.Fetching
+                    ? strings.tableLoadingData
+                    : strings.noIModelSearch, isLoading: fetchStatus === DataStatus.Fetching, isSortable: true, onBottomReached: fetchMore, autoResetFilters: false, autoResetSortBy: false, bodyProps: {
+                    className: onThumbnailClick ? styles$1.rowCursor : "",
+                } })))));
+    };
+    const renderComponent = () => {
+        if (!searchText &&
+            iModels.length === 0 &&
+            noResultsText === strings.noIModels &&
+            emptyStateComponent) {
+            return React.createElement(React.Fragment, null, emptyStateComponent);
+        }
+        if (!searchText && iModels.length === 0 && noResultsText) {
+            return React.createElement(NoResults, { text: noResultsText });
+        }
+        if (searchText &&
+            iModels.length === 0 &&
+            fetchStatus !== DataStatus.Fetching) {
+            return (React.createElement(NoResults, { text: strings.noIModelSearch, subtext: strings.noIModelSearchSubtext, isSearchResult: true }));
+        }
+        return renderIModelGridStructure();
+    };
+    return renderComponent();
+};
+const noOp$1 = () => ({});
+const IModelHookedTile = (props) => {
+    const { useTileState = noOp$1, ...iModelTileProps } = props;
+    const hookIdentity = React.useRef(useTileState);
+    if (hookIdentity.current !== useTileState) {
+        throw new Error("Even when used in a prop, useTilePropsForIModel identity must remain stable as it is used as a hook.");
+    }
+    const tileState = useTileState(props.iModel, iModelTileProps);
+    return React.createElement(IModelTile, { ...iModelTileProps, ...tileState });
+};
+
+var css_248z$1 = ".iac-iTwinCell{display:flex;flex-direction:column;justify-content:center;overflow:hidden}.iac-iTwinCell>*{overflow:hidden;text-overflow:ellipsis;max-width:100%}.row-cursor div[role=row]{cursor:pointer}";
+styleInject(css_248z$1);
+
+var css_248z = ".ITwinTile-module_fullWidth__VGOS7{width:100%}.ITwinTile-module_iTwinTileFavoriteIcon__VwBgT.ITwinTile-module_hidden__8-9tG{display:none}.ITwinTile-module_iTwinTile__EDkIT:hover .ITwinTile-module_iTwinTileFavoriteIcon__VwBgT{display:flex}";
+var styles = {"fullWidth":"ITwinTile-module_fullWidth__VGOS7","iTwinTileFavoriteIcon":"ITwinTile-module_iTwinTileFavoriteIcon__VwBgT","hidden":"ITwinTile-module_hidden__8-9tG","iTwinTile":"ITwinTile-module_iTwinTile__EDkIT"};
+styleInject(css_248z);
+
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+/**
+ * Representation of an iTwin
+ */
+const ITwinTile = ({ iTwin, iTwinOptions, onThumbnailClick, tileProps, stringsOverrides, isFavorite, addToFavorites, removeFromFavorites, refetchITwins, fullWidth, hideFavoriteIcon, }) => {
+    const { name, description, status, isNew, isLoading, isSelected, thumbnail, badge, leftIcon, rightIcon, buttons, metadata, moreOptions, children, isDisabled, onClick, className = "", ...rest } = tileProps ?? {};
+    const strings = _mergeStrings({
+        trialBadge: "Trial",
+        inactiveBadge: "Inactive",
+        addToFavorites: "Add to favorites",
+        removeFromFavorites: "Remove from favorites",
+    }, stringsOverrides);
+    const moreOptionsBuilt = React.useMemo(() => _buildManagedContextMenuOptions(iTwinOptions, iTwin, undefined, refetchITwins), [iTwinOptions, iTwin, refetchITwins]);
+    return (React.createElement(ThemeProvider, { theme: "inherit" },
+        React.createElement(Tile.Wrapper, { key: iTwin.id, isNew: isNew, isSelected: isSelected, isLoading: isLoading, status: status, isDisabled: isDisabled, className: `${styles.iTwinTile} ${fullWidth ? styles.fullWidth : ""} ${className}`, ...rest },
+            React.createElement(Tile.Name, null,
+                (status || isNew || isLoading || isSelected) && React.createElement(Tile.NameIcon, null),
+                React.createElement(Tile.NameLabel, null,
+                    React.createElement(Tile.Action, { onClick: (e) => onClick?.(e) ?? onThumbnailClick?.(iTwin), "aria-disabled": isDisabled, "data-testid": `iTwin-tile-${iTwin.id}` }, name ?? iTwin.displayName))),
+            React.createElement(Tile.ThumbnailArea, null,
+                leftIcon && React.createElement(Tile.TypeIndicator, null, leftIcon),
+                React.createElement(Tile.QuickAction, null,
+                    rightIcon,
+                    !hideFavoriteIcon &&
+                        isFavorite !== undefined &&
+                        addToFavorites &&
+                        removeFromFavorites && (React.createElement(TileFavoriteIcon, { isFavorite: isFavorite, onAddToFavorites: () => addToFavorites(iTwin.id), onRemoveFromFavorites: () => removeFromFavorites(iTwin.id), addLabel: strings.addToFavorites, removeLabel: strings.removeFromFavorites, className: `${styles.iTwinTileFavoriteIcon} ${!isFavorite && styles.hidden}` }))),
+                React.createElement(Tile.BadgeContainer, null, badge ??
+                    (iTwin.status &&
+                        iTwin.status.toLocaleLowerCase() !== "active" && (React.createElement(Badge, { backgroundColor: iTwin.status.toLocaleLowerCase() === "inactive"
+                            ? "oak"
+                            : "steelblue" }, iTwin.status.toLocaleLowerCase() === "inactive"
+                        ? strings.inactiveBadge
+                        : strings.trialBadge)))),
+                React.createElement(Tile.ThumbnailPicture, { style: { cursor: onThumbnailClick ? "pointer" : "auto" } }, thumbnail ?? React.createElement(SvgItwin, null))),
+            React.createElement(Tile.ContentArea, null,
+                React.createElement(Tile.Description, null, description ?? iTwin.number ?? ""),
+                metadata && (React.createElement(Tile.Metadata, { "data-testid": `iTwin-tile-${iTwin.id}-metadata` }, metadata)),
+                children,
+                (moreOptions || moreOptionsBuilt) && (React.createElement(Tile.MoreOptions, { "data-testid": `iTwin-tile-${iTwin.id}-more-options` }, moreOptions ?? moreOptionsBuilt))),
+            buttons && React.createElement(Tile.Buttons, null, buttons))));
+};
+
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+const useITwinFilter = (iTwins, options) => {
+    const filter = options?.toLocaleLowerCase() ?? "";
+    return React.useMemo(() => !filter
+        ? iTwins
+        : iTwins.filter((iTwin) => (iTwin.displayName?.toLocaleLowerCase() ?? "").includes(filter) ||
+            (iTwin.number?.toLocaleLowerCase() ?? "").includes(filter)), [filter, iTwins]);
+};
+
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+const PAGE_SIZE = 100;
+const useITwinData = ({ requestType = "", iTwinSubClass = "Project", accessToken, apiOverrides, filterOptions, orderbyOptions, shouldRefetchFavorites, resetShouldRefetchFavorites, }) => {
+    const data = apiOverrides?.data;
+    const serverEnvironmentPrefix = apiOverrides?.serverEnvironmentPrefix;
+    const [projects, setProjects] = React.useState([]);
+    const [status, setStatus] = React.useState();
+    const filteredProjects = useITwinFilter(projects, filterOptions);
+    const [page, setPage] = React.useState(0);
+    const [morePages, setMorePages] = React.useState(true);
+    const refetchData = React.useCallback(() => {
+        setStatus(DataStatus.Fetching);
+        setProjects([]);
+        setPage(0);
+        setMorePages(true);
+    }, []);
+    const fetchMore = React.useCallback(() => {
+        setPage((page) => page + 1);
+    }, []);
+    const morePagesRef = React.useRef(morePages);
+    morePagesRef.current = morePages;
+    React.useEffect(() => {
+        // If filter changes but we already have all the data for favorites or recents,
+        // let client side filtering do its job, otherwise, refetch from scratch.
+        // Use ref so "morePages" changes itself does not trigger the effect.
+        if (morePagesRef.current ||
+            !["favorites", "recents"].includes(requestType)) {
+            refetchData();
+        }
+    }, [filterOptions, requestType, refetchData]);
+    React.useEffect(() => {
+        // If any of the dependencies change, always restart the fetch from scratch.
+        refetchData();
+    }, [
+        accessToken,
+        requestType,
+        iTwinSubClass,
+        orderbyOptions,
+        data,
+        serverEnvironmentPrefix,
+        refetchData,
+    ]);
+    React.useEffect(() => {
+        if (!morePages) {
+            return;
+        }
+        if (data) {
+            setProjects(data);
+            setStatus(DataStatus.Complete);
+            setMorePages(false);
+            return;
+        }
+        if (!accessToken) {
+            setStatus(DataStatus.TokenRequired);
+            setProjects([]);
+            return;
+        }
+        if (page === 0) {
+            setStatus(DataStatus.Fetching);
+        }
+        const abortController = new AbortController();
+        const endpoint = ["favorites", "recents"].includes(requestType)
+            ? requestType
+            : "";
+        const resolvedITwinSubClass = iTwinSubClass === "All" ? "" : iTwinSubClass;
+        const subClass = `?subClass=${resolvedITwinSubClass}`;
+        const paging = `&$skip=${page * PAGE_SIZE}&$top=${PAGE_SIZE}`;
+        const search = ["favorites", "recents"].includes(requestType) || !filterOptions
+            ? ""
+            : `&$search=${encodeURIComponent(String(filterOptions).trim())}`;
+        const orderby = ["favorites", "recents"].includes(requestType) || !orderbyOptions
+            ? ""
+            : `&$orderby=${encodeURIComponent(String(orderbyOptions).trim())}`;
+        const url = `${_getAPIServer(serverEnvironmentPrefix)}/itwins/${endpoint}${subClass}${paging}${search}${orderby}`;
+        const makeFetchRequest = async () => {
+            const options = {
+                signal: abortController.signal,
+                headers: {
+                    "Cache-Control": requestType === "favorites" && shouldRefetchFavorites
+                        ? "no-cache"
+                        : "",
+                    Authorization: typeof accessToken === "function"
+                        ? await accessToken()
+                        : accessToken,
+                    Accept: "application/vnd.bentley.itwin-platform.v1+json",
+                    Prefer: "return=representation",
+                },
+            };
+            const response = await fetch(url, options);
+            const result = response.ok
+                ? await response.json()
+                : await response.text().then((errorText) => {
+                    throw new Error(errorText);
+                });
+            setStatus(DataStatus.Complete);
+            requestType === "favorites" && resetShouldRefetchFavorites?.();
+            if (result.iTwins.length !== PAGE_SIZE) {
+                setMorePages(false);
+            }
+            setProjects((projects) => page === 0 ? result.iTwins : [...projects, ...result.iTwins]);
+        };
+        makeFetchRequest().catch((e) => {
+            if (e.name === "AbortError") {
+                // Aborting because unmounting is not an error, swallow.
+                return;
+            }
+            setProjects([]);
+            setStatus(DataStatus.FetchFailed);
+            console.error(e);
+        });
+        return () => {
+            abortController.abort();
+        };
+    }, [
+        accessToken,
+        requestType,
+        data,
+        serverEnvironmentPrefix,
+        filterOptions,
+        orderbyOptions,
+        page,
+        morePages,
+        iTwinSubClass,
+        shouldRefetchFavorites,
+        resetShouldRefetchFavorites,
+    ]);
+    return {
+        iTwins: filteredProjects,
+        status,
+        fetchMore: morePages ? fetchMore : undefined,
+        refetchITwins: refetchData,
+    };
+};
+
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+const HOOK_ABORT_ERROR = "The fetch request was aborted by the cleanup function.";
+/**
+ * Custom hook to manage iTwin favorites.
+ * @param accessToken - Access token that requires the `itwin-platform` scope. Provide a function that returns the token to prevent the token from expiring.
+ * @param serverEnvironmentPrefix Optional server environment prefix to target different environments. Can be "dev", "qa", or "" (empty string for production)
+ * @returns {object} An object containing:
+ * - {Set<string>} iTwinFavorites - A set of iTwin IDs that are marked as favorites.
+ * - {function} addITwinToFavorites - A function to add an iTwin to favorites.
+ * - {function} removeITwinFromFavorites - A function to remove an iTwin from favorites.
+ * - {boolean} shouldRefetchFavorites - A boolean indicating whether to refetch favorites when switching to the favorites tab.
+ * - {function} resetShouldRefetchFavorites - A function to reset shouldRefetchFavorites back to false.
+ */
+const useITwinFavorites = (accessToken, serverEnvironmentPrefix) => {
+    const [iTwinFavorites, setITwinFavorites] = useState(new Set());
+    const [shouldRefetchFavorites, setShouldRefetchFavorites] = useState(false);
+    /**
+     * Adds an iTwin to the favorites.
+     * @param {string} iTwinId - The ID of the iTwin to add to favorites.
+     * @returns {Promise<void>}
+     */
+    const addITwinToFavorites = useCallback(async (iTwinId) => {
+        if (!accessToken || !iTwinId || iTwinId === "") {
+            return;
+        }
+        const url = `${_getAPIServer(serverEnvironmentPrefix)}/itwins/favorites/${iTwinId}`;
+        try {
+            const result = await fetch(url, {
+                method: "POST",
+                headers: {
+                    authorization: typeof accessToken === "function"
+                        ? await accessToken()
+                        : accessToken,
+                    Accept: "application/vnd.bentley.itwin-platform.v1+json",
+                },
+            });
+            if (!result || (result.status !== 200 && result.status !== 204)) {
+                throw new Error(`Failed to add iTwin ${iTwinId} to favorites`);
+            }
+            setITwinFavorites((prev) => new Set([...prev, iTwinId]));
+            setShouldRefetchFavorites(true);
+        }
+        catch (error) {
+            console.error(error);
+        }
+    }, [accessToken, serverEnvironmentPrefix]);
+    /**
+     * Removes an iTwin from the favorites.
+     * @param {string} iTwinId - The ID of the iTwin to remove from favorites.
+     * @returns {Promise<void>}
+     */
+    const removeITwinFromFavorites = useCallback(async (iTwinId) => {
+        if (!accessToken || !iTwinId || iTwinId === "") {
+            return;
+        }
+        const url = `${_getAPIServer(serverEnvironmentPrefix)}/itwins/favorites/${iTwinId}`;
+        try {
+            const result = await fetch(url, {
+                method: "DELETE",
+                headers: {
+                    authorization: typeof accessToken === "function"
+                        ? await accessToken()
+                        : accessToken,
+                    Accept: "application/vnd.bentley.itwin-platform.v1+json",
+                },
+            });
+            if (!result || (result.status !== 200 && result.status !== 204)) {
+                throw new Error(`Failed to remove iTwin ${iTwinId} to favorites`);
+            }
+            setITwinFavorites((prev) => {
+                const newFavorites = new Set(prev);
+                newFavorites.delete(iTwinId);
+                return newFavorites;
+            });
+            setShouldRefetchFavorites(true);
+        }
+        catch (error) {
+            console.error(error);
+        }
+    }, [accessToken, serverEnvironmentPrefix]);
+    /**
+     * Fetches iTwin favorites from the API.
+     * @param {AbortSignal} [abortSignal] - Optional abort signal to cancel the fetch request.
+     * @returns {Promise<ITwinFavorites[]>} - A promise that resolves to an array of iTwin favorites.
+     * @throws {Error} - Throws an error if the fetch request fails.
+     */
+    const getITwinFavorites = useCallback(async (abortSignal) => {
+        if (!accessToken) {
+            return [];
+        }
+        const url = `${_getAPIServer(serverEnvironmentPrefix)}/itwins/favorites?subClass=Project`;
+        const result = await fetch(url, {
+            headers: {
+                "Cache-Control": shouldRefetchFavorites ? "no-cache" : "",
+                authorization: typeof accessToken === "function"
+                    ? await accessToken()
+                    : accessToken,
+                Accept: "application/vnd.bentley.itwin-platform.v1+json",
+            },
+            signal: abortSignal,
+        });
+        if (abortSignal?.aborted) {
+            throw new Error(HOOK_ABORT_ERROR);
+        }
+        if (!result) {
+            throw new Error(`Failed to fetch iTwin favorites from ${url}.\nNo response.`);
+        }
+        if (result.status !== 200) {
+            throw new Error(`Failed to fetch iTwin favorites from ${url}.\nStatus: ${result.status}`);
+        }
+        const response = await result.json();
+        return response.iTwins;
+    }, [accessToken, serverEnvironmentPrefix, shouldRefetchFavorites]);
+    const resetShouldRefetchFavorites = useCallback(() => {
+        setShouldRefetchFavorites(false);
+    }, []);
+    useEffect(() => {
+        const controller = new AbortController();
+        /**
+         * Fetches iTwin favorites and updates the state.
+         * @param {AbortSignal} [abortSignal] - Optional abort signal to cancel the fetch request.
+         */
+        const fetchITwinFavorites = async (abortSignal) => {
+            try {
+                const favorites = await getITwinFavorites(abortSignal);
+                setITwinFavorites(new Set(favorites.map((favorite) => favorite.id)));
+            }
+            catch (error) {
+                if (error === HOOK_ABORT_ERROR ||
+                    (error instanceof Error && error.name === "AbortError")) {
+                    return;
+                }
+                console.error(error);
+            }
+        };
+        void fetchITwinFavorites(controller.signal);
+        return () => {
+            controller.abort();
+        };
+    }, [getITwinFavorites]);
+    return {
+        iTwinFavorites,
+        addITwinToFavorites,
+        removeITwinFromFavorites,
+        shouldRefetchFavorites,
+        resetShouldRefetchFavorites,
+    };
+};
+
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+const useITwinTableConfig = ({ iTwinActions, onThumbnailClick, strings, iTwinFavorites, addITwinToFavorites, removeITwinFromFavorites, refetchITwins, cellOverrides = {}, }) => {
+    const onRowClick = (_, row) => {
+        const iTwin = row.original;
+        if (!iTwin) {
+            return;
+        }
+        onThumbnailClick?.(iTwin);
+    };
+    const columns = useMemo(() => [
+        {
+            Header: "Table",
+            columns: [
+                {
+                    id: ITwinCellColumn.Favorite,
+                    Header: strings.tableColumnFavorites,
+                    accessor: "id",
+                    disableSortBy: true,
+                    width: 70,
+                    Cell: (props) => {
+                        const isFavorite = iTwinFavorites.has(props.value);
+                        return (React.createElement(IconButton, { styleType: "borderless", "aria-label": isFavorite
+                                ? strings.addToFavorites
+                                : strings.removeFromFavorites, onClick: async (e) => {
+                                e.stopPropagation();
+                                isFavorite
+                                    ? await removeITwinFromFavorites(props.value)
+                                    : await addITwinToFavorites(props.value);
+                            } }, isFavorite ? React.createElement(SvgStar, null) : React.createElement(SvgStarHollow, null)));
+                    },
+                },
+                {
+                    id: ITwinCellColumn.Number,
+                    Header: strings.tableColumnName,
+                    accessor: "number",
+                    maxWidth: 350,
+                    Cell: (props) => (React.createElement("div", { "data-tip": props.row.original.number, className: "iac-iTwinCell" }, cellOverrides.ITwinNumber ? (cellOverrides.ITwinNumber(props)) : (React.createElement("span", null, props.value)))),
+                },
+                {
+                    id: ITwinCellColumn.Name,
+                    Header: strings.tableColumnDescription,
+                    accessor: "displayName",
+                    maxWidth: 350,
+                    Cell: (props) => (React.createElement("div", { "data-tip": props.row.original.displayName, className: "iac-iTwinCell" }, cellOverrides.ITwinName ? (cellOverrides.ITwinName(props)) : (React.createElement("span", null, props.value)))),
+                },
+                {
+                    id: ITwinCellColumn.LastModified,
+                    Header: strings.tableColumnLastModified,
+                    // Use lastModifiedDateTime (not createdDateTime) so this column reflects the last update, matching the "Last modified" header.
+                    accessor: "lastModifiedDateTime",
+                    Cell: (props) => {
+                        const date = props.data[props.row.index].lastModifiedDateTime;
+                        return cellOverrides.LastModified
+                            ? cellOverrides.LastModified(props)
+                            : date
+                                ? new Date(date).toDateString()
+                                : "";
+                    },
+                },
+                {
+                    id: ITwinCellColumn.Options,
+                    disableSortBy: true,
+                    maxWidth: 65,
+                    Cell: (props) => {
+                        const moreOptions = (close) => {
+                            const options = _buildManagedContextMenuOptions(iTwinActions, props.row.original, close, refetchITwins);
+                            return options !== undefined ? options : [];
+                        };
+                        return iTwinActions && iTwinActions.length > 0 ? (React.createElement(DropdownMenu, { menuItems: moreOptions },
+                            React.createElement(IconButton, { "data-testid": `iTwin-row-${props.row.original.id}-more-options`, styleType: "borderless", "aria-label": "More options", className: "iac-options-icon", onClick: (e) => {
+                                    e.stopPropagation();
+                                } },
+                                React.createElement(SvgMore, null)))) : null;
+                    },
+                },
+            ].filter((column) => !cellOverrides.hideColumns?.includes(column.id)),
+        },
+    ], [
+        strings.tableColumnFavorites,
+        strings.tableColumnName,
+        strings.tableColumnDescription,
+        strings.tableColumnLastModified,
+        strings.addToFavorites,
+        strings.removeFromFavorites,
+        iTwinFavorites,
+        removeITwinFromFavorites,
+        addITwinToFavorites,
+        cellOverrides,
+        iTwinActions,
+        refetchITwins,
+    ]);
+    return {
+        onRowClick,
+        columns,
+    };
+};
+
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+/**
+ * Component that will allow displaying a grid of iTwins, given a requestType
+ */
+const ITwinGrid = ({ accessToken, apiOverrides, filterOptions, orderbyOptions, onThumbnailClick, iTwinActions, requestType, iTwinSubClass, stringsOverrides, tileOverrides, useIndividualState, postProcessCallback, viewMode, cellOverrides, className, }) => {
+    const { iTwinFavorites, addITwinToFavorites, removeITwinFromFavorites, shouldRefetchFavorites, resetShouldRefetchFavorites, } = useITwinFavorites(accessToken, apiOverrides?.serverEnvironmentPrefix);
+    const strings = _mergeStrings({
+        tableColumnFavorites: "",
+        tableColumnName: "iTwin Number",
+        tableColumnDescription: "iTwin Name",
+        tableColumnLastModified: "Last Modified",
+        tableLoadingData: "Loading...",
+        trialBadge: "Trial",
+        inactiveBadge: "Inactive",
+        noITwins: requestType === "recents"
+            ? "No recent iTwins."
+            : requestType === "favorites"
+                ? "No favorite iTwins."
+                : "No iTwin found.",
+        noAuthentication: "No access token provided",
+        error: "An error occurred",
+        addToFavorites: "Add to favorites",
+        removeFromFavorites: "Remove from favorites",
+    }, stringsOverrides);
+    const { iTwins: fetchedItwins, status: fetchStatus, fetchMore, refetchITwins, } = useITwinData({
+        requestType,
+        iTwinSubClass,
+        accessToken,
+        apiOverrides,
+        filterOptions,
+        orderbyOptions,
+        shouldRefetchFavorites,
+        resetShouldRefetchFavorites,
+    });
+    const iTwins = React.useMemo(() => postProcessCallback?.([...fetchedItwins], fetchStatus) ?? fetchedItwins, [postProcessCallback, fetchedItwins, fetchStatus]);
+    const { columns, onRowClick } = useITwinTableConfig({
+        iTwinActions,
+        onThumbnailClick,
+        strings,
+        iTwinFavorites,
+        addITwinToFavorites,
+        removeITwinFromFavorites,
+        refetchITwins,
+        cellOverrides,
+    });
+    const noResultsText = {
+        [DataStatus.Fetching]: "",
+        [DataStatus.Complete]: strings.noITwins,
+        [DataStatus.FetchFailed]: strings.error,
+        [DataStatus.TokenRequired]: strings.noAuthentication,
+        [DataStatus.ContextRequired]: "",
+    }[fetchStatus ?? DataStatus.Fetching];
+    return viewMode !== "cells" ? (iTwins.length === 0 && noResultsText ? (React.createElement(NoResults, { text: noResultsText })) : (React.createElement(GridStructure, { className: className }, fetchStatus === DataStatus.Fetching ? (React.createElement(React.Fragment, null,
+        React.createElement(IModelGhostTile, { fullWidth: tileOverrides?.fullWidth }),
+        React.createElement(IModelGhostTile, { fullWidth: tileOverrides?.fullWidth }),
+        React.createElement(IModelGhostTile, { fullWidth: tileOverrides?.fullWidth }))) : (React.createElement(React.Fragment, null,
+        iTwins?.map((iTwin) => (React.createElement(ITwinHookedTile, { gridProps: {
+                accessToken,
+                apiOverrides,
+                filterOptions,
+                onThumbnailClick,
+                requestType,
+                stringsOverrides,
+                tileOverrides,
+                useIndividualState,
+            }, key: iTwin.id, iTwin: iTwin, iTwinOptions: iTwinActions, onThumbnailClick: onThumbnailClick, useTileState: useIndividualState, isFavorite: iTwinFavorites.has(iTwin.id), addToFavorites: addITwinToFavorites, removeFromFavorites: removeITwinFromFavorites, refetchITwins: refetchITwins, ...tileOverrides }))),
+        fetchMore ? (React.createElement(React.Fragment, null,
+            React.createElement(InView, { onChange: fetchMore },
+                React.createElement(IModelGhostTile, { fullWidth: tileOverrides?.fullWidth })),
+            React.createElement(IModelGhostTile, { fullWidth: tileOverrides?.fullWidth }),
+            React.createElement(IModelGhostTile, { fullWidth: tileOverrides?.fullWidth }))) : null))))) : (React.createElement(ThemeProvider, { theme: "inherit" },
+        React.createElement(Table, { columns: columns, data: iTwins, onRowClick: onRowClick, emptyTableContent: fetchStatus === DataStatus.Fetching
+                ? strings.tableLoadingData
+                : strings.noITwins, isLoading: fetchStatus === DataStatus.Fetching, isSortable: true, onBottomReached: fetchMore, autoResetFilters: false, autoResetSortBy: false, bodyProps: { className: onThumbnailClick ? "row-cursor" : "" } })));
+};
+const noOp = () => ({});
+const ITwinHookedTile = (props) => {
+    const { useTileState = noOp, ...iTwinTileProps } = props;
+    const hookIdentity = React.useRef(useTileState);
+    if (hookIdentity.current !== useTileState) {
+        throw new Error("Even when used in a prop, useTilePropsForIModel identity must remain stable as it is used as a hook.");
+    }
+    const tileState = useTileState(props.iTwin, iTwinTileProps);
+    return React.createElement(ITwinTile, { ...iTwinTileProps, ...tileState });
+};
+
+export { DataStatus, IModelCellColumn, IModelGhostTile, IModelGrid, IModelThumbnail, IModelTile, ITwinCellColumn, ITwinGrid, ITwinTile, NoResults };
