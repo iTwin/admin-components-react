@@ -14,7 +14,7 @@ import { FavoriteIconMUI } from "../../components/tileFavoriteIcon/FavoriteIconM
 import { IModelFavoritesContext } from "../../contexts/IModelFavoritesContext";
 import { AccessTokenProvider, ApiOverrides, IModelFull } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
-import { ContextMenuBuilderItemMUI } from "../../utils/_buildMenuOptions";
+import { MoreActionsMenuBuilderItemMUI } from "../../utils/_buildMenuOptions";
 import { IModelThumbnailMUI } from "../iModelThumbnail/IModelThumbnailMUI";
 import { IModelTileProps } from "./IModelTile";
 
@@ -42,7 +42,7 @@ export interface IModelTileMUIProps
   /** iModel to display */
   iModel: IModelFull;
   /** Items for the three-dot context menu */
-  moreActions?: ContextMenuBuilderItemMUI<IModelFull>[];
+  moreActions?: MoreActionsMenuBuilderItemMUI<IModelFull>[];
   /** Strings displayed by the component */
   stringsOverrides?: {
     /** Accessible text for the hollow star icon to add the iModel to favorites */

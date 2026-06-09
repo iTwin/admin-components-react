@@ -20,7 +20,7 @@ import {
   ITwinFull,
 } from "../../types";
 import {
-  ContextMenuBuilderItemMUI,
+  MoreActionsMenuBuilderItemMUI,
   resolveContextMenuItemsMUI,
 } from "../../utils/_buildMenuOptions";
 
@@ -48,7 +48,7 @@ export interface ITwinTableMUIStrings extends MuiDataGridStrings {
 
 export interface ITwinTableMUIProps {
   iTwins: ITwinFull[];
-  moreActions?: ContextMenuBuilderItemMUI<ITwinFull>[];
+  moreActions?: MoreActionsMenuBuilderItemMUI<ITwinFull>[];
   /** Factory that returns per-row actions. The first action drives row click. */
   actions?: (iTwin: ITwinFull) => BaseCardActionItem[];
   strings: ITwinTableMUIStrings;

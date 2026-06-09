@@ -8,7 +8,6 @@ import Box from "@mui/material/Box";
 import React from "react";
 import { InView } from "react-intersection-observer";
 
-import { type BaseCardActionItem } from "../../components/baseCard/BaseCard";
 import { BaseCardLoading } from "../../components/baseCard/BaseCardLoading";
 import { NoResults } from "../../components/noResults/NoResults";
 import {
@@ -17,7 +16,11 @@ import {
   DataStatus,
 } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
-import { ContextMenuBuilderItemMUI } from "../../utils/_buildMenuOptions";
+import {
+  type ActionsBuilderItemMUI,
+  MoreActionsMenuBuilderItemMUI,
+  resolveActionItemsMUI,
+} from "../../utils/_buildMenuOptions";
 import type { ITwinGridProps, ITwinGridStrings } from "./ITwinGrid";
 import { type ITwinTableMUIStrings, ITwinTableMUI } from "./ITwinTableMUI";
 import { type ITwinTilePropsMUI, ITwinTileMUI } from "./ITwinTileMUI";
@@ -59,14 +62,14 @@ export interface ITwinGridPropsMUI
    *
    * @example
    * ```tsx
-   * actions={(iTwin) => [
-   *   { key: "open", label: iTwin.displayName, onClick: () => navigate(`/itwins/${iTwin.id}`) },
+   * actions={[
+   *   { key: "open", label: (iTwin) => iTwin.displayName, onClick: (iTwin) => navigate(`/itwins/${iTwin.id}`) },
    * ]}
    * ```
    */
-  actions?: (iTwin: ITwinFull) => BaseCardActionItem[];
+  actions?: ActionsBuilderItemMUI<ITwinFull>[];
   /** List of actions to build for each iTwin context menu. */
-  moreActions?: ContextMenuBuilderItemMUI<ITwinFull>[];
+  moreActions?: MoreActionsMenuBuilderItemMUI<ITwinFull>[];
   /** Function (can be a react hook) that returns state for an iTwin, returned values will be applied as props to the iTwinTile, overrides ITwinGrid provided values */
   useIndividualState?: IndividualITwinStateHookMUI;
   /** Static props to apply over each tile, mainly used for tileProps, overrides ITwinGrid provided values */
@@ -216,7 +219,9 @@ export const ITwinGridMUI = ({
                   }}
                   iTwin={iTwin}
                   moreActions={moreActions}
-                  actions={actions ? actions(iTwin) : undefined}
+                  actions={
+                    actions ? resolveActionItemsMUI(actions, iTwin) : undefined
+                  }
                   useTileState={useIndividualState}
                   isFavorite={iTwinFavorites.has(iTwin.id)}
                   addToFavorites={addITwinToFavorites}
@@ -255,7 +260,11 @@ export const ITwinGridMUI = ({
     <ITwinTableMUI
       iTwins={iTwins}
       moreActions={moreActions}
-      actions={actions}
+      actions={
+        actions
+          ? (iTwin: ITwinFull) => resolveActionItemsMUI(actions, iTwin)
+          : undefined
+      }
       strings={strings}
       iTwinFavorites={iTwinFavorites}
       addITwinToFavorites={addITwinToFavorites}

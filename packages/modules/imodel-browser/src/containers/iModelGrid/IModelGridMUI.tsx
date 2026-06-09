@@ -6,7 +6,6 @@ import Box from "@mui/material/Box";
 import React from "react";
 import { InView } from "react-intersection-observer";
 
-import { type BaseCardActionItem } from "../../components/baseCard/BaseCard";
 import { BaseCardLoading } from "../../components/baseCard/BaseCardLoading";
 import { NoResults } from "../../components/noResults/NoResults";
 import { IModelFavoritesProvider } from "../../contexts/IModelFavoritesContext";
@@ -19,7 +18,11 @@ import {
   IModelSortOptions,
 } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
-import { ContextMenuBuilderItemMUI } from "../../utils/_buildMenuOptions";
+import {
+  type ActionsBuilderItemMUI,
+  MoreActionsMenuBuilderItemMUI,
+  resolveActionItemsMUI,
+} from "../../utils/_buildMenuOptions";
 import {
   addIModelToRecents,
   removeIModelFromRecents,
@@ -58,14 +61,14 @@ export interface IModelGridMUIProps
    *
    * @example
    * ```tsx
-   * actions={(iModel) => [
-   *   { key: "open", label: iModel.displayName, onClick: () => navigate(`/imodels/${iModel.id}`) },
+   * actions={[
+   *   { key: "open", label: (iModel) => iModel.displayName, onClick: (iModel) => navigate(`/imodels/${iModel.id}`) },
    * ]}
    * ```
    */
-  actions?: (iModel: IModelFull) => BaseCardActionItem[];
+  actions?: ActionsBuilderItemMUI<IModelFull>[];
   /** List of actions to build for each imodel context menu. */
-  moreActions?: ContextMenuBuilderItemMUI<IModelFull>[];
+  moreActions?: MoreActionsMenuBuilderItemMUI<IModelFull>[];
   /** Custom icon for the "Remove from recents" context menu action. Only applies when requestType is "recents". Should be a Stratakit SVG href. */
   removeFromRecentsIcon?: string;
   useIndividualState?: (
@@ -278,12 +281,16 @@ const IModelGridInternal = ({
     ? { serverEnvironmentPrefix: apiOverrides.serverEnvironmentPrefix }
     : undefined;
 
-  const withRecentsTracking = React.useCallback(
-    (iModel: IModelFull, actionItems: BaseCardActionItem[]) => {
-      if (!actionItems.length) {
-        return actionItems;
+  const resolveActions = React.useCallback(
+    (iModel: IModelFull) => {
+      if (!actions?.length) {
+        return [];
       }
-      const [first, ...rest] = actionItems;
+      const resolved = resolveActionItemsMUI(actions, iModel);
+      if (!resolved.length) {
+        return resolved;
+      }
+      const [first, ...rest] = resolved;
       return [
         {
           ...first,
@@ -326,11 +333,7 @@ const IModelGridInternal = ({
                   refetchIModels={refetchIModels}
                   stringsOverrides={stringsOverrides}
                   {...tileOverrides}
-                  actions={
-                    actions
-                      ? withRecentsTracking(iModel, actions(iModel))
-                      : undefined
-                  }
+                  actions={resolveActions(iModel)}
                 />
               </li>
             ))}
@@ -364,12 +367,7 @@ const IModelGridInternal = ({
           <IModelTableMUI
             iModels={iModels}
             moreActions={enhancedMoreActions}
-            actions={
-              actions
-                ? (iModel: IModelFull) =>
-                    withRecentsTracking(iModel, actions(iModel))
-                : undefined
-            }
+            actions={actions ? resolveActions : undefined}
             strings={strings}
             refetchIModels={refetchIModels}
             tableOverrides={tableOverrides}
@@ -441,7 +439,7 @@ function removeFromRecentsAction(
   accessToken?: AccessTokenProvider,
   apiOverrides?: ApiOverrides<IModelFull[]>,
   removeFromRecentsIcon?: string
-): ContextMenuBuilderItemMUI<IModelFull> {
+): MoreActionsMenuBuilderItemMUI<IModelFull> {
   return {
     key: "remove-from-recents",
     icon: removeFromRecentsIcon,

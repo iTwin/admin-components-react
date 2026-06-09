@@ -46,11 +46,11 @@ const Template: Story<ITwinGridProps> = withAccessTokenOverride((args) => (
 const baseArgs: ITwinGridProps = {
   apiOverrides: { serverEnvironmentPrefix: "qa" },
   viewMode: "tile",
-  actions: (iTwin) => [
+  actions: [
     {
       key: "open",
-      label: iTwin.displayName ?? "",
-      onClick: () => action("Open " + iTwin.displayName)(iTwin),
+      label: (iTwin) => iTwin.displayName ?? "",
+      onClick: (iTwin) => action("Open " + iTwin.displayName)(iTwin),
     },
   ],
 };

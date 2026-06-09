@@ -35,6 +35,8 @@ export interface BaseCardActionItem {
   key: string;
   label: string;
   onClick?: () => void;
+  /** When false, the action is excluded. Defaults to true. */
+  visible?: boolean;
   disabled?: boolean;
 }
 
@@ -191,8 +193,11 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
 
     const hasContextMenu = !!moreActions?.length;
 
-    const singleAction = actions?.length === 1 ? actions[0] : undefined;
-    const multipleActions = actions && actions.length > 1 ? actions : undefined;
+    const visibleActions = actions?.filter(({ visible }) => visible ?? true);
+    const singleAction =
+      visibleActions?.length === 1 ? visibleActions[0] : undefined;
+    const multipleActions =
+      visibleActions && visibleActions.length > 1 ? visibleActions : undefined;
 
     if (loading) {
       return (

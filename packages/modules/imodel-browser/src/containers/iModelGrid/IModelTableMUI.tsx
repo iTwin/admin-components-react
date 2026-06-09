@@ -21,7 +21,7 @@ import {
   IModelCellColumn,
 } from "../../types";
 import {
-  ContextMenuBuilderItemMUI,
+  MoreActionsMenuBuilderItemMUI,
   resolveContextMenuItemsMUI,
 } from "../../utils/_buildMenuOptions";
 
@@ -48,7 +48,7 @@ export interface IModelTableMUIStrings extends MuiDataGridStrings {
 
 export interface IModelTableMUIProps {
   iModels: IModelFull[];
-  moreActions?: ContextMenuBuilderItemMUI<IModelFull>[];
+  moreActions?: MoreActionsMenuBuilderItemMUI<IModelFull>[];
   /** Factory that returns per-row actions. The first action drives row click. */
   actions?: (iModel: IModelFull) => BaseCardActionItem[];
   strings: IModelTableMUIStrings;

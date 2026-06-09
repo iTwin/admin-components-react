@@ -15,7 +15,7 @@ import { SvgThumbnail } from "../../components/baseCard/SvgThumbnail";
 import { FavoriteIconMUI } from "../../components/tileFavoriteIcon/FavoriteIconMUI";
 import { ITwinFull } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
-import { ContextMenuBuilderItemMUI } from "../../utils/_buildMenuOptions";
+import { MoreActionsMenuBuilderItemMUI } from "../../utils/_buildMenuOptions";
 import { ITwinTileProps } from "./ITwinTile";
 
 /** @alpha */
@@ -38,7 +38,7 @@ export interface ITwinTilePropsMUI
   /** If not provided, iTwin number will be used */
   description?: string;
   /** Items for the three-dot context menu */
-  moreActions?: ContextMenuBuilderItemMUI<ITwinFull>[];
+  moreActions?: MoreActionsMenuBuilderItemMUI<ITwinFull>[];
   /** Status to display on the tile — will override iTwin.status if provided, otherwise iTwin.status will be used.  Should be a MUI {@link Chip} */
   getBadge?: (iTwin: ITwinFull) => React.ReactNode;
   stringsOverrides?: {

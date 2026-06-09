@@ -49,11 +49,11 @@ const Template: Story<IModelGridMUIProps> = withITwinIdOverride(
 const baseArgs: IModelGridMUIProps = {
   apiOverrides: { serverEnvironmentPrefix: "qa" },
   sortOptions: { sortType: "name", descending: false },
-  actions: (iModel) => [
+  actions: [
     {
       key: "open",
-      label: iModel.displayName ?? "",
-      onClick: () => action("iModel opened")(iModel),
+      label: (iModel) => iModel.displayName ?? "",
+      onClick: (iModel) => action("iModel opened")(iModel),
     },
   ],
   moreActions: [
@@ -157,6 +157,14 @@ export const OverrideApiDataWithLoadMore: Story<IModelGridMUIProps> =
 export const IndividualContextMenu = Template.bind({});
 IndividualContextMenu.args = {
   ...baseArgs,
+  actions: [
+    {
+      key: "withR",
+      label: "displayName contains 'R'",
+      visible: (iModel) =>
+        iModel.displayName?.toLowerCase().includes("r") ?? false,
+    },
+  ],
   moreActions: [
     {
       children: "displayName contains 'R'",
