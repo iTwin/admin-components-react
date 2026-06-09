@@ -1,10 +1,10 @@
 import "./ITwinGrid.scss";
 import React from "react";
-import { type ITwinTableOverridesMUI, type ITwinFull } from "../../types";
-import { ContextMenuBuilderItemMUI } from "../../utils/_buildMenuOptions";
+import { type ITwinFull, type ITwinTableOverridesMUI } from "../../types";
+import { type ActionsBuilderItemMUI, MoreActionsMenuBuilderItemMUI } from "../../utils/_buildMenuOptions";
+import type { ITwinGridProps, ITwinGridStrings } from "./ITwinGrid";
 import { type ITwinTableMUIStrings } from "./ITwinTableMUI";
 import { type ITwinTilePropsMUI } from "./ITwinTileMUI";
-import type { ITwinGridProps, ITwinGridStrings } from "./ITwinGrid";
 /** @alpha */
 export type IndividualITwinStateHookMUI = (iTwin: ITwinFull, iTwinTileProps: ITwinTilePropsMUI & {
     gridProps: ITwinGridPropsMUI;
@@ -13,13 +13,23 @@ export type IndividualITwinStateHookMUI = (iTwin: ITwinFull, iTwinTileProps: ITw
 export interface ITwinGridStringsMUI extends ITwinGridStrings, ITwinTableMUIStrings {
 }
 /** @alpha */
-export interface ITwinGridPropsMUI extends Omit<ITwinGridProps, "onThumbnailClick" | "iTwinActions" | "tileOverrides" | "useIndividualState" | "cellOverrides" | "tableOverrides" | "stringsOverrides"> {
-    /** Select handler for the iTwin tile. */
-    onSelect?(iTwin: ITwinFull): void;
-    /** Open handler for the iTwin tile. */
-    onOpen?(iTwin: ITwinFull): void;
+export interface ITwinGridPropsMUI extends Omit<ITwinGridProps, "onThumbnailClick" | "iTwinActions" | "tileOverrides" | "useIndividualState" | "cellOverrides" | "tableOverrides" | "stringsOverrides" | "status" | "onOpen"> {
+    /**
+     * Factory that returns actions for a given iTwin.
+     *
+     * - **Single action** — the tile title becomes a clickable link; a table row click fires the action.
+     * - **Multiple actions** — rendered as buttons in the tile footer; the first action still drives table row click.
+     *
+     * @example
+     * ```tsx
+     * actions={[
+     *   { key: "open", label: (iTwin) => iTwin.displayName, onClick: (iTwin) => navigate(`/itwins/${iTwin.id}`) },
+     * ]}
+     * ```
+     */
+    actions?: ActionsBuilderItemMUI<ITwinFull>[];
     /** List of actions to build for each iTwin context menu. */
-    iTwinActions?: ContextMenuBuilderItemMUI<ITwinFull>[];
+    moreActions?: MoreActionsMenuBuilderItemMUI<ITwinFull>[];
     /** Function (can be a react hook) that returns state for an iTwin, returned values will be applied as props to the iTwinTile, overrides ITwinGrid provided values */
     useIndividualState?: IndividualITwinStateHookMUI;
     /** Static props to apply over each tile, mainly used for tileProps, overrides ITwinGrid provided values */
@@ -33,4 +43,4 @@ export interface ITwinGridPropsMUI extends Omit<ITwinGridProps, "onThumbnailClic
  * Component that will allow displaying a grid of iTwins, given a requestType
  * @alpha
  */
-export declare const ITwinGridMUI: ({ accessToken, apiOverrides, filterOptions, orderbyOptions, onSelect, onOpen, iTwinActions, requestType, iTwinSubClass, stringsOverrides, tileOverrides, useIndividualState, postProcessCallback, viewMode, tableOverrides, className, }: ITwinGridPropsMUI) => React.JSX.Element;
+export declare const ITwinGridMUI: ({ accessToken, apiOverrides, filterOptions, orderbyOptions, actions, moreActions, requestType, iTwinSubClass, stringsOverrides, tileOverrides, useIndividualState, postProcessCallback, viewMode, tableOverrides, className, }: ITwinGridPropsMUI) => React.JSX.Element;

@@ -5,7 +5,8 @@ export { ITwinGridMUI as ITwinGrid, type ITwinGridPropsMUI as ITwinGridProps, ty
 export { ITwinTileMUI as ITwinTile, type ITwinTilePropsMUI as ITwinTileProps, } from "../containers/ITwinGrid/ITwinTileMUI";
 export { NoResultsMUI as NoResults, type NoResultsMUIProps as NoResultsProps, } from "../components/noResults/NoResultsMUI";
 export { BaseCardLoading as IModelGhostTile, type BaseCardLoadingProps as IModelGhostTileProps, } from "../components/baseCard/BaseCardLoading";
-export type { ContextMenuBuilderItemMUI as ContextMenuBuilderItem } from "../utils/_buildMenuOptions";
+export type { MoreActionsMenuBuilderItemMUI as ContextMenuBuilderItem } from "../utils/_buildMenuOptions";
+export type { ActionsBuilderItemMUI as ActionBuilderItem } from "../utils/_buildMenuOptions";
 export { ThumbnailIconButton } from "../components/baseCard/ThumbnailIconButton";
 export { SvgThumbnail } from "../components/baseCard/SvgThumbnail";
 export * from "../types";

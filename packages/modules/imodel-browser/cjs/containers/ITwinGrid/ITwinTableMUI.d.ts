@@ -1,7 +1,8 @@
 import { GRID_DEFAULT_LOCALE_TEXT } from "@mui/x-data-grid";
 import React from "react";
+import { type BaseCardActionItem } from "../../components/baseCard/BaseCard";
 import { type ITwinTableOverridesMUI, ITwinFull } from "../../types";
-import { ContextMenuBuilderItemMUI } from "../../utils/_buildMenuOptions";
+import { MoreActionsMenuBuilderItemMUI } from "../../utils/_buildMenuOptions";
 type MuiDataGridStrings = Pick<typeof GRID_DEFAULT_LOCALE_TEXT, "noRowsLabel" | "noResultsOverlayLabel" | "footerRowSelected" | "footerTotalVisibleRows" | "paginationRowsPerPage">;
 export interface ITwinTableMUIStrings extends MuiDataGridStrings {
     tableColumnName: string;
@@ -16,8 +17,9 @@ export interface ITwinTableMUIStrings extends MuiDataGridStrings {
 }
 export interface ITwinTableMUIProps {
     iTwins: ITwinFull[];
-    iTwinActions?: ContextMenuBuilderItemMUI<ITwinFull>[];
-    onOpen?: (iTwin: ITwinFull) => void;
+    moreActions?: MoreActionsMenuBuilderItemMUI<ITwinFull>[];
+    /** Factory that returns per-row actions. The first action drives row click. */
+    actions?: (iTwin: ITwinFull) => BaseCardActionItem[];
     strings: ITwinTableMUIStrings;
     iTwinFavorites: Set<string>;
     addITwinToFavorites: (iTwinId: string) => Promise<void>;
@@ -31,5 +33,5 @@ export interface ITwinTableMUIProps {
 /**
  * Table view for iTwins using MUI X DataGrid (Community edition).
  */
-export declare const ITwinTableMUI: ({ iTwins, iTwinActions, onOpen, strings, iTwinFavorites, addITwinToFavorites, removeITwinFromFavorites, refetchITwins, tableOverrides: { columnOverrides, hideColumns }, isLoading, fetchMore, }: ITwinTableMUIProps) => React.JSX.Element;
+export declare const ITwinTableMUI: ({ iTwins, moreActions, actions, strings, iTwinFavorites, addITwinToFavorites, removeITwinFromFavorites, refetchITwins, tableOverrides: { columnOverrides, hideColumns }, isLoading, fetchMore, }: ITwinTableMUIProps) => React.JSX.Element;
 export {};

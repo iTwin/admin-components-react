@@ -1,7 +1,8 @@
 import { GRID_DEFAULT_LOCALE_TEXT } from "@mui/x-data-grid";
 import React from "react";
-import { type IModelTableOverridesMUI, type IModelFull } from "../../types";
-import { ContextMenuBuilderItemMUI } from "../../utils/_buildMenuOptions";
+import { type BaseCardActionItem } from "../../components/baseCard/BaseCard";
+import { type IModelFull, type IModelTableOverridesMUI } from "../../types";
+import { MoreActionsMenuBuilderItemMUI } from "../../utils/_buildMenuOptions";
 type MuiDataGridStrings = Pick<typeof GRID_DEFAULT_LOCALE_TEXT, "noRowsLabel" | "noResultsOverlayLabel" | "footerRowSelected" | "footerTotalVisibleRows" | "paginationRowsPerPage">;
 export interface IModelTableMUIStrings extends MuiDataGridStrings {
     tableColumnName: string;
@@ -16,8 +17,9 @@ export interface IModelTableMUIStrings extends MuiDataGridStrings {
 }
 export interface IModelTableMUIProps {
     iModels: IModelFull[];
-    iModelActions?: ContextMenuBuilderItemMUI<IModelFull>[];
-    onOpen?: (iModel: IModelFull) => void;
+    moreActions?: MoreActionsMenuBuilderItemMUI<IModelFull>[];
+    /** Factory that returns per-row actions. The first action drives row click. */
+    actions?: (iModel: IModelFull) => BaseCardActionItem[];
     strings: IModelTableMUIStrings;
     refetchIModels: () => void;
     tableOverrides?: IModelTableOverridesMUI;
@@ -28,5 +30,5 @@ export interface IModelTableMUIProps {
 /**
  * Table view for iModels using MUI X DataGrid (Community edition).
  */
-export declare const IModelTableMUI: ({ iModels, iModelActions, onOpen, strings, refetchIModels, tableOverrides: { columnOverrides, hideColumns }, isLoading, fetchMore, }: IModelTableMUIProps) => React.JSX.Element;
+export declare const IModelTableMUI: ({ iModels, moreActions, actions, strings, refetchIModels, tableOverrides: { columnOverrides, hideColumns }, isLoading, fetchMore, }: IModelTableMUIProps) => React.JSX.Element;
 export {};

@@ -1,6 +1,6 @@
 import React from "react";
 /**
- * Status icon displayed to the left of the title on BaseCard components
+ * Status icon displayed in the `avatar` slot to the left of the CardHeader on BaseCard components.
  *
  * @alpha
  */
