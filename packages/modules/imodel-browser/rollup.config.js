@@ -7,7 +7,7 @@ import url from "@rollup/plugin-url";
 import svgr from "@svgr/rollup";
 import peerDepsExternal from "rollup-plugin-peer-deps-external";
 import postcss from "rollup-plugin-postcss";
-import { terser } from "rollup-plugin-terser";
+// import { terser } from "rollup-plugin-terser";
 import typescript from "rollup-plugin-typescript2";
 
 import * as packageJson from "./package.json";
@@ -33,7 +33,7 @@ function createPlugins({ declaration = true } = {}) {
         sass: { outputStyle: "compressed" },
       },
     }),
-    terser(),
+    // terser(),
     url({
       limit: 10 * 1024, // Adjust the limit as needed (e.g., 10 KB)
       include: ["**/*.png"], // Include file extensions you want to handle (e.g., PNG)
