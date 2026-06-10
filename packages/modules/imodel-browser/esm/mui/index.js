@@ -474,7 +474,12 @@ const MoreMenuMUI = React.forwardRef(({ items, prompt, label, tabIndex }, ref) =
                     top: contextMenuPosition.mouseY,
                     left: contextMenuPosition.mouseX,
                 }
-                : undefined, open: menuOpen, onClose: handleClose, transformOrigin: { horizontal: "right", vertical: "top" }, anchorOrigin: { horizontal: "right", vertical: "bottom" }, slotProps: {
+                : undefined, open: menuOpen, onClose: handleClose, 
+            // Stop menu (and backdrop) clicks from bubbling through the React
+            // portal to an ancestor "click anywhere to activate" handler
+            // (e.g. Stratakit's MuiCard), which would otherwise replay the click
+            // onto the card's title action.
+            onClick: (event) => event.stopPropagation(), transformOrigin: { horizontal: "right", vertical: "top" }, anchorOrigin: { horizontal: "right", vertical: "bottom" }, slotProps: {
                 list: {
                     "aria-labelledby": buttonId,
                     dense: true,
@@ -531,6 +536,16 @@ const baseCardSx = {
  */
 const BaseCard = React__default.forwardRef(({ thumbnail, thumbnailTopLeft, thumbnailTopRight, thumbnailBottomRight, thumbnailBottomLeft, title, statusIconHref, description, subheader, thumbnailAlt, actions, moreActions, loading, disabled: cardDisabled, status, stringsOverrides, className, sx, ...rest }, ref) => {
     const titleId = React__default.useId();
+    const titleNode = (React__default.createElement(Typography, { variant: "body1", 
+        // eslint-disable-next-line jsx-a11y/heading-has-content
+        render: React__default.createElement("h2", null), sx: {
+            fontWeight: 600,
+            display: "block",
+            minWidth: 0,
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+        } }, title));
     const thumbnailNode = typeof thumbnail === "string" ? (React__default.createElement(CardMedia, { image: thumbnail, role: "img", "aria-label": thumbnailAlt ?? "", sx: { height: "100%", backgroundSize: "cover" } })) : (thumbnail);
     const moreMenuRef = React__default.useRef(null);
     const handleContextMenu = React__default.useCallback((event) => {
@@ -555,6 +570,7 @@ const BaseCard = React__default.forwardRef(({ thumbnail, thumbnailTopLeft, thumb
                 {
                     ...baseCardSx,
                     cursor: cardDisabled ? "not-allowed" : "default",
+                    boxShadow: "var(--stratakit-shadow-surface-sm)",
                 },
                 ...spreadSx(sx),
             ] },
@@ -582,9 +598,8 @@ const BaseCard = React__default.forwardRef(({ thumbnail, thumbnailTopLeft, thumb
                 } }),
             React__default.createElement(CardHeader, { avatar: statusIconHref ? (React__default.createElement(StatusIcon, { href: statusIconHref, status: status })) : undefined, title: singleAction ? (React__default.createElement(CardActionArea, { onClick: !cardDisabled && !singleAction.disabled
                         ? singleAction.onClick
-                        : undefined, disabled: cardDisabled ? true : singleAction.disabled }, title)) : (title), action: hasContextMenu && !cardDisabled ? (React__default.createElement(MoreMenuMUI, { ref: moreMenuRef, items: moreActions, label: stringsOverrides?.moreOptions ?? "More options", prompt: React__default.createElement(Icon, { href: svgMore }), "data-testid": "show-context-menu-button" })) : undefined, subheader: subheader, sx: [{ alignItems: "flex-start" }], slotProps: {
+                        : undefined, disabled: cardDisabled ? true : singleAction.disabled }, titleNode)) : (titleNode), action: hasContextMenu && !cardDisabled ? (React__default.createElement(MoreMenuMUI, { ref: moreMenuRef, items: moreActions, label: stringsOverrides?.moreOptions ?? "More options", prompt: React__default.createElement(Icon, { href: svgMore }), "data-testid": "show-context-menu-button" })) : undefined, subheader: React__default.createElement(Typography, { variant: "caption", color: "textSecondary" }, subheader), sx: [{ alignItems: "flex-start" }], slotProps: {
                     title: {
-                        component: "h2",
                         id: titleId,
                         sx: [
                             {
@@ -597,13 +612,17 @@ const BaseCard = React__default.forwardRef(({ thumbnail, thumbnailTopLeft, thumb
                             },
                         ],
                     },
-                    subheader: {
-                        component: "h3",
+                    content: {
+                        sx: {
+                            minWidth: 0,
+                            flex: "1 1 auto",
+                            overflow: "hidden",
+                        },
                     },
                 } }),
             description ? (React__default.createElement(CardContent, { "data-testid": "card-description" },
                 React__default.createElement(Typography, { variant: "body2", color: "textSecondary" }, description))) : (React__default.createElement(CardContent, { sx: { pt: 0 } })),
-            multipleActions && (React__default.createElement(CardActions, null, multipleActions.map(({ key, label, onClick, disabled }) => (React__default.createElement(Button, { key: key, onClick: onClick, disabled: cardDisabled ? true : disabled }, label))))))));
+            multipleActions && (React__default.createElement(CardActions, null, multipleActions.map(({ key, label, onClick, disabled }, index) => (React__default.createElement(Button, { key: key, onClick: onClick, disabled: cardDisabled ? true : disabled, variant: "contained", color: index === 0 ? "primary" : "secondary" }, label))))))));
 });
 BaseCard.displayName = "BaseCard";
 
@@ -611,6 +630,7 @@ BaseCard.displayName = "BaseCard";
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+// our attempt at making icons that can be overlayed with some contrast on top of thumbnails
 const activeBgColor = "var(--stratakit-color-bg-positive-muted)";
 const mutedBgColor = "var(--stratakit-color-bg-neutral-muted)";
 /**
