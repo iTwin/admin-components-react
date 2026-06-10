@@ -1,6 +1,6 @@
 import React from "react";
 import { type IModelFull, type IModelTableOverridesMUI } from "../../types";
-import { type ActionsBuilderItemMUI, MoreActionsMenuBuilderItemMUI } from "../../utils/_buildMenuOptions";
+import { type CardActionsItemMUI, MoreActionsMenuItemMUI } from "../../utils/_buildMenuOptions";
 import { type IModelTileMUIProps } from "../iModelTiles/IModelTileMUI";
 import type { IModelGridProps } from "./IModelGrid";
 import { type IModelTableMUIStrings } from "./IModelTableMUI";
@@ -22,9 +22,9 @@ export interface IModelGridMUIProps extends Omit<IModelGridProps, "onThumbnailCl
      * ]}
      * ```
      */
-    actions?: ActionsBuilderItemMUI<IModelFull>[];
+    actions?: CardActionsItemMUI<IModelFull>[];
     /** List of actions to build for each imodel context menu. */
-    moreActions?: MoreActionsMenuBuilderItemMUI<IModelFull>[];
+    moreActions?: MoreActionsMenuItemMUI<IModelFull>[];
     /** Custom icon for the "Remove from recents" context menu action. Only applies when requestType is "recents". Should be a Stratakit SVG href. */
     removeFromRecentsIcon?: string;
     useIndividualState?: (iModel: IModelFull, iModelTileProps: IModelTileMUIProps) => Partial<IModelTileMUIProps>;

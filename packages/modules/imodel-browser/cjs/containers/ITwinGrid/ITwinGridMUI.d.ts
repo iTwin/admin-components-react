@@ -1,7 +1,7 @@
 import "./ITwinGrid.scss";
 import React from "react";
 import { type ITwinFull, type ITwinTableOverridesMUI } from "../../types";
-import { type ActionsBuilderItemMUI, MoreActionsMenuBuilderItemMUI } from "../../utils/_buildMenuOptions";
+import { type CardActionsItemMUI, MoreActionsMenuItemMUI } from "../../utils/_buildMenuOptions";
 import type { ITwinGridProps, ITwinGridStrings } from "./ITwinGrid";
 import { type ITwinTableMUIStrings } from "./ITwinTableMUI";
 import { type ITwinTilePropsMUI } from "./ITwinTileMUI";
@@ -27,9 +27,9 @@ export interface ITwinGridPropsMUI extends Omit<ITwinGridProps, "onThumbnailClic
      * ]}
      * ```
      */
-    actions?: ActionsBuilderItemMUI<ITwinFull>[];
+    actions?: CardActionsItemMUI<ITwinFull>[];
     /** List of actions to build for each iTwin context menu. */
-    moreActions?: MoreActionsMenuBuilderItemMUI<ITwinFull>[];
+    moreActions?: MoreActionsMenuItemMUI<ITwinFull>[];
     /** Function (can be a react hook) that returns state for an iTwin, returned values will be applied as props to the iTwinTile, overrides ITwinGrid provided values */
     useIndividualState?: IndividualITwinStateHookMUI;
     /** Static props to apply over each tile, mainly used for tileProps, overrides ITwinGrid provided values */

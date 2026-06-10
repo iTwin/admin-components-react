@@ -13,7 +13,11 @@ export interface IModelThumbnailMUIProps {
     apiOverrides?: ApiOverrides<string>;
 }
 /**
- * Clickable iModel thumbnail, fetched from the servers — MUI (Stratakit/MUI migration target)
+ * iModel thumbnail, fetched from the servers
+ *
+ * Currently the API will return a placeholder PNG thumbnail when the user has not chosen a custom thumbnail.
+ * Unfortunately that means we can not show a nicely-formatted SVG thumbnail for those iModels.
+ *
  * @alpha
  */
 export declare const IModelThumbnailMUI: ({ iModelId, accessToken, apiOverrides, className, }: IModelThumbnailMUIProps) => React.JSX.Element;

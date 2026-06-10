@@ -1,8 +1,7 @@
 import { GRID_DEFAULT_LOCALE_TEXT } from "@mui/x-data-grid";
 import React from "react";
-import { type BaseCardActionItem } from "../../components/baseCard/BaseCard";
 import { type ITwinTableOverridesMUI, ITwinFull } from "../../types";
-import { MoreActionsMenuBuilderItemMUI } from "../../utils/_buildMenuOptions";
+import { type ResolvedCardActionItem, type MoreActionsMenuItemMUI } from "../../utils/_buildMenuOptions";
 type MuiDataGridStrings = Pick<typeof GRID_DEFAULT_LOCALE_TEXT, "noRowsLabel" | "noResultsOverlayLabel" | "footerRowSelected" | "footerTotalVisibleRows" | "paginationRowsPerPage">;
 export interface ITwinTableMUIStrings extends MuiDataGridStrings {
     tableColumnName: string;
@@ -17,9 +16,9 @@ export interface ITwinTableMUIStrings extends MuiDataGridStrings {
 }
 export interface ITwinTableMUIProps {
     iTwins: ITwinFull[];
-    moreActions?: MoreActionsMenuBuilderItemMUI<ITwinFull>[];
+    moreActions?: MoreActionsMenuItemMUI<ITwinFull>[];
     /** Factory that returns per-row actions. The first action drives row click. */
-    actions?: (iTwin: ITwinFull) => BaseCardActionItem[];
+    actions?: (iTwin: ITwinFull) => ResolvedCardActionItem[];
     strings: ITwinTableMUIStrings;
     iTwinFavorites: Set<string>;
     addITwinToFavorites: (iTwinId: string) => Promise<void>;

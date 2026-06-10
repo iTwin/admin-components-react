@@ -1,16 +1,7 @@
 import { CardProps } from "@mui/material/Card";
 import React, { type ReactNode } from "react";
+import { type ResolvedCardActionItem } from "../../utils/_buildMenuOptions";
 import { type MoreMenuItem } from "../MoreMenuMUI";
-/** @deprecated Use `MoreMenuItem` from `../MoreMenu` instead. */
-export type BaseCardMoreActionItem = MoreMenuItem;
-export interface BaseCardActionItem {
-    key: string;
-    label: string;
-    onClick?: () => void;
-    /** When false, the action is excluded. Defaults to true. */
-    visible?: boolean;
-    disabled?: boolean;
-}
 export interface BaseCardProps extends Omit<CardProps, "children" | "title" | "onClick" | "onSelect"> {
     /**
      * Main thumbnail content.
@@ -66,7 +57,7 @@ export interface BaseCardProps extends Omit<CardProps, "children" | "title" | "o
      * When multiple actions are provided, they are rendered as buttons in a
      * {@link CardActions} row below the card content.
      */
-    actions?: BaseCardActionItem[];
+    actions?: ResolvedCardActionItem[];
     /**
      * Items rendered in the three-dot context menu in the card header.
      * When provided, a three-dot icon button appears in the header action slot

@@ -7,7 +7,7 @@ export interface NoResultsMUIProps {
     isSearchResult?: boolean;
 }
 /**
- * Pre-formatted empty result page (MUI version)
+ * No results page for use on iTwinGrid and iModelGrid.
  * @alpha
  */
 export declare const NoResultsMUI: ({ text, subtext, isSearchResult, }: NoResultsMUIProps) => React.JSX.Element;

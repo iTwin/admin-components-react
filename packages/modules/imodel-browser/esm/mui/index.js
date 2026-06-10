@@ -36,6 +36,8 @@ import svgSearch from '@stratakit/icons/search.svg';
 /**
  * Shared thumbnail area container used by BaseCard and BaseCardLoading
  * to ensure consistent sizing.
+ *
+ * @alpha
  */
 function BaseCardThumbnailArea({ children, className, }) {
     return (React__default.createElement(Box, { className: className, sx: [
@@ -54,7 +56,11 @@ function BaseCardThumbnailArea({ children, className, }) {
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-/** @alpha */
+/**
+ * Skeleton loading state for BaseCard.
+ *
+ * @alpha
+ */
 const BaseCardLoading = forwardRef(({ ...props }, ref) => {
     return (React__default.createElement(Card, { ref: ref, variant: "outlined", "aria-busy": "true", "aria-label": "Loading", ...props },
         React__default.createElement(BaseCardThumbnailArea, null,
@@ -397,11 +403,10 @@ var ITwinCellColumn;
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 /**
- * Resolve `ActionsBuilderItemMUI<T>[]` for a specific entity into
- * `BaseCardActionItem[]` suitable for `<BaseCard>`.
+ * Resolve `CardActionsItemMUI<T>[]` for specific values, e.g. for a given iTwin or iModel, into `ResolvedCardActionItem[]` that can be used by tiles or table rows.
  * @private
  */
-const resolveActionItemsMUI = (items, value, refetchData) => {
+const resolveCardActionsItemsMUI = (items, value, refetchData) => {
     return items
         .filter(({ visible }) => typeof visible === "function" ? visible(value) : visible ?? true)
         .map(({ key, label, onClick, disabled }) => ({
@@ -412,11 +417,10 @@ const resolveActionItemsMUI = (items, value, refetchData) => {
     }));
 };
 /**
- * Resolve `MoreActionsMenuBuilderItemMUI<T>[]` for a specific value into
- * `MoreMenuItem[]` tuples suitable for the `<MoreMenu>` component.
+ * Resolve `MoreActionsMenuItemMUI<T>[]` for specific values, e.g. for a given iTwin or iModel.
  * @private
  */
-const resolveContextMenuItemsMUI = (items, value, refetchData) => {
+const resolveMoreActionsMenuItemsMUI = (items, value, refetchData) => {
     return items
         .filter(({ visible }) => typeof visible === "function" ? visible(value) : visible ?? true)
         .map(({ key, onClick, disabled, icon, label }) => ({
@@ -620,8 +624,15 @@ const BaseCard = React__default.forwardRef(({ thumbnail, thumbnailTopLeft, thumb
                         },
                     },
                 } }),
-            description ? (React__default.createElement(CardContent, { "data-testid": "card-description" },
-                React__default.createElement(Typography, { variant: "body2", color: "textSecondary" }, description))) : (React__default.createElement(CardContent, { sx: { pt: 0 } })),
+            description ? (React__default.createElement(CardContent, { "data-testid": "card-description", sx: { flex: "1 1 auto" } },
+                React__default.createElement(Typography, { variant: "body2", color: "textSecondary", sx: {
+                        display: "-webkit-box",
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: "vertical",
+                        overflow: "hidden",
+                    } }, description))) : (React__default.createElement(CardContent, { sx: {
+                    flex: "1 1 auto",
+                } })),
             multipleActions && (React__default.createElement(CardActions, null, multipleActions.map(({ key, label, onClick, disabled }, index) => (React__default.createElement(Button, { key: key, onClick: onClick, disabled: cardDisabled ? true : disabled, variant: "contained", color: index === 0 ? "primary" : "secondary" }, label))))))));
 });
 BaseCard.displayName = "BaseCard";
@@ -753,7 +764,11 @@ const useIModelThumbnail = (iModelId, accessToken, apiOverrides) => {
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 /**
- * Clickable iModel thumbnail, fetched from the servers — MUI (Stratakit/MUI migration target)
+ * iModel thumbnail, fetched from the servers
+ *
+ * Currently the API will return a placeholder PNG thumbnail when the user has not chosen a custom thumbnail.
+ * Unfortunately that means we can not show a nicely-formatted SVG thumbnail for those iModels.
+ *
  * @alpha
  */
 const IModelThumbnailMUI = ({ iModelId, accessToken, apiOverrides, className, }) => {
@@ -896,7 +911,7 @@ const IModelTableMUI = ({ iModels, moreActions, actions, strings, refetchIModels
                     if (!moreActions || moreActions.length === 0) {
                         return null;
                     }
-                    const items = resolveContextMenuItemsMUI(moreActions, params.row, refetchIModels);
+                    const items = resolveMoreActionsMenuItemsMUI(moreActions, params.row, refetchIModels);
                     return (React__default.createElement(MoreMenuMUI, { items: items, label: strings.moreOptions, prompt: React__default.createElement(Icon, { href: svgMore }), tabIndex: params.tabIndex }));
                 },
                 ...columnOverrides[IModelCellColumn.Options],
@@ -1367,7 +1382,7 @@ const IModelGridInternal = ({ accessToken, apiOverrides, moreActions, removeFrom
         if (!actions?.length) {
             return [];
         }
-        const resolved = resolveActionItemsMUI(actions, iModel);
+        const resolved = resolveCardActionsItemsMUI(actions, iModel);
         if (!resolved.length) {
             return resolved;
         }
@@ -1390,6 +1405,15 @@ const IModelGridInternal = ({ accessToken, apiOverrides, moreActions, removeFrom
                 gap: 2,
                 gridTemplateColumns: "repeat(auto-fill, minmax(22.5rem, 1fr))",
                 listStyle: "none",
+                alignItems: "stretch",
+                "& > li": {
+                    display: "flex",
+                    minWidth: 0,
+                },
+                "& > li > *": {
+                    flex: 1,
+                    minWidth: 0,
+                },
                 p: 0,
                 m: 0,
             }, className: className, "data-testid": "itwin-grid" },
@@ -1523,7 +1547,7 @@ const ITwinTableMUI = ({ iTwins, moreActions, actions, strings, iTwinFavorites, 
                     if (!moreActions || moreActions.length === 0) {
                         return null;
                     }
-                    const items = resolveContextMenuItemsMUI(moreActions, params.row, refetchITwins);
+                    const items = resolveMoreActionsMenuItemsMUI(moreActions, params.row, refetchITwins);
                     return (React__default.createElement(MoreMenuMUI, { items: items, prompt: React__default.createElement(Icon, { href: svgMore }), label: strings.moreOptions, tabIndex: params.tabIndex }));
                 },
                 ...columnOverrides[ITwinCellColumn.Options],
@@ -1582,11 +1606,7 @@ const ITwinTableMUI = ({ iTwins, moreActions, actions, strings, iTwinFavorites, 
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 /**
- * Theme-aware SVG icon thumbnail for use inside BaseCard.
- *
- * Unlike photo thumbnails which fill the container with `objectFit: cover`,
- * this component renders the SVG at a contained size and adjusts its
- * brightness for light/dark mode via a CSS filter.
+ * SVG icon thumbnail for use in the BaseCard thumbnail area.
  *
  * @alpha
  */
@@ -2019,6 +2039,15 @@ const ITwinGridMUI = ({ accessToken, apiOverrides, filterOptions, orderbyOptions
             gap: 2,
             gridTemplateColumns: "repeat(auto-fill, minmax(22.5rem, 1fr))",
             listStyle: "none",
+            alignItems: "stretch",
+            "& > li": {
+                display: "flex",
+                minWidth: 0,
+            },
+            "& > li > *": {
+                flex: 1,
+                minWidth: 0,
+            },
             p: 0,
             m: 0,
         }, className: className }, fetchStatus === DataStatus.Fetching ? (React__default.createElement(React__default.Fragment, null,
@@ -2038,7 +2067,9 @@ const ITwinGridMUI = ({ accessToken, apiOverrides, filterOptions, orderbyOptions
                     stringsOverrides,
                     tileOverrides,
                     useIndividualState,
-                }, iTwin: iTwin, moreActions: moreActions, actions: actions ? resolveActionItemsMUI(actions, iTwin) : undefined, useTileState: useIndividualState, isFavorite: iTwinFavorites.has(iTwin.id), addToFavorites: addITwinToFavorites, removeFromFavorites: removeITwinFromFavorites, refetchITwins: refetchITwins, stringsOverrides: stringsOverrides, thumbnail: iTwin.image, ...tileOverrides })))),
+                }, iTwin: iTwin, moreActions: moreActions, actions: actions
+                    ? resolveCardActionsItemsMUI(actions, iTwin)
+                    : undefined, useTileState: useIndividualState, isFavorite: iTwinFavorites.has(iTwin.id), addToFavorites: addITwinToFavorites, removeFromFavorites: removeITwinFromFavorites, refetchITwins: refetchITwins, stringsOverrides: stringsOverrides, thumbnail: iTwin.image, ...tileOverrides })))),
         fetchMore ? (React__default.createElement(React__default.Fragment, null,
             React__default.createElement("li", null,
                 React__default.createElement(InView, { onChange: (inView) => {
@@ -2049,7 +2080,7 @@ const ITwinGridMUI = ({ accessToken, apiOverrides, filterOptions, orderbyOptions
                 React__default.createElement(BaseCardLoading, null)),
             React__default.createElement("li", null,
                 React__default.createElement(BaseCardLoading, null)))) : null))))) : (React__default.createElement(ITwinTableMUI, { iTwins: iTwins, moreActions: moreActions, actions: actions
-            ? (iTwin) => resolveActionItemsMUI(actions, iTwin)
+            ? (iTwin) => resolveCardActionsItemsMUI(actions, iTwin)
             : undefined, strings: strings, iTwinFavorites: iTwinFavorites, addITwinToFavorites: addITwinToFavorites, removeITwinFromFavorites: removeITwinFromFavorites, refetchITwins: refetchITwins, tableOverrides: tableOverrides, isLoading: fetchStatus === DataStatus.Fetching, fetchMore: fetchMore }));
 };
 const noOp = () => ({});
@@ -2070,7 +2101,7 @@ const ITwinHookedTile = (props) => {
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 /**
- * Pre-formatted empty result page (MUI version)
+ * No results page for use on iTwinGrid and iModelGrid.
  * @alpha
  */
 const NoResultsMUI = ({ text, subtext, isSearchResult = false, }) => {

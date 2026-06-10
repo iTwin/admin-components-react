@@ -1,7 +1,7 @@
 import React from "react";
 import { type BaseCardProps } from "../../components/baseCard/BaseCard";
 import { AccessTokenProvider, ApiOverrides, IModelFull } from "../../types";
-import { MoreActionsMenuBuilderItemMUI } from "../../utils/_buildMenuOptions";
+import { type MoreActionsMenuItemMUI } from "../../utils/_buildMenuOptions";
 import { IModelTileProps } from "./IModelTile";
 /** @alpha */
 export interface IModelTileMUIProps extends Omit<IModelTileProps, "onThumbnailClick" | "iModelOptions" | "tileProps" | "fullWidth">, Omit<BaseCardProps, "statusIcon" | "onSelect" | "onOpen" | "title" | "description" | "thumbnailBottomRight" | "thumbnailTopRight" | "moreActions"> {
@@ -12,7 +12,7 @@ export interface IModelTileMUIProps extends Omit<IModelTileProps, "onThumbnailCl
     /** iModel to display */
     iModel: IModelFull;
     /** Items for the three-dot context menu */
-    moreActions?: MoreActionsMenuBuilderItemMUI<IModelFull>[];
+    moreActions?: MoreActionsMenuItemMUI<IModelFull>[];
     /** Strings displayed by the component */
     stringsOverrides?: {
         /** Accessible text for the hollow star icon to add the iModel to favorites */
