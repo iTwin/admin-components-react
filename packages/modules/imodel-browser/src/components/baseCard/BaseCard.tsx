@@ -166,6 +166,23 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
     ref
   ) => {
     const titleId = React.useId();
+    const titleNode = (
+      <Typography
+        variant="body1"
+        // eslint-disable-next-line jsx-a11y/heading-has-content
+        render={<h2 />}
+        sx={{
+          fontWeight: 600,
+          display: "block",
+          minWidth: 0,
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          whiteSpace: "nowrap",
+        }}
+      >
+        {title}
+      </Typography>
+    );
 
     const thumbnailNode =
       typeof thumbnail === "string" ? (
@@ -229,6 +246,7 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
             {
               ...baseCardSx,
               cursor: cardDisabled ? "not-allowed" : "default",
+              boxShadow: "var(--stratakit-shadow-surface-sm)",
             },
             ...spreadSx(sx),
           ]}
@@ -300,10 +318,10 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
                   }
                   disabled={cardDisabled ? true : singleAction.disabled}
                 >
-                  {title}
+                  {titleNode}
                 </CardActionArea>
               ) : (
-                title
+                titleNode
               )
             }
             action={
@@ -317,11 +335,14 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
                 />
               ) : undefined
             }
-            subheader={subheader}
+            subheader={
+              <Typography variant="caption" color="textSecondary">
+                {subheader}
+              </Typography>
+            }
             sx={[{ alignItems: "flex-start" }]}
             slotProps={{
               title: {
-                component: "h2",
                 id: titleId,
                 sx: [
                   {
@@ -334,8 +355,13 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
                   },
                 ],
               },
-              subheader: {
-                component: "h3",
+
+              content: {
+                sx: {
+                  minWidth: 0,
+                  flex: "1 1 auto",
+                  overflow: "hidden",
+                },
               },
             }}
           />
@@ -352,15 +378,19 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
 
           {multipleActions && (
             <CardActions>
-              {multipleActions.map(({ key, label, onClick, disabled }) => (
-                <Button
-                  key={key}
-                  onClick={onClick}
-                  disabled={cardDisabled ? true : disabled}
-                >
-                  {label}
-                </Button>
-              ))}
+              {multipleActions.map(
+                ({ key, label, onClick, disabled }, index) => (
+                  <Button
+                    key={key}
+                    onClick={onClick}
+                    disabled={cardDisabled ? true : disabled}
+                    variant="contained"
+                    color={index === 0 ? "primary" : "secondary"}
+                  >
+                    {label}
+                  </Button>
+                )
+              )}
             </CardActions>
           )}
         </Card>

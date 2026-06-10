@@ -28,6 +28,7 @@ export interface ThumbnailIconButtonProps
   sx?: SxProps<Theme>;
 }
 
+// our attempt at making icons that can be overlayed with some contrast on top of thumbnails
 const activeBgColor = "var(--stratakit-color-bg-positive-muted)";
 const mutedBgColor = "var(--stratakit-color-bg-neutral-muted)";
 
