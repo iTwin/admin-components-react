@@ -12,7 +12,6 @@ export interface ThumbnailIconButtonProps
     React.ComponentProps<typeof IconButton>,
     | "onClick"
     | "disabled"
-    | "label"
     | "className"
     | "tabIndex"
     | "aria-haspopup"

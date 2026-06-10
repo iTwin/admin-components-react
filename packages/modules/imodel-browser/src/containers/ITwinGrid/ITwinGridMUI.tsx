@@ -2,15 +2,12 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import "./ITwinGrid.scss";
-
 import Box from "@mui/material/Box";
 import React from "react";
 import { InView } from "react-intersection-observer";
 
 import { BaseCardLoading } from "../../components/baseCard/BaseCardLoading";
-import { NoResults } from "../../components/noResults/NoResults";
-import {
+import { NoResultsMUI as NoResults } from "../../components/noResults/NoResultsMUI";
   type ITwinFull,
   type ITwinTableOverridesMUI,
   DataStatus,
