@@ -105,6 +105,11 @@ const MoreMenuMUI = React.forwardRef<MoreMenuHandle, Props>(
           }
           open={menuOpen}
           onClose={handleClose}
+          // Stop menu (and backdrop) clicks from bubbling through the React
+          // portal to an ancestor "click anywhere to activate" handler
+          // (e.g. Stratakit's MuiCard), which would otherwise replay the click
+          // onto the card's title action.
+          onClick={(event) => event.stopPropagation()}
           transformOrigin={{ horizontal: "right", vertical: "top" }}
           anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
           slotProps={{
