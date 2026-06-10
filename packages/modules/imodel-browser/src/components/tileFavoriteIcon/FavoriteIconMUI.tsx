@@ -53,8 +53,14 @@ export const FavoriteIconMUI = ({
       aria-label={isFavorite ? removeLabel : addLabel}
       aria-pressed={isFavorite}
       tabIndex={tabIndex}
-      onClick={async () => {
-        isFavorite ? await onRemoveFromFavorites() : await onAddToFavorites();
+      onClick={async (event: React.MouseEvent<HTMLButtonElement>) => {
+        if (isFavorite) {
+          // Blur so the parent's focus-within rule stops keeping the icon visible.
+          event.currentTarget.blur();
+          await onRemoveFromFavorites();
+        } else {
+          await onAddToFavorites();
+        }
       }}
       className={`favoriteIcon${isFavorite ? " isFavorite" : ""}${
         className ? " " + className : ""

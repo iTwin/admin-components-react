@@ -52,7 +52,7 @@ export function ThumbnailIconButton(props: ThumbnailIconButtonProps) {
         {
           bgcolor,
           "&:hover": {
-            bgcolor: activeBgColor,
+            bgcolor: muted ? mutedBgColor : activeBgColor,
           },
         },
         ...(Array.isArray(sx) ? sx : sx ? [sx] : []),
