@@ -12,7 +12,6 @@ export interface ThumbnailIconButtonProps
     React.ComponentProps<typeof IconButton>,
     | "onClick"
     | "disabled"
-    | "label"
     | "className"
     | "tabIndex"
     | "aria-haspopup"
@@ -53,7 +52,7 @@ export function ThumbnailIconButton(props: ThumbnailIconButtonProps) {
         {
           bgcolor,
           "&:hover": {
-            bgcolor: activeBgColor,
+            bgcolor: muted ? mutedBgColor : activeBgColor,
           },
         },
         ...(Array.isArray(sx) ? sx : sx ? [sx] : []),

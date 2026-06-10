@@ -5,7 +5,6 @@
 import { MenuItem } from "@itwin/itwinui-react";
 import React from "react";
 
-import type { MoreMenuItem } from "../components/MoreMenuMUI";
 
 type MenuItemProps = React.ComponentPropsWithoutRef<typeof MenuItem>;
 
