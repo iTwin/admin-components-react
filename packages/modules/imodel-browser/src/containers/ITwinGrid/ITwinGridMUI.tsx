@@ -17,9 +17,9 @@ import {
 } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
 import {
-  type ActionsBuilderItemMUI,
-  MoreActionsMenuBuilderItemMUI,
-  resolveActionItemsMUI,
+  type CardActionsItemMUI,
+  MoreActionsMenuItemMUI,
+  resolveCardActionsItemsMUI,
 } from "../../utils/_buildMenuOptions";
 import type { ITwinGridProps, ITwinGridStrings } from "./ITwinGrid";
 import { type ITwinTableMUIStrings, ITwinTableMUI } from "./ITwinTableMUI";
@@ -67,9 +67,9 @@ export interface ITwinGridPropsMUI
    * ]}
    * ```
    */
-  actions?: ActionsBuilderItemMUI<ITwinFull>[];
+  actions?: CardActionsItemMUI<ITwinFull>[];
   /** List of actions to build for each iTwin context menu. */
-  moreActions?: MoreActionsMenuBuilderItemMUI<ITwinFull>[];
+  moreActions?: MoreActionsMenuItemMUI<ITwinFull>[];
   /** Function (can be a react hook) that returns state for an iTwin, returned values will be applied as props to the iTwinTile, overrides ITwinGrid provided values */
   useIndividualState?: IndividualITwinStateHookMUI;
   /** Static props to apply over each tile, mainly used for tileProps, overrides ITwinGrid provided values */
@@ -185,6 +185,15 @@ export const ITwinGridMUI = ({
           gap: 2,
           gridTemplateColumns: "repeat(auto-fill, minmax(22.5rem, 1fr))",
           listStyle: "none",
+          alignItems: "stretch",
+          "& > li": {
+            display: "flex",
+            minWidth: 0,
+          },
+          "& > li > *": {
+            flex: 1,
+            minWidth: 0,
+          },
           p: 0,
           m: 0,
         }}
@@ -220,7 +229,9 @@ export const ITwinGridMUI = ({
                   iTwin={iTwin}
                   moreActions={moreActions}
                   actions={
-                    actions ? resolveActionItemsMUI(actions, iTwin) : undefined
+                    actions
+                      ? resolveCardActionsItemsMUI(actions, iTwin)
+                      : undefined
                   }
                   useTileState={useIndividualState}
                   isFavorite={iTwinFavorites.has(iTwin.id)}
@@ -262,7 +273,7 @@ export const ITwinGridMUI = ({
       moreActions={moreActions}
       actions={
         actions
-          ? (iTwin: ITwinFull) => resolveActionItemsMUI(actions, iTwin)
+          ? (iTwin: ITwinFull) => resolveCardActionsItemsMUI(actions, iTwin)
           : undefined
       }
       strings={strings}

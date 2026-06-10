@@ -29,7 +29,7 @@ import {
   additionalData,
   initialData,
   useIndividualState,
-} from "./IModelGridMUI.helpers";
+} from "./IModelGridMUI.storybook-helpers";
 
 export const IModelGridMUI = (props: IModelGridMUIProps) => (
   <ExternalComponent {...props} />
@@ -142,6 +142,19 @@ export const OverrideApiDataWithLoadMore: Story<IModelGridMUIProps> =
       return (
         <ExternalComponent
           {...args}
+          actions={[
+            {
+              key: "open",
+              label: (iModel) => iModel.displayName ?? "",
+              onClick: (iModel) => action("open action clicked")(iModel),
+            },
+            {
+              key: "somethingElse",
+              label: "Something else",
+              onClick: (iModel) =>
+                action("something else clicked " + iModel?.displayName)(iModel),
+            },
+          ]}
           dataMode="external"
           apiOverrides={{
             data,

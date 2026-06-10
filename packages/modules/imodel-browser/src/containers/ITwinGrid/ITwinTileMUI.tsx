@@ -5,9 +5,7 @@
 import Chip from "@mui/material/Chip";
 import svgItwin from "@stratakit/icons/itwin.svg";
 import React from "react";
-
 import {
-  type BaseCardMoreActionItem,
   type BaseCardProps,
   BaseCard,
 } from "../../components/baseCard/BaseCard";
@@ -15,7 +13,10 @@ import { SvgThumbnail } from "../../components/baseCard/SvgThumbnail";
 import { FavoriteIconMUI } from "../../components/tileFavoriteIcon/FavoriteIconMUI";
 import { ITwinFull } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
-import { MoreActionsMenuBuilderItemMUI } from "../../utils/_buildMenuOptions";
+import {
+  type MoreActionsMenuItemMUI,
+  type ResolvedMoreActionsMenuItem,
+} from "../../utils/_buildMenuOptions";
 import { ITwinTileProps } from "./ITwinTile";
 
 /** @alpha */
@@ -38,7 +39,7 @@ export interface ITwinTilePropsMUI
   /** If not provided, iTwin number will be used */
   description?: string;
   /** Items for the three-dot context menu */
-  moreActions?: MoreActionsMenuBuilderItemMUI<ITwinFull>[];
+  moreActions?: MoreActionsMenuItemMUI<ITwinFull>[];
   /** Status to display on the tile — will override iTwin.status if provided, otherwise iTwin.status will be used.  Should be a MUI {@link Chip} */
   getBadge?: (iTwin: ITwinFull) => React.ReactNode;
   stringsOverrides?: {
@@ -84,7 +85,7 @@ export const ITwinTileMUI = ({
     stringsOverrides
   );
 
-  const moreActions: BaseCardMoreActionItem[] | undefined = React.useMemo(
+  const moreActions: ResolvedMoreActionsMenuItem[] | undefined = React.useMemo(
     () =>
       moreActionItems
         ?.filter(({ visible }) =>

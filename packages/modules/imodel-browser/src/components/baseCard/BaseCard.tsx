@@ -15,7 +15,7 @@ import Typography from "@mui/material/Typography";
 import svgMoreVertical from "@stratakit/icons/more-vertical.svg";
 import { Icon } from "@stratakit/mui";
 import React, { type ReactNode } from "react";
-
+import { type ResolvedCardActionItem } from "../../utils/_buildMenuOptions";
 import { spreadSx } from "../../utils/spreadSx";
 import MoreMenuMUI, {
   type MoreMenuHandle,
@@ -26,18 +26,6 @@ import { BaseCardThumbnailArea } from "./BaseCardThumbnailArea";
 import { StatusIcon } from "./StatusIcon";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type { SvgThumbnail } from "./SvgThumbnail";
-
-/** @deprecated Use `MoreMenuItem` from `../MoreMenu` instead. */
-export type BaseCardMoreActionItem = MoreMenuItem;
-
-export interface BaseCardActionItem {
-  key: string;
-  label: string;
-  onClick?: () => void;
-  /** When false, the action is excluded. Defaults to true. */
-  visible?: boolean;
-  disabled?: boolean;
-}
 
 export interface BaseCardProps
   extends Omit<CardProps, "children" | "title" | "onClick" | "onSelect"> {
@@ -101,7 +89,7 @@ export interface BaseCardProps
    * When multiple actions are provided, they are rendered as buttons in a
    * {@link CardActions} row below the card content.
    */
-  actions?: BaseCardActionItem[];
+  actions?: ResolvedCardActionItem[];
 
   /**
    * Items rendered in the three-dot context menu in the card header.
@@ -183,7 +171,6 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
         {title}
       </Typography>
     );
-
     const thumbnailNode =
       typeof thumbnail === "string" ? (
         <CardMedia
@@ -368,12 +355,21 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
 
           {description ? (
             <CardContent data-testid="card-description">
-              <Typography variant="body2" color="textSecondary">
+              <Typography
+                variant="body2"
+                color="textSecondary"
+                sx={{
+                  display: "-webkit-box",
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: "vertical",
+                  overflow: "hidden",
+                }}
+              >
                 {description}
               </Typography>
             </CardContent>
           ) : (
-            <CardContent sx={{ pt: 0 }} />
+            <CardContent />
           )}
 
           {multipleActions && (

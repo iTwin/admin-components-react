@@ -19,9 +19,9 @@ import {
 } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
 import {
-  type ActionsBuilderItemMUI,
-  MoreActionsMenuBuilderItemMUI,
-  resolveActionItemsMUI,
+  type CardActionsItemMUI,
+  MoreActionsMenuItemMUI,
+  resolveCardActionsItemsMUI,
 } from "../../utils/_buildMenuOptions";
 import {
   addIModelToRecents,
@@ -66,9 +66,9 @@ export interface IModelGridMUIProps
    * ]}
    * ```
    */
-  actions?: ActionsBuilderItemMUI<IModelFull>[];
+  actions?: CardActionsItemMUI<IModelFull>[];
   /** List of actions to build for each imodel context menu. */
-  moreActions?: MoreActionsMenuBuilderItemMUI<IModelFull>[];
+  moreActions?: MoreActionsMenuItemMUI<IModelFull>[];
   /** Custom icon for the "Remove from recents" context menu action. Only applies when requestType is "recents". Should be a Stratakit SVG href. */
   removeFromRecentsIcon?: string;
   useIndividualState?: (
@@ -284,7 +284,7 @@ const IModelGridInternal = ({
       if (!actions?.length) {
         return [];
       }
-      const resolved = resolveActionItemsMUI(actions, iModel);
+      const resolved = resolveCardActionsItemsMUI(actions, iModel);
       if (!resolved.length) {
         return resolved;
       }
@@ -307,6 +307,7 @@ const IModelGridInternal = ({
     return (
       <>
         {viewMode !== "cells" ? (
+          // adding in this alignItems:stretch styling to mimic current iModelGrid behaviour
           <Box
             component="ul"
             sx={{
@@ -314,6 +315,15 @@ const IModelGridInternal = ({
               gap: 2,
               gridTemplateColumns: "repeat(auto-fill, minmax(22.5rem, 1fr))",
               listStyle: "none",
+              alignItems: "stretch",
+              "& > li": {
+                display: "flex",
+                minWidth: 0,
+              },
+              "& > li > *": {
+                flex: 1,
+                minWidth: 0,
+              },
               p: 0,
               m: 0,
             }}
@@ -437,7 +447,7 @@ function removeFromRecentsAction(
   accessToken?: AccessTokenProvider,
   apiOverrides?: ApiOverrides<IModelFull[]>,
   removeFromRecentsIcon?: string
-): MoreActionsMenuBuilderItemMUI<IModelFull> {
+): MoreActionsMenuItemMUI<IModelFull> {
   return {
     key: "remove-from-recents",
     icon: removeFromRecentsIcon,

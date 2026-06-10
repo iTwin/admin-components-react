@@ -10,8 +10,6 @@ import {
 import svgMore from "@stratakit/icons/more-vertical.svg";
 import { Icon } from "@stratakit/mui";
 import React from "react";
-
-import { type BaseCardActionItem } from "../../components/baseCard/BaseCard";
 import MoreMenuMUI from "../../components/MoreMenuMUI";
 import { FavoriteIconMUI } from "../../components/tileFavoriteIcon/FavoriteIconMUI";
 import { useIModelFavoritesContext } from "../../contexts/IModelFavoritesContext";
@@ -21,8 +19,9 @@ import {
   IModelCellColumn,
 } from "../../types";
 import {
-  MoreActionsMenuBuilderItemMUI,
-  resolveContextMenuItemsMUI,
+  type ResolvedCardActionItem,
+  type MoreActionsMenuItemMUI,
+  resolveMoreActionsMenuItemsMUI,
 } from "../../utils/_buildMenuOptions";
 
 type MuiDataGridStrings = Pick<
@@ -48,9 +47,9 @@ export interface IModelTableMUIStrings extends MuiDataGridStrings {
 
 export interface IModelTableMUIProps {
   iModels: IModelFull[];
-  moreActions?: MoreActionsMenuBuilderItemMUI<IModelFull>[];
+  moreActions?: MoreActionsMenuItemMUI<IModelFull>[];
   /** Factory that returns per-row actions. The first action drives row click. */
-  actions?: (iModel: IModelFull) => BaseCardActionItem[];
+  actions?: (iModel: IModelFull) => ResolvedCardActionItem[];
   strings: IModelTableMUIStrings;
   refetchIModels: () => void;
   tableOverrides?: IModelTableOverridesMUI;
@@ -146,7 +145,7 @@ export const IModelTableMUI = ({
           if (!moreActions || moreActions.length === 0) {
             return null;
           }
-          const items = resolveContextMenuItemsMUI(
+          const items = resolveMoreActionsMenuItemsMUI(
             moreActions,
             params.row,
             refetchIModels
