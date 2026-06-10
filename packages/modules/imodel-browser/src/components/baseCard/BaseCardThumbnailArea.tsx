@@ -13,6 +13,8 @@ export interface BaseCardThumbnailAreaProps {
 /**
  * Shared thumbnail area container used by BaseCard and BaseCardLoading
  * to ensure consistent sizing.
+ *
+ * @alpha
  */
 export function BaseCardThumbnailArea({
   children,

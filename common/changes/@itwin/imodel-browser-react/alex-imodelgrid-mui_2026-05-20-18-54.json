@@ -3,7 +3,7 @@
     {
       "packageName": "@itwin/imodel-browser-react",
       "comment": "Add Stratakit MUI components",
-      "type": "patch"
+      "type": "minor"
     }
   ],
   "packageName": "@itwin/imodel-browser-react"

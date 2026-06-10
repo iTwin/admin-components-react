@@ -14,7 +14,11 @@ import { BaseCardThumbnailArea } from "./BaseCardThumbnailArea";
 /** @alpha */
 export type BaseCardLoadingProps = CardProps;
 
-/** @alpha */
+/**
+ * Skeleton loading state for BaseCard.
+ *
+ * @alpha
+ */
 export const BaseCardLoading = forwardRef<HTMLDivElement, CardProps>(
   ({ ...props }, ref) => {
     return (

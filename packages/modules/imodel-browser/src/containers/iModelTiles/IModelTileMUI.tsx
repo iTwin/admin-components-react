@@ -6,7 +6,6 @@ import svgImodel from "@stratakit/icons/imodel.svg";
 import React from "react";
 
 import {
-  type BaseCardMoreActionItem,
   type BaseCardProps,
   BaseCard,
 } from "../../components/baseCard/BaseCard";
@@ -14,7 +13,10 @@ import { FavoriteIconMUI } from "../../components/tileFavoriteIcon/FavoriteIconM
 import { IModelFavoritesContext } from "../../contexts/IModelFavoritesContext";
 import { AccessTokenProvider, ApiOverrides, IModelFull } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
-import { MoreActionsMenuBuilderItemMUI } from "../../utils/_buildMenuOptions";
+import {
+  type MoreActionsMenuItemMUI,
+  type ResolvedMoreActionsMenuItem,
+} from "../../utils/_buildMenuOptions";
 import { IModelThumbnailMUI } from "../iModelThumbnail/IModelThumbnailMUI";
 import { IModelTileProps } from "./IModelTile";
 
@@ -42,7 +44,7 @@ export interface IModelTileMUIProps
   /** iModel to display */
   iModel: IModelFull;
   /** Items for the three-dot context menu */
-  moreActions?: MoreActionsMenuBuilderItemMUI<IModelFull>[];
+  moreActions?: MoreActionsMenuItemMUI<IModelFull>[];
   /** Strings displayed by the component */
   stringsOverrides?: {
     /** Accessible text for the hollow star icon to add the iModel to favorites */
@@ -105,7 +107,7 @@ export const IModelTileMUI = ({
     stringsOverrides
   );
 
-  const moreActions: BaseCardMoreActionItem[] | undefined = React.useMemo(
+  const moreActions: ResolvedMoreActionsMenuItem[] | undefined = React.useMemo(
     () =>
       moreActionItems
         ?.filter(({ visible }) =>

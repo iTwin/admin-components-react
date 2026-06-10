@@ -18,7 +18,7 @@ export interface NoResultsMUIProps {
 }
 
 /**
- * Pre-formatted empty result page (MUI version)
+ * No results page for use on iTwinGrid and iModelGrid.
  * @alpha
  */
 export const NoResultsMUI = ({

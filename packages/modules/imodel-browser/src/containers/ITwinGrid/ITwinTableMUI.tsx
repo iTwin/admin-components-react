@@ -11,7 +11,6 @@ import svgMore from "@stratakit/icons/more-vertical.svg";
 import { Icon } from "@stratakit/mui";
 import React from "react";
 
-import { type BaseCardActionItem } from "../../components/baseCard/BaseCard";
 import MoreMenuMUI from "../../components/MoreMenuMUI";
 import { FavoriteIconMUI } from "../../components/tileFavoriteIcon/FavoriteIconMUI";
 import {
@@ -20,8 +19,9 @@ import {
   ITwinFull,
 } from "../../types";
 import {
-  MoreActionsMenuBuilderItemMUI,
-  resolveContextMenuItemsMUI,
+  type ResolvedCardActionItem,
+  type MoreActionsMenuItemMUI,
+  resolveMoreActionsMenuItemsMUI,
 } from "../../utils/_buildMenuOptions";
 
 // strings from data grid that we need to override in addition to our custom strings
@@ -48,9 +48,9 @@ export interface ITwinTableMUIStrings extends MuiDataGridStrings {
 
 export interface ITwinTableMUIProps {
   iTwins: ITwinFull[];
-  moreActions?: MoreActionsMenuBuilderItemMUI<ITwinFull>[];
+  moreActions?: MoreActionsMenuItemMUI<ITwinFull>[];
   /** Factory that returns per-row actions. The first action drives row click. */
-  actions?: (iTwin: ITwinFull) => BaseCardActionItem[];
+  actions?: (iTwin: ITwinFull) => ResolvedCardActionItem[];
   strings: ITwinTableMUIStrings;
   iTwinFavorites: Set<string>;
   addITwinToFavorites: (iTwinId: string) => Promise<void>;
@@ -146,7 +146,7 @@ export const ITwinTableMUI = ({
           if (!moreActions || moreActions.length === 0) {
             return null;
           }
-          const items = resolveContextMenuItemsMUI(
+          const items = resolveMoreActionsMenuItemsMUI(
             moreActions,
             params.row,
             refetchITwins

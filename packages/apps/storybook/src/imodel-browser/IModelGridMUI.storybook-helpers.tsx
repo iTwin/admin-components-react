@@ -2,14 +2,11 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import Select from "@mui/material/Select";
 import {
   type IModelFull,
   type IModelTileProps,
 } from "@itwin/imodel-browser-react/mui";
-import MenuItem from "@mui/material/MenuItem";
 import React from "react";
-import { action } from "@storybook/addon-actions";
 import bridgeThumbnail from "../utils/bridge.jpg";
 import nightThumbnail from "../utils/night.jpg";
 import overpassThumbnail from "../utils/overpass.jpg";
@@ -19,13 +16,14 @@ export const initialData: IModelFull[] = [
   {
     id: "1",
     displayName: "External iModel 1",
-    description: "Loaded from external source",
+    description:
+      "Loaded from external source with a nice long description to see how our layouts work.  It needs to be really long so we get a good representation.",
     thumbnail: bridgeThumbnail,
   },
   {
     id: "2",
     displayName: "External iModel 2",
-    description: "Consumer manages pagination",
+    description: "",
     thumbnail: nightThumbnail,
   },
   {

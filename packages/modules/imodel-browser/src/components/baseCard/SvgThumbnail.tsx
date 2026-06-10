@@ -14,11 +14,7 @@ export interface SvgThumbnailProps {
 }
 
 /**
- * Theme-aware SVG icon thumbnail for use inside BaseCard.
- *
- * Unlike photo thumbnails which fill the container with `objectFit: cover`,
- * this component renders the SVG at a contained size and adjusts its
- * brightness for light/dark mode via a CSS filter.
+ * SVG icon thumbnail for use in the BaseCard thumbnail area.
  *
  * @alpha
  */
