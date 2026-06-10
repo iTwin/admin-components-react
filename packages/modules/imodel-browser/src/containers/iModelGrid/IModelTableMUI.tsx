@@ -70,7 +70,6 @@ export const IModelTableMUI = ({
   refetchIModels,
   tableOverrides: { columnOverrides = {}, hideColumns = [] } = {},
   isLoading,
-  fetchMore,
 }: IModelTableMUIProps) => {
   const favoritesContext = useIModelFavoritesContext();
 

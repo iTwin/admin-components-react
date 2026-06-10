@@ -76,7 +76,6 @@ export const ITwinTableMUI = ({
   refetchITwins,
   tableOverrides: { columnOverrides = {}, hideColumns = [] } = {},
   isLoading,
-  fetchMore,
 }: ITwinTableMUIProps) => {
   const columns = React.useMemo<GridColDef<ITwinFull>[]>(() => {
     const cols: (GridColDef<ITwinFull> | false)[] = [
