@@ -1,4 +1,3 @@
-import "./ITwinGrid.scss";
 import React from "react";
 import { type ITwinFull, type ITwinTableOverridesMUI } from "../../types";
 import { type CardActionsItemMUI, MoreActionsMenuItemMUI } from "../../utils/_buildMenuOptions";

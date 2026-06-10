@@ -25,9 +25,9 @@ import MenuItem from '@mui/material/MenuItem';
 import pinIcon from '@stratakit/icons/pin.svg';
 import classNames from 'classnames';
 import { DataGrid } from '@mui/x-data-grid';
+import svgSearch from '@stratakit/icons/search.svg';
 import Chip from '@mui/material/Chip';
 import svgItwin from '@stratakit/icons/itwin.svg';
-import svgSearch from '@stratakit/icons/search.svg';
 
 /*---------------------------------------------------------------------------------------------
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
@@ -99,8 +99,8 @@ function styleInject(css, ref) {
   }
 }
 
-var css_248z$1 = ".iac-no-results-container{position:absolute;left:50%;top:50%;transform:translate(-50%, -50%);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;margin:1em}.iac-no-results-container .iac-no-results{display:flex;flex-direction:column;align-items:center;gap:var(--iui-size-2xs)}.iac-no-results-container .iac-no-results>svg{height:var(--iui-size-2xl);width:var(--iui-size-2xl);fill:var(--iui-color-icon-muted);margin-bottom:var(--iui-size-2xs)}";
-styleInject(css_248z$1);
+var css_248z = ".iac-no-results-container{position:absolute;left:50%;top:50%;transform:translate(-50%, -50%);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;margin:1em}.iac-no-results-container .iac-no-results{display:flex;flex-direction:column;align-items:center;gap:var(--iui-size-2xs)}.iac-no-results-container .iac-no-results>svg{height:var(--iui-size-2xl);width:var(--iui-size-2xl);fill:var(--iui-color-icon-muted);margin-bottom:var(--iui-size-2xs)}";
+styleInject(css_248z);
 
 /*---------------------------------------------------------------------------------------------
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
@@ -659,7 +659,7 @@ function ThumbnailIconButton(props) {
             {
                 bgcolor,
                 "&:hover": {
-                    bgcolor: activeBgColor,
+                    bgcolor: muted ? mutedBgColor : activeBgColor,
                 },
             },
             ...(Array.isArray(sx) ? sx : sx ? [sx] : []),
@@ -680,8 +680,15 @@ ThumbnailIconButton.displayName = "ThumbnailIconButton";
  * Always visible when favorited.
  */
 const FavoriteIconMUI = ({ isFavorite, onAddToFavorites, onRemoveFromFavorites, addLabel, removeLabel, disabled, className = "", transparent, tabIndex, }) => {
-    return (React__default.createElement(ThumbnailIconButton, { "aria-label": isFavorite ? removeLabel : addLabel, "aria-pressed": isFavorite, tabIndex: tabIndex, onClick: async () => {
-            isFavorite ? await onRemoveFromFavorites() : await onAddToFavorites();
+    return (React__default.createElement(ThumbnailIconButton, { "aria-label": isFavorite ? removeLabel : addLabel, "aria-pressed": isFavorite, tabIndex: tabIndex, onClick: async (event) => {
+            if (isFavorite) {
+                // Blur so the parent's focus-within rule stops keeping the icon visible.
+                event.currentTarget.blur();
+                await onRemoveFromFavorites();
+            }
+            else {
+                await onAddToFavorites();
+            }
         }, className: `favoriteIcon${isFavorite ? " isFavorite" : ""}${className ? " " + className : ""}`, disabled: disabled, muted: !isFavorite, icon: pinIcon, sx: {
             ...(!isFavorite && { opacity: 0 }),
             ...(transparent && {
@@ -1481,8 +1488,41 @@ function removeFromRecentsAction(strings, accessToken, apiOverrides, removeFromR
     };
 }
 
-var css_248z = ".iac-iTwinCell{display:flex;flex-direction:column;justify-content:center;overflow:hidden}.iac-iTwinCell>*{overflow:hidden;text-overflow:ellipsis;max-width:100%}.row-cursor div[role=row]{cursor:pointer}";
-styleInject(css_248z);
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+/**
+ * No results page for use on iTwinGrid and iModelGrid.
+ * @alpha
+ */
+const NoResultsMUI = ({ text, subtext, isSearchResult = false, }) => {
+    return (React__default.createElement(Box, { "data-testid": "no-results", sx: {
+            position: "absolute",
+            left: "50%",
+            top: "50%",
+            transform: "translate(-50%, -50%)",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            textAlign: "center",
+            m: 2,
+        } },
+        React__default.createElement(Box, { sx: {
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: 1,
+            } },
+            React__default.createElement(Icon, { href: isSearchResult ? svgSearch : svgImodel, size: "large", style: {
+                    width: "5rem",
+                    height: "5rem",
+                    color: "var(--stratakit-color-text-muted)",
+                } }),
+            React__default.createElement(Typography, { variant: "h6", render: React__default.createElement("h2", null) }, text),
+            subtext && React__default.createElement(Typography, { variant: "body1" }, subtext))));
+};
 
 /*---------------------------------------------------------------------------------------------
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
@@ -2034,7 +2074,7 @@ const ITwinGridMUI = ({ accessToken, apiOverrides, filterOptions, orderbyOptions
         [DataStatus.TokenRequired]: strings.noAuthentication,
         [DataStatus.ContextRequired]: "",
     }[fetchStatus ?? DataStatus.Fetching];
-    return viewMode !== "cells" ? (iTwins.length === 0 && noResultsText ? (React__default.createElement(NoResults, { text: noResultsText })) : (React__default.createElement(Box, { component: "ul", sx: {
+    return viewMode !== "cells" ? (iTwins.length === 0 && noResultsText ? (React__default.createElement(NoResultsMUI, { text: noResultsText })) : (React__default.createElement(Box, { component: "ul", sx: {
             display: "grid",
             gap: 2,
             gridTemplateColumns: "repeat(auto-fill, minmax(22.5rem, 1fr))",
@@ -2094,42 +2134,6 @@ const ITwinHookedTile = (props) => {
     // gridProps aren't used by ITwinTileMUI but are passed to useIndividualState
     const { gridProps, ...tileProps } = props;
     return React__default.createElement(ITwinTileMUI, { ...tileProps, ...tileState });
-};
-
-/*---------------------------------------------------------------------------------------------
- * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
- * See LICENSE.md in the project root for license terms and full copyright notice.
- *--------------------------------------------------------------------------------------------*/
-/**
- * No results page for use on iTwinGrid and iModelGrid.
- * @alpha
- */
-const NoResultsMUI = ({ text, subtext, isSearchResult = false, }) => {
-    return (React__default.createElement(Box, { "data-testid": "no-results", sx: {
-            position: "absolute",
-            left: "50%",
-            top: "50%",
-            transform: "translate(-50%, -50%)",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            textAlign: "center",
-            m: 2,
-        } },
-        React__default.createElement(Box, { sx: {
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: 1,
-            } },
-            React__default.createElement(Icon, { href: isSearchResult ? svgSearch : svgImodel, size: "large", style: {
-                    width: "5rem",
-                    height: "5rem",
-                    color: "var(--stratakit-color-text-muted)",
-                } }),
-            React__default.createElement(Typography, { variant: "h6", render: React__default.createElement("h2", null) }, text),
-            subtext && React__default.createElement(Typography, { variant: "body1" }, subtext))));
 };
 
 export { DataStatus, IModelCellColumn, BaseCardLoading as IModelGhostTile, IModelGridMUI as IModelGrid, IModelThumbnailMUI as IModelThumbnail, IModelTileMUI as IModelTile, ITwinCellColumn, ITwinGridMUI as ITwinGrid, ITwinTileMUI as ITwinTile, NoResultsMUI as NoResults, SvgThumbnail, ThumbnailIconButton };
