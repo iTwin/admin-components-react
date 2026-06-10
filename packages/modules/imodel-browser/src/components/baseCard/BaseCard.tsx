@@ -15,6 +15,7 @@ import Typography from "@mui/material/Typography";
 import svgMoreVertical from "@stratakit/icons/more-vertical.svg";
 import { Icon } from "@stratakit/mui";
 import React, { type ReactNode } from "react";
+
 import { type ResolvedCardActionItem } from "../../utils/_buildMenuOptions";
 import { spreadSx } from "../../utils/spreadSx";
 import MoreMenuMUI, {
@@ -354,7 +355,10 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
           />
 
           {description ? (
-            <CardContent data-testid="card-description">
+            <CardContent
+              data-testid="card-description"
+              sx={{ flex: "1 1 auto" }}
+            >
               <Typography
                 variant="body2"
                 color="textSecondary"
@@ -369,7 +373,11 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
               </Typography>
             </CardContent>
           ) : (
-            <CardContent />
+            <CardContent
+              sx={{
+                flex: "1 1 auto",
+              }}
+            />
           )}
 
           {multipleActions && (
