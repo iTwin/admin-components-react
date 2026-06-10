@@ -2,8 +2,9 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import pinIcon from "@stratakit/icons/pin.svg";
-import React from "react";
+import pinUnpinSvg from "@stratakit/icons/pin-unpin.svg";
+import pinSvg from "@stratakit/icons/pin.svg";
+import React, { useState } from "react";
 
 import { ThumbnailIconButton } from "../baseCard/ThumbnailIconButton";
 
@@ -48,17 +49,28 @@ export const FavoriteIconMUI = ({
   transparent,
   tabIndex,
 }: TileFavoriteIconProps) => {
+  const [hovered, setHovered] = useState(false);
+
+  // Pinned: always show pin icon, swap to unpin on hover.
+  // Unpinned: hidden by default, show pin icon on hover.
+  const icon = isFavorite && hovered ? pinUnpinSvg : pinSvg;
+
   return (
     <ThumbnailIconButton
       aria-label={isFavorite ? removeLabel : addLabel}
       aria-pressed={isFavorite}
       tabIndex={tabIndex}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
       onClick={async (event: React.MouseEvent<HTMLButtonElement>) => {
         if (isFavorite) {
           // Blur so the parent's focus-within rule stops keeping the icon visible.
           event.currentTarget.blur();
           await onRemoveFromFavorites();
         } else {
+          // Reset hover so the icon doesn't immediately flip to "unpin"
+          // while the cursor is still over the button.
+          setHovered(false);
           await onAddToFavorites();
         }
       }}
@@ -67,7 +79,7 @@ export const FavoriteIconMUI = ({
       }`}
       disabled={disabled}
       muted={!isFavorite}
-      icon={pinIcon}
+      icon={icon}
       sx={{
         ...(!isFavorite && { opacity: 0 }),
         ...(transparent && {

@@ -18,6 +18,8 @@ export interface ThumbnailIconButtonProps
     | "aria-expanded"
     | "aria-pressed"
     | "aria-label"
+    | "onMouseEnter"
+    | "onMouseLeave"
   > {
   /**
    * URL of the icon SVG (typically an import from `@stratakit/icons`).
