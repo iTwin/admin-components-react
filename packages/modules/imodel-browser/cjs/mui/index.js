@@ -25,7 +25,8 @@ var ListItemIcon = require('@mui/material/ListItemIcon');
 var ListItemText = require('@mui/material/ListItemText');
 var Menu = require('@mui/material/Menu');
 var MenuItem = require('@mui/material/MenuItem');
-var pinIcon = require('@stratakit/icons/pin.svg');
+var pinUnpinSvg = require('@stratakit/icons/pin-unpin.svg');
+var pinSvg = require('@stratakit/icons/pin.svg');
 var classNames = require('classnames');
 var xDataGrid = require('@mui/x-data-grid');
 var svgSearch = require('@stratakit/icons/search.svg');
@@ -72,7 +73,8 @@ var ListItemIcon__default = /*#__PURE__*/_interopDefaultLegacy(ListItemIcon);
 var ListItemText__default = /*#__PURE__*/_interopDefaultLegacy(ListItemText);
 var Menu__default = /*#__PURE__*/_interopDefaultLegacy(Menu);
 var MenuItem__default = /*#__PURE__*/_interopDefaultLegacy(MenuItem);
-var pinIcon__default = /*#__PURE__*/_interopDefaultLegacy(pinIcon);
+var pinUnpinSvg__default = /*#__PURE__*/_interopDefaultLegacy(pinUnpinSvg);
+var pinSvg__default = /*#__PURE__*/_interopDefaultLegacy(pinSvg);
 var classNames__default = /*#__PURE__*/_interopDefaultLegacy(classNames);
 var svgSearch__default = /*#__PURE__*/_interopDefaultLegacy(svgSearch);
 var Chip__default = /*#__PURE__*/_interopDefaultLegacy(Chip);
@@ -729,16 +731,23 @@ ThumbnailIconButton.displayName = "ThumbnailIconButton";
  * Always visible when favorited.
  */
 const FavoriteIconMUI = ({ isFavorite, onAddToFavorites, onRemoveFromFavorites, addLabel, removeLabel, disabled, className = "", transparent, tabIndex, }) => {
-    return (React__default["default"].createElement(ThumbnailIconButton, { "aria-label": isFavorite ? removeLabel : addLabel, "aria-pressed": isFavorite, tabIndex: tabIndex, onClick: async (event) => {
+    const [hovered, setHovered] = React.useState(false);
+    // Pinned: always show pin icon, swap to unpin on hover.
+    // Unpinned: hidden by default, show pin icon on hover.
+    const icon = isFavorite && hovered ? pinUnpinSvg__default["default"] : pinSvg__default["default"];
+    return (React__default["default"].createElement(ThumbnailIconButton, { "aria-label": isFavorite ? removeLabel : addLabel, "aria-pressed": isFavorite, tabIndex: tabIndex, onMouseEnter: () => setHovered(true), onMouseLeave: () => setHovered(false), onClick: async (event) => {
             if (isFavorite) {
                 // Blur so the parent's focus-within rule stops keeping the icon visible.
                 event.currentTarget.blur();
                 await onRemoveFromFavorites();
             }
             else {
+                // Reset hover so the icon doesn't immediately flip to "unpin"
+                // while the cursor is still over the button.
+                setHovered(false);
                 await onAddToFavorites();
             }
-        }, className: `favoriteIcon${isFavorite ? " isFavorite" : ""}${className ? " " + className : ""}`, disabled: disabled, muted: !isFavorite, icon: pinIcon__default["default"], sx: {
+        }, className: `favoriteIcon${isFavorite ? " isFavorite" : ""}${className ? " " + className : ""}`, disabled: disabled, muted: !isFavorite, icon: icon, sx: {
             ...(!isFavorite && { opacity: 0 }),
             ...(transparent && {
                 bgcolor: "transparent",

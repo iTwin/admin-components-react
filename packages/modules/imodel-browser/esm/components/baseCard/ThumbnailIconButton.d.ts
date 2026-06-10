@@ -1,7 +1,7 @@
 import IconButton from "@mui/material/IconButton";
 import type { SxProps, Theme } from "@mui/material/styles";
 import React from "react";
-export interface ThumbnailIconButtonProps extends Pick<React.ComponentProps<typeof IconButton>, "onClick" | "disabled" | "className" | "tabIndex" | "aria-haspopup" | "aria-expanded" | "aria-pressed" | "aria-label"> {
+export interface ThumbnailIconButtonProps extends Pick<React.ComponentProps<typeof IconButton>, "onClick" | "disabled" | "className" | "tabIndex" | "aria-haspopup" | "aria-expanded" | "aria-pressed" | "aria-label" | "onMouseEnter" | "onMouseLeave"> {
     /**
      * URL of the icon SVG (typically an import from `@stratakit/icons`).
      */

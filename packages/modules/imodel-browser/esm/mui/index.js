@@ -22,7 +22,8 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import pinIcon from '@stratakit/icons/pin.svg';
+import pinUnpinSvg from '@stratakit/icons/pin-unpin.svg';
+import pinSvg from '@stratakit/icons/pin.svg';
 import classNames from 'classnames';
 import { DataGrid } from '@mui/x-data-grid';
 import svgSearch from '@stratakit/icons/search.svg';
@@ -680,16 +681,23 @@ ThumbnailIconButton.displayName = "ThumbnailIconButton";
  * Always visible when favorited.
  */
 const FavoriteIconMUI = ({ isFavorite, onAddToFavorites, onRemoveFromFavorites, addLabel, removeLabel, disabled, className = "", transparent, tabIndex, }) => {
-    return (React__default.createElement(ThumbnailIconButton, { "aria-label": isFavorite ? removeLabel : addLabel, "aria-pressed": isFavorite, tabIndex: tabIndex, onClick: async (event) => {
+    const [hovered, setHovered] = useState(false);
+    // Pinned: always show pin icon, swap to unpin on hover.
+    // Unpinned: hidden by default, show pin icon on hover.
+    const icon = isFavorite && hovered ? pinUnpinSvg : pinSvg;
+    return (React__default.createElement(ThumbnailIconButton, { "aria-label": isFavorite ? removeLabel : addLabel, "aria-pressed": isFavorite, tabIndex: tabIndex, onMouseEnter: () => setHovered(true), onMouseLeave: () => setHovered(false), onClick: async (event) => {
             if (isFavorite) {
                 // Blur so the parent's focus-within rule stops keeping the icon visible.
                 event.currentTarget.blur();
                 await onRemoveFromFavorites();
             }
             else {
+                // Reset hover so the icon doesn't immediately flip to "unpin"
+                // while the cursor is still over the button.
+                setHovered(false);
                 await onAddToFavorites();
             }
-        }, className: `favoriteIcon${isFavorite ? " isFavorite" : ""}${className ? " " + className : ""}`, disabled: disabled, muted: !isFavorite, icon: pinIcon, sx: {
+        }, className: `favoriteIcon${isFavorite ? " isFavorite" : ""}${className ? " " + className : ""}`, disabled: disabled, muted: !isFavorite, icon: icon, sx: {
             ...(!isFavorite && { opacity: 0 }),
             ...(transparent && {
                 bgcolor: "transparent",
