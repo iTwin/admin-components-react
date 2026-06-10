@@ -136,7 +136,6 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
       thumbnailBottomRight,
       thumbnailBottomLeft,
       title,
-
       statusIconHref,
       description,
       subheader,
@@ -146,7 +145,6 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
       loading,
       disabled: cardDisabled,
       status,
-
       stringsOverrides,
       className,
       sx,
