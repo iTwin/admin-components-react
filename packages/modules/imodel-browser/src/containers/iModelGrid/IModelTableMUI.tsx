@@ -106,6 +106,8 @@ export const IModelTableMUI = ({
         flex: 1,
         minWidth: 200,
         disableColumnMenu: true,
+        valueGetter: (_value: string | undefined, row: IModelFull) =>
+          row.name ?? row.displayName ?? "",
         ...columnOverrides[IModelCellColumn.Name],
       },
       !hideColumns.includes(IModelCellColumn.Description) && {
