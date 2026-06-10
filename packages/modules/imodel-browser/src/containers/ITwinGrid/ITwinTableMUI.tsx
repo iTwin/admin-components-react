@@ -13,14 +13,11 @@ import React from "react";
 
 import MoreMenuMUI from "../../components/MoreMenuMUI";
 import { FavoriteIconMUI } from "../../components/tileFavoriteIcon/FavoriteIconMUI";
+import { type ITwinTableOverridesMUI } from "../../mui/types";
+import { ITwinCellColumn, ITwinFull } from "../../types";
 import {
-  type ITwinTableOverridesMUI,
-  ITwinCellColumn,
-  ITwinFull,
-} from "../../types";
-import {
-  type ResolvedCardActionItem,
   type MoreActionsMenuItemMUI,
+  type ResolvedCardActionItem,
   resolveMoreActionsMenuItemsMUI,
 } from "../../utils/_buildMenuOptions";
 

@@ -7,13 +7,13 @@ import React from "react";
 import { InView } from "react-intersection-observer";
 
 import { BaseCardLoading } from "../../components/baseCard/BaseCardLoading";
-import { NoResults } from "../../components/noResults/NoResults";
+import { NoResultsMUI as NoResults } from "../../components/noResults/NoResultsMUI";
 import { IModelFavoritesProvider } from "../../contexts/IModelFavoritesContext";
+import { type IModelTableOverridesMUI } from "../../mui/types";
 import {
   type AccessTokenProvider,
   type ApiOverrides,
   type IModelFull,
-  type IModelTableOverridesMUI,
   DataStatus,
   IModelSortOptions,
 } from "../../types";
@@ -328,7 +328,7 @@ const IModelGridInternal = ({
               m: 0,
             }}
             className={className}
-            data-testid="itwin-grid"
+            data-testid="imodel-grid"
           >
             {iModels?.map((iModel) => (
               <li key={iModel.id}>
@@ -381,7 +381,7 @@ const IModelGridInternal = ({
             tableOverrides={tableOverrides}
             isLoading={fetchStatus === DataStatus.Fetching}
             fetchMore={fetchMore}
-            data-testid="itwin-table"
+            data-testid="imodel-table"
           />
         )}
       </>

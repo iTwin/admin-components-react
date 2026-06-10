@@ -10,17 +10,15 @@ import {
 import svgMore from "@stratakit/icons/more-vertical.svg";
 import { Icon } from "@stratakit/mui";
 import React from "react";
+
 import MoreMenuMUI from "../../components/MoreMenuMUI";
 import { FavoriteIconMUI } from "../../components/tileFavoriteIcon/FavoriteIconMUI";
 import { useIModelFavoritesContext } from "../../contexts/IModelFavoritesContext";
+import { type IModelTableOverridesMUI } from "../../mui/types";
+import { type IModelFull, IModelCellColumn } from "../../types";
 import {
-  type IModelFull,
-  type IModelTableOverridesMUI,
-  IModelCellColumn,
-} from "../../types";
-import {
-  type ResolvedCardActionItem,
   type MoreActionsMenuItemMUI,
+  type ResolvedCardActionItem,
   resolveMoreActionsMenuItemsMUI,
 } from "../../utils/_buildMenuOptions";
 
