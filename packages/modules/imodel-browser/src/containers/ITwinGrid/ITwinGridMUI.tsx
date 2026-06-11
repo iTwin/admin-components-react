@@ -118,7 +118,7 @@ export const ITwinGridMUI = ({
           ? "No recent iTwins."
           : requestType === "favorites"
           ? "No favorite iTwins."
-          : "No iTwin found.",
+          : "No iTwins found.",
       noAuthentication: "No access token provided",
       error: "An error occurred",
       addToFavorites: "Add to favorites",
