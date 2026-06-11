@@ -27,7 +27,10 @@ export const withITwinIdOverride: <T extends { iTwinId?: string | undefined }>(
   Story(
     {
       ...args,
-      iTwinId: args.iTwinId ?? context.globals.iTwinId,
+      iTwinId:
+        args.iTwinId ??
+        context.globals.iTwinId ??
+        process.env.STORYBOOK_ITWIN_ID,
     },
     context
   );
