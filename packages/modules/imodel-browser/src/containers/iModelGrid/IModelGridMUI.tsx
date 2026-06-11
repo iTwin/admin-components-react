@@ -36,6 +36,26 @@ import type { IModelGridProps } from "./IModelGrid";
 import { type IModelTableMUIStrings, IModelTableMUI } from "./IModelTableMUI";
 import { DEFAULT_PAGE_SIZE, useIModelData } from "./useIModelData";
 
+/**
+ * Localized strings for the MUI IModelGrid. Extends the table-level strings
+ * with the grid-level messages used for empty, error, and authentication states.
+ * @alpha
+ */
+export interface IModelGridStringsMUI extends IModelTableMUIStrings {
+  /** Displayed after successful fetch, but no iModels are returned. */
+  noIModels: string;
+  /** Displayed when the component is mounted and there is no iTwin or asset Id. */
+  noContext: string;
+  /** Displayed when the component is mounted but the accessToken is empty. */
+  noAuthentication: string;
+  /** Generic message displayed if an error occurs while fetching. */
+  error: string;
+  /** Displayed after successful fetch search, but no iModel is returned, along with noIModelSearch text. */
+  noIModelSearchSubtext: string;
+  /** Displayed in context menu for removing iModel from recents. */
+  removeFromRecents: string;
+}
+
 /** @alpha */
 export interface IModelGridMUIProps
   extends Omit<
@@ -78,7 +98,7 @@ export interface IModelGridMUIProps
   /** Static props to apply over each tile, mainly used for tileProps, overrides IModelGrid provided values */
   tileOverrides?: Partial<IModelTileMUIProps>;
   tableOverrides?: IModelTableOverridesMUI;
-  stringsOverrides?: Partial<IModelTableMUIStrings>;
+  stringsOverrides?: Partial<IModelGridStringsMUI>;
 }
 
 /**

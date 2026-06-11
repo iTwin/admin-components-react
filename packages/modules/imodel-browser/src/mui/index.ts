@@ -7,6 +7,7 @@
 export {
   IModelGridMUI as IModelGrid,
   type IModelGridMUIProps as IModelGridProps,
+  type IModelGridStringsMUI as IModelGridStrings,
 } from "../containers/iModelGrid/IModelGridMUI";
 
 export {
