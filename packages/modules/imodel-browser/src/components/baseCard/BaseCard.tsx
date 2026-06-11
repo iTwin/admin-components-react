@@ -210,7 +210,7 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
       return (
         <BaseCardLoading
           className={className}
-          sx={{ ...baseCardSx, ...spreadSx(sx) }}
+          sx={[baseCardSx, ...spreadSx(sx)]}
         />
       );
     }
@@ -319,7 +319,6 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
                   items={moreActions!}
                   label={stringsOverrides?.moreOptions ?? "More options"}
                   prompt={<Icon href={svgMoreVertical} />}
-                  data-testid="show-context-menu-button"
                 />
               ) : undefined
             }
