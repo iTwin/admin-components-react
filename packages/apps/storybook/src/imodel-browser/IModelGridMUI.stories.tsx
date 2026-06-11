@@ -70,9 +70,6 @@ const baseArgs: IModelGridMUIProps = {
       onClick: (iModel) => action("Details for " + iModel?.displayName)(iModel),
     },
   ],
-  // tileOverrides: {
-  //   actions: (iModel) => [{ key: "open", label: iModel.displayName, onClick: () => alert("Opened " + iModel.displayName) }],
-  // },
 };
 
 export const Primary = Template.bind({});
@@ -185,7 +182,7 @@ ContextualActions.args = {
         iModel.displayName?.toLowerCase().includes("r") ?? false,
       key: "withR",
       onClick: (iModel: IModelFull | undefined) =>
-        alert("Contains R: " + iModel?.displayName),
+        action("Contains R: " + iModel?.displayName)(iModel),
     },
     {
       label: "Disabled if name contains 'T'",
@@ -193,20 +190,20 @@ ContextualActions.args = {
         iModel.displayName?.toLowerCase().includes("t") ?? false,
       key: "withT",
       onClick: (iModel: IModelFull | undefined) =>
-        alert("Does not contain T: " + iModel?.displayName),
+        action("Does not contain T: " + iModel?.displayName)(iModel),
     },
     {
       label: "Add description",
       key: "addD",
       onClick: (iModel: IModelFull | undefined) =>
-        alert("Add description: " + iModel?.displayName),
+        action("Add description: " + iModel?.displayName)(iModel),
     },
     {
       label: "Edit description",
       visible: (iModel: IModelFull) => !!iModel.description,
       key: "editD",
       onClick: (iModel: IModelFull | undefined) =>
-        alert("Edit description: " + iModel?.displayName),
+        action("Edit description: " + iModel?.displayName)(iModel),
     },
   ],
 };
