@@ -119,6 +119,13 @@ const baseCardSx = {
   flexDirection: "column",
 };
 
+const textEllipsisSx = {
+  display: "block",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  whiteSpace: "nowrap",
+};
+
 /**
  * Base card component built on MUI Card.
  *
@@ -153,23 +160,7 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
     ref
   ) => {
     const titleId = React.useId();
-    const titleNode = (
-      <Typography
-        variant="body1"
-        // eslint-disable-next-line jsx-a11y/heading-has-content
-        render={<h2 />}
-        sx={{
-          fontWeight: 600,
-          display: "block",
-          minWidth: 0,
-          overflow: "hidden",
-          textOverflow: "ellipsis",
-          whiteSpace: "nowrap",
-        }}
-      >
-        {title}
-      </Typography>
-    );
+
     const thumbnailNode =
       typeof thumbnail === "string" ? (
         <CardMedia
@@ -299,6 +290,7 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
             title={
               singleAction ? (
                 <CardActionArea
+                  sx={textEllipsisSx}
                   onClick={
                     !cardDisabled && !singleAction.disabled
                       ? singleAction.onClick
@@ -306,10 +298,10 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
                   }
                   disabled={cardDisabled ? true : singleAction.disabled}
                 >
-                  {titleNode}
+                  {title}
                 </CardActionArea>
               ) : (
-                titleNode
+                title
               )
             }
             action={
@@ -323,7 +315,12 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
               ) : undefined
             }
             subheader={
-              <Typography variant="caption" color="textSecondary">
+              <Typography
+                variant="caption"
+                color="textSecondary"
+                // eslint-disable-next-line jsx-a11y/heading-has-content
+                render={<h3 />}
+              >
                 {subheader}
               </Typography>
             }
@@ -331,18 +328,8 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
             slotProps={{
               title: {
                 id: titleId,
-                sx: [
-                  {
-                    flex: 1,
-                    minWidth: 0,
-                    display: "-webkit-box",
-                    WebkitLineClamp: 1,
-                    WebkitBoxOrient: "vertical",
-                    overflow: "hidden",
-                  },
-                ],
+                sx: textEllipsisSx,
               },
-
               content: {
                 sx: {
                   minWidth: 0,
