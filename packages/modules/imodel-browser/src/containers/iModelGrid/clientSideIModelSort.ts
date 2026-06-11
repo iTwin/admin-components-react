@@ -19,8 +19,12 @@ export const clientSideIModelSort = (
   iModels: IModelFull[],
   { viewMode, requestType, sort }: ClientSideIModelSortOptions
 ): IModelFull[] => {
-  if (viewMode !== "tile") return iModels;
-  if (requestType !== "recents" && requestType !== "favorites") return iModels;
+  if (viewMode === "cells") {
+    return iModels;
+  }
+  if (requestType !== "recents" && requestType !== "favorites") {
+    return iModels;
+  }
 
   const sortValue = (iModel: IModelFull) => {
     const currValue =
