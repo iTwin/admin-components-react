@@ -83,6 +83,15 @@ export const TableViewWithOverrides = Template.bind({});
 TableViewWithOverrides.args = {
   ...baseArgs,
   viewMode: "cells",
+  actions: [
+    {
+      key: "open",
+      label: (iTwin) => iTwin.displayName ?? "",
+      onClick: (iTwin) => action("Open " + iTwin.displayName)(iTwin),
+      disabled: (iTwin) =>
+        iTwin.displayName?.toLowerCase().includes("t") ?? false,
+    },
+  ],
   tableOverrides: {
     columnOverrides: {
       [ITwinCellColumn.Number]: {

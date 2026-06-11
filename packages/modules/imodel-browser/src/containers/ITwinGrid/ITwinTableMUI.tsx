@@ -178,7 +178,14 @@ export const ITwinTableMUI = ({
       columns={columns}
       loading={isLoading}
       onRowClick={
-        actions ? (params) => actions(params.row)[0]?.onClick?.() : undefined
+        actions
+          ? (params) => {
+              const action = actions(params.row)[0];
+              if (action && !action.disabled) {
+                action.onClick?.();
+              }
+            }
+          : undefined
       }
       onCellKeyDown={
         actions
@@ -188,8 +195,11 @@ export const ITwinTableMUI = ({
                 params.field !== "id" &&
                 params.field !== "actions"
               ) {
-                event.preventDefault();
-                actions(params.row)[0]?.onClick?.();
+                const action = actions(params.row)[0];
+                if (action && !action.disabled) {
+                  event.preventDefault();
+                  action.onClick?.();
+                }
               }
             }
           : undefined
@@ -224,7 +234,16 @@ export const ITwinTableMUI = ({
             cursor: "pointer",
           },
         }),
+        "& .MuiDataGrid-row.row-disabled": {
+          cursor: "default",
+          color: "var(--stratakit-color-text-neutral-disabled)",
+        },
       }}
+      getRowClassName={
+        actions
+          ? (params) => (actions(params.row)[0]?.disabled ? "row-disabled" : "")
+          : undefined
+      }
     />
   );
 };

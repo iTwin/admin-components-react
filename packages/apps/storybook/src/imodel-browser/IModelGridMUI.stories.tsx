@@ -75,15 +75,24 @@ const baseArgs: IModelGridMUIProps = {
 export const Primary = Template.bind({});
 Primary.args = { ...baseArgs };
 
-export const PrimaryCell = Template.bind({});
-PrimaryCell.args = {
+export const TableView = Template.bind({});
+TableView.args = {
   ...baseArgs,
   viewMode: "cells",
 };
 
-export const OverrideCellData = Template.bind({});
-OverrideCellData.args = {
+export const TableViewWithOverrides = Template.bind({});
+TableViewWithOverrides.args = {
   ...baseArgs,
+  actions: [
+    {
+      key: "open",
+      label: (iModel) => iModel.displayName ?? "",
+      onClick: (iModel) => action("iModel opened")(iModel),
+      disabled: (iModel) =>
+        iModel.displayName?.toLowerCase().includes("t") ?? false,
+    },
+  ],
   viewMode: "cells",
   tableOverrides: {
     columnOverrides: {
