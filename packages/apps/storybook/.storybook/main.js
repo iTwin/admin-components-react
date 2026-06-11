@@ -107,7 +107,12 @@ module.exports = {
       use: ["style-loader", "css-loader", "sass-loader"],
     });
 
-    // Enable HMR for local packages in development by aliasing to source directories
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      ...packagePaths,
+    };
+
+    // Enable HMR/source maps for local packages in development.
     if (configType === "DEVELOPMENT") {
       // Use full source maps to allow VS Code Chrome debugger to map back to TS/TSX sources
       config.devtool = "source-map";
@@ -119,10 +124,6 @@ module.exports = {
           .relative(repoRoot, info.absoluteResourcePath)
           .replace(/\\/g, "/");
         return `webpack:///${relPath}`;
-      };
-      config.resolve.alias = {
-        ...config.resolve.alias,
-        ...packagePaths,
       };
     }
 
