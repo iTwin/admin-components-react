@@ -279,29 +279,25 @@ const IModelGridInternal = ({
     ? { serverEnvironmentPrefix: apiOverrides.serverEnvironmentPrefix }
     : undefined;
 
-  const resolveActions = React.useCallback(
-    (iModel: IModelFull) => {
-      if (!actions?.length) {
-        return [];
-      }
-      const resolved = resolveCardActionsItemsMUI(actions, iModel);
-      if (!resolved.length) {
-        return resolved;
-      }
-      const [first, ...rest] = resolved;
-      return [
-        {
-          ...first,
-          onClick: first.onClick
-            ? () => iModelClickAndAddToRecents(iModel, first.onClick!)
-            : undefined,
-        },
-        ...rest,
-      ];
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [accessToken, disableAddToRecents, apiOverrides?.serverEnvironmentPrefix]
-  );
+  const resolveActions = (iModel: IModelFull) => {
+    if (!actions?.length) {
+      return [];
+    }
+    const resolved = resolveCardActionsItemsMUI(actions, iModel);
+    if (!resolved.length) {
+      return resolved;
+    }
+    const [first, ...rest] = resolved;
+    return [
+      {
+        ...first,
+        onClick: first.onClick
+          ? () => iModelClickAndAddToRecents(iModel, first.onClick!)
+          : undefined,
+      },
+      ...rest,
+    ];
+  };
 
   const renderIModelGridStructure = () => {
     return (
