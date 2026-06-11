@@ -4,7 +4,7 @@ import { AccessTokenProvider, ApiOverrides, IModelFull } from "../../types";
 import { type MoreActionsMenuItemMUI } from "../../utils/_buildMenuOptions";
 import { IModelTileProps } from "./IModelTile";
 /** @alpha */
-export interface IModelTileMUIProps extends Omit<IModelTileProps, "onThumbnailClick" | "iModelOptions" | "tileProps" | "fullWidth">, Omit<BaseCardProps, "statusIcon" | "onSelect" | "onOpen" | "title" | "description" | "thumbnailBottomRight" | "thumbnailTopRight" | "moreActions"> {
+export interface IModelTileMUIProps extends Omit<IModelTileProps, "onThumbnailClick" | "iModelOptions" | "tileProps" | "fullWidth">, Omit<BaseCardProps, "statusIcon" | "onSelect" | "onOpen" | "title" | "description" | "thumbnailTopRight" | "moreActions"> {
     /** If not provided, iModel display name will be used */
     title?: string;
     /** If not provided, iModel description will be used */
@@ -29,13 +29,9 @@ export interface IModelTileMUIProps extends Omit<IModelTileProps, "onThumbnailCl
     refetchIModels?: () => void;
     /** Hides the favorite icon when true */
     hideFavoriteIcon?: boolean;
-    /** Function that returns a badge node for the given iModel */
-    getBadge?: (iModel: IModelFull) => React.ReactNode;
-    /** Badge for the given iModel - getBadge will take precedence over this prop */
-    badge?: React.ReactNode;
 }
 /**
  * Representation of an IModel — V2 (Stratakit/MUI)
  * @alpha
  */
-export declare const IModelTileMUI: ({ iModel, moreActions: moreActionItems, accessToken, apiOverrides, stringsOverrides, refetchIModels, hideFavoriteIcon, loading, disabled, status, thumbnail, thumbnailTopLeft, thumbnailBottomLeft, getBadge, badge, title, description, subheader, actions, className, ...rest }: IModelTileMUIProps) => React.JSX.Element;
+export declare const IModelTileMUI: ({ iModel, moreActions: moreActionItems, accessToken, apiOverrides, stringsOverrides, refetchIModels, hideFavoriteIcon, loading, disabled, status, thumbnail, thumbnailTopLeft, thumbnailBottomLeft, thumbnailBottomRight, title, description, subheader, actions, className, ...rest }: IModelTileMUIProps) => React.JSX.Element;

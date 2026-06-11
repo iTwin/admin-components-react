@@ -1,5 +1,6 @@
 import React from "react";
-import { type ITwinFull, type ITwinTableOverridesMUI } from "../../types";
+import { type ITwinTableOverridesMUI } from "../../mui/types";
+import { type ITwinFull } from "../../types";
 import { type CardActionsItemMUI, MoreActionsMenuItemMUI } from "../../utils/_buildMenuOptions";
 import type { ITwinGridProps, ITwinGridStrings } from "./ITwinGrid";
 import { type ITwinTableMUIStrings } from "./ITwinTableMUI";

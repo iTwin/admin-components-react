@@ -7,16 +7,16 @@ import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Skeleton from '@mui/material/Skeleton';
 import Typography from '@mui/material/Typography';
-import { SvgSearch, SvgImodelHollow } from '@itwin/itwinui-icons-react';
-import { Text } from '@itwin/itwinui-react';
 import svgImodel from '@stratakit/icons/imodel.svg';
+import svgSearch from '@stratakit/icons/search.svg';
+import { Icon } from '@stratakit/mui';
+import '@itwin/itwinui-react';
 import Button from '@mui/material/Button';
 import CardActionArea from '@mui/material/CardActionArea';
 import CardActions from '@mui/material/CardActions';
 import CardMedia from '@mui/material/CardMedia';
 import Divider from '@mui/material/Divider';
 import svgMore from '@stratakit/icons/more-vertical.svg';
-import { Icon } from '@stratakit/mui';
 import IconButton from '@mui/material/IconButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
@@ -26,7 +26,6 @@ import pinUnpinSvg from '@stratakit/icons/pin-unpin.svg';
 import pinSvg from '@stratakit/icons/pin.svg';
 import classNames from 'classnames';
 import { DataGrid } from '@mui/x-data-grid';
-import svgSearch from '@stratakit/icons/search.svg';
 import Chip from '@mui/material/Chip';
 import svgItwin from '@stratakit/icons/itwin.svg';
 
@@ -73,47 +72,40 @@ const BaseCardLoading = forwardRef(({ ...props }, ref) => {
                 React__default.createElement(Typography, { variant: "body2" })))));
 });
 
-function styleInject(css, ref) {
-  if ( ref === void 0 ) ref = {};
-  var insertAt = ref.insertAt;
-
-  if (!css || typeof document === 'undefined') { return; }
-
-  var head = document.head || document.getElementsByTagName('head')[0];
-  var style = document.createElement('style');
-  style.type = 'text/css';
-
-  if (insertAt === 'top') {
-    if (head.firstChild) {
-      head.insertBefore(style, head.firstChild);
-    } else {
-      head.appendChild(style);
-    }
-  } else {
-    head.appendChild(style);
-  }
-
-  if (style.styleSheet) {
-    style.styleSheet.cssText = css;
-  } else {
-    style.appendChild(document.createTextNode(css));
-  }
-}
-
-var css_248z = ".iac-no-results-container{position:absolute;left:50%;top:50%;transform:translate(-50%, -50%);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;margin:1em}.iac-no-results-container .iac-no-results{display:flex;flex-direction:column;align-items:center;gap:var(--iui-size-2xs)}.iac-no-results-container .iac-no-results>svg{height:var(--iui-size-2xl);width:var(--iui-size-2xl);fill:var(--iui-color-icon-muted);margin-bottom:var(--iui-size-2xs)}";
-styleInject(css_248z);
-
 /*---------------------------------------------------------------------------------------------
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-/** Pre-formatted empty result page */
-const NoResults = ({ text, subtext, isSearchResult = false, }) => {
-    return (React__default.createElement("div", { className: "iac-no-results-container" },
-        React__default.createElement("div", { className: "iac-no-results" },
-            isSearchResult ? React__default.createElement(SvgSearch, null) : React__default.createElement(SvgImodelHollow, null),
-            React__default.createElement(Text, { variant: "leading" }, text),
-            subtext && React__default.createElement(Text, null, subtext))));
+/**
+ * No results page for use on iTwinGrid and iModelGrid.
+ * @alpha
+ */
+const NoResultsMUI = ({ text, subtext, isSearchResult = false, }) => {
+    return (React__default.createElement(Box, { "data-testid": "no-results", sx: {
+            position: "absolute",
+            left: "50%",
+            top: "50%",
+            transform: "translate(-50%, -50%)",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            textAlign: "center",
+            m: 2,
+        } },
+        React__default.createElement(Box, { sx: {
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: 1,
+            } },
+            React__default.createElement(Icon, { href: isSearchResult ? svgSearch : svgImodel, size: "large", style: {
+                    width: "5rem",
+                    height: "5rem",
+                    color: "var(--stratakit-color-text-muted)",
+                } }),
+            React__default.createElement(Typography, { variant: "h6", render: React__default.createElement("h2", null) }, text),
+            subtext && React__default.createElement(Typography, { variant: "body1" }, subtext))));
 };
 
 /*---------------------------------------------------------------------------------------------
@@ -531,6 +523,12 @@ const baseCardSx = {
     display: "flex",
     flexDirection: "column",
 };
+const textEllipsisSx = {
+    display: "block",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+};
 /**
  * Base card component built on MUI Card.
  *
@@ -541,16 +539,6 @@ const baseCardSx = {
  */
 const BaseCard = React__default.forwardRef(({ thumbnail, thumbnailTopLeft, thumbnailTopRight, thumbnailBottomRight, thumbnailBottomLeft, title, statusIconHref, description, subheader, thumbnailAlt, actions, moreActions, loading, disabled: cardDisabled, status, stringsOverrides, className, sx, ...rest }, ref) => {
     const titleId = React__default.useId();
-    const titleNode = (React__default.createElement(Typography, { variant: "body1", 
-        // eslint-disable-next-line jsx-a11y/heading-has-content
-        render: React__default.createElement("h2", null), sx: {
-            fontWeight: 600,
-            display: "block",
-            minWidth: 0,
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
-        } }, title));
     const thumbnailNode = typeof thumbnail === "string" ? (React__default.createElement(CardMedia, { image: thumbnail, role: "img", "aria-label": thumbnailAlt ?? "", sx: { height: "100%", backgroundSize: "cover" } })) : (thumbnail);
     const moreMenuRef = React__default.useRef(null);
     const handleContextMenu = React__default.useCallback((event) => {
@@ -568,10 +556,12 @@ const BaseCard = React__default.forwardRef(({ thumbnail, thumbnailTopLeft, thumb
     const singleAction = visibleActions?.length === 1 ? visibleActions[0] : undefined;
     const multipleActions = visibleActions && visibleActions.length > 1 ? visibleActions : undefined;
     if (loading) {
-        return (React__default.createElement(BaseCardLoading, { className: className, sx: { ...baseCardSx, ...spreadSx(sx) } }));
+        return (React__default.createElement(BaseCardLoading, { className: className, sx: [baseCardSx, ...spreadSx(sx)] }));
     }
     return (React__default.createElement(React__default.Fragment, null,
-        React__default.createElement(Card, { ref: ref, variant: "outlined", ...rest, className: className, "aria-labelledby": titleId, ...(cardDisabled ? { inert: "" } : {}), onContextMenu: !cardDisabled && hasContextMenu ? handleContextMenu : undefined, sx: [
+        React__default.createElement(Card, { ref: ref, variant: "outlined", ...rest, className: className, "aria-labelledby": titleId, ...(cardDisabled
+                ? { inert: "true" }
+                : {}), onContextMenu: !cardDisabled && hasContextMenu ? handleContextMenu : undefined, sx: [
                 {
                     ...baseCardSx,
                     cursor: cardDisabled ? "not-allowed" : "default",
@@ -601,21 +591,14 @@ const BaseCard = React__default.forwardRef(({ thumbnail, thumbnailTopLeft, thumb
                                 ? "var(--stratakit-color-border-critical-base)"
                                 : undefined,
                 } }),
-            React__default.createElement(CardHeader, { avatar: statusIconHref ? (React__default.createElement(StatusIcon, { href: statusIconHref, status: status })) : undefined, title: singleAction ? (React__default.createElement(CardActionArea, { onClick: !cardDisabled && !singleAction.disabled
+            React__default.createElement(CardHeader, { avatar: statusIconHref ? (React__default.createElement(StatusIcon, { href: statusIconHref, status: status })) : undefined, title: singleAction ? (React__default.createElement(CardActionArea, { sx: textEllipsisSx, onClick: !cardDisabled && !singleAction.disabled
                         ? singleAction.onClick
-                        : undefined, disabled: cardDisabled ? true : singleAction.disabled }, titleNode)) : (titleNode), action: hasContextMenu && !cardDisabled ? (React__default.createElement(MoreMenuMUI, { ref: moreMenuRef, items: moreActions, label: stringsOverrides?.moreOptions ?? "More options", prompt: React__default.createElement(Icon, { href: svgMore }), "data-testid": "show-context-menu-button" })) : undefined, subheader: React__default.createElement(Typography, { variant: "caption", color: "textSecondary" }, subheader), sx: [{ alignItems: "flex-start" }], slotProps: {
+                        : undefined, disabled: cardDisabled ? true : singleAction.disabled }, title)) : (title), action: hasContextMenu && !cardDisabled ? (React__default.createElement(MoreMenuMUI, { ref: moreMenuRef, items: moreActions, label: stringsOverrides?.moreOptions ?? "More options", prompt: React__default.createElement(Icon, { href: svgMore }) })) : undefined, subheader: React__default.createElement(Typography, { variant: "caption", color: "textSecondary", 
+                    // eslint-disable-next-line jsx-a11y/heading-has-content
+                    render: React__default.createElement("h3", null) }, subheader), sx: [{ alignItems: "flex-start" }], slotProps: {
                     title: {
                         id: titleId,
-                        sx: [
-                            {
-                                flex: 1,
-                                minWidth: 0,
-                                display: "-webkit-box",
-                                WebkitLineClamp: 1,
-                                WebkitBoxOrient: "vertical",
-                                overflow: "hidden",
-                            },
-                        ],
+                        sx: textEllipsisSx,
                     },
                     content: {
                         sx: {
@@ -706,6 +689,8 @@ const FavoriteIconMUI = ({ isFavorite, onAddToFavorites, onRemoveFromFavorites, 
         } }));
 };
 
+var defaultIModelThumbnail = "data:image/png;base64,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";
+
 /*---------------------------------------------------------------------------------------------
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
@@ -744,7 +729,7 @@ const useIModelThumbnail = (iModelId, accessToken, apiOverrides) => {
                 const thumbnail = response.ok
                     ? await response.arrayBuffer().then(convertArrayBufferToUrlBase64PNG)
                     : response.status === 404
-                        ? svgImodel
+                        ? defaultIModelThumbnail
                         : await response.text().then((errorText) => {
                             throw new Error(errorText);
                         });
@@ -803,7 +788,7 @@ const IModelThumbnailMUI = ({ iModelId, accessToken, apiOverrides, className, })
  * Representation of an IModel — V2 (Stratakit/MUI)
  * @alpha
  */
-const IModelTileMUI = ({ iModel, moreActions: moreActionItems, accessToken, apiOverrides, stringsOverrides, refetchIModels, hideFavoriteIcon, loading, disabled, status, thumbnail, thumbnailTopLeft, thumbnailBottomLeft, getBadge, badge, title, description, subheader, actions, className, ...rest }) => {
+const IModelTileMUI = ({ iModel, moreActions: moreActionItems, accessToken, apiOverrides, stringsOverrides, refetchIModels, hideFavoriteIcon, loading, disabled, status, thumbnail, thumbnailTopLeft, thumbnailBottomLeft, thumbnailBottomRight, title, description, subheader, actions, className, ...rest }) => {
     const favoritesContext = React__default.useContext(IModelFavoritesContext);
     const strings = _mergeStrings({
         addToFavorites: "Add to favorites",
@@ -824,14 +809,11 @@ const IModelTileMUI = ({ iModel, moreActions: moreActionItems, accessToken, apiO
         : undefined;
     const isFavorite = favoritesContext?.favorites.has(iModel.id) ?? false;
     const favoriteIcon = !hideFavoriteIcon && favoritesContext ? (React__default.createElement(FavoriteIconMUI, { isFavorite: isFavorite, onAddToFavorites: () => favoritesContext.add(iModel.id), onRemoveFromFavorites: () => favoritesContext.remove(iModel.id), addLabel: strings.addToFavorites, removeLabel: strings.removeFromFavorites, disabled: disabled })) : undefined;
-    if (badge && getBadge) {
-        console.warn("Both badge and getBadge props were provided to IModelTileMUI. The getBadge function will take precedence over the badge prop.");
-    }
     return (React__default.createElement(BaseCard, { className: className, sx: {
             "&:hover .favoriteIcon, &:focus-within .favoriteIcon": {
                 opacity: 1,
             },
-        }, disabled: disabled, loading: loading, thumbnail: thumbnail ?? (React__default.createElement(IModelThumbnailMUI, { iModelId: iModel.id, accessToken: accessToken, apiOverrides: thumbnailApiOverride })), thumbnailTopLeft: thumbnailTopLeft, thumbnailTopRight: favoriteIcon, thumbnailBottomLeft: thumbnailBottomLeft, thumbnailBottomRight: getBadge?.(iModel) ?? badge, title: title ?? iModel.displayName ?? "", actions: actions, moreActions: moreActions, status: status, statusIconHref: svgImodel, description: description ?? iModel.description ?? "", subheader: subheader, stringsOverrides: stringsOverrides, "data-testid": `imodel-tile-${iModel.id}`, ...rest }));
+        }, disabled: disabled, loading: loading, thumbnail: thumbnail ?? (React__default.createElement(IModelThumbnailMUI, { iModelId: iModel.id, accessToken: accessToken, apiOverrides: thumbnailApiOverride })), thumbnailTopLeft: thumbnailTopLeft, thumbnailTopRight: favoriteIcon, thumbnailBottomLeft: thumbnailBottomLeft, thumbnailBottomRight: thumbnailBottomRight, title: title ?? iModel.displayName ?? "", actions: actions, moreActions: moreActions, status: status, statusIconHref: svgImodel, description: description ?? iModel.description ?? "", subheader: subheader, stringsOverrides: stringsOverrides, "data-testid": `imodel-tile-${iModel.id}`, ...rest }));
 };
 
 /**
@@ -840,10 +822,12 @@ const IModelTileMUI = ({ iModel, moreActions: moreActionItems, accessToken, apiO
  * options for those request types, so we sort on the client.
  */
 const clientSideIModelSort = (iModels, { viewMode, requestType, sort }) => {
-    if (viewMode !== "tile")
+    if (viewMode === "cells") {
         return iModels;
-    if (requestType !== "recents" && requestType !== "favorites")
+    }
+    if (requestType !== "recents" && requestType !== "favorites") {
         return iModels;
+    }
     const sortValue = (iModel) => {
         const currValue = sort.sortType === "name"
             ? iModel.displayName ?? iModel.name ?? ""
@@ -863,12 +847,17 @@ const clientSideIModelSort = (iModels, { viewMode, requestType, sort }) => {
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-// TODO: investigate infinite scroll as an alternative to built-in pagination
-// MUI X DataGrid Pro supports onRowsScrollEnd, but the free version does not.
 /**
  * Table view for iModels using MUI X DataGrid (Community edition).
  */
 const IModelTableMUI = ({ iModels, moreActions, actions, strings, refetchIModels, tableOverrides: { columnOverrides = {}, hideColumns = [] } = {}, isLoading, fetchMore, }) => {
+    // Eagerly load all available data so the table has the full dataset
+    // for client-side pagination and sorting.
+    React__default.useEffect(() => {
+        if (fetchMore) {
+            fetchMore();
+        }
+    }, [fetchMore]);
     const favoritesContext = useIModelFavoritesContext();
     const columns = React__default.useMemo(() => {
         const cols = [
@@ -890,6 +879,7 @@ const IModelTableMUI = ({ iModels, moreActions, actions, strings, refetchIModels
                 flex: 1,
                 minWidth: 200,
                 disableColumnMenu: true,
+                valueGetter: (_value, row) => row.name ?? row.displayName ?? "",
                 ...columnOverrides[IModelCellColumn.Name],
             },
             !hideColumns.includes(IModelCellColumn.Description) && {
@@ -941,13 +931,23 @@ const IModelTableMUI = ({ iModels, moreActions, actions, strings, refetchIModels
         moreActions,
         refetchIModels,
     ]);
-    return (React__default.createElement(DataGrid, { rows: iModels, columns: columns, loading: isLoading, onRowClick: actions ? (params) => actions(params.row)[0]?.onClick?.() : undefined, onCellKeyDown: actions
+    return (React__default.createElement(DataGrid, { rows: iModels, columns: columns, loading: isLoading, onRowClick: actions
+            ? (params) => {
+                const action = actions(params.row)[0];
+                if (action && !action.disabled) {
+                    action.onClick?.();
+                }
+            }
+            : undefined, onCellKeyDown: actions
             ? (params, event) => {
                 if ((event.key === "Enter" || event.key === " ") &&
                     params.field !== "id" &&
                     params.field !== "actions") {
-                    event.preventDefault();
-                    actions(params.row)[0]?.onClick?.();
+                    const action = actions(params.row)[0];
+                    if (action && !action.disabled) {
+                        event.preventDefault();
+                        action.onClick?.();
+                    }
                 }
             }
             : undefined, disableRowSelectionOnClick: true, disableMultipleRowSelection: true, disableColumnSelector: true, disableColumnFilter: true, initialState: {
@@ -960,10 +960,7 @@ const IModelTableMUI = ({ iModels, moreActions, actions, strings, refetchIModels
             paginationRowsPerPage: strings.paginationRowsPerPage,
         }, sx: {
             // prevent individual cells from showing focus outlines
-            "& .MuiDataGrid-cell:focus": {
-                outline: "none",
-            },
-            "& .MuiDataGrid-cell:focus-within": {
+            "& .MuiDataGrid-cell:focus:not(:focus-visible)": {
                 outline: "none",
             },
             // reveal unfavorited icon on row hover or keyboard focus
@@ -974,8 +971,14 @@ const IModelTableMUI = ({ iModels, moreActions, actions, strings, refetchIModels
                 "& .MuiDataGrid-row": {
                     cursor: "pointer",
                 },
+                "& .MuiDataGrid-row.row-disabled": {
+                    cursor: "default",
+                    color: "var(--stratakit-color-text-neutral-disabled)",
+                },
             }),
-        } }));
+        }, getRowClassName: actions
+            ? (params) => (actions(params.row)[0]?.disabled ? "row-disabled" : "")
+            : undefined }));
 };
 
 /*---------------------------------------------------------------------------------------------
@@ -1393,7 +1396,7 @@ const IModelGridInternal = ({ accessToken, apiOverrides, moreActions, removeFrom
     const tileApiOverrides = apiOverrides
         ? { serverEnvironmentPrefix: apiOverrides.serverEnvironmentPrefix }
         : undefined;
-    const resolveActions = React__default.useCallback((iModel) => {
+    const resolveActions = (iModel) => {
         if (!actions?.length) {
             return [];
         }
@@ -1411,9 +1414,7 @@ const IModelGridInternal = ({ accessToken, apiOverrides, moreActions, removeFrom
             },
             ...rest,
         ];
-    }, 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [accessToken, disableAddToRecents, apiOverrides?.serverEnvironmentPrefix]);
+    };
     const renderIModelGridStructure = () => {
         return (React__default.createElement(React__default.Fragment, null, viewMode !== "cells" ? (React__default.createElement(Box, { component: "ul", sx: {
                 display: "grid",
@@ -1431,7 +1432,7 @@ const IModelGridInternal = ({ accessToken, apiOverrides, moreActions, removeFrom
                 },
                 p: 0,
                 m: 0,
-            }, className: className, "data-testid": "itwin-grid" },
+            }, className: className, "data-testid": "imodel-grid" },
             iModels?.map((iModel) => (React__default.createElement("li", { key: iModel.id },
                 React__default.createElement(IModelHookedTile, { iModel: iModel, moreActions: enhancedMoreActions, accessToken: accessToken, apiOverrides: tileApiOverrides, useTileState: useIndividualState, refetchIModels: refetchIModels, stringsOverrides: stringsOverrides, ...tileOverrides, actions: resolveActions(iModel) })))),
             fetchMore ? (React__default.createElement("li", null,
@@ -1446,7 +1447,7 @@ const IModelGridInternal = ({ accessToken, apiOverrides, moreActions, removeFrom
                 React__default.createElement("li", null,
                     React__default.createElement(BaseCardLoading, null)),
                 React__default.createElement("li", null,
-                    React__default.createElement(BaseCardLoading, null)))))) : (React__default.createElement(IModelTableMUI, { iModels: iModels, moreActions: enhancedMoreActions, actions: actions ? resolveActions : undefined, strings: strings, refetchIModels: refetchIModels, tableOverrides: tableOverrides, isLoading: fetchStatus === DataStatus.Fetching, fetchMore: fetchMore, "data-testid": "itwin-table" }))));
+                    React__default.createElement(BaseCardLoading, null)))))) : (React__default.createElement(IModelTableMUI, { iModels: iModels, moreActions: enhancedMoreActions, actions: actions ? resolveActions : undefined, strings: strings, refetchIModels: refetchIModels, tableOverrides: tableOverrides, isLoading: fetchStatus === DataStatus.Fetching, fetchMore: fetchMore, "data-testid": "imodel-table" }))));
     };
     const renderComponent = () => {
         if (!searchText &&
@@ -1456,12 +1457,12 @@ const IModelGridInternal = ({ accessToken, apiOverrides, moreActions, removeFrom
             return React__default.createElement(React__default.Fragment, null, emptyStateComponent);
         }
         if (!searchText && iModels.length === 0 && noResultsText) {
-            return React__default.createElement(NoResults, { text: noResultsText });
+            return React__default.createElement(NoResultsMUI, { text: noResultsText });
         }
         if (searchText &&
             iModels.length === 0 &&
             fetchStatus !== DataStatus.Fetching) {
-            return (React__default.createElement(NoResults, { text: strings.noIModelSearch, subtext: strings.noIModelSearchSubtext, isSearchResult: true }));
+            return (React__default.createElement(NoResultsMUI, { text: strings.noIModelSearch, subtext: strings.noIModelSearchSubtext, isSearchResult: true }));
         }
         return renderIModelGridStructure();
     };
@@ -1501,47 +1502,16 @@ function removeFromRecentsAction(strings, accessToken, apiOverrides, removeFromR
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 /**
- * No results page for use on iTwinGrid and iModelGrid.
- * @alpha
- */
-const NoResultsMUI = ({ text, subtext, isSearchResult = false, }) => {
-    return (React__default.createElement(Box, { "data-testid": "no-results", sx: {
-            position: "absolute",
-            left: "50%",
-            top: "50%",
-            transform: "translate(-50%, -50%)",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            textAlign: "center",
-            m: 2,
-        } },
-        React__default.createElement(Box, { sx: {
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: 1,
-            } },
-            React__default.createElement(Icon, { href: isSearchResult ? svgSearch : svgImodel, size: "large", style: {
-                    width: "5rem",
-                    height: "5rem",
-                    color: "var(--stratakit-color-text-muted)",
-                } }),
-            React__default.createElement(Typography, { variant: "h6", render: React__default.createElement("h2", null) }, text),
-            subtext && React__default.createElement(Typography, { variant: "body1" }, subtext))));
-};
-
-/*---------------------------------------------------------------------------------------------
- * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
- * See LICENSE.md in the project root for license terms and full copyright notice.
- *--------------------------------------------------------------------------------------------*/
-// TODO: investigate infinite scroll as an alternative to built-in pagination
-// MUI X DataGrid Pro supports onRowsScrollEnd, but the free version does not.
-/**
  * Table view for iTwins using MUI X DataGrid (Community edition).
  */
 const ITwinTableMUI = ({ iTwins, moreActions, actions, strings, iTwinFavorites, addITwinToFavorites, removeITwinFromFavorites, refetchITwins, tableOverrides: { columnOverrides = {}, hideColumns = [] } = {}, isLoading, fetchMore, }) => {
+    // Eagerly load all available data so the table has the full dataset
+    // for client-side pagination and sorting.
+    React__default.useEffect(() => {
+        if (fetchMore) {
+            fetchMore();
+        }
+    }, [fetchMore]);
     const columns = React__default.useMemo(() => {
         const cols = [
             !hideColumns.includes(ITwinCellColumn.Favorite) && {
@@ -1612,13 +1582,23 @@ const ITwinTableMUI = ({ iTwins, moreActions, actions, strings, iTwinFavorites, 
         moreActions,
         refetchITwins,
     ]);
-    return (React__default.createElement(DataGrid, { rows: iTwins, columns: columns, loading: isLoading, onRowClick: actions ? (params) => actions(params.row)[0]?.onClick?.() : undefined, onCellKeyDown: actions
+    return (React__default.createElement(DataGrid, { rows: iTwins, columns: columns, loading: isLoading, onRowClick: actions
+            ? (params) => {
+                const action = actions(params.row)[0];
+                if (action && !action.disabled) {
+                    action.onClick?.();
+                }
+            }
+            : undefined, onCellKeyDown: actions
             ? (params, event) => {
                 if ((event.key === "Enter" || event.key === " ") &&
                     params.field !== "id" &&
                     params.field !== "actions") {
-                    event.preventDefault();
-                    actions(params.row)[0]?.onClick?.();
+                    const action = actions(params.row)[0];
+                    if (action && !action.disabled) {
+                        event.preventDefault();
+                        action.onClick?.();
+                    }
                 }
             }
             : undefined, disableRowSelectionOnClick: true, disableMultipleRowSelection: true, disableColumnSelector: true, disableColumnFilter: true, initialState: {
@@ -1631,10 +1611,7 @@ const ITwinTableMUI = ({ iTwins, moreActions, actions, strings, iTwinFavorites, 
             paginationRowsPerPage: strings.paginationRowsPerPage,
         }, sx: {
             // prevent individual cells from showing focus outlines
-            "& .MuiDataGrid-cell:focus": {
-                outline: "none",
-            },
-            "& .MuiDataGrid-cell:focus-within": {
+            "& .MuiDataGrid-cell:focus:not(:focus-visible)": {
                 outline: "none",
             },
             // reveal unfavorited icon on row hover or keyboard focus
@@ -1646,7 +1623,13 @@ const ITwinTableMUI = ({ iTwins, moreActions, actions, strings, iTwinFavorites, 
                     cursor: "pointer",
                 },
             }),
-        } }));
+            "& .MuiDataGrid-row.row-disabled": {
+                cursor: "default",
+                color: "var(--stratakit-color-text-neutral-disabled)",
+            },
+        }, getRowClassName: actions
+            ? (params) => (actions(params.row)[0]?.disabled ? "row-disabled" : "")
+            : undefined }));
 };
 
 /*---------------------------------------------------------------------------------------------
@@ -1686,7 +1669,7 @@ SvgThumbnail.displayName = "SvgThumbnail";
  * Representation of an iTwin — V2 (Stratakit/MUI)
  * @alpha
  */
-const ITwinTileMUI = ({ iTwin, moreActions: moreActionItems, stringsOverrides, isFavorite, addToFavorites, removeFromFavorites, refetchITwins, hideFavoriteIcon, loading, disabled, status, thumbnail, getBadge, title, description, actions, className, ...rest }) => {
+const ITwinTileMUI = ({ iTwin, moreActions: moreActionItems, stringsOverrides, isFavorite, addToFavorites, removeFromFavorites, refetchITwins, hideFavoriteIcon, loading, disabled, status, thumbnail, thumbnailBottomRight, thumbnailTopLeft, thumbnailBottomLeft, title, description, actions, className, ...rest }) => {
     const strings = _mergeStrings({
         trialBadge: "Trial",
         inactiveBadge: "Inactive",
@@ -1713,7 +1696,7 @@ const ITwinTileMUI = ({ iTwin, moreActions: moreActionItems, stringsOverrides, i
             "&:hover .favoriteIcon, &:focus-within .favoriteIcon": {
                 opacity: 1,
             },
-        }, disabled: disabled, loading: loading, thumbnail: thumbnail ?? React__default.createElement(DefaultThumbnail, null), thumbnailTopRight: favoriteIcon, thumbnailBottomRight: getBadge?.(iTwin) ?? (React__default.createElement(StatusBadge, { status: iTwin.status, strings: strings })), title: title ?? iTwin.displayName ?? "", actions: actions, moreActions: moreActions, status: status, statusIconHref: svgItwin, description: description ?? iTwin.number ?? "", subheader: additionalDescription, "data-testid": `itwin-tile-${iTwin.id}`, stringsOverrides: stringsOverrides, ...rest }));
+        }, disabled: disabled, loading: loading, thumbnail: thumbnail ?? React__default.createElement(DefaultThumbnail, null), thumbnailTopLeft: thumbnailTopLeft, thumbnailBottomLeft: thumbnailBottomLeft, thumbnailTopRight: favoriteIcon, thumbnailBottomRight: thumbnailBottomRight ?? (React__default.createElement(StatusBadge, { status: iTwin.status, strings: strings })), title: title ?? iTwin.displayName ?? "", actions: actions, moreActions: moreActions, status: status, statusIconHref: svgItwin, description: description ?? iTwin.number ?? "", subheader: additionalDescription, "data-testid": `itwin-tile-${iTwin.id}`, stringsOverrides: stringsOverrides, ...rest }));
 };
 function DefaultThumbnail() {
     return React__default.createElement(SvgThumbnail, { src: `${svgItwin}#icon-large` });
@@ -1757,8 +1740,14 @@ const useITwinData = ({ requestType = "", iTwinSubClass = "Project", accessToken
         setProjects([]);
         setPage(0);
         setMorePages(true);
+        fetchingMoreRef.current = false;
     }, []);
+    const fetchingMoreRef = React__default.useRef(false);
     const fetchMore = React__default.useCallback(() => {
+        if (fetchingMoreRef.current) {
+            return;
+        }
+        fetchingMoreRef.current = true;
         setPage((page) => page + 1);
     }, []);
     const morePagesRef = React__default.useRef(morePages);
@@ -1837,6 +1826,7 @@ const useITwinData = ({ requestType = "", iTwinSubClass = "Project", accessToken
                     throw new Error(errorText);
                 });
             setStatus(DataStatus.Complete);
+            fetchingMoreRef.current = false;
             requestType === "favorites" && resetShouldRefetchFavorites?.();
             if (result.iTwins.length !== PAGE_SIZE) {
                 setMorePages(false);
@@ -1850,6 +1840,7 @@ const useITwinData = ({ requestType = "", iTwinSubClass = "Project", accessToken
             }
             setProjects([]);
             setStatus(DataStatus.FetchFailed);
+            fetchingMoreRef.current = false;
             console.error(e);
         });
         return () => {
@@ -2050,7 +2041,7 @@ const ITwinGridMUI = ({ accessToken, apiOverrides, filterOptions, orderbyOptions
             ? "No recent iTwins."
             : requestType === "favorites"
                 ? "No favorite iTwins."
-                : "No iTwin found.",
+                : "No iTwins found.",
         noAuthentication: "No access token provided",
         error: "An error occurred",
         addToFavorites: "Add to favorites",
@@ -2082,7 +2073,10 @@ const ITwinGridMUI = ({ accessToken, apiOverrides, filterOptions, orderbyOptions
         [DataStatus.TokenRequired]: strings.noAuthentication,
         [DataStatus.ContextRequired]: "",
     }[fetchStatus ?? DataStatus.Fetching];
-    return viewMode !== "cells" ? (iTwins.length === 0 && noResultsText ? (React__default.createElement(NoResultsMUI, { text: noResultsText })) : (React__default.createElement(Box, { component: "ul", sx: {
+    if (iTwins.length === 0 && noResultsText) {
+        return React__default.createElement(NoResultsMUI, { text: noResultsText });
+    }
+    return viewMode !== "cells" ? (React__default.createElement(Box, { component: "ul", sx: {
             display: "grid",
             gap: 2,
             gridTemplateColumns: "repeat(auto-fill, minmax(22.5rem, 1fr))",
@@ -2127,7 +2121,7 @@ const ITwinGridMUI = ({ accessToken, apiOverrides, filterOptions, orderbyOptions
             React__default.createElement("li", null,
                 React__default.createElement(BaseCardLoading, null)),
             React__default.createElement("li", null,
-                React__default.createElement(BaseCardLoading, null)))) : null))))) : (React__default.createElement(ITwinTableMUI, { iTwins: iTwins, moreActions: moreActions, actions: actions
+                React__default.createElement(BaseCardLoading, null)))) : null)))) : (React__default.createElement(ITwinTableMUI, { iTwins: iTwins, moreActions: moreActions, actions: actions
             ? (iTwin) => resolveCardActionsItemsMUI(actions, iTwin)
             : undefined, strings: strings, iTwinFavorites: iTwinFavorites, addITwinToFavorites: addITwinToFavorites, removeITwinFromFavorites: removeITwinFromFavorites, refetchITwins: refetchITwins, tableOverrides: tableOverrides, isLoading: fetchStatus === DataStatus.Fetching, fetchMore: fetchMore }));
 };

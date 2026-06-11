@@ -1,4 +1,4 @@
-export { IModelGridMUI as IModelGrid, type IModelGridMUIProps as IModelGridProps, } from "../containers/iModelGrid/IModelGridMUI";
+export { IModelGridMUI as IModelGrid, type IModelGridMUIProps as IModelGridProps, type IModelGridStringsMUI as IModelGridStrings, } from "../containers/iModelGrid/IModelGridMUI";
 export { IModelTileMUI as IModelTile, type IModelTileMUIProps as IModelTileProps, } from "../containers/iModelTiles/IModelTileMUI";
 export { IModelThumbnailMUI as IModelThumbnail, type IModelThumbnailMUIProps as IModelThumbnailProps, } from "../containers/iModelThumbnail/IModelThumbnailMUI";
 export { ITwinGridMUI as ITwinGrid, type ITwinGridPropsMUI as ITwinGridProps, type IndividualITwinStateHookMUI as IndividualITwinStateHook, type ITwinGridStringsMUI as ITwinGridStrings, } from "../containers/ITwinGrid/ITwinGridMUI";
@@ -10,3 +10,4 @@ export type { CardActionsItemMUI as CardActionsItem } from "../utils/_buildMenuO
 export { ThumbnailIconButton } from "../components/baseCard/ThumbnailIconButton";
 export { SvgThumbnail } from "../components/baseCard/SvgThumbnail";
 export * from "../types";
+export type { IModelTableOverridesMUI, ITwinTableOverridesMUI } from "./types";

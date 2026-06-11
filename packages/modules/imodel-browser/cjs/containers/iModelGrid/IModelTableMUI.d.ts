@@ -1,7 +1,8 @@
 import { GRID_DEFAULT_LOCALE_TEXT } from "@mui/x-data-grid";
 import React from "react";
-import { type IModelFull, type IModelTableOverridesMUI } from "../../types";
-import { type ResolvedCardActionItem, type MoreActionsMenuItemMUI } from "../../utils/_buildMenuOptions";
+import { type IModelTableOverridesMUI } from "../../mui/types";
+import { type IModelFull } from "../../types";
+import { type MoreActionsMenuItemMUI, type ResolvedCardActionItem } from "../../utils/_buildMenuOptions";
 type MuiDataGridStrings = Pick<typeof GRID_DEFAULT_LOCALE_TEXT, "noRowsLabel" | "noResultsOverlayLabel" | "footerRowSelected" | "footerTotalVisibleRows" | "paginationRowsPerPage">;
 export interface IModelTableMUIStrings extends MuiDataGridStrings {
     tableColumnName: string;

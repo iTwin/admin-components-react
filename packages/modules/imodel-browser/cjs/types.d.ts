@@ -1,4 +1,3 @@
-import { GridColDef } from "@mui/x-data-grid";
 import { CellProps } from "react-table";
 /** Full representation of the iModel. */
 export interface IModelFull {
@@ -103,12 +102,6 @@ export type IModelCellOverrides = {
     createdDateTime?: (cellData: CellProps<IModelFull>) => React.ReactNode;
     hideColumns?: IModelCellColumn[];
 };
-export type IModelTableOverridesMUI = {
-    /** Per-column overrides merged onto the default column definitions. */
-    columnOverrides?: Partial<Record<IModelCellColumn, Partial<GridColDef<IModelFull>>>>;
-    /** Columns to hide from the table. */
-    hideColumns?: IModelCellColumn[];
-};
 export declare enum ITwinCellColumn {
     Favorite = "Favorite",
     Number = "ITwinNumber",
@@ -120,12 +113,6 @@ export type ITwinCellOverrides = {
     ITwinNumber?: (cellData: CellProps<ITwinFull>) => React.ReactNode;
     ITwinName?: (cellData: CellProps<ITwinFull>) => React.ReactNode;
     LastModified?: (cellData: CellProps<ITwinFull>) => React.ReactNode;
-    hideColumns?: ITwinCellColumn[];
-};
-export type ITwinTableOverridesMUI = {
-    /** Per-column overrides merged onto the default column definitions. */
-    columnOverrides?: Partial<Record<ITwinCellColumn, Partial<GridColDef<ITwinFull>>>>;
-    /** Columns to hide from the table. */
     hideColumns?: ITwinCellColumn[];
 };
 export type AccessTokenProvider = string | (() => Promise<string>);
