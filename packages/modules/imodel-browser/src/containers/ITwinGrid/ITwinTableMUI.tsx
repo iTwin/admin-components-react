@@ -211,11 +211,7 @@ export const ITwinTableMUI = ({
       }}
       sx={{
         // prevent individual cells from showing focus outlines
-        "& .MuiDataGrid-cell:focus": {
-          outline: "none",
-        },
-
-        "& .MuiDataGrid-cell:focus-within": {
+        "& .MuiDataGrid-cell:focus:not(:focus-visible)": {
           outline: "none",
         },
         // reveal unfavorited icon on row hover or keyboard focus
