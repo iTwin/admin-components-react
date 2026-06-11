@@ -283,6 +283,15 @@ NoResultsWithDefaultEmptyState.args = {
   },
 };
 
+export const TableViewWithNoResults = Template.bind({});
+TableViewWithNoResults.args = {
+  ...baseArgs,
+  viewMode: "cells",
+  postProcessCallback: (iModels, status) => {
+    return [];
+  },
+};
+
 export const StringsOverrideGrid = Template.bind({});
 StringsOverrideGrid.args = {
   ...baseArgs,
