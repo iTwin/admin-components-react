@@ -33,7 +33,6 @@ export interface IModelTileMUIProps
       | "onOpen"
       | "title"
       | "description"
-      | "thumbnailBottomRight"
       | "thumbnailTopRight"
       | "moreActions"
     > {
@@ -62,11 +61,6 @@ export interface IModelTileMUIProps
   refetchIModels?: () => void;
   /** Hides the favorite icon when true */
   hideFavoriteIcon?: boolean;
-  /** Function that returns a badge node for the given iModel */
-  getBadge?: (iModel: IModelFull) => React.ReactNode;
-
-  /** Badge for the given iModel - getBadge will take precedence over this prop */
-  badge?: React.ReactNode;
 }
 
 /**
@@ -87,8 +81,7 @@ export const IModelTileMUI = ({
   thumbnail,
   thumbnailTopLeft,
   thumbnailBottomLeft,
-  getBadge,
-  badge,
+  thumbnailBottomRight,
   title,
   description,
   subheader,
@@ -142,12 +135,6 @@ export const IModelTileMUI = ({
       />
     ) : undefined;
 
-  if (badge && getBadge) {
-    console.warn(
-      "Both badge and getBadge props were provided to IModelTileMUI. The getBadge function will take precedence over the badge prop."
-    );
-  }
-
   return (
     <BaseCard
       className={className}
@@ -170,7 +157,7 @@ export const IModelTileMUI = ({
       thumbnailTopLeft={thumbnailTopLeft}
       thumbnailTopRight={favoriteIcon}
       thumbnailBottomLeft={thumbnailBottomLeft}
-      thumbnailBottomRight={getBadge?.(iModel) ?? badge}
+      thumbnailBottomRight={thumbnailBottomRight}
       title={title ?? iModel.displayName ?? ""}
       actions={actions}
       moreActions={moreActions}

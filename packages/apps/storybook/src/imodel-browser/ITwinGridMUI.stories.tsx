@@ -180,7 +180,8 @@ SimpleTilePropsOverrides.args = {
   tileOverrides: {
     status: "negative",
     thumbnail: bridgeThumbnail,
-    getBadge: () => <Chip size="small" label="Tile Override" />,
+    thumbnailBottomLeft: <Chip size="small" label="Bottom Left Override" />,
+    thumbnailBottomRight: <Chip size="small" label="Bottom Right Override" />,
     thumbnailTopLeft: (
       <AvatarGroup max={3}>
         <Avatar alt="User 1" src="https://i.pravatar.cc/150?img=1" />
@@ -191,32 +192,19 @@ SimpleTilePropsOverrides.args = {
   },
 };
 
-interface IModelMinimal {
-  id: string;
-  displayName: string;
-}
-interface IModelsFetchData {
-  iModels: IModelMinimal[];
-  _links: {
-    prev: { href: string };
-    next: { href: string };
-    self: { href: string };
-  };
-}
-
 const useIndividualState: IndividualITwinStateHook = (iTwin, props) => {
   const tileProps = React.useMemo<Partial<ITwinTileType>>(
     () => ({
       actions: [
         {
           key: "create",
-          label: "Create IModel",
-          onClick: action("Create IModel clicked"),
+          label: "Create iModel",
+          onClick: action("Create iModel clicked"),
         },
         {
           key: "open",
-          label: "Open IModel",
-          onClick: action("Open IModel clicked"),
+          label: `Open ${iTwin.displayName}`,
+          onClick: action(`Open ${iTwin.displayName} clicked`),
         },
       ],
       thumbnailTopLeft: (
@@ -225,7 +213,7 @@ const useIndividualState: IndividualITwinStateHook = (iTwin, props) => {
         </AvatarGroup>
       ),
     }),
-    []
+    [iTwin.displayName]
   );
 
   return {
@@ -234,8 +222,8 @@ const useIndividualState: IndividualITwinStateHook = (iTwin, props) => {
   };
 };
 
-export const StatefulPropsOverrides = Template.bind({});
-StatefulPropsOverrides.args = {
+export const UseIndividualState = Template.bind({});
+UseIndividualState.args = {
   apiOverrides: { serverEnvironmentPrefix: "qa" },
   useIndividualState,
 };

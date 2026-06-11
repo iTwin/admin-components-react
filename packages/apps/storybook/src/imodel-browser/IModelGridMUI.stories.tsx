@@ -216,7 +216,8 @@ SimpleTilePropsOverrides.args = {
   ...baseArgs,
   tileOverrides: {
     thumbnail: bridgeThumbnail,
-    getBadge: () => <Chip size="small" label="Tile X Override" />,
+    thumbnailBottomRight: <Chip size="small" label="Tile Bottom Right" />,
+    thumbnailBottomLeft: <Chip size="small" label="Thumbnail Bottom Left " />,
     thumbnailTopLeft: (
       <AvatarGroup max={3}>
         <Avatar alt="User 1" src="https://i.pravatar.cc/150?img=1" />

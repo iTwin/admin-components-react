@@ -84,7 +84,7 @@ export interface BaseCardProps
   /**
    * Primary card actions.
    *
-   * When a single action is provided, the card title becomes a clickable
+   * When a single action is provided, the card title area becomes a clickable
    * {@link CardActionArea} wired to that action.
    *
    * When multiple actions are provided, they are rendered as buttons in a
@@ -93,9 +93,9 @@ export interface BaseCardProps
   actions?: ResolvedCardActionItem[];
 
   /**
-   * Items rendered in the three-dot context menu in the card header.
-   * When provided, a three-dot icon button appears in the header action slot
-   * and these items are rendered as menu items.
+   * Items rendered in the three-dot context menu in the card header area.
+   * When provided, a three-dot icon button appears in the {@link CardHeader} `action` slot
+   * and these items are rendered as menu items. The menu is also accessible via right-click on the card header.
    */
   moreActions?: MoreMenuItem[];
 
