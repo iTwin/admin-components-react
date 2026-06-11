@@ -33,14 +33,10 @@ module.exports = {
       ...config.resolve.fallback,
       fs: false,
     };
-    // Keep symlinked package paths (e.g. node_modules/@stratakit/icons) instead of
-    // resolving to pnpm realpaths under common/temp. This prevents "../.." segments
-    // from leaking into emitted asset URLs.
-    config.resolve.symlinks = false;
 
     // Ensure StrataKit icon SVGs are emitted with stable URLs so <Icon href="...#icon" />
     // resolves correctly in Storybook (pnpm paths can otherwise leak into URLs).
-    config.module.rules.unshift({
+    config.module.rules.push({
       test: /\.svg$/i,
       include: (resourcePath) => {
         if (!resourcePath) {
@@ -55,6 +51,7 @@ module.exports = {
       type: "asset/resource",
       generator: {
         filename: "static/media/[name].[contenthash:8][ext]",
+        publicPath: "/",
       },
     });
 
