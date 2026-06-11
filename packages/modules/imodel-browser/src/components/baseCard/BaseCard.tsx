@@ -224,7 +224,9 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
           className={className}
           aria-labelledby={titleId}
           // `inert` is not yet in React 18's DOM typings; spread it in until React 19 types land.
-          {...(cardDisabled ? ({ inert: "" } as Record<string, unknown>) : {})}
+          {...(cardDisabled
+            ? ({ inert: "true" } as Record<string, unknown>)
+            : {})}
           onContextMenu={
             !cardDisabled && hasContextMenu ? handleContextMenu : undefined
           }
