@@ -5,6 +5,7 @@
 import Chip from "@mui/material/Chip";
 import svgItwin from "@stratakit/icons/itwin.svg";
 import React from "react";
+
 import {
   type BaseCardProps,
   BaseCard,
@@ -29,9 +30,7 @@ export interface ITwinTilePropsMUI
       | "onOpen"
       | "title"
       | "description"
-      | "thumbnailBottomRight"
       | "thumbnailTopRight"
-      | "thumbnailBottomLeft"
       | "moreActions"
     > {
   /** Defaults to iTwin.displayName */
@@ -40,8 +39,10 @@ export interface ITwinTilePropsMUI
   description?: string;
   /** Items for the three-dot context menu */
   moreActions?: MoreActionsMenuItemMUI<ITwinFull>[];
-  /** Status to display on the tile — will override iTwin.status if provided, otherwise iTwin.status will be used.  Should be a MUI {@link Chip} */
-  getBadge?: (iTwin: ITwinFull) => React.ReactNode;
+
+  /** Node to display in the bottom right corner of the thumbnail. If not provided, a default status badge will be used. */
+  thumbnailBottomRight?: React.ReactNode;
+
   stringsOverrides?: {
     trialBadge?: string;
     inactiveBadge?: string;
@@ -68,7 +69,9 @@ export const ITwinTileMUI = ({
   disabled,
   status,
   thumbnail,
-  getBadge,
+  thumbnailBottomRight,
+  thumbnailTopLeft,
+  thumbnailBottomLeft,
   title,
   description,
   actions,
@@ -131,9 +134,11 @@ export const ITwinTileMUI = ({
       disabled={disabled}
       loading={loading}
       thumbnail={thumbnail ?? <DefaultThumbnail />}
+      thumbnailTopLeft={thumbnailTopLeft}
+      thumbnailBottomLeft={thumbnailBottomLeft}
       thumbnailTopRight={favoriteIcon}
       thumbnailBottomRight={
-        getBadge?.(iTwin) ?? (
+        thumbnailBottomRight ?? (
           <StatusBadge status={iTwin.status} strings={strings} />
         )
       }

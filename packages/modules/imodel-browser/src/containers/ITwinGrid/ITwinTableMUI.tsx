@@ -13,14 +13,11 @@ import React from "react";
 
 import MoreMenuMUI from "../../components/MoreMenuMUI";
 import { FavoriteIconMUI } from "../../components/tileFavoriteIcon/FavoriteIconMUI";
+import { type ITwinTableOverridesMUI } from "../../mui/types";
+import { ITwinCellColumn, ITwinFull } from "../../types";
 import {
-  type ITwinTableOverridesMUI,
-  ITwinCellColumn,
-  ITwinFull,
-} from "../../types";
-import {
-  type ResolvedCardActionItem,
   type MoreActionsMenuItemMUI,
+  type ResolvedCardActionItem,
   resolveMoreActionsMenuItemsMUI,
 } from "../../utils/_buildMenuOptions";
 
@@ -62,9 +59,6 @@ export interface ITwinTableMUIProps {
   fetchMore?: (() => void) | false;
 }
 
-// TODO: investigate infinite scroll as an alternative to built-in pagination
-// MUI X DataGrid Pro supports onRowsScrollEnd, but the free version does not.
-
 /**
  * Table view for iTwins using MUI X DataGrid (Community edition).
  */
@@ -81,6 +75,13 @@ export const ITwinTableMUI = ({
   isLoading,
   fetchMore,
 }: ITwinTableMUIProps) => {
+  // Eagerly load all available data so the table has the full dataset
+  // for client-side pagination and sorting.
+  React.useEffect(() => {
+    if (fetchMore) {
+      fetchMore();
+    }
+  }, [fetchMore]);
   const columns = React.useMemo<GridColDef<ITwinFull>[]>(() => {
     const cols: (GridColDef<ITwinFull> | false)[] = [
       !hideColumns.includes(ITwinCellColumn.Favorite) && {
@@ -182,7 +183,14 @@ export const ITwinTableMUI = ({
       columns={columns}
       loading={isLoading}
       onRowClick={
-        actions ? (params) => actions(params.row)[0]?.onClick?.() : undefined
+        actions
+          ? (params) => {
+              const action = actions(params.row)[0];
+              if (action && !action.disabled) {
+                action.onClick?.();
+              }
+            }
+          : undefined
       }
       onCellKeyDown={
         actions
@@ -192,8 +200,11 @@ export const ITwinTableMUI = ({
                 params.field !== "id" &&
                 params.field !== "actions"
               ) {
-                event.preventDefault();
-                actions(params.row)[0]?.onClick?.();
+                const action = actions(params.row)[0];
+                if (action && !action.disabled) {
+                  event.preventDefault();
+                  action.onClick?.();
+                }
               }
             }
           : undefined
@@ -215,11 +226,7 @@ export const ITwinTableMUI = ({
       }}
       sx={{
         // prevent individual cells from showing focus outlines
-        "& .MuiDataGrid-cell:focus": {
-          outline: "none",
-        },
-
-        "& .MuiDataGrid-cell:focus-within": {
+        "& .MuiDataGrid-cell:focus:not(:focus-visible)": {
           outline: "none",
         },
         // reveal unfavorited icon on row hover or keyboard focus
@@ -232,7 +239,16 @@ export const ITwinTableMUI = ({
             cursor: "pointer",
           },
         }),
+        "& .MuiDataGrid-row.row-disabled": {
+          cursor: "default",
+          color: "var(--stratakit-color-text-neutral-disabled)",
+        },
       }}
+      getRowClassName={
+        actions
+          ? (params) => (actions(params.row)[0]?.disabled ? "row-disabled" : "")
+          : undefined
+      }
     />
   );
 };

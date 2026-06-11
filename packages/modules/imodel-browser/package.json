@@ -99,7 +99,7 @@
     "typescript": "~6.0.3"
   },
   "peerDependencies": {
-    "@itwin/itwinui-react": "~3.17.3",
+    "@itwin/itwinui-react": "^3.17.3",
     "@mui/material": "^9.0.0",
     "@mui/x-data-grid": "^9.3.0",
     "@stratakit/icons": "^0.3.1",

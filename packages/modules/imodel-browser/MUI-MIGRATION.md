@@ -57,8 +57,8 @@ interface MoreActionsMenuItemMUI<T> {
 | `tileProps.thumbnail`     | `thumbnail`           | Moved                   | Flattened to a top-level prop.                                                                                                             |
 | `tileProps.leftIcon`      | `thumbnailTopLeft`    | Renamed                 | Flattened to a top-level `BaseCard` slot prop.                                                                                             |
 | `tileProps.rightIcon`     | —                     | Removed                 | MUI renders the "more actions" menu trigger here automatically.                                                                            |
-| `tileProps.badge`         | `badge`               | Renamed                 | Flattened to a top-level prop. Value is placed in `thumbnailBottomRight`.                                                                  |
-| `tileProps.getBadge`      | `getBadge`            | Moved                   | Flattened to a top-level prop. Return value is placed in `thumbnailBottomRight`. Takes precedence over `badge`.                            |
+| `tileProps.badge`         | `thumbnailBottomRight`| Renamed                 | Flattened to a top-level prop. Overlay slot in the bottom-right of the thumbnail.                                                        |
+| `tileProps.getBadge`      | —                     | Removed                 | Use `thumbnailBottomRight` directly.                                                                                                     |
 | `tileProps.buttons`       | `actions`             | Renamed + type changed  | Type changes from `ReactNode` to `CardActionsItemMUI<IModelFull>[]`.                                                                       |
 | `tileProps.moreOptions`   | `moreActions`         | Renamed + type changed  | Combined with `moreActions`                                                                                                                |
 | `tileProps.iModelActions` | `moreActions`         | Renamed + type changed  | Combined with `moreActions`                                                                                                                |
@@ -72,12 +72,11 @@ interface MoreActionsMenuItemMUI<T> {
 | `tileProps.isNew`         | —                     | Removed                 | Removed for now.                                                                                                                           |
 | `tileProps.onClick`       | —                     | Removed                 | Replaced by `actions`.                                                                                                                     |
 | `tileProps.children`      | —                     | Removed                 |                                                                                                                                            |
-|                           | `badge`               | Added                   | Static badge node for `thumbnailBottomRight`. `getBadge` takes precedence when both provided.                                              |
 |                           | `description`         | Added                   | Defaults to `iModel.description`.                                                                                                          |
 |                           | `thumbnailTopLeft`    | Added                   | Overlay slot in the top-left of the thumbnail.                                                                                             |
 |                           | `thumbnailBottomLeft` | Added                   | Overlay slot in the bottom-left of the thumbnail.                                                                                          |
-|                           | `headerRight`         | Added                   | Slot to the right of the title in the header row.                                                                                          |
-|                           | `statusIcon`          | Added                   | Icon rendered to the left of the content area.                                                                                             |
+|                           | `thumbnailBottomRight`| Added                   | Overlay slot in the bottom-right of the thumbnail.                                                                                         |
+|                           | `statusIconHref`      | Added                   | SVG href rendered as an icon to the left of the content area. Auto-set to `imodel.svg`.                                                    |
 
 ---
 
@@ -104,7 +103,7 @@ interface MoreActionsMenuItemMUI<T> {
 | `tileProps.thumbnail`    | `thumbnail`            | Moved                   | Flattened. Default changes from itwinui `SvgItwin` icon to Stratakit `Icon` with `itwin.svg`.                                             |
 | `tileProps.leftIcon`     | `thumbnailTopLeft`     | Renamed                 | Flattened to a top-level `BaseCard` slot prop.                                                                                            |
 | `tileProps.rightIcon`    | —                      | Removed                 | MUI renders the favorite and context menu trigger here automatically.                                                                     |
-| `tileProps.badge`        | `thumbnailBottomRight` | Renamed                 | MUI auto-renders a `StatusBadge` here when `iTwin.status` is not "active". Can be overridden via `getBadge`.                              |
+| `tileProps.badge`        | `thumbnailBottomRight` | Renamed                 | MUI auto-renders a `StatusBadge` here when `iTwin.status` is not "active". Override with any ReactNode.                                 |
 | `tileProps.buttons`      | `actions`              | Renamed + type changed  | Type changes from `ReactNode` to `CardActionsItemMUI<ITwinFull>[]`.                                                                       |
 | `tileProps.moreOptions`  | `moreActions`          | Renamed + type changed  |                                                                                                                                           |
 | `tileProps.iTwinActions` | `moreActions`          | Renamed + type changed  |                                                                                                                                           |
@@ -121,9 +120,10 @@ interface MoreActionsMenuItemMUI<T> {
 | `fullWidth`              |                        | Removed                 | No direct replacement. Grid layout is now CSS grid via parent.                                                                            |
 | `tileProps.isNew`        |                        | Removed                 | No direct replacement currently.                                                                                                          |
 | `tileProps.onClick`      |                        | Removed                 | Replaced by `actions`.                                                                                                                    |
-|                          | `getBadge`             | Added                   | `(iTwin: ITwinFull) => ReactNode`. Overrides the default `StatusBadge`.                                                                   |
-|                          | `headerRight`          | Added                   | Slot to the right of the title in the header row.                                                                                         |
-|                          | `statusIcon`           | Added                   | Icon rendered to the left of the content area.                                                                                            |
+|                          | `thumbnailTopLeft`     | Added                   | Overlay slot in the top-left of the thumbnail.                                                                                            |
+|                          | `thumbnailBottomLeft`  | Added                   | Overlay slot in the bottom-left of the thumbnail.                                                                                         |
+|                          | `thumbnailBottomRight` | Added                   | Overlay slot in the bottom-right of the thumbnail. Defaults to a status badge (`Trial`/`Inactive`).                                       |
+|                          | `statusIconHref`       | Added                   | SVG href rendered as an icon to the left of the content area. Auto-set to `itwin.svg`.                                                    |
 
 ### Behavior changes
 

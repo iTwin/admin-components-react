@@ -84,7 +84,7 @@ export interface BaseCardProps
   /**
    * Primary card actions.
    *
-   * When a single action is provided, the card title becomes a clickable
+   * When a single action is provided, the card title area becomes a clickable
    * {@link CardActionArea} wired to that action.
    *
    * When multiple actions are provided, they are rendered as buttons in a
@@ -93,9 +93,9 @@ export interface BaseCardProps
   actions?: ResolvedCardActionItem[];
 
   /**
-   * Items rendered in the three-dot context menu in the card header.
-   * When provided, a three-dot icon button appears in the header action slot
-   * and these items are rendered as menu items.
+   * Items rendered in the three-dot context menu in the card header area.
+   * When provided, a three-dot icon button appears in the {@link CardHeader} `action` slot
+   * and these items are rendered as menu items. The menu is also accessible via right-click on the card header.
    */
   moreActions?: MoreMenuItem[];
 
@@ -117,6 +117,13 @@ const baseCardSx = {
   minHeight: "15rem",
   display: "flex",
   flexDirection: "column",
+};
+
+const textEllipsisSx = {
+  display: "block",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  whiteSpace: "nowrap",
 };
 
 /**
@@ -153,23 +160,7 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
     ref
   ) => {
     const titleId = React.useId();
-    const titleNode = (
-      <Typography
-        variant="body1"
-        // eslint-disable-next-line jsx-a11y/heading-has-content
-        render={<h2 />}
-        sx={{
-          fontWeight: 600,
-          display: "block",
-          minWidth: 0,
-          overflow: "hidden",
-          textOverflow: "ellipsis",
-          whiteSpace: "nowrap",
-        }}
-      >
-        {title}
-      </Typography>
-    );
+
     const thumbnailNode =
       typeof thumbnail === "string" ? (
         <CardMedia
@@ -210,7 +201,7 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
       return (
         <BaseCardLoading
           className={className}
-          sx={{ ...baseCardSx, ...spreadSx(sx) }}
+          sx={[baseCardSx, ...spreadSx(sx)]}
         />
       );
     }
@@ -224,7 +215,9 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
           className={className}
           aria-labelledby={titleId}
           // `inert` is not yet in React 18's DOM typings; spread it in until React 19 types land.
-          {...(cardDisabled ? ({ inert: "" } as Record<string, unknown>) : {})}
+          {...(cardDisabled
+            ? ({ inert: "true" } as Record<string, unknown>)
+            : {})}
           onContextMenu={
             !cardDisabled && hasContextMenu ? handleContextMenu : undefined
           }
@@ -297,6 +290,7 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
             title={
               singleAction ? (
                 <CardActionArea
+                  sx={textEllipsisSx}
                   onClick={
                     !cardDisabled && !singleAction.disabled
                       ? singleAction.onClick
@@ -304,10 +298,10 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
                   }
                   disabled={cardDisabled ? true : singleAction.disabled}
                 >
-                  {titleNode}
+                  {title}
                 </CardActionArea>
               ) : (
-                titleNode
+                title
               )
             }
             action={
@@ -317,12 +311,16 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
                   items={moreActions!}
                   label={stringsOverrides?.moreOptions ?? "More options"}
                   prompt={<Icon href={svgMoreVertical} />}
-                  data-testid="show-context-menu-button"
                 />
               ) : undefined
             }
             subheader={
-              <Typography variant="caption" color="textSecondary">
+              <Typography
+                variant="caption"
+                color="textSecondary"
+                // eslint-disable-next-line jsx-a11y/heading-has-content
+                render={<h3 />}
+              >
                 {subheader}
               </Typography>
             }
@@ -330,18 +328,8 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
             slotProps={{
               title: {
                 id: titleId,
-                sx: [
-                  {
-                    flex: 1,
-                    minWidth: 0,
-                    display: "-webkit-box",
-                    WebkitLineClamp: 1,
-                    WebkitBoxOrient: "vertical",
-                    overflow: "hidden",
-                  },
-                ],
+                sx: textEllipsisSx,
               },
-
               content: {
                 sx: {
                   minWidth: 0,

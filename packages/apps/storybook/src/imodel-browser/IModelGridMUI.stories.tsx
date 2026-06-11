@@ -70,23 +70,29 @@ const baseArgs: IModelGridMUIProps = {
       onClick: (iModel) => action("Details for " + iModel?.displayName)(iModel),
     },
   ],
-  // tileOverrides: {
-  //   actions: (iModel) => [{ key: "open", label: iModel.displayName, onClick: () => alert("Opened " + iModel.displayName) }],
-  // },
 };
 
 export const Primary = Template.bind({});
 Primary.args = { ...baseArgs };
 
-export const PrimaryCell = Template.bind({});
-PrimaryCell.args = {
+export const TableView = Template.bind({});
+TableView.args = {
   ...baseArgs,
   viewMode: "cells",
 };
 
-export const OverrideCellData = Template.bind({});
-OverrideCellData.args = {
+export const TableViewWithOverrides = Template.bind({});
+TableViewWithOverrides.args = {
   ...baseArgs,
+  actions: [
+    {
+      key: "open",
+      label: (iModel) => iModel.displayName ?? "",
+      onClick: (iModel) => action("iModel opened")(iModel),
+      disabled: (iModel) =>
+        iModel.displayName?.toLowerCase().includes("t") ?? false,
+    },
+  ],
   viewMode: "cells",
   tableOverrides: {
     columnOverrides: {
@@ -185,7 +191,7 @@ ContextualActions.args = {
         iModel.displayName?.toLowerCase().includes("r") ?? false,
       key: "withR",
       onClick: (iModel: IModelFull | undefined) =>
-        alert("Contains R: " + iModel?.displayName),
+        action("Contains R: " + iModel?.displayName)(iModel),
     },
     {
       label: "Disabled if name contains 'T'",
@@ -193,20 +199,20 @@ ContextualActions.args = {
         iModel.displayName?.toLowerCase().includes("t") ?? false,
       key: "withT",
       onClick: (iModel: IModelFull | undefined) =>
-        alert("Does not contain T: " + iModel?.displayName),
+        action("Does not contain T: " + iModel?.displayName)(iModel),
     },
     {
       label: "Add description",
       key: "addD",
       onClick: (iModel: IModelFull | undefined) =>
-        alert("Add description: " + iModel?.displayName),
+        action("Add description: " + iModel?.displayName)(iModel),
     },
     {
       label: "Edit description",
       visible: (iModel: IModelFull) => !!iModel.description,
       key: "editD",
       onClick: (iModel: IModelFull | undefined) =>
-        alert("Edit description: " + iModel?.displayName),
+        action("Edit description: " + iModel?.displayName)(iModel),
     },
   ],
 };
@@ -216,7 +222,8 @@ SimpleTilePropsOverrides.args = {
   ...baseArgs,
   tileOverrides: {
     thumbnail: bridgeThumbnail,
-    getBadge: () => <Chip size="small" label="Tile X Override" />,
+    thumbnailBottomRight: <Chip size="small" label="Tile Bottom Right" />,
+    thumbnailBottomLeft: <Chip size="small" label="Thumbnail Bottom Left " />,
     thumbnailTopLeft: (
       <AvatarGroup max={3}>
         <Avatar alt="User 1" src="https://i.pravatar.cc/150?img=1" />

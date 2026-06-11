@@ -14,7 +14,7 @@ export const accessTokenArgTypes = {
 
 /** HOC that will override the "accessToken" prop with the Addon token */
 export const withAccessTokenOverride: <
-  T extends { accessToken?: string | (() => Promise<string>) },
+  T extends { accessToken?: string | (() => Promise<string>) }
 >(
   story: Story<T>
 ) => Story<T> = (Story) => (args, context) =>
@@ -30,7 +30,7 @@ export const withITwinIdOverride: <T extends { iTwinId?: string | undefined }>(
       iTwinId:
         args.iTwinId ??
         context.globals.iTwinId ??
-        "23a67b97-30b3-4cdb-82c0-752edd10606b",
+        process.env.STORYBOOK_ITWIN_ID,
     },
     context
   );

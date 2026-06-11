@@ -7,13 +7,13 @@ import React from "react";
 import { InView } from "react-intersection-observer";
 
 import { BaseCardLoading } from "../../components/baseCard/BaseCardLoading";
-import { NoResults } from "../../components/noResults/NoResults";
+import { NoResultsMUI as NoResults } from "../../components/noResults/NoResultsMUI";
 import { IModelFavoritesProvider } from "../../contexts/IModelFavoritesContext";
+import { type IModelTableOverridesMUI } from "../../mui/types";
 import {
   type AccessTokenProvider,
   type ApiOverrides,
   type IModelFull,
-  type IModelTableOverridesMUI,
   DataStatus,
   IModelSortOptions,
 } from "../../types";
@@ -35,6 +35,26 @@ import { clientSideIModelSort } from "./clientSideIModelSort";
 import type { IModelGridProps } from "./IModelGrid";
 import { type IModelTableMUIStrings, IModelTableMUI } from "./IModelTableMUI";
 import { DEFAULT_PAGE_SIZE, useIModelData } from "./useIModelData";
+
+/**
+ * Localized strings for the MUI IModelGrid. Extends the table-level strings
+ * with the grid-level messages used for empty, error, and authentication states.
+ * @alpha
+ */
+export interface IModelGridStringsMUI extends IModelTableMUIStrings {
+  /** Displayed after successful fetch, but no iModels are returned. */
+  noIModels: string;
+  /** Displayed when the component is mounted and there is no iTwin or asset Id. */
+  noContext: string;
+  /** Displayed when the component is mounted but the accessToken is empty. */
+  noAuthentication: string;
+  /** Generic message displayed if an error occurs while fetching. */
+  error: string;
+  /** Displayed after successful fetch search, but no iModel is returned, along with noIModelSearch text. */
+  noIModelSearchSubtext: string;
+  /** Displayed in context menu for removing iModel from recents. */
+  removeFromRecents: string;
+}
 
 /** @alpha */
 export interface IModelGridMUIProps
@@ -78,7 +98,7 @@ export interface IModelGridMUIProps
   /** Static props to apply over each tile, mainly used for tileProps, overrides IModelGrid provided values */
   tileOverrides?: Partial<IModelTileMUIProps>;
   tableOverrides?: IModelTableOverridesMUI;
-  stringsOverrides?: Partial<IModelTableMUIStrings>;
+  stringsOverrides?: Partial<IModelGridStringsMUI>;
 }
 
 /**
@@ -279,29 +299,25 @@ const IModelGridInternal = ({
     ? { serverEnvironmentPrefix: apiOverrides.serverEnvironmentPrefix }
     : undefined;
 
-  const resolveActions = React.useCallback(
-    (iModel: IModelFull) => {
-      if (!actions?.length) {
-        return [];
-      }
-      const resolved = resolveCardActionsItemsMUI(actions, iModel);
-      if (!resolved.length) {
-        return resolved;
-      }
-      const [first, ...rest] = resolved;
-      return [
-        {
-          ...first,
-          onClick: first.onClick
-            ? () => iModelClickAndAddToRecents(iModel, first.onClick!)
-            : undefined,
-        },
-        ...rest,
-      ];
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [accessToken, disableAddToRecents, apiOverrides?.serverEnvironmentPrefix]
-  );
+  const resolveActions = (iModel: IModelFull) => {
+    if (!actions?.length) {
+      return [];
+    }
+    const resolved = resolveCardActionsItemsMUI(actions, iModel);
+    if (!resolved.length) {
+      return resolved;
+    }
+    const [first, ...rest] = resolved;
+    return [
+      {
+        ...first,
+        onClick: first.onClick
+          ? () => iModelClickAndAddToRecents(iModel, first.onClick!)
+          : undefined,
+      },
+      ...rest,
+    ];
+  };
 
   const renderIModelGridStructure = () => {
     return (
@@ -328,7 +344,7 @@ const IModelGridInternal = ({
               m: 0,
             }}
             className={className}
-            data-testid="itwin-grid"
+            data-testid="imodel-grid"
           >
             {iModels?.map((iModel) => (
               <li key={iModel.id}>
@@ -381,7 +397,7 @@ const IModelGridInternal = ({
             tableOverrides={tableOverrides}
             isLoading={fetchStatus === DataStatus.Fetching}
             fetchMore={fetchMore}
-            data-testid="itwin-table"
+            data-testid="imodel-table"
           />
         )}
       </>

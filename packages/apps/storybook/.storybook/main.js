@@ -33,14 +33,10 @@ module.exports = {
       ...config.resolve.fallback,
       fs: false,
     };
-    // Keep symlinked package paths (e.g. node_modules/@stratakit/icons) instead of
-    // resolving to pnpm realpaths under common/temp. This prevents "../.." segments
-    // from leaking into emitted asset URLs.
-    config.resolve.symlinks = false;
 
     // Ensure StrataKit icon SVGs are emitted with stable URLs so <Icon href="...#icon" />
     // resolves correctly in Storybook (pnpm paths can otherwise leak into URLs).
-    config.module.rules.unshift({
+    config.module.rules.push({
       test: /\.svg$/i,
       include: (resourcePath) => {
         if (!resourcePath) {
@@ -55,6 +51,7 @@ module.exports = {
       type: "asset/resource",
       generator: {
         filename: "static/media/[name].[contenthash:8][ext]",
+        publicPath: "/",
       },
     });
 
@@ -110,7 +107,12 @@ module.exports = {
       use: ["style-loader", "css-loader", "sass-loader"],
     });
 
-    // Enable HMR for local packages in development by aliasing to source directories
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      ...packagePaths,
+    };
+
+    // Enable HMR/source maps for local packages in development.
     if (configType === "DEVELOPMENT") {
       // Use full source maps to allow VS Code Chrome debugger to map back to TS/TSX sources
       config.devtool = "source-map";
@@ -122,10 +124,6 @@ module.exports = {
           .relative(repoRoot, info.absoluteResourcePath)
           .replace(/\\/g, "/");
         return `webpack:///${relPath}`;
-      };
-      config.resolve.alias = {
-        ...config.resolve.alias,
-        ...packagePaths,
       };
     }
 

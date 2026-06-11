@@ -7,12 +7,9 @@ import React from "react";
 import { InView } from "react-intersection-observer";
 
 import { BaseCardLoading } from "../../components/baseCard/BaseCardLoading";
-import { NoResultsMUI as NoResults } from "../../components/noResults/NoResultsMUI";
-import {
-  type ITwinFull,
-  type ITwinTableOverridesMUI,
-  DataStatus,
-} from "../../types";
+import { NoResultsMUI } from "../../components/noResults/NoResultsMUI";
+import { type ITwinTableOverridesMUI } from "../../mui/types";
+import { type ITwinFull, DataStatus } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
 import {
   type CardActionsItemMUI,
@@ -121,7 +118,7 @@ export const ITwinGridMUI = ({
           ? "No recent iTwins."
           : requestType === "favorites"
           ? "No favorite iTwins."
-          : "No iTwin found.",
+          : "No iTwins found.",
       noAuthentication: "No access token provided",
       error: "An error occurred",
       addToFavorites: "Add to favorites",
@@ -172,99 +169,99 @@ export const ITwinGridMUI = ({
     [DataStatus.ContextRequired]: "",
   }[fetchStatus ?? DataStatus.Fetching];
 
+  if (iTwins.length === 0 && noResultsText) {
+    return <NoResultsMUI text={noResultsText} />;
+  }
+
   return viewMode !== "cells" ? (
-    iTwins.length === 0 && noResultsText ? (
-      <NoResults text={noResultsText} />
-    ) : (
-      <Box
-        component="ul"
-        sx={{
-          display: "grid",
-          gap: 2,
-          gridTemplateColumns: "repeat(auto-fill, minmax(22.5rem, 1fr))",
-          listStyle: "none",
-          alignItems: "stretch",
-          "& > li": {
-            display: "flex",
-            minWidth: 0,
-          },
-          "& > li > *": {
-            flex: 1,
-            minWidth: 0,
-          },
-          p: 0,
-          m: 0,
-        }}
-        className={className}
-      >
-        {fetchStatus === DataStatus.Fetching ? (
-          <>
-            <li>
-              <BaseCardLoading />
+    <Box
+      component="ul"
+      sx={{
+        display: "grid",
+        gap: 2,
+        gridTemplateColumns: "repeat(auto-fill, minmax(22.5rem, 1fr))",
+        listStyle: "none",
+        alignItems: "stretch",
+        "& > li": {
+          display: "flex",
+          minWidth: 0,
+        },
+        "& > li > *": {
+          flex: 1,
+          minWidth: 0,
+        },
+        p: 0,
+        m: 0,
+      }}
+      className={className}
+    >
+      {fetchStatus === DataStatus.Fetching ? (
+        <>
+          <li>
+            <BaseCardLoading />
+          </li>
+          <li>
+            <BaseCardLoading />
+          </li>
+          <li>
+            <BaseCardLoading />
+          </li>
+        </>
+      ) : (
+        <>
+          {iTwins?.map((iTwin) => (
+            <li key={iTwin.id}>
+              <ITwinHookedTile
+                gridProps={{
+                  accessToken,
+                  apiOverrides,
+                  filterOptions,
+                  actions,
+                  requestType,
+                  stringsOverrides,
+                  tileOverrides,
+                  useIndividualState,
+                }}
+                iTwin={iTwin}
+                moreActions={moreActions}
+                actions={
+                  actions
+                    ? resolveCardActionsItemsMUI(actions, iTwin)
+                    : undefined
+                }
+                useTileState={useIndividualState}
+                isFavorite={iTwinFavorites.has(iTwin.id)}
+                addToFavorites={addITwinToFavorites}
+                removeFromFavorites={removeITwinFromFavorites}
+                refetchITwins={refetchITwins}
+                stringsOverrides={stringsOverrides}
+                thumbnail={iTwin.image} // This is a fix for https://github.com/iTwin/admin-components-react/issues/196
+                {...tileOverrides}
+              />
             </li>
-            <li>
-              <BaseCardLoading />
-            </li>
-            <li>
-              <BaseCardLoading />
-            </li>
-          </>
-        ) : (
-          <>
-            {iTwins?.map((iTwin) => (
-              <li key={iTwin.id}>
-                <ITwinHookedTile
-                  gridProps={{
-                    accessToken,
-                    apiOverrides,
-                    filterOptions,
-                    actions,
-                    requestType,
-                    stringsOverrides,
-                    tileOverrides,
-                    useIndividualState,
+          ))}
+          {fetchMore ? (
+            <>
+              <li>
+                <InView
+                  onChange={(inView) => {
+                    inView && fetchMore();
                   }}
-                  iTwin={iTwin}
-                  moreActions={moreActions}
-                  actions={
-                    actions
-                      ? resolveCardActionsItemsMUI(actions, iTwin)
-                      : undefined
-                  }
-                  useTileState={useIndividualState}
-                  isFavorite={iTwinFavorites.has(iTwin.id)}
-                  addToFavorites={addITwinToFavorites}
-                  removeFromFavorites={removeITwinFromFavorites}
-                  refetchITwins={refetchITwins}
-                  stringsOverrides={stringsOverrides}
-                  thumbnail={iTwin.image} // This is a fix for https://github.com/iTwin/admin-components-react/issues/196
-                  {...tileOverrides}
-                />
+                >
+                  <BaseCardLoading />
+                </InView>
               </li>
-            ))}
-            {fetchMore ? (
-              <>
-                <li>
-                  <InView
-                    onChange={(inView) => {
-                      inView && fetchMore();
-                    }}
-                  >
-                    <BaseCardLoading />
-                  </InView>
-                </li>
-                <li>
-                  <BaseCardLoading />
-                </li>
-                <li>
-                  <BaseCardLoading />
-                </li>
-              </>
-            ) : null}
-          </>
-        )}
-      </Box>
-    )
+              <li>
+                <BaseCardLoading />
+              </li>
+              <li>
+                <BaseCardLoading />
+              </li>
+            </>
+          ) : null}
+        </>
+      )}
+    </Box>
   ) : (
     <ITwinTableMUI
       iTwins={iTwins}

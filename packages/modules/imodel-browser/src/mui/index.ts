@@ -7,6 +7,7 @@
 export {
   IModelGridMUI as IModelGrid,
   type IModelGridMUIProps as IModelGridProps,
+  type IModelGridStringsMUI as IModelGridStrings,
 } from "../containers/iModelGrid/IModelGridMUI";
 
 export {
@@ -47,3 +48,4 @@ export { ThumbnailIconButton } from "../components/baseCard/ThumbnailIconButton"
 export { SvgThumbnail } from "../components/baseCard/SvgThumbnail";
 
 export * from "../types";
+export type { IModelTableOverridesMUI, ITwinTableOverridesMUI } from "./types";

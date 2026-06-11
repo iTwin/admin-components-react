@@ -354,7 +354,6 @@ importers:
       '@itwin/itwinui-icons-react': ^2.9.0
       '@itwin/itwinui-react': ^3.19.4
       '@mui/material': ^9.0.0
-      '@mui/system': ^9.0.0
       '@mui/x-data-grid': ^9.3.0
       '@rollup/plugin-commonjs': ~17.1.0
       '@rollup/plugin-url': ^8.0.1
@@ -413,8 +412,7 @@ importers:
     devDependencies:
       '@itwin/itwinui-react': 3.19.4_nnrd3gsncyragczmpvfhocinkq
       '@mui/material': 9.0.1_27kzlijtntas6645qwojwuhdba
-      '@mui/system': 9.0.1_po4keleilqsm4vrhgxl2cr46aq
-      '@mui/x-data-grid': 9.3.0_7mpntgkhpya3s3ktsfitjpkb5y
+      '@mui/x-data-grid': 9.3.0_khtwlpggtuvdxv4ufkxjwosrqm
       '@rollup/plugin-commonjs': 17.1.0_rollup@2.79.2
       '@rollup/plugin-url': 8.0.2_rollup@2.79.2
       '@stratakit/icons': 0.3.2
@@ -3400,6 +3398,36 @@ packages:
       '@babel/runtime': 7.29.2
       '@mui/material': 9.0.1_27kzlijtntas6645qwojwuhdba
       '@mui/system': 9.0.1_po4keleilqsm4vrhgxl2cr46aq
+      '@mui/utils': 9.0.1_po4keleilqsm4vrhgxl2cr46aq
+      '@mui/x-internals': 9.1.0_po4keleilqsm4vrhgxl2cr46aq
+      '@mui/x-virtualizer': 9.0.0-alpha.7_27kzlijtntas6645qwojwuhdba
+      clsx: 2.1.1
+      prop-types: 15.8.1
+      react: 18.3.1
+      react-dom: 18.3.1_react@18.3.1
+      use-sync-external-store: 1.6.0_react@18.3.1
+    transitivePeerDependencies:
+      - '@types/react'
+    dev: true
+
+  /@mui/x-data-grid/9.3.0_khtwlpggtuvdxv4ufkxjwosrqm:
+    resolution: {integrity: sha512-MWzp4YH4iFFG6H1M6r9zqQhPYGA74noekxi/RxS+Gr3w/jHshNAVJECwjgMazQUwtnO/Pwx0TA/grzmj1Wzamg==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      '@emotion/react': ^11.9.0
+      '@emotion/styled': ^11.8.1
+      '@mui/material': ^7.3.0 || ^9.0.0
+      '@mui/system': ^7.3.0 || ^9.0.0
+      react: ^17.0.0 || ^18.0.0 || ^19.0.0
+      react-dom: ^17.0.0 || ^18.0.0 || ^19.0.0
+    peerDependenciesMeta:
+      '@emotion/react':
+        optional: true
+      '@emotion/styled':
+        optional: true
+    dependencies:
+      '@babel/runtime': 7.29.2
+      '@mui/material': 9.0.1_27kzlijtntas6645qwojwuhdba
       '@mui/utils': 9.0.1_po4keleilqsm4vrhgxl2cr46aq
       '@mui/x-internals': 9.1.0_po4keleilqsm4vrhgxl2cr46aq
       '@mui/x-virtualizer': 9.0.0-alpha.7_27kzlijtntas6645qwojwuhdba

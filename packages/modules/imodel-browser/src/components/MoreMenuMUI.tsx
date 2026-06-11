@@ -28,7 +28,6 @@ interface Props {
   items: MoreMenuItem[];
   prompt: React.ReactNode;
   label: string;
-
   tabIndex?: number;
 }
 
