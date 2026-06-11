@@ -56,9 +56,6 @@ export interface IModelTableMUIProps {
   fetchMore?: (() => void) | false;
 }
 
-// TODO: investigate infinite scroll as an alternative to built-in pagination
-// MUI X DataGrid Pro supports onRowsScrollEnd, but the free version does not.
-
 /**
  * Table view for iModels using MUI X DataGrid (Community edition).
  */
@@ -70,7 +67,15 @@ export const IModelTableMUI = ({
   refetchIModels,
   tableOverrides: { columnOverrides = {}, hideColumns = [] } = {},
   isLoading,
+  fetchMore,
 }: IModelTableMUIProps) => {
+  // Eagerly load all available data so the table has the full dataset
+  // for client-side pagination and sorting.
+  React.useEffect(() => {
+    if (fetchMore) {
+      fetchMore();
+    }
+  }, [fetchMore]);
   const favoritesContext = useIModelFavoritesContext();
 
   const columns = React.useMemo<GridColDef<IModelFull>[]>(() => {

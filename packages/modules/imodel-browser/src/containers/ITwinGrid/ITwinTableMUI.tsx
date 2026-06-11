@@ -59,9 +59,6 @@ export interface ITwinTableMUIProps {
   fetchMore?: (() => void) | false;
 }
 
-// TODO: investigate infinite scroll as an alternative to built-in pagination
-// MUI X DataGrid Pro supports onRowsScrollEnd, but the free version does not.
-
 /**
  * Table view for iTwins using MUI X DataGrid (Community edition).
  */
@@ -76,7 +73,15 @@ export const ITwinTableMUI = ({
   refetchITwins,
   tableOverrides: { columnOverrides = {}, hideColumns = [] } = {},
   isLoading,
+  fetchMore,
 }: ITwinTableMUIProps) => {
+  // Eagerly load all available data so the table has the full dataset
+  // for client-side pagination and sorting.
+  React.useEffect(() => {
+    if (fetchMore) {
+      fetchMore();
+    }
+  }, [fetchMore]);
   const columns = React.useMemo<GridColDef<ITwinFull>[]>(() => {
     const cols: (GridColDef<ITwinFull> | false)[] = [
       !hideColumns.includes(ITwinCellColumn.Favorite) && {
