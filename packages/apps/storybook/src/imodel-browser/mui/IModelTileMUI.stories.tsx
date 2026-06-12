@@ -18,8 +18,8 @@ import svgRoad from "@stratakit/icons/road.svg";
 import SvgShare from "@stratakit/icons/share.svg";
 import React from "react";
 
-import bridgeThumbnail from "../utils/bridge.jpg";
-import overpassThumbnail from "../utils/overpass.jpg";
+import bridgeThumbnail from "../../utils/bridge.jpg";
+import overpassThumbnail from "../../utils/overpass.jpg";
 
 const InConstrainedContainer = ({
   children,

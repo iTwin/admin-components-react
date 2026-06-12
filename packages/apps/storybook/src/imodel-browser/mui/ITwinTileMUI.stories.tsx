@@ -15,9 +15,9 @@ import { Meta, Story } from "@storybook/react/types-6-0";
 import svgMagnet from "@stratakit/icons/magnet.svg";
 import React from "react";
 
-import { DefaultThumbnail } from "../../../../modules/imodel-browser/src/containers/ITwinGrid/ITwinTileMUI";
-import bridgeThumbnail from "../utils/bridge.jpg";
-import powerThumbnail from "../utils/power.jpg";
+import { DefaultThumbnail } from "../../../../../modules/imodel-browser/src/mui/containers/ITwinGrid/ITwinTileMUI";
+import bridgeThumbnail from "../../utils/bridge.jpg";
+import powerThumbnail from "../../utils/power.jpg";
 
 const InConstrainedContainer = ({
   children,

@@ -15,6 +15,7 @@ packages/apps/storybook/src/imodel-browser/ @aruniverse @ben-polinsky
 
 # imodel-browser MUI/Stratakit components (alpha)
 packages/modules/imodel-browser/src/mui/ @alexdunae @toddsouthenbentley @kckst8
+packages/apps/storybook/src/imodel-browser/mui/ @alexdunae @toddsouthenbentley @kckst8
 
 # delete-imodel
 packages/modules/delete-imodel/ @veekeys
