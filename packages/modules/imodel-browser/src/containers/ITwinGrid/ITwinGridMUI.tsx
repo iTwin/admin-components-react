@@ -104,40 +104,44 @@ export const ITwinGridMUI = ({
     resetShouldRefetchFavorites,
   } = useITwinFavorites(accessToken, apiOverrides?.serverEnvironmentPrefix);
 
-  const strings = _mergeStrings(
-    {
-      tableColumnFavorites: "",
-      tableColumnName: "iTwin Number",
-      tableColumnDescription: "iTwin Name",
-      tableColumnLastModified: "Last Modified",
-      tableLoadingData: "Loading...",
-      trialBadge: "Trial",
-      inactiveBadge: "Inactive",
-      noITwins:
-        requestType === "recents"
-          ? "No recent iTwins."
-          : requestType === "favorites"
-          ? "No favorite iTwins."
-          : "No iTwins found.",
-      noAuthentication: "No access token provided",
-      error: "An error occurred",
-      addToFavorites: "Add to favorites",
-      removeFromFavorites: "Remove from favorites",
-      moreOptions: "More options",
-      noRowsLabel: "No rows",
-      noResultsOverlayLabel: "No results found.",
-      paginationRowsPerPage: "Rows per page:",
-      footerRowSelected: (count: number): React.ReactNode =>
-        count !== 1
-          ? `${count.toLocaleString()} rows selected`
-          : `${count.toLocaleString()} row selected`,
-      footerTotalVisibleRows: (
-        visibleCount: number,
-        totalCount: number
-      ): React.ReactNode =>
-        `${visibleCount.toLocaleString()} of ${totalCount.toLocaleString()}`,
-    },
-    stringsOverrides
+  const strings = React.useMemo(
+    () =>
+      _mergeStrings(
+        {
+          tableColumnFavorites: "",
+          tableColumnName: "iTwin Number",
+          tableColumnDescription: "iTwin Name",
+          tableColumnLastModified: "Last Modified",
+          tableLoadingData: "Loading...",
+          trialBadge: "Trial",
+          inactiveBadge: "Inactive",
+          noITwins:
+            requestType === "recents"
+              ? "No recent iTwins."
+              : requestType === "favorites"
+              ? "No favorite iTwins."
+              : "No iTwins found.",
+          noAuthentication: "No access token provided",
+          error: "An error occurred",
+          addToFavorites: "Add to favorites",
+          removeFromFavorites: "Remove from favorites",
+          moreOptions: "More options",
+          noRowsLabel: "No rows",
+          noResultsOverlayLabel: "No results found.",
+          paginationRowsPerPage: "Rows per page:",
+          footerRowSelected: (count: number): React.ReactNode =>
+            count !== 1
+              ? `${count.toLocaleString()} rows selected`
+              : `${count.toLocaleString()} row selected`,
+          footerTotalVisibleRows: (
+            visibleCount: number,
+            totalCount: number
+          ): React.ReactNode =>
+            `${visibleCount.toLocaleString()} of ${totalCount.toLocaleString()}`,
+        },
+        stringsOverrides
+      ),
+    [requestType, stringsOverrides]
   );
   const {
     iTwins: fetchedItwins,

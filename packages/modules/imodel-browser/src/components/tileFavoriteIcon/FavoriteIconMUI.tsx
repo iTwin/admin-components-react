@@ -24,8 +24,7 @@ export interface TileFavoriteIconProps {
   /** Whether the icon button is disabled */
   disabled?: boolean;
   /**
-   * When true, removes the overlay background (e.g. for use in table rows
-   * where the row itself provides contrast).
+   * When true, removes the overlay background (e.g. table rows)
    */
   transparent?: boolean;
   tabIndex?: number;
@@ -50,6 +49,7 @@ export const FavoriteIconMUI = ({
   tabIndex,
 }: TileFavoriteIconProps) => {
   const [hovered, setHovered] = useState(false);
+  const [pending, setPending] = useState(false);
 
   // Pinned: always show pin icon, swap to unpin on hover.
   // Unpinned: hidden by default, show pin icon on hover.
@@ -63,21 +63,32 @@ export const FavoriteIconMUI = ({
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onClick={async (event: React.MouseEvent<HTMLButtonElement>) => {
-        if (isFavorite) {
-          // Blur so the parent's focus-within rule stops keeping the icon visible.
-          event.currentTarget.blur();
-          await onRemoveFromFavorites();
-        } else {
-          // Reset hover so the icon doesn't immediately flip to "unpin"
-          // while the cursor is still over the button.
-          setHovered(false);
-          await onAddToFavorites();
+        // debounce
+        if (pending) return;
+
+        setPending(true);
+        try {
+          if (isFavorite) {
+            // Blur so the parent's focus-within rule stops keeping the icon visible.
+            event.currentTarget.blur();
+            await onRemoveFromFavorites();
+          } else {
+            // Reset hover so the icon doesn't immediately flip to "unpin"
+            // while the cursor is still over the button.
+            setHovered(false);
+            await onAddToFavorites();
+          }
+        } catch (error) {
+          // eslint-disable-next-line no-console
+          console.error("Failed to toggle favorite", error);
+        } finally {
+          setPending(false);
         }
       }}
       className={`favoriteIcon${isFavorite ? " isFavorite" : ""}${
         className ? " " + className : ""
       }`}
-      disabled={disabled}
+      disabled={(disabled ?? false) || pending}
       muted={!isFavorite}
       icon={icon}
       sx={{

@@ -162,43 +162,47 @@ const IModelGridInternal = ({
     );
   }, [sortOptions.descending, sortOptions.sortType, viewMode]);
 
-  const strings = _mergeStrings(
-    {
-      tableColumnFavorites: "",
-      tableColumnName: "Name",
-      tableColumnDescription: "Description",
-      tableColumnLastModified: "Last Modified",
-      tableLoadingData: "Loading...",
-      noIModelSearch: "No results found",
-      noIModelSearchSubtext:
-        "Try adjusting your search by using fewer or more general terms.",
-      noIModels:
-        requestType === "recents"
-          ? "There are no recent iModels."
-          : requestType === "favorites"
-          ? "There are no favorite iModels."
-          : "There are no iModels in this iTwin.",
-      noContext: "No context provided",
-      noAuthentication: "No access token provided",
-      error: "An error occurred",
-      addToFavorites: "Add to favorites",
-      removeFromFavorites: "Remove from favorites",
-      removeFromRecents: "Remove from recents",
-      moreOptions: "More options",
-      noRowsLabel: "No rows",
-      noResultsOverlayLabel: "No results found.",
-      paginationRowsPerPage: "Rows per page:",
-      footerRowSelected: (count: number): React.ReactNode =>
-        count !== 1
-          ? `${count.toLocaleString()} rows selected`
-          : `${count.toLocaleString()} row selected`,
-      footerTotalVisibleRows: (
-        visibleCount: number,
-        totalCount: number
-      ): React.ReactNode =>
-        `${visibleCount.toLocaleString()} of ${totalCount.toLocaleString()}`,
-    },
-    stringsOverrides
+  const strings = React.useMemo(
+    () =>
+      _mergeStrings(
+        {
+          tableColumnFavorites: "",
+          tableColumnName: "Name",
+          tableColumnDescription: "Description",
+          tableColumnLastModified: "Last Modified",
+          tableLoadingData: "Loading...",
+          noIModelSearch: "No results found",
+          noIModelSearchSubtext:
+            "Try adjusting your search by using fewer or more general terms.",
+          noIModels:
+            requestType === "recents"
+              ? "There are no recent iModels."
+              : requestType === "favorites"
+              ? "There are no favorite iModels."
+              : "There are no iModels in this iTwin.",
+          noContext: "No context provided",
+          noAuthentication: "No access token provided",
+          error: "An error occurred",
+          addToFavorites: "Add to favorites",
+          removeFromFavorites: "Remove from favorites",
+          removeFromRecents: "Remove from recents",
+          moreOptions: "More options",
+          noRowsLabel: "No rows",
+          noResultsOverlayLabel: "No results found.",
+          paginationRowsPerPage: "Rows per page:",
+          footerRowSelected: (count: number): React.ReactNode =>
+            count !== 1
+              ? `${count.toLocaleString()} rows selected`
+              : `${count.toLocaleString()} row selected`,
+          footerTotalVisibleRows: (
+            visibleCount: number,
+            totalCount: number
+          ): React.ReactNode =>
+            `${visibleCount.toLocaleString()} of ${totalCount.toLocaleString()}`,
+        },
+        stringsOverrides
+      ),
+    [requestType, stringsOverrides]
   );
 
   const enhancedMoreActions = React.useMemo(() => {
@@ -267,25 +271,25 @@ const IModelGridInternal = ({
     }
   }, [iModels.length, pageSize, fetchMore, fetchStatus]);
 
-  const iModelClickAndAddToRecents = async (
-    iModel: IModelFull,
-    clickFn: () => void
-  ) => {
-    if (!accessToken || disableAddToRecents) {
-      clickFn();
-      return;
-    }
+  const iModelClickAndAddToRecents = React.useCallback(
+    async (iModel: IModelFull, clickFn: () => void) => {
+      if (!accessToken || disableAddToRecents) {
+        clickFn();
+        return;
+      }
 
-    void addIModelToRecents({
-      iModelId: iModel.id,
-      accessToken,
-      serverEnvironmentPrefix: apiOverrides?.serverEnvironmentPrefix,
-    }).catch((e) => {
-      // swallow errors to avoid disrupting the UI
-      console.error("Failed to add iModel to recents", e);
-    });
-    clickFn();
-  };
+      void addIModelToRecents({
+        iModelId: iModel.id,
+        accessToken,
+        serverEnvironmentPrefix: apiOverrides?.serverEnvironmentPrefix,
+      }).catch((e) => {
+        // swallow errors to avoid disrupting the UI
+        console.error("Failed to add iModel to recents", e);
+      });
+      clickFn();
+    },
+    [accessToken, disableAddToRecents, apiOverrides?.serverEnvironmentPrefix]
+  );
 
   const noResultsText = {
     [DataStatus.Fetching]: "",
@@ -299,25 +303,28 @@ const IModelGridInternal = ({
     ? { serverEnvironmentPrefix: apiOverrides.serverEnvironmentPrefix }
     : undefined;
 
-  const resolveActions = (iModel: IModelFull) => {
-    if (!actions?.length) {
-      return [];
-    }
-    const resolved = resolveCardActionsItemsMUI(actions, iModel);
-    if (!resolved.length) {
-      return resolved;
-    }
-    const [first, ...rest] = resolved;
-    return [
-      {
-        ...first,
-        onClick: first.onClick
-          ? () => iModelClickAndAddToRecents(iModel, first.onClick!)
-          : undefined,
-      },
-      ...rest,
-    ];
-  };
+  const resolveActions = React.useCallback(
+    (iModel: IModelFull) => {
+      if (!actions?.length) {
+        return [];
+      }
+      const resolved = resolveCardActionsItemsMUI(actions, iModel);
+      if (!resolved.length) {
+        return resolved;
+      }
+      const [first, ...rest] = resolved;
+      return [
+        {
+          ...first,
+          onClick: first.onClick
+            ? () => iModelClickAndAddToRecents(iModel, first.onClick!)
+            : undefined,
+        },
+        ...rest,
+      ];
+    },
+    [actions, iModelClickAndAddToRecents]
+  );
 
   const renderIModelGridStructure = () => {
     return (

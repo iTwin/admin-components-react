@@ -5,7 +5,6 @@
 import { MenuItem } from "@itwin/itwinui-react";
 import React from "react";
 
-
 type MenuItemProps = React.ComponentPropsWithoutRef<typeof MenuItem>;
 
 export interface ContextMenuBuilderItem<T = any>
@@ -68,8 +67,6 @@ export interface ResolvedCardActionItem {
   key: string;
   label: string;
   onClick?: () => void;
-  /** When false, the action is excluded. Defaults to true. */
-  visible?: boolean;
   disabled?: boolean;
 }
 
@@ -94,6 +91,14 @@ export const resolveCardActionsItemsMUI = <T,>(
         typeof disabled === "function" ? disabled(value) : disabled ?? false,
     }));
 };
+
+/**
+ * Returns the primary (first visible) resolved card action, or `undefined` when
+ * there are none for use as the primary button or row action.
+ */
+export const getPrimaryCardAction = (
+  actions: ResolvedCardActionItem[] | undefined
+): ResolvedCardActionItem | undefined => actions?.[0];
 
 /**
  * Definition for the "More Actions" menu items.

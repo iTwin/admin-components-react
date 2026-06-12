@@ -18,8 +18,16 @@ import { ITwinCellColumn, ITwinFull } from "../../types";
 import {
   type MoreActionsMenuItemMUI,
   type ResolvedCardActionItem,
+  getPrimaryCardAction,
   resolveMoreActionsMenuItemsMUI,
 } from "../../utils/_buildMenuOptions";
+import { formatDate } from "../../utils/formatDate";
+
+const EMPTY_COLUMN_OVERRIDES: NonNullable<
+  ITwinTableOverridesMUI["columnOverrides"]
+> = {};
+const EMPTY_HIDE_COLUMNS: NonNullable<ITwinTableOverridesMUI["hideColumns"]> =
+  [];
 
 // strings from data grid that we need to override in addition to our custom strings
 type MuiDataGridStrings = Pick<
@@ -71,7 +79,10 @@ export const ITwinTableMUI = ({
   addITwinToFavorites,
   removeITwinFromFavorites,
   refetchITwins,
-  tableOverrides: { columnOverrides = {}, hideColumns = [] } = {},
+  tableOverrides: {
+    columnOverrides = EMPTY_COLUMN_OVERRIDES,
+    hideColumns = EMPTY_HIDE_COLUMNS,
+  } = {},
   isLoading,
   fetchMore,
 }: ITwinTableMUIProps) => {
@@ -129,12 +140,7 @@ export const ITwinTableMUI = ({
         headerName: strings.tableColumnLastModified,
         width: 200,
         disableColumnMenu: true,
-        valueFormatter: (value: string) => {
-          if (!value) {
-            return "";
-          }
-          return new Date(value).toLocaleDateString();
-        },
+        valueFormatter: (value: string) => formatDate(value),
         ...columnOverrides[ITwinCellColumn.LastModified],
       },
       !hideColumns.includes(ITwinCellColumn.Options) && {
@@ -185,7 +191,7 @@ export const ITwinTableMUI = ({
       onRowClick={
         actions
           ? (params) => {
-              const action = actions(params.row)[0];
+              const action = getPrimaryCardAction(actions(params.row));
               if (action && !action.disabled) {
                 action.onClick?.();
               }
@@ -200,7 +206,7 @@ export const ITwinTableMUI = ({
                 params.field !== "id" &&
                 params.field !== "actions"
               ) {
-                const action = actions(params.row)[0];
+                const action = getPrimaryCardAction(actions(params.row));
                 if (action && !action.disabled) {
                   event.preventDefault();
                   action.onClick?.();
@@ -246,7 +252,10 @@ export const ITwinTableMUI = ({
       }}
       getRowClassName={
         actions
-          ? (params) => (actions(params.row)[0]?.disabled ? "row-disabled" : "")
+          ? (params) =>
+              getPrimaryCardAction(actions(params.row))?.disabled
+                ? "row-disabled"
+                : ""
           : undefined
       }
     />

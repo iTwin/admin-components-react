@@ -19,8 +19,16 @@ import { type IModelFull, IModelCellColumn } from "../../types";
 import {
   type MoreActionsMenuItemMUI,
   type ResolvedCardActionItem,
+  getPrimaryCardAction,
   resolveMoreActionsMenuItemsMUI,
 } from "../../utils/_buildMenuOptions";
+import { formatDate } from "../../utils/formatDate";
+
+const EMPTY_COLUMN_OVERRIDES: NonNullable<
+  IModelTableOverridesMUI["columnOverrides"]
+> = {};
+const EMPTY_HIDE_COLUMNS: NonNullable<IModelTableOverridesMUI["hideColumns"]> =
+  [];
 
 type MuiDataGridStrings = Pick<
   typeof GRID_DEFAULT_LOCALE_TEXT,
@@ -65,7 +73,10 @@ export const IModelTableMUI = ({
   actions,
   strings,
   refetchIModels,
-  tableOverrides: { columnOverrides = {}, hideColumns = [] } = {},
+  tableOverrides: {
+    columnOverrides = EMPTY_COLUMN_OVERRIDES,
+    hideColumns = EMPTY_HIDE_COLUMNS,
+  } = {},
   isLoading,
   fetchMore,
 }: IModelTableMUIProps) => {
@@ -130,12 +141,7 @@ export const IModelTableMUI = ({
           width: 200,
           valueGetter: (value: string | null | undefined, row: IModelFull) =>
             row.lastChangesetPushDateTime ?? row.createdDateTime ?? "",
-          valueFormatter: (value: string) => {
-            if (!value) {
-              return "";
-            }
-            return new Date(value).toLocaleDateString();
-          },
+          valueFormatter: (value: string) => formatDate(value),
           disableColumnMenu: true,
           ...columnOverrides[IModelCellColumn.LastModified],
         },
@@ -185,7 +191,7 @@ export const IModelTableMUI = ({
       onRowClick={
         actions
           ? (params) => {
-              const action = actions(params.row)[0];
+              const action = getPrimaryCardAction(actions(params.row));
               if (action && !action.disabled) {
                 action.onClick?.();
               }
@@ -200,7 +206,7 @@ export const IModelTableMUI = ({
                 params.field !== "id" &&
                 params.field !== "actions"
               ) {
-                const action = actions(params.row)[0];
+                const action = getPrimaryCardAction(actions(params.row));
                 if (action && !action.disabled) {
                   event.preventDefault();
                   action.onClick?.();
@@ -246,7 +252,10 @@ export const IModelTableMUI = ({
       }}
       getRowClassName={
         actions
-          ? (params) => (actions(params.row)[0]?.disabled ? "row-disabled" : "")
+          ? (params) =>
+              getPrimaryCardAction(actions(params.row))?.disabled
+                ? "row-disabled"
+                : ""
           : undefined
       }
     />
