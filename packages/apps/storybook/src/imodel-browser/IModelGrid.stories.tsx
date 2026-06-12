@@ -263,28 +263,27 @@ const buildMenuItems =
     close: () => void,
     setVersion: React.Dispatch<React.SetStateAction<Version | undefined>>
   ) =>
-  (v: Version) =>
-    (
-      <span
-        onClick={(event) => {
-          event.stopPropagation();
-        }}
-      >
-        {v.id === "loading" ? (
-          <MenuItemSkeleton />
-        ) : (
-          <MenuItem
-            key={v.id}
-            onClick={() => {
-              close();
-              v.id !== "loading" && setVersion(v);
-            }}
-          >
-            {v.displayName}
-          </MenuItem>
-        )}
-      </span>
-    );
+  (v: Version) => (
+    <span
+      onClick={(event) => {
+        event.stopPropagation();
+      }}
+    >
+      {v.id === "loading" ? (
+        <MenuItemSkeleton />
+      ) : (
+        <MenuItem
+          key={v.id}
+          onClick={() => {
+            close();
+            v.id !== "loading" && setVersion(v);
+          }}
+        >
+          {v.displayName}
+        </MenuItem>
+      )}
+    </span>
+  );
 
 /** Hook used in StatefulPropsOverrides.args, the function itself must be a stable reference as it is a hook. */
 const useIndividualState = (iModel: IModelFull, props: IModelTileProps) => {
@@ -343,8 +342,8 @@ const useIndividualState = (iModel: IModelFull, props: IModelTileProps) => {
       isNew: versions?.length === 0,
       metadata: (
         <span
-          onClick={() => {
-            versions === undefined && fetchVersionsList();
+          onClick={async () => {
+            versions === undefined && (await fetchVersionsList());
           }}
         >
           <DropdownButton

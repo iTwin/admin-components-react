@@ -3,6 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { ThemeProvider } from "@itwin/itwinui-react";
+import { Root } from "@stratakit/mui";
 import { themes } from "@storybook/theming";
 import { useDarkMode } from "storybook-dark-mode";
 import { darkTheme, lightTheme } from "./itwinTheme";
@@ -32,7 +33,13 @@ export const decorators = [
     const theme = isDark ? "dark" : "light";
 
     return (
-      <ThemeProvider style={{ background: "transparent" }} theme={theme}>
+      <ThemeProvider
+        style={{ background: "transparent" }}
+        theme={theme}
+        as={Root}
+        future={{ themeBridge: true }}
+        colorScheme={theme}
+      >
         <Story />
       </ThemeProvider>
     );

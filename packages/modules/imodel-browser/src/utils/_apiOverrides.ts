@@ -17,16 +17,16 @@ export const _getAPIServer = (serverEnvironmentPrefix?: "dev" | "qa" | "") =>
  * @param overrides Potentially incomplete string object
  * @returns
  */
-export const _mergeStrings: <T extends { [key: string]: string }>(
+export const _mergeStrings: <T extends Record<string, unknown>>(
   defaults: T,
-  overrides: Partial<T> | undefined
+  overrides: Partial<NoInfer<T>> | undefined
 ) => T = (defaults, overrides) =>
   !overrides
     ? { ...defaults }
     : Object.keys(overrides).reduce(
         (red, val: keyof typeof overrides) => {
           if ((overrides[val] ?? red[val]) !== red[val]) {
-            red[val] = overrides[val] as typeof red[typeof val];
+            red[val] = overrides[val] as (typeof red)[typeof val];
           }
           return red;
         },
