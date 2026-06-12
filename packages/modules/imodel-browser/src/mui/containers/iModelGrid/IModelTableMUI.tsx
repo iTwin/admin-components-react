@@ -11,25 +11,25 @@ import svgMore from "@stratakit/icons/more-vertical.svg";
 import { Icon } from "@stratakit/mui";
 import React from "react";
 
-import MoreMenuMUI from "../../components/MoreMenuMUI";
-import { FavoriteIconMUI } from "../../components/tileFavoriteIcon/FavoriteIconMUI";
-import { type ITwinTableOverridesMUI } from "../../mui/types";
-import { ITwinCellColumn, ITwinFull } from "../../types";
+import { useIModelFavoritesContext } from "../../../contexts/IModelFavoritesContext";
+import { type IModelFull, IModelCellColumn } from "../../../types";
 import {
   type MoreActionsMenuItemMUI,
   type ResolvedCardActionItem,
   getPrimaryCardAction,
   resolveMoreActionsMenuItemsMUI,
-} from "../../utils/_buildMenuOptions";
-import { formatDate } from "../../utils/formatDate";
+} from "../../../utils/_buildMenuOptions";
+import { formatDate } from "../../../utils/formatDate";
+import MoreMenuMUI from "../../components/MoreMenuMUI";
+import { FavoriteIconMUI } from "../../components/tileFavoriteIcon/FavoriteIconMUI";
+import { type IModelTableOverridesMUI } from "../../types";
 
 const EMPTY_COLUMN_OVERRIDES: NonNullable<
-  ITwinTableOverridesMUI["columnOverrides"]
+  IModelTableOverridesMUI["columnOverrides"]
 > = {};
-const EMPTY_HIDE_COLUMNS: NonNullable<ITwinTableOverridesMUI["hideColumns"]> =
+const EMPTY_HIDE_COLUMNS: NonNullable<IModelTableOverridesMUI["hideColumns"]> =
   [];
 
-// strings from data grid that we need to override in addition to our custom strings
 type MuiDataGridStrings = Pick<
   typeof GRID_DEFAULT_LOCALE_TEXT,
   | "noRowsLabel"
@@ -39,53 +39,47 @@ type MuiDataGridStrings = Pick<
   | "paginationRowsPerPage"
 >;
 
-export interface ITwinTableMUIStrings extends MuiDataGridStrings {
+export interface IModelTableMUIStrings extends MuiDataGridStrings {
   tableColumnName: string;
   tableColumnDescription: string;
   tableColumnLastModified: string;
   tableColumnFavorites: string;
   tableLoadingData: string;
-  noITwins: string;
+  noIModelSearch: string;
   addToFavorites: string;
   removeFromFavorites: string;
   moreOptions: string;
 }
 
-export interface ITwinTableMUIProps {
-  iTwins: ITwinFull[];
-  moreActions?: MoreActionsMenuItemMUI<ITwinFull>[];
+export interface IModelTableMUIProps {
+  iModels: IModelFull[];
+  moreActions?: MoreActionsMenuItemMUI<IModelFull>[];
   /** Factory that returns per-row actions. The first action drives row click. */
-  actions?: (iTwin: ITwinFull) => ResolvedCardActionItem[];
-  strings: ITwinTableMUIStrings;
-  iTwinFavorites: Set<string>;
-  addITwinToFavorites: (iTwinId: string) => Promise<void>;
-  removeITwinFromFavorites: (iTwinId: string) => Promise<void>;
-  refetchITwins: () => void;
-  tableOverrides?: ITwinTableOverridesMUI;
+  actions?: (iModel: IModelFull) => ResolvedCardActionItem[];
+  strings: IModelTableMUIStrings;
+  refetchIModels: () => void;
+  tableOverrides?: IModelTableOverridesMUI;
   isLoading?: boolean;
   /** Called when more data should be loaded. */
   fetchMore?: (() => void) | false;
 }
 
 /**
- * Table view for iTwins using MUI X DataGrid (Community edition).
+ * Table view for iModels using MUI X DataGrid (Community edition).
  */
-export const ITwinTableMUI = ({
-  iTwins,
+export const IModelTableMUI = ({
+  iModels,
   moreActions,
   actions,
   strings,
-  iTwinFavorites,
-  addITwinToFavorites,
-  removeITwinFromFavorites,
-  refetchITwins,
+  refetchIModels,
   tableOverrides: {
     columnOverrides = EMPTY_COLUMN_OVERRIDES,
     hideColumns = EMPTY_HIDE_COLUMNS,
   } = {},
   isLoading,
   fetchMore,
-}: ITwinTableMUIProps) => {
+}: IModelTableMUIProps) => {
   // Eagerly load all available data so the table has the full dataset
   // for client-side pagination and sorting.
   React.useEffect(() => {
@@ -93,61 +87,69 @@ export const ITwinTableMUI = ({
       fetchMore();
     }
   }, [fetchMore]);
-  const columns = React.useMemo<GridColDef<ITwinFull>[]>(() => {
-    const cols: (GridColDef<ITwinFull> | false)[] = [
-      !hideColumns.includes(ITwinCellColumn.Favorite) && {
+  const favoritesContext = useIModelFavoritesContext();
+
+  const columns = React.useMemo<GridColDef<IModelFull>[]>(() => {
+    const cols: (GridColDef<IModelFull> | false)[] = [
+      !hideColumns.includes(IModelCellColumn.Favorite) && {
         field: "id",
         headerName: strings.tableColumnFavorites,
         sortable: false,
         width: 70,
         disableColumnMenu: true,
         renderCell: (params) => {
-          const isFavorite = iTwinFavorites.has(params.value);
+          const isFavorite = favoritesContext?.favorites.has(params.value);
           return (
             <FavoriteIconMUI
-              isFavorite={isFavorite}
+              isFavorite={!!isFavorite}
               addLabel={strings.addToFavorites}
               removeLabel={strings.removeFromFavorites}
-              onAddToFavorites={() => addITwinToFavorites(params.value)}
+              onAddToFavorites={() => favoritesContext?.add?.(params.value)}
               onRemoveFromFavorites={() =>
-                removeITwinFromFavorites(params.value)
+                favoritesContext?.remove?.(params.value)
               }
               transparent
               tabIndex={params.tabIndex}
             />
           );
         },
-        ...columnOverrides[ITwinCellColumn.Favorite],
+        ...columnOverrides[IModelCellColumn.Favorite],
       },
-      !hideColumns.includes(ITwinCellColumn.Number) && {
-        field: "number",
+      !hideColumns.includes(IModelCellColumn.Name) && {
+        field: "name",
         headerName: strings.tableColumnName,
         flex: 1,
         minWidth: 200,
         disableColumnMenu: true,
-        ...columnOverrides[ITwinCellColumn.Number],
+        valueGetter: (_value: string | undefined, row: IModelFull) =>
+          row.name ?? row.displayName ?? "",
+        ...columnOverrides[IModelCellColumn.Name],
       },
-      !hideColumns.includes(ITwinCellColumn.Name) && {
-        field: "displayName",
+      !hideColumns.includes(IModelCellColumn.Description) && {
+        field: "description",
         headerName: strings.tableColumnDescription,
         flex: 1,
         minWidth: 200,
+        sortable: false,
         disableColumnMenu: true,
-        ...columnOverrides[ITwinCellColumn.Name],
+        ...columnOverrides[IModelCellColumn.Description],
       },
-      !hideColumns.includes(ITwinCellColumn.LastModified) && {
-        field: "lastModifiedDateTime",
-        headerName: strings.tableColumnLastModified,
-        width: 200,
-        disableColumnMenu: true,
-        valueFormatter: (value: string) => formatDate(value),
-        ...columnOverrides[ITwinCellColumn.LastModified],
-      },
-      !hideColumns.includes(ITwinCellColumn.Options) && {
+      !hideColumns.includes(IModelCellColumn.LastModified) &&
+        !hideColumns.includes(IModelCellColumn.CreatedDateTime) && {
+          field: "lastChangesetPushDateTime",
+          headerName: strings.tableColumnLastModified,
+          width: 200,
+          valueGetter: (value: string | null | undefined, row: IModelFull) =>
+            row.lastChangesetPushDateTime ?? row.createdDateTime ?? "",
+          valueFormatter: (value: string) => formatDate(value),
+          disableColumnMenu: true,
+          ...columnOverrides[IModelCellColumn.LastModified],
+        },
+      !hideColumns.includes(IModelCellColumn.Options) && {
         field: "actions",
         headerName: "",
         sortable: false,
-        width: 65,
+        width: 50,
         disableColumnMenu: true,
         renderCell: (params) => {
           if (!moreActions || moreActions.length === 0) {
@@ -156,36 +158,34 @@ export const ITwinTableMUI = ({
           const items = resolveMoreActionsMenuItemsMUI(
             moreActions,
             params.row,
-            refetchITwins
+            refetchIModels
           );
           return (
             <MoreMenuMUI
               items={items}
-              prompt={<Icon href={svgMore} />}
               label={strings.moreOptions}
+              prompt={<Icon href={svgMore} />}
               tabIndex={params.tabIndex}
             />
           );
         },
-        ...columnOverrides[ITwinCellColumn.Options],
+        ...columnOverrides[IModelCellColumn.Options],
       },
     ];
 
-    return cols.filter(Boolean) as GridColDef<ITwinFull>[];
+    return cols.filter(Boolean) as GridColDef<IModelFull>[];
   }, [
     strings,
-    iTwinFavorites,
-    addITwinToFavorites,
-    removeITwinFromFavorites,
+    favoritesContext,
     columnOverrides,
     hideColumns,
     moreActions,
-    refetchITwins,
+    refetchIModels,
   ]);
 
   return (
-    <DataGrid<ITwinFull>
-      rows={iTwins}
+    <DataGrid<IModelFull>
+      rows={iModels}
       columns={columns}
       loading={isLoading}
       onRowClick={
@@ -244,11 +244,11 @@ export const ITwinTableMUI = ({
           "& .MuiDataGrid-row": {
             cursor: "pointer",
           },
+          "& .MuiDataGrid-row.row-disabled": {
+            cursor: "default",
+            color: "var(--stratakit-color-text-neutral-disabled)",
+          },
         }),
-        "& .MuiDataGrid-row.row-disabled": {
-          cursor: "default",
-          color: "var(--stratakit-color-text-neutral-disabled)",
-        },
       }}
       getRowClassName={
         actions
