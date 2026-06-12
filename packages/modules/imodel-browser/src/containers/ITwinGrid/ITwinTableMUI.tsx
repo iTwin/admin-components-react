@@ -23,6 +23,12 @@ import {
 } from "../../utils/_buildMenuOptions";
 import { formatDate } from "../../utils/formatDate";
 
+const EMPTY_COLUMN_OVERRIDES: NonNullable<
+  ITwinTableOverridesMUI["columnOverrides"]
+> = {};
+const EMPTY_HIDE_COLUMNS: NonNullable<ITwinTableOverridesMUI["hideColumns"]> =
+  [];
+
 // strings from data grid that we need to override in addition to our custom strings
 type MuiDataGridStrings = Pick<
   typeof GRID_DEFAULT_LOCALE_TEXT,
@@ -73,7 +79,10 @@ export const ITwinTableMUI = ({
   addITwinToFavorites,
   removeITwinFromFavorites,
   refetchITwins,
-  tableOverrides: { columnOverrides = {}, hideColumns = [] } = {},
+  tableOverrides: {
+    columnOverrides = EMPTY_COLUMN_OVERRIDES,
+    hideColumns = EMPTY_HIDE_COLUMNS,
+  } = {},
   isLoading,
   fetchMore,
 }: ITwinTableMUIProps) => {

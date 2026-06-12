@@ -24,6 +24,12 @@ import {
 } from "../../utils/_buildMenuOptions";
 import { formatDate } from "../../utils/formatDate";
 
+const EMPTY_COLUMN_OVERRIDES: NonNullable<
+  IModelTableOverridesMUI["columnOverrides"]
+> = {};
+const EMPTY_HIDE_COLUMNS: NonNullable<IModelTableOverridesMUI["hideColumns"]> =
+  [];
+
 type MuiDataGridStrings = Pick<
   typeof GRID_DEFAULT_LOCALE_TEXT,
   | "noRowsLabel"
@@ -67,7 +73,10 @@ export const IModelTableMUI = ({
   actions,
   strings,
   refetchIModels,
-  tableOverrides: { columnOverrides = {}, hideColumns = [] } = {},
+  tableOverrides: {
+    columnOverrides = EMPTY_COLUMN_OVERRIDES,
+    hideColumns = EMPTY_HIDE_COLUMNS,
+  } = {},
   isLoading,
   fetchMore,
 }: IModelTableMUIProps) => {
