@@ -410,6 +410,11 @@ const resolveCardActionsItemsMUI = (items, value, refetchData) => {
     }));
 };
 /**
+ * Returns the primary (first visible) resolved card action, or `undefined` when
+ * there are none for use as the primary button or row action.
+ */
+const getPrimaryCardAction = (actions) => actions?.[0];
+/**
  * Resolve `MoreActionsMenuItemMUI<T>[]` for specific values, e.g. for a given iTwin or iModel.
  * @private
  */
@@ -552,9 +557,8 @@ const BaseCard = React__default.forwardRef(({ thumbnail, thumbnailTopLeft, thumb
         });
     }, [moreActions]);
     const hasContextMenu = !!moreActions?.length;
-    const visibleActions = actions?.filter(({ visible }) => visible ?? true);
-    const singleAction = visibleActions?.length === 1 ? visibleActions[0] : undefined;
-    const multipleActions = visibleActions && visibleActions.length > 1 ? visibleActions : undefined;
+    const primaryAction = getPrimaryCardAction(actions);
+    const multipleActions = actions && actions.length > 1 ? actions : undefined;
     if (loading) {
         return (React__default.createElement(BaseCardLoading, { className: className, sx: [baseCardSx, ...spreadSx(sx)] }));
     }
@@ -591,9 +595,9 @@ const BaseCard = React__default.forwardRef(({ thumbnail, thumbnailTopLeft, thumb
                                 ? "var(--stratakit-color-border-critical-base)"
                                 : undefined,
                 } }),
-            React__default.createElement(CardHeader, { avatar: statusIconHref ? (React__default.createElement(StatusIcon, { href: statusIconHref, status: status })) : undefined, title: singleAction ? (React__default.createElement(CardActionArea, { sx: textEllipsisSx, onClick: !cardDisabled && !singleAction.disabled
-                        ? singleAction.onClick
-                        : undefined, disabled: cardDisabled ? true : singleAction.disabled }, title)) : (title), action: hasContextMenu && !cardDisabled ? (React__default.createElement(MoreMenuMUI, { ref: moreMenuRef, items: moreActions, label: stringsOverrides?.moreOptions ?? "More options", prompt: React__default.createElement(Icon, { href: svgMore }) })) : undefined, subheader: React__default.createElement(Typography, { variant: "caption", color: "textSecondary", 
+            React__default.createElement(CardHeader, { avatar: statusIconHref ? (React__default.createElement(StatusIcon, { href: statusIconHref, status: status })) : undefined, title: primaryAction ? (React__default.createElement(CardActionArea, { sx: textEllipsisSx, onClick: !cardDisabled && !primaryAction.disabled
+                        ? primaryAction.onClick
+                        : undefined, disabled: cardDisabled ? true : primaryAction.disabled }, title)) : (title), action: hasContextMenu && !cardDisabled ? (React__default.createElement(MoreMenuMUI, { ref: moreMenuRef, items: moreActions, label: stringsOverrides?.moreOptions ?? "More options", prompt: React__default.createElement(Icon, { href: svgMore }) })) : undefined, subheader: React__default.createElement(Typography, { variant: "caption", color: "textSecondary", 
                     // eslint-disable-next-line jsx-a11y/heading-has-content
                     render: React__default.createElement("h3", null) }, subheader), sx: [{ alignItems: "flex-start" }], slotProps: {
                     title: {
@@ -665,22 +669,36 @@ ThumbnailIconButton.displayName = "ThumbnailIconButton";
  */
 const FavoriteIconMUI = ({ isFavorite, onAddToFavorites, onRemoveFromFavorites, addLabel, removeLabel, disabled, className = "", transparent, tabIndex, }) => {
     const [hovered, setHovered] = useState(false);
+    const [pending, setPending] = useState(false);
     // Pinned: always show pin icon, swap to unpin on hover.
     // Unpinned: hidden by default, show pin icon on hover.
     const icon = isFavorite && hovered ? pinUnpinSvg : pinSvg;
     return (React__default.createElement(ThumbnailIconButton, { "aria-label": isFavorite ? removeLabel : addLabel, "aria-pressed": isFavorite, tabIndex: tabIndex, onMouseEnter: () => setHovered(true), onMouseLeave: () => setHovered(false), onClick: async (event) => {
-            if (isFavorite) {
-                // Blur so the parent's focus-within rule stops keeping the icon visible.
-                event.currentTarget.blur();
-                await onRemoveFromFavorites();
+            // debounce
+            if (pending)
+                return;
+            setPending(true);
+            try {
+                if (isFavorite) {
+                    // Blur so the parent's focus-within rule stops keeping the icon visible.
+                    event.currentTarget.blur();
+                    await onRemoveFromFavorites();
+                }
+                else {
+                    // Reset hover so the icon doesn't immediately flip to "unpin"
+                    // while the cursor is still over the button.
+                    setHovered(false);
+                    await onAddToFavorites();
+                }
             }
-            else {
-                // Reset hover so the icon doesn't immediately flip to "unpin"
-                // while the cursor is still over the button.
-                setHovered(false);
-                await onAddToFavorites();
+            catch (error) {
+                // eslint-disable-next-line no-console
+                console.error("Failed to toggle favorite", error);
             }
-        }, className: `favoriteIcon${isFavorite ? " isFavorite" : ""}${className ? " " + className : ""}`, disabled: disabled, muted: !isFavorite, icon: icon, sx: {
+            finally {
+                setPending(false);
+            }
+        }, className: `favoriteIcon${isFavorite ? " isFavorite" : ""}${className ? " " + className : ""}`, disabled: (disabled ?? false) || pending, muted: !isFavorite, icon: icon, sx: {
             ...(!isFavorite && { opacity: 0 }),
             ...(transparent && {
                 bgcolor: "transparent",
@@ -848,9 +866,29 @@ const clientSideIModelSort = (iModels, { viewMode, requestType, sort }) => {
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 /**
+ * Format an ISO date string for display using the user's locale.
+ */
+const formatDate = (value) => {
+    if (!value) {
+        return "";
+    }
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
+        return "";
+    }
+    return date.toLocaleDateString();
+};
+
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+const EMPTY_COLUMN_OVERRIDES$1 = {};
+const EMPTY_HIDE_COLUMNS$1 = [];
+/**
  * Table view for iModels using MUI X DataGrid (Community edition).
  */
-const IModelTableMUI = ({ iModels, moreActions, actions, strings, refetchIModels, tableOverrides: { columnOverrides = {}, hideColumns = [] } = {}, isLoading, fetchMore, }) => {
+const IModelTableMUI = ({ iModels, moreActions, actions, strings, refetchIModels, tableOverrides: { columnOverrides = EMPTY_COLUMN_OVERRIDES$1, hideColumns = EMPTY_HIDE_COLUMNS$1, } = {}, isLoading, fetchMore, }) => {
     // Eagerly load all available data so the table has the full dataset
     // for client-side pagination and sorting.
     React__default.useEffect(() => {
@@ -897,12 +935,7 @@ const IModelTableMUI = ({ iModels, moreActions, actions, strings, refetchIModels
                 headerName: strings.tableColumnLastModified,
                 width: 200,
                 valueGetter: (value, row) => row.lastChangesetPushDateTime ?? row.createdDateTime ?? "",
-                valueFormatter: (value) => {
-                    if (!value) {
-                        return "";
-                    }
-                    return new Date(value).toLocaleDateString();
-                },
+                valueFormatter: (value) => formatDate(value),
                 disableColumnMenu: true,
                 ...columnOverrides[IModelCellColumn.LastModified],
             },
@@ -933,7 +966,7 @@ const IModelTableMUI = ({ iModels, moreActions, actions, strings, refetchIModels
     ]);
     return (React__default.createElement(DataGrid, { rows: iModels, columns: columns, loading: isLoading, onRowClick: actions
             ? (params) => {
-                const action = actions(params.row)[0];
+                const action = getPrimaryCardAction(actions(params.row));
                 if (action && !action.disabled) {
                     action.onClick?.();
                 }
@@ -943,7 +976,7 @@ const IModelTableMUI = ({ iModels, moreActions, actions, strings, refetchIModels
                 if ((event.key === "Enter" || event.key === " ") &&
                     params.field !== "id" &&
                     params.field !== "actions") {
-                    const action = actions(params.row)[0];
+                    const action = getPrimaryCardAction(actions(params.row));
                     if (action && !action.disabled) {
                         event.preventDefault();
                         action.onClick?.();
@@ -977,7 +1010,9 @@ const IModelTableMUI = ({ iModels, moreActions, actions, strings, refetchIModels
                 },
             }),
         }, getRowClassName: actions
-            ? (params) => (actions(params.row)[0]?.disabled ? "row-disabled" : "")
+            ? (params) => getPrimaryCardAction(actions(params.row))?.disabled
+                ? "row-disabled"
+                : ""
             : undefined }));
 };
 
@@ -1294,7 +1329,7 @@ const IModelGridInternal = ({ accessToken, apiOverrides, moreActions, removeFrom
                 descending: sortOptions.descending,
             });
     }, [sortOptions.descending, sortOptions.sortType, viewMode]);
-    const strings = _mergeStrings({
+    const strings = React__default.useMemo(() => _mergeStrings({
         tableColumnFavorites: "",
         tableColumnName: "Name",
         tableColumnDescription: "Description",
@@ -1321,7 +1356,7 @@ const IModelGridInternal = ({ accessToken, apiOverrides, moreActions, removeFrom
             ? `${count.toLocaleString()} rows selected`
             : `${count.toLocaleString()} row selected`,
         footerTotalVisibleRows: (visibleCount, totalCount) => `${visibleCount.toLocaleString()} of ${totalCount.toLocaleString()}`,
-    }, stringsOverrides);
+    }, stringsOverrides), [requestType, stringsOverrides]);
     const enhancedMoreActions = React__default.useMemo(() => {
         // Add "Remove from recents" action when viewing recents
         if (requestType === "recents") {
@@ -1371,7 +1406,7 @@ const IModelGridInternal = ({ accessToken, apiOverrides, moreActions, removeFrom
             fetchMore();
         }
     }, [iModels.length, pageSize, fetchMore, fetchStatus]);
-    const iModelClickAndAddToRecents = async (iModel, clickFn) => {
+    const iModelClickAndAddToRecents = React__default.useCallback(async (iModel, clickFn) => {
         if (!accessToken || disableAddToRecents) {
             clickFn();
             return;
@@ -1385,7 +1420,7 @@ const IModelGridInternal = ({ accessToken, apiOverrides, moreActions, removeFrom
             console.error("Failed to add iModel to recents", e);
         });
         clickFn();
-    };
+    }, [accessToken, disableAddToRecents, apiOverrides?.serverEnvironmentPrefix]);
     const noResultsText = {
         [DataStatus.Fetching]: "",
         [DataStatus.Complete]: strings.noIModels,
@@ -1396,7 +1431,7 @@ const IModelGridInternal = ({ accessToken, apiOverrides, moreActions, removeFrom
     const tileApiOverrides = apiOverrides
         ? { serverEnvironmentPrefix: apiOverrides.serverEnvironmentPrefix }
         : undefined;
-    const resolveActions = (iModel) => {
+    const resolveActions = React__default.useCallback((iModel) => {
         if (!actions?.length) {
             return [];
         }
@@ -1414,7 +1449,7 @@ const IModelGridInternal = ({ accessToken, apiOverrides, moreActions, removeFrom
             },
             ...rest,
         ];
-    };
+    }, [actions, iModelClickAndAddToRecents]);
     const renderIModelGridStructure = () => {
         return (React__default.createElement(React__default.Fragment, null, viewMode !== "cells" ? (React__default.createElement(Box, { component: "ul", sx: {
                 display: "grid",
@@ -1501,10 +1536,12 @@ function removeFromRecentsAction(strings, accessToken, apiOverrides, removeFromR
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+const EMPTY_COLUMN_OVERRIDES = {};
+const EMPTY_HIDE_COLUMNS = [];
 /**
  * Table view for iTwins using MUI X DataGrid (Community edition).
  */
-const ITwinTableMUI = ({ iTwins, moreActions, actions, strings, iTwinFavorites, addITwinToFavorites, removeITwinFromFavorites, refetchITwins, tableOverrides: { columnOverrides = {}, hideColumns = [] } = {}, isLoading, fetchMore, }) => {
+const ITwinTableMUI = ({ iTwins, moreActions, actions, strings, iTwinFavorites, addITwinToFavorites, removeITwinFromFavorites, refetchITwins, tableOverrides: { columnOverrides = EMPTY_COLUMN_OVERRIDES, hideColumns = EMPTY_HIDE_COLUMNS, } = {}, isLoading, fetchMore, }) => {
     // Eagerly load all available data so the table has the full dataset
     // for client-side pagination and sorting.
     React__default.useEffect(() => {
@@ -1547,12 +1584,7 @@ const ITwinTableMUI = ({ iTwins, moreActions, actions, strings, iTwinFavorites, 
                 headerName: strings.tableColumnLastModified,
                 width: 200,
                 disableColumnMenu: true,
-                valueFormatter: (value) => {
-                    if (!value) {
-                        return "";
-                    }
-                    return new Date(value).toLocaleDateString();
-                },
+                valueFormatter: (value) => formatDate(value),
                 ...columnOverrides[ITwinCellColumn.LastModified],
             },
             !hideColumns.includes(ITwinCellColumn.Options) && {
@@ -1584,7 +1616,7 @@ const ITwinTableMUI = ({ iTwins, moreActions, actions, strings, iTwinFavorites, 
     ]);
     return (React__default.createElement(DataGrid, { rows: iTwins, columns: columns, loading: isLoading, onRowClick: actions
             ? (params) => {
-                const action = actions(params.row)[0];
+                const action = getPrimaryCardAction(actions(params.row));
                 if (action && !action.disabled) {
                     action.onClick?.();
                 }
@@ -1594,7 +1626,7 @@ const ITwinTableMUI = ({ iTwins, moreActions, actions, strings, iTwinFavorites, 
                 if ((event.key === "Enter" || event.key === " ") &&
                     params.field !== "id" &&
                     params.field !== "actions") {
-                    const action = actions(params.row)[0];
+                    const action = getPrimaryCardAction(actions(params.row));
                     if (action && !action.disabled) {
                         event.preventDefault();
                         action.onClick?.();
@@ -1628,7 +1660,9 @@ const ITwinTableMUI = ({ iTwins, moreActions, actions, strings, iTwinFavorites, 
                 color: "var(--stratakit-color-text-neutral-disabled)",
             },
         }, getRowClassName: actions
-            ? (params) => (actions(params.row)[0]?.disabled ? "row-disabled" : "")
+            ? (params) => getPrimaryCardAction(actions(params.row))?.disabled
+                ? "row-disabled"
+                : ""
             : undefined }));
 };
 
@@ -1690,7 +1724,7 @@ const ITwinTileMUI = ({ iTwin, moreActions: moreActionItems, stringsOverrides, i
         addToFavorites &&
         removeFromFavorites ? (React__default.createElement(FavoriteIconMUI, { isFavorite: isFavorite, onAddToFavorites: () => addToFavorites(iTwin.id), onRemoveFromFavorites: () => removeFromFavorites(iTwin.id), addLabel: strings.addToFavorites, removeLabel: strings.removeFromFavorites, disabled: disabled })) : undefined;
     const additionalDescription = iTwin.lastModifiedDateTime
-        ? new Date(iTwin.lastModifiedDateTime).toDateString()
+        ? formatDate(iTwin.lastModifiedDateTime)
         : undefined;
     return (React__default.createElement(BaseCard, { className: className, sx: {
             "&:hover .favoriteIcon, &:focus-within .favoriteIcon": {
@@ -2029,7 +2063,7 @@ const useITwinFavorites = (accessToken, serverEnvironmentPrefix) => {
  */
 const ITwinGridMUI = ({ accessToken, apiOverrides, filterOptions, orderbyOptions, actions, moreActions, requestType, iTwinSubClass, stringsOverrides, tileOverrides, useIndividualState, postProcessCallback, viewMode, tableOverrides, className, }) => {
     const { iTwinFavorites, addITwinToFavorites, removeITwinFromFavorites, shouldRefetchFavorites, resetShouldRefetchFavorites, } = useITwinFavorites(accessToken, apiOverrides?.serverEnvironmentPrefix);
-    const strings = _mergeStrings({
+    const strings = React__default.useMemo(() => _mergeStrings({
         tableColumnFavorites: "",
         tableColumnName: "iTwin Number",
         tableColumnDescription: "iTwin Name",
@@ -2054,7 +2088,7 @@ const ITwinGridMUI = ({ accessToken, apiOverrides, filterOptions, orderbyOptions
             ? `${count.toLocaleString()} rows selected`
             : `${count.toLocaleString()} row selected`,
         footerTotalVisibleRows: (visibleCount, totalCount) => `${visibleCount.toLocaleString()} of ${totalCount.toLocaleString()}`,
-    }, stringsOverrides);
+    }, stringsOverrides), [requestType, stringsOverrides]);
     const { iTwins: fetchedItwins, status: fetchStatus, fetchMore, refetchITwins, } = useITwinData({
         requestType,
         iTwinSubClass,

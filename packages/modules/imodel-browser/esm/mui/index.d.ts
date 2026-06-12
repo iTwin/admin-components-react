@@ -8,6 +8,7 @@ export { BaseCardLoading as IModelGhostTile, type BaseCardLoadingProps as IModel
 export type { MoreActionsMenuItemMUI as MoreActionsMenuItem } from "../utils/_buildMenuOptions";
 export type { CardActionsItemMUI as CardActionsItem } from "../utils/_buildMenuOptions";
 export { ThumbnailIconButton } from "../components/baseCard/ThumbnailIconButton";
-export { SvgThumbnail } from "../components/baseCard/SvgThumbnail";
-export * from "../types";
+export { SvgThumbnail, type SvgThumbnailProps, } from "../components/baseCard/SvgThumbnail";
+export type { IModelFull, ITwinFull, ApiOverrides, ITwinFilterOptions, DataMode, IModelSortOptionsKeys, IModelSortOptions, ITwinSubClass, ITwinClassType, ITwinStatus, ViewType, IModelViewType, AccessTokenProvider, } from "../types";
+export { DataStatus, IModelCellColumn, ITwinCellColumn } from "../types";
 export type { IModelTableOverridesMUI, ITwinTableOverridesMUI } from "./types";

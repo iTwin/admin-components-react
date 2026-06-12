@@ -51,11 +51,12 @@ export interface BaseCardProps extends Omit<CardProps, "children" | "title" | "o
     /**
      * Primary card actions.
      *
-     * When a single action is provided, the card title area becomes a clickable
-     * {@link CardActionArea} wired to that action.
+     * The first action is treated as the primary action: the card title area
+     * becomes a clickable {@link CardActionArea} wired to it, mirroring the
+     * table's row-click behavior.
      *
-     * When multiple actions are provided, they are rendered as buttons in a
-     * {@link CardActions} row below the card content.
+     * When more than one action is provided, all actions are additionally
+     * rendered as buttons in a {@link CardActions} row below the card content.
      */
     actions?: ResolvedCardActionItem[];
     /**

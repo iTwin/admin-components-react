@@ -33,5 +33,5 @@ export interface ITwinTableMUIProps {
 /**
  * Table view for iTwins using MUI X DataGrid (Community edition).
  */
-export declare const ITwinTableMUI: ({ iTwins, moreActions, actions, strings, iTwinFavorites, addITwinToFavorites, removeITwinFromFavorites, refetchITwins, tableOverrides: { columnOverrides, hideColumns }, isLoading, fetchMore, }: ITwinTableMUIProps) => React.JSX.Element;
+export declare const ITwinTableMUI: ({ iTwins, moreActions, actions, strings, iTwinFavorites, addITwinToFavorites, removeITwinFromFavorites, refetchITwins, tableOverrides: { columnOverrides, hideColumns, }, isLoading, fetchMore, }: ITwinTableMUIProps) => React.JSX.Element;
 export {};

@@ -33,8 +33,6 @@ export interface ResolvedCardActionItem {
     key: string;
     label: string;
     onClick?: () => void;
-    /** When false, the action is excluded. Defaults to true. */
-    visible?: boolean;
     disabled?: boolean;
 }
 /**
@@ -42,6 +40,11 @@ export interface ResolvedCardActionItem {
  * @private
  */
 export declare const resolveCardActionsItemsMUI: <T>(items: CardActionsItemMUI<T>[], value: T, refetchData?: () => void) => ResolvedCardActionItem[];
+/**
+ * Returns the primary (first visible) resolved card action, or `undefined` when
+ * there are none for use as the primary button or row action.
+ */
+export declare const getPrimaryCardAction: (actions: ResolvedCardActionItem[] | undefined) => ResolvedCardActionItem | undefined;
 /**
  * Definition for the "More Actions" menu items.
  * @alpha

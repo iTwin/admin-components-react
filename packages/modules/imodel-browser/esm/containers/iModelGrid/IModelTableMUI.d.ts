@@ -30,5 +30,5 @@ export interface IModelTableMUIProps {
 /**
  * Table view for iModels using MUI X DataGrid (Community edition).
  */
-export declare const IModelTableMUI: ({ iModels, moreActions, actions, strings, refetchIModels, tableOverrides: { columnOverrides, hideColumns }, isLoading, fetchMore, }: IModelTableMUIProps) => React.JSX.Element;
+export declare const IModelTableMUI: ({ iModels, moreActions, actions, strings, refetchIModels, tableOverrides: { columnOverrides, hideColumns, }, isLoading, fetchMore, }: IModelTableMUIProps) => React.JSX.Element;
 export {};
