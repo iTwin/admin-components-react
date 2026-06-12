@@ -49,7 +49,7 @@ interface MoreActionsMenuItemMUI<T> {
 | `iModel`                  | `iModel`              | Unchanged               |                                                                                                                                            |
 | `accessToken`             | `accessToken`         | Unchanged               | Used for thumbnail fetching.                                                                                                               |
 | `iModelOptions`           | `moreActions`         | Renamed + type changed  | Type changes from `ContextMenuBuilderItem<IModelFull>[]` to `MoreActionsMenuItemMUI<IModelFull>[]`.                                        |
-| `onThumbnailClick`        | `actions`             | Replaced                | Pass `CardActionsItemMUI<IModelFull>[]`. Callbacks receive the entity. Single action → title becomes clickable. Multiple → footer buttons. |
+| `onThumbnailClick`        | `actions`             | Replaced                | Pass `CardActionsItemMUI<IModelFull>[]`. Callbacks receive the entity. The first action drives the clickable title; with multiple actions all are also rendered as footer buttons. |
 | `tileProps.isSelected`    | —                     | Removed                 |                                                                                                                                            |
 | `tileProps.isLoading`     | `loading`             | Renamed                 | Flattened to a top-level prop.                                                                                                             |
 | `tileProps.isDisabled`    | `disabled`            | Renamed                 | Flattened to a top-level prop.                                                                                                             |
@@ -93,7 +93,7 @@ interface MoreActionsMenuItemMUI<T> {
 | ------------------------ | ---------------------- | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
 | `iTwin`                  | `iTwin`                | Unchanged               |                                                                                                                                           |
 | `iTwinOptions`           | `moreActions`          | Renamed + type changed  | Type changes from `ContextMenuBuilderItem<ITwinFull>[]` to `MoreActionsMenuItemMUI<ITwinFull>[]`.                                         |
-| `onThumbnailClick`       | `actions`              | Replaced                | Pass `CardActionsItemMUI<ITwinFull>[]`. Callbacks receive the entity. Single action → title becomes clickable. Multiple → footer buttons. |
+| `onThumbnailClick`       | `actions`              | Replaced                | Pass `CardActionsItemMUI<ITwinFull>[]`. Callbacks receive the entity. The first action drives the clickable title; with multiple actions all are also rendered as footer buttons. |
 | `tileProps` object       | Top-level props`       | Structural change       | `tileProps` are now top-level`.                                                                                                           |
 | `tileProps.isSelected`   | —                      | Removed                 |                                                                                                                                           |
 | `tileProps.isLoading`    | `loading`              | Renamed                 | Flattened to a top-level prop.                                                                                                            |
@@ -271,11 +271,17 @@ New entry point that re-exports MUI components under **legacy-aligned names**:
 | `NoResultsProps`           | `NoResultsMUIProps`           |
 | `IModelGhostTile`          | `BaseCardLoading`             |
 | `IModelGhostTileProps`     | `BaseCardLoadingProps`        |
-| `ContextMenuBuilderItem`   | `MoreActionsMenuItemMUI`      |
-| `ActionBuilderItem`        | `CardActionsItemMUI`          |
+| `MoreActionsMenuItem`      | `MoreActionsMenuItemMUI`      |
+| `CardActionsItem`          | `CardActionsItemMUI`          |
 | `ThumbnailIconButton`      | `ThumbnailIconButton`         |
+| `SvgThumbnail`             | `SvgThumbnail`                |
+| `SvgThumbnailProps`        | `SvgThumbnailProps`           |
 
-Also re-exports all shared types.
+Also re-exports an explicit, framework-neutral subset of the shared domain
+types (`IModelFull`, `ITwinFull`, `ApiOverrides`, `DataStatus`,
+`IModelCellColumn`, `ITwinCellColumn`, sort/filter/view types, etc.). The
+react-table–coupled `IModelCellOverrides` / `ITwinCellOverrides` types are
+intentionally **not** re-exported from the MUI barrel.
 
 Built via a separate rollup entry point → `cjs/src/mui/index.js` / `esm/src/mui/index.js`.
 
@@ -289,6 +295,7 @@ This allows consumers to swap imports from the legacy barrel to the MUI barrel w
 ### New exports (no legacy equivalent)
 
 - `ThumbnailIconButton` — styled MUI `IconButton` with translucent background and backdrop blur, intended for use in thumbnail overlay slots (`thumbnailTopLeft`, `thumbnailTopRight`, etc.).
+- `SvgThumbnail` (and `SvgThumbnailProps`) — wraps a Stratakit SVG href so it can be passed as a `thumbnail` with correct sizing/layout.
 
 ---
 
