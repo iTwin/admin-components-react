@@ -17,9 +17,9 @@ import { Icon } from "@stratakit/mui";
 import React, { type ReactNode } from "react";
 
 import {
-  getPrimaryCardAction,
   type ResolvedCardActionItem,
-} from "../../utils/_buildMenuOptions";
+  getPrimaryCardAction,
+} from "../../../utils/_buildMenuOptions";
 import { spreadSx } from "../../utils/spreadSx";
 import MoreMenuMUI, {
   type MoreMenuHandle,

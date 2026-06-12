@@ -22,14 +22,14 @@ import { action } from "@storybook/addon-actions";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
 
-import bridgeThumbnail from "../utils/bridge.jpg";
-import nightThumbnail from "../utils/night.jpg";
-import overpassThumbnail from "../utils/overpass.jpg";
-import powerThumbnail from "../utils/power.jpg";
+import bridgeThumbnail from "../../utils/bridge.jpg";
+import nightThumbnail from "../../utils/night.jpg";
+import overpassThumbnail from "../../utils/overpass.jpg";
+import powerThumbnail from "../../utils/power.jpg";
 import {
   accessTokenArgTypes,
   withAccessTokenOverride,
-} from "../utils/storyHelp";
+} from "../../utils/storyHelp";
 
 type ITwinTileType = React.ComponentPropsWithoutRef<typeof ITwinTile>;
 

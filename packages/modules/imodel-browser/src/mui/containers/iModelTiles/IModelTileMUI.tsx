@@ -5,20 +5,20 @@
 import svgImodel from "@stratakit/icons/imodel.svg";
 import React from "react";
 
+import { IModelTileProps } from "../../../containers/iModelTiles/IModelTile";
+import { IModelFavoritesContext } from "../../../contexts/IModelFavoritesContext";
+import { AccessTokenProvider, ApiOverrides, IModelFull } from "../../../types";
+import { _mergeStrings } from "../../../utils/_apiOverrides";
+import {
+  type MoreActionsMenuItemMUI,
+  type ResolvedMoreActionsMenuItem,
+} from "../../../utils/_buildMenuOptions";
 import {
   type BaseCardProps,
   BaseCard,
 } from "../../components/baseCard/BaseCard";
 import { FavoriteIconMUI } from "../../components/tileFavoriteIcon/FavoriteIconMUI";
-import { IModelFavoritesContext } from "../../contexts/IModelFavoritesContext";
-import { AccessTokenProvider, ApiOverrides, IModelFull } from "../../types";
-import { _mergeStrings } from "../../utils/_apiOverrides";
-import {
-  type MoreActionsMenuItemMUI,
-  type ResolvedMoreActionsMenuItem,
-} from "../../utils/_buildMenuOptions";
 import { IModelThumbnailMUI } from "../iModelThumbnail/IModelThumbnailMUI";
-import { IModelTileProps } from "./IModelTile";
 
 /** @alpha */
 export interface IModelTileMUIProps

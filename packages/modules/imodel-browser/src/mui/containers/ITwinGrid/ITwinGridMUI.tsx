@@ -6,21 +6,24 @@ import Box from "@mui/material/Box";
 import React from "react";
 import { InView } from "react-intersection-observer";
 
-import { BaseCardLoading } from "../../components/baseCard/BaseCardLoading";
-import { NoResultsMUI } from "../../components/noResults/NoResultsMUI";
-import { type ITwinTableOverridesMUI } from "../../mui/types";
-import { type ITwinFull, DataStatus } from "../../types";
-import { _mergeStrings } from "../../utils/_apiOverrides";
+import type {
+  ITwinGridProps,
+  ITwinGridStrings,
+} from "../../../containers/ITwinGrid/ITwinGrid";
+import { useITwinData } from "../../../containers/ITwinGrid/useITwinData";
+import { useITwinFavorites } from "../../../containers/ITwinGrid/useITwinFavorites";
+import { type ITwinFull, DataStatus } from "../../../types";
+import { _mergeStrings } from "../../../utils/_apiOverrides";
 import {
   type CardActionsItemMUI,
   MoreActionsMenuItemMUI,
   resolveCardActionsItemsMUI,
-} from "../../utils/_buildMenuOptions";
-import type { ITwinGridProps, ITwinGridStrings } from "./ITwinGrid";
+} from "../../../utils/_buildMenuOptions";
+import { BaseCardLoading } from "../../components/baseCard/BaseCardLoading";
+import { NoResultsMUI } from "../../components/noResults/NoResultsMUI";
+import { type ITwinTableOverridesMUI } from "../../types";
 import { type ITwinTableMUIStrings, ITwinTableMUI } from "./ITwinTableMUI";
 import { type ITwinTilePropsMUI, ITwinTileMUI } from "./ITwinTileMUI";
-import { useITwinData } from "./useITwinData";
-import { useITwinFavorites } from "./useITwinFavorites";
 
 /** @alpha */
 export type IndividualITwinStateHookMUI = (

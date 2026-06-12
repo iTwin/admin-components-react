@@ -9,8 +9,8 @@ import classNames from "classnames";
 import React from "react";
 import { useInView } from "react-intersection-observer";
 
-import { AccessTokenProvider, ApiOverrides } from "../../types";
-import { useIModelThumbnail } from "./useIModelThumbnail";
+import { useIModelThumbnail } from "../../../containers/iModelThumbnail/useIModelThumbnail";
+import { AccessTokenProvider, ApiOverrides } from "../../../types";
 
 /** @alpha */
 export interface IModelThumbnailMUIProps {

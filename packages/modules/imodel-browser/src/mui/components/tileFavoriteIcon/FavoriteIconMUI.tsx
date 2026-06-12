@@ -64,7 +64,9 @@ export const FavoriteIconMUI = ({
       onMouseLeave={() => setHovered(false)}
       onClick={async (event: React.MouseEvent<HTMLButtonElement>) => {
         // debounce
-        if (pending) return;
+        if (pending) {
+          return;
+        }
 
         setPending(true);
         try {
