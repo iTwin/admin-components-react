@@ -16,7 +16,10 @@ import svgMoreVertical from "@stratakit/icons/more-vertical.svg";
 import { Icon } from "@stratakit/mui";
 import React, { type ReactNode } from "react";
 
-import { type ResolvedCardActionItem } from "../../utils/_buildMenuOptions";
+import {
+  getPrimaryCardAction,
+  type ResolvedCardActionItem,
+} from "../../utils/_buildMenuOptions";
 import { spreadSx } from "../../utils/spreadSx";
 import MoreMenuMUI, {
   type MoreMenuHandle,
@@ -84,11 +87,12 @@ export interface BaseCardProps
   /**
    * Primary card actions.
    *
-   * When a single action is provided, the card title area becomes a clickable
-   * {@link CardActionArea} wired to that action.
+   * The first action is treated as the primary action: the card title area
+   * becomes a clickable {@link CardActionArea} wired to it, mirroring the
+   * table's row-click behavior.
    *
-   * When multiple actions are provided, they are rendered as buttons in a
-   * {@link CardActions} row below the card content.
+   * When more than one action is provided, all actions are additionally
+   * rendered as buttons in a {@link CardActions} row below the card content.
    */
   actions?: ResolvedCardActionItem[];
 
@@ -191,11 +195,8 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
 
     const hasContextMenu = !!moreActions?.length;
 
-    const visibleActions = actions?.filter(({ visible }) => visible ?? true);
-    const singleAction =
-      visibleActions?.length === 1 ? visibleActions[0] : undefined;
-    const multipleActions =
-      visibleActions && visibleActions.length > 1 ? visibleActions : undefined;
+    const primaryAction = getPrimaryCardAction(actions);
+    const multipleActions = actions && actions.length > 1 ? actions : undefined;
 
     if (loading) {
       return (
@@ -288,15 +289,15 @@ export const BaseCard = React.forwardRef<HTMLDivElement, BaseCardProps>(
               ) : undefined
             }
             title={
-              singleAction ? (
+              primaryAction ? (
                 <CardActionArea
                   sx={textEllipsisSx}
                   onClick={
-                    !cardDisabled && !singleAction.disabled
-                      ? singleAction.onClick
+                    !cardDisabled && !primaryAction.disabled
+                      ? primaryAction.onClick
                       : undefined
                   }
-                  disabled={cardDisabled ? true : singleAction.disabled}
+                  disabled={cardDisabled ? true : primaryAction.disabled}
                 >
                   {title}
                 </CardActionArea>

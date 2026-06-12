@@ -17,6 +17,7 @@ import { useIModelFavoritesContext } from "../../contexts/IModelFavoritesContext
 import { type IModelTableOverridesMUI } from "../../mui/types";
 import { type IModelFull, IModelCellColumn } from "../../types";
 import {
+  getPrimaryCardAction,
   type MoreActionsMenuItemMUI,
   type ResolvedCardActionItem,
   resolveMoreActionsMenuItemsMUI,
@@ -185,7 +186,7 @@ export const IModelTableMUI = ({
       onRowClick={
         actions
           ? (params) => {
-              const action = actions(params.row)[0];
+              const action = getPrimaryCardAction(actions(params.row));
               if (action && !action.disabled) {
                 action.onClick?.();
               }
@@ -200,7 +201,7 @@ export const IModelTableMUI = ({
                 params.field !== "id" &&
                 params.field !== "actions"
               ) {
-                const action = actions(params.row)[0];
+                const action = getPrimaryCardAction(actions(params.row));
                 if (action && !action.disabled) {
                   event.preventDefault();
                   action.onClick?.();
@@ -246,7 +247,10 @@ export const IModelTableMUI = ({
       }}
       getRowClassName={
         actions
-          ? (params) => (actions(params.row)[0]?.disabled ? "row-disabled" : "")
+          ? (params) =>
+              getPrimaryCardAction(actions(params.row))?.disabled
+                ? "row-disabled"
+                : ""
           : undefined
       }
     />
