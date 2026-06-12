@@ -3,7 +3,10 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 
-// MUI beta surface: keep public names aligned with legacy exports while reusing *MUI internals.
+// ============================================================================
+// @alpha — everything exported from `@itwin/imodel-browser-react/mui` is alpha and may
+// change or be removed in a release without a major version bump.
+// ============================================================================
 export {
   IModelGridMUI as IModelGrid,
   type IModelGridMUIProps as IModelGridProps,
@@ -45,7 +48,25 @@ export {
 export type { MoreActionsMenuItemMUI as MoreActionsMenuItem } from "../utils/_buildMenuOptions";
 export type { CardActionsItemMUI as CardActionsItem } from "../utils/_buildMenuOptions";
 export { ThumbnailIconButton } from "../components/baseCard/ThumbnailIconButton";
-export { SvgThumbnail } from "../components/baseCard/SvgThumbnail";
+export {
+  SvgThumbnail,
+  type SvgThumbnailProps,
+} from "../components/baseCard/SvgThumbnail";
 
-export * from "../types";
+export type {
+  IModelFull,
+  ITwinFull,
+  ApiOverrides,
+  ITwinFilterOptions,
+  DataMode,
+  IModelSortOptionsKeys,
+  IModelSortOptions,
+  ITwinSubClass,
+  ITwinClassType,
+  ITwinStatus,
+  ViewType,
+  IModelViewType,
+  AccessTokenProvider,
+} from "../types";
+export { DataStatus, IModelCellColumn, ITwinCellColumn } from "../types";
 export type { IModelTableOverridesMUI, ITwinTableOverridesMUI } from "./types";
