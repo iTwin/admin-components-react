@@ -80,19 +80,7 @@ const baseArgs: BaseCardProps = {
 // ── Stories ──────────────────────────────────────────────────────────────────
 
 export const Default = Template.bind({});
-Default.args = {
-  ...baseArgs,
-  moreActions: [
-    {
-      key: "open",
-      label: "Open with",
-      onClick: action("menu: open clicked"),
-      icon: svgGeo,
-    },
-    { key: "share", label: "Share", onClick: action("menu: share clicked") },
-    { key: "delete", label: "Delete", onClick: action("menu: delete clicked") },
-  ],
-};
+Default.args = { ...baseArgs };
 
 const everythingArgs: BaseCardProps = {
   ...baseArgs,
