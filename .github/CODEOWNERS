@@ -13,6 +13,9 @@ packages/modules/imodel-browser/ @aruniverse @ben-polinsky
 common/changes/@itwin/imodel-browser-react/ @aruniverse @ben-polinsky
 packages/apps/storybook/src/imodel-browser/ @aruniverse @ben-polinsky
 
+# imodel-browser MUI/Stratakit components (alpha)
+packages/modules/imodel-browser/src/mui/ @alexdunae @toddsouthenbentley @kckst8
+
 # delete-imodel
 packages/modules/delete-imodel/ @veekeys
 common/changes/@itwin/delete-imodel-react/ @veekeys
