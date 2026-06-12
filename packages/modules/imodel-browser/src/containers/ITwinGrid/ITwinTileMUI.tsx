@@ -18,6 +18,7 @@ import {
   type MoreActionsMenuItemMUI,
   type ResolvedMoreActionsMenuItem,
 } from "../../utils/_buildMenuOptions";
+import { formatDate } from "../../utils/formatDate";
 import { ITwinTileProps } from "./ITwinTile";
 
 /** @alpha */
@@ -120,7 +121,7 @@ export const ITwinTileMUI = ({
     ) : undefined;
 
   const additionalDescription = iTwin.lastModifiedDateTime
-    ? new Date(iTwin.lastModifiedDateTime).toDateString()
+    ? formatDate(iTwin.lastModifiedDateTime)
     : undefined;
 
   return (

@@ -17,11 +17,12 @@ import { useIModelFavoritesContext } from "../../contexts/IModelFavoritesContext
 import { type IModelTableOverridesMUI } from "../../mui/types";
 import { type IModelFull, IModelCellColumn } from "../../types";
 import {
-  getPrimaryCardAction,
   type MoreActionsMenuItemMUI,
   type ResolvedCardActionItem,
+  getPrimaryCardAction,
   resolveMoreActionsMenuItemsMUI,
 } from "../../utils/_buildMenuOptions";
+import { formatDate } from "../../utils/formatDate";
 
 type MuiDataGridStrings = Pick<
   typeof GRID_DEFAULT_LOCALE_TEXT,
@@ -131,12 +132,7 @@ export const IModelTableMUI = ({
           width: 200,
           valueGetter: (value: string | null | undefined, row: IModelFull) =>
             row.lastChangesetPushDateTime ?? row.createdDateTime ?? "",
-          valueFormatter: (value: string) => {
-            if (!value) {
-              return "";
-            }
-            return new Date(value).toLocaleDateString();
-          },
+          valueFormatter: (value: string) => formatDate(value),
           disableColumnMenu: true,
           ...columnOverrides[IModelCellColumn.LastModified],
         },

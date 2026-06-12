@@ -16,11 +16,12 @@ import { FavoriteIconMUI } from "../../components/tileFavoriteIcon/FavoriteIconM
 import { type ITwinTableOverridesMUI } from "../../mui/types";
 import { ITwinCellColumn, ITwinFull } from "../../types";
 import {
-  getPrimaryCardAction,
   type MoreActionsMenuItemMUI,
   type ResolvedCardActionItem,
+  getPrimaryCardAction,
   resolveMoreActionsMenuItemsMUI,
 } from "../../utils/_buildMenuOptions";
+import { formatDate } from "../../utils/formatDate";
 
 // strings from data grid that we need to override in addition to our custom strings
 type MuiDataGridStrings = Pick<
@@ -130,12 +131,7 @@ export const ITwinTableMUI = ({
         headerName: strings.tableColumnLastModified,
         width: 200,
         disableColumnMenu: true,
-        valueFormatter: (value: string) => {
-          if (!value) {
-            return "";
-          }
-          return new Date(value).toLocaleDateString();
-        },
+        valueFormatter: (value: string) => formatDate(value),
         ...columnOverrides[ITwinCellColumn.LastModified],
       },
       !hideColumns.includes(ITwinCellColumn.Options) && {
