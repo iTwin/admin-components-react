@@ -271,25 +271,25 @@ const IModelGridInternal = ({
     }
   }, [iModels.length, pageSize, fetchMore, fetchStatus]);
 
-  const iModelClickAndAddToRecents = async (
-    iModel: IModelFull,
-    clickFn: () => void
-  ) => {
-    if (!accessToken || disableAddToRecents) {
-      clickFn();
-      return;
-    }
+  const iModelClickAndAddToRecents = React.useCallback(
+    async (iModel: IModelFull, clickFn: () => void) => {
+      if (!accessToken || disableAddToRecents) {
+        clickFn();
+        return;
+      }
 
-    void addIModelToRecents({
-      iModelId: iModel.id,
-      accessToken,
-      serverEnvironmentPrefix: apiOverrides?.serverEnvironmentPrefix,
-    }).catch((e) => {
-      // swallow errors to avoid disrupting the UI
-      console.error("Failed to add iModel to recents", e);
-    });
-    clickFn();
-  };
+      void addIModelToRecents({
+        iModelId: iModel.id,
+        accessToken,
+        serverEnvironmentPrefix: apiOverrides?.serverEnvironmentPrefix,
+      }).catch((e) => {
+        // swallow errors to avoid disrupting the UI
+        console.error("Failed to add iModel to recents", e);
+      });
+      clickFn();
+    },
+    [accessToken, disableAddToRecents, apiOverrides?.serverEnvironmentPrefix]
+  );
 
   const noResultsText = {
     [DataStatus.Fetching]: "",
@@ -303,25 +303,28 @@ const IModelGridInternal = ({
     ? { serverEnvironmentPrefix: apiOverrides.serverEnvironmentPrefix }
     : undefined;
 
-  const resolveActions = (iModel: IModelFull) => {
-    if (!actions?.length) {
-      return [];
-    }
-    const resolved = resolveCardActionsItemsMUI(actions, iModel);
-    if (!resolved.length) {
-      return resolved;
-    }
-    const [first, ...rest] = resolved;
-    return [
-      {
-        ...first,
-        onClick: first.onClick
-          ? () => iModelClickAndAddToRecents(iModel, first.onClick!)
-          : undefined,
-      },
-      ...rest,
-    ];
-  };
+  const resolveActions = React.useCallback(
+    (iModel: IModelFull) => {
+      if (!actions?.length) {
+        return [];
+      }
+      const resolved = resolveCardActionsItemsMUI(actions, iModel);
+      if (!resolved.length) {
+        return resolved;
+      }
+      const [first, ...rest] = resolved;
+      return [
+        {
+          ...first,
+          onClick: first.onClick
+            ? () => iModelClickAndAddToRecents(iModel, first.onClick!)
+            : undefined,
+        },
+        ...rest,
+      ];
+    },
+    [actions, iModelClickAndAddToRecents]
+  );
 
   const renderIModelGridStructure = () => {
     return (
