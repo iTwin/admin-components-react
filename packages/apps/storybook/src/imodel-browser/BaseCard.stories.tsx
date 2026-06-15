@@ -7,8 +7,8 @@ import Avatar from "@mui/material/Avatar";
 import AvatarGroup from "@mui/material/AvatarGroup";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
-import { action } from "@storybook/addon-actions";
-import { Meta, Story } from "@storybook/react/types-6-0";
+import { action } from "storybook/actions";
+import type { Meta, StoryObj } from "@storybook/react-webpack5";
 import svgGeo from "@stratakit/icons/geospatial-features.svg";
 import svgPin from "@stratakit/icons/pin.svg";
 import svgSave from "@stratakit/icons/save.svg";
@@ -65,8 +65,6 @@ export default {
   },
 } as Meta;
 
-const Template: Story<BaseCardProps> = (args) => <BaseCardStory {...args} />;
-
 const baseArgs: BaseCardProps = {
   title: "Main Street Bridge",
   description: "3D model of the Main Street bridge structure and components.",
@@ -79,8 +77,9 @@ const baseArgs: BaseCardProps = {
 
 // ── Stories ──────────────────────────────────────────────────────────────────
 
-export const Default = Template.bind({});
-Default.args = { ...baseArgs };
+export const Default: StoryObj<typeof BaseCardStory> = {
+  args: { ...baseArgs },
+};
 
 const everythingArgs: BaseCardProps = {
   ...baseArgs,
@@ -146,133 +145,143 @@ const everythingArgs: BaseCardProps = {
   thumbnailBottomRight: <Chip size="small" label="Bottom right" />,
 };
 
-export const Everything = Template.bind({});
-Everything.storyName = "Everything";
-Everything.args = { ...everythingArgs };
-
-export const WithoutThumbnail = Template.bind({});
-WithoutThumbnail.storyName = "Without thumbnail";
-WithoutThumbnail.args = { ...everythingArgs, thumbnail: undefined };
-
-export const WithDarkThumbnail = Template.bind({});
-WithDarkThumbnail.storyName = "With dark thumbnail";
-WithDarkThumbnail.args = {
-  ...everythingArgs,
-  thumbnail: nightThumbnail,
+export const Everything: StoryObj<typeof BaseCardStory> = {
+  name: "Everything",
+  args: { ...everythingArgs },
 };
 
-export const WithoutContent = Template.bind({});
-WithoutContent.storyName = "Without content";
-WithoutContent.args = {
-  ...everythingArgs,
-  title: "Main Street Bridge",
-  description: undefined,
-  subheader: undefined,
-  thumbnail: bridgeThumbnail,
+export const WithoutThumbnail: StoryObj<typeof BaseCardStory> = {
+  name: "Without thumbnail",
+  args: { ...everythingArgs, thumbnail: undefined },
 };
 
-export const Statuses = () => (
-  <Box
-    sx={{
-      display: "grid",
-      gap: 2,
-      gridTemplateColumns: "repeat(auto-fill, minmax(22.5rem, 1fr))",
-    }}
-  >
-    {(
-      [
-        { label: "Positive", icon: svgStatusSuccess, status: "positive" },
-        { label: "Warning", icon: svgStatusWarning, status: "warning" },
-        { label: "Negative", icon: svgStatusError, status: "negative" },
-      ] as const
-    ).map(({ label, icon, status }) => (
-      <BaseCard
-        key={label}
-        title="Main Street Bridge"
-        description="3D model of the Main Street bridge structure."
-        subheader="Edited 1/16/2024"
-        thumbnail={bridgeThumbnail}
-        statusIconHref={icon}
-        status={status}
-      />
-    ))}
-  </Box>
-);
-
-export const WithSvgThumbnail = Template.bind({});
-WithSvgThumbnail.storyName = "With SVG thumbnail";
-WithSvgThumbnail.args = {
-  ...baseArgs,
-  thumbnail: <SvgThumbnail src={svgGeo} />,
+export const WithDarkThumbnail: StoryObj<typeof BaseCardStory> = {
+  name: "With dark thumbnail",
+  args: {
+    ...everythingArgs,
+    thumbnail: nightThumbnail,
+  },
 };
 
-export const Loading = Template.bind({});
-Loading.args = { ...baseArgs, loading: true };
-
-export const Disabled = Template.bind({});
-Disabled.storyName = "Disabled state";
-Disabled.args = { ...baseArgs, disabled: true };
-
-export const LongTitle = Template.bind({});
-LongTitle.storyName = "Long title";
-LongTitle.args = {
-  ...baseArgs,
-  title:
-    "This is a very long title that should truncate automagically with an ellipsis at the end",
-  moreActions: [
-    {
-      key: "open",
-      label: "Open with",
-      onClick: action("menu: open clicked"),
-      icon: svgGeo,
-    },
-  ],
+export const WithoutContent: StoryObj<typeof BaseCardStory> = {
+  name: "Without content",
+  args: {
+    ...everythingArgs,
+    title: "Main Street Bridge",
+    description: undefined,
+    subheader: undefined,
+    thumbnail: bridgeThumbnail,
+  },
 };
 
-export const OpenSitePlus = Template.bind({});
-OpenSitePlus.storyName = "OpenSite+ iModel style";
-OpenSitePlus.args = {
-  ...baseArgs,
-  title: "OpenSite+ iModel",
-  subheader: "Modified 2026-01-01",
-  description:
-    "This card mimics the design of OpenSite+ iModel cards with an AvatarGroup in the top left, a pin/favorite button in the top right, and no dedicated action buttons below the description.",
-  onContextMenu: action("context-menu opened"),
-  moreActions: [
-    {
-      key: "open",
-      label: "Open with",
-      onClick: action("menu: open with clicked"),
-      icon: svgGeo,
-    },
-    { key: "share", label: "Share", onClick: action("menu: share clicked") },
-    { key: "delete", label: "Delete", onClick: action("menu: delete clicked") },
-  ],
-  actions: [
-    {
-      key: "open",
-      label: "Open",
-      onClick: action("default open action clicked"),
-    },
-  ],
-  statusIconHref: undefined,
-  thumbnailTopLeft: (
-    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-      <AvatarGroup max={3}>
-        <Avatar alt="User 1" src="https://i.pravatar.cc/150?img=1" />
-        <Avatar alt="User 2" src="https://i.pravatar.cc/150?img=2" />
-        <Avatar alt="User 3" src="https://i.pravatar.cc/150?img=3" />
-      </AvatarGroup>
+export const Statuses: StoryObj<typeof BaseCardStory> = {
+  render: () => (
+    <Box
+      sx={{
+        display: "grid",
+        gap: 2,
+        gridTemplateColumns: "repeat(auto-fill, minmax(22.5rem, 1fr))",
+      }}
+    >
+      {(
+        [
+          { label: "Positive", icon: svgStatusSuccess, status: "positive" },
+          { label: "Warning", icon: svgStatusWarning, status: "warning" },
+          { label: "Negative", icon: svgStatusError, status: "negative" },
+        ] as const
+      ).map(({ label, icon, status }) => (
+        <BaseCard
+          key={label}
+          title="Main Street Bridge"
+          description="3D model of the Main Street bridge structure."
+          subheader="Edited 1/16/2024"
+          thumbnail={bridgeThumbnail}
+          statusIconHref={icon}
+          status={status}
+        />
+      ))}
     </Box>
   ),
+};
 
-  thumbnailTopRight: (
-    <>
-      <ThumbnailIconButton
-        aria-label="Add to favorites"
-        onClick={action("thumbnail favorite clicked")}
-        icon={svgPin}
-      />
-    </>
-  ),
+export const WithSvgThumbnail: StoryObj<typeof BaseCardStory> = {
+  name: "With SVG thumbnail",
+  args: {
+    ...baseArgs,
+    thumbnail: <SvgThumbnail src={svgGeo} />,
+  },
+};
+
+export const Loading: StoryObj<typeof BaseCardStory> = {
+  args: { ...baseArgs, loading: true },
+};
+
+export const Disabled: StoryObj<typeof BaseCardStory> = {
+  name: "Disabled state",
+  args: { ...baseArgs, disabled: true },
+};
+
+export const LongTitle: StoryObj<typeof BaseCardStory> = {
+  name: "Long title",
+  args: {
+    ...baseArgs,
+    title:
+      "This is a very long title that should truncate automagically with an ellipsis at the end",
+    moreActions: [
+      {
+        key: "open",
+        label: "Open with",
+        onClick: action("menu: open clicked"),
+        icon: svgGeo,
+      },
+    ],
+  },
+};
+
+export const OpenSitePlus: StoryObj<typeof BaseCardStory> = {
+  name: "OpenSite+ iModel style",
+  args: {
+    ...baseArgs,
+    title: "OpenSite+ iModel",
+    subheader: "Modified 2026-01-01",
+    description:
+      "This card mimics the design of OpenSite+ iModel cards with an AvatarGroup in the top left, a pin/favorite button in the top right, and no dedicated action buttons below the description.",
+    onContextMenu: action("context-menu opened"),
+    moreActions: [
+      {
+        key: "open",
+        label: "Open with",
+        onClick: action("menu: open with clicked"),
+        icon: svgGeo,
+      },
+      { key: "share", label: "Share", onClick: action("menu: share clicked") },
+      { key: "delete", label: "Delete", onClick: action("menu: delete clicked") },
+    ],
+    actions: [
+      {
+        key: "open",
+        label: "Open",
+        onClick: action("default open action clicked"),
+      },
+    ],
+    statusIconHref: undefined,
+    thumbnailTopLeft: (
+      <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+        <AvatarGroup max={3}>
+          <Avatar alt="User 1" src="https://i.pravatar.cc/150?img=1" />
+          <Avatar alt="User 2" src="https://i.pravatar.cc/150?img=2" />
+          <Avatar alt="User 3" src="https://i.pravatar.cc/150?img=3" />
+        </AvatarGroup>
+      </Box>
+    ),
+    thumbnailTopRight: (
+      <>
+        <ThumbnailIconButton
+          aria-label="Add to favorites"
+          onClick={action("thumbnail favorite clicked")}
+          icon={svgPin}
+        />
+      </>
+    ),
+  },
 };

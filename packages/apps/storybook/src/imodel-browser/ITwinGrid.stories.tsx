@@ -21,13 +21,9 @@ import {
   Text,
   Tile,
 } from "@itwin/itwinui-react";
-import { Meta, Story } from "@storybook/react/types-6-0";
+import type { Meta, StoryObj } from "@storybook/react-webpack5";
 import React, { PropsWithChildren } from "react";
-
-import {
-  accessTokenArgTypes,
-  withAccessTokenOverride,
-} from "../utils/storyHelp";
+import { accessTokenArgTypes } from "../utils/storyHelp";
 
 type TileProps = React.ComponentPropsWithoutRef<typeof Tile>;
 
@@ -35,97 +31,92 @@ export const ITwinGrid = (props: ITwinGridProps) => (
   <ExternalComponent {...props} />
 );
 
-const accessToken = accessTokenArgTypes.accessToken;
 export default {
   title: "imodel-browser/ITwinGrid",
   component: ITwinGrid,
-  argTypes: {
-    accessToken,
-  },
+  argTypes: accessTokenArgTypes,
+  args: { apiOverrides: { serverEnvironmentPrefix: "qa" } },
   excludeStories: ["ITwinGrid"],
 } as Meta;
 
-const Template: Story<ITwinGridProps> = withAccessTokenOverride((args) => (
-  <ITwinGrid {...args} />
-));
-export const Primary = Template.bind({});
-Primary.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
-};
+export const Primary: StoryObj<typeof ITwinGrid> = {};
 
-export const OverrideCellData = Template.bind({});
-OverrideCellData.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
-  viewMode: "cells",
-  cellOverrides: {
-    ITwinNumber: (props) => (
-      <strong>
-        <IconButton
-          size="small"
-          styleType="borderless"
-          onClick={(e) => {
-            e.stopPropagation();
-            console.log("Icon Clicked");
-          }}
-        >
-          <SvgHeart />
-        </IconButton>{" "}
-        {props.value}
-      </strong>
-    ),
-    ITwinName: (props) => <i style={{ color: "red" }}>{props.value}</i>,
-    hideColumns: [ITwinCellColumn.LastModified],
+export const OverrideCellData: StoryObj<typeof ITwinGrid> = {
+  args: {
+    viewMode: "cells",
+    cellOverrides: {
+      ITwinNumber: (props) => (
+        <strong>
+          <IconButton
+            size="small"
+            styleType="borderless"
+            onClick={(e) => {
+              e.stopPropagation();
+              console.log("Icon Clicked");
+            }}
+          >
+            <SvgHeart />
+          </IconButton>{" "}
+          {props.value}
+        </strong>
+      ),
+      ITwinName: (props) => <i style={{ color: "red" }}>{props.value}</i>,
+      hideColumns: [ITwinCellColumn.LastModified],
+    },
   },
 };
 
-export const OverrideApiData = Template.bind({});
-OverrideApiData.args = {
-  apiOverrides: {
-    data: [
+export const OverrideApiData: StoryObj<typeof ITwinGrid> = {
+  args: {
+    apiOverrides: {
+      data: [
+        {
+          id: "1",
+          displayName: "Provided iTwin",
+          number: "No Network Calls",
+        },
+        {
+          id: "2",
+          displayName: "Useful iTwin",
+          number:
+            "Use if the data comes from a different API or needs to be tweaked",
+        },
+      ],
+    },
+  },
+};
+
+export const IndividualContextMenu: StoryObj<typeof ITwinGrid> = {
+  args: {
+    iTwinActions: [
       {
-        id: "1",
-        displayName: "Provided iTwin",
-        number: "No Network Calls",
+        children: "displayName contains 'R'",
+        visible: (iTwin) => iTwin.displayName?.includes("R") ?? false,
+        key: "withR",
+        onClick: (iTwin) => alert("Contains R" + iTwin?.displayName),
       },
       {
-        id: "2",
-        displayName: "Useful iTwin",
-        number:
-          "Use if the data comes from a different API or needs to be tweaked",
+        children: "Add iTwinNumber",
+        visible: (iTwin) => !iTwin.number,
+        key: "addD",
+        onClick: (iTwin) => alert("Add iTwinNumber to " + iTwin?.displayName),
+      },
+      {
+        children: "Edit iTwinNumber",
+        visible: (iTwin) => !!iTwin.number,
+        key: "editD",
+        onClick: (iTwin) => alert("Edit iTwinNumber: " + iTwin?.number),
       },
     ],
   },
 };
 
-export const IndividualContextMenu = Template.bind({});
-IndividualContextMenu.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
-  iTwinActions: [
-    {
-      children: "displayName contains 'R'",
-      visible: (iTwin) => iTwin.displayName?.includes("R") ?? false,
-      key: "withR",
-      onClick: (iTwin) => alert("Contains R" + iTwin?.displayName),
+export const SimpleTilePropsOverrides: StoryObj<typeof ITwinGrid> = {
+  args: {
+    tileOverrides: {
+      tileProps: { style: { width: "100%" }, variant: "folder" },
     },
-    {
-      children: "Add iTwinNumber",
-      visible: (iTwin) => !iTwin.number,
-      key: "addD",
-      onClick: (iTwin) => alert("Add iTwinNumber to " + iTwin?.displayName),
-    },
-    {
-      children: "Edit iTwinNumber",
-      visible: (iTwin) => !!iTwin.number,
-      key: "editD",
-      onClick: (iTwin) => alert("Edit iTwinNumber: " + iTwin?.number),
-    },
-  ],
-};
-
-export const SimpleTilePropsOverrides = Template.bind({});
-SimpleTilePropsOverrides.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
-  tileOverrides: { tileProps: { style: { width: "100%" }, variant: "folder" } },
+  },
 };
 
 interface IModelMinimal {
@@ -147,28 +138,27 @@ const buildMenuItems =
     close: () => void,
     setVersion: React.Dispatch<React.SetStateAction<IModelMinimal | undefined>>
   ) =>
-  (v: IModelMinimal) =>
-    (
-      <span
-        onClick={(event) => {
-          event.stopPropagation();
-        }}
-      >
-        {v.id === "loading" ? (
-          <MenuItemSkeleton />
-        ) : (
-          <MenuItem
-            key={v.id}
-            onClick={() => {
-              close();
-              v.id !== "loading" && setVersion(v);
-            }}
-          >
-            {v.displayName}
-          </MenuItem>
-        )}
-      </span>
-    );
+  (v: IModelMinimal) => (
+    <span
+      onClick={(event) => {
+        event.stopPropagation();
+      }}
+    >
+      {v.id === "loading" ? (
+        <MenuItemSkeleton />
+      ) : (
+        <MenuItem
+          key={v.id}
+          onClick={() => {
+            close();
+            v.id !== "loading" && setVersion(v);
+          }}
+        >
+          {v.displayName}
+        </MenuItem>
+      )}
+    </span>
+  );
 
 const Pager = (props: PropsWithChildren<{ onClick: () => void }>) => (
   <span onClick={props.onClick}>
@@ -258,7 +248,7 @@ const useIndividualState: IndividualITwinStateHook = (iTwin, props) => {
       metadata: (
         <span
           onClick={() => {
-            imodels === undefined && fetchIModelList();
+            imodels === undefined && void fetchIModelList();
           }}
         >
           <DropdownButton
@@ -294,46 +284,46 @@ const useIndividualState: IndividualITwinStateHook = (iTwin, props) => {
   };
 };
 
-export const StatefulPropsOverrides = Template.bind({});
-StatefulPropsOverrides.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
-  useIndividualState,
+export const StatefulPropsOverrides: StoryObj<typeof ITwinGrid> = {
+  args: {
+    useIndividualState,
+  },
 };
 
-export const WithPostProcessCallback: Story<ITwinGridProps> =
-  withAccessTokenOverride((args) => {
-    const addStartTile = React.useCallback(
-      (iTwins: ITwinFull[], status: DataStatus | undefined) => {
-        if (status !== DataStatus.Complete) {
-          return iTwins;
-        }
-        iTwins.unshift({
-          id: "newProject",
-          displayName: "New Project",
-          number: "Click on this tile to create a new ITwin",
-        });
+const WithPostProcessCallbackRender = (args: ITwinGridProps) => {
+  const addStartTile = React.useCallback(
+    (iTwins: ITwinFull[], status: DataStatus | undefined) => {
+      if (status !== DataStatus.Complete) {
         return iTwins;
-      },
-      []
-    );
-    return (
-      <div>
-        <Text variant="title">Description</Text>
-        <Text as="p" variant="body">
-          Property <Code>postProcessCallback</Code> allows modification of the
-          data that is sent to the grid, here, we add a new tile at the start of
-          the list for a 'New Project'.
-        </Text>
-        <ITwinGrid {...args} postProcessCallback={addStartTile} />
-      </div>
-    );
-  });
-WithPostProcessCallback.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
+      }
+      iTwins.unshift({
+        id: "newProject",
+        displayName: "New Project",
+        number: "Click on this tile to create a new ITwin",
+      });
+      return iTwins;
+    },
+    []
+  );
+  return (
+    <div>
+      <Text variant="title">Description</Text>
+      <Text as="p" variant="body">
+        Property <Code>postProcessCallback</Code> allows modification of the
+        data that is sent to the grid, here, we add a new tile at the start of
+        the list for a 'New Project'.
+      </Text>
+      <ITwinGrid {...args} postProcessCallback={addStartTile} />
+    </div>
+  );
 };
 
-export const FetchAllSubclasses = Template.bind({});
-FetchAllSubclasses.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
-  iTwinSubClass: "All",
+export const WithPostProcessCallback: StoryObj<typeof ITwinGrid> = {
+  render: (args) => <WithPostProcessCallbackRender {...args} />,
+};
+
+export const FetchAllSubclasses: StoryObj<typeof ITwinGrid> = {
+  args: {
+    iTwinSubClass: "All",
+  },
 };

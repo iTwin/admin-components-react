@@ -18,8 +18,8 @@ import AvatarGroup from "@mui/material/AvatarGroup";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import Typography from "@mui/material/Typography";
-import { action } from "@storybook/addon-actions";
-import { Meta, Story } from "@storybook/react/types-6-0";
+import { action } from "storybook/actions";
+import type { Meta, StoryObj } from "@storybook/react-webpack5";
 import React from "react";
 
 import bridgeThumbnail from "../utils/bridge.jpg";
@@ -28,7 +28,6 @@ import overpassThumbnail from "../utils/overpass.jpg";
 import powerThumbnail from "../utils/power.jpg";
 import {
   accessTokenArgTypes,
-  withAccessTokenOverride,
 } from "../utils/storyHelp";
 
 type ITwinTileType = React.ComponentPropsWithoutRef<typeof ITwinTile>;
@@ -39,9 +38,14 @@ export const ITwinGrid = (props: ITwinGridProps) => (
 
 const accessToken = accessTokenArgTypes.accessToken;
 
-const Template: Story<ITwinGridProps> = withAccessTokenOverride((args) => (
-  <ITwinGrid {...args} />
-));
+export default {
+  title: "imodel-browser/ITwinGridMUI",
+  component: ITwinGrid,
+  argTypes: {
+    accessToken,
+  },
+  excludeStories: ["ITwinGrid"],
+} as Meta;
 
 const baseArgs: ITwinGridProps = {
   apiOverrides: { serverEnvironmentPrefix: "qa" },
@@ -55,13 +59,14 @@ const baseArgs: ITwinGridProps = {
   ],
 };
 
-export const Primary = Template.bind({});
-Primary.args = {
-  ...baseArgs,
+export const Primary: StoryObj<typeof ITwinGrid> = {
+  args: {
+    ...baseArgs,
+  },
 };
 
-export const TableView = Template.bind({});
-TableView.args = {
+export const TableView: StoryObj<typeof ITwinGrid> = {
+  args: {
   ...baseArgs,
   viewMode: "cells",
   moreActions: [
@@ -77,10 +82,11 @@ TableView.args = {
         action("clicked something else " + iTwin?.displayName)(iTwin),
     },
   ],
+  },
 };
 
-export const TableViewWithOverrides = Template.bind({});
-TableViewWithOverrides.args = {
+export const TableViewWithOverrides: StoryObj<typeof ITwinGrid> = {
+  args: {
   ...baseArgs,
   viewMode: "cells",
   actions: [
@@ -121,10 +127,11 @@ TableViewWithOverrides.args = {
     },
     hideColumns: [ITwinCellColumn.LastModified],
   },
+  },
 };
 
-export const OverrideApiData = Template.bind({});
-OverrideApiData.args = {
+export const OverrideApiData: StoryObj<typeof ITwinGrid> = {
+  args: {
   ...baseArgs,
   apiOverrides: {
     data: [
@@ -155,10 +162,11 @@ OverrideApiData.args = {
       },
     ],
   },
+  },
 };
 
-export const IndividualContextMenu = Template.bind({});
-IndividualContextMenu.args = {
+export const IndividualContextMenu: StoryObj<typeof ITwinGrid> = {
+  args: {
   ...baseArgs,
   moreActions: [
     {
@@ -181,10 +189,11 @@ IndividualContextMenu.args = {
       onClick: (iTwin) => action("Edit iTwinNumber: " + iTwin?.number)(iTwin),
     },
   ],
+  },
 };
 
-export const SimpleTilePropsOverrides = Template.bind({});
-SimpleTilePropsOverrides.args = {
+export const SimpleTilePropsOverrides: StoryObj<typeof ITwinGrid> = {
+  args: {
   ...baseArgs,
   tileOverrides: {
     status: "negative",
@@ -198,6 +207,7 @@ SimpleTilePropsOverrides.args = {
         <Avatar alt="User 3" src="https://i.pravatar.cc/150?img=3" />
       </AvatarGroup>
     ),
+  },
   },
 };
 
@@ -231,14 +241,14 @@ const useIndividualState: IndividualITwinStateHook = (iTwin, props) => {
   };
 };
 
-export const UseIndividualState = Template.bind({});
-UseIndividualState.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
-  useIndividualState,
+export const UseIndividualState: StoryObj<typeof ITwinGrid> = {
+  args: {
+    apiOverrides: { serverEnvironmentPrefix: "qa" },
+    useIndividualState,
+  },
 };
 
-export const WithPostProcessCallback: Story<ITwinGridProps> =
-  withAccessTokenOverride((args) => {
+const WithPostProcessCallbackRender = (args: ITwinGridProps) => {
     const addStartTile = React.useCallback(
       (iTwins: ITwinFull[], status: any) => {
         if (status !== (DataStatus as any).Complete) {
@@ -258,42 +268,49 @@ export const WithPostProcessCallback: Story<ITwinGridProps> =
         <Typography variant="body1" sx={{ mb: 2 }}>
           Property <Code>postProcessCallback</Code> allows modification of the
           data that is sent to the grid, here, we add a new tile at the start of
-          the list for a 'New Project'.
+          the list for a &apos;New Project&apos;.
         </Typography>
         <ITwinGrid {...args} postProcessCallback={addStartTile} />
       </div>
     );
-  });
-WithPostProcessCallback.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
 };
 
-export const FetchAllSubclasses = Template.bind({});
-FetchAllSubclasses.args = {
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
-  iTwinSubClass: "All",
-};
-
-export const NoResultsWithDefaultEmptyState = Template.bind({});
-NoResultsWithDefaultEmptyState.args = {
-  ...baseArgs,
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
-  postProcessCallback: (iModels, status) => {
-    return [];
+export const WithPostProcessCallback: StoryObj<typeof ITwinGrid> = {
+  render: (args) => <WithPostProcessCallbackRender {...args} />,
+  args: {
+    apiOverrides: { serverEnvironmentPrefix: "qa" },
   },
 };
 
-export const TableViewWithNoResults = Template.bind({});
-TableViewWithNoResults.args = {
-  ...baseArgs,
-  viewMode: "cells",
-  postProcessCallback: (iModels, status) => {
-    return [];
+export const FetchAllSubclasses: StoryObj<typeof ITwinGrid> = {
+  args: {
+    apiOverrides: { serverEnvironmentPrefix: "qa" },
+    iTwinSubClass: "All",
   },
 };
 
-export const StringsOverrideGrid = Template.bind({});
-StringsOverrideGrid.args = {
+export const NoResultsWithDefaultEmptyState: StoryObj<typeof ITwinGrid> = {
+  args: {
+    ...baseArgs,
+    apiOverrides: { serverEnvironmentPrefix: "qa" },
+    postProcessCallback: (iModels, status) => {
+      return [];
+    },
+  },
+};
+
+export const TableViewWithNoResults: StoryObj<typeof ITwinGrid> = {
+  args: {
+    ...baseArgs,
+    viewMode: "cells",
+    postProcessCallback: (iModels, status) => {
+      return [];
+    },
+  },
+};
+
+export const StringsOverrideGrid: StoryObj<typeof ITwinGrid> = {
+  args: {
   ...baseArgs,
   apiOverrides: {
     data: [
@@ -342,10 +359,11 @@ StringsOverrideGrid.args = {
       `${visibleCount.toLocaleString()} af ${totalCount.toLocaleString()}`,
     paginationRowsPerPage: "Rækker per side:",
   },
+  },
 };
 
-export const StringsOverrideTable = Template.bind({});
-StringsOverrideTable.args = {
+export const StringsOverrideTable: StoryObj<typeof ITwinGrid> = {
+  args: {
   ...baseArgs,
   viewMode: "cells",
   apiOverrides: {
@@ -398,13 +416,5 @@ StringsOverrideTable.args = {
       `${visibleCount.toLocaleString()} af ${totalCount.toLocaleString()}`,
     paginationRowsPerPage: "Rækker per side:",
   },
-};
-
-export default {
-  title: "imodel-browser/ITwinGridMUI",
-  component: ITwinGrid,
-  argTypes: {
-    accessToken,
   },
-  excludeStories: ["ITwinGrid"],
-} as Meta;
+};

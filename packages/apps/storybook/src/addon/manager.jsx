@@ -3,16 +3,22 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 /* eslint-disable react-hooks/rules-of-hooks */
-import addons, { types } from "@storybook/addons";
-import { useAddonState, useArgTypes, useGlobals } from "@storybook/api";
+import {
+  addons,
+  types,
+  useAddonState,
+  useArgTypes,
+} from "storybook/manager-api";
 import {
   IconButton,
-  Icons,
-  Loader,
   TooltipLinkList,
   WithTooltip,
-} from "@storybook/components";
+} from "storybook/internal/components";
+import { SvgItwin } from "@itwin/itwinui-icons-react";
 import React from "react";
+
+const ITWIN_ID_EVENT = "project/toolbar/set-itwin-id";
+const ACCESS_TOKEN_EVENT = "auth/toolbar/set-access-token";
 
 addons.register("project/toolbar", () => {
   addons.add("project-toolbar-addon/toolbar", {
@@ -22,17 +28,35 @@ addons.register("project/toolbar", () => {
     //👇 Shows the Toolbar UI element if either the Canvas or Docs tab is active
     match: ({ viewMode }) => !!viewMode?.match(/^(story|docs)$/),
     render: () => {
-      const [globals, updateGlobals] = useGlobals();
       const { iTwinId: withITwinId } = useArgTypes();
+      const channel = addons.getChannel();
 
       const [state, setState] = useAddonState("project/toolbar", {
         mustLoad: true,
         projects: [],
+        accessToken: "",
       });
+      const [selectedId, setSelectedId] = useAddonState(
+        "project/toolbar/selected",
+        ""
+      );
+      const [accessToken, setAccessToken] = useAddonState(
+        "project/toolbar/accessToken",
+        ""
+      );
+
+      React.useEffect(() => {
+        const handler = (token) => {
+          setAccessToken(token);
+          setState({ mustLoad: true, projects: [] });
+        };
+        channel.on(ACCESS_TOKEN_EVENT, handler);
+        return () => channel.off(ACCESS_TOKEN_EVENT, handler);
+      }, [channel, setState, setAccessToken]);
 
       const fetchProjects = React.useCallback(async () => {
-        if (!state.mustLoad || !globals.accessToken) {
-          if (!globals.accessToken) {
+        if (!state.mustLoad || !accessToken) {
+          if (!accessToken) {
             setState({
               mustLoad: true,
               projects: [{ displayName: "Authentication required" }],
@@ -47,20 +71,7 @@ addons.register("project/toolbar", () => {
               {
                 displayName: (
                   <div style={{ display: "flex", gap: 4 }}>
-                    <div
-                      style={{ width: 16, height: 16, position: "relative" }}
-                    >
-                      <Loader
-                        size={16}
-                        style={{
-                          borderLeftColor: "currentColor",
-                          borderBottomColor: "currentColor",
-                          borderRightColor: "currentColor",
-                          borderTopColor: "rgba(0,0,0,0)",
-                        }}
-                      />
-                    </div>
-                    <span>Fetching favorites</span>
+                    <span>Fetching favorites...</span>
                   </div>
                 ),
               },
@@ -69,7 +80,7 @@ addons.register("project/toolbar", () => {
           const response = await fetch(
             "https://qa-api.bentley.com/itwins/favorites?subClass=Project",
             {
-              headers: { Authorization: globals.accessToken },
+              headers: { Authorization: accessToken },
             }
           );
           if (response.ok) {
@@ -89,7 +100,7 @@ addons.register("project/toolbar", () => {
         } catch (e) {
           console.error("Error", e);
         }
-      }, [state.mustLoad, globals.accessToken, setState]);
+      }, [state.mustLoad, accessToken, setState]);
 
       const buildLinks = React.useCallback(
         (onHide) =>
@@ -98,34 +109,35 @@ addons.register("project/toolbar", () => {
             id: project.id,
             title: project.displayName,
             onClick: () => {
-              updateGlobals({
-                iTwinId: globals.iTwinId === project.id ? "" : project.id,
-              });
+              const newId = selectedId === project.id ? "" : project.id;
+              setSelectedId(newId);
+              channel.emit(ITWIN_ID_EVENT, newId);
               onHide();
             },
-            active: globals.iTwinId === project.id,
+            active: selectedId === project.id,
           })),
-        [state.projects, globals.iTwinId, updateGlobals]
+        [state.projects, selectedId, setSelectedId, channel]
       );
 
-      return withITwinId && globals.accessToken ? (
+      return withITwinId && accessToken ? (
         <WithTooltip
-          placement="top"
-          trigger="hover"
-          closeOnClick
+          placement="bottom"
+          trigger="click"
+          closeOnOutsideClick
+          onVisibleChange={async (visible) => {
+            if (visible) await fetchProjects();
+          }}
           tooltip={({ onHide }) => {
             return <TooltipLinkList links={buildLinks(onHide)} />;
           }}
         >
           <IconButton
-            active={globals.iTwinId}
+            active={!!selectedId}
             title={`Favorite projects${
-              globals.iTwinId ? " (click to unselect)" : ""
+              selectedId ? " (click to unselect)" : ""
             }`}
-            onMouseEnter={() => fetchProjects()}
-            onClick={() => updateGlobals({ iTwinId: "" })}
           >
-            <Icons icon={"book"} />
+            <SvgItwin />
           </IconButton>
         </WithTooltip>
       ) : null;

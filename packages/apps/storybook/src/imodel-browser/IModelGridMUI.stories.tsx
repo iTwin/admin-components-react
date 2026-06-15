@@ -13,8 +13,8 @@ import Avatar from "@mui/material/Avatar";
 import AvatarGroup from "@mui/material/AvatarGroup";
 import Chip from "@mui/material/Chip";
 import Typography from "@mui/material/Typography";
-import { action } from "@storybook/addon-actions";
-import { Meta, Story } from "@storybook/react/types-6-0";
+import { action } from "storybook/actions";
+import type { Meta, StoryObj } from "@storybook/react-webpack5";
 import SvgDelete from "@stratakit/icons/delete.svg";
 import React from "react";
 
@@ -22,8 +22,6 @@ import bridgeThumbnail from "../utils/bridge.jpg";
 import nightThumbnail from "../utils/night.jpg";
 import {
   accessTokenArgTypes,
-  withAccessTokenOverride,
-  withITwinIdOverride,
 } from "../utils/storyHelp";
 import {
   additionalData,
@@ -41,10 +39,6 @@ export default {
   argTypes: accessTokenArgTypes,
   excludeStories: ["IModelGridMUI"],
 } as Meta;
-
-const Template: Story<IModelGridMUIProps> = withITwinIdOverride(
-  withAccessTokenOverride((args) => <IModelGridMUI {...args} />)
-);
 
 const baseArgs: IModelGridMUIProps = {
   apiOverrides: { serverEnvironmentPrefix: "qa" },
@@ -72,17 +66,19 @@ const baseArgs: IModelGridMUIProps = {
   ],
 };
 
-export const Primary = Template.bind({});
-Primary.args = { ...baseArgs };
-
-export const TableView = Template.bind({});
-TableView.args = {
-  ...baseArgs,
-  viewMode: "cells",
+export const Primary: StoryObj<typeof IModelGridMUI> = {
+  args: { ...baseArgs },
 };
 
-export const TableViewWithOverrides = Template.bind({});
-TableViewWithOverrides.args = {
+export const TableView: StoryObj<typeof IModelGridMUI> = {
+  args: {
+    ...baseArgs,
+    viewMode: "cells",
+  },
+};
+
+export const TableViewWithOverrides: StoryObj<typeof IModelGridMUI> = {
+  args: {
   ...baseArgs,
   actions: [
     {
@@ -127,11 +123,10 @@ TableViewWithOverrides.args = {
     },
     hideColumns: [IModelCellColumn.LastModified],
   },
+  },
 };
 
-export const OverrideApiDataWithLoadMore: Story<IModelGridMUIProps> =
-  withITwinIdOverride(
-    withAccessTokenOverride((args) => {
+const OverrideApiDataWithLoadMoreRender = (args: IModelGridMUIProps) => {
       const [data, setData] = React.useState<IModelFull[]>(initialData);
       const [isLoading, setIsLoading] = React.useState(false);
       const [hasMore, setHasMore] = React.useState(true);
@@ -170,11 +165,15 @@ export const OverrideApiDataWithLoadMore: Story<IModelGridMUIProps> =
           onLoadMore={handleLoadMore}
         />
       );
-    })
-  );
+};
 
-export const ContextualActions = Template.bind({});
-ContextualActions.args = {
+export const OverrideApiDataWithLoadMore: StoryObj<typeof IModelGridMUI> = {
+  render: (args) => <OverrideApiDataWithLoadMoreRender {...args} />,
+  args: { ...baseArgs },
+};
+
+export const ContextualActions: StoryObj<typeof IModelGridMUI> = {
+  args: {
   ...baseArgs,
   actions: [
     {
@@ -215,29 +214,32 @@ ContextualActions.args = {
         action("Edit description: " + iModel?.displayName)(iModel),
     },
   ],
-};
-
-export const SimpleTilePropsOverrides = Template.bind({});
-SimpleTilePropsOverrides.args = {
-  ...baseArgs,
-  tileOverrides: {
-    thumbnail: bridgeThumbnail,
-    thumbnailBottomRight: <Chip size="small" label="Tile Bottom Right" />,
-    thumbnailBottomLeft: <Chip size="small" label="Thumbnail Bottom Left " />,
-    thumbnailTopLeft: (
-      <AvatarGroup max={3}>
-        <Avatar alt="User 1" src="https://i.pravatar.cc/150?img=1" />
-        <Avatar alt="User 2" src="https://i.pravatar.cc/150?img=2" />
-        <Avatar alt="User 3" src="https://i.pravatar.cc/150?img=3" />
-      </AvatarGroup>
-    ),
   },
 };
 
-export const StatefulPropsOverrides = Template.bind({});
-StatefulPropsOverrides.args = {
-  ...baseArgs,
-  useIndividualState,
+export const SimpleTilePropsOverrides: StoryObj<typeof IModelGridMUI> = {
+  args: {
+    ...baseArgs,
+    tileOverrides: {
+      thumbnail: bridgeThumbnail,
+      thumbnailBottomRight: <Chip size="small" label="Tile Bottom Right" />,
+      thumbnailBottomLeft: <Chip size="small" label="Thumbnail Bottom Left " />,
+      thumbnailTopLeft: (
+        <AvatarGroup max={3}>
+          <Avatar alt="User 1" src="https://i.pravatar.cc/150?img=1" />
+          <Avatar alt="User 2" src="https://i.pravatar.cc/150?img=2" />
+          <Avatar alt="User 3" src="https://i.pravatar.cc/150?img=3" />
+        </AvatarGroup>
+      ),
+    },
+  },
+};
+
+export const StatefulPropsOverrides: StoryObj<typeof IModelGridMUI> = {
+  args: {
+    ...baseArgs,
+    useIndividualState,
+  },
 };
 
 function addStartTileCallback(iModels: IModelFull[], status?: DataStatus) {
@@ -254,127 +256,134 @@ function addStartTileCallback(iModels: IModelFull[], status?: DataStatus) {
   return iModels;
 }
 
-export const WithPostProcessCallback = Template.bind({});
-WithPostProcessCallback.args = {
-  ...baseArgs,
-  postProcessCallback: addStartTileCallback,
-};
-
-export const DefaultNoStateComponentOverride = Template.bind({});
-DefaultNoStateComponentOverride.args = {
-  ...baseArgs,
-  emptyStateComponent: (
-    <div>
-      {/* eslint-disable-next-line jsx-a11y/heading-has-content */}
-      <Typography variant="h2" render={<h2 />}>
-        There are no iModels to show.
-      </Typography>
-    </div>
-  ),
-};
-
-export const DisableAddToRecents = Template.bind({});
-DisableAddToRecents.args = {
-  ...baseArgs,
-  disableAddToRecents: true,
-};
-DisableAddToRecents.argTypes = {
-  accessToken: { table: { disable: true } },
-  actions: { table: { disable: true } },
-  sortOptions: { table: { disable: true } },
-  moreActions: { table: { disable: true } },
-  useIndividualState: { table: { disable: true } },
-  tileOverrides: { table: { disable: true } },
-  stringsOverrides: { table: { disable: true } },
-  apiOverrides: { table: { disable: true } },
-  postProcessCallback: { table: { disable: true } },
-  emptyStateComponent: { table: { disable: true } },
-  searchText: { table: { disable: true } },
-  viewMode: { table: { disable: true } },
-  pageSize: { table: { disable: true } },
-  maxCount: { table: { disable: true } },
-  tableOverrides: { table: { disable: true } },
-  className: { table: { disable: true } },
-};
-
-export const Recents = Template.bind({});
-Recents.args = {
-  ...baseArgs,
-  requestType: "recents",
-};
-
-export const RecentsWithCustomIcon = Template.bind({});
-RecentsWithCustomIcon.args = {
-  ...baseArgs,
-  requestType: "recents",
-  removeFromRecentsIcon: SvgDelete,
-};
-
-export const NoResultsWithDefaultEmptyState = Template.bind({});
-NoResultsWithDefaultEmptyState.args = {
-  ...baseArgs,
-  apiOverrides: { serverEnvironmentPrefix: "qa" },
-  postProcessCallback: (iModels, status) => {
-    return [];
+export const WithPostProcessCallback: StoryObj<typeof IModelGridMUI> = {
+  args: {
+    ...baseArgs,
+    postProcessCallback: addStartTileCallback,
   },
 };
 
-export const StringsOverrideGrid = Template.bind({});
-StringsOverrideGrid.args = {
-  ...baseArgs,
-  moreActions: [
-    {
-      label: "Some action",
-      key: "something",
-      onClick: (iModel) => action("clicked " + iModel?.displayName)(iModel),
-    },
-  ],
-  stringsOverrides: {
-    moreOptions: "Fleiri valkostir",
-    addToFavorites: "Bæta við eftirlæti",
-    removeFromFavorites: "Fjarlægja úr eftirlætum",
-    tableColumnName: "Heiti iModel",
-    tableColumnDescription: "Lýsing iModel",
-    tableColumnLastModified: "Síðast breytt",
-    noRowsLabel: "Engar raðir",
-    noResultsOverlayLabel: "Engar niðurstöður fundust.",
-    paginationRowsPerPage: "Raðir á síðu:",
-    footerRowSelected: (count: number) =>
-      count !== 1
-        ? `${count.toLocaleString()} raðir valdar`
-        : `${count.toLocaleString()} röð valin`,
-    footerTotalVisibleRows: (visibleCount: number, totalCount: number) =>
-      `${visibleCount.toLocaleString()} af ${totalCount.toLocaleString()}`,
+export const DefaultNoStateComponentOverride: StoryObj<typeof IModelGridMUI> = {
+  args: {
+    ...baseArgs,
+    emptyStateComponent: (
+      <div>
+        {/* eslint-disable-next-line jsx-a11y/heading-has-content */}
+        <Typography variant="h2" render={<h2 />}>
+          There are no iModels to show.
+        </Typography>
+      </div>
+    ),
   },
 };
 
-export const StringsOverrideTable = Template.bind({});
-StringsOverrideTable.args = {
-  ...baseArgs,
-  viewMode: "cells",
+export const DisableAddToRecents: StoryObj<typeof IModelGridMUI> = {
+  args: {
+    ...baseArgs,
+    disableAddToRecents: true,
+  },
+  argTypes: {
+    accessToken: { table: { disable: true } },
+    actions: { table: { disable: true } },
+    sortOptions: { table: { disable: true } },
+    moreActions: { table: { disable: true } },
+    useIndividualState: { table: { disable: true } },
+    tileOverrides: { table: { disable: true } },
+    stringsOverrides: { table: { disable: true } },
+    apiOverrides: { table: { disable: true } },
+    postProcessCallback: { table: { disable: true } },
+    emptyStateComponent: { table: { disable: true } },
+    searchText: { table: { disable: true } },
+    viewMode: { table: { disable: true } },
+    pageSize: { table: { disable: true } },
+    maxCount: { table: { disable: true } },
+    tableOverrides: { table: { disable: true } },
+    className: { table: { disable: true } },
+  },
+};
 
-  moreActions: [
-    {
-      label: "Some action",
-      key: "something",
-      onClick: (iModel) => action("clicked " + iModel?.displayName)(iModel),
+export const Recents: StoryObj<typeof IModelGridMUI> = {
+  args: {
+    ...baseArgs,
+    requestType: "recents",
+  },
+};
+
+export const RecentsWithCustomIcon: StoryObj<typeof IModelGridMUI> = {
+  args: {
+    ...baseArgs,
+    requestType: "recents",
+    removeFromRecentsIcon: SvgDelete,
+  },
+};
+
+export const NoResultsWithDefaultEmptyState: StoryObj<typeof IModelGridMUI> = {
+  args: {
+    ...baseArgs,
+    apiOverrides: { serverEnvironmentPrefix: "qa" },
+    postProcessCallback: (iModels, status) => {
+      return [];
     },
-  ],
-  stringsOverrides: {
-    moreOptions: "Fleiri valkostir",
-    addToFavorites: "Bæta við eftirlæti",
-    removeFromFavorites: "Fjarlægja úr eftirlætum",
-    tableColumnName: "Heiti iModel",
-    tableColumnDescription: "Lýsing iModel",
-    tableColumnLastModified: "Síðast breytt",
-    noRowsLabel: "Engar raðir",
-    noResultsOverlayLabel: "Engar niðurstöður fundust.",
-    paginationRowsPerPage: "Raðir á síðu:",
-    footerRowSelected: (count: number) =>
-      count !== 1
-        ? `${count.toLocaleString()} raðir valdar`
-        : `${count.toLocaleString()} röð valin`,
-    footerTotalVisibleRows: (visibleCount: number, totalCount: number) =>
-      `${visibleCount.toLocaleString()} af ${totalCount.toLocaleString()}`,
+  },
+};
+
+export const StringsOverrideGrid: StoryObj<typeof IModelGridMUI> = {
+  args: {
+    ...baseArgs,
+    moreActions: [
+      {
+        label: "Some action",
+        key: "something",
+        onClick: (iModel) => action("clicked " + iModel?.displayName)(iModel),
+      },
+    ],
+    stringsOverrides: {
+      moreOptions: "Fleiri valkostir",
+      addToFavorites: "Bæta við eftirlæti",
+      removeFromFavorites: "Fjarlægja úr eftirlætum",
+      tableColumnName: "Heiti iModel",
+      tableColumnDescription: "Lýsing iModel",
+      tableColumnLastModified: "Síðast breytt",
+      noRowsLabel: "Engar raðir",
+      noResultsOverlayLabel: "Engar niðurstöður fundust.",
+      paginationRowsPerPage: "Raðir á síðu:",
+      footerRowSelected: (count: number) =>
+        count !== 1
+          ? `${count.toLocaleString()} raðir valdar`
+          : `${count.toLocaleString()} röð valin`,
+      footerTotalVisibleRows: (visibleCount: number, totalCount: number) =>
+        `${visibleCount.toLocaleString()} af ${totalCount.toLocaleString()}`,
+    },
+  },
+};
+
+export const StringsOverrideTable: StoryObj<typeof IModelGridMUI> = {
+  args: {
+    ...baseArgs,
+    viewMode: "cells",
+    moreActions: [
+      {
+        label: "Some action",
+        key: "something",
+        onClick: (iModel) => action("clicked " + iModel?.displayName)(iModel),
+      },
+    ],
+    stringsOverrides: {
+      moreOptions: "Fleiri valkostir",
+      addToFavorites: "Bæta við eftirlæti",
+      removeFromFavorites: "Fjarlægja úr eftirlætum",
+      tableColumnName: "Heiti iModel",
+      tableColumnDescription: "Lýsing iModel",
+      tableColumnLastModified: "Síðast breytt",
+      noRowsLabel: "Engar raðir",
+      noResultsOverlayLabel: "Engar niðurstöður fundust.",
+      paginationRowsPerPage: "Raðir á síðu:",
+      footerRowSelected: (count: number) =>
+        count !== 1
+          ? `${count.toLocaleString()} raðir valdar`
+          : `${count.toLocaleString()} röð valin`,
+      footerTotalVisibleRows: (visibleCount: number, totalCount: number) =>
+        `${visibleCount.toLocaleString()} af ${totalCount.toLocaleString()}`,
+    },
   },
 };
