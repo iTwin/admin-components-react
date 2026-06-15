@@ -51,9 +51,15 @@ export const useITwinData = ({
     setProjects([]);
     setPage(0);
     setMorePages(true);
+    fetchingMoreRef.current = false;
   }, []);
 
+  const fetchingMoreRef = React.useRef(false);
   const fetchMore = React.useCallback(() => {
+    if (fetchingMoreRef.current) {
+      return;
+    }
+    fetchingMoreRef.current = true;
     setPage((page) => page + 1);
   }, []);
 
@@ -147,6 +153,7 @@ export const useITwinData = ({
             throw new Error(errorText);
           });
       setStatus(DataStatus.Complete);
+      fetchingMoreRef.current = false;
       requestType === "favorites" && resetShouldRefetchFavorites?.();
       if (result.iTwins.length !== PAGE_SIZE) {
         setMorePages(false);
@@ -163,6 +170,7 @@ export const useITwinData = ({
       }
       setProjects([]);
       setStatus(DataStatus.FetchFailed);
+      fetchingMoreRef.current = false;
       console.error(e);
     });
     return () => {

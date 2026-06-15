@@ -12,25 +12,21 @@ import typescript from "rollup-plugin-typescript2";
 
 import * as packageJson from "./package.json";
 
-const rollupConfig = {
-  input: "src/index.ts",
+const baseConfig = {
   external: Object.keys(packageJson.dependencies).map(
     (dep) => new RegExp(`${dep}(/.*)?`, "g")
   ),
-  output: [
-    {
-      file: packageJson.main,
-      format: "cjs",
-    },
-    {
-      file: packageJson.module,
-      format: "esm",
-    },
-  ],
-  plugins: [
+};
+
+function createPlugins({ declaration = true } = {}) {
+  return [
     peerDepsExternal(),
     commonjs(),
-    typescript(),
+    typescript({
+      tsconfigOverride: declaration
+        ? {}
+        : { compilerOptions: { declaration: false, declarationMap: false } },
+    }),
     svgr(),
     postcss({
       use: {
@@ -43,7 +39,42 @@ const rollupConfig = {
       include: ["**/*.png"], // Include file extensions you want to handle (e.g., PNG)
       emitFiles: true, // Emit the files to the output directory
     }),
-  ],
-};
+  ];
+}
+
+const rollupConfig = [
+  // Default/itwinui barrel — emits JS + declarations for the entire project
+  {
+    ...baseConfig,
+    plugins: createPlugins(),
+    input: "src/index.ts",
+    output: [
+      {
+        file: packageJson.main,
+        format: "cjs",
+      },
+      {
+        file: packageJson.module,
+        format: "esm",
+      },
+    ],
+  },
+  // MUI barrel — JS only, declarations already emitted by the first entry
+  {
+    ...baseConfig,
+    plugins: createPlugins({ declaration: false }),
+    input: "src/mui/index.ts",
+    output: [
+      {
+        file: "cjs/mui/index.js",
+        format: "cjs",
+      },
+      {
+        file: "esm/mui/index.js",
+        format: "esm",
+      },
+    ],
+  },
+];
 
 export default rollupConfig;

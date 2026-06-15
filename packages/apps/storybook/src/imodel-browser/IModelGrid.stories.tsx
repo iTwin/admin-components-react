@@ -336,8 +336,8 @@ const useIndividualState = (iModel: IModelFull, props: IModelTileProps) => {
       isNew: versions?.length === 0,
       metadata: (
         <span
-          onClick={() => {
-            versions === undefined && void fetchVersionsList();
+          onClick={async () => {
+            versions === undefined && (await fetchVersionsList());
           }}
         >
           <DropdownButton

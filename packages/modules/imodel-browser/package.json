@@ -2,7 +2,7 @@
   "name": "@itwin/imodel-browser-react",
   "description": "Components that let the user browse the iModels of a context and select one.",
   "repository": "https://github.com/iTwin/admin-components-react/tree/main/packages/modules/imodel-browser",
-  "version": "4.2.0",
+  "version": "4.3.0",
   "main": "cjs/index.js",
   "module": "esm/index.js",
   "types": "cjs/index.d.ts",
@@ -15,6 +15,16 @@
       "require": {
         "types": "./cjs/index.d.ts",
         "default": "./cjs/index.js"
+      }
+    },
+    "./mui": {
+      "import": {
+        "types": "./esm/mui/index.d.ts",
+        "default": "./esm/mui/index.js"
+      },
+      "require": {
+        "types": "./cjs/mui/index.d.ts",
+        "default": "./cjs/mui/index.js"
       }
     }
   },
@@ -37,8 +47,12 @@
   },
   "devDependencies": {
     "@itwin/itwinui-react": "^3.19.4",
+    "@mui/material": "^9.0.0",
+    "@mui/x-data-grid": "^9.3.0",
     "@rollup/plugin-commonjs": "~17.1.0",
     "@rollup/plugin-url": "^8.0.1",
+    "@stratakit/icons": "^0.3.1",
+    "@stratakit/mui": "^0.4.1",
     "@svgr/rollup": "^5.5.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^11.1.0",
@@ -85,8 +99,26 @@
     "typescript": "~6.0.3"
   },
   "peerDependencies": {
-    "@itwin/itwinui-react": "~3.17.3",
+    "@itwin/itwinui-react": "^3.17.3",
+    "@mui/material": "^9.0.0",
+    "@mui/x-data-grid": "^9.3.0",
+    "@stratakit/icons": "^0.3.1",
+    "@stratakit/mui": "^0.4.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
+  },
+  "peerDependenciesMeta": {
+    "@mui/material": {
+      "optional": true
+    },
+    "@mui/x-data-grid": {
+      "optional": true
+    },
+    "@stratakit/icons": {
+      "optional": true
+    },
+    "@stratakit/mui": {
+      "optional": true
+    }
   }
 }

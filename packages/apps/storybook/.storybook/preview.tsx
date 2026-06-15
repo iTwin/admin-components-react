@@ -3,6 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { ThemeProvider } from "@itwin/itwinui-react";
+import { Root } from "@stratakit/mui";
 import { themes } from "storybook/theming";
 import { useDarkMode } from "storybook-dark-mode";
 import { darkTheme, lightTheme } from "./itwinTheme";
@@ -82,6 +83,9 @@ export const decorators = [
           minHeight: "100vh",
         }}
         theme={theme}
+        as={Root}
+        future={{ themeBridge: true }}
+        colorScheme={theme}
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         children={
           (<Story args={{ ...context.args, ...injectedArgs }} />) as any

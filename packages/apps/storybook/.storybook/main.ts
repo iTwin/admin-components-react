@@ -37,6 +37,10 @@ const config: StorybookConfig = {
     config.resolve.mainFields = ["module", "main"];
 
     const packagePaths: Record<string, string> = {
+      "@itwin/imodel-browser-react/mui": path.resolve(
+        __dirname,
+        "../../../modules/imodel-browser/src/mui"
+      ),
       "@itwin/imodel-browser-react": path.resolve(
         __dirname,
         "../../../modules/imodel-browser/src"
@@ -89,6 +93,27 @@ const config: StorybookConfig = {
       test: /\.scss$/,
       include: Object.values(packagePaths),
       use: ["style-loader", "css-loader", "sass-loader"],
+    });
+
+    // Ensure StrataKit icon SVGs are emitted with stable URLs so <Icon href="...#icon" />
+    // resolves correctly in Storybook (pnpm paths can otherwise leak into URLs).
+    config.module.rules.push({
+      test: /\.svg$/i,
+      include: (resourcePath: string) => {
+        if (!resourcePath) {
+          return false;
+        }
+        const normalized = resourcePath.replace(/\\/g, "/");
+        return (
+          normalized.includes("/node_modules/@stratakit/icons/") ||
+          normalized.includes("/.pnpm/@stratakit+icons@")
+        );
+      },
+      type: "asset/resource",
+      generator: {
+        filename: "static/media/[name].[contenthash:8][ext]",
+        publicPath: "/",
+      },
     });
 
     return config;

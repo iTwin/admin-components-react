@@ -2,6 +2,18 @@
   "name": "@itwin/imodel-browser-react",
   "entries": [
     {
+      "version": "4.3.0",
+      "tag": "@itwin/imodel-browser-react_v4.3.0",
+      "date": "Fri, 12 Jun 2026 14:00:59 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Add Stratakit MUI components"
+          }
+        ]
+      }
+    },
+    {
       "version": "4.2.0",
       "tag": "@itwin/imodel-browser-react_v4.2.0",
       "date": "Wed, 29 Apr 2026 20:47:51 GMT",
