@@ -11,47 +11,47 @@ export {
   IModelGridMUI as IModelGrid,
   type IModelGridMUIProps as IModelGridProps,
   type IModelGridStringsMUI as IModelGridStrings,
-} from "../containers/iModelGrid/IModelGridMUI";
+} from "./containers/iModelGrid/IModelGridMUI";
 
 export {
   IModelTileMUI as IModelTile,
   type IModelTileMUIProps as IModelTileProps,
-} from "../containers/iModelTiles/IModelTileMUI";
+} from "./containers/iModelTiles/IModelTileMUI";
 
 export {
   IModelThumbnailMUI as IModelThumbnail,
   type IModelThumbnailMUIProps as IModelThumbnailProps,
-} from "../containers/iModelThumbnail/IModelThumbnailMUI";
+} from "./containers/iModelThumbnail/IModelThumbnailMUI";
 
 export {
   ITwinGridMUI as ITwinGrid,
   type ITwinGridPropsMUI as ITwinGridProps,
   type IndividualITwinStateHookMUI as IndividualITwinStateHook,
   type ITwinGridStringsMUI as ITwinGridStrings,
-} from "../containers/ITwinGrid/ITwinGridMUI";
+} from "./containers/ITwinGrid/ITwinGridMUI";
 
 export {
   ITwinTileMUI as ITwinTile,
   type ITwinTilePropsMUI as ITwinTileProps,
-} from "../containers/ITwinGrid/ITwinTileMUI";
+} from "./containers/ITwinGrid/ITwinTileMUI";
 
 export {
   NoResultsMUI as NoResults,
   type NoResultsMUIProps as NoResultsProps,
-} from "../components/noResults/NoResultsMUI";
+} from "./components/noResults/NoResultsMUI";
 
 export {
   BaseCardLoading as IModelGhostTile,
   type BaseCardLoadingProps as IModelGhostTileProps,
-} from "../components/baseCard/BaseCardLoading";
+} from "./components/baseCard/BaseCardLoading";
 
 export type { MoreActionsMenuItemMUI as MoreActionsMenuItem } from "../utils/_buildMenuOptions";
 export type { CardActionsItemMUI as CardActionsItem } from "../utils/_buildMenuOptions";
-export { ThumbnailIconButton } from "../components/baseCard/ThumbnailIconButton";
+export { ThumbnailIconButton } from "./components/baseCard/ThumbnailIconButton";
 export {
   SvgThumbnail,
   type SvgThumbnailProps,
-} from "../components/baseCard/SvgThumbnail";
+} from "./components/baseCard/SvgThumbnail";
 
 export type {
   IModelFull,

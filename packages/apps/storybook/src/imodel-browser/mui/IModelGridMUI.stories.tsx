@@ -18,13 +18,13 @@ import { Meta, Story } from "@storybook/react/types-6-0";
 import SvgDelete from "@stratakit/icons/delete.svg";
 import React from "react";
 
-import bridgeThumbnail from "../utils/bridge.jpg";
-import nightThumbnail from "../utils/night.jpg";
+import bridgeThumbnail from "../../utils/bridge.jpg";
+import nightThumbnail from "../../utils/night.jpg";
 import {
   accessTokenArgTypes,
   withAccessTokenOverride,
   withITwinIdOverride,
-} from "../utils/storyHelp";
+} from "../../utils/storyHelp";
 import {
   additionalData,
   initialData,
