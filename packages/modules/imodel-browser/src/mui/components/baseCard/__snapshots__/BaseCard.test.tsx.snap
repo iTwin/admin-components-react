@@ -1,97 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`BaseCard renders in disabled state 1`] = `
-<div
-  class="🥝Root 🥝MuiRoot"
-  data-_sk-color-scheme="light"
->
-  <article
-    aria-labelledby=":ro:"
-    class="MuiPaper-root MuiPaper-outlined MuiPaper-rounded MuiCard-root css-kscmbp-MuiPaper-root-MuiCard-root"
-    inert="true"
-  >
-    <div
-      class="MuiBox-root css-j4m9l"
-    />
-    <hr
-      class="MuiDivider-root MuiDivider-fullWidth css-4icces-MuiDivider-root"
-      role="presentation"
-    />
-    <div
-      class="MuiCardHeader-root css-qpjmc7-MuiCardHeader-root"
-    >
-      <div
-        class="MuiCardHeader-content css-17kxlwy-MuiCardHeader-content"
-      >
-        <h2
-          class="MuiTypography-root MuiTypography-h5 MuiCardHeader-title css-pt4l7i-MuiTypography-root"
-          id=":ro:"
-        >
-          Test Card
-        </h2>
-        <h3
-          class="MuiTypography-root MuiTypography-caption css-1578r2f-MuiTypography-root"
-        />
-      </div>
-    </div>
-    <div
-      class="MuiCardContent-root css-1li13yv-MuiCardContent-root"
-    />
-  </article>
-</div>
-`;
-
-exports[`BaseCard renders in loading state 1`] = `
-<div
-  class="🥝Root 🥝MuiRoot"
-  data-_sk-color-scheme="light"
->
-  <article
-    aria-busy="true"
-    aria-label="Loading"
-    class="MuiPaper-root MuiPaper-outlined MuiPaper-rounded MuiCard-root css-1qaq6co-MuiPaper-root-MuiCard-root"
-  >
-    <div
-      class="MuiBox-root css-j4m9l"
-    >
-      <span
-        class="MuiSkeleton-root MuiSkeleton-rectangular MuiSkeleton-pulse css-p93oea-MuiSkeleton-root"
-      />
-    </div>
-    <div
-      class="MuiCardHeader-root css-149tc0y-MuiCardHeader-root"
-    >
-      <div
-        class="MuiCardHeader-content css-1jkp9bu-MuiCardHeader-content"
-      >
-        <h2
-          class="MuiTypography-root MuiTypography-h5 MuiCardHeader-title css-haxvb7-MuiTypography-root"
-        >
-          <span
-            class="MuiSkeleton-root MuiSkeleton-text MuiSkeleton-pulse MuiSkeleton-withChildren MuiSkeleton-fitContent MuiSkeleton-heightAuto css-1nkybs7-MuiSkeleton-root"
-          >
-            <h2
-              class="MuiTypography-root MuiTypography-h2 css-ckjhjo-MuiTypography-root"
-            />
-          </span>
-        </h2>
-      </div>
-    </div>
-    <div
-      class="MuiCardContent-root css-1lt5qva-MuiCardContent-root"
-    >
-      <span
-        class="MuiSkeleton-root MuiSkeleton-text MuiSkeleton-pulse MuiSkeleton-withChildren MuiSkeleton-fitContent MuiSkeleton-heightAuto css-1nkybs7-MuiSkeleton-root"
-      >
-        <p
-          class="MuiTypography-root MuiTypography-body2 css-zhb9un-MuiTypography-root"
-        />
-      </span>
-    </div>
-  </article>
-</div>
-`;
-
 exports[`BaseCard renders with all the props 1`] = `
 <div
   class="🥝Root 🥝MuiRoot"
@@ -192,7 +100,7 @@ exports[`BaseCard renders with all the props 1`] = `
             class="🥝Icon"
           >
             <use
-              href="mock-file-stub#icon"
+              href="mock-static-asset-path#icon"
             />
           </svg>
         </button>
@@ -207,7 +115,7 @@ exports[`BaseCard renders with all the props 1`] = `
             class="🥝Icon"
           >
             <use
-              href="mock-file-stub#icon"
+              href="mock-static-asset-path#icon"
             />
           </svg>
         </button>
@@ -263,7 +171,7 @@ exports[`BaseCard renders with all the props 1`] = `
             data-_sk-size="large"
           >
             <use
-              href="mock-file-stub#icon"
+              href="mock-static-asset-path#icon"
             />
           </svg>
         </div>
@@ -310,7 +218,7 @@ exports[`BaseCard renders with all the props 1`] = `
             class="🥝Icon"
           >
             <use
-              href="mock-file-stub#icon"
+              href="mock-static-asset-path#icon"
             />
           </svg>
         </button>

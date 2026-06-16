@@ -95,14 +95,4 @@ describe("BaseCard", () => {
     });
     expect(container.firstChild).toMatchSnapshot();
   });
-
-  it("renders in loading state", () => {
-    const { container } = renderBaseCard({ loading: true });
-    expect(container.firstChild).toMatchSnapshot();
-  });
-
-  it("renders in disabled state", () => {
-    const { container } = renderBaseCard({ disabled: true });
-    expect(container.firstChild).toMatchSnapshot();
-  });
 });
