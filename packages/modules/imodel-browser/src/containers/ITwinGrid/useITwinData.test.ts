@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { renderHook } from "@testing-library/react-hooks";
+import { act, renderHook } from "@testing-library/react-hooks";
 import {
   type ResponseComposition,
   type RestContext,
@@ -278,6 +278,81 @@ describe("useITwinData hook", () => {
       rerender([{ accessToken, orderbyOptions: "somethingDifferent" }]);
       await waitForNextUpdate();
       expect(urlWatcher).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  describe("fetchMore", () => {
+    it("ignores fetchMore until the initial request settles", async () => {
+      const requestedPages: (string | null)[] = [];
+      server.use(
+        rest.get("https://api.bentley.com/itwins/", (req, res, ctx) => {
+          const skip = req.url.searchParams.get("$skip");
+          requestedPages.push(skip);
+          return res(
+            ctx.status(200),
+            ctx.json({
+              iTwins: [{ id: `id-${skip}`, displayName: `name-${skip}` }],
+            })
+          );
+        })
+      );
+
+      const { result, waitForNextUpdate } = renderHook(() =>
+        useITwinData({ accessToken })
+      );
+
+      // fetchMore is available immediately but must be ignored until the first request completes.
+      act(() => {
+        result.current.fetchMore?.();
+        result.current.fetchMore?.();
+      });
+
+      await waitForNextUpdate();
+
+      expect(result.current.status).toEqual(DataStatus.Complete);
+      // Only the first page should have been requested
+      expect(requestedPages).toEqual(["0"]);
+      expect(result.current.iTwins).toEqual([
+        { id: "id-0", displayName: "name-0" },
+      ]);
+    });
+
+    it("fetches the next page once the previous request has settled", async () => {
+      const firstPage = Array.from({ length: 5 }, (_, i) => ({
+        id: `first-${i}`,
+        displayName: `first-${i}`,
+      }));
+      const secondPage = [{ id: "second-0", displayName: "second-0" }];
+      server.use(
+        rest.get("https://api.bentley.com/itwins/", (req, res, ctx) => {
+          const skip = req.url.searchParams.get("$skip");
+          return res(
+            ctx.status(200),
+            ctx.json({ iTwins: skip === "0" ? firstPage : secondPage })
+          );
+        })
+      );
+
+      const { result, waitForNextUpdate } = renderHook(() =>
+        useITwinData({ accessToken })
+      );
+
+      await waitForNextUpdate();
+      // A full page keeps morePages true, so fetchMore stays available.
+      expect(result.current.status).toEqual(DataStatus.Complete);
+      expect(result.current.iTwins).toHaveLength(5);
+      expect(result.current.fetchMore).toBeDefined();
+
+      act(() => {
+        result.current.fetchMore?.();
+      });
+      await waitForNextUpdate();
+
+      expect(result.current.iTwins).toHaveLength(6);
+      expect(result.current.iTwins).toContainEqual({
+        id: "second-0",
+        displayName: "second-0",
+      });
     });
   });
 });
