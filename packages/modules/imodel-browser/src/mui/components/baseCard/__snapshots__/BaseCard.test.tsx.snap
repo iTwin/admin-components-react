@@ -1,0 +1,305 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BaseCard renders with all the props 1`] = `
+<div
+  class="🥝Root 🥝MuiRoot"
+  data-_sk-color-scheme="light"
+>
+  <article
+    aria-labelledby=":r3:"
+    class="MuiPaper-root MuiPaper-outlined MuiPaper-rounded MuiCard-root css-11apm71-MuiPaper-root-MuiCard-root"
+    data-_sk-actionable=""
+  >
+    <div
+      class="MuiBox-root css-j4m9l"
+    >
+      <div
+        class="MuiBox-root css-1a24o1e"
+      >
+        <div
+          class="MuiBox-root css-1vuaec4"
+        >
+          <div
+            class="MuiChip-root MuiChip-filled MuiChip-sizeSmall MuiChip-colorDefault css-l1x84v-MuiChip-root"
+          >
+            <span
+              class="MuiChip-label css-eccknh-MuiChip-label"
+              id=":r5:"
+            >
+              Top Left
+            </span>
+          </div>
+          <div
+            class="MuiAvatarGroup-root css-1y0l2ft-MuiAvatarGroup-root"
+            role="list"
+            style="--AvatarGroup-spacing: -8px;"
+          >
+            <div
+              class="🥝MuiAvatarGroupItem"
+              role="listitem"
+            >
+              <div
+                class="MuiAvatar-root MuiAvatar-circular MuiAvatarGroup-avatar css-an7b4o-MuiAvatar-root"
+              >
+                <img
+                  alt="User 1"
+                  class="MuiAvatar-img css-1su80sj-MuiAvatar-img"
+                  draggable="false"
+                  src="https://i.pravatar.cc/150?img=1"
+                />
+              </div>
+            </div>
+            <div
+              class="🥝MuiAvatarGroupItem"
+              role="listitem"
+            >
+              <div
+                class="MuiAvatar-root MuiAvatar-circular MuiAvatarGroup-avatar css-an7b4o-MuiAvatar-root"
+              >
+                <img
+                  alt="User 2"
+                  class="MuiAvatar-img css-1su80sj-MuiAvatar-img"
+                  draggable="false"
+                  src="https://i.pravatar.cc/150?img=2"
+                />
+              </div>
+            </div>
+            <div
+              class="🥝MuiAvatarGroupItem"
+              role="listitem"
+            >
+              <div
+                class="MuiAvatar-root MuiAvatar-circular MuiAvatarGroup-avatar css-an7b4o-MuiAvatar-root"
+              >
+                <img
+                  alt="User 3"
+                  class="MuiAvatar-img css-1su80sj-MuiAvatar-img"
+                  draggable="false"
+                  src="https://i.pravatar.cc/150?img=3"
+                />
+              </div>
+            </div>
+            <div
+              class="🥝MuiAvatarGroupItem"
+              role="listitem"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="MuiBox-root css-n4fbak"
+      >
+        <button
+          aria-label="Add to favorites"
+          class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorSecondary MuiIconButton-sizeSmall css-qvmoi4-MuiButtonBase-root-MuiIconButton-root"
+          tabindex="0"
+          type="button"
+        >
+          <svg
+            aria-hidden="true"
+            class="🥝Icon"
+          >
+            <use
+              href="mock-static-asset-path#icon"
+            />
+          </svg>
+        </button>
+        <button
+          aria-label="Muted icon button"
+          class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorSecondary MuiIconButton-sizeSmall css-vjaiy1-MuiButtonBase-root-MuiIconButton-root"
+          tabindex="0"
+          type="button"
+        >
+          <svg
+            aria-hidden="true"
+            class="🥝Icon"
+          >
+            <use
+              href="mock-static-asset-path#icon"
+            />
+          </svg>
+        </button>
+      </div>
+      <div
+        class="MuiBox-root css-1i04t5p"
+      >
+        <div
+          class="MuiChip-root MuiChip-filled MuiChip-sizeSmall MuiChip-colorDefault css-l1x84v-MuiChip-root"
+        >
+          <span
+            class="MuiChip-label css-eccknh-MuiChip-label"
+            id=":rb:"
+          >
+            Bottom left
+          </span>
+        </div>
+      </div>
+      <div
+        class="MuiBox-root css-17hjogf"
+      >
+        <div
+          class="MuiChip-root MuiChip-filled MuiChip-sizeSmall MuiChip-colorDefault css-l1x84v-MuiChip-root"
+        >
+          <span
+            class="MuiChip-label css-eccknh-MuiChip-label"
+            id=":rd:"
+          >
+            Bottom right
+          </span>
+        </div>
+      </div>
+    </div>
+    <hr
+      class="MuiDivider-root MuiDivider-fullWidth css-4icces-MuiDivider-root"
+      role="presentation"
+    />
+    <div
+      class="MuiCardHeader-root css-qpjmc7-MuiCardHeader-root"
+    >
+      <div
+        class="MuiCardHeader-avatar css-1r9wl67-MuiCardHeader-avatar"
+      >
+        <div
+          aria-hidden="true"
+          class="MuiBox-root css-1fru31a"
+          data-testid="status-icon"
+          role="img"
+        >
+          <svg
+            aria-hidden="true"
+            class="🥝Icon"
+            data-_sk-size="large"
+          >
+            <use
+              href="mock-static-asset-path#icon"
+            />
+          </svg>
+        </div>
+      </div>
+      <div
+        class="MuiCardHeader-content css-17kxlwy-MuiCardHeader-content"
+      >
+        <h2
+          class="MuiTypography-root MuiTypography-body2 MuiCardHeader-title css-19x7l83-MuiTypography-root"
+          id=":r3:"
+        >
+          <button
+            class="MuiButtonBase-root MuiCardActionArea-root css-faos08-MuiButtonBase-root-MuiCardActionArea-root"
+            tabindex="0"
+            type="button"
+          >
+            Test Card
+            <span
+              class="MuiCardActionArea-focusHighlight css-1h5un5t-MuiCardActionArea-focusHighlight"
+            />
+          </button>
+        </h2>
+        <h3
+          class="MuiTypography-root MuiTypography-caption css-1578r2f-MuiTypography-root"
+        >
+          This is a subheader
+        </h3>
+      </div>
+      <div
+        class="MuiCardHeader-action css-116l9hl-MuiCardHeader-action"
+      >
+        <button
+          aria-expanded="false"
+          aria-haspopup="true"
+          aria-label="More options"
+          class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorSecondary MuiIconButton-sizeSmall css-1ron3nm-MuiButtonBase-root-MuiIconButton-root"
+          data-testid="more-options-button"
+          id=":rf:"
+          tabindex="0"
+          type="button"
+        >
+          <svg
+            aria-hidden="true"
+            class="🥝Icon"
+          >
+            <use
+              href="mock-static-asset-path#icon"
+            />
+          </svg>
+        </button>
+      </div>
+    </div>
+    <div
+      class="MuiCardContent-root css-1li13yv-MuiCardContent-root"
+      data-testid="card-description"
+    >
+      <p
+        class="MuiTypography-root MuiTypography-body2 css-72qc7z-MuiTypography-root"
+      >
+        When there is more than one \`action\` prop they will be rendered as buttons in the footer of the card and the whole card is not clickable.
+      </p>
+    </div>
+    <div
+      class="MuiCardActions-root MuiCardActions-spacing css-1q4nm6f-MuiCardActions-root"
+    >
+      <button
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary css-1wyu1lz-MuiButtonBase-root-MuiButton-root"
+        tabindex="0"
+        type="button"
+      >
+        Open
+      </button>
+      <button
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorSecondary css-1pk93v4-MuiButtonBase-root-MuiButton-root"
+        tabindex="0"
+        type="button"
+      >
+        Share
+      </button>
+      <button
+        class="MuiButtonBase-root Mui-disabled MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorSecondary css-1pk93v4-MuiButtonBase-root-MuiButton-root"
+        disabled=""
+        tabindex="-1"
+        type="button"
+      >
+        Disabled
+      </button>
+    </div>
+  </article>
+</div>
+`;
+
+exports[`BaseCard renders with only a title 1`] = `
+<div
+  class="🥝Root 🥝MuiRoot"
+  data-_sk-color-scheme="light"
+>
+  <article
+    aria-labelledby=":r1:"
+    class="MuiPaper-root MuiPaper-outlined MuiPaper-rounded MuiCard-root css-11apm71-MuiPaper-root-MuiCard-root"
+  >
+    <div
+      class="MuiBox-root css-j4m9l"
+    />
+    <hr
+      class="MuiDivider-root MuiDivider-fullWidth css-4icces-MuiDivider-root"
+      role="presentation"
+    />
+    <div
+      class="MuiCardHeader-root css-qpjmc7-MuiCardHeader-root"
+    >
+      <div
+        class="MuiCardHeader-content css-17kxlwy-MuiCardHeader-content"
+      >
+        <h2
+          class="MuiTypography-root MuiTypography-h5 MuiCardHeader-title css-pt4l7i-MuiTypography-root"
+          id=":r1:"
+        >
+          Test Card
+        </h2>
+        <h3
+          class="MuiTypography-root MuiTypography-caption css-1578r2f-MuiTypography-root"
+        />
+      </div>
+    </div>
+    <div
+      class="MuiCardContent-root css-1li13yv-MuiCardContent-root"
+    />
+  </article>
+</div>
+`;

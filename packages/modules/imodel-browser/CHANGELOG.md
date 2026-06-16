@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Fri, 12 Jun 2026 14:00:59 GMT and should not be manually modified.
+This log was last generated on Tue, 16 Jun 2026 18:38:57 GMT and should not be manually modified.
+
+## 4.3.1
+Tue, 16 Jun 2026 18:38:57 GMT
+
+### Patches
+
+- Update Stratakit card aspect ratio and title style
 
 ## 4.3.0
 Fri, 12 Jun 2026 14:00:59 GMT

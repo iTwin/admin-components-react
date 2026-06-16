@@ -5,19 +5,16 @@
 module.exports = {
   roots: ["<rootDir>/src"],
   transform: {
-    "^.+\\.(ts|tsx)$": [
+    "^.+\\.(ts|tsx|js|jsx)$": [
       "ts-jest",
       {
-        tsconfig: {
-          module: "CommonJS",
-          moduleResolution: "Node10",
-          types: ["jest", "node"],
-        },
+        tsconfig: "./tsconfig.test.json",
+        diagnostics: false,
       },
     ],
   },
   transformIgnorePatterns: [
-    "[/\\\\]node_modules[/\\\\](?!@bentley/ui).+\\.(js|jsx|ts|tsx)$",
+    "node_modules/(?!(\\.pnpm/(@stratakit|@ariakit|@mui).*|@bentley/ui|@stratakit|@ariakit|@mui))",
     "^.+\\.module\\.(css|sass|scss)$",
   ],
   testEnvironment: "jsdom",

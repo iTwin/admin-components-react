@@ -118,12 +118,15 @@ export interface BaseCardProps
 const baseCardSx = {
   overflow: "hidden",
   minWidth: "18rem",
-  minHeight: "15rem",
+  width: "21.5rem",
+  maxWidth: "24rem",
   display: "flex",
   flexDirection: "column",
 };
 
 const textEllipsisSx = {
+  typography: "body1",
+  fontWeight: "500",
   display: "block",
   overflow: "hidden",
   textOverflow: "ellipsis",
