@@ -5,6 +5,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 var Box = require('@mui/material/Box');
 var React = require('react');
 var reactIntersectionObserver = require('react-intersection-observer');
+require('@itwin/itwinui-react');
 var Card = require('@mui/material/Card');
 var CardContent = require('@mui/material/CardContent');
 var CardHeader = require('@mui/material/CardHeader');
@@ -13,7 +14,6 @@ var Typography = require('@mui/material/Typography');
 var svgImodel = require('@stratakit/icons/imodel.svg');
 var svgSearch = require('@stratakit/icons/search.svg');
 var mui = require('@stratakit/mui');
-require('@itwin/itwinui-react');
 var Button = require('@mui/material/Button');
 var CardActionArea = require('@mui/material/CardActionArea');
 var CardActions = require('@mui/material/CardActions');
@@ -83,80 +83,34 @@ var svgItwin__default = /*#__PURE__*/_interopDefaultLegacy(svgItwin);
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-/**
- * Shared thumbnail area container used by BaseCard and BaseCardLoading
- * to ensure consistent sizing.
- *
- * @alpha
- */
-function BaseCardThumbnailArea({ children, className, }) {
-    return (React__default["default"].createElement(Box__default["default"], { className: className, sx: [
-            {
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                position: "relative",
-                aspectRatio: "16 / 10",
-                overflow: "hidden",
-            },
-        ] }, children));
-}
-
-/*---------------------------------------------------------------------------------------------
- * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
- * See LICENSE.md in the project root for license terms and full copyright notice.
- *--------------------------------------------------------------------------------------------*/
-/**
- * Skeleton loading state for BaseCard.
- *
- * @alpha
- */
-const BaseCardLoading = React.forwardRef(({ ...props }, ref) => {
-    return (React__default["default"].createElement(Card__default["default"], { ref: ref, variant: "outlined", "aria-busy": "true", "aria-label": "Loading", ...props },
-        React__default["default"].createElement(BaseCardThumbnailArea, null,
-            React__default["default"].createElement(Skeleton__default["default"], { variant: "rectangular", sx: { width: "100%", height: "100%" } })),
-        React__default["default"].createElement(CardHeader__default["default"], { title: React__default["default"].createElement(Skeleton__default["default"], { variant: "text" },
-                React__default["default"].createElement(Typography__default["default"], { variant: "h2", render: React__default["default"].createElement("h2", null) })) }),
-        React__default["default"].createElement(CardContent__default["default"], null,
-            React__default["default"].createElement(Skeleton__default["default"], { variant: "text" },
-                React__default["default"].createElement(Typography__default["default"], { variant: "body2" })))));
-});
-
-/*---------------------------------------------------------------------------------------------
- * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
- * See LICENSE.md in the project root for license terms and full copyright notice.
- *--------------------------------------------------------------------------------------------*/
-/**
- * No results page for use on iTwinGrid and iModelGrid.
- * @alpha
- */
-const NoResultsMUI = ({ text, subtext, isSearchResult = false, }) => {
-    return (React__default["default"].createElement(Box__default["default"], { "data-testid": "no-results", sx: {
-            position: "absolute",
-            left: "50%",
-            top: "50%",
-            transform: "translate(-50%, -50%)",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            textAlign: "center",
-            m: 2,
-        } },
-        React__default["default"].createElement(Box__default["default"], { sx: {
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: 1,
-            } },
-            React__default["default"].createElement(mui.Icon, { href: isSearchResult ? svgSearch__default["default"] : svgImodel__default["default"], size: "large", style: {
-                    width: "5rem",
-                    height: "5rem",
-                    color: "var(--stratakit-color-text-muted)",
-                } }),
-            React__default["default"].createElement(Typography__default["default"], { variant: "h6", render: React__default["default"].createElement("h2", null) }, text),
-            subtext && React__default["default"].createElement(Typography__default["default"], { variant: "body1" }, subtext))));
-};
+exports.DataStatus = void 0;
+(function (DataStatus) {
+    DataStatus["Fetching"] = "fetching";
+    DataStatus["Complete"] = "complete";
+    DataStatus["FetchFailed"] = "error_fetchFailed";
+    DataStatus["TokenRequired"] = "error_tokenRequired";
+    DataStatus["ContextRequired"] = "error_contextRequired";
+})(exports.DataStatus || (exports.DataStatus = {}));
+/* Supported IModel cell columns */
+exports.IModelCellColumn = void 0;
+(function (IModelCellColumn) {
+    IModelCellColumn["Favorite"] = "Favorite";
+    IModelCellColumn["Name"] = "name";
+    IModelCellColumn["Description"] = "description";
+    IModelCellColumn["LastModified"] = "lastChangesetPushDateTime";
+    /** @deprecated Since 4.1.0. Use `LastModified` instead. */
+    IModelCellColumn["CreatedDateTime"] = "createdDateTime";
+    IModelCellColumn["Options"] = "options";
+})(exports.IModelCellColumn || (exports.IModelCellColumn = {}));
+/* Supported ITwin cell columns */
+exports.ITwinCellColumn = void 0;
+(function (ITwinCellColumn) {
+    ITwinCellColumn["Favorite"] = "Favorite";
+    ITwinCellColumn["Number"] = "ITwinNumber";
+    ITwinCellColumn["Name"] = "ITwinName";
+    ITwinCellColumn["LastModified"] = "LastModified";
+    ITwinCellColumn["Options"] = "options";
+})(exports.ITwinCellColumn || (exports.ITwinCellColumn = {}));
 
 /*---------------------------------------------------------------------------------------------
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
@@ -180,6 +134,290 @@ const _mergeStrings = (defaults, overrides) => !overrides
         }
         return red;
     }, { ...defaults });
+
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+/** Runtime check that we are not fed invalid sort type */
+function isSupportedSortType(sortType) {
+    return (!!sortType &&
+        [
+            "displayName",
+            "name",
+            "description",
+            "initialized",
+            "createdDateTime",
+        ].includes(sortType));
+}
+const sortEitherEmptyValues = (a, b) => (!a && !b ? 0 : !a ? 1 : -1);
+const sortBooleanOrEqualValues = (a, b) => (a === b ? 0 : a ? -1 : 1);
+const sortStringValues = (a, b) => a.localeCompare(b);
+const useIModelSort = (iModels, options, 
+// needed to account for limitation of react hooks
+enableSort = true) => {
+    const sortType = typeof options !== "function" ? options?.sortType : undefined;
+    const descending = typeof options !== "function" ? options?.descending ?? false : undefined;
+    const sortFn = typeof options === "function" ? options : undefined;
+    return React__default["default"].useMemo(() => {
+        if (!enableSort) {
+            return iModels;
+        }
+        if (sortFn) {
+            return [...iModels].sort(sortFn);
+        }
+        if (!isSupportedSortType(sortType)) {
+            return iModels;
+        }
+        const sorted = [...iModels].sort((iModelA, iModelB) => {
+            const a = iModelA[sortType];
+            const b = iModelB[sortType];
+            if (typeof a === "boolean" || typeof b === "boolean" || a === b) {
+                return sortBooleanOrEqualValues(a, b);
+            }
+            if (!a || !b) {
+                return sortEitherEmptyValues(a, b);
+            }
+            // Look this file history on gitHub for dateTimeStringValuesSorting on "createdDateTime"
+            return sortStringValues(a, b);
+        });
+        return descending ? sorted.reverse() : sorted;
+    }, [enableSort, sortFn, sortType, iModels, descending]);
+};
+
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+const DEFAULT_PAGE_SIZE = 100;
+const useIModelData = ({ requestType = "", iTwinId, accessToken, sortOptions, apiOverrides, searchText, pageSize = DEFAULT_PAGE_SIZE, maxCount, dataMode, onLoadMore, onRefetch, }) => {
+    const [needsUpdate, setNeedsUpdate] = React__default["default"].useState(true);
+    const [iModels, setIModels] = React__default["default"].useState([]);
+    const [status, setStatus] = React__default["default"].useState();
+    const [page, setPage] = React__default["default"].useState(0);
+    const [morePagesAvailable, setMorePagesAvailable] = React__default["default"].useState(true);
+    const [abortController, setAbortController] = React__default["default"].useState(undefined);
+    const sortType = sortOptions && ["name", "createdDateTime"].includes(sortOptions.sortType)
+        ? sortOptions.sortType
+        : undefined; //Only available sort-by API at the moment.
+    const [previousSortOptions, setPreviousSortOptions] = React__default["default"].useState(sortOptions && { ...sortOptions });
+    const sortDescending = sortOptions?.descending;
+    const sortedIModels = useIModelSort(iModels, sortOptions, requestType !== "recents");
+    // For recents and favorites, apply client-side filtering based on searchText
+    const filteredIModels = React__default["default"].useMemo(() => {
+        if (!searchText?.trim() ||
+            (requestType !== "recents" && requestType !== "favorites")) {
+            return sortedIModels;
+        }
+        const lowerSearchText = searchText.toLowerCase();
+        return sortedIModels.filter((iModel) => (iModel.name?.toLowerCase().includes(lowerSearchText) ?? false) ||
+            (iModel.description?.toLowerCase().includes(lowerSearchText) ?? false));
+    }, [sortedIModels, searchText, requestType]);
+    const sortChanged = sortOptions?.descending !== previousSortOptions?.descending ||
+        sortOptions?.sortType !== previousSortOptions?.sortType;
+    if (sortChanged) {
+        setPreviousSortOptions(sortOptions);
+    }
+    // cleanup the abort controller when unmounting
+    React.useEffect(() => () => abortController?.abort(), [abortController]);
+    const reset = React__default["default"].useCallback(() => {
+        if (dataMode === "external") {
+            return;
+        }
+        setStatus(exports.DataStatus.Fetching);
+        setIModels([]);
+        setPage(0);
+        setMorePagesAvailable(true);
+        setNeedsUpdate(true);
+    }, [dataMode]);
+    const fetchMore = React__default["default"].useCallback(() => {
+        if (dataMode === "external") {
+            return;
+        }
+        if (needsUpdate ||
+            status === exports.DataStatus.Fetching ||
+            status === exports.DataStatus.TokenRequired ||
+            status === exports.DataStatus.ContextRequired ||
+            !morePagesAvailable) {
+            return;
+        }
+        setPage((page) => page + 1);
+        setNeedsUpdate(true);
+    }, [dataMode, needsUpdate, status, morePagesAvailable]);
+    React__default["default"].useEffect(() => {
+        if (dataMode === "external") {
+            return;
+        }
+        // start from scratch when any external state changes
+        if (requestType !== "recents" && requestType !== "favorites") {
+            reset();
+        }
+    }, [
+        dataMode,
+        iTwinId,
+        accessToken,
+        sortOptions?.descending,
+        sortOptions?.sortType,
+        apiOverrides?.data,
+        apiOverrides?.serverEnvironmentPrefix,
+        searchText,
+        pageSize,
+        maxCount,
+        requestType,
+        reset,
+    ]);
+    React__default["default"].useEffect(() => {
+        if (dataMode === "external") {
+            return;
+        }
+        // start from scratch when any external state changes
+        if (requestType === "recents" || requestType === "favorites") {
+            reset();
+        }
+    }, [
+        dataMode,
+        iTwinId,
+        accessToken,
+        sortOptions?.descending,
+        sortOptions?.sortType,
+        apiOverrides?.data,
+        apiOverrides?.serverEnvironmentPrefix,
+        pageSize,
+        maxCount,
+        requestType,
+        reset,
+    ]);
+    // Main function
+    React__default["default"].useEffect(() => {
+        if (dataMode === "external" || !needsUpdate) {
+            return;
+        }
+        setNeedsUpdate(false);
+        abortController?.abort();
+        setAbortController(undefined);
+        if (!accessToken || !iTwinId) {
+            setStatus(!accessToken ? exports.DataStatus.TokenRequired : exports.DataStatus.ContextRequired);
+            setIModels([]);
+            return;
+        }
+        // If sort changes but we already have all the data, let client side sorting do its job
+        if (sortChanged && !morePagesAvailable) {
+            setStatus(exports.DataStatus.Complete);
+            return;
+        }
+        // Otherwise, fetch from server
+        setStatus(exports.DataStatus.Fetching);
+        const { abortController: newAbortController, fetchIModels } = createFetchIModelsFn(iTwinId, accessToken, sortType, sortDescending ?? false, page, searchText, pageSize, maxCount, apiOverrides?.serverEnvironmentPrefix, requestType);
+        setAbortController(newAbortController);
+        fetchIModels()
+            .then(({ iModels, morePagesAvailable }) => {
+            setMorePagesAvailable(morePagesAvailable);
+            setIModels((prev) => page === 0 ? [...iModels] : [...prev, ...iModels]);
+            setStatus(exports.DataStatus.Complete);
+        })
+            .catch((e) => {
+            if (e.name === "AbortError") {
+                // Aborting because unmounting is not an error, swallow.
+                return;
+            }
+            setIModels([]);
+            setMorePagesAvailable(false);
+            setStatus(exports.DataStatus.FetchFailed);
+            console.error(e);
+        });
+    }, [
+        dataMode,
+        abortController,
+        accessToken,
+        apiOverrides?.data,
+        apiOverrides?.serverEnvironmentPrefix,
+        iModels,
+        iTwinId,
+        maxCount,
+        pageSize,
+        morePagesAvailable,
+        needsUpdate,
+        page,
+        requestType,
+        searchText,
+        sortChanged,
+        sortDescending,
+        sortType,
+    ]);
+    if (dataMode === "external") {
+        return {
+            iModels: apiOverrides?.data ?? [],
+            status: apiOverrides?.isLoading
+                ? exports.DataStatus.Fetching
+                : exports.DataStatus.Complete,
+            fetchMore: apiOverrides?.hasMoreData && !apiOverrides.isLoading
+                ? onLoadMore
+                : undefined,
+            refetchIModels: onRefetch ??
+                (() => {
+                    // No-op in external mode - consumer handles refetch
+                }),
+        };
+    }
+    return {
+        iModels: filteredIModels,
+        status,
+        fetchMore: morePagesAvailable ? fetchMore : undefined,
+        refetchIModels: reset,
+    };
+};
+const createFetchIModelsFn = (iTwinId, accessToken, sortType, sortDescending, page, searchText, pageSize = DEFAULT_PAGE_SIZE, maxCount, serverEnvironmentPrefix, requestType = "") => {
+    const selection = `?iTwinId=${encodeURIComponent(iTwinId)}`;
+    const sorting = sortType
+        ? `&$orderBy=${encodeURIComponent(sortType)} ${sortDescending ? "desc" : "asc"}`
+        : "";
+    const skip = page * pageSize;
+    if (maxCount !== undefined && skip >= maxCount) {
+        const abortController = new AbortController();
+        return {
+            abortController,
+            fetchIModels: async () => ({
+                iModels: [],
+                morePagesAvailable: false,
+            }),
+        };
+    }
+    const endpoint = ["favorites", "recents"].includes(requestType)
+        ? requestType
+        : "";
+    const top = maxCount ? Math.min(pageSize, maxCount - skip) : pageSize;
+    const paging = `&$skip=${skip}&$top=${top}`;
+    // Only apply server-side search for non-recents and non-favorites requests
+    const searching = searchText?.trim() && !["favorites", "recents"].includes(requestType)
+        ? `&$search=${encodeURIComponent(searchText)}`
+        : "";
+    const abortController = new AbortController();
+    const url = `${_getAPIServer(serverEnvironmentPrefix)}/imodels/${endpoint}${selection}${sorting}${paging}${searching}`;
+    const doFetchRequest = async () => {
+        const options = {
+            signal: abortController.signal,
+            headers: {
+                Authorization: typeof accessToken === "function" ? await accessToken() : accessToken,
+                Prefer: "return=representation",
+                Accept: "application/vnd.bentley.itwin-platform.v2+json",
+            },
+        };
+        const response = await fetch(url, options);
+        if (!response.ok) {
+            throw new Error(await response.text());
+        }
+        const result = await response.json();
+        const totalLocalIModels = page * pageSize + result.iModels.length;
+        return {
+            iModels: result.iModels,
+            morePagesAvailable: !(totalLocalIModels === maxCount || result.iModels.length < top),
+        };
+    };
+    return {
+        abortController,
+        fetchIModels: doFetchRequest,
+    };
+};
 
 async function addIModelToRecents(options) {
     const { iModelId, accessToken, serverEnvironmentPrefix } = options;
@@ -412,39 +650,6 @@ const useIModelFavoritesContext = () => {
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-exports.DataStatus = void 0;
-(function (DataStatus) {
-    DataStatus["Fetching"] = "fetching";
-    DataStatus["Complete"] = "complete";
-    DataStatus["FetchFailed"] = "error_fetchFailed";
-    DataStatus["TokenRequired"] = "error_tokenRequired";
-    DataStatus["ContextRequired"] = "error_contextRequired";
-})(exports.DataStatus || (exports.DataStatus = {}));
-/* Supported IModel cell columns */
-exports.IModelCellColumn = void 0;
-(function (IModelCellColumn) {
-    IModelCellColumn["Favorite"] = "Favorite";
-    IModelCellColumn["Name"] = "name";
-    IModelCellColumn["Description"] = "description";
-    IModelCellColumn["LastModified"] = "lastChangesetPushDateTime";
-    /** @deprecated Since 4.1.0. Use `LastModified` instead. */
-    IModelCellColumn["CreatedDateTime"] = "createdDateTime";
-    IModelCellColumn["Options"] = "options";
-})(exports.IModelCellColumn || (exports.IModelCellColumn = {}));
-/* Supported ITwin cell columns */
-exports.ITwinCellColumn = void 0;
-(function (ITwinCellColumn) {
-    ITwinCellColumn["Favorite"] = "Favorite";
-    ITwinCellColumn["Number"] = "ITwinNumber";
-    ITwinCellColumn["Name"] = "ITwinName";
-    ITwinCellColumn["LastModified"] = "LastModified";
-    ITwinCellColumn["Options"] = "options";
-})(exports.ITwinCellColumn || (exports.ITwinCellColumn = {}));
-
-/*---------------------------------------------------------------------------------------------
- * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
- * See LICENSE.md in the project root for license terms and full copyright notice.
- *--------------------------------------------------------------------------------------------*/
 /**
  * Resolve `CardActionsItemMUI<T>[]` for specific values, e.g. for a given iTwin or iModel, into `ResolvedCardActionItem[]` that can be used by tiles or table rows.
  * @private
@@ -478,6 +683,85 @@ const resolveMoreActionsMenuItemsMUI = (items, value, refetchData) => {
         disabled: typeof disabled === "function" ? disabled(value) : disabled ?? false,
         onClick: onClick ? () => onClick(value, refetchData) : undefined,
     }));
+};
+
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+/**
+ * Shared thumbnail area container used by BaseCard and BaseCardLoading
+ * to ensure consistent sizing.
+ *
+ * @alpha
+ */
+function BaseCardThumbnailArea({ children, className, }) {
+    return (React__default["default"].createElement(Box__default["default"], { className: className, sx: [
+            {
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                position: "relative",
+                aspectRatio: "16 / 10",
+                overflow: "hidden",
+            },
+        ] }, children));
+}
+
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+/**
+ * Skeleton loading state for BaseCard.
+ *
+ * @alpha
+ */
+const BaseCardLoading = React.forwardRef(({ ...props }, ref) => {
+    return (React__default["default"].createElement(Card__default["default"], { ref: ref, variant: "outlined", "aria-busy": "true", "aria-label": "Loading", ...props },
+        React__default["default"].createElement(BaseCardThumbnailArea, null,
+            React__default["default"].createElement(Skeleton__default["default"], { variant: "rectangular", sx: { width: "100%", height: "100%" } })),
+        React__default["default"].createElement(CardHeader__default["default"], { title: React__default["default"].createElement(Skeleton__default["default"], { variant: "text" },
+                React__default["default"].createElement(Typography__default["default"], { variant: "h2", render: React__default["default"].createElement("h2", null) })) }),
+        React__default["default"].createElement(CardContent__default["default"], null,
+            React__default["default"].createElement(Skeleton__default["default"], { variant: "text" },
+                React__default["default"].createElement(Typography__default["default"], { variant: "body2" })))));
+});
+
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+/**
+ * No results page for use on iTwinGrid and iModelGrid.
+ * @alpha
+ */
+const NoResultsMUI = ({ text, subtext, isSearchResult = false, }) => {
+    return (React__default["default"].createElement(Box__default["default"], { "data-testid": "no-results", sx: {
+            position: "absolute",
+            left: "50%",
+            top: "50%",
+            transform: "translate(-50%, -50%)",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            textAlign: "center",
+            m: 2,
+        } },
+        React__default["default"].createElement(Box__default["default"], { sx: {
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: 1,
+            } },
+            React__default["default"].createElement(mui.Icon, { href: isSearchResult ? svgSearch__default["default"] : svgImodel__default["default"], size: "large", style: {
+                    width: "5rem",
+                    height: "5rem",
+                    color: "var(--stratakit-color-text-muted)",
+                } }),
+            React__default["default"].createElement(Typography__default["default"], { variant: "h6", render: React__default["default"].createElement("h2", null) }, text),
+            subtext && React__default["default"].createElement(Typography__default["default"], { variant: "body1" }, subtext))));
 };
 
 /** Flatten an optional SxProps value into spreadable array elements. */
@@ -725,8 +1009,9 @@ const FavoriteIconMUI = ({ isFavorite, onAddToFavorites, onRemoveFromFavorites, 
     const icon = isFavorite && hovered ? pinUnpinSvg__default["default"] : pinSvg__default["default"];
     return (React__default["default"].createElement(ThumbnailIconButton, { "aria-label": isFavorite ? removeLabel : addLabel, "aria-pressed": isFavorite, tabIndex: tabIndex, onMouseEnter: () => setHovered(true), onMouseLeave: () => setHovered(false), onClick: async (event) => {
             // debounce
-            if (pending)
+            if (pending) {
                 return;
+            }
             setPending(true);
             try {
                 if (isFavorite) {
@@ -1070,290 +1355,6 @@ const IModelTableMUI = ({ iModels, moreActions, actions, strings, refetchIModels
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-/** Runtime check that we are not fed invalid sort type */
-function isSupportedSortType(sortType) {
-    return (!!sortType &&
-        [
-            "displayName",
-            "name",
-            "description",
-            "initialized",
-            "createdDateTime",
-        ].includes(sortType));
-}
-const sortEitherEmptyValues = (a, b) => (!a && !b ? 0 : !a ? 1 : -1);
-const sortBooleanOrEqualValues = (a, b) => (a === b ? 0 : a ? -1 : 1);
-const sortStringValues = (a, b) => a.localeCompare(b);
-const useIModelSort = (iModels, options, 
-// needed to account for limitation of react hooks
-enableSort = true) => {
-    const sortType = typeof options !== "function" ? options?.sortType : undefined;
-    const descending = typeof options !== "function" ? options?.descending ?? false : undefined;
-    const sortFn = typeof options === "function" ? options : undefined;
-    return React__default["default"].useMemo(() => {
-        if (!enableSort) {
-            return iModels;
-        }
-        if (sortFn) {
-            return [...iModels].sort(sortFn);
-        }
-        if (!isSupportedSortType(sortType)) {
-            return iModels;
-        }
-        const sorted = [...iModels].sort((iModelA, iModelB) => {
-            const a = iModelA[sortType];
-            const b = iModelB[sortType];
-            if (typeof a === "boolean" || typeof b === "boolean" || a === b) {
-                return sortBooleanOrEqualValues(a, b);
-            }
-            if (!a || !b) {
-                return sortEitherEmptyValues(a, b);
-            }
-            // Look this file history on gitHub for dateTimeStringValuesSorting on "createdDateTime"
-            return sortStringValues(a, b);
-        });
-        return descending ? sorted.reverse() : sorted;
-    }, [enableSort, sortFn, sortType, iModels, descending]);
-};
-
-/*---------------------------------------------------------------------------------------------
- * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
- * See LICENSE.md in the project root for license terms and full copyright notice.
- *--------------------------------------------------------------------------------------------*/
-const DEFAULT_PAGE_SIZE = 100;
-const useIModelData = ({ requestType = "", iTwinId, accessToken, sortOptions, apiOverrides, searchText, pageSize = DEFAULT_PAGE_SIZE, maxCount, dataMode, onLoadMore, onRefetch, }) => {
-    const [needsUpdate, setNeedsUpdate] = React__default["default"].useState(true);
-    const [iModels, setIModels] = React__default["default"].useState([]);
-    const [status, setStatus] = React__default["default"].useState();
-    const [page, setPage] = React__default["default"].useState(0);
-    const [morePagesAvailable, setMorePagesAvailable] = React__default["default"].useState(true);
-    const [abortController, setAbortController] = React__default["default"].useState(undefined);
-    const sortType = sortOptions && ["name", "createdDateTime"].includes(sortOptions.sortType)
-        ? sortOptions.sortType
-        : undefined; //Only available sort-by API at the moment.
-    const [previousSortOptions, setPreviousSortOptions] = React__default["default"].useState(sortOptions && { ...sortOptions });
-    const sortDescending = sortOptions?.descending;
-    const sortedIModels = useIModelSort(iModels, sortOptions, requestType !== "recents");
-    // For recents and favorites, apply client-side filtering based on searchText
-    const filteredIModels = React__default["default"].useMemo(() => {
-        if (!searchText?.trim() ||
-            (requestType !== "recents" && requestType !== "favorites")) {
-            return sortedIModels;
-        }
-        const lowerSearchText = searchText.toLowerCase();
-        return sortedIModels.filter((iModel) => (iModel.name?.toLowerCase().includes(lowerSearchText) ?? false) ||
-            (iModel.description?.toLowerCase().includes(lowerSearchText) ?? false));
-    }, [sortedIModels, searchText, requestType]);
-    const sortChanged = sortOptions?.descending !== previousSortOptions?.descending ||
-        sortOptions?.sortType !== previousSortOptions?.sortType;
-    if (sortChanged) {
-        setPreviousSortOptions(sortOptions);
-    }
-    // cleanup the abort controller when unmounting
-    React.useEffect(() => () => abortController?.abort(), [abortController]);
-    const reset = React__default["default"].useCallback(() => {
-        if (dataMode === "external") {
-            return;
-        }
-        setStatus(exports.DataStatus.Fetching);
-        setIModels([]);
-        setPage(0);
-        setMorePagesAvailable(true);
-        setNeedsUpdate(true);
-    }, [dataMode]);
-    const fetchMore = React__default["default"].useCallback(() => {
-        if (dataMode === "external") {
-            return;
-        }
-        if (needsUpdate ||
-            status === exports.DataStatus.Fetching ||
-            status === exports.DataStatus.TokenRequired ||
-            status === exports.DataStatus.ContextRequired ||
-            !morePagesAvailable) {
-            return;
-        }
-        setPage((page) => page + 1);
-        setNeedsUpdate(true);
-    }, [dataMode, needsUpdate, status, morePagesAvailable]);
-    React__default["default"].useEffect(() => {
-        if (dataMode === "external") {
-            return;
-        }
-        // start from scratch when any external state changes
-        if (requestType !== "recents" && requestType !== "favorites") {
-            reset();
-        }
-    }, [
-        dataMode,
-        iTwinId,
-        accessToken,
-        sortOptions?.descending,
-        sortOptions?.sortType,
-        apiOverrides?.data,
-        apiOverrides?.serverEnvironmentPrefix,
-        searchText,
-        pageSize,
-        maxCount,
-        requestType,
-        reset,
-    ]);
-    React__default["default"].useEffect(() => {
-        if (dataMode === "external") {
-            return;
-        }
-        // start from scratch when any external state changes
-        if (requestType === "recents" || requestType === "favorites") {
-            reset();
-        }
-    }, [
-        dataMode,
-        iTwinId,
-        accessToken,
-        sortOptions?.descending,
-        sortOptions?.sortType,
-        apiOverrides?.data,
-        apiOverrides?.serverEnvironmentPrefix,
-        pageSize,
-        maxCount,
-        requestType,
-        reset,
-    ]);
-    // Main function
-    React__default["default"].useEffect(() => {
-        if (dataMode === "external" || !needsUpdate) {
-            return;
-        }
-        setNeedsUpdate(false);
-        abortController?.abort();
-        setAbortController(undefined);
-        if (!accessToken || !iTwinId) {
-            setStatus(!accessToken ? exports.DataStatus.TokenRequired : exports.DataStatus.ContextRequired);
-            setIModels([]);
-            return;
-        }
-        // If sort changes but we already have all the data, let client side sorting do its job
-        if (sortChanged && !morePagesAvailable) {
-            setStatus(exports.DataStatus.Complete);
-            return;
-        }
-        // Otherwise, fetch from server
-        setStatus(exports.DataStatus.Fetching);
-        const { abortController: newAbortController, fetchIModels } = createFetchIModelsFn(iTwinId, accessToken, sortType, sortDescending ?? false, page, searchText, pageSize, maxCount, apiOverrides?.serverEnvironmentPrefix, requestType);
-        setAbortController(newAbortController);
-        fetchIModels()
-            .then(({ iModels, morePagesAvailable }) => {
-            setMorePagesAvailable(morePagesAvailable);
-            setIModels((prev) => page === 0 ? [...iModels] : [...prev, ...iModels]);
-            setStatus(exports.DataStatus.Complete);
-        })
-            .catch((e) => {
-            if (e.name === "AbortError") {
-                // Aborting because unmounting is not an error, swallow.
-                return;
-            }
-            setIModels([]);
-            setMorePagesAvailable(false);
-            setStatus(exports.DataStatus.FetchFailed);
-            console.error(e);
-        });
-    }, [
-        dataMode,
-        abortController,
-        accessToken,
-        apiOverrides?.data,
-        apiOverrides?.serverEnvironmentPrefix,
-        iModels,
-        iTwinId,
-        maxCount,
-        pageSize,
-        morePagesAvailable,
-        needsUpdate,
-        page,
-        requestType,
-        searchText,
-        sortChanged,
-        sortDescending,
-        sortType,
-    ]);
-    if (dataMode === "external") {
-        return {
-            iModels: apiOverrides?.data ?? [],
-            status: apiOverrides?.isLoading
-                ? exports.DataStatus.Fetching
-                : exports.DataStatus.Complete,
-            fetchMore: apiOverrides?.hasMoreData && !apiOverrides.isLoading
-                ? onLoadMore
-                : undefined,
-            refetchIModels: onRefetch ??
-                (() => {
-                    // No-op in external mode - consumer handles refetch
-                }),
-        };
-    }
-    return {
-        iModels: filteredIModels,
-        status,
-        fetchMore: morePagesAvailable ? fetchMore : undefined,
-        refetchIModels: reset,
-    };
-};
-const createFetchIModelsFn = (iTwinId, accessToken, sortType, sortDescending, page, searchText, pageSize = DEFAULT_PAGE_SIZE, maxCount, serverEnvironmentPrefix, requestType = "") => {
-    const selection = `?iTwinId=${encodeURIComponent(iTwinId)}`;
-    const sorting = sortType
-        ? `&$orderBy=${encodeURIComponent(sortType)} ${sortDescending ? "desc" : "asc"}`
-        : "";
-    const skip = page * pageSize;
-    if (maxCount !== undefined && skip >= maxCount) {
-        const abortController = new AbortController();
-        return {
-            abortController,
-            fetchIModels: async () => ({
-                iModels: [],
-                morePagesAvailable: false,
-            }),
-        };
-    }
-    const endpoint = ["favorites", "recents"].includes(requestType)
-        ? requestType
-        : "";
-    const top = maxCount ? Math.min(pageSize, maxCount - skip) : pageSize;
-    const paging = `&$skip=${skip}&$top=${top}`;
-    // Only apply server-side search for non-recents and non-favorites requests
-    const searching = searchText?.trim() && !["favorites", "recents"].includes(requestType)
-        ? `&$search=${encodeURIComponent(searchText)}`
-        : "";
-    const abortController = new AbortController();
-    const url = `${_getAPIServer(serverEnvironmentPrefix)}/imodels/${endpoint}${selection}${sorting}${paging}${searching}`;
-    const doFetchRequest = async () => {
-        const options = {
-            signal: abortController.signal,
-            headers: {
-                Authorization: typeof accessToken === "function" ? await accessToken() : accessToken,
-                Prefer: "return=representation",
-                Accept: "application/vnd.bentley.itwin-platform.v2+json",
-            },
-        };
-        const response = await fetch(url, options);
-        if (!response.ok) {
-            throw new Error(await response.text());
-        }
-        const result = await response.json();
-        const totalLocalIModels = page * pageSize + result.iModels.length;
-        return {
-            iModels: result.iModels,
-            morePagesAvailable: !(totalLocalIModels === maxCount || result.iModels.length < top),
-        };
-    };
-    return {
-        abortController,
-        fetchIModels: doFetchRequest,
-    };
-};
-
-/*---------------------------------------------------------------------------------------------
- * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
- * See LICENSE.md in the project root for license terms and full copyright notice.
- *--------------------------------------------------------------------------------------------*/
 /**
  * Component to display a grid or table of iModels within a given iTwin.
  *
@@ -1586,218 +1587,6 @@ function removeFromRecentsAction(strings, accessToken, apiOverrides, removeFromR
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-const EMPTY_COLUMN_OVERRIDES = {};
-const EMPTY_HIDE_COLUMNS = [];
-/**
- * Table view for iTwins using MUI X DataGrid (Community edition).
- */
-const ITwinTableMUI = ({ iTwins, moreActions, actions, strings, iTwinFavorites, addITwinToFavorites, removeITwinFromFavorites, refetchITwins, tableOverrides: { columnOverrides = EMPTY_COLUMN_OVERRIDES, hideColumns = EMPTY_HIDE_COLUMNS, } = {}, isLoading, fetchMore, }) => {
-    // Eagerly load all available data so the table has the full dataset
-    // for client-side pagination and sorting.
-    React__default["default"].useEffect(() => {
-        if (fetchMore) {
-            fetchMore();
-        }
-    }, [fetchMore]);
-    const columns = React__default["default"].useMemo(() => {
-        const cols = [
-            !hideColumns.includes(exports.ITwinCellColumn.Favorite) && {
-                field: "id",
-                headerName: strings.tableColumnFavorites,
-                sortable: false,
-                width: 70,
-                disableColumnMenu: true,
-                renderCell: (params) => {
-                    const isFavorite = iTwinFavorites.has(params.value);
-                    return (React__default["default"].createElement(FavoriteIconMUI, { isFavorite: isFavorite, addLabel: strings.addToFavorites, removeLabel: strings.removeFromFavorites, onAddToFavorites: () => addITwinToFavorites(params.value), onRemoveFromFavorites: () => removeITwinFromFavorites(params.value), transparent: true, tabIndex: params.tabIndex }));
-                },
-                ...columnOverrides[exports.ITwinCellColumn.Favorite],
-            },
-            !hideColumns.includes(exports.ITwinCellColumn.Number) && {
-                field: "number",
-                headerName: strings.tableColumnName,
-                flex: 1,
-                minWidth: 200,
-                disableColumnMenu: true,
-                ...columnOverrides[exports.ITwinCellColumn.Number],
-            },
-            !hideColumns.includes(exports.ITwinCellColumn.Name) && {
-                field: "displayName",
-                headerName: strings.tableColumnDescription,
-                flex: 1,
-                minWidth: 200,
-                disableColumnMenu: true,
-                ...columnOverrides[exports.ITwinCellColumn.Name],
-            },
-            !hideColumns.includes(exports.ITwinCellColumn.LastModified) && {
-                field: "lastModifiedDateTime",
-                headerName: strings.tableColumnLastModified,
-                width: 200,
-                disableColumnMenu: true,
-                valueFormatter: (value) => formatDate(value),
-                ...columnOverrides[exports.ITwinCellColumn.LastModified],
-            },
-            !hideColumns.includes(exports.ITwinCellColumn.Options) && {
-                field: "actions",
-                headerName: "",
-                sortable: false,
-                width: 65,
-                disableColumnMenu: true,
-                renderCell: (params) => {
-                    if (!moreActions || moreActions.length === 0) {
-                        return null;
-                    }
-                    const items = resolveMoreActionsMenuItemsMUI(moreActions, params.row, refetchITwins);
-                    return (React__default["default"].createElement(MoreMenuMUI, { items: items, prompt: React__default["default"].createElement(mui.Icon, { href: svgMore__default["default"] }), label: strings.moreOptions, tabIndex: params.tabIndex }));
-                },
-                ...columnOverrides[exports.ITwinCellColumn.Options],
-            },
-        ];
-        return cols.filter(Boolean);
-    }, [
-        strings,
-        iTwinFavorites,
-        addITwinToFavorites,
-        removeITwinFromFavorites,
-        columnOverrides,
-        hideColumns,
-        moreActions,
-        refetchITwins,
-    ]);
-    return (React__default["default"].createElement(xDataGrid.DataGrid, { rows: iTwins, columns: columns, loading: isLoading, onRowClick: actions
-            ? (params) => {
-                const action = getPrimaryCardAction(actions(params.row));
-                if (action && !action.disabled) {
-                    action.onClick?.();
-                }
-            }
-            : undefined, onCellKeyDown: actions
-            ? (params, event) => {
-                if ((event.key === "Enter" || event.key === " ") &&
-                    params.field !== "id" &&
-                    params.field !== "actions") {
-                    const action = getPrimaryCardAction(actions(params.row));
-                    if (action && !action.disabled) {
-                        event.preventDefault();
-                        action.onClick?.();
-                    }
-                }
-            }
-            : undefined, disableRowSelectionOnClick: true, disableMultipleRowSelection: true, disableColumnSelector: true, disableColumnFilter: true, initialState: {
-            pagination: { paginationModel: { pageSize: 25 } },
-        }, pageSizeOptions: [25, 50, 100], localeText: {
-            noRowsLabel: strings.noRowsLabel,
-            noResultsOverlayLabel: strings.noResultsOverlayLabel,
-            footerRowSelected: strings.footerRowSelected,
-            footerTotalVisibleRows: strings.footerTotalVisibleRows,
-            paginationRowsPerPage: strings.paginationRowsPerPage,
-        }, sx: {
-            // prevent individual cells from showing focus outlines
-            "& .MuiDataGrid-cell:focus:not(:focus-visible)": {
-                outline: "none",
-            },
-            // reveal unfavorited icon on row hover or keyboard focus
-            "& .MuiDataGrid-row:hover .favoriteIcon, & .MuiDataGrid-row:focus-within .favoriteIcon": {
-                opacity: 1,
-            },
-            ...(actions && {
-                "& .MuiDataGrid-row": {
-                    cursor: "pointer",
-                },
-            }),
-            "& .MuiDataGrid-row.row-disabled": {
-                cursor: "default",
-                color: "var(--stratakit-color-text-neutral-disabled)",
-            },
-        }, getRowClassName: actions
-            ? (params) => getPrimaryCardAction(actions(params.row))?.disabled
-                ? "row-disabled"
-                : ""
-            : undefined }));
-};
-
-/*---------------------------------------------------------------------------------------------
- * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
- * See LICENSE.md in the project root for license terms and full copyright notice.
- *--------------------------------------------------------------------------------------------*/
-/**
- * SVG icon thumbnail for use in the BaseCard thumbnail area.
- *
- * @alpha
- */
-const SvgThumbnail = React__default["default"].forwardRef(({ src, sx: sxOverride }, ref) => {
-    return (React__default["default"].createElement(CardMedia__default["default"], { image: src, ref: ref, role: "presentation", "aria-hidden": "true", sx: [
-            (theme) => ({
-                objectFit: "contain",
-                width: "40%",
-                height: "40%",
-                filter: "invert(80%)",
-                ...theme.applyStyles("dark", {
-                    filter: "invert(30%)",
-                }),
-            }),
-            ...(Array.isArray(sxOverride)
-                ? sxOverride
-                : sxOverride
-                    ? [sxOverride]
-                    : []),
-        ] }));
-});
-SvgThumbnail.displayName = "SvgThumbnail";
-
-/*---------------------------------------------------------------------------------------------
- * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
- * See LICENSE.md in the project root for license terms and full copyright notice.
- *--------------------------------------------------------------------------------------------*/
-/**
- * Representation of an iTwin — V2 (Stratakit/MUI)
- * @alpha
- */
-const ITwinTileMUI = ({ iTwin, moreActions: moreActionItems, stringsOverrides, isFavorite, addToFavorites, removeFromFavorites, refetchITwins, hideFavoriteIcon, loading, disabled, status, thumbnail, thumbnailBottomRight, thumbnailTopLeft, thumbnailBottomLeft, title, description, actions, className, ...rest }) => {
-    const strings = _mergeStrings({
-        trialBadge: "Trial",
-        inactiveBadge: "Inactive",
-        addToFavorites: "Add to favorites",
-        removeFromFavorites: "Remove from favorites",
-    }, stringsOverrides);
-    const moreActions = React__default["default"].useMemo(() => moreActionItems
-        ?.filter(({ visible }) => typeof visible === "function" ? visible(iTwin) : visible ?? true)
-        .map(({ key, label, icon, onClick, disabled }) => ({
-        key,
-        label: typeof label === "function" ? label(iTwin) : label,
-        icon,
-        onClick: onClick ? () => onClick(iTwin, refetchITwins) : undefined,
-        disabled: typeof disabled === "function" ? disabled(iTwin) : disabled,
-    })), [moreActionItems, iTwin, refetchITwins]);
-    const favoriteIcon = !hideFavoriteIcon &&
-        isFavorite !== undefined &&
-        addToFavorites &&
-        removeFromFavorites ? (React__default["default"].createElement(FavoriteIconMUI, { isFavorite: isFavorite, onAddToFavorites: () => addToFavorites(iTwin.id), onRemoveFromFavorites: () => removeFromFavorites(iTwin.id), addLabel: strings.addToFavorites, removeLabel: strings.removeFromFavorites, disabled: disabled })) : undefined;
-    const additionalDescription = iTwin.lastModifiedDateTime
-        ? formatDate(iTwin.lastModifiedDateTime)
-        : undefined;
-    return (React__default["default"].createElement(BaseCard, { className: className, sx: {
-            "&:hover .favoriteIcon, &:focus-within .favoriteIcon": {
-                opacity: 1,
-            },
-        }, disabled: disabled, loading: loading, thumbnail: thumbnail ?? React__default["default"].createElement(DefaultThumbnail, null), thumbnailTopLeft: thumbnailTopLeft, thumbnailBottomLeft: thumbnailBottomLeft, thumbnailTopRight: favoriteIcon, thumbnailBottomRight: thumbnailBottomRight ?? (React__default["default"].createElement(StatusBadge, { status: iTwin.status, strings: strings })), title: title ?? iTwin.displayName ?? "", actions: actions, moreActions: moreActions, status: status, statusIconHref: svgItwin__default["default"], description: description ?? iTwin.number ?? "", subheader: additionalDescription, "data-testid": `itwin-tile-${iTwin.id}`, stringsOverrides: stringsOverrides, ...rest }));
-};
-function DefaultThumbnail() {
-    return React__default["default"].createElement(SvgThumbnail, { src: `${svgItwin__default["default"]}#icon-large` });
-}
-function StatusBadge({ status, strings, }) {
-    if (!status || status.toLocaleLowerCase() === "active") {
-        return null;
-    }
-    return (React__default["default"].createElement(Chip__default["default"], { size: "small", label: status.toLocaleLowerCase() === "inactive"
-            ? strings.inactiveBadge
-            : strings.trialBadge }));
-}
-
-/*---------------------------------------------------------------------------------------------
- * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
- * See LICENSE.md in the project root for license terms and full copyright notice.
- *--------------------------------------------------------------------------------------------*/
 const useITwinFilter = (iTwins, options) => {
     const filter = options?.toLocaleLowerCase() ?? "";
     return React__default["default"].useMemo(() => !filter
@@ -1824,9 +1613,10 @@ const useITwinData = ({ requestType = "", iTwinSubClass = "Project", accessToken
         setProjects([]);
         setPage(0);
         setMorePages(true);
-        fetchingMoreRef.current = false;
+        fetchingMoreRef.current = true;
     }, []);
-    const fetchingMoreRef = React__default["default"].useRef(false);
+    // We start in a fetching state
+    const fetchingMoreRef = React__default["default"].useRef(true);
     const fetchMore = React__default["default"].useCallback(() => {
         if (fetchingMoreRef.current) {
             return;
@@ -2102,6 +1892,218 @@ const useITwinFavorites = (accessToken, serverEnvironmentPrefix) => {
         resetShouldRefetchFavorites,
     };
 };
+
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+const EMPTY_COLUMN_OVERRIDES = {};
+const EMPTY_HIDE_COLUMNS = [];
+/**
+ * Table view for iTwins using MUI X DataGrid (Community edition).
+ */
+const ITwinTableMUI = ({ iTwins, moreActions, actions, strings, iTwinFavorites, addITwinToFavorites, removeITwinFromFavorites, refetchITwins, tableOverrides: { columnOverrides = EMPTY_COLUMN_OVERRIDES, hideColumns = EMPTY_HIDE_COLUMNS, } = {}, isLoading, fetchMore, }) => {
+    // Eagerly load all available data so the table has the full dataset
+    // for client-side pagination and sorting.
+    React__default["default"].useEffect(() => {
+        if (fetchMore) {
+            fetchMore();
+        }
+    }, [fetchMore, iTwins.length]);
+    const columns = React__default["default"].useMemo(() => {
+        const cols = [
+            !hideColumns.includes(exports.ITwinCellColumn.Favorite) && {
+                field: "id",
+                headerName: strings.tableColumnFavorites,
+                sortable: false,
+                width: 70,
+                disableColumnMenu: true,
+                renderCell: (params) => {
+                    const isFavorite = iTwinFavorites.has(params.value);
+                    return (React__default["default"].createElement(FavoriteIconMUI, { isFavorite: isFavorite, addLabel: strings.addToFavorites, removeLabel: strings.removeFromFavorites, onAddToFavorites: () => addITwinToFavorites(params.value), onRemoveFromFavorites: () => removeITwinFromFavorites(params.value), transparent: true, tabIndex: params.tabIndex }));
+                },
+                ...columnOverrides[exports.ITwinCellColumn.Favorite],
+            },
+            !hideColumns.includes(exports.ITwinCellColumn.Number) && {
+                field: "number",
+                headerName: strings.tableColumnName,
+                flex: 1,
+                minWidth: 200,
+                disableColumnMenu: true,
+                ...columnOverrides[exports.ITwinCellColumn.Number],
+            },
+            !hideColumns.includes(exports.ITwinCellColumn.Name) && {
+                field: "displayName",
+                headerName: strings.tableColumnDescription,
+                flex: 1,
+                minWidth: 200,
+                disableColumnMenu: true,
+                ...columnOverrides[exports.ITwinCellColumn.Name],
+            },
+            !hideColumns.includes(exports.ITwinCellColumn.LastModified) && {
+                field: "lastModifiedDateTime",
+                headerName: strings.tableColumnLastModified,
+                width: 200,
+                disableColumnMenu: true,
+                valueFormatter: (value) => formatDate(value),
+                ...columnOverrides[exports.ITwinCellColumn.LastModified],
+            },
+            !hideColumns.includes(exports.ITwinCellColumn.Options) && {
+                field: "actions",
+                headerName: "",
+                sortable: false,
+                width: 65,
+                disableColumnMenu: true,
+                renderCell: (params) => {
+                    if (!moreActions || moreActions.length === 0) {
+                        return null;
+                    }
+                    const items = resolveMoreActionsMenuItemsMUI(moreActions, params.row, refetchITwins);
+                    return (React__default["default"].createElement(MoreMenuMUI, { items: items, prompt: React__default["default"].createElement(mui.Icon, { href: svgMore__default["default"] }), label: strings.moreOptions, tabIndex: params.tabIndex }));
+                },
+                ...columnOverrides[exports.ITwinCellColumn.Options],
+            },
+        ];
+        return cols.filter(Boolean);
+    }, [
+        strings,
+        iTwinFavorites,
+        addITwinToFavorites,
+        removeITwinFromFavorites,
+        columnOverrides,
+        hideColumns,
+        moreActions,
+        refetchITwins,
+    ]);
+    return (React__default["default"].createElement(xDataGrid.DataGrid, { rows: iTwins, columns: columns, loading: isLoading, onRowClick: actions
+            ? (params) => {
+                const action = getPrimaryCardAction(actions(params.row));
+                if (action && !action.disabled) {
+                    action.onClick?.();
+                }
+            }
+            : undefined, onCellKeyDown: actions
+            ? (params, event) => {
+                if ((event.key === "Enter" || event.key === " ") &&
+                    params.field !== "id" &&
+                    params.field !== "actions") {
+                    const action = getPrimaryCardAction(actions(params.row));
+                    if (action && !action.disabled) {
+                        event.preventDefault();
+                        action.onClick?.();
+                    }
+                }
+            }
+            : undefined, disableRowSelectionOnClick: true, disableMultipleRowSelection: true, disableColumnSelector: true, disableColumnFilter: true, initialState: {
+            pagination: { paginationModel: { pageSize: 25 } },
+        }, pageSizeOptions: [25, 50, 100], localeText: {
+            noRowsLabel: strings.noRowsLabel,
+            noResultsOverlayLabel: strings.noResultsOverlayLabel,
+            footerRowSelected: strings.footerRowSelected,
+            footerTotalVisibleRows: strings.footerTotalVisibleRows,
+            paginationRowsPerPage: strings.paginationRowsPerPage,
+        }, sx: {
+            // prevent individual cells from showing focus outlines
+            "& .MuiDataGrid-cell:focus:not(:focus-visible)": {
+                outline: "none",
+            },
+            // reveal unfavorited icon on row hover or keyboard focus
+            "& .MuiDataGrid-row:hover .favoriteIcon, & .MuiDataGrid-row:focus-within .favoriteIcon": {
+                opacity: 1,
+            },
+            ...(actions && {
+                "& .MuiDataGrid-row": {
+                    cursor: "pointer",
+                },
+            }),
+            "& .MuiDataGrid-row.row-disabled": {
+                cursor: "default",
+                color: "var(--stratakit-color-text-neutral-disabled)",
+            },
+        }, getRowClassName: actions
+            ? (params) => getPrimaryCardAction(actions(params.row))?.disabled
+                ? "row-disabled"
+                : ""
+            : undefined }));
+};
+
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+/**
+ * SVG icon thumbnail for use in the BaseCard thumbnail area.
+ *
+ * @alpha
+ */
+const SvgThumbnail = React__default["default"].forwardRef(({ src, sx: sxOverride }, ref) => {
+    return (React__default["default"].createElement(CardMedia__default["default"], { image: src, ref: ref, role: "presentation", "aria-hidden": "true", sx: [
+            (theme) => ({
+                objectFit: "contain",
+                width: "40%",
+                height: "40%",
+                filter: "invert(80%)",
+                ...theme.applyStyles("dark", {
+                    filter: "invert(30%)",
+                }),
+            }),
+            ...(Array.isArray(sxOverride)
+                ? sxOverride
+                : sxOverride
+                    ? [sxOverride]
+                    : []),
+        ] }));
+});
+SvgThumbnail.displayName = "SvgThumbnail";
+
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+/**
+ * Representation of an iTwin — V2 (Stratakit/MUI)
+ * @alpha
+ */
+const ITwinTileMUI = ({ iTwin, moreActions: moreActionItems, stringsOverrides, isFavorite, addToFavorites, removeFromFavorites, refetchITwins, hideFavoriteIcon, loading, disabled, status, thumbnail, thumbnailBottomRight, thumbnailTopLeft, thumbnailBottomLeft, title, description, actions, className, ...rest }) => {
+    const strings = _mergeStrings({
+        trialBadge: "Trial",
+        inactiveBadge: "Inactive",
+        addToFavorites: "Add to favorites",
+        removeFromFavorites: "Remove from favorites",
+    }, stringsOverrides);
+    const moreActions = React__default["default"].useMemo(() => moreActionItems
+        ?.filter(({ visible }) => typeof visible === "function" ? visible(iTwin) : visible ?? true)
+        .map(({ key, label, icon, onClick, disabled }) => ({
+        key,
+        label: typeof label === "function" ? label(iTwin) : label,
+        icon,
+        onClick: onClick ? () => onClick(iTwin, refetchITwins) : undefined,
+        disabled: typeof disabled === "function" ? disabled(iTwin) : disabled,
+    })), [moreActionItems, iTwin, refetchITwins]);
+    const favoriteIcon = !hideFavoriteIcon &&
+        isFavorite !== undefined &&
+        addToFavorites &&
+        removeFromFavorites ? (React__default["default"].createElement(FavoriteIconMUI, { isFavorite: isFavorite, onAddToFavorites: () => addToFavorites(iTwin.id), onRemoveFromFavorites: () => removeFromFavorites(iTwin.id), addLabel: strings.addToFavorites, removeLabel: strings.removeFromFavorites, disabled: disabled })) : undefined;
+    const additionalDescription = iTwin.lastModifiedDateTime
+        ? formatDate(iTwin.lastModifiedDateTime)
+        : undefined;
+    return (React__default["default"].createElement(BaseCard, { className: className, sx: {
+            "&:hover .favoriteIcon, &:focus-within .favoriteIcon": {
+                opacity: 1,
+            },
+        }, disabled: disabled, loading: loading, thumbnail: thumbnail ?? React__default["default"].createElement(DefaultThumbnail, null), thumbnailTopLeft: thumbnailTopLeft, thumbnailBottomLeft: thumbnailBottomLeft, thumbnailTopRight: favoriteIcon, thumbnailBottomRight: thumbnailBottomRight ?? (React__default["default"].createElement(StatusBadge, { status: iTwin.status, strings: strings })), title: title ?? iTwin.displayName ?? "", actions: actions, moreActions: moreActions, status: status, statusIconHref: svgItwin__default["default"], description: description ?? iTwin.number ?? "", subheader: additionalDescription, "data-testid": `itwin-tile-${iTwin.id}`, stringsOverrides: stringsOverrides, ...rest }));
+};
+function DefaultThumbnail() {
+    return React__default["default"].createElement(SvgThumbnail, { src: `${svgItwin__default["default"]}#icon-large` });
+}
+function StatusBadge({ status, strings, }) {
+    if (!status || status.toLocaleLowerCase() === "active") {
+        return null;
+    }
+    return (React__default["default"].createElement(Chip__default["default"], { size: "small", label: status.toLocaleLowerCase() === "inactive"
+            ? strings.inactiveBadge
+            : strings.trialBadge }));
+}
 
 /*---------------------------------------------------------------------------------------------
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.

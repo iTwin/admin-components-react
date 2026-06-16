@@ -1193,9 +1193,10 @@ const useITwinData = ({ requestType = "", iTwinSubClass = "Project", accessToken
         setProjects([]);
         setPage(0);
         setMorePages(true);
-        fetchingMoreRef.current = false;
+        fetchingMoreRef.current = true;
     }, []);
-    const fetchingMoreRef = React.useRef(false);
+    // We start in a fetching state
+    const fetchingMoreRef = React.useRef(true);
     const fetchMore = React.useCallback(() => {
         if (fetchingMoreRef.current) {
             return;
