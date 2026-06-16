@@ -714,6 +714,19 @@ const NoResultsMUI = ({ text, subtext, isSearchResult = false, }) => {
             subtext && React__default.createElement(Typography, { variant: "body1" }, subtext))));
 };
 
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+/**
+ * Strip props that may be passed to useIndividualState hooks but should not be
+ * forwarded to a tile/card component.
+ */
+const stripNonTileProps = (source) => {
+    const { gridProps: _gridProps, useTileState: _useTileState, tileProps: _tileProps, ...stripped } = source;
+    return stripped;
+};
+
 /** Flatten an optional SxProps value into spreadable array elements. */
 const spreadSx = (sx) => Array.isArray(sx) ? sx : sx ? [sx] : [];
 
@@ -808,11 +821,14 @@ function StatusIcon({ status, href, }) {
 const baseCardSx = {
     overflow: "hidden",
     minWidth: "18rem",
-    minHeight: "15rem",
+    width: "21.5rem",
+    maxWidth: "24rem",
     display: "flex",
     flexDirection: "column",
 };
 const textEllipsisSx = {
+    typography: "body1",
+    fontWeight: "500",
     display: "block",
     overflow: "hidden",
     textOverflow: "ellipsis",
@@ -1455,7 +1471,7 @@ const IModelGridInternal = ({ accessToken, apiOverrides, moreActions, removeFrom
         return (React__default.createElement(React__default.Fragment, null, viewMode !== "cells" ? (React__default.createElement(Box, { component: "ul", sx: {
                 display: "grid",
                 gap: 2,
-                gridTemplateColumns: "repeat(auto-fill, minmax(22.5rem, 1fr))",
+                gridTemplateColumns: "repeat(auto-fill, minmax(18rem, 1fr))",
                 listStyle: "none",
                 alignItems: "stretch",
                 "& > li": {
@@ -1506,13 +1522,15 @@ const IModelGridInternal = ({ accessToken, apiOverrides, moreActions, removeFrom
 };
 const noOp$1 = () => ({});
 const IModelHookedTile = (props) => {
-    const { useTileState = noOp$1, ...iModelTileProps } = props;
+    const { useTileState = noOp$1, ...rest } = props;
     const hookIdentity = React__default.useRef(useTileState);
     if (hookIdentity.current !== useTileState) {
         throw new Error("Even when used in a prop, useIndividualState identity must remain stable as it is used as a hook.");
     }
-    const tileState = useTileState(props.iModel, iModelTileProps);
-    return React__default.createElement(IModelTileMUI, { ...iModelTileProps, ...tileState });
+    const useIndividualStateResult = useTileState(props.iModel, rest);
+    const tileProps = stripNonTileProps(rest);
+    const tileState = stripNonTileProps(useIndividualStateResult);
+    return React__default.createElement(IModelTileMUI, { ...tileProps, ...tileState });
 };
 function removeFromRecentsAction(strings, accessToken, apiOverrides, removeFromRecentsIcon) {
     return {
@@ -2115,7 +2133,7 @@ const ITwinGridMUI = ({ accessToken, apiOverrides, filterOptions, orderbyOptions
     return viewMode !== "cells" ? (React__default.createElement(Box, { component: "ul", sx: {
             display: "grid",
             gap: 2,
-            gridTemplateColumns: "repeat(auto-fill, minmax(22.5rem, 1fr))",
+            gridTemplateColumns: "repeat(auto-fill, minmax(18rem, 1fr))",
             listStyle: "none",
             alignItems: "stretch",
             "& > li": {
@@ -2163,14 +2181,14 @@ const ITwinGridMUI = ({ accessToken, apiOverrides, filterOptions, orderbyOptions
 };
 const noOp = () => ({});
 const ITwinHookedTile = (props) => {
-    const { useTileState = noOp, ...iTwinTileProps } = props;
+    const { useTileState = noOp, ...rest } = props;
     const hookIdentity = React__default.useRef(useTileState);
     if (hookIdentity.current !== useTileState) {
         throw new Error("Even when used in a prop, useIndividualState identity must remain stable as it is used as a hook.");
     }
-    const tileState = useTileState(props.iTwin, iTwinTileProps);
-    // gridProps aren't used by ITwinTileMUI but are passed to useIndividualState
-    const { gridProps, ...tileProps } = props;
+    const useIndividualStateResult = useTileState(props.iTwin, rest);
+    const tileProps = stripNonTileProps(rest);
+    const tileState = stripNonTileProps(useIndividualStateResult);
     return React__default.createElement(ITwinTileMUI, { ...tileProps, ...tileState });
 };
 
