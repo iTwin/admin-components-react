@@ -18,13 +18,13 @@ import { Meta, Story } from "@storybook/react/types-6-0";
 import SvgDelete from "@stratakit/icons/delete.svg";
 import React from "react";
 
-import bridgeThumbnail from "../utils/bridge.jpg";
-import nightThumbnail from "../utils/night.jpg";
+import bridgeThumbnail from "../../utils/bridge.jpg";
+import nightThumbnail from "../../utils/night.jpg";
 import {
   accessTokenArgTypes,
   withAccessTokenOverride,
   withITwinIdOverride,
-} from "../utils/storyHelp";
+} from "../../utils/storyHelp";
 import {
   additionalData,
   initialData,
@@ -38,7 +38,29 @@ export const IModelGridMUI = (props: IModelGridMUIProps) => (
 export default {
   title: "imodel-browser/IModelGridMUI",
   component: IModelGridMUI,
-  argTypes: accessTokenArgTypes,
+  argTypes: {
+    ...accessTokenArgTypes,
+    requestType: {
+      options: ["all", "recents", "favorites"],
+      mapping: {
+        all: "",
+        recents: "recents",
+        favorites: "favorites",
+      },
+      control: {
+        type: "radio",
+      },
+    },
+    viewMode: {
+      options: ["tile", "cells"],
+      control: {
+        type: "radio",
+      },
+    },
+  },
+  args: {
+    requestType: "all",
+  },
   excludeStories: ["IModelGridMUI"],
 } as Meta;
 

@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Wed, 29 Apr 2026 20:47:51 GMT and should not be manually modified.
+This log was last generated on Fri, 12 Jun 2026 14:00:59 GMT and should not be manually modified.
+
+## 4.3.0
+Fri, 12 Jun 2026 14:00:59 GMT
+
+### Minor changes
+
+- Add Stratakit MUI components
 
 ## 4.2.0
 Wed, 29 Apr 2026 20:47:51 GMT

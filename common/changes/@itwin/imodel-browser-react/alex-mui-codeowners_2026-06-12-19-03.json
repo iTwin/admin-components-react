@@ -2,7 +2,7 @@
   "changes": [
     {
       "packageName": "@itwin/imodel-browser-react",
-      "comment": "",
+      "comment": "Reorganize internal paths of Stratakit MUI components",
       "type": "none"
     }
   ],

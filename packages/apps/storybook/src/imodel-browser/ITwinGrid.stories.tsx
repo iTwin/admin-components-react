@@ -41,6 +41,26 @@ export default {
   component: ITwinGrid,
   argTypes: {
     accessToken,
+    requestType: {
+      options: ["all", "recents", "favorites"],
+      mapping: {
+        all: "",
+        recents: "recents",
+        favorites: "favorites",
+      },
+      control: {
+        type: "radio",
+      },
+    },
+    viewMode: {
+      options: ["tile", "cells"],
+      control: {
+        type: "radio",
+      },
+    },
+  },
+  args: {
+    requestType: "all",
   },
   excludeStories: ["ITwinGrid"],
 } as Meta;

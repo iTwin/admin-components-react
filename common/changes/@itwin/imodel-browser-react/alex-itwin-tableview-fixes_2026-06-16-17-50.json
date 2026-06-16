@@ -2,8 +2,8 @@
   "changes": [
     {
       "packageName": "@itwin/imodel-browser-react",
-      "comment": "",
-      "type": "none"
+      "comment": "Prevent concurrent iTwin API fetches",
+      "type": "patch"
     }
   ],
   "packageName": "@itwin/imodel-browser-react"

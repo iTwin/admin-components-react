@@ -40,7 +40,29 @@ export const IModelGrid = (props: IModelGridProps) => (
 export default {
   title: "imodel-browser/IModelGrid",
   component: IModelGrid,
-  argTypes: accessTokenArgTypes,
+  argTypes: {
+    ...accessTokenArgTypes,
+    requestType: {
+      options: ["all", "recents", "favorites"],
+      mapping: {
+        all: "",
+        recents: "recents",
+        favorites: "favorites",
+      },
+      control: {
+        type: "radio",
+      },
+    },
+    viewMode: {
+      options: ["tile", "cells"],
+      control: {
+        type: "radio",
+      },
+    },
+  },
+  args: {
+    requestType: "all",
+  },
   excludeStories: ["IModelGrid"],
 } as Meta;
 

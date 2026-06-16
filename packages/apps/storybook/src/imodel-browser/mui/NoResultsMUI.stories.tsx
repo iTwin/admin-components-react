@@ -3,8 +3,8 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import {
-  NoResults as ExternalComponent,
   type NoResultsProps as NoResultsMUIProps,
+  NoResults as ExternalComponent,
 } from "@itwin/imodel-browser-react/mui";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import React from "react";
