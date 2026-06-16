@@ -187,7 +187,7 @@ export const ITwinGridMUI = ({
       sx={{
         display: "grid",
         gap: 2,
-        gridTemplateColumns: "repeat(auto-fill, minmax(22.5rem, 1fr))",
+        gridTemplateColumns: "repeat(auto-fill, minmax(18rem, 1fr))",
         listStyle: "none",
         alignItems: "stretch",
         "& > li": {
