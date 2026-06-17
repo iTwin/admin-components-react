@@ -92,7 +92,7 @@ export const ITwinTableMUI = ({
     if (fetchMore) {
       fetchMore();
     }
-  }, [fetchMore, iTwins.length]);
+  }, [fetchMore]);
   const columns = React.useMemo<GridColDef<ITwinFull>[]>(() => {
     const cols: (GridColDef<ITwinFull> | false)[] = [
       !hideColumns.includes(ITwinCellColumn.Favorite) && {
