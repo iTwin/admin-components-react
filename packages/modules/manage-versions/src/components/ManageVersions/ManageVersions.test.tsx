@@ -119,11 +119,16 @@ describe("ManageVersions", () => {
       expect(container.querySelector(".iac-changes-table-body")).toBeVisible()
     );
 
+    await waitFor(() => {
+      const rows = container.querySelectorAll(
+        ".iac-changes-table-body [role='row']"
+      );
+      expect(rows.length).toBeGreaterThanOrEqual(1);
+    });
+
     const changesetRows = container.querySelectorAll(
       ".iac-changes-table-body [role='row']"
     );
-    // Virtualization renders only visible rows
-    expect(changesetRows.length).toBeGreaterThanOrEqual(1);
 
     changesetRows.forEach((row, index) => {
       const cells = row.querySelectorAll("div[role='cell']");
