@@ -464,9 +464,8 @@ const IModelHookedTile = (props: IModelHookedTileProps) => {
     );
   }
 
-  const useIndividualStateResult = useTileState(props.iModel, rest);
   const tileProps = stripNonTileProps(rest);
-  const tileState = stripNonTileProps(useIndividualStateResult);
+  const tileState = stripNonTileProps(useTileState(props.iModel, rest););
 
   return <IModelTileMUI {...tileProps} {...tileState} />;
 };
