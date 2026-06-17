@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Tue, 16 Jun 2026 18:38:57 GMT and should not be manually modified.
+This log was last generated on Wed, 17 Jun 2026 17:52:45 GMT and should not be manually modified.
+
+## 4.3.2
+Wed, 17 Jun 2026 17:52:45 GMT
+
+### Patches
+
+- Prevent Stratakit grid-level props from being passed to cards
 
 ## 4.3.1
 Tue, 16 Jun 2026 18:38:57 GMT

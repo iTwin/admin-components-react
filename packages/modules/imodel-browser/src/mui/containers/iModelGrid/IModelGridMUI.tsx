@@ -32,6 +32,7 @@ import {
 import { BaseCardLoading } from "../../components/baseCard/BaseCardLoading";
 import { NoResultsMUI as NoResults } from "../../components/noResults/NoResultsMUI";
 import { type IModelTableOverridesMUI } from "../../types";
+import { stripNonTileProps } from "../../utils/stripNonTileProps";
 import {
   type IModelTileMUIProps,
   IModelTileMUI,
@@ -453,7 +454,7 @@ type IModelHookedTileProps = IModelTileMUIProps & {
 const noOp = () => ({} as Partial<IModelTileMUIProps>);
 
 const IModelHookedTile = (props: IModelHookedTileProps) => {
-  const { useTileState = noOp, ...iModelTileProps } = props;
+  const { useTileState = noOp, ...rest } = props;
 
   const hookIdentity = React.useRef(useTileState);
 
@@ -463,9 +464,9 @@ const IModelHookedTile = (props: IModelHookedTileProps) => {
     );
   }
 
-  const tileState = useTileState(props.iModel, iModelTileProps);
-
-  return <IModelTileMUI {...iModelTileProps} {...tileState} />;
+  const tileProps = stripNonTileProps(rest);
+  const tileState = stripNonTileProps(useTileState(props.iModel, rest));
+  return <IModelTileMUI {...tileProps} {...tileState} />;
 };
 
 function removeFromRecentsAction(
