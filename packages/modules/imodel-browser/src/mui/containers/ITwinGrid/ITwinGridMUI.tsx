@@ -26,6 +26,8 @@ import { stripNonTileProps } from "../../utils/stripNonTileProps";
 import { type ITwinTableMUIStrings, ITwinTableMUI } from "./ITwinTableMUI";
 import { type ITwinTilePropsMUI, ITwinTileMUI } from "./ITwinTileMUI";
 
+const DEFAULT_PAGE_SIZE = 250;
+
 /** @alpha */
 export type IndividualITwinStateHookMUI = (
   iTwin: ITwinFull,
@@ -161,6 +163,7 @@ export const ITwinGridMUI = ({
     orderbyOptions,
     shouldRefetchFavorites,
     resetShouldRefetchFavorites,
+    pageSize: DEFAULT_PAGE_SIZE,
   });
 
   const iTwins = React.useMemo(

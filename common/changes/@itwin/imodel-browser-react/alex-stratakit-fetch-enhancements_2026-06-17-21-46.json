@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/imodel-browser-react",
+      "comment": "Increase default page size for Stratakit components",
+      "type": "patch"
+    }
+  ],
+  "packageName": "@itwin/imodel-browser-react"
+}

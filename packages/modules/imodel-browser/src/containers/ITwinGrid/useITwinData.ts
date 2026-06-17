@@ -24,9 +24,10 @@ export interface ProjectDataHookOptions {
   orderbyOptions?: string;
   shouldRefetchFavorites?: boolean;
   resetShouldRefetchFavorites?: () => void;
+  pageSize?: number;
 }
 
-const PAGE_SIZE = 100;
+const DEFAULT_PAGE_SIZE = 100;
 
 export const useITwinData = ({
   requestType = "",
@@ -37,6 +38,7 @@ export const useITwinData = ({
   orderbyOptions,
   shouldRefetchFavorites,
   resetShouldRefetchFavorites,
+  pageSize = DEFAULT_PAGE_SIZE,
 }: ProjectDataHookOptions) => {
   const data = apiOverrides?.data;
   const serverEnvironmentPrefix = apiOverrides?.serverEnvironmentPrefix;
@@ -115,7 +117,7 @@ export const useITwinData = ({
       : "";
     const resolvedITwinSubClass = iTwinSubClass === "All" ? "" : iTwinSubClass;
     const subClass = `?subClass=${resolvedITwinSubClass}`;
-    const paging = `&$skip=${page * PAGE_SIZE}&$top=${PAGE_SIZE}`;
+    const paging = `&$skip=${page * pageSize}&$top=${pageSize}`;
     const search =
       ["favorites", "recents"].includes(requestType) || !filterOptions
         ? ""
@@ -155,7 +157,7 @@ export const useITwinData = ({
       setStatus(DataStatus.Complete);
       fetchingMoreRef.current = false;
       requestType === "favorites" && resetShouldRefetchFavorites?.();
-      if (result.iTwins.length !== PAGE_SIZE) {
+      if (result.iTwins.length !== pageSize) {
         setMorePages(false);
       }
       setProjects((projects) =>
@@ -188,6 +190,7 @@ export const useITwinData = ({
     iTwinSubClass,
     shouldRefetchFavorites,
     resetShouldRefetchFavorites,
+    pageSize,
   ]);
   return {
     iTwins: filteredProjects,

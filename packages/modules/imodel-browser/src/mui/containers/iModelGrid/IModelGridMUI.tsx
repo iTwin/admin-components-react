@@ -7,10 +7,7 @@ import React from "react";
 import { InView } from "react-intersection-observer";
 
 import type { IModelGridProps } from "../../../containers/iModelGrid/IModelGrid";
-import {
-  DEFAULT_PAGE_SIZE,
-  useIModelData,
-} from "../../../containers/iModelGrid/useIModelData";
+import { useIModelData } from "../../../containers/iModelGrid/useIModelData";
 import { IModelFavoritesProvider } from "../../../contexts/IModelFavoritesContext";
 import {
   type AccessTokenProvider,
@@ -39,6 +36,8 @@ import {
 } from "../iModelTiles/IModelTileMUI";
 import { clientSideIModelSort } from "./clientSideIModelSort";
 import { type IModelTableMUIStrings, IModelTableMUI } from "./IModelTableMUI";
+
+const DEFAULT_PAGE_SIZE = 250;
 
 /**
  * Localized strings for the MUI IModelGrid. Extends the table-level strings
@@ -243,7 +242,7 @@ const IModelGridInternal = ({
     sortOptions: sort,
     searchText,
     maxCount,
-    pageSize,
+    pageSize: DEFAULT_PAGE_SIZE,
     viewMode,
     dataMode,
     onLoadMore,
