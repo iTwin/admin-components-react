@@ -405,26 +405,26 @@ export default {
   component: ITwinGrid,
   argTypes: {
     accessToken,
-    viewMode: {
-      options: ["tile", "cells"],
-      control: {
-        type: "radio",
-      },
+    orderbyOptions: {
+      control: "radio",
+      options: [
+        "displayName asc",
+        "displayName desc",
+        "number asc",
+        "number desc",
+        "createdDateTime asc",
+        "createdDateTime desc",
+        "lastModifiedDateTime asc",
+        "lastModifiedDateTime desc",
+      ],
     },
-    requestType: {
-      options: ["all", "recents", "favorites"],
-      mapping: {
-        all: "",
-        recents: "recents",
-        favorites: "favorites",
-      },
-      control: {
-        type: "radio",
-      },
+    filterOptions: {
+      description: "Search text",
+      control: "text",
     },
   },
   args: {
-    requestType: "all",
+    orderbyOptions: "displayName asc",
   },
   excludeStories: ["ITwinGrid"],
 } as Meta;

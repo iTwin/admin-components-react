@@ -307,8 +307,7 @@ const ITwinHookedTile = (props: ITwinHookedTileProps) => {
     );
   }
 
-  const useIndividualStateResult = useTileState(props.iTwin, rest);
   const tileProps = stripNonTileProps(rest);
-  const tileState = stripNonTileProps(useIndividualStateResult);
+  const tileState = stripNonTileProps(useTileState(props.iTwin, rest));
   return <ITwinTileMUI {...tileProps} {...tileState} />;
 };

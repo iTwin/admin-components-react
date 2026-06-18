@@ -40,26 +40,34 @@ export default {
   component: IModelGridMUI,
   argTypes: {
     ...accessTokenArgTypes,
-    requestType: {
-      options: ["all", "recents", "favorites"],
+    sortOptions: {
+      control: "radio",
+      options: [
+        "name asc",
+        "name desc",
+        "createdDateTime asc",
+        "createdDateTime desc",
+      ],
       mapping: {
-        all: "",
-        recents: "recents",
-        favorites: "favorites",
-      },
-      control: {
-        type: "radio",
+        "name asc": { sortType: "name", descending: false },
+        "name desc": { sortType: "name", descending: true },
+        "createdDateTime asc": {
+          sortType: "createdDateTime",
+          descending: false,
+        },
+        "createdDateTime desc": {
+          sortType: "createdDateTime",
+          descending: true,
+        },
       },
     },
-    viewMode: {
-      options: ["tile", "cells"],
-      control: {
-        type: "radio",
-      },
+    searchText: {
+      description: "Search text",
+      control: "text",
     },
   },
   args: {
-    requestType: "all",
+    sortOptions: "name asc",
   },
   excludeStories: ["IModelGridMUI"],
 } as Meta;
@@ -70,7 +78,6 @@ const Template: Story<IModelGridMUIProps> = withITwinIdOverride(
 
 const baseArgs: IModelGridMUIProps = {
   apiOverrides: { serverEnvironmentPrefix: "qa" },
-  sortOptions: { sortType: "name", descending: false },
   actions: [
     {
       key: "open",
