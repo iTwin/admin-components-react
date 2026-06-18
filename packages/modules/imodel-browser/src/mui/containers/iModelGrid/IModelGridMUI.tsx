@@ -37,7 +37,6 @@ import {
   type IModelTileMUIProps,
   IModelTileMUI,
 } from "../iModelTiles/IModelTileMUI";
-import { clientSideIModelSort } from "./clientSideIModelSort";
 import { type IModelTableMUIStrings, IModelTableMUI } from "./IModelTableMUI";
 
 /**
@@ -153,18 +152,11 @@ const IModelGridInternal = ({
   const [sort, setSort] = React.useState<IModelSortOptions>(sortOptions);
 
   React.useEffect(() => {
-    setSort(
-      viewMode === "cells"
-        ? {
-            sortType: "name",
-            descending: false,
-          }
-        : {
-            sortType: sortOptions.sortType,
-            descending: sortOptions.descending,
-          }
-    );
-  }, [sortOptions.descending, sortOptions.sortType, viewMode]);
+    setSort({
+      sortType: sortOptions.sortType,
+      descending: sortOptions.descending,
+    });
+  }, [sortOptions.descending, sortOptions.sortType]);
 
   const strings = React.useMemo(
     () =>
@@ -251,19 +243,11 @@ const IModelGridInternal = ({
   });
 
   const iModels = React.useMemo(() => {
-    const processed =
+    return (
       postProcessCallback?.([...fetchediModels], fetchStatus, searchText) ??
-      fetchediModels;
-    return clientSideIModelSort(processed, { viewMode, requestType, sort });
-  }, [
-    postProcessCallback,
-    fetchediModels,
-    fetchStatus,
-    searchText,
-    viewMode,
-    requestType,
-    sort,
-  ]);
+      fetchediModels
+    );
+  }, [postProcessCallback, fetchediModels, fetchStatus, searchText]);
 
   React.useEffect(() => {
     if (

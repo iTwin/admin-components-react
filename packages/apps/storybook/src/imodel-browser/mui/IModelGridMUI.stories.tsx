@@ -38,7 +38,37 @@ export const IModelGridMUI = (props: IModelGridMUIProps) => (
 export default {
   title: "imodel-browser/IModelGridMUI",
   component: IModelGridMUI,
-  argTypes: accessTokenArgTypes,
+  argTypes: {
+    ...accessTokenArgTypes,
+    sortOptions: {
+      control: "radio",
+      options: [
+        "name asc",
+        "name desc",
+        "createdDateTime asc",
+        "createdDateTime desc",
+      ],
+      mapping: {
+        "name asc": { sortType: "name", descending: false },
+        "name desc": { sortType: "name", descending: true },
+        "createdDateTime asc": {
+          sortType: "createdDateTime",
+          descending: false,
+        },
+        "createdDateTime desc": {
+          sortType: "createdDateTime",
+          descending: true,
+        },
+      },
+    },
+    searchText: {
+      description: "Search text",
+      control: "text",
+    },
+  },
+  args: {
+    sortOptions: "name asc",
+  },
   excludeStories: ["IModelGridMUI"],
 } as Meta;
 
@@ -48,7 +78,6 @@ const Template: Story<IModelGridMUIProps> = withITwinIdOverride(
 
 const baseArgs: IModelGridMUIProps = {
   apiOverrides: { serverEnvironmentPrefix: "qa" },
-  sortOptions: { sortType: "name", descending: false },
   actions: [
     {
       key: "open",

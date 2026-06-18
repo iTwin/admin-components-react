@@ -217,6 +217,7 @@ export const IModelTableMUI = ({
       }
       disableRowSelectionOnClick
       disableMultipleRowSelection
+      disableColumnSorting
       disableColumnSelector
       disableColumnFilter
       initialState={{

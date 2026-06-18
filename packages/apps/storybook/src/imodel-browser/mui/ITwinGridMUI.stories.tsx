@@ -405,6 +405,26 @@ export default {
   component: ITwinGrid,
   argTypes: {
     accessToken,
+    orderbyOptions: {
+      control: "radio",
+      options: [
+        "displayName asc",
+        "displayName desc",
+        "number asc",
+        "number desc",
+        "createdDateTime asc",
+        "createdDateTime desc",
+        "lastModifiedDateTime asc",
+        "lastModifiedDateTime desc",
+      ],
+    },
+    filterOptions: {
+      description: "Search text",
+      control: "text",
+    },
+  },
+  args: {
+    orderbyOptions: "displayName asc",
   },
   excludeStories: ["ITwinGrid"],
 } as Meta;

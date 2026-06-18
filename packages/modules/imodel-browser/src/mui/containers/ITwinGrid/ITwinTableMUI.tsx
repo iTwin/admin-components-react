@@ -217,6 +217,7 @@ export const ITwinTableMUI = ({
       }
       disableRowSelectionOnClick
       disableMultipleRowSelection
+      disableColumnSorting
       disableColumnSelector
       disableColumnFilter
       initialState={{
