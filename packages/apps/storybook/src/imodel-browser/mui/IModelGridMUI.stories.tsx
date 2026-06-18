@@ -38,7 +38,29 @@ export const IModelGridMUI = (props: IModelGridMUIProps) => (
 export default {
   title: "imodel-browser/IModelGridMUI",
   component: IModelGridMUI,
-  argTypes: accessTokenArgTypes,
+  argTypes: {
+    ...accessTokenArgTypes,
+    requestType: {
+      options: ["all", "recents", "favorites"],
+      mapping: {
+        all: "",
+        recents: "recents",
+        favorites: "favorites",
+      },
+      control: {
+        type: "radio",
+      },
+    },
+    viewMode: {
+      options: ["tile", "cells"],
+      control: {
+        type: "radio",
+      },
+    },
+  },
+  args: {
+    requestType: "all",
+  },
   excludeStories: ["IModelGridMUI"],
 } as Meta;
 
