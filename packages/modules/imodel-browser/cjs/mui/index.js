@@ -1185,33 +1185,6 @@ const IModelTileMUI = ({ iModel, moreActions: moreActionItems, accessToken, apiO
         }, disabled: disabled, loading: loading, thumbnail: thumbnail ?? (React__default["default"].createElement(IModelThumbnailMUI, { iModelId: iModel.id, accessToken: accessToken, apiOverrides: thumbnailApiOverride })), thumbnailTopLeft: thumbnailTopLeft, thumbnailTopRight: favoriteIcon, thumbnailBottomLeft: thumbnailBottomLeft, thumbnailBottomRight: thumbnailBottomRight, title: title ?? iModel.displayName ?? "", actions: actions, moreActions: moreActions, status: status, statusIconHref: svgImodel__default["default"], description: description ?? iModel.description ?? "", subheader: subheader, stringsOverrides: stringsOverrides, "data-testid": `imodel-tile-${iModel.id}`, ...rest }));
 };
 
-/**
- * Client-side sort applied to the MUI iModel grid for tile view when the
- * request type is "recents" or "favorites" — the server does not honor sort
- * options for those request types, so we sort on the client.
- */
-const clientSideIModelSort = (iModels, { viewMode, requestType, sort }) => {
-    if (viewMode === "cells") {
-        return iModels;
-    }
-    if (requestType !== "recents" && requestType !== "favorites") {
-        return iModels;
-    }
-    const sortValue = (iModel) => {
-        const currValue = sort.sortType === "name"
-            ? iModel.displayName ?? iModel.name ?? ""
-            : iModel[sort.sortType] ?? "";
-        return currValue.toLocaleLowerCase();
-    };
-    return [...iModels].sort((a, b) => {
-        const aValue = sortValue(a);
-        const bValue = sortValue(b);
-        return sort.descending
-            ? bValue.localeCompare(aValue)
-            : aValue.localeCompare(bValue);
-    });
-};
-
 /*---------------------------------------------------------------------------------------------
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
@@ -1334,7 +1307,7 @@ const IModelTableMUI = ({ iModels, moreActions, actions, strings, refetchIModels
                     }
                 }
             }
-            : undefined, disableRowSelectionOnClick: true, disableMultipleRowSelection: true, disableColumnSelector: true, disableColumnFilter: true, initialState: {
+            : undefined, disableRowSelectionOnClick: true, disableMultipleRowSelection: true, disableColumnSorting: true, disableColumnSelector: true, disableColumnFilter: true, initialState: {
             pagination: { paginationModel: { pageSize: 25 } },
         }, pageSizeOptions: [25, 50, 100], localeText: {
             noRowsLabel: strings.noRowsLabel,
@@ -1386,16 +1359,11 @@ const IModelGridMUI = (props) => {
 const IModelGridInternal = ({ accessToken, apiOverrides, moreActions, removeFromRecentsIcon, actions, iTwinId, sortOptions = { sortType: "name", descending: false }, requestType, stringsOverrides, tileOverrides, useIndividualState, postProcessCallback, emptyStateComponent, searchText, viewMode, pageSize, maxCount, tableOverrides, className, onLoadMore, onRefetch, dataMode = "internal", disableAddToRecents = false, }) => {
     const [sort, setSort] = React__default["default"].useState(sortOptions);
     React__default["default"].useEffect(() => {
-        setSort(viewMode === "cells"
-            ? {
-                sortType: "name",
-                descending: false,
-            }
-            : {
-                sortType: sortOptions.sortType,
-                descending: sortOptions.descending,
-            });
-    }, [sortOptions.descending, sortOptions.sortType, viewMode]);
+        setSort({
+            sortType: sortOptions.sortType,
+            descending: sortOptions.descending,
+        });
+    }, [sortOptions.descending, sortOptions.sortType]);
     const strings = React__default["default"].useMemo(() => _mergeStrings({
         tableColumnFavorites: "",
         tableColumnName: "Name",
@@ -1454,18 +1422,9 @@ const IModelGridInternal = ({ accessToken, apiOverrides, moreActions, removeFrom
         onRefetch,
     });
     const iModels = React__default["default"].useMemo(() => {
-        const processed = postProcessCallback?.([...fetchediModels], fetchStatus, searchText) ??
-            fetchediModels;
-        return clientSideIModelSort(processed, { viewMode, requestType, sort });
-    }, [
-        postProcessCallback,
-        fetchediModels,
-        fetchStatus,
-        searchText,
-        viewMode,
-        requestType,
-        sort,
-    ]);
+        return (postProcessCallback?.([...fetchediModels], fetchStatus, searchText) ??
+            fetchediModels);
+    }, [postProcessCallback, fetchediModels, fetchStatus, searchText]);
     React__default["default"].useEffect(() => {
         if (iModels.length < (pageSize ?? DEFAULT_PAGE_SIZE) &&
             fetchMore &&
@@ -1577,9 +1536,8 @@ const IModelHookedTile = (props) => {
     if (hookIdentity.current !== useTileState) {
         throw new Error("Even when used in a prop, useIndividualState identity must remain stable as it is used as a hook.");
     }
-    const useIndividualStateResult = useTileState(props.iModel, rest);
     const tileProps = stripNonTileProps(rest);
-    const tileState = stripNonTileProps(useIndividualStateResult);
+    const tileState = stripNonTileProps(useTileState(props.iModel, rest));
     return React__default["default"].createElement(IModelTileMUI, { ...tileProps, ...tileState });
 };
 function removeFromRecentsAction(strings, accessToken, apiOverrides, removeFromRecentsIcon) {
@@ -1927,7 +1885,7 @@ const ITwinTableMUI = ({ iTwins, moreActions, actions, strings, iTwinFavorites, 
         if (fetchMore) {
             fetchMore();
         }
-    }, [fetchMore, iTwins.length]);
+    }, [fetchMore]);
     const columns = React__default["default"].useMemo(() => {
         const cols = [
             !hideColumns.includes(exports.ITwinCellColumn.Favorite) && {
@@ -2012,7 +1970,7 @@ const ITwinTableMUI = ({ iTwins, moreActions, actions, strings, iTwinFavorites, 
                     }
                 }
             }
-            : undefined, disableRowSelectionOnClick: true, disableMultipleRowSelection: true, disableColumnSelector: true, disableColumnFilter: true, initialState: {
+            : undefined, disableRowSelectionOnClick: true, disableMultipleRowSelection: true, disableColumnSorting: true, disableColumnSelector: true, disableColumnFilter: true, initialState: {
             pagination: { paginationModel: { pageSize: 25 } },
         }, pageSizeOptions: [25, 50, 100], localeText: {
             noRowsLabel: strings.noRowsLabel,
@@ -2236,9 +2194,8 @@ const ITwinHookedTile = (props) => {
     if (hookIdentity.current !== useTileState) {
         throw new Error("Even when used in a prop, useIndividualState identity must remain stable as it is used as a hook.");
     }
-    const useIndividualStateResult = useTileState(props.iTwin, rest);
     const tileProps = stripNonTileProps(rest);
-    const tileState = stripNonTileProps(useIndividualStateResult);
+    const tileState = stripNonTileProps(useTileState(props.iTwin, rest));
     return React__default["default"].createElement(ITwinTileMUI, { ...tileProps, ...tileState });
 };
 
