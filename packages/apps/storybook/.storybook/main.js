@@ -51,7 +51,6 @@ module.exports = {
       type: "asset/resource",
       generator: {
         filename: "static/media/[name].[contenthash:8][ext]",
-        publicPath: "/",
       },
     });
 
