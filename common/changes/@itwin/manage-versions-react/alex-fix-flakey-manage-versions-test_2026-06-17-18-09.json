@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/manage-versions-react",
+      "comment": "Fix flakey table row test",
+      "type": "none"
+    }
+  ],
+  "packageName": "@itwin/manage-versions-react"
+}
