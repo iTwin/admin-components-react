@@ -318,7 +318,7 @@ describe("useITwinData hook", () => {
     });
 
     it("fetches the next page once the previous request has settled", async () => {
-      const firstPage = Array.from({ length: 5 }, (_, i) => ({
+      const firstPage = Array.from({ length: 100 }, (_, i) => ({
         id: `first-${i}`,
         displayName: `first-${i}`,
       }));
@@ -338,9 +338,8 @@ describe("useITwinData hook", () => {
       );
 
       await waitForNextUpdate();
-      // A full page keeps morePages true, so fetchMore stays available.
       expect(result.current.status).toEqual(DataStatus.Complete);
-      expect(result.current.iTwins).toHaveLength(5);
+      expect(result.current.iTwins).toHaveLength(100);
       expect(result.current.fetchMore).toBeDefined();
 
       act(() => {
@@ -348,7 +347,7 @@ describe("useITwinData hook", () => {
       });
       await waitForNextUpdate();
 
-      expect(result.current.iTwins).toHaveLength(6);
+      expect(result.current.iTwins).toHaveLength(101);
       expect(result.current.iTwins).toContainEqual({
         id: "second-0",
         displayName: "second-0",
