@@ -6,21 +6,25 @@ import Box from "@mui/material/Box";
 import React from "react";
 import { InView } from "react-intersection-observer";
 
-import { BaseCardLoading } from "../../components/baseCard/BaseCardLoading";
-import { NoResultsMUI } from "../../components/noResults/NoResultsMUI";
-import { type ITwinTableOverridesMUI } from "../../mui/types";
-import { type ITwinFull, DataStatus } from "../../types";
-import { _mergeStrings } from "../../utils/_apiOverrides";
+import type {
+  ITwinGridProps,
+  ITwinGridStrings,
+} from "../../../containers/ITwinGrid/ITwinGrid";
+import { useITwinData } from "../../../containers/ITwinGrid/useITwinData";
+import { useITwinFavorites } from "../../../containers/ITwinGrid/useITwinFavorites";
+import { type ITwinFull, DataStatus } from "../../../types";
+import { _mergeStrings } from "../../../utils/_apiOverrides";
 import {
   type CardActionsItemMUI,
   MoreActionsMenuItemMUI,
   resolveCardActionsItemsMUI,
-} from "../../utils/_buildMenuOptions";
-import type { ITwinGridProps, ITwinGridStrings } from "./ITwinGrid";
+} from "../../../utils/_buildMenuOptions";
+import { BaseCardLoading } from "../../components/baseCard/BaseCardLoading";
+import { NoResultsMUI } from "../../components/noResults/NoResultsMUI";
+import { type ITwinTableOverridesMUI } from "../../types";
+import { stripNonTileProps } from "../../utils/stripNonTileProps";
 import { type ITwinTableMUIStrings, ITwinTableMUI } from "./ITwinTableMUI";
 import { type ITwinTilePropsMUI, ITwinTileMUI } from "./ITwinTileMUI";
-import { useITwinData } from "./useITwinData";
-import { useITwinFavorites } from "./useITwinFavorites";
 
 /** @alpha */
 export type IndividualITwinStateHookMUI = (
@@ -183,7 +187,7 @@ export const ITwinGridMUI = ({
       sx={{
         display: "grid",
         gap: 2,
-        gridTemplateColumns: "repeat(auto-fill, minmax(22.5rem, 1fr))",
+        gridTemplateColumns: "repeat(auto-fill, minmax(18rem, 1fr))",
         listStyle: "none",
         alignItems: "stretch",
         "& > li": {
@@ -293,7 +297,7 @@ type ITwinHookedTileProps = ITwinTilePropsMUI & {
 };
 const noOp = () => ({} as Partial<ITwinTilePropsMUI>);
 const ITwinHookedTile = (props: ITwinHookedTileProps) => {
-  const { useTileState = noOp, ...iTwinTileProps } = props;
+  const { useTileState = noOp, ...rest } = props;
 
   const hookIdentity = React.useRef(useTileState);
 
@@ -303,8 +307,7 @@ const ITwinHookedTile = (props: ITwinHookedTileProps) => {
     );
   }
 
-  const tileState = useTileState(props.iTwin, iTwinTileProps);
-  // gridProps aren't used by ITwinTileMUI but are passed to useIndividualState
-  const { gridProps, ...tileProps } = props;
+  const tileProps = stripNonTileProps(rest);
+  const tileState = stripNonTileProps(useTileState(props.iTwin, rest));
   return <ITwinTileMUI {...tileProps} {...tileState} />;
 };

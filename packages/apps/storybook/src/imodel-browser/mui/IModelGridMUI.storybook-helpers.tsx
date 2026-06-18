@@ -7,10 +7,11 @@ import {
   type IModelTileProps,
 } from "@itwin/imodel-browser-react/mui";
 import React from "react";
-import bridgeThumbnail from "../utils/bridge.jpg";
-import nightThumbnail from "../utils/night.jpg";
-import overpassThumbnail from "../utils/overpass.jpg";
-import powerThumbnail from "../utils/power.jpg";
+
+import bridgeThumbnail from "../../utils/bridge.jpg";
+import nightThumbnail from "../../utils/night.jpg";
+import overpassThumbnail from "../../utils/overpass.jpg";
+import powerThumbnail from "../../utils/power.jpg";
 
 export const initialData: IModelFull[] = [
   {

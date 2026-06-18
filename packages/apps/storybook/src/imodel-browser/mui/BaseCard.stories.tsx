@@ -20,10 +20,10 @@ import React from "react";
 import {
   BaseCard,
   BaseCardProps,
-} from "../../../../modules/imodel-browser/src/components/baseCard/BaseCard";
-import { ThumbnailIconButton } from "../../../../modules/imodel-browser/src/components/baseCard/ThumbnailIconButton";
-import bridgeThumbnail from "../utils/bridge.jpg";
-import nightThumbnail from "../utils/night.jpg";
+} from "../../../../../modules/imodel-browser/src/mui/components/baseCard/BaseCard";
+import { ThumbnailIconButton } from "../../../../../modules/imodel-browser/src/mui/components/baseCard/ThumbnailIconButton";
+import bridgeThumbnail from "../../utils/bridge.jpg";
+import nightThumbnail from "../../utils/night.jpg";
 
 const InConstrainedContainer = ({
   children,

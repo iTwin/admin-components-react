@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import type { IModelFull, IModelSortOptions, ViewType } from "../../types";
+import type { IModelFull, IModelSortOptions, ViewType } from "../../../types";
 
 export interface ClientSideIModelSortOptions {
   viewMode: ViewType | undefined;

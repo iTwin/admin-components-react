@@ -6,35 +6,39 @@ import Box from "@mui/material/Box";
 import React from "react";
 import { InView } from "react-intersection-observer";
 
-import { BaseCardLoading } from "../../components/baseCard/BaseCardLoading";
-import { NoResultsMUI as NoResults } from "../../components/noResults/NoResultsMUI";
-import { IModelFavoritesProvider } from "../../contexts/IModelFavoritesContext";
-import { type IModelTableOverridesMUI } from "../../mui/types";
+import type { IModelGridProps } from "../../../containers/iModelGrid/IModelGrid";
+import {
+  DEFAULT_PAGE_SIZE,
+  useIModelData,
+} from "../../../containers/iModelGrid/useIModelData";
+import { IModelFavoritesProvider } from "../../../contexts/IModelFavoritesContext";
 import {
   type AccessTokenProvider,
   type ApiOverrides,
   type IModelFull,
   DataStatus,
   IModelSortOptions,
-} from "../../types";
-import { _mergeStrings } from "../../utils/_apiOverrides";
+} from "../../../types";
+import { _mergeStrings } from "../../../utils/_apiOverrides";
 import {
   type CardActionsItemMUI,
   MoreActionsMenuItemMUI,
   resolveCardActionsItemsMUI,
-} from "../../utils/_buildMenuOptions";
+} from "../../../utils/_buildMenuOptions";
 import {
   addIModelToRecents,
   removeIModelFromRecents,
-} from "../../utils/iModelApi";
+} from "../../../utils/iModelApi";
+import { BaseCardLoading } from "../../components/baseCard/BaseCardLoading";
+import { NoResultsMUI as NoResults } from "../../components/noResults/NoResultsMUI";
+import { type IModelTableOverridesMUI } from "../../types";
+import { stripNonTileProps } from "../../utils/stripNonTileProps";
 import {
   type IModelTileMUIProps,
   IModelTileMUI,
 } from "../iModelTiles/IModelTileMUI";
 import { clientSideIModelSort } from "./clientSideIModelSort";
-import type { IModelGridProps } from "./IModelGrid";
 import { type IModelTableMUIStrings, IModelTableMUI } from "./IModelTableMUI";
-import { DEFAULT_PAGE_SIZE, useIModelData } from "./useIModelData";
 
 /**
  * Localized strings for the MUI IModelGrid. Extends the table-level strings
@@ -336,7 +340,7 @@ const IModelGridInternal = ({
             sx={{
               display: "grid",
               gap: 2,
-              gridTemplateColumns: "repeat(auto-fill, minmax(22.5rem, 1fr))",
+              gridTemplateColumns: "repeat(auto-fill, minmax(18rem, 1fr))",
               listStyle: "none",
               alignItems: "stretch",
               "& > li": {
@@ -450,7 +454,7 @@ type IModelHookedTileProps = IModelTileMUIProps & {
 const noOp = () => ({} as Partial<IModelTileMUIProps>);
 
 const IModelHookedTile = (props: IModelHookedTileProps) => {
-  const { useTileState = noOp, ...iModelTileProps } = props;
+  const { useTileState = noOp, ...rest } = props;
 
   const hookIdentity = React.useRef(useTileState);
 
@@ -460,9 +464,9 @@ const IModelHookedTile = (props: IModelHookedTileProps) => {
     );
   }
 
-  const tileState = useTileState(props.iModel, iModelTileProps);
-
-  return <IModelTileMUI {...iModelTileProps} {...tileState} />;
+  const tileProps = stripNonTileProps(rest);
+  const tileState = stripNonTileProps(useTileState(props.iModel, rest));
+  return <IModelTileMUI {...tileProps} {...tileState} />;
 };
 
 function removeFromRecentsAction(
