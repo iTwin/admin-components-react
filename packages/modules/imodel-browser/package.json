@@ -33,7 +33,7 @@
   "scripts": {
     "start": "rollup -cw",
     "build": "rollup --silent -c",
-    "test": "jest --silent --forceExit",
+    "test": "jest --silent",
     "clean": "rimraf cjs esm"
   },
   "files": [
