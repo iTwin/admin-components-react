@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Wed, 17 Jun 2026 17:52:45 GMT and should not be manually modified.
+This log was last generated on Thu, 18 Jun 2026 17:36:51 GMT and should not be manually modified.
+
+## 4.3.3
+Thu, 18 Jun 2026 17:36:51 GMT
+
+### Patches
+
+- Prevent concurrent iTwin API fetches
 
 ## 4.3.2
 Wed, 17 Jun 2026 17:52:45 GMT
