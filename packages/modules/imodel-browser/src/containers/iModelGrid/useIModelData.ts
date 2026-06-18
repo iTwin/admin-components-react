@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import React, { useEffect } from "react";
+import React from "react";
 
 import {
   AccessTokenProvider,
@@ -53,9 +53,10 @@ export const useIModelData = ({
   const [status, setStatus] = React.useState<DataStatus>();
   const [page, setPage] = React.useState(0);
   const [morePagesAvailable, setMorePagesAvailable] = React.useState(true);
-  const [abortController, setAbortController] = React.useState<
-    AbortController | undefined
-  >(undefined);
+  const abortControllerRef = React.useRef<AbortController | undefined>(
+    undefined
+  );
+  const activeRequestRef = React.useRef<symbol | undefined>(undefined);
 
   const sortType =
     sortOptions && ["name", "createdDateTime"].includes(sortOptions.sortType)
@@ -94,9 +95,6 @@ export const useIModelData = ({
   if (sortChanged) {
     setPreviousSortOptions(sortOptions);
   }
-
-  // cleanup the abort controller when unmounting
-  useEffect(() => () => abortController?.abort(), [abortController]);
 
   const reset = React.useCallback(() => {
     if (dataMode === "external") {
@@ -182,8 +180,8 @@ export const useIModelData = ({
     }
 
     setNeedsUpdate(false);
-    abortController?.abort();
-    setAbortController(undefined);
+    abortControllerRef.current?.abort();
+    abortControllerRef.current = undefined;
 
     if (!accessToken || !iTwinId) {
       setStatus(
@@ -202,6 +200,9 @@ export const useIModelData = ({
     // Otherwise, fetch from server
     setStatus(DataStatus.Fetching);
 
+    const requestId = Symbol();
+    activeRequestRef.current = requestId;
+
     const { abortController: newAbortController, fetchIModels } =
       createFetchIModelsFn(
         iTwinId,
@@ -215,10 +216,11 @@ export const useIModelData = ({
         apiOverrides?.serverEnvironmentPrefix,
         requestType
       );
-    setAbortController(newAbortController);
+    abortControllerRef.current = newAbortController;
 
     fetchIModels()
       .then(({ iModels, morePagesAvailable }) => {
+        if (activeRequestRef.current !== requestId) return;
         setMorePagesAvailable(morePagesAvailable);
         setIModels((prev) =>
           page === 0 ? [...iModels] : [...prev, ...iModels]
@@ -226,10 +228,8 @@ export const useIModelData = ({
         setStatus(DataStatus.Complete);
       })
       .catch((e) => {
-        if (e.name === "AbortError") {
-          // Aborting because unmounting is not an error, swallow.
+        if (activeRequestRef.current !== requestId || e.name === "AbortError")
           return;
-        }
         setIModels([]);
         setMorePagesAvailable(false);
         setStatus(DataStatus.FetchFailed);
@@ -237,15 +237,12 @@ export const useIModelData = ({
       });
   }, [
     dataMode,
-    abortController,
     accessToken,
     apiOverrides?.data,
     apiOverrides?.serverEnvironmentPrefix,
-    iModels,
     iTwinId,
     maxCount,
     pageSize,
-    morePagesAvailable,
     needsUpdate,
     page,
     requestType,
@@ -254,6 +251,15 @@ export const useIModelData = ({
     sortDescending,
     sortType,
   ]);
+
+  // Abort any in-flight request and invalidate stale results on unmount
+  React.useEffect(
+    () => () => {
+      activeRequestRef.current = undefined;
+      abortControllerRef.current?.abort();
+    },
+    []
+  );
 
   if (dataMode === "external") {
     return {

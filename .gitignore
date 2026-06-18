@@ -13,6 +13,9 @@ yarn-error.log*
 # Dependency directories
 node_modules/
 
+# Per-package lockfiles (Rush manages a single lockfile at common/config/rush/pnpm-lock.yaml)
+pnpm-lock.yaml
+
 # Optional npm cache directory
 .npm
 
