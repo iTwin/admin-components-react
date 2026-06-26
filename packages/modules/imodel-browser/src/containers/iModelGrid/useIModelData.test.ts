@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { renderHook } from "@testing-library/react-hooks";
 import { rest } from "msw";
-import { act } from "react";
+import { act, StrictMode } from "react";
 
 import { server } from "../../tests/mocks/server";
 import { DataStatus } from "../../types";
@@ -15,7 +15,10 @@ describe("useIModelData hook", () => {
   beforeAll(() => server.listen());
   // Reset any request handlers that we may add during the tests,
   // so they don't affect other tests.
-  afterEach(() => server.resetHandlers());
+  afterEach(() => {
+    server.resetHandlers();
+    jest.restoreAllMocks();
+  });
   // Clean up after the tests are finished.
   afterAll(() => {
     server.close();
@@ -309,6 +312,24 @@ describe("useIModelData hook", () => {
     expect(result.current.iModels.length).toBe(101);
     expect(result.current.fetchMore).toBeUndefined();
     expect(watcher).toHaveBeenCalledTimes(2);
+  });
+
+  it("completes fetch when mounted inside React.StrictMode", async () => {
+    const { result, waitForValueToChange } = renderHook(
+      () => useIModelData({ iTwinId: "iTwinId", accessToken: "accessToken" }),
+      { wrapper: StrictMode }
+    );
+
+    await waitForValueToChange(
+      () => result.current.status === DataStatus.Complete,
+      { timeout: 3000 }
+    );
+
+    expect(result.current.status).toEqual(DataStatus.Complete);
+    expect(result.current.iModels).toContainEqual({
+      id: "fakeId",
+      displayName: "fakeName",
+    });
   });
 
   it.each([
