@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { renderHook } from "@testing-library/react-hooks";
 import { rest } from "msw";
-import React, { act } from "react";
+import { act, StrictMode } from "react";
 
 import { server } from "../../tests/mocks/server";
 import { DataStatus } from "../../types";
@@ -317,7 +317,7 @@ describe("useIModelData hook", () => {
   it("completes fetch when mounted inside React.StrictMode", async () => {
     const { result, waitForValueToChange } = renderHook(
       () => useIModelData({ iTwinId: "iTwinId", accessToken: "accessToken" }),
-      { wrapper: React.StrictMode }
+      { wrapper: StrictMode }
     );
 
     await waitForValueToChange(
