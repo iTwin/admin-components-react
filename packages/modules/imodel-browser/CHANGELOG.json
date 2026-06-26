@@ -2,6 +2,18 @@
   "name": "@itwin/imodel-browser-react",
   "entries": [
     {
+      "version": "4.3.4",
+      "tag": "@itwin/imodel-browser-react_v4.3.4",
+      "date": "Fri, 26 Jun 2026 19:00:15 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Fix AbortController aborting in-flight fetch in React 18 Strict Mode"
+          }
+        ]
+      }
+    },
+    {
       "version": "4.3.3",
       "tag": "@itwin/imodel-browser-react_v4.3.3",
       "date": "Thu, 18 Jun 2026 17:36:51 GMT",

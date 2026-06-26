@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Thu, 18 Jun 2026 17:36:51 GMT and should not be manually modified.
+This log was last generated on Fri, 26 Jun 2026 19:00:15 GMT and should not be manually modified.
+
+## 4.3.4
+Fri, 26 Jun 2026 19:00:15 GMT
+
+### Patches
+
+- Fix AbortController aborting in-flight fetch in React 18 Strict Mode
 
 ## 4.3.3
 Thu, 18 Jun 2026 17:36:51 GMT
