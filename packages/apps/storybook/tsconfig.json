@@ -1,6 +1,7 @@
 {
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
+    "noEmit": true,
     "strictNullChecks": true,
     "paths": {
       "@itwin/imodel-browser-react/mui": [
