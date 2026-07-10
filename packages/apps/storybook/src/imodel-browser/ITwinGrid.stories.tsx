@@ -23,6 +23,7 @@ import {
 } from "@itwin/itwinui-react";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
 import React, { PropsWithChildren } from "react";
+
 import { accessTokenArgTypes } from "../utils/storyHelp";
 
 type TileProps = React.ComponentPropsWithoutRef<typeof Tile>;
@@ -34,8 +35,31 @@ export const ITwinGrid = (props: ITwinGridProps) => (
 export default {
   title: "imodel-browser/ITwinGrid",
   component: ITwinGrid,
-  argTypes: accessTokenArgTypes,
-  args: { apiOverrides: { serverEnvironmentPrefix: "qa" } },
+  argTypes: {
+    ...accessTokenArgTypes,
+    requestType: {
+      options: ["all", "recents", "favorites"],
+      mapping: {
+        all: "",
+        recents: "recents",
+        favorites: "favorites",
+      },
+      control: {
+        type: "radio",
+      },
+    },
+    viewMode: {
+      options: ["tile", "cells"],
+      control: {
+        type: "radio",
+      },
+    },
+  },
+  args: {
+    apiOverrides: { serverEnvironmentPrefix: "qa" },
+    requestType: "all",
+  },
+
   excludeStories: ["ITwinGrid"],
 } as Meta;
 
@@ -138,27 +162,28 @@ const buildMenuItems =
     close: () => void,
     setVersion: React.Dispatch<React.SetStateAction<IModelMinimal | undefined>>
   ) =>
-  (v: IModelMinimal) => (
-    <span
-      onClick={(event) => {
-        event.stopPropagation();
-      }}
-    >
-      {v.id === "loading" ? (
-        <MenuItemSkeleton />
-      ) : (
-        <MenuItem
-          key={v.id}
-          onClick={() => {
-            close();
-            v.id !== "loading" && setVersion(v);
-          }}
-        >
-          {v.displayName}
-        </MenuItem>
-      )}
-    </span>
-  );
+  (v: IModelMinimal) =>
+    (
+      <span
+        onClick={(event) => {
+          event.stopPropagation();
+        }}
+      >
+        {v.id === "loading" ? (
+          <MenuItemSkeleton />
+        ) : (
+          <MenuItem
+            key={v.id}
+            onClick={() => {
+              close();
+              v.id !== "loading" && setVersion(v);
+            }}
+          >
+            {v.displayName}
+          </MenuItem>
+        )}
+      </span>
+    );
 
 const Pager = (props: PropsWithChildren<{ onClick: () => void }>) => (
   <span onClick={props.onClick}>

@@ -24,6 +24,7 @@ import {
 } from "@itwin/itwinui-react";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
 import React from "react";
+
 import { iTwinAndAccessTokenArgTypes } from "../utils/storyHelp";
 
 type TileProps = React.ComponentPropsWithoutRef<typeof Tile>;
@@ -35,8 +36,34 @@ export const IModelGrid = (props: IModelGridProps) => (
 export default {
   title: "imodel-browser/IModelGrid",
   component: IModelGrid,
-  argTypes: iTwinAndAccessTokenArgTypes,
-  args: { apiOverrides: { serverEnvironmentPrefix: "qa" } },
+  argTypes: {
+    ...iTwinAndAccessTokenArgTypes,
+    iTwinId: {
+      control: { type: "text" },
+    },
+    requestType: {
+      options: ["all", "recents", "favorites"],
+      mapping: {
+        all: "",
+        recents: "recents",
+        favorites: "favorites",
+      },
+      control: {
+        type: "radio",
+      },
+    },
+    viewMode: {
+      options: ["tile", "cells"],
+      control: {
+        type: "radio",
+      },
+    },
+  },
+  args: {
+    requestType: "all",
+    apiOverrides: { serverEnvironmentPrefix: "qa" },
+  },
+
   excludeStories: ["IModelGrid"],
 } as Meta;
 
@@ -257,27 +284,28 @@ const buildMenuItems =
     close: () => void,
     setVersion: React.Dispatch<React.SetStateAction<Version | undefined>>
   ) =>
-  (v: Version) => (
-    <span
-      onClick={(event) => {
-        event.stopPropagation();
-      }}
-    >
-      {v.id === "loading" ? (
-        <MenuItemSkeleton />
-      ) : (
-        <MenuItem
-          key={v.id}
-          onClick={() => {
-            close();
-            v.id !== "loading" && setVersion(v);
-          }}
-        >
-          {v.displayName}
-        </MenuItem>
-      )}
-    </span>
-  );
+  (v: Version) =>
+    (
+      <span
+        onClick={(event) => {
+          event.stopPropagation();
+        }}
+      >
+        {v.id === "loading" ? (
+          <MenuItemSkeleton />
+        ) : (
+          <MenuItem
+            key={v.id}
+            onClick={() => {
+              close();
+              v.id !== "loading" && setVersion(v);
+            }}
+          >
+            {v.displayName}
+          </MenuItem>
+        )}
+      </span>
+    );
 
 /** Hook used in StatefulPropsOverrides.args, the function itself must be a stable reference as it is a hook. */
 const useIndividualState = (iModel: IModelFull, props: IModelTileProps) => {

@@ -13,16 +13,14 @@ import Avatar from "@mui/material/Avatar";
 import AvatarGroup from "@mui/material/AvatarGroup";
 import Chip from "@mui/material/Chip";
 import Typography from "@mui/material/Typography";
-import { action } from "storybook/actions";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
 import SvgDelete from "@stratakit/icons/delete.svg";
 import React from "react";
+import { action } from "storybook/actions";
 
 import bridgeThumbnail from "../../utils/bridge.jpg";
 import nightThumbnail from "../../utils/night.jpg";
-import {
-  accessTokenArgTypes,
-} from "../../utils/storyHelp";
+import { accessTokenArgTypes } from "../../utils/storyHelp";
 import {
   additionalData,
   initialData,
@@ -36,7 +34,36 @@ export const IModelGridMUI = (props: IModelGridMUIProps) => (
 export default {
   title: "imodel-browser/IModelGridMUI",
   component: IModelGridMUI,
-  argTypes: accessTokenArgTypes,
+  argTypes: {
+    ...accessTokenArgTypes,
+    // Explicitly declared so the project-selection toolbar (which keys off
+    // `useArgTypes().iTwinId`) renders. react-docgen-typescript does not expand
+    // the `Omit<IModelGridProps, ...>` used by IModelGridMUIProps, so this
+    // argType would otherwise be missing.
+    iTwinId: {
+      control: { type: "text" },
+    },
+    requestType: {
+      options: ["all", "recents", "favorites"],
+      mapping: {
+        all: "",
+        recents: "recents",
+        favorites: "favorites",
+      },
+      control: {
+        type: "radio",
+      },
+    },
+    viewMode: {
+      options: ["tile", "cells"],
+      control: {
+        type: "radio",
+      },
+    },
+  },
+  args: {
+    requestType: "all",
+  },
   excludeStories: ["IModelGridMUI"],
 } as Meta;
 
@@ -79,92 +106,92 @@ export const TableView: StoryObj<typeof IModelGridMUI> = {
 
 export const TableViewWithOverrides: StoryObj<typeof IModelGridMUI> = {
   args: {
-  ...baseArgs,
-  actions: [
-    {
-      key: "open",
-      label: (iModel) => iModel.displayName ?? "",
-      onClick: (iModel) => action("iModel opened")(iModel),
-      disabled: (iModel) =>
-        iModel.displayName?.toLowerCase().includes("t") ?? false,
-    },
-  ],
-  viewMode: "cells",
-  tableOverrides: {
-    columnOverrides: {
-      [IModelCellColumn.Name]: {
-        renderCell: (params) =>
-          params.formattedValue?.includes("*") ? (
-            <div>
-              {params.formattedValue}{" "}
-              <Typography variant="caption">
-                (redacted number in name)
-              </Typography>
-            </div>
-          ) : (
-            <div>
-              {params.formattedValue}{" "}
-              <Typography variant="caption">(no redactions)</Typography>
-            </div>
+    ...baseArgs,
+    actions: [
+      {
+        key: "open",
+        label: (iModel) => iModel.displayName ?? "",
+        onClick: (iModel) => action("iModel opened")(iModel),
+        disabled: (iModel) =>
+          iModel.displayName?.toLowerCase().includes("t") ?? false,
+      },
+    ],
+    viewMode: "cells",
+    tableOverrides: {
+      columnOverrides: {
+        [IModelCellColumn.Name]: {
+          renderCell: (params) =>
+            params.formattedValue?.includes("*") ? (
+              <div>
+                {params.formattedValue}{" "}
+                <Typography variant="caption">
+                  (redacted number in name)
+                </Typography>
+              </div>
+            ) : (
+              <div>
+                {params.formattedValue}{" "}
+                <Typography variant="caption">(no redactions)</Typography>
+              </div>
+            ),
+          valueFormatter: (value, iModel) => {
+            // replace any numbers with *
+            return iModel.displayName?.replace(/[0-9]/g, "*");
+          },
+        },
+        [IModelCellColumn.Description]: {
+          renderCell: (params) => (
+            <em>
+              Add random number {Math.floor(Math.random() * 100)} to description
+              &quot;{params.value}&quot;
+            </em>
           ),
-        valueFormatter: (value, iModel) => {
-          // replace any numbers with *
-          return iModel.displayName?.replace(/[0-9]/g, "*");
         },
       },
-      [IModelCellColumn.Description]: {
-        renderCell: (params) => (
-          <em>
-            Add random number {Math.floor(Math.random() * 100)} to description
-            &quot;{params.value}&quot;
-          </em>
-        ),
-      },
+      hideColumns: [IModelCellColumn.LastModified],
     },
-    hideColumns: [IModelCellColumn.LastModified],
-  },
   },
 };
 
 const OverrideApiDataWithLoadMoreRender = (args: IModelGridMUIProps) => {
-      const [data, setData] = React.useState<IModelFull[]>(initialData);
-      const [isLoading, setIsLoading] = React.useState(false);
-      const [hasMore, setHasMore] = React.useState(true);
+  const [data, setData] = React.useState<IModelFull[]>(initialData);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [hasMore, setHasMore] = React.useState(true);
 
-      const handleLoadMore = React.useCallback(async () => {
-        setIsLoading(true);
-        // Simulate network delay
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-        setData((prev) => [...prev, ...additionalData]);
-        setHasMore(false);
-        setIsLoading(false);
-      }, []);
+  const handleLoadMore = React.useCallback(async () => {
+    setIsLoading(true);
+    // Simulate network delay
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    setData((prev) => [...prev, ...additionalData]);
+    setHasMore(false);
+    setIsLoading(false);
+  }, []);
 
-      return (
-        <ExternalComponent
-          {...args}
-          actions={[
-            {
-              key: "open",
-              label: (iModel) => iModel.displayName ?? "",
-              onClick: (iModel) => action("open action clicked")(iModel),
-            },
-            {
-              key: "somethingElse",
-              label: "Something else",
-              onClick: (iModel) =>
-                action("something else clicked " + iModel?.displayName)(iModel),
-            },
-          ]}
-          dataMode="external"
-          apiOverrides={{
-            data,
-            isLoading,
-            hasMoreData: hasMore,
-          }}
-          onLoadMore={handleLoadMore}
-        />
-      );
+  return (
+    <ExternalComponent
+      {...args}
+      actions={[
+        {
+          key: "open",
+          label: (iModel) => iModel.displayName ?? "",
+          onClick: (iModel) => action("open action clicked")(iModel),
+        },
+        {
+          key: "somethingElse",
+          label: "Something else",
+          onClick: (iModel) =>
+            action("something else clicked " + iModel?.displayName)(iModel),
+        },
+      ]}
+      dataMode="external"
+      apiOverrides={{
+        data,
+        isLoading,
+        hasMoreData: hasMore,
+      }}
+      onLoadMore={handleLoadMore}
+    />
+  );
 };
 
 export const OverrideApiDataWithLoadMore: StoryObj<typeof IModelGridMUI> = {
@@ -174,46 +201,46 @@ export const OverrideApiDataWithLoadMore: StoryObj<typeof IModelGridMUI> = {
 
 export const ContextualActions: StoryObj<typeof IModelGridMUI> = {
   args: {
-  ...baseArgs,
-  actions: [
-    {
-      key: "withR",
-      label: "displayName contains 'R'",
-      visible: (iModel) =>
-        iModel.displayName?.toLowerCase().includes("r") ?? false,
-    },
-  ],
-  moreActions: [
-    {
-      label: "displayName contains 'R'",
-      visible: (iModel: IModelFull) =>
-        iModel.displayName?.toLowerCase().includes("r") ?? false,
-      key: "withR",
-      onClick: (iModel: IModelFull | undefined) =>
-        action("Contains R: " + iModel?.displayName)(iModel),
-    },
-    {
-      label: "Disabled if name contains 'T'",
-      disabled: (iModel: IModelFull) =>
-        iModel.displayName?.toLowerCase().includes("t") ?? false,
-      key: "withT",
-      onClick: (iModel: IModelFull | undefined) =>
-        action("Does not contain T: " + iModel?.displayName)(iModel),
-    },
-    {
-      label: "Add description",
-      key: "addD",
-      onClick: (iModel: IModelFull | undefined) =>
-        action("Add description: " + iModel?.displayName)(iModel),
-    },
-    {
-      label: "Edit description",
-      visible: (iModel: IModelFull) => !!iModel.description,
-      key: "editD",
-      onClick: (iModel: IModelFull | undefined) =>
-        action("Edit description: " + iModel?.displayName)(iModel),
-    },
-  ],
+    ...baseArgs,
+    actions: [
+      {
+        key: "withR",
+        label: "displayName contains 'R'",
+        visible: (iModel) =>
+          iModel.displayName?.toLowerCase().includes("r") ?? false,
+      },
+    ],
+    moreActions: [
+      {
+        label: "displayName contains 'R'",
+        visible: (iModel: IModelFull) =>
+          iModel.displayName?.toLowerCase().includes("r") ?? false,
+        key: "withR",
+        onClick: (iModel: IModelFull | undefined) =>
+          action("Contains R: " + iModel?.displayName)(iModel),
+      },
+      {
+        label: "Disabled if name contains 'T'",
+        disabled: (iModel: IModelFull) =>
+          iModel.displayName?.toLowerCase().includes("t") ?? false,
+        key: "withT",
+        onClick: (iModel: IModelFull | undefined) =>
+          action("Does not contain T: " + iModel?.displayName)(iModel),
+      },
+      {
+        label: "Add description",
+        key: "addD",
+        onClick: (iModel: IModelFull | undefined) =>
+          action("Add description: " + iModel?.displayName)(iModel),
+      },
+      {
+        label: "Edit description",
+        visible: (iModel: IModelFull) => !!iModel.description,
+        key: "editD",
+        onClick: (iModel: IModelFull | undefined) =>
+          action("Edit description: " + iModel?.displayName)(iModel),
+      },
+    ],
   },
 };
 
