@@ -12,7 +12,7 @@ import { ITwinTableMUI } from "./ITwinGrid/ITwinTableMUI";
 
 jest.mock("@mui/x-data-grid", () => ({
   DataGrid: ({ nonce }: { nonce?: string }) => (
-    <div data-testid="data-grid" nonce={nonce} />
+    <div data-testid="data-grid" data-nonce={nonce} />
   ),
 }));
 
@@ -32,7 +32,10 @@ describe("MUI table CSP nonce", () => {
       />
     );
 
-    expect(screen.getByTestId("data-grid")).toHaveAttribute("nonce", nonce);
+    expect(screen.getByTestId("data-grid")).toHaveAttribute(
+      "data-nonce",
+      nonce
+    );
   });
 
   it("forwards the nonce to the iModel DataGrid", () => {
@@ -45,6 +48,9 @@ describe("MUI table CSP nonce", () => {
       />
     );
 
-    expect(screen.getByTestId("data-grid")).toHaveAttribute("nonce", nonce);
+    expect(screen.getByTestId("data-grid")).toHaveAttribute(
+      "data-nonce",
+      nonce
+    );
   });
 });
