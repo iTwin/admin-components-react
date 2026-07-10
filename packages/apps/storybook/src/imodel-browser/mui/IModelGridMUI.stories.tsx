@@ -13,6 +13,7 @@ import Avatar from "@mui/material/Avatar";
 import AvatarGroup from "@mui/material/AvatarGroup";
 import Chip from "@mui/material/Chip";
 import Typography from "@mui/material/Typography";
+import { GridSortModel } from "@mui/x-data-grid";
 import { action } from "@storybook/addon-actions";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import SvgDelete from "@stratakit/icons/delete.svg";
@@ -158,18 +159,39 @@ TableViewWithOverrides.args = {
   },
 };
 
-export const TableWithPersistedSort = Template.bind({});
-TableWithPersistedSort.args = {
+export const TableWithControlledSort: Story<IModelGridMUIProps> =
+  withITwinIdOverride(
+    withAccessTokenOverride((args) => {
+      const [sortModel, setSortModel] = React.useState<GridSortModel>([
+        { field: "name", sort: "desc" },
+      ]);
+
+      return (
+        <div>
+          <Typography variant="body2" style={{ marginBottom: 8 }}>
+            Controlled sort model: {JSON.stringify(sortModel)}
+          </Typography>
+          <ExternalComponent
+            {...args}
+            viewMode="cells"
+            sortModel={sortModel}
+            onSortModelChange={(newSortModel) => {
+              action("sort model changed")(newSortModel);
+              setSortModel(newSortModel);
+            }}
+          />
+        </div>
+      );
+    })
+  );
+TableWithControlledSort.args = {
   ...baseArgs,
-  viewMode: "cells",
-  preserveSortState: true,
-  sortStateStorageKey: "storybook-imodel-table-sort",
 };
-TableWithPersistedSort.parameters = {
+TableWithControlledSort.parameters = {
   docs: {
     description: {
       story:
-        "Sort a column, then reload the page. The sort state is restored from `localStorage` using `sortStateStorageKey`.",
+        "The sort state is fully controlled by the parent via `sortModel` and `onSortModelChange`, so it can be saved anywhere the consumer wants.",
     },
   },
 };

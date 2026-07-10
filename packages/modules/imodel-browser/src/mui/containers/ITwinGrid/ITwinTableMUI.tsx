@@ -67,45 +67,13 @@ export interface ITwinTableMUIProps {
   /** Called when more data should be loaded. */
   fetchMore?: (() => void) | false;
   /**
-   * When true, the sort state is persisted to `localStorage` so it is restored
-   * on subsequent mounts.
+   * Controlled sort model. When provided, the table's sort state is fully
+   * controlled by the parent and must be kept in sync via `onSortModelChange`.
    */
-  preserveSortState?: boolean;
-  /**
-   * `localStorage` key used to persist the sort state when `preserveSortState`
-   * is true.
-   * @default "itwin-table-sort-model"
-   */
-  sortStateStorageKey?: string;
+  sortModel?: GridSortModel;
+  /** Called whenever the sort model changes. */
+  onSortModelChange?: (sortModel: GridSortModel) => void;
 }
-
-const DEFAULT_SORT_STATE_STORAGE_KEY = "itwin-table-sort-model";
-
-const readPersistedSortModel = (storageKey: string): GridSortModel => {
-  try {
-    const raw = window.localStorage.getItem(storageKey);
-    if (!raw) {
-      return [];
-    }
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? (parsed as GridSortModel) : [];
-  } catch {
-    return [];
-  }
-};
-
-const writePersistedSortModel = (
-  storageKey: string,
-  sortModel: GridSortModel
-) => {
-  try {
-    window.localStorage.setItem(storageKey, JSON.stringify(sortModel));
-  } catch {
-    console.warn(
-      `Failed to persist sort model to localStorage under key "${storageKey}".`
-    );
-  }
-};
 
 /**
  * Table view for iTwins using MUI X DataGrid (Community edition).
@@ -125,8 +93,8 @@ export const ITwinTableMUI = ({
   } = {},
   isLoading,
   fetchMore,
-  preserveSortState,
-  sortStateStorageKey = DEFAULT_SORT_STATE_STORAGE_KEY,
+  sortModel,
+  onSortModelChange,
 }: ITwinTableMUIProps) => {
   // Eagerly load all available data so the table has the full dataset
   // for client-side pagination and sorting.
@@ -135,20 +103,6 @@ export const ITwinTableMUI = ({
       fetchMore();
     }
   }, [fetchMore]);
-
-  // Internal sort state, seeded from localStorage when persistence is enabled.
-  const [internalSortModel, setInternalSortModel] =
-    React.useState<GridSortModel>(() =>
-      preserveSortState ? readPersistedSortModel(sortStateStorageKey) : []
-    );
-
-  const handleSortModelChange = React.useCallback(
-    (newSortModel: GridSortModel) => {
-      setInternalSortModel(newSortModel);
-      writePersistedSortModel(sortStateStorageKey, newSortModel);
-    },
-    [sortStateStorageKey]
-  );
   const columns = React.useMemo<GridColDef<ITwinFull>[]>(() => {
     const cols: (GridColDef<ITwinFull> | false)[] = [
       !hideColumns.includes(ITwinCellColumn.Favorite) && {
@@ -244,8 +198,8 @@ export const ITwinTableMUI = ({
       rows={iTwins}
       columns={columns}
       loading={isLoading}
-      sortModel={preserveSortState ? internalSortModel : undefined}
-      onSortModelChange={preserveSortState ? handleSortModelChange : undefined}
+      sortModel={sortModel}
+      onSortModelChange={onSortModelChange}
       onRowClick={
         actions
           ? (params) => {

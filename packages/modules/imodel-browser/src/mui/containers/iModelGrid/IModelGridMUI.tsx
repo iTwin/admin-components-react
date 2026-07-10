@@ -3,6 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import Box from "@mui/material/Box";
+import { GridSortModel } from "@mui/x-data-grid";
 import React from "react";
 import { InView } from "react-intersection-observer";
 
@@ -104,15 +105,13 @@ export interface IModelGridMUIProps
   tableOverrides?: IModelTableOverridesMUI;
   stringsOverrides?: Partial<IModelGridStringsMUI>;
   /**
-   * When true, the table sort state is persisted to `localStorage` so it is
-   * restored on subsequent mounts.
+   * Controlled sort model for the table view. When provided, the table's sort
+   * state is fully controlled by the parent and must be kept in sync via
+   * `onSortModelChange`.
    */
-  preserveSortState?: boolean;
-  /**
-   * `localStorage` key used to persist the table sort state when
-   * `preserveSortState` is true.
-   */
-  sortStateStorageKey?: string;
+  sortModel?: GridSortModel;
+  /** Called whenever the table sort model changes. */
+  onSortModelChange?: (sortModel: GridSortModel) => void;
 }
 
 /**
@@ -159,8 +158,8 @@ const IModelGridInternal = ({
   onRefetch,
   dataMode = "internal",
   disableAddToRecents = false,
-  preserveSortState,
-  sortStateStorageKey,
+  sortModel,
+  onSortModelChange,
 }: IModelGridMUIProps) => {
   const [sort, setSort] = React.useState<IModelSortOptions>(sortOptions);
 
@@ -420,8 +419,8 @@ const IModelGridInternal = ({
             tableOverrides={tableOverrides}
             isLoading={fetchStatus === DataStatus.Fetching}
             fetchMore={fetchMore}
-            preserveSortState={preserveSortState}
-            sortStateStorageKey={sortStateStorageKey}
+            sortModel={sortModel}
+            onSortModelChange={onSortModelChange}
             data-testid="imodel-table"
           />
         )}
