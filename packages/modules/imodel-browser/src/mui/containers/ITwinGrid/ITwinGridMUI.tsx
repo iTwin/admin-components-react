@@ -77,6 +77,16 @@ export interface ITwinGridPropsMUI
   tableOverrides?: ITwinTableOverridesMUI;
   /** Localized string overrides - falls back to default English strings if not provided */
   stringsOverrides?: Partial<ITwinGridStringsMUI>;
+  /**
+   * When true, the table sort state is persisted to `localStorage` so it is
+   * restored on subsequent mounts.
+   */
+  preserveSortState?: boolean;
+  /**
+   * `localStorage` key used to persist the table sort state when
+   * `preserveSortState` is true.
+   */
+  sortStateStorageKey?: string;
 }
 
 /**
@@ -99,6 +109,8 @@ export const ITwinGridMUI = ({
   viewMode,
   tableOverrides,
   className,
+  preserveSortState,
+  sortStateStorageKey,
 }: ITwinGridPropsMUI) => {
   const {
     iTwinFavorites,
@@ -287,6 +299,8 @@ export const ITwinGridMUI = ({
       tableOverrides={tableOverrides}
       isLoading={fetchStatus === DataStatus.Fetching}
       fetchMore={fetchMore}
+      preserveSortState={preserveSortState}
+      sortStateStorageKey={sortStateStorageKey}
     />
   );
 };

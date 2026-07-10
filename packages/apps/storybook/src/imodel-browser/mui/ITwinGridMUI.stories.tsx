@@ -79,6 +79,22 @@ TableView.args = {
   ],
 };
 
+export const TableWithPersistedSort = Template.bind({});
+TableWithPersistedSort.args = {
+  ...baseArgs,
+  viewMode: "cells",
+  preserveSortState: true,
+  sortStateStorageKey: "storybook-itwin-table-sort",
+};
+TableWithPersistedSort.parameters = {
+  docs: {
+    description: {
+      story:
+        "Sort a column, then reload the page. The sort state is restored from `localStorage` using `sortStateStorageKey`.",
+    },
+  },
+};
+
 export const TableViewWithOverrides = Template.bind({});
 TableViewWithOverrides.args = {
   ...baseArgs,
