@@ -40,6 +40,13 @@ export default {
   component: IModelGridMUI,
   argTypes: {
     ...accessTokenArgTypes,
+    // Explicitly declared so the project-selection toolbar (which keys off
+    // `useArgTypes().iTwinId`) renders. react-docgen-typescript does not expand
+    // the `Omit<IModelGridProps, ...>` used by IModelGridMUIProps, so this
+    // argType would otherwise be missing.
+    iTwinId: {
+      control: { type: "text" },
+    },
     requestType: {
       options: ["all", "recents", "favorites"],
       mapping: {
