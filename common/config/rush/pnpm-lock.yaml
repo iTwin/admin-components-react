@@ -30,6 +30,7 @@ importers:
       '@mui/material': ~9.0.0
       '@mui/system': ~9.0.0
       '@mui/x-data-grid': ~9.3.0
+      '@storybook/addon-docs': 10.4.1
       '@storybook/addon-webpack5-compiler-swc': ^4.0.3
       '@storybook/icons': ^2.0.2
       '@storybook/react-webpack5': ^10.4.0
@@ -80,6 +81,7 @@ importers:
       '@mui/material': 9.0.1_27kzlijtntas6645qwojwuhdba
       '@mui/system': 9.0.1_po4keleilqsm4vrhgxl2cr46aq
       '@mui/x-data-grid': 9.3.0_7mpntgkhpya3s3ktsfitjpkb5y
+      '@storybook/addon-docs': 10.4.1_5wxpuceljsettvvmc55j7mftuu
       '@storybook/addon-webpack5-compiler-swc': 4.0.3_3r7jhhea4uhlattdxe4biwrhfu
       '@storybook/icons': 2.0.2_nnrd3gsncyragczmpvfhocinkq
       '@storybook/react-webpack5': 10.4.1_pxwaj4fa7rs5amymhn6xb7fxr4
@@ -2866,7 +2868,7 @@ packages:
       '@jest/test-result': 29.7.0
       '@jest/transform': 29.7.0
       '@jest/types': 29.6.3
-      '@jridgewell/trace-mapping': 0.3.25
+      '@jridgewell/trace-mapping': 0.3.31
       '@types/node': 14.18.63
       chalk: 4.1.2
       collect-v8-coverage: 1.0.2
@@ -2931,7 +2933,7 @@ packages:
     dependencies:
       '@babel/core': 7.26.10
       '@jest/types': 29.6.3
-      '@jridgewell/trace-mapping': 0.3.25
+      '@jridgewell/trace-mapping': 0.3.31
       babel-plugin-istanbul: 6.1.1
       chalk: 4.1.2
       convert-source-map: 2.0.0
@@ -3007,8 +3009,8 @@ packages:
   /@jridgewell/source-map/0.3.6:
     resolution: {integrity: sha512-1ZJTZebgqllO79ue2bm3rIGud/bOe0pP5BjSRCRxxYkEZS8STV7zN84UBbiYu7jy+eCKSnVIUgoWWE/tt+shMQ==}
     dependencies:
-      '@jridgewell/gen-mapping': 0.3.8
-      '@jridgewell/trace-mapping': 0.3.25
+      '@jridgewell/gen-mapping': 0.3.13
+      '@jridgewell/trace-mapping': 0.3.31
     dev: true
 
   /@jridgewell/sourcemap-codec/1.5.0:
@@ -3031,6 +3033,17 @@ packages:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
+    dev: true
+
+  /@mdx-js/react/3.1.1_po4keleilqsm4vrhgxl2cr46aq:
+    resolution: {integrity: sha512-f++rKLQgUVYDAtECQ6fn/is15GkEH9+nZPM3MS0RcxVqoTfawHvDlSCH7JbMhAM6uJ32v3eXLvLmLvjGu7PTQw==}
+    peerDependencies:
+      '@types/react': '>=16'
+      react: '>=16'
+    dependencies:
+      '@types/mdx': 2.0.14
+      '@types/react': 18.3.20
+      react: 18.3.1
     dev: true
 
   /@mswjs/cookies/0.1.7:
@@ -3913,6 +3926,32 @@ packages:
       '@sinonjs/commons': 3.0.1
     dev: true
 
+  /@storybook/addon-docs/10.4.1_5wxpuceljsettvvmc55j7mftuu:
+    resolution: {integrity: sha512-IYqUdjoZe4VO2LFZlKL/gwy7DsQSWCq6hX+zc1MBmZo04yycDASk1tte57n9pdlW3ajw9yYMF/+lVBi+xQjyvw==}
+    peerDependencies:
+      '@types/react': ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+      storybook: ^10.4.1
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+    dependencies:
+      '@mdx-js/react': 3.1.1_po4keleilqsm4vrhgxl2cr46aq
+      '@storybook/csf-plugin': 10.4.1_3r7jhhea4uhlattdxe4biwrhfu
+      '@storybook/icons': 2.0.2_nnrd3gsncyragczmpvfhocinkq
+      '@storybook/react-dom-shim': 10.4.1_eexgig6qrotky225qzn2rxihai
+      '@types/react': 18.3.20
+      react: 18.3.1
+      react-dom: 18.3.1_react@18.3.1
+      storybook: 10.4.1_27kzlijtntas6645qwojwuhdba
+      ts-dedent: 2.2.0
+    transitivePeerDependencies:
+      - '@types/react-dom'
+      - esbuild
+      - rollup
+      - vite
+      - webpack
+    dev: true
+
   /@storybook/addon-webpack5-compiler-swc/4.0.3_3r7jhhea4uhlattdxe4biwrhfu:
     resolution: {integrity: sha512-REJZBArIBcqzxmhQY9R1br9hjfcFYdl4FeWD/okx1eRwPZkl49aUhTYqZPrA+MWXfKJkuuNQ5vnfSoR0c9HyvA==}
     engines: {node: '>=18'}
@@ -3977,6 +4016,29 @@ packages:
     dependencies:
       storybook: 10.4.1_27kzlijtntas6645qwojwuhdba
       ts-dedent: 2.2.0
+    dev: true
+
+  /@storybook/csf-plugin/10.4.1_3r7jhhea4uhlattdxe4biwrhfu:
+    resolution: {integrity: sha512-WdPepGBxDGOUDjYd8KxMtcf+us/2PAcnBczl77XtrnxxHNs0jWesxKkiJ9yiuGrge4BPhDeAj6rxjbBoaHxLBA==}
+    peerDependencies:
+      esbuild: '*'
+      rollup: '*'
+      storybook: ^10.4.1
+      vite: '*'
+      webpack: '*'
+    peerDependenciesMeta:
+      esbuild:
+        optional: true
+      rollup:
+        optional: true
+      vite:
+        optional: true
+      webpack:
+        optional: true
+    dependencies:
+      storybook: 10.4.1_27kzlijtntas6645qwojwuhdba
+      unplugin: 2.3.11
+      webpack: 5.99.5
     dev: true
 
   /@storybook/global/5.0.0:
@@ -4787,6 +4849,10 @@ packages:
       '@types/unist': 2.0.11
     dev: true
 
+  /@types/mdx/2.0.14:
+    resolution: {integrity: sha512-T48PeuJtvLosNTPVhfnIp3i/n3a4g4Bad7YCq5k64D4u7NwDrAotikQ+5+sjtUvBmxCMlbo3dVL+C2dP0rWHzg==}
+    dev: true
+
   /@types/minimist/1.2.5:
     resolution: {integrity: sha512-hov8bUuiLiyFPGyFPE1lwWhmzYbirOXQNNo40+y3zow8aFVTeyn3VWL0VFFfdNddA8S4Vf0Tc062rzyNr7Paag==}
     dev: true
@@ -5190,7 +5256,7 @@ packages:
   /acorn-globals/7.0.1:
     resolution: {integrity: sha512-umOSDSDrfHbTNPuNpC2NSnnA3LUrqpevPb4T9jRx4MagXNS0rs+gwiTcAvqCRmsD6utzsrzNt+ebm00SNWiC3Q==}
     dependencies:
-      acorn: 8.14.1
+      acorn: 8.17.0
       acorn-walk: 8.3.5
     dev: true
 
@@ -5206,7 +5272,7 @@ packages:
     resolution: {integrity: sha512-HEHNfbars9v4pgpW6SO1KSPkfoS0xVOM/9UzkJltjlsHZmJasxg8aXkuZa7SMf8vKGIBhpUsPluQSqhJFCqebw==}
     engines: {node: '>=0.4.0'}
     dependencies:
-      acorn: 8.14.1
+      acorn: 8.17.0
     dev: true
 
   /acorn/5.7.4:
@@ -5223,6 +5289,12 @@ packages:
 
   /acorn/8.14.1:
     resolution: {integrity: sha512-OvQ/2pUDKmgfCg++xsTX1wGxfTaszcHVcTctW4UJB4hibJx2HXxxO5UmVgyjMa+ZDsiaf5wWLXYpRWMmBI0QHg==}
+    engines: {node: '>=0.4.0'}
+    hasBin: true
+    dev: true
+
+  /acorn/8.17.0:
+    resolution: {integrity: sha512-xRQbDb9BnwDafYNn6Vwl839DYVjqXYb1XVGtWAZ1kcDc6iwAL4hg3B1dZlRiuENFeO2H53gFG3in621AdERVAg==}
     engines: {node: '>=0.4.0'}
     hasBin: true
     dev: true
@@ -13127,7 +13199,7 @@ packages:
       uglify-js:
         optional: true
     dependencies:
-      '@jridgewell/trace-mapping': 0.3.25
+      '@jridgewell/trace-mapping': 0.3.31
       jest-worker: 27.5.1
       schema-utils: 4.3.0
       terser: 5.39.0
@@ -13523,6 +13595,16 @@ packages:
   /universalify/2.0.1:
     resolution: {integrity: sha512-gptHNQghINnc/vTGIk0SOFGFNXw7JVrlRUtConJRlvaw6DuX0wO5Jeko9sWrMBhh+PsYAZ7oXAiOnf/UKogyiw==}
     engines: {node: '>= 10.0.0'}
+    dev: true
+
+  /unplugin/2.3.11:
+    resolution: {integrity: sha512-5uKD0nqiYVzlmCRs01Fhs2BdkEgBS3SAVP6ndrBsuK42iC2+JHyxM05Rm9G8+5mkmRtzMZGY8Ct5+mliZxU/Ww==}
+    engines: {node: '>=18.12.0'}
+    dependencies:
+      '@jridgewell/remapping': 2.3.5
+      acorn: 8.17.0
+      picomatch: 4.0.4
+      webpack-virtual-modules: 0.6.2
     dev: true
 
   /unquote/1.1.1:

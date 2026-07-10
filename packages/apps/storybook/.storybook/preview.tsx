@@ -16,6 +16,8 @@ const ACCESS_TOKEN_EVENT = "auth/toolbar/set-access-token";
 let _currentITwinId = "";
 let _currentAccessToken = "";
 
+export const tags = ["autodocs"];
+
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
   backgrounds: { disable: true },

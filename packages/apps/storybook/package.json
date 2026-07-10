@@ -10,6 +10,7 @@
     "@bentley/bentleyjs-core": "2.11.0",
     "@bentley/frontend-authorization-client": "2.11.0",
     "@bentley/itwin-client": "2.11.0",
+    "@storybook/addon-docs": "10.4.1",
     "@storybook/addon-webpack5-compiler-swc": "^4.0.3",
     "@storybook/icons": "^2.0.2",
     "@storybook/react-webpack5": "^10.4.0",
