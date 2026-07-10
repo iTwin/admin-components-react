@@ -65,6 +65,10 @@ export interface ITwinTableMUIProps {
   isLoading?: boolean;
   /** Called when more data should be loaded. */
   fetchMore?: (() => void) | false;
+  /**
+   * Nonce applied to `<style>` elements. Required if your application uses a Content Security Policy (CSP) that restricts inline styles.
+   */
+  nonce?: string;
 }
 
 /**
@@ -85,6 +89,7 @@ export const ITwinTableMUI = ({
   } = {},
   isLoading,
   fetchMore,
+  nonce,
 }: ITwinTableMUIProps) => {
   // Eagerly load all available data so the table has the full dataset
   // for client-side pagination and sorting.
@@ -187,6 +192,7 @@ export const ITwinTableMUI = ({
     <DataGrid<ITwinFull>
       rows={iTwins}
       columns={columns}
+      nonce={nonce}
       loading={isLoading}
       onRowClick={
         actions
