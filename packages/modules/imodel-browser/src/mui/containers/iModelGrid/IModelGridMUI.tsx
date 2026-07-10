@@ -103,6 +103,16 @@ export interface IModelGridMUIProps
   tileOverrides?: Partial<IModelTileMUIProps>;
   tableOverrides?: IModelTableOverridesMUI;
   stringsOverrides?: Partial<IModelGridStringsMUI>;
+  /**
+   * When true, the table sort state is persisted to `localStorage` so it is
+   * restored on subsequent mounts.
+   */
+  preserveSortState?: boolean;
+  /**
+   * `localStorage` key used to persist the table sort state when
+   * `preserveSortState` is true.
+   */
+  sortStateStorageKey?: string;
 }
 
 /**
@@ -149,6 +159,8 @@ const IModelGridInternal = ({
   onRefetch,
   dataMode = "internal",
   disableAddToRecents = false,
+  preserveSortState,
+  sortStateStorageKey,
 }: IModelGridMUIProps) => {
   const [sort, setSort] = React.useState<IModelSortOptions>(sortOptions);
 
@@ -408,6 +420,8 @@ const IModelGridInternal = ({
             tableOverrides={tableOverrides}
             isLoading={fetchStatus === DataStatus.Fetching}
             fetchMore={fetchMore}
+            preserveSortState={preserveSortState}
+            sortStateStorageKey={sortStateStorageKey}
             data-testid="imodel-table"
           />
         )}

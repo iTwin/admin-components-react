@@ -158,6 +158,22 @@ TableViewWithOverrides.args = {
   },
 };
 
+export const TableWithPersistedSort = Template.bind({});
+TableWithPersistedSort.args = {
+  ...baseArgs,
+  viewMode: "cells",
+  preserveSortState: true,
+  sortStateStorageKey: "storybook-imodel-table-sort",
+};
+TableWithPersistedSort.parameters = {
+  docs: {
+    description: {
+      story:
+        "Sort a column, then reload the page. The sort state is restored from `localStorage` using `sortStateStorageKey`.",
+    },
+  },
+};
+
 export const OverrideApiDataWithLoadMore: Story<IModelGridMUIProps> =
   withITwinIdOverride(
     withAccessTokenOverride((args) => {
