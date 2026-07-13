@@ -3,19 +3,19 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 /* eslint-disable react-hooks/rules-of-hooks */
+import { SvgItwin } from "@itwin/itwinui-icons-react";
+import React from "react";
+import {
+  IconButton,
+  TooltipLinkList,
+  WithTooltip,
+} from "storybook/internal/components";
 import {
   addons,
   types,
   useAddonState,
   useArgTypes,
 } from "storybook/manager-api";
-import {
-  IconButton,
-  TooltipLinkList,
-  WithTooltip,
-} from "storybook/internal/components";
-import { SvgItwin } from "@itwin/itwinui-icons-react";
-import React from "react";
 
 const ITWIN_ID_EVENT = "project/toolbar/set-itwin-id";
 const ACCESS_TOKEN_EVENT = "auth/toolbar/set-access-token";
@@ -48,7 +48,11 @@ addons.register("project/toolbar", () => {
       React.useEffect(() => {
         const handler = (token) => {
           setAccessToken(token);
-          setState({ mustLoad: true, projects: [] });
+          setState((previousState) => ({
+            ...previousState,
+            mustLoad: true,
+            projects: [],
+          }));
         };
         channel.on(ACCESS_TOKEN_EVENT, handler);
         return () => channel.off(ACCESS_TOKEN_EVENT, handler);
@@ -57,16 +61,18 @@ addons.register("project/toolbar", () => {
       const fetchProjects = React.useCallback(async () => {
         if (!state.mustLoad || !accessToken) {
           if (!accessToken) {
-            setState({
+            setState((previousState) => ({
+              ...previousState,
               mustLoad: true,
               projects: [{ displayName: "Authentication required" }],
-            });
+            }));
           }
           return;
         }
 
         try {
-          setState({
+          setState((previousState) => ({
+            ...previousState,
             projects: [
               {
                 displayName: (
@@ -76,7 +82,7 @@ addons.register("project/toolbar", () => {
                 ),
               },
             ],
-          });
+          }));
           const response = await fetch(
             "https://qa-api.bentley.com/itwins/favorites?subClass=Project",
             {
@@ -95,7 +101,11 @@ addons.register("project/toolbar", () => {
                   "'Favorite' a project in CONNECT (QA) to show it here, refresh this page to see the results",
               });
             }
-            setState({ projects: projects });
+            setState((previousState) => ({
+              ...previousState,
+              mustLoad: false,
+              projects,
+            }));
           }
         } catch (e) {
           console.error("Error", e);
@@ -105,7 +115,7 @@ addons.register("project/toolbar", () => {
       const buildLinks = React.useCallback(
         (onHide) =>
           state.projects.map((project) => ({
-            key: project.id || project.displayName || "Loading State",
+            key: project.id ?? project.displayName ?? "Loading State",
             id: project.id,
             title: project.displayName,
             onClick: () => {
@@ -125,7 +135,9 @@ addons.register("project/toolbar", () => {
           trigger="click"
           closeOnOutsideClick
           onVisibleChange={async (visible) => {
-            if (visible) await fetchProjects();
+            if (visible) {
+              await fetchProjects();
+            }
           }}
           tooltip={({ onHide }) => {
             return <TooltipLinkList links={buildLinks(onHide)} />;
@@ -134,7 +146,7 @@ addons.register("project/toolbar", () => {
           <IconButton
             active={!!selectedId}
             title={`Favorite projects${
-              selectedId ? " (click to unselect)" : ""
+              selectedId ? " (open menu to change or unselect)" : ""
             }`}
           >
             <SvgItwin />

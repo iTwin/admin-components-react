@@ -5,15 +5,15 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { ClientRequestContext } from "@bentley/bentleyjs-core";
 import { BrowserAuthorizationClient } from "@bentley/frontend-authorization-client";
+import { AlertIcon, KeyIcon, LockIcon } from "@storybook/icons";
+import React, { useRef, useState } from "react";
+import { IconButton, WithTooltip } from "storybook/internal/components";
 import {
   addons,
   types,
   useAddonState,
   useParameter,
 } from "storybook/manager-api";
-import { IconButton, WithTooltip } from "storybook/internal/components";
-import { AlertIcon, KeyIcon, LockIcon } from "@storybook/icons";
-import React, { useRef, useState } from "react";
 
 const ACCESS_TOKEN_EVENT = "auth/toolbar/set-access-token";
 
@@ -41,7 +41,10 @@ addons.register("auth/toolbar", () => {
           return;
         }
 
-        setState({ loading: true });
+        setState((previousState) => ({
+          ...previousState,
+          loading: true,
+        }));
         try {
           if (!authClientConfig.clientId) {
             setClientIdMissing(true);
@@ -87,7 +90,10 @@ addons.register("auth/toolbar", () => {
             });
           }
         } catch {
-          setState({ loading: false });
+          setState((previousState) => ({
+            ...previousState,
+            loading: false,
+          }));
         }
       };
 
@@ -108,12 +114,12 @@ addons.register("auth/toolbar", () => {
                 {clientIdMissing
                   ? `No client Id configured: clientId must be provided in 'authClientConfig' parameter in preview.js`
                   : buildMissing
-                    ? `${redirectURI} not found: "storybook-auth-addon" is likely not built, run "rush build"`
-                    : state.loading
-                      ? "Authenticating..."
-                      : state.accessToken
-                        ? `Authenticated: ${state.email}, click to sign off`
-                        : `Authenticate`}
+                  ? `${redirectURI} not found: "storybook-auth-addon" is likely not built, run "rush build"`
+                  : state.loading
+                  ? "Authenticating..."
+                  : state.accessToken
+                  ? `Authenticated: ${state.email}, click to sign off`
+                  : `Authenticate`}
               </div>
             );
           }}

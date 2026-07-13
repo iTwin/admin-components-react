@@ -1,11 +1,18 @@
 {
   "compilerOptions": {
     "strictNullChecks": true,
+    "allowJs": true,
     "paths": {
       "@itwin/imodel-browser-react/mui": [
         "../../modules/imodel-browser/src/mui/index.ts"
       ]
     }
   },
-  "include": ["**/*.ts*", "**/*.js*", "**/.*.js*"]
+  "include": [
+    ".storybook/**/*.ts*",
+    ".storybook/**/*.js*",
+    "**/*.ts*",
+    "**/*.js*",
+    "**/.*.js*"
+  ]
 }

@@ -2,21 +2,21 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
+import "@itwin/itwinui-react/styles.css";
+
 import { ThemeProvider } from "@itwin/itwinui-react";
 import { Root } from "@stratakit/mui";
-import { themes } from "storybook/theming";
-import { useDarkMode } from "storybook-dark-mode";
-import { darkTheme, lightTheme } from "./itwinTheme";
-import "@itwin/itwinui-react/styles.css";
 import React from "react";
+import { useDarkMode } from "storybook-dark-mode";
 import { addons } from "storybook/preview-api";
+import { themes } from "storybook/theming";
+
+import { darkTheme, lightTheme } from "./itwinTheme";
 
 const ITWIN_ID_EVENT = "project/toolbar/set-itwin-id";
 const ACCESS_TOKEN_EVENT = "auth/toolbar/set-access-token";
 let _currentITwinId = "";
 let _currentAccessToken = "";
-
-export const tags = ["autodocs"];
 
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
@@ -77,6 +77,11 @@ export const decorators = [
       injectedArgs.iTwinId = iTwinId;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const story = (
+      <Story args={{ ...context.args, ...injectedArgs }} />
+    ) as any;
+
     return (
       <ThemeProvider
         style={{
@@ -88,11 +93,9 @@ export const decorators = [
         as={Root}
         future={{ themeBridge: true }}
         colorScheme={theme}
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        children={
-          (<Story args={{ ...context.args, ...injectedArgs }} />) as any
-        }
-      />
+      >
+        {story}
+      </ThemeProvider>
     );
   },
 ];
