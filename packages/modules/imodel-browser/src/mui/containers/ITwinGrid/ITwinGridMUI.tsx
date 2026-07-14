@@ -75,6 +75,10 @@ export interface ITwinGridPropsMUI
   tileOverrides?: Partial<ITwinTilePropsMUI>;
   /** Overrides for table column definitions and visibility in cells viewMode */
   tableOverrides?: ITwinTableOverridesMUI;
+  /**
+   * Nonce applied to `<style>` elements. Required if your application uses a Content Security Policy (CSP) that restricts inline styles.
+   */
+  nonce?: string;
   /** Localized string overrides - falls back to default English strings if not provided */
   stringsOverrides?: Partial<ITwinGridStringsMUI>;
 }
@@ -99,6 +103,7 @@ export const ITwinGridMUI = ({
   viewMode,
   tableOverrides,
   className,
+  nonce,
 }: ITwinGridPropsMUI) => {
   const {
     iTwinFavorites,
@@ -287,6 +292,7 @@ export const ITwinGridMUI = ({
       tableOverrides={tableOverrides}
       isLoading={fetchStatus === DataStatus.Fetching}
       fetchMore={fetchMore}
+      nonce={nonce}
     />
   );
 };
