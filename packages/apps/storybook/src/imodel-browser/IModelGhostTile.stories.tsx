@@ -3,8 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { IModelGhostTile } from "@itwin/imodel-browser-react";
-import { Meta, Story } from "@storybook/react/types-6-0";
-import React from "react";
+import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
 export default {
   title: "imodel-browser/IModelGhostTile",
@@ -14,7 +13,4 @@ export default {
   },
 } as Meta;
 
-const Template: Story = (args) => <IModelGhostTile {...args} />;
-
-export const Primary = Template.bind({});
-Primary.args = {};
+export const Primary: StoryObj<typeof IModelGhostTile> = {};

@@ -10,8 +10,8 @@ import {
 import { SvgThumbnail } from "@itwin/imodel-browser-react/mui";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
-import { action } from "@storybook/addon-actions";
-import { Meta, Story } from "@storybook/react/types-6-0";
+import { action } from "storybook/actions";
+import type { Meta, StoryObj } from "@storybook/react-webpack5";
 import svgMagnet from "@stratakit/icons/magnet.svg";
 import React from "react";
 
@@ -117,46 +117,46 @@ export default {
   },
 } as Meta;
 
-const Template: Story<ITwinTileProps> = (args) => (
-  <ITwinTileMUIStory {...args} />
-);
-
-export const Default = Template.bind({});
-Default.args = {
-  ...baseArgs,
-  isFavorite: false,
-  disabled: false,
-  loading: false,
+export const Default: StoryObj<typeof ITwinTileMUIStory> = {
+  args: {
+    ...baseArgs,
+    isFavorite: false,
+    disabled: false,
+    loading: false,
+  },
 };
 
-export const Extensive = Template.bind({});
-Extensive.args = {
-  ...baseArgs,
-  status: "warning",
-  isFavorite: true,
-  title: "Overridden Title",
-  description: "Overriden description",
-  disabled: false,
-  loading: false,
-  thumbnail: powerThumbnail,
-  thumbnailBottomRight: <Chip size="small" label="Thumbnail Bottom Right" />,
-  thumbnailTopLeft: <Chip size="small" label="Thumbnail Top Left" />,
-  thumbnailBottomLeft: <Chip size="small" label="Thumbnail Bottom Left" />,
-  actions: [
-    { key: "open", label: "Open", onClick: action("iTwin open clicked") },
-    { key: "share", label: "Share", onClick: action("iTwin share clicked") },
-  ],
+export const Extensive: StoryObj<typeof ITwinTileMUIStory> = {
+  args: {
+    ...baseArgs,
+    status: "warning",
+    isFavorite: true,
+    title: "Overridden Title",
+    description: "Overriden description",
+    disabled: false,
+    loading: false,
+    thumbnail: powerThumbnail,
+    thumbnailBottomRight: <Chip size="small" label="Thumbnail Bottom Right" />,
+    thumbnailTopLeft: <Chip size="small" label="Thumbnail Top Left" />,
+    thumbnailBottomLeft: <Chip size="small" label="Thumbnail Bottom Left" />,
+    actions: [
+      { key: "open", label: "Open", onClick: action("iTwin open clicked") },
+      { key: "share", label: "Share", onClick: action("iTwin share clicked") },
+    ],
+  },
 };
 
-export const DefaultThumbnailStory = Template.bind({});
-DefaultThumbnailStory.args = {
-  ...baseArgs,
-  thumbnail: <DefaultThumbnail />,
+export const DefaultThumbnailStory: StoryObj<typeof ITwinTileMUIStory> = {
+  name: "Default Thumbnail",
+  args: {
+    ...baseArgs,
+    thumbnail: <DefaultThumbnail />,
+  },
 };
-DefaultThumbnailStory.storyName = "Default Thumbnail";
 
-export const CustomSvgThumbnail = Template.bind({});
-CustomSvgThumbnail.args = {
-  ...baseArgs,
-  thumbnail: <SvgThumbnail src={svgMagnet} />,
+export const CustomSvgThumbnail: StoryObj<typeof ITwinTileMUIStory> = {
+  args: {
+    ...baseArgs,
+    thumbnail: <SvgThumbnail src={svgMagnet} />,
+  },
 };

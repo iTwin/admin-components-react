@@ -11,8 +11,8 @@ import Avatar from "@mui/material/Avatar";
 import AvatarGroup from "@mui/material/AvatarGroup";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
-import { action } from "@storybook/addon-actions";
-import { Meta, Story } from "@storybook/react/types-6-0";
+import { action } from "storybook/actions";
+import type { Meta, StoryObj } from "@storybook/react-webpack5";
 import SvgDelete from "@stratakit/icons/delete.svg";
 import svgRoad from "@stratakit/icons/road.svg";
 import SvgShare from "@stratakit/icons/share.svg";
@@ -61,10 +61,6 @@ export default {
   },
 } as Meta;
 
-const Template: Story<IModelTileMUIProps> = (args) => (
-  <IModelTileMUIStory {...args} />
-);
-
 const baseArgs: IModelTileMUIProps = {
   iModel: {
     id: "1",
@@ -99,48 +95,52 @@ const baseArgs: IModelTileMUIProps = {
   ],
 };
 
-export const Default = Template.bind({});
-Default.args = {
-  ...baseArgs,
+export const Default: StoryObj<typeof IModelTileMUIStory> = {
+  args: {
+    ...baseArgs,
+  },
 };
 
-export const Extensive = Template.bind({});
-Extensive.args = {
-  ...baseArgs,
-  title: "Overridden Title",
-  description: "Overriden description",
-  subheader: "Additional description",
-  thumbnail: overpassThumbnail,
-  getBadge: () => <Chip size="small" label="Badge" />,
-  thumbnailTopLeft: (
-    <AvatarGroup max={3}>
-      <Avatar alt="User 1" src="https://i.pravatar.cc/150?img=1" />
-      <Avatar alt="User 2" src="https://i.pravatar.cc/150?img=2" />
-      <Avatar alt="User 3" src="https://i.pravatar.cc/150?img=3" />
-    </AvatarGroup>
-  ),
-  actions: [
-    {
-      key: "open",
-      label: "Open in App",
-      onClick: action("iModel opened"),
-    },
-    {
-      key: "vr",
-      label: "Open in VR Headset",
-      onClick: action("VR Headset clicked"),
-    },
-  ],
+export const Extensive: StoryObj<typeof IModelTileMUIStory> = {
+  args: {
+    ...baseArgs,
+    title: "Overridden Title",
+    description: "Overriden description",
+    subheader: "Additional description",
+    thumbnail: overpassThumbnail,
+    getBadge: () => <Chip size="small" label="Badge" />,
+    thumbnailTopLeft: (
+      <AvatarGroup max={3}>
+        <Avatar alt="User 1" src="https://i.pravatar.cc/150?img=1" />
+        <Avatar alt="User 2" src="https://i.pravatar.cc/150?img=2" />
+        <Avatar alt="User 3" src="https://i.pravatar.cc/150?img=3" />
+      </AvatarGroup>
+    ),
+    actions: [
+      {
+        key: "open",
+        label: "Open in App",
+        onClick: action("iModel opened"),
+      },
+      {
+        key: "vr",
+        label: "Open in VR Headset",
+        onClick: action("VR Headset clicked"),
+      },
+    ],
+  },
 };
 
-export const NoThumbnail = Template.bind({});
-NoThumbnail.args = {
-  ...baseArgs,
-  thumbnail: undefined,
+export const NoThumbnail: StoryObj<typeof IModelTileMUIStory> = {
+  args: {
+    ...baseArgs,
+    thumbnail: undefined,
+  },
 };
 
-export const CustomSvgThumbnail = Template.bind({});
-CustomSvgThumbnail.args = {
-  ...baseArgs,
-  thumbnail: <SvgThumbnail src={svgRoad} />,
+export const CustomSvgThumbnail: StoryObj<typeof IModelTileMUIStory> = {
+  args: {
+    ...baseArgs,
+    thumbnail: <SvgThumbnail src={svgRoad} />,
+  },
 };
