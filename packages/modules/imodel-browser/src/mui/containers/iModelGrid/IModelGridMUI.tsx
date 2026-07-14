@@ -102,6 +102,10 @@ export interface IModelGridMUIProps
   /** Static props to apply over each tile, mainly used for tileProps, overrides IModelGrid provided values */
   tileOverrides?: Partial<IModelTileMUIProps>;
   tableOverrides?: IModelTableOverridesMUI;
+  /**
+   * Nonce applied to `<style>` elements. Required if your application uses a Content Security Policy (CSP) that restricts inline styles.
+   */
+  nonce?: string;
   stringsOverrides?: Partial<IModelGridStringsMUI>;
 }
 
@@ -149,6 +153,7 @@ const IModelGridInternal = ({
   onRefetch,
   dataMode = "internal",
   disableAddToRecents = false,
+  nonce,
 }: IModelGridMUIProps) => {
   const [sort, setSort] = React.useState<IModelSortOptions>(sortOptions);
 
@@ -408,6 +413,7 @@ const IModelGridInternal = ({
             tableOverrides={tableOverrides}
             isLoading={fetchStatus === DataStatus.Fetching}
             fetchMore={fetchMore}
+            nonce={nonce}
             data-testid="imodel-table"
           />
         )}

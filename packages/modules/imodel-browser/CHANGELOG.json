@@ -2,6 +2,18 @@
   "name": "@itwin/imodel-browser-react",
   "entries": [
     {
+      "version": "4.3.5",
+      "tag": "@itwin/imodel-browser-react_v4.3.5",
+      "date": "Tue, 14 Jul 2026 11:06:52 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Add CSP nonce support to the MUI iTwin and iModel DataGrid table views."
+          }
+        ]
+      }
+    },
+    {
       "version": "4.3.4",
       "tag": "@itwin/imodel-browser-react_v4.3.4",
       "date": "Fri, 26 Jun 2026 19:00:15 GMT",
