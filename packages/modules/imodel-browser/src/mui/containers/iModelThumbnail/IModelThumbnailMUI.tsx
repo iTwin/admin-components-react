@@ -10,7 +10,8 @@ import React from "react";
 import { useInView } from "react-intersection-observer";
 
 import { useIModelThumbnail } from "../../../containers/iModelThumbnail/useIModelThumbnail";
-import { AccessTokenProvider, ApiOverrides } from "../../../types";
+import { AccessTokenProvider, ApiOverrides, Logger } from "../../../types";
+import { defaultLogger } from "../../../utils/_defaultLogger";
 
 /** @alpha */
 export interface IModelThumbnailMUIProps {
@@ -24,6 +25,8 @@ export interface IModelThumbnailMUIProps {
    * @property serverEnvironmentPrefix Either qa or dev
    */
   apiOverrides?: ApiOverrides<string>;
+  /** Callbacks will be used for logging any potentially useful information. Defaults to logging to console if not provided. */
+  logger?: Logger;
 }
 
 /**
@@ -39,6 +42,7 @@ export const IModelThumbnailMUI = ({
   accessToken,
   apiOverrides,
   className,
+  logger = defaultLogger,
 }: IModelThumbnailMUIProps) => {
   const { ref, inView } = useInView({
     triggerOnce: true,
@@ -47,7 +51,8 @@ export const IModelThumbnailMUI = ({
   const thumbnail = useIModelThumbnail(
     iModelId,
     inView ? accessToken : undefined,
-    apiOverrides
+    apiOverrides,
+    logger
   );
   return thumbnail ? (
     <CardMedia

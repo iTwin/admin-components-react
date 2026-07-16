@@ -129,7 +129,7 @@ export interface IModelGridProps {
    */
   onRefetch?: () => void | Promise<void>;
 
-  /** Callbacks will be used for logging any potentially useful information. */
+  /** Callbacks will be used for logging any potentially useful information. Defaults to logging to console if not provided. */
   logger?: Logger;
 }
 
@@ -143,6 +143,7 @@ export const IModelGrid = (props: IModelGridProps) => {
       accessToken={props.accessToken}
       serverEnvironmentPrefix={props.apiOverrides?.serverEnvironmentPrefix}
       disabled={props.tileOverrides?.hideFavoriteIcon}
+      logger={props.logger}
     >
       <IModelGridInternal {...props} />
     </IModelFavoritesProvider>
@@ -231,6 +232,7 @@ const IModelGridInternal = ({
             iModelId: iModel.id,
             accessToken,
             serverEnvironmentPrefix: apiOverrides?.serverEnvironmentPrefix,
+            logger,
           });
           refetchData?.();
         },
@@ -247,6 +249,7 @@ const IModelGridInternal = ({
     removeFromRecentsIcon,
     accessToken,
     apiOverrides?.serverEnvironmentPrefix,
+    logger,
   ]);
 
   const {
@@ -301,6 +304,7 @@ const IModelGridInternal = ({
         iModelId: iModel.id,
         accessToken,
         serverEnvironmentPrefix: apiOverrides?.serverEnvironmentPrefix,
+        logger,
       });
     } catch (e) {
       // swallow errors to avoid disrupting the UI
@@ -316,6 +320,7 @@ const IModelGridInternal = ({
     strings,
     refetchIModels,
     cellOverrides,
+    logger,
   });
 
   const noResultsText = {
@@ -341,6 +346,7 @@ const IModelGridInternal = ({
                 iModel={iModel}
                 iModelOptions={enhancedIModelActions}
                 accessToken={accessToken}
+                logger={logger}
                 onThumbnailClick={(iModel) =>
                   iModelClickAndAddToRecents(iModel, () =>
                     onThumbnailClick?.(iModel)

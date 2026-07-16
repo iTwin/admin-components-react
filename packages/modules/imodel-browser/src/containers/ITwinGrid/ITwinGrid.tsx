@@ -18,10 +18,12 @@ import {
   ITwinFilterOptions,
   ITwinFull,
   ITwinSubClass,
+  Logger,
   ViewType,
 } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
 import { ContextMenuBuilderItem } from "../../utils/_buildMenuOptions";
+import { defaultLogger } from "../../utils/_defaultLogger";
 import { IModelGhostTile } from "../iModelTiles/IModelGhostTile";
 import { ITwinTile, ITwinTileProps } from "./ITwinTile";
 import { useITwinData } from "./useITwinData";
@@ -109,6 +111,9 @@ export interface ITwinGridProps {
   cellOverrides?: ITwinCellOverrides;
   /** Additional class name for the grid structure */
   className?: string;
+
+  /** Callbacks will be used for logging any potentially useful information. Defaults to logging to console if not provided. */
+  logger?: Logger;
 }
 
 /**
@@ -130,6 +135,7 @@ export const ITwinGrid = ({
   viewMode,
   cellOverrides,
   className,
+  logger = defaultLogger,
 }: ITwinGridProps) => {
   const {
     iTwinFavorites,
@@ -137,7 +143,11 @@ export const ITwinGrid = ({
     removeITwinFromFavorites,
     shouldRefetchFavorites,
     resetShouldRefetchFavorites,
-  } = useITwinFavorites(accessToken, apiOverrides?.serverEnvironmentPrefix);
+  } = useITwinFavorites(
+    accessToken,
+    apiOverrides?.serverEnvironmentPrefix,
+    logger
+  );
 
   const strings = _mergeStrings(
     {
@@ -175,6 +185,7 @@ export const ITwinGrid = ({
     orderbyOptions,
     shouldRefetchFavorites,
     resetShouldRefetchFavorites,
+    logger,
   });
 
   const iTwins = React.useMemo(
@@ -226,6 +237,7 @@ export const ITwinGrid = ({
                   stringsOverrides,
                   tileOverrides,
                   useIndividualState,
+                  logger,
                 }}
                 key={iTwin.id}
                 iTwin={iTwin}

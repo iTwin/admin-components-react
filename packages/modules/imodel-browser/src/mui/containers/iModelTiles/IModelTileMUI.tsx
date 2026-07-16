@@ -7,12 +7,18 @@ import React from "react";
 
 import { IModelTileProps } from "../../../containers/iModelTiles/IModelTile";
 import { IModelFavoritesContext } from "../../../contexts/IModelFavoritesContext";
-import { AccessTokenProvider, ApiOverrides, IModelFull } from "../../../types";
+import {
+  AccessTokenProvider,
+  ApiOverrides,
+  IModelFull,
+  Logger,
+} from "../../../types";
 import { _mergeStrings } from "../../../utils/_apiOverrides";
 import {
   type MoreActionsMenuItemMUI,
   type ResolvedMoreActionsMenuItem,
 } from "../../../utils/_buildMenuOptions";
+import { defaultLogger } from "../../../utils/_defaultLogger";
 import {
   type BaseCardProps,
   BaseCard,
@@ -61,6 +67,8 @@ export interface IModelTileMUIProps
   refetchIModels?: () => void;
   /** Hides the favorite icon when true */
   hideFavoriteIcon?: boolean;
+  /** Callbacks will be used for logging any potentially useful information. Defaults to logging to console if not provided. */
+  logger?: Logger;
 }
 
 /**
@@ -86,6 +94,7 @@ export const IModelTileMUI = ({
   description,
   subheader,
   actions,
+  logger = defaultLogger,
 
   className,
   ...rest
@@ -132,6 +141,7 @@ export const IModelTileMUI = ({
         addLabel={strings.addToFavorites}
         removeLabel={strings.removeFromFavorites}
         disabled={disabled}
+        logger={logger}
       />
     ) : undefined;
 
@@ -151,6 +161,7 @@ export const IModelTileMUI = ({
             iModelId={iModel.id}
             accessToken={accessToken}
             apiOverrides={thumbnailApiOverride}
+            logger={logger}
           />
         )
       }

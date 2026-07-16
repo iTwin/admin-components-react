@@ -6,6 +6,8 @@ import pinUnpinSvg from "@stratakit/icons/pin-unpin.svg";
 import pinSvg from "@stratakit/icons/pin.svg";
 import React, { useState } from "react";
 
+import { Logger } from "../../../types";
+import { defaultLogger } from "../../../utils/_defaultLogger";
 import { ThumbnailIconButton } from "../baseCard/ThumbnailIconButton";
 
 export interface TileFavoriteIconProps {
@@ -28,6 +30,8 @@ export interface TileFavoriteIconProps {
    */
   transparent?: boolean;
   tabIndex?: number;
+  /** Callbacks will be used for logging any potentially useful information. Defaults to logging to console if not provided. */
+  logger?: Logger;
 }
 
 /**
@@ -47,6 +51,7 @@ export const FavoriteIconMUI = ({
   className = "",
   transparent,
   tabIndex,
+  logger = defaultLogger,
 }: TileFavoriteIconProps) => {
   const [hovered, setHovered] = useState(false);
   const [pending, setPending] = useState(false);
@@ -81,8 +86,7 @@ export const FavoriteIconMUI = ({
             await onAddToFavorites();
           }
         } catch (error) {
-          // eslint-disable-next-line no-console
-          console.error("Failed to toggle favorite", error);
+          logger.logError("Failed to toggle favorite", error);
         } finally {
           setPending(false);
         }

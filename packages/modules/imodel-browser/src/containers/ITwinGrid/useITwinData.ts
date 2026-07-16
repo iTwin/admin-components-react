@@ -11,8 +11,10 @@ import {
   ITwinFilterOptions,
   ITwinFull,
   ITwinSubClass,
+  Logger,
 } from "../../types";
 import { _getAPIServer } from "../../utils/_apiOverrides";
+import { defaultLogger } from "../../utils/_defaultLogger";
 import { useITwinFilter } from "./useITwinFilter";
 
 export interface ProjectDataHookOptions {
@@ -24,6 +26,8 @@ export interface ProjectDataHookOptions {
   orderbyOptions?: string;
   shouldRefetchFavorites?: boolean;
   resetShouldRefetchFavorites?: () => void;
+  /** Callbacks will be used for logging any potentially useful information. Defaults to logging to console if not provided. */
+  logger?: Logger;
 }
 
 const PAGE_SIZE = 100;
@@ -37,6 +41,7 @@ export const useITwinData = ({
   orderbyOptions,
   shouldRefetchFavorites,
   resetShouldRefetchFavorites,
+  logger = defaultLogger,
 }: ProjectDataHookOptions) => {
   const data = apiOverrides?.data;
   const serverEnvironmentPrefix = apiOverrides?.serverEnvironmentPrefix;
@@ -172,7 +177,7 @@ export const useITwinData = ({
       setProjects([]);
       setStatus(DataStatus.FetchFailed);
       fetchingMoreRef.current = false;
-      console.error(e);
+      logger.logError("Failed to fetch iTwins", e);
     });
     return () => {
       abortController.abort();
@@ -189,6 +194,7 @@ export const useITwinData = ({
     iTwinSubClass,
     shouldRefetchFavorites,
     resetShouldRefetchFavorites,
+    logger,
   ]);
   return {
     iTwins: filteredProjects,

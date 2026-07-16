@@ -77,4 +77,27 @@ describe("useITwinFavorites", () => {
     });
     expect(result.current.iTwinFavorites.has(iTwinId)).toBe(false);
   });
+
+  test("should use provided logger when add favorite fails", async () => {
+    const logger = {
+      logError: jest.fn(),
+      logWarning: jest.fn(),
+      logInfo: jest.fn(),
+      logTrace: jest.fn(),
+    };
+
+    window.fetch = mockFetch({}, 500);
+    const { result } = renderHook(() =>
+      useITwinFavorites(accessToken, undefined, logger)
+    );
+
+    await act(async () => {
+      await result.current.addITwinToFavorites("failed-id");
+    });
+
+    expect(logger.logError).toHaveBeenCalledWith(
+      "Failed to add iTwin to favorites",
+      expect.any(Error)
+    );
+  });
 });

@@ -81,4 +81,27 @@ describe("useIModelFavorites", () => {
     });
     expect(result.current.iModelFavorites.has(iModelId)).toBe(false);
   });
+
+  test("should use provided logger when add favorite fails", async () => {
+    const logger = {
+      logError: jest.fn(),
+      logWarning: jest.fn(),
+      logInfo: jest.fn(),
+      logTrace: jest.fn(),
+    };
+
+    window.fetch = mockFetch({}, 500);
+    const { result } = renderHook(() =>
+      useIModelFavorites(iTwinId, accessToken, undefined, undefined, logger)
+    );
+
+    await act(async () => {
+      await result.current.addIModelToFavorites("failed-id");
+    });
+
+    expect(logger.logError).toHaveBeenCalledWith(
+      "Failed to add iModel to favorites",
+      expect.any(Error)
+    );
+  });
 });

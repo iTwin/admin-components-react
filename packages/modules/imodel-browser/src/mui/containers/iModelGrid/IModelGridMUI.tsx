@@ -125,6 +125,7 @@ export const IModelGridMUI = (props: IModelGridMUIProps) => {
       accessToken={props.accessToken}
       serverEnvironmentPrefix={props.apiOverrides?.serverEnvironmentPrefix}
       disabled={props.tileOverrides?.hideFavoriteIcon}
+      logger={props.logger}
     >
       <IModelGridInternal {...props} />
     </IModelFavoritesProvider>
@@ -223,7 +224,8 @@ const IModelGridInternal = ({
         strings,
         accessToken,
         apiOverrides,
-        removeFromRecentsIcon
+        removeFromRecentsIcon,
+        logger
       );
       return moreActions ? [action, ...moreActions] : [action];
     }
@@ -235,6 +237,7 @@ const IModelGridInternal = ({
     removeFromRecentsIcon,
     accessToken,
     apiOverrides,
+    logger,
   ]);
 
   const {
@@ -294,13 +297,19 @@ const IModelGridInternal = ({
         iModelId: iModel.id,
         accessToken,
         serverEnvironmentPrefix: apiOverrides?.serverEnvironmentPrefix,
+        logger,
       }).catch((e) => {
         // swallow errors to avoid disrupting the UI
         logger.logError("Failed to add iModel to recents", e);
       });
       clickFn();
     },
-    [accessToken, disableAddToRecents, apiOverrides?.serverEnvironmentPrefix]
+    [
+      accessToken,
+      disableAddToRecents,
+      apiOverrides?.serverEnvironmentPrefix,
+      logger,
+    ]
   );
 
   const noResultsText = {
@@ -371,6 +380,7 @@ const IModelGridInternal = ({
                   iModel={iModel}
                   moreActions={enhancedMoreActions}
                   accessToken={accessToken}
+                  logger={logger}
                   apiOverrides={tileApiOverrides}
                   useTileState={useIndividualState}
                   refetchIModels={refetchIModels}
@@ -413,6 +423,7 @@ const IModelGridInternal = ({
             actions={actions ? resolveActions : undefined}
             strings={strings}
             refetchIModels={refetchIModels}
+            logger={logger}
             tableOverrides={tableOverrides}
             isLoading={fetchStatus === DataStatus.Fetching}
             fetchMore={fetchMore}
@@ -482,7 +493,8 @@ function removeFromRecentsAction(
   strings: IModelGridProps["stringsOverrides"],
   accessToken?: AccessTokenProvider,
   apiOverrides?: ApiOverrides<IModelFull[]>,
-  removeFromRecentsIcon?: string
+  removeFromRecentsIcon?: string,
+  logger = defaultLogger
 ): MoreActionsMenuItemMUI<IModelFull> {
   return {
     key: "remove-from-recents",
@@ -497,6 +509,7 @@ function removeFromRecentsAction(
         iModelId: iModel.id,
         accessToken,
         serverEnvironmentPrefix: apiOverrides?.serverEnvironmentPrefix,
+        logger,
       });
       refetchData?.();
     },

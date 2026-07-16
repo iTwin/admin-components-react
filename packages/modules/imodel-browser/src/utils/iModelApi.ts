@@ -5,8 +5,9 @@
 /*---------------------------------------------------------------------------------------------
  * Utility functions for iModel related API operations.
  *--------------------------------------------------------------------------------------------*/
-import { AccessTokenProvider } from "../types";
+import { AccessTokenProvider, Logger } from "../types";
 import { _getAPIServer } from "./_apiOverrides";
+import { defaultLogger } from "./_defaultLogger";
 
 /** Response from https://developer.bentley.com/apis/imodels-v2/operations/get-my-favorite-imodels/ */
 export interface IModelFavoritesResponse {
@@ -33,8 +34,15 @@ export async function addIModelToRecents(options: {
   iModelId: string;
   accessToken?: AccessTokenProvider;
   serverEnvironmentPrefix?: "dev" | "qa" | "";
+  /** Callbacks will be used for logging any potentially useful information. Defaults to logging to console if not provided. */
+  logger?: Logger;
 }): Promise<void> {
-  const { iModelId, accessToken, serverEnvironmentPrefix } = options;
+  const {
+    iModelId,
+    accessToken,
+    serverEnvironmentPrefix,
+    logger = defaultLogger,
+  } = options;
   try {
     if (!accessToken) {
       return;
@@ -57,9 +65,7 @@ export async function addIModelToRecents(options: {
     });
   } catch (e) {
     // keep parity with previous behavior where errors were swallowed
-    // Log for diagnostics
-    // eslint-disable-next-line no-console
-    console.error("Failed to add iModel to recents", e);
+    logger.logError("Failed to add iModel to recents", e);
   }
 }
 
@@ -67,8 +73,15 @@ export async function removeIModelFromRecents(options: {
   iModelId: string;
   accessToken?: AccessTokenProvider;
   serverEnvironmentPrefix?: "dev" | "qa" | "";
+  /** Callbacks will be used for logging any potentially useful information. Defaults to logging to console if not provided. */
+  logger?: Logger;
 }): Promise<void> {
-  const { iModelId, accessToken, serverEnvironmentPrefix } = options;
+  const {
+    iModelId,
+    accessToken,
+    serverEnvironmentPrefix,
+    logger = defaultLogger,
+  } = options;
   try {
     if (!accessToken) {
       return;
@@ -90,9 +103,7 @@ export async function removeIModelFromRecents(options: {
     });
   } catch (e) {
     // keep parity with previous behavior where errors were swallowed
-    // Log for diagnostics
-    // eslint-disable-next-line no-console
-    console.error("Failed to remove iModel from recents", e);
+    logger.logError("Failed to remove iModel from recents", e);
   }
 }
 

@@ -11,13 +11,14 @@ import svgMore from "@stratakit/icons/more-vertical.svg";
 import { Icon } from "@stratakit/mui";
 import React from "react";
 
-import { ITwinCellColumn, ITwinFull } from "../../../types";
+import { ITwinCellColumn, ITwinFull, Logger } from "../../../types";
 import {
   type MoreActionsMenuItemMUI,
   type ResolvedCardActionItem,
   getPrimaryCardAction,
   resolveMoreActionsMenuItemsMUI,
 } from "../../../utils/_buildMenuOptions";
+import { defaultLogger } from "../../../utils/_defaultLogger";
 import { formatDate } from "../../../utils/formatDate";
 import MoreMenuMUI from "../../components/MoreMenuMUI";
 import { FavoriteIconMUI } from "../../components/tileFavoriteIcon/FavoriteIconMUI";
@@ -69,6 +70,8 @@ export interface ITwinTableMUIProps {
    * Nonce applied to `<style>` elements. Required if your application uses a Content Security Policy (CSP) that restricts inline styles.
    */
   nonce?: string;
+  /** Callbacks will be used for logging any potentially useful information. Defaults to logging to console if not provided. */
+  logger?: Logger;
 }
 
 /**
@@ -90,6 +93,7 @@ export const ITwinTableMUI = ({
   isLoading,
   fetchMore,
   nonce,
+  logger = defaultLogger,
 }: ITwinTableMUIProps) => {
   // Eagerly load all available data so the table has the full dataset
   // for client-side pagination and sorting.
@@ -119,6 +123,7 @@ export const ITwinTableMUI = ({
               }
               transparent
               tabIndex={params.tabIndex}
+              logger={logger}
             />
           );
         },
@@ -186,6 +191,7 @@ export const ITwinTableMUI = ({
     hideColumns,
     moreActions,
     refetchITwins,
+    logger,
   ]);
 
   return (

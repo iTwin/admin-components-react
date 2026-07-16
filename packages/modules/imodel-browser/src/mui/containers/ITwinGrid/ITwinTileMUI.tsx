@@ -7,12 +7,13 @@ import svgItwin from "@stratakit/icons/itwin.svg";
 import React from "react";
 
 import { ITwinTileProps } from "../../../containers/ITwinGrid/ITwinTile";
-import { ITwinFull } from "../../../types";
+import { ITwinFull, Logger } from "../../../types";
 import { _mergeStrings } from "../../../utils/_apiOverrides";
 import {
   type MoreActionsMenuItemMUI,
   type ResolvedMoreActionsMenuItem,
 } from "../../../utils/_buildMenuOptions";
+import { defaultLogger } from "../../../utils/_defaultLogger";
 import { formatDate } from "../../../utils/formatDate";
 import {
   type BaseCardProps,
@@ -51,6 +52,8 @@ export interface ITwinTilePropsMUI
     removeFromFavorites?: string;
     moreOptions?: string;
   };
+  /** Callbacks will be used for logging any potentially useful information. Defaults to logging to console if not provided. */
+  logger?: Logger;
 }
 
 /**
@@ -76,6 +79,7 @@ export const ITwinTileMUI = ({
   title,
   description,
   actions,
+  logger = defaultLogger,
   className,
   ...rest
 }: ITwinTilePropsMUI) => {
@@ -117,6 +121,7 @@ export const ITwinTileMUI = ({
         addLabel={strings.addToFavorites}
         removeLabel={strings.removeFromFavorites}
         disabled={disabled}
+        logger={logger}
       />
     ) : undefined;
 

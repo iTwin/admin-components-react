@@ -8,7 +8,8 @@ import classNames from "classnames";
 import React from "react";
 import { useInView } from "react-intersection-observer";
 
-import { AccessTokenProvider, ApiOverrides } from "../../types";
+import { AccessTokenProvider, ApiOverrides, Logger } from "../../types";
+import { defaultLogger } from "../../utils/_defaultLogger";
 import { useIModelThumbnail } from "./useIModelThumbnail";
 
 export interface IModelThumbnailProps {
@@ -24,6 +25,8 @@ export interface IModelThumbnailProps {
    * @property serverEnvironmentPrefix Either qa or dev
    */
   apiOverrides?: ApiOverrides<string>;
+  /** Callbacks will be used for logging any potentially useful information. Defaults to logging to console if not provided. */
+  logger?: Logger;
 }
 
 /** Clickable iModel thumbnail, fetched from the servers */
@@ -32,6 +35,7 @@ export const IModelThumbnail = ({
   accessToken,
   apiOverrides,
   className,
+  logger = defaultLogger,
 }: IModelThumbnailProps) => {
   const { ref, inView } = useInView({
     triggerOnce: true,
@@ -40,7 +44,8 @@ export const IModelThumbnail = ({
   const thumbnail = useIModelThumbnail(
     iModelId,
     inView ? accessToken : undefined,
-    apiOverrides
+    apiOverrides,
+    logger
   );
   return thumbnail ? (
     <Tile.ThumbnailPicture

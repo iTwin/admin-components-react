@@ -19,6 +19,7 @@ import {
   MoreActionsMenuItemMUI,
   resolveCardActionsItemsMUI,
 } from "../../../utils/_buildMenuOptions";
+import { defaultLogger } from "../../../utils/_defaultLogger";
 import { BaseCardLoading } from "../../components/baseCard/BaseCardLoading";
 import { NoResultsMUI } from "../../components/noResults/NoResultsMUI";
 import { type ITwinTableOverridesMUI } from "../../types";
@@ -104,6 +105,7 @@ export const ITwinGridMUI = ({
   tableOverrides,
   className,
   nonce,
+  logger = defaultLogger,
 }: ITwinGridPropsMUI) => {
   const {
     iTwinFavorites,
@@ -111,7 +113,11 @@ export const ITwinGridMUI = ({
     removeITwinFromFavorites,
     shouldRefetchFavorites,
     resetShouldRefetchFavorites,
-  } = useITwinFavorites(accessToken, apiOverrides?.serverEnvironmentPrefix);
+  } = useITwinFavorites(
+    accessToken,
+    apiOverrides?.serverEnvironmentPrefix,
+    logger
+  );
 
   const strings = React.useMemo(
     () =>
@@ -166,6 +172,7 @@ export const ITwinGridMUI = ({
     orderbyOptions,
     shouldRefetchFavorites,
     resetShouldRefetchFavorites,
+    logger,
   });
 
   const iTwins = React.useMemo(
@@ -234,6 +241,7 @@ export const ITwinGridMUI = ({
                   stringsOverrides,
                   tileOverrides,
                   useIndividualState,
+                  logger,
                 }}
                 iTwin={iTwin}
                 moreActions={moreActions}
@@ -247,6 +255,7 @@ export const ITwinGridMUI = ({
                 addToFavorites={addITwinToFavorites}
                 removeFromFavorites={removeITwinFromFavorites}
                 refetchITwins={refetchITwins}
+                logger={logger}
                 stringsOverrides={stringsOverrides}
                 thumbnail={iTwin.image} // This is a fix for https://github.com/iTwin/admin-components-react/issues/196
                 {...tileOverrides}
@@ -289,6 +298,7 @@ export const ITwinGridMUI = ({
       addITwinToFavorites={addITwinToFavorites}
       removeITwinFromFavorites={removeITwinFromFavorites}
       refetchITwins={refetchITwins}
+      logger={logger}
       tableOverrides={tableOverrides}
       isLoading={fetchStatus === DataStatus.Fetching}
       fetchMore={fetchMore}

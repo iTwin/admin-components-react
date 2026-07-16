@@ -2,13 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import {
   AccessTokenProvider,
@@ -17,9 +11,11 @@ import {
   DataStatus,
   IModelFull,
   IModelSortOptions,
+  Logger,
   ViewType,
 } from "../../types";
 import { _getAPIServer } from "../../utils/_apiOverrides";
+import { defaultLogger } from "../../utils/_defaultLogger";
 import { useIModelSort } from "./useIModelSort";
 
 export interface IModelDataHookOptions {
@@ -38,6 +34,7 @@ export interface IModelDataHookOptions {
   dataMode?: DataMode;
   onLoadMore?: () => void | Promise<void>;
   onRefetch?: () => void | Promise<void>;
+  logger?: Logger;
 }
 export const DEFAULT_PAGE_SIZE = 100;
 
@@ -53,15 +50,14 @@ export const useIModelData = ({
   dataMode,
   onLoadMore,
   onRefetch,
+  logger = defaultLogger,
 }: IModelDataHookOptions) => {
   const [needsUpdate, setNeedsUpdate] = useState(true);
   const [iModels, setIModels] = useState<IModelFull[]>([]);
   const [status, setStatus] = useState<DataStatus>();
   const [page, setPage] = useState(0);
   const [morePagesAvailable, setMorePagesAvailable] = useState(true);
-  const abortControllerRef = useRef<AbortController | undefined>(
-    undefined
-  );
+  const abortControllerRef = useRef<AbortController | undefined>(undefined);
   const activeRequestRef = useRef<symbol | undefined>(undefined);
 
   const sortType =
@@ -226,7 +222,9 @@ export const useIModelData = ({
 
     fetchIModels()
       .then(({ iModels, morePagesAvailable }) => {
-        if (activeRequestRef.current !== requestId) return;
+        if (activeRequestRef.current !== requestId) {
+          return;
+        }
         setMorePagesAvailable(morePagesAvailable);
         setIModels((prev) =>
           page === 0 ? [...iModels] : [...prev, ...iModels]
@@ -234,12 +232,13 @@ export const useIModelData = ({
         setStatus(DataStatus.Complete);
       })
       .catch((e) => {
-        if (activeRequestRef.current !== requestId || e.name === "AbortError")
+        if (activeRequestRef.current !== requestId || e.name === "AbortError") {
           return;
+        }
         setIModels([]);
         setMorePagesAvailable(false);
         setStatus(DataStatus.FetchFailed);
-        console.error(e);
+        logger.logError("Failed to fetch iModels", e);
       });
   }, [
     dataMode,
@@ -256,6 +255,7 @@ export const useIModelData = ({
     sortChanged,
     sortDescending,
     sortType,
+    logger,
   ]);
 
   // Abort any in-flight request and invalidate stale results on unmount

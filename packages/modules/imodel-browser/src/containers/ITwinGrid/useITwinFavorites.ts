@@ -5,8 +5,9 @@
 
 import { useCallback, useEffect, useState } from "react";
 
-import { AccessTokenProvider } from "../../types";
+import { AccessTokenProvider, Logger } from "../../types";
 import { _getAPIServer } from "../../utils/_apiOverrides";
+import { defaultLogger } from "../../utils/_defaultLogger";
 
 const HOOK_ABORT_ERROR =
   "The fetch request was aborted by the cleanup function.";
@@ -24,7 +25,8 @@ const HOOK_ABORT_ERROR =
  */
 export const useITwinFavorites = (
   accessToken: AccessTokenProvider | undefined,
-  serverEnvironmentPrefix?: "dev" | "qa" | ""
+  serverEnvironmentPrefix?: "dev" | "qa" | "",
+  logger: Logger = defaultLogger
 ): {
   iTwinFavorites: Set<string>;
   addITwinToFavorites: (iTwinId: string) => Promise<void>;
@@ -67,10 +69,10 @@ export const useITwinFavorites = (
         setITwinFavorites((prev) => new Set([...prev, iTwinId]));
         setShouldRefetchFavorites(true);
       } catch (error) {
-        console.error(error);
+        logger.logError("Failed to add iTwin to favorites", error);
       }
     },
-    [accessToken, serverEnvironmentPrefix]
+    [accessToken, serverEnvironmentPrefix, logger]
   );
 
   /**
@@ -109,10 +111,10 @@ export const useITwinFavorites = (
         });
         setShouldRefetchFavorites(true);
       } catch (error) {
-        console.error(error);
+        logger.logError("Failed to remove iTwin from favorites", error);
       }
     },
-    [accessToken, serverEnvironmentPrefix]
+    [accessToken, serverEnvironmentPrefix, logger]
   );
 
   /**
@@ -180,7 +182,7 @@ export const useITwinFavorites = (
         ) {
           return;
         }
-        console.error(error);
+        logger.logError("Failed to fetch iTwin favorites", error);
       }
     };
     void fetchITwinFavorites(controller.signal);
@@ -188,7 +190,7 @@ export const useITwinFavorites = (
     return () => {
       controller.abort();
     };
-  }, [getITwinFavorites]);
+  }, [getITwinFavorites, logger]);
 
   return {
     iTwinFavorites,

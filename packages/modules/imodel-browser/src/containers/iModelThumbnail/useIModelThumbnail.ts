@@ -5,8 +5,9 @@
 import { useEffect, useState } from "react";
 
 import defaultIModelThumbnail from "../../images/default-thumbnail.png";
-import { AccessTokenProvider, ApiOverrides } from "../../types";
+import { AccessTokenProvider, ApiOverrides, Logger } from "../../types";
 import { _getAPIServer } from "../../utils/_apiOverrides";
+import { defaultLogger } from "../../utils/_defaultLogger";
 
 /** Convert buffer response to URL format: data:image/png;base64 */
 function convertArrayBufferToUrlBase64PNG(buffer: ArrayBuffer) {
@@ -25,7 +26,8 @@ function convertArrayBufferToUrlBase64PNG(buffer: ArrayBuffer) {
 export const useIModelThumbnail = (
   iModelId: string,
   accessToken?: AccessTokenProvider,
-  apiOverrides?: ApiOverrides<string>
+  apiOverrides?: ApiOverrides<string>,
+  logger: Logger = defaultLogger
 ) => {
   const [thumbnail, setThumbnail] = useState<string>();
   useEffect(() => {
@@ -69,10 +71,7 @@ export const useIModelThumbnail = (
           // Aborting because unmounting is not an error, swallow.
           return;
         }
-        console.error("Thumbnail download error", "Thumbnail Fetch", {
-          iModelId,
-          e,
-        });
+        logger.logError(`Thumbnail download error for iModel ${iModelId}`, e);
       });
     }
     return () => {
@@ -84,6 +83,7 @@ export const useIModelThumbnail = (
     thumbnail,
     apiOverrides?.data,
     apiOverrides?.serverEnvironmentPrefix,
+    logger,
   ]);
   return thumbnail;
 };

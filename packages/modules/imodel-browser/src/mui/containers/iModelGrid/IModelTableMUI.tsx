@@ -12,13 +12,14 @@ import { Icon } from "@stratakit/mui";
 import React from "react";
 
 import { useIModelFavoritesContext } from "../../../contexts/IModelFavoritesContext";
-import { type IModelFull, IModelCellColumn } from "../../../types";
+import { type IModelFull, IModelCellColumn, Logger } from "../../../types";
 import {
   type MoreActionsMenuItemMUI,
   type ResolvedCardActionItem,
   getPrimaryCardAction,
   resolveMoreActionsMenuItemsMUI,
 } from "../../../utils/_buildMenuOptions";
+import { defaultLogger } from "../../../utils/_defaultLogger";
 import { formatDate } from "../../../utils/formatDate";
 import MoreMenuMUI from "../../components/MoreMenuMUI";
 import { FavoriteIconMUI } from "../../components/tileFavoriteIcon/FavoriteIconMUI";
@@ -66,6 +67,8 @@ export interface IModelTableMUIProps {
    * Nonce applied to `<style>` elements. Required if your application uses a Content Security Policy (CSP) that restricts inline styles.
    */
   nonce?: string;
+  /** Callbacks will be used for logging any potentially useful information. Defaults to logging to console if not provided. */
+  logger?: Logger;
 }
 
 /**
@@ -84,6 +87,7 @@ export const IModelTableMUI = ({
   isLoading,
   fetchMore,
   nonce,
+  logger = defaultLogger,
 }: IModelTableMUIProps) => {
   // Eagerly load all available data so the table has the full dataset
   // for client-side pagination and sorting.
@@ -92,7 +96,7 @@ export const IModelTableMUI = ({
       fetchMore();
     }
   }, [fetchMore]);
-  const favoritesContext = useIModelFavoritesContext();
+  const favoritesContext = useIModelFavoritesContext(logger);
 
   const columns = React.useMemo<GridColDef<IModelFull>[]>(() => {
     const cols: (GridColDef<IModelFull> | false)[] = [
@@ -115,6 +119,7 @@ export const IModelTableMUI = ({
               }
               transparent
               tabIndex={params.tabIndex}
+              logger={logger}
             />
           );
         },
@@ -186,6 +191,7 @@ export const IModelTableMUI = ({
     hideColumns,
     moreActions,
     refetchIModels,
+    logger,
   ]);
 
   return (
