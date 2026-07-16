@@ -17,10 +17,12 @@ import {
   IModelCellOverrides,
   IModelFull,
   IModelSortOptions,
+  Logger,
   ViewType,
 } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
 import { ContextMenuBuilderItem } from "../../utils/_buildMenuOptions";
+import { defaultLogger } from "../../utils/_defaultLogger";
 import {
   addIModelToRecents,
   removeIModelFromRecents,
@@ -126,6 +128,9 @@ export interface IModelGridProps {
    * Only used when dataMode is set to 'external'.
    */
   onRefetch?: () => void | Promise<void>;
+
+  /** Callbacks will be used for logging any potentially useful information. */
+  logger?: Logger;
 }
 
 /**
@@ -214,6 +219,7 @@ const IModelGridInternal = ({
   onRefetch,
   dataMode = "internal",
   disableAddToRecents = false,
+  logger = defaultLogger,
 }: IModelGridProps) => {
   const [sort, setSort] = React.useState<IModelSortOptions>(sortOptions);
 
@@ -274,6 +280,7 @@ const IModelGridInternal = ({
     dataMode,
     onLoadMore,
     onRefetch,
+    logger,
   });
 
   const iModels = React.useMemo(
@@ -310,7 +317,7 @@ const IModelGridInternal = ({
       });
     } catch (e) {
       // swallow errors to avoid disrupting the UI
-      console.error("Failed to add iModel to recents", e);
+      logger.logError("Failed to add iModel to recents", e);
     }
     onThumbnailClick?.(iModel);
   };

@@ -25,6 +25,7 @@ import {
   MoreActionsMenuItemMUI,
   resolveCardActionsItemsMUI,
 } from "../../../utils/_buildMenuOptions";
+import { defaultLogger } from "../../../utils/_defaultLogger";
 import {
   addIModelToRecents,
   removeIModelFromRecents,
@@ -154,6 +155,7 @@ const IModelGridInternal = ({
   dataMode = "internal",
   disableAddToRecents = false,
   nonce,
+  logger = defaultLogger,
 }: IModelGridMUIProps) => {
   const [sort, setSort] = React.useState<IModelSortOptions>(sortOptions);
 
@@ -253,6 +255,7 @@ const IModelGridInternal = ({
     dataMode,
     onLoadMore,
     onRefetch,
+    logger,
   });
 
   const iModels = React.useMemo(() => {
@@ -293,7 +296,7 @@ const IModelGridInternal = ({
         serverEnvironmentPrefix: apiOverrides?.serverEnvironmentPrefix,
       }).catch((e) => {
         // swallow errors to avoid disrupting the UI
-        console.error("Failed to add iModel to recents", e);
+        logger.logError("Failed to add iModel to recents", e);
       });
       clickFn();
     },
