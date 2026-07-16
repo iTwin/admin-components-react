@@ -9,17 +9,11 @@ import { useMemo } from "react";
 import { CellProps } from "react-table";
 
 import { useIModelFavoritesContext } from "../../contexts/IModelFavoritesContext";
-import {
-  IModelCellColumn,
-  IModelCellOverrides,
-  IModelFull,
-  Logger,
-} from "../../types";
+import { IModelCellColumn, IModelCellOverrides, IModelFull } from "../../types";
 import {
   _buildManagedContextMenuOptions,
   ContextMenuBuilderItem,
 } from "../../utils/_buildMenuOptions";
-import { defaultLogger } from "../../utils/_defaultLogger";
 
 export interface IModelTableStrings {
   /** Displayed for table name header. */
@@ -41,8 +35,6 @@ export interface useIModelTableConfigProps {
   strings: IModelTableStrings;
   refetchIModels: () => void;
   cellOverrides?: IModelCellOverrides;
-  /** Callbacks will be used for logging any potentially useful information. Defaults to logging to console if not provided. */
-  logger?: Logger;
 }
 
 export const useIModelTableConfig = ({
@@ -51,9 +43,8 @@ export const useIModelTableConfig = ({
   strings,
   refetchIModels,
   cellOverrides = {},
-  logger = defaultLogger,
 }: useIModelTableConfigProps) => {
-  const favoritesContext = useIModelFavoritesContext(logger);
+  const favoritesContext = useIModelFavoritesContext();
   const onRowClick = (_: React.MouseEvent, row: any) => {
     const iModel = row.original as IModelFull;
     if (!iModel) {

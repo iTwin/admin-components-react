@@ -5,9 +5,9 @@
 
 import { useCallback, useEffect, useState } from "react";
 
-import { AccessTokenProvider, Logger } from "../../types";
+import { useLogger } from "../../contexts/LoggerContext";
+import { AccessTokenProvider } from "../../types";
 import { _getAPIServer } from "../../utils/_apiOverrides";
-import { defaultLogger } from "../../utils/_defaultLogger";
 
 const HOOK_ABORT_ERROR =
   "The fetch request was aborted by the cleanup function.";
@@ -25,8 +25,7 @@ const HOOK_ABORT_ERROR =
  */
 export const useITwinFavorites = (
   accessToken: AccessTokenProvider | undefined,
-  serverEnvironmentPrefix?: "dev" | "qa" | "",
-  logger: Logger = defaultLogger
+  serverEnvironmentPrefix?: "dev" | "qa" | ""
 ): {
   iTwinFavorites: Set<string>;
   addITwinToFavorites: (iTwinId: string) => Promise<void>;
@@ -34,6 +33,7 @@ export const useITwinFavorites = (
   shouldRefetchFavorites: boolean;
   resetShouldRefetchFavorites: () => void;
 } => {
+  const logger = useLogger();
   const [iTwinFavorites, setITwinFavorites] = useState(new Set<string>());
   const [shouldRefetchFavorites, setShouldRefetchFavorites] = useState(false);
 

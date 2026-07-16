@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import React from "react";
 
+import { useLogger } from "../../contexts/LoggerContext";
 import {
   AccessTokenProvider,
   ApiOverrides,
@@ -11,10 +12,8 @@ import {
   ITwinFilterOptions,
   ITwinFull,
   ITwinSubClass,
-  Logger,
 } from "../../types";
 import { _getAPIServer } from "../../utils/_apiOverrides";
-import { defaultLogger } from "../../utils/_defaultLogger";
 import { useITwinFilter } from "./useITwinFilter";
 
 export interface ProjectDataHookOptions {
@@ -26,8 +25,6 @@ export interface ProjectDataHookOptions {
   orderbyOptions?: string;
   shouldRefetchFavorites?: boolean;
   resetShouldRefetchFavorites?: () => void;
-  /** Callbacks will be used for logging any potentially useful information. Defaults to logging to console if not provided. */
-  logger?: Logger;
 }
 
 const PAGE_SIZE = 100;
@@ -41,8 +38,8 @@ export const useITwinData = ({
   orderbyOptions,
   shouldRefetchFavorites,
   resetShouldRefetchFavorites,
-  logger = defaultLogger,
 }: ProjectDataHookOptions) => {
+  const logger = useLogger();
   const data = apiOverrides?.data;
   const serverEnvironmentPrefix = apiOverrides?.serverEnvironmentPrefix;
   const [projects, setProjects] = React.useState<ITwinFull[]>([]);

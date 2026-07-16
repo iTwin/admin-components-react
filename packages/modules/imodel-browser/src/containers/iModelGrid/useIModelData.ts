@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
+import { useLogger } from "../../contexts/LoggerContext";
 import {
   AccessTokenProvider,
   ApiOverrides,
@@ -11,11 +12,9 @@ import {
   DataStatus,
   IModelFull,
   IModelSortOptions,
-  Logger,
   ViewType,
 } from "../../types";
 import { _getAPIServer } from "../../utils/_apiOverrides";
-import { defaultLogger } from "../../utils/_defaultLogger";
 import { useIModelSort } from "./useIModelSort";
 
 export interface IModelDataHookOptions {
@@ -34,7 +33,6 @@ export interface IModelDataHookOptions {
   dataMode?: DataMode;
   onLoadMore?: () => void | Promise<void>;
   onRefetch?: () => void | Promise<void>;
-  logger?: Logger;
 }
 export const DEFAULT_PAGE_SIZE = 100;
 
@@ -50,8 +48,8 @@ export const useIModelData = ({
   dataMode,
   onLoadMore,
   onRefetch,
-  logger = defaultLogger,
 }: IModelDataHookOptions) => {
+  const logger = useLogger();
   const [needsUpdate, setNeedsUpdate] = useState(true);
   const [iModels, setIModels] = useState<IModelFull[]>([]);
   const [status, setStatus] = useState<DataStatus>();

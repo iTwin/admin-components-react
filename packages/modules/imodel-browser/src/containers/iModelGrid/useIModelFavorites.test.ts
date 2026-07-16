@@ -4,8 +4,10 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { renderHook } from "@testing-library/react-hooks";
+import React from "react";
 import { act } from "react";
 
+import { LoggerContext } from "../../contexts/LoggerContext";
 import { useIModelFavorites } from "./useIModelFavorites";
 
 export function mockFetch(data: any, status = 200) {
@@ -89,10 +91,15 @@ describe("useIModelFavorites", () => {
       logInfo: jest.fn(),
       logTrace: jest.fn(),
     };
+    const wrapper = ({ children }: { children?: React.ReactNode }) =>
+      React.createElement(LoggerContext.Provider, { value: logger }, children);
 
     window.fetch = mockFetch({}, 500);
-    const { result } = renderHook(() =>
-      useIModelFavorites(iTwinId, accessToken, undefined, undefined, logger)
+    const { result } = renderHook(
+      () => useIModelFavorites(iTwinId, accessToken),
+      {
+        wrapper,
+      }
     );
 
     await act(async () => {

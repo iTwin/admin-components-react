@@ -7,12 +7,7 @@ import React from "react";
 
 import { TileFavoriteIcon } from "../../components/tileFavoriteIcon/TileFavoriteIcon";
 import { useIModelFavoritesContext } from "../../contexts/IModelFavoritesContext";
-import {
-  AccessTokenProvider,
-  ApiOverrides,
-  IModelFull,
-  Logger,
-} from "../../types";
+import { AccessTokenProvider, ApiOverrides, IModelFull } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
 import {
   _buildManagedContextMenuOptions,
@@ -51,8 +46,6 @@ export interface IModelTileProps {
   fullWidth?: boolean;
   /** Hides the favorite icon when true */
   hideFavoriteIcon?: boolean;
-  /** Callbacks will be used for logging any potentially useful information. Defaults to logging to console if not provided. */
-  logger?: Logger;
 }
 
 /**
@@ -69,7 +62,6 @@ export const IModelTile = ({
   refetchIModels,
   fullWidth,
   hideFavoriteIcon,
-  logger,
 }: IModelTileProps) => {
   const {
     name,
@@ -90,7 +82,7 @@ export const IModelTile = ({
     className = "",
     ...rest
   } = tileProps ?? {};
-  const favoritesContext = useIModelFavoritesContext(logger);
+  const favoritesContext = useIModelFavoritesContext();
   const strings = _mergeStrings(
     {
       addToFavorites: "Add to favorites",
@@ -164,7 +156,6 @@ export const IModelTile = ({
             iModelId={iModel.id}
             accessToken={accessToken}
             apiOverrides={thumbnailApiOverride}
-            logger={logger}
           />
         )}
         {(getBadge || badge) && (

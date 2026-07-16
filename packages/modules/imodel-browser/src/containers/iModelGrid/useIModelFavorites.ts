@@ -5,8 +5,8 @@
 
 import { useCallback, useEffect, useState } from "react";
 
-import { AccessTokenProvider, Logger } from "../../types";
-import { defaultLogger } from "../../utils/_defaultLogger";
+import { useLogger } from "../../contexts/LoggerContext";
+import { AccessTokenProvider } from "../../types";
 import * as iModelApi from "../../utils/iModelApi";
 
 /**
@@ -24,13 +24,13 @@ export const useIModelFavorites = (
   iTwinId: string | undefined,
   accessToken: AccessTokenProvider | undefined,
   serverEnvironmentPrefix?: "dev" | "qa" | "",
-  disabled?: boolean,
-  logger: Logger = defaultLogger
+  disabled?: boolean
 ): {
   iModelFavorites: Set<string>;
   addIModelToFavorites: (iModelId: string) => Promise<void>;
   removeIModelFromFavorites: (iModelId: string) => Promise<void>;
 } => {
+  const logger = useLogger();
   const [iModelFavorites, setIModelFavorites] = useState(new Set<string>());
 
   /**

@@ -5,9 +5,9 @@
 /*---------------------------------------------------------------------------------------------
  * Utility functions for iModel related API operations.
  *--------------------------------------------------------------------------------------------*/
+import { defaultLogger } from "../contexts/LoggerContext";
 import { AccessTokenProvider, Logger } from "../types";
 import { _getAPIServer } from "./_apiOverrides";
-import { defaultLogger } from "./_defaultLogger";
 
 /** Response from https://developer.bentley.com/apis/imodels-v2/operations/get-my-favorite-imodels/ */
 export interface IModelFavoritesResponse {

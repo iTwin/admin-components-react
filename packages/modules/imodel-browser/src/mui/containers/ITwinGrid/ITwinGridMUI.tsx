@@ -12,6 +12,11 @@ import type {
 } from "../../../containers/ITwinGrid/ITwinGrid";
 import { useITwinData } from "../../../containers/ITwinGrid/useITwinData";
 import { useITwinFavorites } from "../../../containers/ITwinGrid/useITwinFavorites";
+import {
+  defaultLogger,
+  LoggerContext,
+  useLogger,
+} from "../../../contexts/LoggerContext";
 import { type ITwinFull, DataStatus } from "../../../types";
 import { _mergeStrings } from "../../../utils/_apiOverrides";
 import {
@@ -19,7 +24,6 @@ import {
   MoreActionsMenuItemMUI,
   resolveCardActionsItemsMUI,
 } from "../../../utils/_buildMenuOptions";
-import { defaultLogger } from "../../../utils/_defaultLogger";
 import { BaseCardLoading } from "../../components/baseCard/BaseCardLoading";
 import { NoResultsMUI } from "../../components/noResults/NoResultsMUI";
 import { type ITwinTableOverridesMUI } from "../../types";
@@ -88,7 +92,15 @@ export interface ITwinGridPropsMUI
  * Component that will allow displaying a grid of iTwins, given a requestType
  * @alpha
  */
-export const ITwinGridMUI = ({
+export const ITwinGridMUI = ({ logger, ...props }: ITwinGridPropsMUI) => {
+  return (
+    <LoggerContext.Provider value={logger ?? defaultLogger}>
+      <ITwinGridMUIInternal {...props} />
+    </LoggerContext.Provider>
+  );
+};
+
+const ITwinGridMUIInternal = ({
   accessToken,
   apiOverrides,
   filterOptions,
@@ -105,19 +117,15 @@ export const ITwinGridMUI = ({
   tableOverrides,
   className,
   nonce,
-  logger = defaultLogger,
 }: ITwinGridPropsMUI) => {
+  const logger = useLogger();
   const {
     iTwinFavorites,
     addITwinToFavorites,
     removeITwinFromFavorites,
     shouldRefetchFavorites,
     resetShouldRefetchFavorites,
-  } = useITwinFavorites(
-    accessToken,
-    apiOverrides?.serverEnvironmentPrefix,
-    logger
-  );
+  } = useITwinFavorites(accessToken, apiOverrides?.serverEnvironmentPrefix);
 
   const strings = React.useMemo(
     () =>
@@ -172,7 +180,6 @@ export const ITwinGridMUI = ({
     orderbyOptions,
     shouldRefetchFavorites,
     resetShouldRefetchFavorites,
-    logger,
   });
 
   const iTwins = React.useMemo(
@@ -255,7 +262,6 @@ export const ITwinGridMUI = ({
                 addToFavorites={addITwinToFavorites}
                 removeFromFavorites={removeITwinFromFavorites}
                 refetchITwins={refetchITwins}
-                logger={logger}
                 stringsOverrides={stringsOverrides}
                 thumbnail={iTwin.image} // This is a fix for https://github.com/iTwin/admin-components-react/issues/196
                 {...tileOverrides}
@@ -298,7 +304,6 @@ export const ITwinGridMUI = ({
       addITwinToFavorites={addITwinToFavorites}
       removeITwinFromFavorites={removeITwinFromFavorites}
       refetchITwins={refetchITwins}
-      logger={logger}
       tableOverrides={tableOverrides}
       isLoading={fetchStatus === DataStatus.Fetching}
       fetchMore={fetchMore}

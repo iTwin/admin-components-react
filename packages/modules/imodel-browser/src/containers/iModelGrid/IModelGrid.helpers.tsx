@@ -10,6 +10,11 @@ import { GridStructure } from "../../components/gridStructure/GridStructure";
 import { NoResults } from "../../components/noResults/NoResults";
 import { IModelFavoritesProvider } from "../../contexts/IModelFavoritesContext";
 import {
+  defaultLogger,
+  LoggerContext,
+  useLogger,
+} from "../../contexts/LoggerContext";
+import {
   AccessTokenProvider,
   ApiOverrides,
   DataMode,
@@ -22,7 +27,6 @@ import {
 } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
 import { ContextMenuBuilderItem } from "../../utils/_buildMenuOptions";
-import { defaultLogger } from "../../utils/_defaultLogger";
 import {
   addIModelToRecents,
   removeIModelFromRecents,
@@ -138,15 +142,16 @@ export interface IModelGridProps {
  */
 export const IModelGrid = (props: IModelGridProps) => {
   return (
-    <IModelFavoritesProvider
-      iTwinId={props.iTwinId}
-      accessToken={props.accessToken}
-      serverEnvironmentPrefix={props.apiOverrides?.serverEnvironmentPrefix}
-      disabled={props.tileOverrides?.hideFavoriteIcon}
-      logger={props.logger}
-    >
-      <IModelGridInternal {...props} />
-    </IModelFavoritesProvider>
+    <LoggerContext.Provider value={props.logger ?? defaultLogger}>
+      <IModelFavoritesProvider
+        iTwinId={props.iTwinId}
+        accessToken={props.accessToken}
+        serverEnvironmentPrefix={props.apiOverrides?.serverEnvironmentPrefix}
+        disabled={props.tileOverrides?.hideFavoriteIcon}
+      >
+        <IModelGridInternal {...props} />
+      </IModelFavoritesProvider>
+    </LoggerContext.Provider>
   );
 };
 
@@ -220,8 +225,8 @@ const IModelGridInternal = ({
   onRefetch,
   dataMode = "internal",
   disableAddToRecents = false,
-  logger = defaultLogger,
 }: IModelGridProps) => {
+  const logger = useLogger();
   const [sort, setSort] = React.useState<IModelSortOptions>(sortOptions);
 
   React.useEffect(() => {
@@ -283,7 +288,6 @@ const IModelGridInternal = ({
     dataMode,
     onLoadMore,
     onRefetch,
-    logger,
   });
 
   const iModels = React.useMemo(
@@ -333,7 +337,6 @@ const IModelGridInternal = ({
     strings,
     refetchIModels,
     cellOverrides,
-    logger,
   });
 
   const noResultsText = {
@@ -359,7 +362,6 @@ const IModelGridInternal = ({
                 iModel={iModel}
                 iModelOptions={enhancedIModelActions}
                 accessToken={accessToken}
-                logger={logger}
                 onThumbnailClick={(iModel) =>
                   iModelClickAndAddToRecents(iModel, () =>
                     onThumbnailClick?.(iModel)

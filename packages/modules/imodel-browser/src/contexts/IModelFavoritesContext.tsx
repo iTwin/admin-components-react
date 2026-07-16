@@ -5,8 +5,8 @@
 import React from "react";
 
 import { useIModelFavorites } from "../containers/iModelGrid/useIModelFavorites";
-import { AccessTokenProvider, Logger } from "../types";
-import { defaultLogger } from "../utils/_defaultLogger";
+import { AccessTokenProvider } from "../types";
+import { useLogger } from "./LoggerContext";
 
 export interface IModelFavoritesContextValue {
   favorites: Set<string>;
@@ -24,8 +24,6 @@ export interface IModelFavoritesProviderProps {
   serverEnvironmentPrefix?: string;
   children: React.ReactNode;
   disabled?: boolean;
-  /** Callbacks will be used for logging any potentially useful information. Defaults to logging to console if not provided. */
-  logger?: Logger;
 }
 
 export const IModelFavoritesProvider = ({
@@ -34,7 +32,6 @@ export const IModelFavoritesProvider = ({
   serverEnvironmentPrefix,
   children,
   disabled,
-  logger = defaultLogger,
 }: IModelFavoritesProviderProps) => {
   const { iModelFavorites, addIModelToFavorites, removeIModelFromFavorites } =
     useIModelFavorites(
@@ -43,8 +40,7 @@ export const IModelFavoritesProvider = ({
       serverEnvironmentPrefix === "dev" || serverEnvironmentPrefix === "qa"
         ? serverEnvironmentPrefix
         : undefined,
-      disabled,
-      logger
+      disabled
     );
 
   const value = React.useMemo<IModelFavoritesContextValue>(
@@ -63,8 +59,9 @@ export const IModelFavoritesProvider = ({
   );
 };
 
-export const useIModelFavoritesContext = (logger: Logger = defaultLogger) => {
+export const useIModelFavoritesContext = () => {
   const ctx = React.useContext(IModelFavoritesContext);
+  const logger = useLogger();
   if (!ctx) {
     logger.logWarning(
       "useIModelFavoritesContext must be used within IModelFavoritesProvider"

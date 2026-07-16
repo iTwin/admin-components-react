@@ -4,10 +4,10 @@
  *--------------------------------------------------------------------------------------------*/
 import { useEffect, useState } from "react";
 
+import { useLogger } from "../../contexts/LoggerContext";
 import defaultIModelThumbnail from "../../images/default-thumbnail.png";
-import { AccessTokenProvider, ApiOverrides, Logger } from "../../types";
+import { AccessTokenProvider, ApiOverrides } from "../../types";
 import { _getAPIServer } from "../../utils/_apiOverrides";
-import { defaultLogger } from "../../utils/_defaultLogger";
 
 /** Convert buffer response to URL format: data:image/png;base64 */
 function convertArrayBufferToUrlBase64PNG(buffer: ArrayBuffer) {
@@ -26,9 +26,9 @@ function convertArrayBufferToUrlBase64PNG(buffer: ArrayBuffer) {
 export const useIModelThumbnail = (
   iModelId: string,
   accessToken?: AccessTokenProvider,
-  apiOverrides?: ApiOverrides<string>,
-  logger: Logger = defaultLogger
+  apiOverrides?: ApiOverrides<string>
 ) => {
+  const logger = useLogger();
   const [thumbnail, setThumbnail] = useState<string>();
   useEffect(() => {
     if (apiOverrides?.data) {

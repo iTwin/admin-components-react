@@ -13,6 +13,11 @@ import {
 } from "../../../containers/iModelGrid/useIModelData";
 import { IModelFavoritesProvider } from "../../../contexts/IModelFavoritesContext";
 import {
+  defaultLogger,
+  LoggerContext,
+  useLogger,
+} from "../../../contexts/LoggerContext";
+import {
   type AccessTokenProvider,
   type ApiOverrides,
   type IModelFull,
@@ -25,7 +30,6 @@ import {
   MoreActionsMenuItemMUI,
   resolveCardActionsItemsMUI,
 } from "../../../utils/_buildMenuOptions";
-import { defaultLogger } from "../../../utils/_defaultLogger";
 import {
   addIModelToRecents,
   removeIModelFromRecents,
@@ -120,15 +124,16 @@ export interface IModelGridMUIProps
  */
 export const IModelGridMUI = (props: IModelGridMUIProps) => {
   return (
-    <IModelFavoritesProvider
-      iTwinId={props.iTwinId}
-      accessToken={props.accessToken}
-      serverEnvironmentPrefix={props.apiOverrides?.serverEnvironmentPrefix}
-      disabled={props.tileOverrides?.hideFavoriteIcon}
-      logger={props.logger}
-    >
-      <IModelGridInternal {...props} />
-    </IModelFavoritesProvider>
+    <LoggerContext.Provider value={props.logger ?? defaultLogger}>
+      <IModelFavoritesProvider
+        iTwinId={props.iTwinId}
+        accessToken={props.accessToken}
+        serverEnvironmentPrefix={props.apiOverrides?.serverEnvironmentPrefix}
+        disabled={props.tileOverrides?.hideFavoriteIcon}
+      >
+        <IModelGridInternal {...props} />
+      </IModelFavoritesProvider>
+    </LoggerContext.Provider>
   );
 };
 const IModelGridInternal = ({
@@ -156,8 +161,8 @@ const IModelGridInternal = ({
   dataMode = "internal",
   disableAddToRecents = false,
   nonce,
-  logger = defaultLogger,
 }: IModelGridMUIProps) => {
+  const logger = useLogger();
   const [sort, setSort] = React.useState<IModelSortOptions>(sortOptions);
 
   React.useEffect(() => {
@@ -258,7 +263,6 @@ const IModelGridInternal = ({
     dataMode,
     onLoadMore,
     onRefetch,
-    logger,
   });
 
   const iModels = React.useMemo(() => {
@@ -380,7 +384,6 @@ const IModelGridInternal = ({
                   iModel={iModel}
                   moreActions={enhancedMoreActions}
                   accessToken={accessToken}
-                  logger={logger}
                   apiOverrides={tileApiOverrides}
                   useTileState={useIndividualState}
                   refetchIModels={refetchIModels}
@@ -423,7 +426,6 @@ const IModelGridInternal = ({
             actions={actions ? resolveActions : undefined}
             strings={strings}
             refetchIModels={refetchIModels}
-            logger={logger}
             tableOverrides={tableOverrides}
             isLoading={fetchStatus === DataStatus.Fetching}
             fetchMore={fetchMore}

@@ -11,6 +11,11 @@ import { InView } from "react-intersection-observer";
 import { GridStructure } from "../../components/gridStructure/GridStructure";
 import { NoResults } from "../../components/noResults/NoResults";
 import {
+  defaultLogger,
+  LoggerContext,
+  useLogger,
+} from "../../contexts/LoggerContext";
+import {
   AccessTokenProvider,
   ApiOverrides,
   DataStatus,
@@ -23,7 +28,6 @@ import {
 } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
 import { ContextMenuBuilderItem } from "../../utils/_buildMenuOptions";
-import { defaultLogger } from "../../utils/_defaultLogger";
 import { IModelGhostTile } from "../iModelTiles/IModelGhostTile";
 import { ITwinTile, ITwinTileProps } from "./ITwinTile";
 import { useITwinData } from "./useITwinData";
@@ -119,7 +123,15 @@ export interface ITwinGridProps {
 /**
  * Component that will allow displaying a grid of iTwins, given a requestType
  */
-export const ITwinGrid = ({
+export const ITwinGrid = ({ logger, ...props }: ITwinGridProps) => {
+  return (
+    <LoggerContext.Provider value={logger ?? defaultLogger}>
+      <ITwinGridInternal {...props} />
+    </LoggerContext.Provider>
+  );
+};
+
+const ITwinGridInternal = ({
   accessToken,
   apiOverrides,
   filterOptions,
@@ -135,19 +147,15 @@ export const ITwinGrid = ({
   viewMode,
   cellOverrides,
   className,
-  logger = defaultLogger,
 }: ITwinGridProps) => {
+  const logger = useLogger();
   const {
     iTwinFavorites,
     addITwinToFavorites,
     removeITwinFromFavorites,
     shouldRefetchFavorites,
     resetShouldRefetchFavorites,
-  } = useITwinFavorites(
-    accessToken,
-    apiOverrides?.serverEnvironmentPrefix,
-    logger
-  );
+  } = useITwinFavorites(accessToken, apiOverrides?.serverEnvironmentPrefix);
 
   const strings = _mergeStrings(
     {
@@ -185,7 +193,6 @@ export const ITwinGrid = ({
     orderbyOptions,
     shouldRefetchFavorites,
     resetShouldRefetchFavorites,
-    logger,
   });
 
   const iTwins = React.useMemo(
