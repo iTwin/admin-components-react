@@ -2,6 +2,18 @@
   "name": "@itwin/imodel-browser-react",
   "entries": [
     {
+      "version": "4.4.0",
+      "tag": "@itwin/imodel-browser-react_v4.4.0",
+      "date": "Fri, 17 Jul 2026 15:48:49 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "allow consumers to provide their own logger"
+          }
+        ]
+      }
+    },
+    {
       "version": "4.3.5",
       "tag": "@itwin/imodel-browser-react_v4.3.5",
       "date": "Tue, 14 Jul 2026 11:06:52 GMT",
