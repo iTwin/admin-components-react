@@ -86,7 +86,6 @@ export const IModelTileMUI = ({
   description,
   subheader,
   actions,
-
   className,
   ...rest
 }: IModelTileMUIProps) => {

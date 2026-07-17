@@ -10,6 +10,7 @@ import { InView } from "react-intersection-observer";
 
 import { GridStructure } from "../../components/gridStructure/GridStructure";
 import { NoResults } from "../../components/noResults/NoResults";
+import { LoggerProvider, useLogger } from "../../contexts/LoggerContext";
 import {
   AccessTokenProvider,
   ApiOverrides,
@@ -18,6 +19,7 @@ import {
   ITwinFilterOptions,
   ITwinFull,
   ITwinSubClass,
+  Logger,
   ViewType,
 } from "../../types";
 import { _mergeStrings } from "../../utils/_apiOverrides";
@@ -109,12 +111,23 @@ export interface ITwinGridProps {
   cellOverrides?: ITwinCellOverrides;
   /** Additional class name for the grid structure */
   className?: string;
+
+  /** Callbacks will be used for logging any potentially useful information. Defaults to logging to console if not provided. */
+  logger?: Logger;
 }
 
 /**
  * Component that will allow displaying a grid of iTwins, given a requestType
  */
-export const ITwinGrid = ({
+export const ITwinGrid = ({ logger, ...props }: ITwinGridProps) => {
+  return (
+    <LoggerProvider logger={logger}>
+      <ITwinGridInternal {...props} />
+    </LoggerProvider>
+  );
+};
+
+const ITwinGridInternal = ({
   accessToken,
   apiOverrides,
   filterOptions,
@@ -131,6 +144,7 @@ export const ITwinGrid = ({
   cellOverrides,
   className,
 }: ITwinGridProps) => {
+  const logger = useLogger();
   const {
     iTwinFavorites,
     addITwinToFavorites,
@@ -226,6 +240,7 @@ export const ITwinGrid = ({
                   stringsOverrides,
                   tileOverrides,
                   useIndividualState,
+                  logger,
                 }}
                 key={iTwin.id}
                 iTwin={iTwin}

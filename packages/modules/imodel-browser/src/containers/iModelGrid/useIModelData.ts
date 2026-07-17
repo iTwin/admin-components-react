@@ -2,14 +2,9 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
+import { useLogger } from "../../contexts/LoggerContext";
 import {
   AccessTokenProvider,
   ApiOverrides,
@@ -54,14 +49,13 @@ export const useIModelData = ({
   onLoadMore,
   onRefetch,
 }: IModelDataHookOptions) => {
+  const logger = useLogger();
   const [needsUpdate, setNeedsUpdate] = useState(true);
   const [iModels, setIModels] = useState<IModelFull[]>([]);
   const [status, setStatus] = useState<DataStatus>();
   const [page, setPage] = useState(0);
   const [morePagesAvailable, setMorePagesAvailable] = useState(true);
-  const abortControllerRef = useRef<AbortController | undefined>(
-    undefined
-  );
+  const abortControllerRef = useRef<AbortController | undefined>(undefined);
   const activeRequestRef = useRef<symbol | undefined>(undefined);
 
   const sortType =
@@ -226,7 +220,9 @@ export const useIModelData = ({
 
     fetchIModels()
       .then(({ iModels, morePagesAvailable }) => {
-        if (activeRequestRef.current !== requestId) return;
+        if (activeRequestRef.current !== requestId) {
+          return;
+        }
         setMorePagesAvailable(morePagesAvailable);
         setIModels((prev) =>
           page === 0 ? [...iModels] : [...prev, ...iModels]
@@ -234,12 +230,13 @@ export const useIModelData = ({
         setStatus(DataStatus.Complete);
       })
       .catch((e) => {
-        if (activeRequestRef.current !== requestId || e.name === "AbortError")
+        if (activeRequestRef.current !== requestId || e.name === "AbortError") {
           return;
+        }
         setIModels([]);
         setMorePagesAvailable(false);
         setStatus(DataStatus.FetchFailed);
-        console.error(e);
+        logger.logError("Failed to fetch iModels", e);
       });
   }, [
     dataMode,
@@ -256,6 +253,7 @@ export const useIModelData = ({
     sortChanged,
     sortDescending,
     sortType,
+    logger,
   ]);
 
   // Abort any in-flight request and invalidate stale results on unmount

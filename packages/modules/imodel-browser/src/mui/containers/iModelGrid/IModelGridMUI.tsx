@@ -13,6 +13,11 @@ import {
 } from "../../../containers/iModelGrid/useIModelData";
 import { IModelFavoritesProvider } from "../../../contexts/IModelFavoritesContext";
 import {
+  defaultLogger,
+  LoggerProvider,
+  useLogger,
+} from "../../../contexts/LoggerContext";
+import {
   type AccessTokenProvider,
   type ApiOverrides,
   type IModelFull,
@@ -119,14 +124,16 @@ export interface IModelGridMUIProps
  */
 export const IModelGridMUI = (props: IModelGridMUIProps) => {
   return (
-    <IModelFavoritesProvider
-      iTwinId={props.iTwinId}
-      accessToken={props.accessToken}
-      serverEnvironmentPrefix={props.apiOverrides?.serverEnvironmentPrefix}
-      disabled={props.tileOverrides?.hideFavoriteIcon}
-    >
-      <IModelGridInternal {...props} />
-    </IModelFavoritesProvider>
+    <LoggerProvider logger={props.logger}>
+      <IModelFavoritesProvider
+        iTwinId={props.iTwinId}
+        accessToken={props.accessToken}
+        serverEnvironmentPrefix={props.apiOverrides?.serverEnvironmentPrefix}
+        disabled={props.tileOverrides?.hideFavoriteIcon}
+      >
+        <IModelGridInternal {...props} />
+      </IModelFavoritesProvider>
+    </LoggerProvider>
   );
 };
 const IModelGridInternal = ({
@@ -155,6 +162,7 @@ const IModelGridInternal = ({
   disableAddToRecents = false,
   nonce,
 }: IModelGridMUIProps) => {
+  const logger = useLogger();
   const [sort, setSort] = React.useState<IModelSortOptions>(sortOptions);
 
   React.useEffect(() => {
@@ -221,7 +229,8 @@ const IModelGridInternal = ({
         strings,
         accessToken,
         apiOverrides,
-        removeFromRecentsIcon
+        removeFromRecentsIcon,
+        logger
       );
       return moreActions ? [action, ...moreActions] : [action];
     }
@@ -233,6 +242,7 @@ const IModelGridInternal = ({
     removeFromRecentsIcon,
     accessToken,
     apiOverrides,
+    logger,
   ]);
 
   const {
@@ -291,13 +301,19 @@ const IModelGridInternal = ({
         iModelId: iModel.id,
         accessToken,
         serverEnvironmentPrefix: apiOverrides?.serverEnvironmentPrefix,
+        logger,
       }).catch((e) => {
         // swallow errors to avoid disrupting the UI
-        console.error("Failed to add iModel to recents", e);
+        logger.logError("Failed to add iModel to recents", e);
       });
       clickFn();
     },
-    [accessToken, disableAddToRecents, apiOverrides?.serverEnvironmentPrefix]
+    [
+      accessToken,
+      disableAddToRecents,
+      apiOverrides?.serverEnvironmentPrefix,
+      logger,
+    ]
   );
 
   const noResultsText = {
@@ -479,7 +495,8 @@ function removeFromRecentsAction(
   strings: IModelGridProps["stringsOverrides"],
   accessToken?: AccessTokenProvider,
   apiOverrides?: ApiOverrides<IModelFull[]>,
-  removeFromRecentsIcon?: string
+  removeFromRecentsIcon?: string,
+  logger = defaultLogger
 ): MoreActionsMenuItemMUI<IModelFull> {
   return {
     key: "remove-from-recents",
@@ -494,6 +511,7 @@ function removeFromRecentsAction(
         iModelId: iModel.id,
         accessToken,
         serverEnvironmentPrefix: apiOverrides?.serverEnvironmentPrefix,
+        logger,
       });
       refetchData?.();
     },

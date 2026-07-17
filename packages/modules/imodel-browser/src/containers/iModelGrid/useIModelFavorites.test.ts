@@ -4,8 +4,10 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { renderHook } from "@testing-library/react-hooks";
+import React from "react";
 import { act } from "react";
 
+import { LoggerContext } from "../../contexts/LoggerContext";
 import { useIModelFavorites } from "./useIModelFavorites";
 
 export function mockFetch(data: any, status = 200) {
@@ -80,5 +82,33 @@ describe("useIModelFavorites", () => {
       await result.current.removeIModelFromFavorites(iModelId);
     });
     expect(result.current.iModelFavorites.has(iModelId)).toBe(false);
+  });
+
+  test("should use provided logger when add favorite fails", async () => {
+    const logger = {
+      logError: jest.fn(),
+      logWarning: jest.fn(),
+      logInfo: jest.fn(),
+      logTrace: jest.fn(),
+    };
+    const wrapper = ({ children }: { children?: React.ReactNode }) =>
+      React.createElement(LoggerContext.Provider, { value: logger }, children);
+
+    window.fetch = mockFetch({}, 500);
+    const { result } = renderHook(
+      () => useIModelFavorites(iTwinId, accessToken),
+      {
+        wrapper,
+      }
+    );
+
+    await act(async () => {
+      await result.current.addIModelToFavorites("failed-id");
+    });
+
+    expect(logger.logError).toHaveBeenCalledWith(
+      "Failed to add iModel to favorites",
+      expect.any(Error)
+    );
   });
 });
