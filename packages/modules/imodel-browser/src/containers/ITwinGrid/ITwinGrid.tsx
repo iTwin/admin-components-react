@@ -10,11 +10,7 @@ import { InView } from "react-intersection-observer";
 
 import { GridStructure } from "../../components/gridStructure/GridStructure";
 import { NoResults } from "../../components/noResults/NoResults";
-import {
-  defaultLogger,
-  LoggerContext,
-  useLogger,
-} from "../../contexts/LoggerContext";
+import { LoggerProvider, useLogger } from "../../contexts/LoggerContext";
 import {
   AccessTokenProvider,
   ApiOverrides,
@@ -125,9 +121,9 @@ export interface ITwinGridProps {
  */
 export const ITwinGrid = ({ logger, ...props }: ITwinGridProps) => {
   return (
-    <LoggerContext.Provider value={logger ?? defaultLogger}>
+    <LoggerProvider logger={logger}>
       <ITwinGridInternal {...props} />
-    </LoggerContext.Provider>
+    </LoggerProvider>
   );
 };
 

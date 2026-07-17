@@ -14,7 +14,7 @@ import {
 import { IModelFavoritesProvider } from "../../../contexts/IModelFavoritesContext";
 import {
   defaultLogger,
-  LoggerContext,
+  LoggerProvider,
   useLogger,
 } from "../../../contexts/LoggerContext";
 import {
@@ -124,7 +124,7 @@ export interface IModelGridMUIProps
  */
 export const IModelGridMUI = (props: IModelGridMUIProps) => {
   return (
-    <LoggerContext.Provider value={props.logger ?? defaultLogger}>
+    <LoggerProvider logger={props.logger}>
       <IModelFavoritesProvider
         iTwinId={props.iTwinId}
         accessToken={props.accessToken}
@@ -133,7 +133,7 @@ export const IModelGridMUI = (props: IModelGridMUIProps) => {
       >
         <IModelGridInternal {...props} />
       </IModelFavoritesProvider>
-    </LoggerContext.Provider>
+    </LoggerProvider>
   );
 };
 const IModelGridInternal = ({

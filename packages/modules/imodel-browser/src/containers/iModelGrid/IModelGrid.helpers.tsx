@@ -9,11 +9,7 @@ import { InView } from "react-intersection-observer";
 import { GridStructure } from "../../components/gridStructure/GridStructure";
 import { NoResults } from "../../components/noResults/NoResults";
 import { IModelFavoritesProvider } from "../../contexts/IModelFavoritesContext";
-import {
-  defaultLogger,
-  LoggerContext,
-  useLogger,
-} from "../../contexts/LoggerContext";
+import { LoggerProvider, useLogger } from "../../contexts/LoggerContext";
 import {
   AccessTokenProvider,
   ApiOverrides,
@@ -142,7 +138,7 @@ export interface IModelGridProps {
  */
 export const IModelGrid = (props: IModelGridProps) => {
   return (
-    <LoggerContext.Provider value={props.logger ?? defaultLogger}>
+    <LoggerProvider logger={props.logger}>
       <IModelFavoritesProvider
         iTwinId={props.iTwinId}
         accessToken={props.accessToken}
@@ -151,7 +147,7 @@ export const IModelGrid = (props: IModelGridProps) => {
       >
         <IModelGridInternal {...props} />
       </IModelFavoritesProvider>
-    </LoggerContext.Provider>
+    </LoggerProvider>
   );
 };
 

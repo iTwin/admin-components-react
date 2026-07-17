@@ -12,11 +12,7 @@ import type {
 } from "../../../containers/ITwinGrid/ITwinGrid";
 import { useITwinData } from "../../../containers/ITwinGrid/useITwinData";
 import { useITwinFavorites } from "../../../containers/ITwinGrid/useITwinFavorites";
-import {
-  defaultLogger,
-  LoggerContext,
-  useLogger,
-} from "../../../contexts/LoggerContext";
+import { LoggerProvider, useLogger } from "../../../contexts/LoggerContext";
 import { type ITwinFull, DataStatus } from "../../../types";
 import { _mergeStrings } from "../../../utils/_apiOverrides";
 import {
@@ -94,9 +90,9 @@ export interface ITwinGridPropsMUI
  */
 export const ITwinGridMUI = ({ logger, ...props }: ITwinGridPropsMUI) => {
   return (
-    <LoggerContext.Provider value={logger ?? defaultLogger}>
+    <LoggerProvider logger={logger}>
       <ITwinGridMUIInternal {...props} />
-    </LoggerContext.Provider>
+    </LoggerProvider>
   );
 };
 
