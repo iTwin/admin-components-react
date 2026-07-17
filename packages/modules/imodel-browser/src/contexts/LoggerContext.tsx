@@ -11,7 +11,7 @@ export const defaultLogger: Logger = {
   logError: (message, error) => console.error(message, error),
   logWarning: (message) => console.warn(message),
   logInfo: (message) => console.log(message),
-  logTrace: (message) => console.log(message),
+  logTrace: (message) => console.debug(message),
 };
 
 /** React context that provides a Logger to the component subtree. */
