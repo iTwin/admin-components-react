@@ -2,7 +2,7 @@
   "changes": [
     {
       "packageName": "@itwin/imodel-browser-react",
-      "comment": "allow consumers provide their own logger",
+      "comment": "allow consumers to provide their own logger",
       "type": "minor"
     }
   ],

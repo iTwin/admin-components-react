@@ -30,6 +30,10 @@ export interface IModelFavorites {
   dataCenterLocation: string;
 }
 
+/**
+ * Marks iModel as recently used. Typically called in a fire-and-forget fashion.
+ * Swallows errors so UI isn't disrupted.
+ */
 export async function addIModelToRecents(options: {
   iModelId: string;
   accessToken?: AccessTokenProvider;
@@ -55,8 +59,7 @@ export async function addIModelToRecents(options: {
       serverEnvironmentPrefix
     )}/imodels/recents/${encodeURIComponent(iModelId)}`;
 
-    // fire-and-forget POST to record recents; swallow errors so UI isn't disrupted
-    void fetch(url, {
+    await fetch(url, {
       method: "POST",
       headers: {
         authorization: token as string,
