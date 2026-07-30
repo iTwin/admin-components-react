@@ -69,4 +69,13 @@ export type {
   AccessTokenProvider,
 } from "../types";
 export { DataStatus, IModelCellColumn, ITwinCellColumn } from "../types";
-export type { IModelTableOverridesMUI, ITwinTableOverridesMUI } from "./types";
+export type {
+  IModelTableOverridesMUI,
+  ITwinTableOverridesMUI,
+  IModelTableSortField,
+  IModelTableSortModel,
+  ITwinTableSortField,
+  ITwinTableSortModel,
+  TypedGridSortItem,
+  TypedGridSortModel,
+} from "./types";

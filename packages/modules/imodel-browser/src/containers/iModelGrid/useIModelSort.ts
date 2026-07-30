@@ -53,8 +53,14 @@ export const useIModelSort = (
     }
     const sorted = [...iModels].sort(
       (iModelA: IModelFull, iModelB: IModelFull) => {
-        const a = iModelA[sortType];
-        const b = iModelB[sortType];
+        const a =
+          sortType === "lastChangesetPushDateTime"
+            ? iModelA.lastChangesetPushDateTime ?? iModelA.createdDateTime
+            : iModelA[sortType];
+        const b =
+          sortType === "lastChangesetPushDateTime"
+            ? iModelB.lastChangesetPushDateTime ?? iModelB.createdDateTime
+            : iModelB[sortType];
         if (typeof a === "boolean" || typeof b === "boolean" || a === b) {
           return sortBooleanOrEqualValues(a, b);
         }

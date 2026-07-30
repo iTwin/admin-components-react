@@ -3,7 +3,6 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import Box from "@mui/material/Box";
-import { GridSortModel } from "@mui/x-data-grid";
 import React from "react";
 import { InView } from "react-intersection-observer";
 
@@ -22,7 +21,10 @@ import {
 } from "../../../utils/_buildMenuOptions";
 import { BaseCardLoading } from "../../components/baseCard/BaseCardLoading";
 import { NoResultsMUI } from "../../components/noResults/NoResultsMUI";
-import { type ITwinTableOverridesMUI } from "../../types";
+import {
+  type ITwinTableOverridesMUI,
+  type ITwinTableSortModel,
+} from "../../types";
 import { stripNonTileProps } from "../../utils/stripNonTileProps";
 import { type ITwinTableMUIStrings, ITwinTableMUI } from "./ITwinTableMUI";
 import { type ITwinTilePropsMUI, ITwinTileMUI } from "./ITwinTileMUI";
@@ -78,14 +80,8 @@ export interface ITwinGridPropsMUI
   tableOverrides?: ITwinTableOverridesMUI;
   /** Localized string overrides - falls back to default English strings if not provided */
   stringsOverrides?: Partial<ITwinGridStringsMUI>;
-  /**
-   * Controlled sort model for the table view. When provided, the table's sort
-   * state is fully controlled by the parent and must be kept in sync via
-   * `onSortModelChange`.
-   */
-  sortModel?: GridSortModel;
   /** Called whenever the table sort model changes. */
-  onSortModelChange?: (sortModel: GridSortModel) => void;
+  onSortModelChange?: (sortModel: ITwinTableSortModel) => void;
 }
 
 /**
@@ -108,7 +104,6 @@ export const ITwinGridMUI = ({
   viewMode,
   tableOverrides,
   className,
-  sortModel,
   onSortModelChange,
 }: ITwinGridPropsMUI) => {
   const {
@@ -118,6 +113,46 @@ export const ITwinGridMUI = ({
     shouldRefetchFavorites,
     resetShouldRefetchFavorites,
   } = useITwinFavorites(accessToken, apiOverrides?.serverEnvironmentPrefix);
+
+  // Translate the `orderbyOptions` prop (an OData `$orderby` string such as
+  // "number DESC" or "displayName ASC") into the equivalent DataGrid sort model
+  // so the table view reflects the requested sort without reordering the fetched
+  // list (which keeps its default sort). Left undefined when no sort is
+  // requested so the table stays uncontrolled.
+  const initialTableSortModel = React.useMemo<
+    ITwinTableSortModel | undefined
+  >(() => {
+    if (!orderbyOptions) {
+      return undefined;
+    }
+    const [field, direction] = orderbyOptions.split(",")[0].trim().split(/\s+/);
+    if (!field) {
+      return undefined;
+    }
+    return [
+      {
+        field: field as ITwinTableSortModel[number]["field"],
+        sort: direction?.toLowerCase() === "desc" ? "desc" : "asc",
+      },
+    ];
+  }, [orderbyOptions]);
+
+  // Own the sort state so column-header clicks re-sort the table even when the
+  // consumer does not control it, while staying in sync with the prop-derived
+  // sort and forwarding changes through `onSortModelChange`.
+  const [tableSortModel, setTableSortModel] = React.useState<
+    ITwinTableSortModel | undefined
+  >(initialTableSortModel);
+  React.useEffect(() => {
+    setTableSortModel(initialTableSortModel);
+  }, [initialTableSortModel]);
+  const handleSortModelChange = React.useCallback(
+    (model: ITwinTableSortModel) => {
+      setTableSortModel(model);
+      onSortModelChange?.(model);
+    },
+    [onSortModelChange]
+  );
 
   const strings = React.useMemo(
     () =>
@@ -298,8 +333,8 @@ export const ITwinGridMUI = ({
       tableOverrides={tableOverrides}
       isLoading={fetchStatus === DataStatus.Fetching}
       fetchMore={fetchMore}
-      sortModel={sortModel}
-      onSortModelChange={onSortModelChange}
+      sortModel={tableSortModel}
+      onSortModelChange={handleSortModelChange}
     />
   );
 };

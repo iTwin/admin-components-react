@@ -6,7 +6,6 @@ import {
   DataGrid,
   GRID_DEFAULT_LOCALE_TEXT,
   GridColDef,
-  GridSortModel,
 } from "@mui/x-data-grid";
 import svgMore from "@stratakit/icons/more-vertical.svg";
 import { Icon } from "@stratakit/mui";
@@ -22,7 +21,10 @@ import {
 import { formatDate } from "../../../utils/formatDate";
 import MoreMenuMUI from "../../components/MoreMenuMUI";
 import { FavoriteIconMUI } from "../../components/tileFavoriteIcon/FavoriteIconMUI";
-import { type ITwinTableOverridesMUI } from "../../types";
+import {
+  type ITwinTableOverridesMUI,
+  type ITwinTableSortModel,
+} from "../../types";
 
 const EMPTY_COLUMN_OVERRIDES: NonNullable<
   ITwinTableOverridesMUI["columnOverrides"]
@@ -70,9 +72,9 @@ export interface ITwinTableMUIProps {
    * Controlled sort model. When provided, the table's sort state is fully
    * controlled by the parent and must be kept in sync via `onSortModelChange`.
    */
-  sortModel?: GridSortModel;
+  sortModel?: ITwinTableSortModel;
   /** Called whenever the sort model changes. */
-  onSortModelChange?: (sortModel: GridSortModel) => void;
+  onSortModelChange?: (sortModel: ITwinTableSortModel) => void;
 }
 
 /**
@@ -199,7 +201,10 @@ export const ITwinTableMUI = ({
       columns={columns}
       loading={isLoading}
       sortModel={sortModel}
-      onSortModelChange={onSortModelChange}
+      onSortModelChange={(model) =>
+        onSortModelChange?.([...model] as ITwinTableSortModel)
+      }
+      sortingOrder={sortModel ? ["asc", "desc"] : ["asc", "desc", null]}
       onRowClick={
         actions
           ? (params) => {
@@ -233,6 +238,7 @@ export const ITwinTableMUI = ({
       disableColumnFilter
       initialState={{
         pagination: { paginationModel: { pageSize: 25 } },
+        ...(sortModel ? { sorting: { sortModel } } : {}),
       }}
       pageSizeOptions={[25, 50, 100]}
       localeText={{

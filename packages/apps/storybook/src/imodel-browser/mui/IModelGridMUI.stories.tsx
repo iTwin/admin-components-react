@@ -5,6 +5,7 @@
 import {
   type IModelFull,
   type IModelGridProps as IModelGridMUIProps,
+  type IModelTableSortModel,
   DataStatus,
   IModelCellColumn,
   IModelGrid as ExternalComponent,
@@ -14,7 +15,6 @@ import Avatar from "@mui/material/Avatar";
 import AvatarGroup from "@mui/material/AvatarGroup";
 import Chip from "@mui/material/Chip";
 import Typography from "@mui/material/Typography";
-import { GridSortModel } from "@mui/x-data-grid";
 import { action } from "@storybook/addon-actions";
 import { Meta, Story } from "@storybook/react/types-6-0";
 import SvgDelete from "@stratakit/icons/delete.svg";
@@ -182,7 +182,6 @@ export const TableWithControlledSort: Story<IModelGridMUIProps> =
             <Chip
               label="Name"
               clickable
-              color={sortModel.sortType === "name" ? "primary" : "default"}
               variant={sortModel.sortType === "name" ? "filled" : "outlined"}
               onClick={() =>
                 setSortModel((prev) => ({ ...prev, sortType: "name" }))
@@ -191,11 +190,6 @@ export const TableWithControlledSort: Story<IModelGridMUIProps> =
             <Chip
               label="Last Modified"
               clickable
-              color={
-                sortModel.sortType === "lastChangesetPushDateTime"
-                  ? "primary"
-                  : "default"
-              }
               variant={
                 sortModel.sortType === "lastChangesetPushDateTime"
                   ? "filled"
@@ -223,13 +217,11 @@ export const TableWithControlledSort: Story<IModelGridMUIProps> =
           <ExternalComponent
             {...args}
             sortOptions={sortModel}
-            onSortModelChange={(newSortModel: GridSortModel) => {
+            onSortModelChange={(newSortModel: IModelTableSortModel) => {
               if (newSortModel.length > 0) {
                 const newSort = newSortModel[0];
                 setSortModel({
-                  sortType: newSort.field as
-                    | "name"
-                    | "lastChangesetPushDateTime",
+                  sortType: newSort.field,
                   descending: newSort.sort === "desc",
                 });
               }

@@ -3,7 +3,6 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import Box from "@mui/material/Box";
-import { GridSortModel } from "@mui/x-data-grid";
 import React from "react";
 import { InView } from "react-intersection-observer";
 
@@ -18,7 +17,6 @@ import {
   type ApiOverrides,
   type IModelFull,
   DataStatus,
-  IModelCellColumn,
   IModelSortOptions,
 } from "../../../types";
 import { _mergeStrings } from "../../../utils/_apiOverrides";
@@ -33,7 +31,10 @@ import {
 } from "../../../utils/iModelApi";
 import { BaseCardLoading } from "../../components/baseCard/BaseCardLoading";
 import { NoResultsMUI as NoResults } from "../../components/noResults/NoResultsMUI";
-import { type IModelTableOverridesMUI } from "../../types";
+import {
+  type IModelTableOverridesMUI,
+  type IModelTableSortModel,
+} from "../../types";
 import { stripNonTileProps } from "../../utils/stripNonTileProps";
 import {
   type IModelTileMUIProps,
@@ -106,7 +107,7 @@ export interface IModelGridMUIProps
   tableOverrides?: IModelTableOverridesMUI;
   stringsOverrides?: Partial<IModelGridStringsMUI>;
   /** Called whenever the table sort model changes. */
-  onSortModelChange?: (sortModel: GridSortModel) => void;
+  onSortModelChange?: (sortModel: IModelTableSortModel) => void;
 }
 
 /**
@@ -172,17 +173,30 @@ const IModelGridInternal = ({
   // Translate the `sortOptions` prop into the equivalent DataGrid sort model so
   // the table view reflects the requested sort without reordering the fetched
   // list (which keeps its default sort).
-  const initialTableSortModel = React.useMemo<GridSortModel>(
+  const initialTableSortModel = React.useMemo<IModelTableSortModel>(
     () => [
       {
-        field:
-          sortOptions.sortType === "lastChangesetPushDateTime"
-            ? IModelCellColumn.LastModified
-            : IModelCellColumn.Name,
+        field: sortOptions.sortType,
         sort: sortOptions.descending ? "desc" : "asc",
       },
     ],
     [sortOptions.sortType, sortOptions.descending]
+  );
+
+  // Own the sort state so column-header clicks re-sort the table even when the
+  // consumer does not control it, while staying in sync with the prop-derived
+  // sort and forwarding changes through `onSortModelChange`.
+  const [tableSortModel, setTableSortModel] =
+    React.useState<IModelTableSortModel>(initialTableSortModel);
+  React.useEffect(() => {
+    setTableSortModel(initialTableSortModel);
+  }, [initialTableSortModel]);
+  const handleSortModelChange = React.useCallback(
+    (model: IModelTableSortModel) => {
+      setTableSortModel(model);
+      onSortModelChange?.(model);
+    },
+    [onSortModelChange]
   );
 
   const strings = React.useMemo(
@@ -427,8 +441,8 @@ const IModelGridInternal = ({
             tableOverrides={tableOverrides}
             isLoading={fetchStatus === DataStatus.Fetching}
             fetchMore={fetchMore}
-            onSortModelChange={onSortModelChange}
-            sortModel={initialTableSortModel}
+            onSortModelChange={handleSortModelChange}
+            sortModel={tableSortModel}
             data-testid="imodel-table"
           />
         )}
