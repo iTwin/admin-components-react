@@ -18,6 +18,7 @@ import {
   type ApiOverrides,
   type IModelFull,
   DataStatus,
+  IModelCellColumn,
   IModelSortOptions,
 } from "../../../types";
 import { _mergeStrings } from "../../../utils/_apiOverrides";
@@ -104,12 +105,6 @@ export interface IModelGridMUIProps
   tileOverrides?: Partial<IModelTileMUIProps>;
   tableOverrides?: IModelTableOverridesMUI;
   stringsOverrides?: Partial<IModelGridStringsMUI>;
-  /**
-   * Controlled sort model for the table view. When provided, the table's sort
-   * state is fully controlled by the parent and must be kept in sync via
-   * `onSortModelChange`.
-   */
-  sortModel?: GridSortModel;
   /** Called whenever the table sort model changes. */
   onSortModelChange?: (sortModel: GridSortModel) => void;
 }
@@ -158,13 +153,10 @@ const IModelGridInternal = ({
   onRefetch,
   dataMode = "internal",
   disableAddToRecents = false,
-  sortModel,
   onSortModelChange,
 }: IModelGridMUIProps) => {
-  const [sort, setSort] = React.useState<IModelSortOptions>(sortOptions);
-
-  React.useEffect(() => {
-    setSort(
+  const sort = React.useMemo<IModelSortOptions>(
+    () =>
       viewMode === "cells"
         ? {
             sortType: "name",
@@ -173,9 +165,25 @@ const IModelGridInternal = ({
         : {
             sortType: sortOptions.sortType,
             descending: sortOptions.descending,
-          }
-    );
-  }, [sortOptions.descending, sortOptions.sortType, viewMode]);
+          },
+    [sortOptions.descending, sortOptions.sortType, viewMode]
+  );
+
+  // Translate the `sortOptions` prop into the equivalent DataGrid sort model so
+  // the table view reflects the requested sort without reordering the fetched
+  // list (which keeps its default sort).
+  const initialTableSortModel = React.useMemo<GridSortModel>(
+    () => [
+      {
+        field:
+          sortOptions.sortType === "lastChangesetPushDateTime"
+            ? IModelCellColumn.LastModified
+            : IModelCellColumn.Name,
+        sort: sortOptions.descending ? "desc" : "asc",
+      },
+    ],
+    [sortOptions.sortType, sortOptions.descending]
+  );
 
   const strings = React.useMemo(
     () =>
@@ -419,8 +427,8 @@ const IModelGridInternal = ({
             tableOverrides={tableOverrides}
             isLoading={fetchStatus === DataStatus.Fetching}
             fetchMore={fetchMore}
-            sortModel={sortModel}
             onSortModelChange={onSortModelChange}
+            sortModel={initialTableSortModel}
             data-testid="imodel-table"
           />
         )}

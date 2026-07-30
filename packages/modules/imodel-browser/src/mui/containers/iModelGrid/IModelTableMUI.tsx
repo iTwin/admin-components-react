@@ -200,6 +200,7 @@ export const IModelTableMUI = ({
       loading={isLoading}
       sortModel={sortModel}
       onSortModelChange={onSortModelChange}
+      sortingOrder={sortModel ? ["asc", "desc"] : ["asc", "desc", null]}
       onRowClick={
         actions
           ? (params) => {
@@ -233,6 +234,7 @@ export const IModelTableMUI = ({
       disableColumnFilter
       initialState={{
         pagination: { paginationModel: { pageSize: 25 } },
+        ...(sortModel ? { sorting: { sortModel } } : {}),
       }}
       pageSizeOptions={[25, 50, 100]}
       localeText={{

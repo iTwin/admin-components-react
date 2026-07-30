@@ -8,6 +8,7 @@ import {
   DataStatus,
   IModelCellColumn,
   IModelGrid as ExternalComponent,
+  IModelSortOptions,
 } from "@itwin/imodel-browser-react/mui";
 import Avatar from "@mui/material/Avatar";
 import AvatarGroup from "@mui/material/AvatarGroup";
@@ -162,22 +163,76 @@ TableViewWithOverrides.args = {
 export const TableWithControlledSort: Story<IModelGridMUIProps> =
   withITwinIdOverride(
     withAccessTokenOverride((args) => {
-      const [sortModel, setSortModel] = React.useState<GridSortModel>([
-        { field: "name", sort: "desc" },
-      ]);
+      const [sortModel, setSortModel] = React.useState<IModelSortOptions>({
+        sortType: "name",
+        descending: true,
+      });
 
       return (
         <div>
-          <Typography variant="body2" style={{ marginBottom: 8 }}>
-            Controlled sort model: {JSON.stringify(sortModel)}
-          </Typography>
+          <div
+            style={{
+              display: "flex",
+              gap: 8,
+              marginBottom: 8,
+              alignItems: "center",
+            }}
+          >
+            <Typography variant="body2">Sort by:</Typography>
+            <Chip
+              label="Name"
+              clickable
+              color={sortModel.sortType === "name" ? "primary" : "default"}
+              variant={sortModel.sortType === "name" ? "filled" : "outlined"}
+              onClick={() =>
+                setSortModel((prev) => ({ ...prev, sortType: "name" }))
+              }
+            />
+            <Chip
+              label="Last Modified"
+              clickable
+              color={
+                sortModel.sortType === "lastChangesetPushDateTime"
+                  ? "primary"
+                  : "default"
+              }
+              variant={
+                sortModel.sortType === "lastChangesetPushDateTime"
+                  ? "filled"
+                  : "outlined"
+              }
+              onClick={() =>
+                setSortModel((prev) => ({
+                  ...prev,
+                  sortType: "lastChangesetPushDateTime",
+                }))
+              }
+            />
+            <Chip
+              label={sortModel.descending ? "↓ Descending" : "↑ Ascending"}
+              clickable
+              variant="outlined"
+              onClick={() =>
+                setSortModel((prev) => ({
+                  ...prev,
+                  descending: !prev.descending,
+                }))
+              }
+            />
+          </div>
           <ExternalComponent
             {...args}
-            viewMode="cells"
-            sortModel={sortModel}
-            onSortModelChange={(newSortModel) => {
-              action("sort model changed")(newSortModel);
-              setSortModel(newSortModel);
+            sortOptions={sortModel}
+            onSortModelChange={(newSortModel: GridSortModel) => {
+              if (newSortModel.length > 0) {
+                const newSort = newSortModel[0];
+                setSortModel({
+                  sortType: newSort.field as
+                    | "name"
+                    | "lastChangesetPushDateTime",
+                  descending: newSort.sort === "desc",
+                });
+              }
             }}
           />
         </div>
