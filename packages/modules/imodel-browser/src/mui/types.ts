@@ -3,7 +3,7 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 
-import { GridColDef, GridSortItem } from "@mui/x-data-grid";
+import { GridColDef, GridSortModel } from "@mui/x-data-grid";
 
 import {
   type IModelFull,
@@ -13,7 +13,7 @@ import {
 } from "../types";
 
 /** A DataGrid sort item whose `field` is limited to a known set of column names. */
-export type TypedGridSortItem<Field extends string> = GridSortItem & {
+export type TypedGridSortItem<Field extends string> = GridSortModel[number] & {
   field: Field;
 };
 
