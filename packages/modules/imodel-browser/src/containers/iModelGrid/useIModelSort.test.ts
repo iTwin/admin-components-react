@@ -8,12 +8,12 @@ import { IModelFull, IModelSortOptionsKeys } from "../../types";
 import { useIModelSort } from "./useIModelSort";
 
 describe("useIModelSort hook", () => {
-  it.each(["name", "createdDateTime"] as IModelSortOptionsKeys[])(
+  it.each(["name", "lastChangesetPushDateTime"] as IModelSortOptionsKeys[])(
     "sorts correctly with %s",
     (sortType) => {
       const expectedSortOrder = {
         name: ["3", "4", "1", "2", "5"],
-        createdDateTime: ["4", "5", "2", "3", "1"],
+        lastChangesetPushDateTime: ["4", "5", "2", "3", "1"],
       }[sortType];
       const iModels: IModelFull[] = [
         {
@@ -22,7 +22,7 @@ describe("useIModelSort hook", () => {
           name: "c",
           description: "e",
           state: "initialized",
-          createdDateTime: "2020-09-05T12:42:51.593Z",
+          lastChangesetPushDateTime: "2020-09-05T12:42:51.593Z",
         },
         {
           id: "2",
@@ -30,7 +30,7 @@ describe("useIModelSort hook", () => {
           name: "d",
           description: "d",
           state: "initialized",
-          createdDateTime: "2020-09-03T12:42:51.593Z",
+          lastChangesetPushDateTime: "2020-09-03T12:42:51.593Z",
         },
         {
           id: "3",
@@ -38,7 +38,7 @@ describe("useIModelSort hook", () => {
           name: "a",
           description: "c",
           state: "notInitialized",
-          createdDateTime: "2020-09-04T12:42:51.593Z",
+          lastChangesetPushDateTime: "2020-09-04T12:42:51.593Z",
         },
         {
           id: "4",
@@ -46,7 +46,7 @@ describe("useIModelSort hook", () => {
           name: "b",
           description: "b",
           state: "notInitialized",
-          createdDateTime: "2020-09-01T12:42:51.593Z",
+          lastChangesetPushDateTime: "2020-09-01T12:42:51.593Z",
         },
         {
           id: "5",
@@ -54,7 +54,7 @@ describe("useIModelSort hook", () => {
           name: "d",
           description: "a",
           state: "initialized",
-          createdDateTime: "2020-09-02T12:42:51.593Z",
+          lastChangesetPushDateTime: "2020-09-02T12:42:51.593Z",
         },
       ];
       const { result, rerender } = renderHook(
@@ -82,7 +82,7 @@ describe("useIModelSort hook", () => {
         name: "c",
         description: "e",
         state: "initialized",
-        createdDateTime: "2020-09-05T12:42:51.593Z",
+        lastChangesetPushDateTime: "2020-09-05T12:42:51.593Z",
       },
       {
         id: "2",
@@ -90,7 +90,7 @@ describe("useIModelSort hook", () => {
         name: "d",
         description: "d",
         state: "initialized",
-        createdDateTime: "2020-09-03T12:42:51.593Z",
+        lastChangesetPushDateTime: "2020-09-03T12:42:51.593Z",
       },
       {
         id: "3",
@@ -98,7 +98,7 @@ describe("useIModelSort hook", () => {
         name: "a",
         description: "c",
         state: "notInitialized",
-        createdDateTime: "2020-09-04T12:42:51.593Z",
+        lastChangesetPushDateTime: "2020-09-04T12:42:51.593Z",
       },
       {
         id: "4",
@@ -106,7 +106,7 @@ describe("useIModelSort hook", () => {
         name: "b",
         description: "b",
         state: "notInitialized",
-        createdDateTime: "2020-09-01T12:42:51.593Z",
+        lastChangesetPushDateTime: "2020-09-01T12:42:51.593Z",
       },
       {
         id: "5",
@@ -114,7 +114,7 @@ describe("useIModelSort hook", () => {
         name: "d",
         description: "a",
         state: "initialized",
-        createdDateTime: "2020-09-02T12:42:51.593Z",
+        lastChangesetPushDateTime: "2020-09-02T12:42:51.593Z",
       },
     ];
     const { result } = renderHook(() =>
