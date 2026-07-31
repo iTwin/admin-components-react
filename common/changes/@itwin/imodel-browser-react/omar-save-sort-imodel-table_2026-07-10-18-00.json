@@ -2,7 +2,7 @@
   "changes": [
     {
       "packageName": "@itwin/imodel-browser-react",
-      "comment": "Controlled table sorting for iTwin/iModel tables",
+      "comment": "Controlled table sorting for iTwin/iModel grids",
       "type": "minor"
     }
   ],
