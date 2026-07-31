@@ -1,2 +1,4 @@
 **/node_modules/**
 common/**
+!packages/apps/storybook/.storybook/
+!packages/apps/storybook/.storybook/**

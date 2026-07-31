@@ -4,8 +4,10 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { renderHook } from "@testing-library/react-hooks";
+import React from "react";
 import { act } from "react";
 
+import { LoggerContext } from "../../contexts/LoggerContext";
 import { useITwinFavorites } from "./useITwinFavorites";
 
 export function mockFetch(data: any, status = 200) {
@@ -76,5 +78,50 @@ describe("useITwinFavorites", () => {
       await result.current.removeITwinFromFavorites(iTwinId);
     });
     expect(result.current.iTwinFavorites.has(iTwinId)).toBe(false);
+  });
+
+  test("should use provided logger when add favorite fails", async () => {
+    const logger = {
+      logError: jest.fn(),
+      logWarning: jest.fn(),
+      logInfo: jest.fn(),
+      logTrace: jest.fn(),
+    };
+    const wrapper = ({ children }: { children?: React.ReactNode }) =>
+      React.createElement(LoggerContext.Provider, { value: logger }, children);
+
+    window.fetch = mockFetch({}, 500);
+    const { result } = renderHook(() => useITwinFavorites(accessToken), {
+      wrapper,
+    });
+
+    await act(async () => {
+      await result.current.addITwinToFavorites("failed-id");
+    });
+
+    expect(logger.logError).toHaveBeenCalledWith(
+      "Failed to add iTwin to favorites",
+      expect.any(Error)
+    );
+  });
+
+  test("should use default logger when add favorite fails without logger provider", async () => {
+    const consoleErrorSpy = jest
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
+
+    window.fetch = mockFetch({}, 500);
+    const { result } = renderHook(() => useITwinFavorites(accessToken));
+
+    await act(async () => {
+      await result.current.addITwinToFavorites("failed-id");
+    });
+
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      "Failed to add iTwin to favorites",
+      expect.any(Error)
+    );
+
+    consoleErrorSpy.mockRestore();
   });
 });

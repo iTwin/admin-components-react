@@ -1,16 +1,12 @@
 /*---------------------------------------------------------------------------------------------
-* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
-* See LICENSE.md in the project root for license terms and full copyright notice.
-*--------------------------------------------------------------------------------------------*/
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
 
-import { Meta, Story } from "@storybook/react/types-6-0";
-import React from "react";
+import type { Meta, StoryObj } from "@storybook/react-webpack5";
 
-import {
-  accessTokenArgTypes,
-  withAccessTokenOverride,
-} from "../utils/storyHelp";
-import { Authentiated, AuthenticatedProps } from "./Authenticated";
+import { accessTokenArgTypes } from "../utils/storyHelp";
+import { Authentiated } from "./Authenticated";
 
 export default {
   title: "Example/Authenticated",
@@ -18,9 +14,4 @@ export default {
   argTypes: accessTokenArgTypes,
 } as Meta;
 
-const Template: Story<AuthenticatedProps> = withAccessTokenOverride((args) => {
-  return <Authentiated {...args} />;
-});
-
-export const Primary = Template.bind({});
-Primary.args = {};
+export const Primary: StoryObj<typeof Authentiated> = {};

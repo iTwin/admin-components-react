@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import React from "react";
 
+import { useLogger } from "../../contexts/LoggerContext";
 import {
   AccessTokenProvider,
   ApiOverrides,
@@ -38,6 +39,7 @@ export const useITwinData = ({
   shouldRefetchFavorites,
   resetShouldRefetchFavorites,
 }: ProjectDataHookOptions) => {
+  const logger = useLogger();
   const data = apiOverrides?.data;
   const serverEnvironmentPrefix = apiOverrides?.serverEnvironmentPrefix;
   const [projects, setProjects] = React.useState<ITwinFull[]>([]);
@@ -172,7 +174,7 @@ export const useITwinData = ({
       setProjects([]);
       setStatus(DataStatus.FetchFailed);
       fetchingMoreRef.current = false;
-      console.error(e);
+      logger.logError("Failed to fetch iTwins", e);
     });
     return () => {
       abortController.abort();
@@ -189,6 +191,7 @@ export const useITwinData = ({
     iTwinSubClass,
     shouldRefetchFavorites,
     resetShouldRefetchFavorites,
+    logger,
   ]);
   return {
     iTwins: filteredProjects,

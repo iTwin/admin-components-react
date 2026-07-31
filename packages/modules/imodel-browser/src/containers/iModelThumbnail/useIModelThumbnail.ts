@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { useEffect, useState } from "react";
 
+import { useLogger } from "../../contexts/LoggerContext";
 import defaultIModelThumbnail from "../../images/default-thumbnail.png";
 import { AccessTokenProvider, ApiOverrides } from "../../types";
 import { _getAPIServer } from "../../utils/_apiOverrides";
@@ -27,6 +28,7 @@ export const useIModelThumbnail = (
   accessToken?: AccessTokenProvider,
   apiOverrides?: ApiOverrides<string>
 ) => {
+  const logger = useLogger();
   const [thumbnail, setThumbnail] = useState<string>();
   useEffect(() => {
     if (apiOverrides?.data) {
@@ -69,10 +71,7 @@ export const useIModelThumbnail = (
           // Aborting because unmounting is not an error, swallow.
           return;
         }
-        console.error("Thumbnail download error", "Thumbnail Fetch", {
-          iModelId,
-          e,
-        });
+        logger.logError(`Thumbnail download error for iModel ${iModelId}`, e);
       });
     }
     return () => {
@@ -84,6 +83,7 @@ export const useIModelThumbnail = (
     thumbnail,
     apiOverrides?.data,
     apiOverrides?.serverEnvironmentPrefix,
+    logger,
   ]);
   return thumbnail;
 };

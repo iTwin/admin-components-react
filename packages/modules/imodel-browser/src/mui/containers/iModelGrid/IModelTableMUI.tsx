@@ -72,6 +72,8 @@ export interface IModelTableMUIProps {
   sortModel?: IModelTableSortModel;
   /** Called whenever the sort model changes. */
   onSortModelChange?: (sortModel: IModelTableSortModel) => void;
+  /** Nonce applied to `<style>` elements. Required if your application uses a Content Security Policy (CSP) that restricts inline styles. */
+  nonce?: string;
 }
 
 /**
@@ -91,6 +93,7 @@ export const IModelTableMUI = ({
   fetchMore,
   sortModel,
   onSortModelChange,
+  nonce,
 }: IModelTableMUIProps) => {
   // Eagerly load all available data so the table has the full dataset
   // for client-side pagination and sorting.
@@ -199,6 +202,7 @@ export const IModelTableMUI = ({
     <DataGrid<IModelFull>
       rows={iModels}
       columns={columns}
+      nonce={nonce}
       loading={isLoading}
       sortModel={sortModel}
       onSortModelChange={(model) =>

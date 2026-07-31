@@ -12,6 +12,7 @@ import type {
 } from "../../../containers/ITwinGrid/ITwinGrid";
 import { useITwinData } from "../../../containers/ITwinGrid/useITwinData";
 import { useITwinFavorites } from "../../../containers/ITwinGrid/useITwinFavorites";
+import { LoggerProvider, useLogger } from "../../../contexts/LoggerContext";
 import { type ITwinFull, DataStatus } from "../../../types";
 import { _mergeStrings } from "../../../utils/_apiOverrides";
 import {
@@ -78,6 +79,10 @@ export interface ITwinGridPropsMUI
   tileOverrides?: Partial<ITwinTilePropsMUI>;
   /** Overrides for table column definitions and visibility in cells viewMode */
   tableOverrides?: ITwinTableOverridesMUI;
+  /**
+   * Nonce applied to `<style>` elements. Required if your application uses a Content Security Policy (CSP) that restricts inline styles.
+   */
+  nonce?: string;
   /** Localized string overrides - falls back to default English strings if not provided */
   stringsOverrides?: Partial<ITwinGridStringsMUI>;
   /** Called whenever the table sort model changes. */
@@ -88,7 +93,15 @@ export interface ITwinGridPropsMUI
  * Component that will allow displaying a grid of iTwins, given a requestType
  * @alpha
  */
-export const ITwinGridMUI = ({
+export const ITwinGridMUI = ({ logger, ...props }: ITwinGridPropsMUI) => {
+  return (
+    <LoggerProvider logger={logger}>
+      <ITwinGridMUIInternal {...props} />
+    </LoggerProvider>
+  );
+};
+
+const ITwinGridMUIInternal = ({
   accessToken,
   apiOverrides,
   filterOptions,
@@ -105,7 +118,9 @@ export const ITwinGridMUI = ({
   tableOverrides,
   className,
   onSortModelChange,
+  nonce,
 }: ITwinGridPropsMUI) => {
+  const logger = useLogger();
   const {
     iTwinFavorites,
     addITwinToFavorites,
@@ -275,6 +290,7 @@ export const ITwinGridMUI = ({
                   stringsOverrides,
                   tileOverrides,
                   useIndividualState,
+                  logger,
                 }}
                 iTwin={iTwin}
                 moreActions={moreActions}
@@ -335,6 +351,7 @@ export const ITwinGridMUI = ({
       fetchMore={fetchMore}
       sortModel={tableSortModel}
       onSortModelChange={handleSortModelChange}
+      nonce={nonce}
     />
   );
 };

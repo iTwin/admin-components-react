@@ -4,9 +4,8 @@
   "private": true,
   "homepage": ".",
   "dependencies": {
-    "@storybook/addons": "^6.5.16",
-    "@storybook/api": "^6.5.16",
-    "@storybook/components": "^6.5.16"
+    "@storybook/icons": "^2.0.2",
+    "storybook": "^10.4.0"
   },
   "devDependencies": {
     "@bentley/bentleyjs-core": "2.11.0",

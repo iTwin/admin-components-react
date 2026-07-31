@@ -75,6 +75,8 @@ export interface ITwinTableMUIProps {
   sortModel?: ITwinTableSortModel;
   /** Called whenever the sort model changes. */
   onSortModelChange?: (sortModel: ITwinTableSortModel) => void;
+  /** Nonce applied to `<style>` elements. Required if your application uses a Content Security Policy (CSP) that restricts inline styles. */
+  nonce?: string;
 }
 
 /**
@@ -97,6 +99,7 @@ export const ITwinTableMUI = ({
   fetchMore,
   sortModel,
   onSortModelChange,
+  nonce,
 }: ITwinTableMUIProps) => {
   // Eagerly load all available data so the table has the full dataset
   // for client-side pagination and sorting.
@@ -199,6 +202,7 @@ export const ITwinTableMUI = ({
     <DataGrid<ITwinFull>
       rows={iTwins}
       columns={columns}
+      nonce={nonce}
       loading={isLoading}
       sortModel={sortModel}
       onSortModelChange={(model) =>

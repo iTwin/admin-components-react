@@ -13,6 +13,11 @@ import {
 } from "../../../containers/iModelGrid/useIModelData";
 import { IModelFavoritesProvider } from "../../../contexts/IModelFavoritesContext";
 import {
+  defaultLogger,
+  LoggerProvider,
+  useLogger,
+} from "../../../contexts/LoggerContext";
+import {
   type AccessTokenProvider,
   type ApiOverrides,
   type IModelFull,
@@ -105,6 +110,10 @@ export interface IModelGridMUIProps
   /** Static props to apply over each tile, mainly used for tileProps, overrides IModelGrid provided values */
   tileOverrides?: Partial<IModelTileMUIProps>;
   tableOverrides?: IModelTableOverridesMUI;
+  /**
+   * Nonce applied to `<style>` elements. Required if your application uses a Content Security Policy (CSP) that restricts inline styles.
+   */
+  nonce?: string;
   stringsOverrides?: Partial<IModelGridStringsMUI>;
   /** Called whenever the table sort model changes. */
   onSortModelChange?: (sortModel: IModelTableSortModel) => void;
@@ -120,14 +129,16 @@ export interface IModelGridMUIProps
  */
 export const IModelGridMUI = (props: IModelGridMUIProps) => {
   return (
-    <IModelFavoritesProvider
-      iTwinId={props.iTwinId}
-      accessToken={props.accessToken}
-      serverEnvironmentPrefix={props.apiOverrides?.serverEnvironmentPrefix}
-      disabled={props.tileOverrides?.hideFavoriteIcon}
-    >
-      <IModelGridInternal {...props} />
-    </IModelFavoritesProvider>
+    <LoggerProvider logger={props.logger}>
+      <IModelFavoritesProvider
+        iTwinId={props.iTwinId}
+        accessToken={props.accessToken}
+        serverEnvironmentPrefix={props.apiOverrides?.serverEnvironmentPrefix}
+        disabled={props.tileOverrides?.hideFavoriteIcon}
+      >
+        <IModelGridInternal {...props} />
+      </IModelFavoritesProvider>
+    </LoggerProvider>
   );
 };
 const IModelGridInternal = ({
@@ -155,20 +166,20 @@ const IModelGridInternal = ({
   dataMode = "internal",
   disableAddToRecents = false,
   onSortModelChange,
+  nonce,
 }: IModelGridMUIProps) => {
-  const sort = React.useMemo<IModelSortOptions>(
-    () =>
-      viewMode === "cells"
-        ? {
-            sortType: "name",
-            descending: false,
-          }
-        : {
-            sortType: sortOptions.sortType,
-            descending: sortOptions.descending,
-          },
-    [sortOptions.descending, sortOptions.sortType, viewMode]
-  );
+  const logger = useLogger();
+  const sort = React.useMemo<IModelSortOptions>(() => {
+    return viewMode === "cells"
+      ? {
+          sortType: "name",
+          descending: false,
+        }
+      : {
+          sortType: sortOptions.sortType,
+          descending: sortOptions.descending,
+        };
+  }, [sortOptions.descending, sortOptions.sortType, viewMode]);
 
   // Translate the `sortOptions` prop into the equivalent DataGrid sort model so
   // the table view reflects the requested sort without reordering the fetched
@@ -249,7 +260,8 @@ const IModelGridInternal = ({
         strings,
         accessToken,
         apiOverrides,
-        removeFromRecentsIcon
+        removeFromRecentsIcon,
+        logger
       );
       return moreActions ? [action, ...moreActions] : [action];
     }
@@ -261,6 +273,7 @@ const IModelGridInternal = ({
     removeFromRecentsIcon,
     accessToken,
     apiOverrides,
+    logger,
   ]);
 
   const {
@@ -319,13 +332,19 @@ const IModelGridInternal = ({
         iModelId: iModel.id,
         accessToken,
         serverEnvironmentPrefix: apiOverrides?.serverEnvironmentPrefix,
+        logger,
       }).catch((e) => {
         // swallow errors to avoid disrupting the UI
-        console.error("Failed to add iModel to recents", e);
+        logger.logError("Failed to add iModel to recents", e);
       });
       clickFn();
     },
-    [accessToken, disableAddToRecents, apiOverrides?.serverEnvironmentPrefix]
+    [
+      accessToken,
+      disableAddToRecents,
+      apiOverrides?.serverEnvironmentPrefix,
+      logger,
+    ]
   );
 
   const noResultsText = {
@@ -443,6 +462,7 @@ const IModelGridInternal = ({
             fetchMore={fetchMore}
             onSortModelChange={handleSortModelChange}
             sortModel={tableSortModel}
+            nonce={nonce}
             data-testid="imodel-table"
           />
         )}
@@ -508,7 +528,8 @@ function removeFromRecentsAction(
   strings: IModelGridProps["stringsOverrides"],
   accessToken?: AccessTokenProvider,
   apiOverrides?: ApiOverrides<IModelFull[]>,
-  removeFromRecentsIcon?: string
+  removeFromRecentsIcon?: string,
+  logger = defaultLogger
 ): MoreActionsMenuItemMUI<IModelFull> {
   return {
     key: "remove-from-recents",
@@ -523,6 +544,7 @@ function removeFromRecentsAction(
         iModelId: iModel.id,
         accessToken,
         serverEnvironmentPrefix: apiOverrides?.serverEnvironmentPrefix,
+        logger,
       });
       refetchData?.();
     },

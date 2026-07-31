@@ -6,6 +6,7 @@ import React from "react";
 
 import { useIModelFavorites } from "../containers/iModelGrid/useIModelFavorites";
 import { AccessTokenProvider } from "../types";
+import { useLogger } from "./LoggerContext";
 
 export interface IModelFavoritesContextValue {
   favorites: Set<string>;
@@ -60,8 +61,9 @@ export const IModelFavoritesProvider = ({
 
 export const useIModelFavoritesContext = () => {
   const ctx = React.useContext(IModelFavoritesContext);
+  const logger = useLogger();
   if (!ctx) {
-    console.warn(
+    logger.logWarning(
       "useIModelFavoritesContext must be used within IModelFavoritesProvider"
     );
   }

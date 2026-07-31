@@ -5,6 +5,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 
+import { useLogger } from "../../contexts/LoggerContext";
 import { AccessTokenProvider } from "../../types";
 import * as iModelApi from "../../utils/iModelApi";
 
@@ -29,6 +30,7 @@ export const useIModelFavorites = (
   addIModelToFavorites: (iModelId: string) => Promise<void>;
   removeIModelFromFavorites: (iModelId: string) => Promise<void>;
 } => {
+  const logger = useLogger();
   const [iModelFavorites, setIModelFavorites] = useState(new Set<string>());
 
   /**
@@ -50,10 +52,10 @@ export const useIModelFavorites = (
 
         setIModelFavorites((prev) => new Set([...prev, iModelId]));
       } catch (error) {
-        console.error(error);
+        logger.logError("Failed to add iModel to favorites", error);
       }
     },
-    [accessToken, serverEnvironmentPrefix]
+    [accessToken, serverEnvironmentPrefix, logger]
   );
 
   /**
@@ -79,10 +81,10 @@ export const useIModelFavorites = (
           return newFavorites;
         });
       } catch (error) {
-        console.error(error);
+        logger.logError("Failed to remove iModel from favorites", error);
       }
     },
-    [accessToken, serverEnvironmentPrefix]
+    [accessToken, serverEnvironmentPrefix, logger]
   );
 
   useEffect(() => {
@@ -109,7 +111,7 @@ export const useIModelFavorites = (
         if (error instanceof Error && error.name === "AbortError") {
           return;
         }
-        console.error(error);
+        logger.logError("Failed to fetch iModel favorites", error);
       }
     };
     void fetchIModelFavorites(controller.signal);
@@ -117,7 +119,7 @@ export const useIModelFavorites = (
     return () => {
       controller.abort();
     };
-  }, [disabled, iTwinId, accessToken, serverEnvironmentPrefix]);
+  }, [disabled, iTwinId, accessToken, serverEnvironmentPrefix, logger]);
 
   return {
     iModelFavorites,

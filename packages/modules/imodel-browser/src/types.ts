@@ -156,3 +156,10 @@ export type ITwinCellOverrides = {
 };
 
 export type AccessTokenProvider = string | (() => Promise<string>);
+
+export type Logger = {
+  logError: (message: string, error: unknown) => void;
+  logWarning: (message: string) => void;
+  logInfo: (message: string) => void;
+  logTrace: (message: string) => void;
+};

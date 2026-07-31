@@ -1,6 +1,20 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Fri, 26 Jun 2026 19:00:15 GMT and should not be manually modified.
+This log was last generated on Fri, 17 Jul 2026 15:48:49 GMT and should not be manually modified.
+
+## 4.4.0
+Fri, 17 Jul 2026 15:48:49 GMT
+
+### Minor changes
+
+- allow consumers to provide their own logger
+
+## 4.3.5
+Tue, 14 Jul 2026 11:06:52 GMT
+
+### Patches
+
+- Add CSP nonce support to the MUI iTwin and iModel DataGrid table views.
 
 ## 4.3.4
 Fri, 26 Jun 2026 19:00:15 GMT

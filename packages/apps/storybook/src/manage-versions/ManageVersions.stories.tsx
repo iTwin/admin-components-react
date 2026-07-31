@@ -7,14 +7,11 @@ import {
   ManageVersions as ExternalComponent,
   ManageVersionsProps,
 } from "@itwin/manage-versions-react";
-import { action } from "@storybook/addon-actions";
-import { Meta, Story } from "@storybook/react/types-6-0";
+import type { Meta, StoryObj } from "@storybook/react-webpack5";
 import React from "react";
+import { action } from "storybook/actions";
 
-import {
-  accessTokenArgTypes,
-  withAccessTokenOverride,
-} from "../utils/storyHelp";
+import { accessTokenArgTypes } from "../utils/storyHelp";
 
 export const ManageVersions = (props: ManageVersionsProps) => (
   <ExternalComponent {...props} />
@@ -26,21 +23,19 @@ export default {
   excludeStories: ["ManageVersions"],
   argTypes: {
     ...accessTokenArgTypes,
-    log: { defaultValue: action("Error logged. "), control: { disable: true } },
-    onViewClick: {
-      defaultValue: action("View Named Version clicked"),
-      control: { disable: true },
-    },
+    log: { control: { disable: true } },
+    onViewClick: { control: { disable: true } },
+  },
+  args: {
+    log: action("Error logged."),
+    onViewClick: action("View Named Version clicked"),
   },
 } as Meta;
 
-const Template: Story<ManageVersionsProps> = withAccessTokenOverride((args) => (
-  <ManageVersions {...args} />
-));
-
-export const Primary = Template.bind({});
-Primary.args = {
-  apiOverrides: {
-    serverEnvironmentPrefix: "qa",
+export const Primary: StoryObj<typeof ManageVersions> = {
+  args: {
+    apiOverrides: {
+      serverEnvironmentPrefix: "qa",
+    },
   },
 };
