@@ -21,6 +21,7 @@ function isSupportedSortType(
       "name",
       "description",
       "initialized",
+      "createdDateTime",
       "lastChangesetPushDateTime",
     ].includes(sortType)
   );

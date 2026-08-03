@@ -8,71 +8,77 @@ import { IModelFull, IModelSortOptionsKeys } from "../../types";
 import { useIModelSort } from "./useIModelSort";
 
 describe("useIModelSort hook", () => {
-  it.each(["name", "lastChangesetPushDateTime"] as IModelSortOptionsKeys[])(
-    "sorts correctly with %s",
-    (sortType) => {
-      const expectedSortOrder = {
-        name: ["3", "4", "1", "2", "5"],
-        createdDateTime: ["4", "5", "2", "3", "1"],
-        lastChangesetPushDateTime: ["4", "5", "2", "3", "1"],
-      }[sortType];
-      const iModels: IModelFull[] = [
-        {
-          id: "1",
-          displayName: "d",
-          name: "c",
-          description: "e",
-          state: "initialized",
-          lastChangesetPushDateTime: "2020-09-05T12:42:51.593Z",
-        },
-        {
-          id: "2",
-          displayName: "a",
-          name: "d",
-          description: "d",
-          state: "initialized",
-          lastChangesetPushDateTime: "2020-09-03T12:42:51.593Z",
-        },
-        {
-          id: "3",
-          displayName: "e",
-          name: "a",
-          description: "c",
-          state: "notInitialized",
-          lastChangesetPushDateTime: "2020-09-04T12:42:51.593Z",
-        },
-        {
-          id: "4",
-          displayName: "b",
-          name: "b",
-          description: "b",
-          state: "notInitialized",
-          lastChangesetPushDateTime: "2020-09-01T12:42:51.593Z",
-        },
-        {
-          id: "5",
-          displayName: "c",
-          name: "d",
-          description: "a",
-          state: "initialized",
-          lastChangesetPushDateTime: "2020-09-02T12:42:51.593Z",
-        },
-      ];
-      const { result, rerender } = renderHook(
-        (props: { descending: boolean }) =>
-          useIModelSort(iModels, { sortType, descending: props.descending }),
-        { initialProps: { descending: false } }
-      );
-      expect(result.current.map((iModel) => iModel.id)).toEqual(
-        expectedSortOrder
-      );
+  it.each([
+    "name",
+    "createdDateTime",
+    "lastChangesetPushDateTime",
+  ] as IModelSortOptionsKeys[])("sorts correctly with %s", (sortType) => {
+    const expectedSortOrder = {
+      name: ["3", "4", "1", "2", "5"],
+      createdDateTime: ["2", "3", "1", "4", "5"],
+      lastChangesetPushDateTime: ["4", "5", "2", "3", "1"],
+    }[sortType];
+    const iModels: IModelFull[] = [
+      {
+        id: "1",
+        displayName: "d",
+        name: "c",
+        description: "e",
+        state: "initialized",
+        createdDateTime: "2020-08-03T12:42:51.593Z",
+        lastChangesetPushDateTime: "2020-09-05T12:42:51.593Z",
+      },
+      {
+        id: "2",
+        displayName: "a",
+        name: "d",
+        description: "d",
+        state: "initialized",
+        createdDateTime: "2020-08-01T12:42:51.593Z",
+        lastChangesetPushDateTime: "2020-09-03T12:42:51.593Z",
+      },
+      {
+        id: "3",
+        displayName: "e",
+        name: "a",
+        description: "c",
+        state: "notInitialized",
+        createdDateTime: "2020-08-02T12:42:51.593Z",
+        lastChangesetPushDateTime: "2020-09-04T12:42:51.593Z",
+      },
+      {
+        id: "4",
+        displayName: "b",
+        name: "b",
+        description: "b",
+        state: "notInitialized",
+        createdDateTime: "2020-08-04T12:42:51.593Z",
+        lastChangesetPushDateTime: "2020-09-01T12:42:51.593Z",
+      },
+      {
+        id: "5",
+        displayName: "c",
+        name: "d",
+        description: "a",
+        state: "initialized",
+        createdDateTime: "2020-08-05T12:42:51.593Z",
+        lastChangesetPushDateTime: "2020-09-02T12:42:51.593Z",
+      },
+    ];
+    const { result, rerender } = renderHook(
+      (props: { descending: boolean }) =>
+        useIModelSort(iModels, { sortType, descending: props.descending }),
+      { initialProps: { descending: false } }
+    );
+    expect(result.current.map((iModel) => iModel.id)).toEqual(
+      expectedSortOrder
+    );
 
-      rerender({ descending: true });
-      expect(result.current.map((iModel) => iModel.id)).toEqual(
-        expectedSortOrder.reverse()
-      );
-    }
-  );
+    rerender({ descending: true });
+    expect(result.current.map((iModel) => iModel.id)).toEqual(
+      expectedSortOrder.reverse()
+    );
+  });
 
   it("do not modify input array", () => {
     const expectedSortOrder = ["1", "2", "3", "4", "5"];
