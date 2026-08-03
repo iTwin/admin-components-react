@@ -12,6 +12,7 @@ import {
   ITwinTableSortModel,
   ITwinTile,
 } from "@itwin/imodel-browser-react/mui";
+import { SvgHeart } from "@itwin/itwinui-icons-react";
 import { Code, IconButton } from "@itwin/itwinui-react";
 import Avatar from "@mui/material/Avatar";
 import AvatarGroup from "@mui/material/AvatarGroup";
@@ -97,7 +98,9 @@ export const TableViewWithOverrides: StoryObj<typeof ITwinGrid> = {
                   e.stopPropagation();
                   action("Icon Clicked")();
                 }}
-              ></IconButton>{" "}
+              >
+                <SvgHeart />
+              </IconButton>{" "}
               {params.formattedValue}
             </div>
           ),
