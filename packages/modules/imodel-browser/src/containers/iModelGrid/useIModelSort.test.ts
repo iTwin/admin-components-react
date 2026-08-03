@@ -13,6 +13,7 @@ describe("useIModelSort hook", () => {
     (sortType) => {
       const expectedSortOrder = {
         name: ["3", "4", "1", "2", "5"],
+        createdDateTime: ["4", "5", "2", "3", "1"],
         lastChangesetPushDateTime: ["4", "5", "2", "3", "1"],
       }[sortType];
       const iModels: IModelFull[] = [

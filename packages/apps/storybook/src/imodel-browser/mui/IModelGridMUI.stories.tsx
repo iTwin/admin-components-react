@@ -196,6 +196,19 @@ const TableWithControlledSortRender = (args: IModelGridMUIProps) => {
           }
         />
         <Chip
+          label="Created Date"
+          clickable
+          variant={
+            sortModel.sortType === "createdDateTime" ? "filled" : "outlined"
+          }
+          onClick={() =>
+            setSortModel((prev) => ({
+              ...prev,
+              sortType: "createdDateTime",
+            }))
+          }
+        />
+        <Chip
           label={sortModel.descending ? "↓ Descending" : "↑ Ascending"}
           clickable
           variant="outlined"

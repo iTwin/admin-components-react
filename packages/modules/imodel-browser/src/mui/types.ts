@@ -21,8 +21,11 @@ export type TypedGridSortItem<Field extends string> = GridSortModel[number] & {
 export type TypedGridSortModel<Field extends string> =
   TypedGridSortItem<Field>[];
 
-/** Sortable column field names for the MUI iModel table. */
-export type IModelTableSortField = "name" | "lastChangesetPushDateTime";
+/** Sortable column field names for the MUI iModel table. `createdDateTime` is sortable even though it is not displayed as a column. */
+export type IModelTableSortField =
+  | "name"
+  | "lastChangesetPushDateTime"
+  | "createdDateTime";
 
 /** Sort model for the MUI iModel table, limited to its sortable field names. */
 export type IModelTableSortModel = TypedGridSortModel<IModelTableSortField>;

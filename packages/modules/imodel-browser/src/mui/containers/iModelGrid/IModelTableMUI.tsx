@@ -160,6 +160,15 @@ export const IModelTableMUI = ({
           disableColumnMenu: true,
           ...columnOverrides[IModelCellColumn.LastModified],
         },
+      // Hidden column so the sort model can sort by creation date even though
+      // the column is never displayed.
+      {
+        field: "createdDateTime",
+        headerName: "",
+        valueGetter: (_value: string | undefined, row: IModelFull) =>
+          row.createdDateTime ?? "",
+        disableColumnMenu: true,
+      },
       !hideColumns.includes(IModelCellColumn.Options) && {
         field: "actions",
         headerName: "",
@@ -202,6 +211,7 @@ export const IModelTableMUI = ({
     <DataGrid<IModelFull>
       rows={iModels}
       columns={columns}
+      columnVisibilityModel={{ createdDateTime: false }}
       nonce={nonce}
       loading={isLoading}
       sortModel={sortModel}
