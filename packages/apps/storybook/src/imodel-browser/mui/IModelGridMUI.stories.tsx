@@ -211,6 +211,7 @@ const TableWithControlledSortRender = (args: IModelGridMUIProps) => {
         {...args}
         sortOptions={sortModel}
         onSortModelChange={(newSortModel: IModelTableSortModel) => {
+          action("sort model changed")(newSortModel);
           if (newSortModel.length > 0) {
             const newSort = newSortModel[0];
             setSortModel({
@@ -226,7 +227,10 @@ const TableWithControlledSortRender = (args: IModelGridMUIProps) => {
 
 export const TableWithControlledSort: StoryObj<typeof IModelGridMUI> = {
   render: (args) => <TableWithControlledSortRender {...args} />,
-  args: { ...baseArgs },
+  args: {
+    ...baseArgs,
+    viewMode: "cells",
+  },
   parameters: {
     docs: {
       description: {

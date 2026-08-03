@@ -462,24 +462,16 @@ const TableWithControlledSortRender = (args: ITwinGridProps) => {
 
 export const TableWithControlledSort: StoryObj<typeof ITwinGrid> = {
   render: (args) => <TableWithControlledSortRender {...args} />,
-  args: { ...baseArgs },
+  args: { ...baseArgs, viewMode: "cells" },
   parameters: {
     docs: {
       description: {
         story:
-          "The sort state is fully controlled by the parent via `sortModel` and `onSortModelChange`, so it can be saved anywhere the consumer wants.",
+          "The initial table sort is derived from the `orderbyOptions` prop, and changes are reported via `onSortModelChange` so the sort state can be saved anywhere the consumer wants.",
       },
     },
   },
 };
-// TableWithControlledSort.parameters = {
-//   docs: {
-//     description: {
-//       story:
-//         "The initial table sort is derived from the `orderbyOptions` prop, and changes are reported via `onSortModelChange` so the sort state can be saved anywhere the consumer wants.",
-//     },
-//   },
-// };
 
 export default {
   title: "imodel-browser/ITwinGridMUI",
