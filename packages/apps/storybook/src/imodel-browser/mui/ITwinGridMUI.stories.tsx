@@ -9,7 +9,6 @@ import {
   DataStatus,
   ITwinCellColumn,
   ITwinGrid as ExternalComponent,
-  ITwinTableSortModel,
   ITwinTile,
 } from "@itwin/imodel-browser-react/mui";
 import { SvgHeart } from "@itwin/itwinui-icons-react";
@@ -451,11 +450,10 @@ const TableWithControlledSortRender = (args: ITwinGridProps) => {
       <ExternalComponent
         {...args}
         orderbyOptions={orderbyOptions}
-        onSortModelChange={(newSortModel: ITwinTableSortModel) => {
-          action("sort model changed")(newSortModel);
-          if (newSortModel.length > 0) {
-            const newSort = newSortModel[0];
-            setOrderbyOptions(`${newSort.field} ${newSort.sort ?? "asc"}`);
+        onOrderbyOptionsChange={(newOrderbyOptions) => {
+          action("orderby options changed")(newOrderbyOptions);
+          if (newOrderbyOptions) {
+            setOrderbyOptions(newOrderbyOptions);
           }
         }}
       />
@@ -470,7 +468,7 @@ export const TableWithControlledSort: StoryObj<typeof ITwinGrid> = {
     docs: {
       description: {
         story:
-          "The initial table sort is derived from the `orderbyOptions` prop, and changes are reported via `onSortModelChange` so the sort state can be saved anywhere the consumer wants.",
+          "The sort state is fully controlled by the parent via `orderbyOptions` and `onOrderbyOptionsChange`, so it can be saved anywhere the consumer wants.",
       },
     },
   },

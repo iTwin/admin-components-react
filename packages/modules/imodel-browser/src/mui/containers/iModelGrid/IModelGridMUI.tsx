@@ -115,8 +115,12 @@ export interface IModelGridMUIProps
    */
   nonce?: string;
   stringsOverrides?: Partial<IModelGridStringsMUI>;
-  /** Called whenever the table sort model changes. */
-  onSortModelChange?: (sortModel: IModelTableSortModel) => void;
+  /**
+   * Called when the user changes the table sort (e.g. by clicking a column
+   * header). Receives the new sort in the same shape as the `sortOptions`
+   * prop, so it can be stored and passed back as-is.
+   */
+  onSortOptionsChange?: (sortOptions: IModelSortOptions) => void;
 }
 
 /**
@@ -165,7 +169,7 @@ const IModelGridInternal = ({
   onRefetch,
   dataMode = "internal",
   disableAddToRecents = false,
-  onSortModelChange,
+  onSortOptionsChange,
   nonce,
 }: IModelGridMUIProps) => {
   const logger = useLogger();
@@ -196,7 +200,7 @@ const IModelGridInternal = ({
 
   // Own the sort state so column-header clicks re-sort the table even when the
   // consumer does not control it, while staying in sync with the prop-derived
-  // sort and forwarding changes through `onSortModelChange`.
+  // sort and forwarding changes through `onSortOptionsChange`.
   const [tableSortModel, setTableSortModel] =
     React.useState<IModelTableSortModel>(initialTableSortModel);
   React.useEffect(() => {
@@ -205,9 +209,15 @@ const IModelGridInternal = ({
   const handleSortModelChange = React.useCallback(
     (model: IModelTableSortModel) => {
       setTableSortModel(model);
-      onSortModelChange?.(model);
+      const item = model[0];
+      if (item) {
+        onSortOptionsChange?.({
+          sortType: item.field,
+          descending: item.sort === "desc",
+        });
+      }
     },
-    [onSortModelChange]
+    [onSortOptionsChange]
   );
 
   const strings = React.useMemo(

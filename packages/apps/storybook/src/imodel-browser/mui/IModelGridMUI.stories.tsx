@@ -5,7 +5,6 @@
 import {
   type IModelFull,
   type IModelGridProps as IModelGridMUIProps,
-  type IModelTableSortModel,
   DataStatus,
   IModelCellColumn,
   IModelGrid as ExternalComponent,
@@ -156,7 +155,7 @@ export const TableViewWithOverrides: StoryObj<typeof IModelGridMUI> = {
 };
 
 const TableWithControlledSortRender = (args: IModelGridMUIProps) => {
-  const [sortModel, setSortModel] = React.useState<IModelSortOptions>({
+  const [sortOptions, setSortOptions] = React.useState<IModelSortOptions>({
     sortType: "name",
     descending: true,
   });
@@ -175,21 +174,21 @@ const TableWithControlledSortRender = (args: IModelGridMUIProps) => {
         <Chip
           label="Name"
           clickable
-          variant={sortModel.sortType === "name" ? "filled" : "outlined"}
+          variant={sortOptions.sortType === "name" ? "filled" : "outlined"}
           onClick={() =>
-            setSortModel((prev) => ({ ...prev, sortType: "name" }))
+            setSortOptions((prev) => ({ ...prev, sortType: "name" }))
           }
         />
         <Chip
           label="Last Modified"
           clickable
           variant={
-            sortModel.sortType === "lastChangesetPushDateTime"
+            sortOptions.sortType === "lastChangesetPushDateTime"
               ? "filled"
               : "outlined"
           }
           onClick={() =>
-            setSortModel((prev) => ({
+            setSortOptions((prev) => ({
               ...prev,
               sortType: "lastChangesetPushDateTime",
             }))
@@ -199,21 +198,21 @@ const TableWithControlledSortRender = (args: IModelGridMUIProps) => {
           label="Created Date"
           clickable
           variant={
-            sortModel.sortType === "createdDateTime" ? "filled" : "outlined"
+            sortOptions.sortType === "createdDateTime" ? "filled" : "outlined"
           }
           onClick={() =>
-            setSortModel((prev) => ({
+            setSortOptions((prev) => ({
               ...prev,
               sortType: "createdDateTime",
             }))
           }
         />
         <Chip
-          label={sortModel.descending ? "↓ Descending" : "↑ Ascending"}
+          label={sortOptions.descending ? "↓ Descending" : "↑ Ascending"}
           clickable
           variant="outlined"
           onClick={() =>
-            setSortModel((prev) => ({
+            setSortOptions((prev) => ({
               ...prev,
               descending: !prev.descending,
             }))
@@ -222,16 +221,10 @@ const TableWithControlledSortRender = (args: IModelGridMUIProps) => {
       </div>
       <ExternalComponent
         {...args}
-        sortOptions={sortModel}
-        onSortModelChange={(newSortModel: IModelTableSortModel) => {
-          action("sort model changed")(newSortModel);
-          if (newSortModel.length > 0) {
-            const newSort = newSortModel[0];
-            setSortModel({
-              sortType: newSort.field,
-              descending: newSort.sort === "desc",
-            });
-          }
+        sortOptions={sortOptions}
+        onSortOptionsChange={(newSortOptions) => {
+          action("sort options changed")(newSortOptions);
+          setSortOptions(newSortOptions);
         }}
       />
     </div>
@@ -248,7 +241,7 @@ export const TableWithControlledSort: StoryObj<typeof IModelGridMUI> = {
     docs: {
       description: {
         story:
-          "The sort state is fully controlled by the parent via `sortModel` and `onSortModelChange`, so it can be saved anywhere the consumer wants.",
+          "The sort state is fully controlled by the parent via `sortOptions` and `onSortOptionsChange`, so it can be saved anywhere the consumer wants.",
       },
     },
   },

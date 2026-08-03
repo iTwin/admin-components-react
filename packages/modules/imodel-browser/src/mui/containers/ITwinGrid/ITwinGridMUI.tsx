@@ -85,8 +85,13 @@ export interface ITwinGridPropsMUI
   nonce?: string;
   /** Localized string overrides - falls back to default English strings if not provided */
   stringsOverrides?: Partial<ITwinGridStringsMUI>;
-  /** Called whenever the table sort model changes. */
-  onSortModelChange?: (sortModel: ITwinTableSortModel) => void;
+  /**
+   * Called when the user changes the table sort (e.g. by clicking a column
+   * header). Receives the new sort in the same shape as the `orderbyOptions`
+   * prop (e.g. `displayName asc`), so it can be stored and passed back as-is.
+   * Receives `undefined` when the sort is cleared.
+   */
+  onOrderbyOptionsChange?: (orderbyOptions: string | undefined) => void;
 }
 
 /**
@@ -117,7 +122,7 @@ const ITwinGridMUIInternal = ({
   viewMode,
   tableOverrides,
   className,
-  onSortModelChange,
+  onOrderbyOptionsChange,
   nonce,
 }: ITwinGridPropsMUI) => {
   const logger = useLogger();
@@ -154,7 +159,7 @@ const ITwinGridMUIInternal = ({
 
   // Own the sort state so column-header clicks re-sort the table even when the
   // consumer does not control it, while staying in sync with the prop-derived
-  // sort and forwarding changes through `onSortModelChange`.
+  // sort and forwarding changes through `onOrderbyOptionsChange`.
   const [tableSortModel, setTableSortModel] = React.useState<
     ITwinTableSortModel | undefined
   >(initialTableSortModel);
@@ -164,9 +169,12 @@ const ITwinGridMUIInternal = ({
   const handleSortModelChange = React.useCallback(
     (model: ITwinTableSortModel) => {
       setTableSortModel(model);
-      onSortModelChange?.(model);
+      const item = model[0];
+      onOrderbyOptionsChange?.(
+        item ? `${item.field} ${item.sort ?? "asc"}` : undefined
+      );
     },
-    [onSortModelChange]
+    [onOrderbyOptionsChange]
   );
 
   const strings = React.useMemo(
