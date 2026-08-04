@@ -44,6 +44,7 @@ export const useITwinData = ({
   const serverEnvironmentPrefix = apiOverrides?.serverEnvironmentPrefix;
   const [projects, setProjects] = React.useState<ITwinFull[]>([]);
   const [status, setStatus] = React.useState<DataStatus>();
+  const [totalCount, setTotalCount] = React.useState<number>();
   const filteredProjects = useITwinFilter(projects, filterOptions);
   const [page, setPage] = React.useState(0);
   const [morePages, setMorePages] = React.useState(true);
@@ -146,6 +147,7 @@ export const useITwinData = ({
               : accessToken,
           Accept: "application/vnd.bentley.itwin-platform.v1+json",
           Prefer: "return=representation",
+          "x-total-count": "true",
         },
       };
 
@@ -155,6 +157,10 @@ export const useITwinData = ({
         : await response.text().then((errorText) => {
             throw new Error(errorText);
           });
+      const totalCountHeader = response.headers.get("x-total-count");
+      if (totalCountHeader !== null) {
+        setTotalCount(Number(totalCountHeader));
+      }
       setStatus(DataStatus.Complete);
       fetchingMoreRef.current = false;
       requestType === "favorites" && resetShouldRefetchFavorites?.();
@@ -196,6 +202,7 @@ export const useITwinData = ({
   return {
     iTwins: filteredProjects,
     status,
+    totalCount,
     fetchMore: morePages ? fetchMore : undefined,
     refetchITwins: refetchData,
   };
