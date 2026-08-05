@@ -30,7 +30,9 @@ export const clientSideIModelSort = (
     const currValue =
       sort.sortType === "name"
         ? iModel.displayName ?? iModel.name ?? ""
-        : iModel.lastChangesetPushDateTime ?? iModel.createdDateTime ?? "";
+        : sort.sortType === "lastChangesetPushDateTime"
+        ? iModel.lastChangesetPushDateTime ?? iModel.createdDateTime ?? ""
+        : iModel[sort.sortType] ?? "";
     return currValue.toLocaleLowerCase();
   };
 
