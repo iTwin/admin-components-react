@@ -205,10 +205,12 @@ export const ITwinTableMUI = ({
       nonce={nonce}
       loading={isLoading}
       sortModel={sortModel}
-      onSortModelChange={(model) =>
-        onSortModelChange?.([...model] as ITwinTableSortModel)
+      onSortModelChange={
+        onSortModelChange
+          ? (model) => onSortModelChange([...model] as ITwinTableSortModel)
+          : undefined
       }
-      sortingOrder={sortModel ? ["asc", "desc"] : ["asc", "desc", null]}
+      sortingOrder={onSortModelChange ? ["asc", "desc"] : ["asc", "desc", null]}
       onRowClick={
         actions
           ? (params) => {

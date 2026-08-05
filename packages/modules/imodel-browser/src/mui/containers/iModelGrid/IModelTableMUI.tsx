@@ -12,7 +12,11 @@ import { Icon } from "@stratakit/mui";
 import React from "react";
 
 import { useIModelFavoritesContext } from "../../../contexts/IModelFavoritesContext";
-import { type IModelFull, IModelCellColumn } from "../../../types";
+import {
+  type IModelFull,
+  type IModelSortOptions,
+  IModelCellColumn,
+} from "../../../types";
 import {
   type MoreActionsMenuItemMUI,
   type ResolvedCardActionItem,
@@ -66,12 +70,17 @@ export interface IModelTableMUIProps {
   /** Called when more data should be loaded. */
   fetchMore?: (() => void) | false;
   /**
-   * Controlled sort model. When provided, the table's sort state is fully
-   * controlled by the parent and must be kept in sync via `onSortModelChange`.
+   * Requested sort. When `onSortOptionsChange` is provided the sort is fully
+   * controlled: store the reported value and pass it back through this prop.
+   * Otherwise this is only the initial sort and the table manages its own.
    */
-  sortModel?: IModelTableSortModel;
-  /** Called whenever the sort model changes. */
-  onSortModelChange?: (sortModel: IModelTableSortModel) => void;
+  sortOptions?: IModelSortOptions;
+  /**
+   * Called when the user changes the table sort (e.g. by clicking a column
+   * header). Providing this makes the sort controlled; receive the new sort
+   * in the same shape as the `sortOptions` prop and pass it back as-is.
+   */
+  onSortOptionsChange?: (sortOptions: IModelSortOptions) => void;
   /** Nonce applied to `<style>` elements. Required if your application uses a Content Security Policy (CSP) that restricts inline styles. */
   nonce?: string;
 }
@@ -91,8 +100,8 @@ export const IModelTableMUI = ({
   } = {},
   isLoading,
   fetchMore,
-  sortModel,
-  onSortModelChange,
+  sortOptions,
+  onSortOptionsChange,
   nonce,
 }: IModelTableMUIProps) => {
   // Eagerly load all available data so the table has the full dataset
@@ -103,6 +112,37 @@ export const IModelTableMUI = ({
     }
   }, [fetchMore]);
   const favoritesContext = useIModelFavoritesContext();
+
+  // Translate the `sortOptions` prop into the equivalent DataGrid sort model.
+  const sortModel = React.useMemo<IModelTableSortModel>(
+    () =>
+      sortOptions
+        ? [
+            {
+              field: sortOptions.sortType,
+              sort: sortOptions.descending ? "desc" : "asc",
+            },
+          ]
+        : [],
+    [sortOptions]
+  );
+
+  // Controlled when `onSortOptionsChange` is provided: the consumer stores the
+  // sort and passes it back through `sortOptions`.
+  const isSortControlled = !!onSortOptionsChange;
+
+  const handleSortModelChange = React.useCallback(
+    (model: IModelTableSortModel) => {
+      const item = model[0];
+      if (item) {
+        onSortOptionsChange?.({
+          sortType: item.field,
+          descending: item.sort === "desc",
+        });
+      }
+    },
+    [onSortOptionsChange]
+  );
 
   const columns = React.useMemo<GridColDef<IModelFull>[]>(() => {
     const cols: (GridColDef<IModelFull> | false)[] = [
@@ -214,11 +254,13 @@ export const IModelTableMUI = ({
       columnVisibilityModel={{ createdDateTime: false }}
       nonce={nonce}
       loading={isLoading}
-      sortModel={sortModel}
-      onSortModelChange={(model) =>
-        onSortModelChange?.([...model] as IModelTableSortModel)
+      sortModel={isSortControlled ? sortModel : undefined}
+      onSortModelChange={
+        isSortControlled
+          ? (model) => handleSortModelChange([...model] as IModelTableSortModel)
+          : undefined
       }
-      sortingOrder={sortModel ? ["asc", "desc"] : ["asc", "desc", null]}
+      sortingOrder={isSortControlled ? ["asc", "desc"] : ["asc", "desc", null]}
       onRowClick={
         actions
           ? (params) => {
@@ -251,8 +293,8 @@ export const IModelTableMUI = ({
       disableColumnSelector
       disableColumnFilter
       initialState={{
+        sorting: { sortModel },
         pagination: { paginationModel: { pageSize: 25 } },
-        ...(sortModel ? { sorting: { sortModel } } : {}),
       }}
       pageSizeOptions={[25, 50, 100]}
       localeText={{

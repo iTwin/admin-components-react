@@ -44,6 +44,7 @@ const baseArgs: ITwinGridProps = {
       onClick: (iTwin) => action("Open " + iTwin.displayName)(iTwin),
     },
   ],
+  onOrderbyOptionsChange: undefined,
 };
 
 export const Primary: StoryObj<typeof ITwinGrid> = {
@@ -113,6 +114,77 @@ export const TableViewWithOverrides: StoryObj<typeof ITwinGrid> = {
         },
       },
       hideColumns: [ITwinCellColumn.LastModified],
+    },
+  },
+};
+
+const TableWithControlledSortRender = (args: ITwinGridProps) => {
+  const [orderbyOptions, setOrderbyOptions] = React.useState("number desc");
+  const [field, direction] = orderbyOptions.split(/\s+/);
+
+  return (
+    <div>
+      <div
+        style={{
+          display: "flex",
+          gap: 8,
+          marginBottom: 8,
+          alignItems: "center",
+        }}
+      >
+        <Typography variant="body2">Sort by:</Typography>
+        <Chip
+          label="iTwin Number"
+          clickable
+          variant={field === "number" ? "filled" : "outlined"}
+          onClick={() => setOrderbyOptions(`number ${direction}`)}
+        />
+        <Chip
+          label="iTwin Name"
+          clickable
+          variant={field === "displayName" ? "filled" : "outlined"}
+          onClick={() => setOrderbyOptions(`displayName ${direction}`)}
+        />
+        <Chip
+          label="Last Modified"
+          clickable
+          variant={field === "lastModifiedDateTime" ? "filled" : "outlined"}
+          onClick={() => setOrderbyOptions(`lastModifiedDateTime ${direction}`)}
+        />
+        <Chip
+          label={direction === "desc" ? "↓ Descending" : "↑ Ascending"}
+          clickable
+          variant="outlined"
+          onClick={() =>
+            setOrderbyOptions(
+              `${field} ${direction === "desc" ? "asc" : "desc"}`
+            )
+          }
+        />
+      </div>
+      <ExternalComponent
+        {...args}
+        orderbyOptions={orderbyOptions}
+        onOrderbyOptionsChange={(newOrderbyOptions) => {
+          action("orderby options changed")(newOrderbyOptions);
+          if (newOrderbyOptions) {
+            setOrderbyOptions(newOrderbyOptions);
+          }
+        }}
+      />
+    </div>
+  );
+};
+
+export const TableWithControlledSort: StoryObj<typeof ITwinGrid> = {
+  render: (args) => <TableWithControlledSortRender {...args} />,
+  args: { ...baseArgs, viewMode: "cells" },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "The sort state is fully controlled by the parent via `orderbyOptions` and `onOrderbyOptionsChange`, so it can be saved anywhere the consumer wants.",
+      },
     },
   },
 };
@@ -399,77 +471,6 @@ export const StringsOverrideTable: StoryObj<typeof ITwinGrid> = {
       footerTotalVisibleRows: (visibleCount: number, totalCount: number) =>
         `${visibleCount.toLocaleString()} af ${totalCount.toLocaleString()}`,
       paginationRowsPerPage: "Rækker per side:",
-    },
-  },
-};
-
-const TableWithControlledSortRender = (args: ITwinGridProps) => {
-  const [orderbyOptions, setOrderbyOptions] = React.useState("number desc");
-  const [field, direction] = orderbyOptions.split(/\s+/);
-
-  return (
-    <div>
-      <div
-        style={{
-          display: "flex",
-          gap: 8,
-          marginBottom: 8,
-          alignItems: "center",
-        }}
-      >
-        <Typography variant="body2">Sort by:</Typography>
-        <Chip
-          label="iTwin Number"
-          clickable
-          variant={field === "number" ? "filled" : "outlined"}
-          onClick={() => setOrderbyOptions(`number ${direction}`)}
-        />
-        <Chip
-          label="iTwin Name"
-          clickable
-          variant={field === "displayName" ? "filled" : "outlined"}
-          onClick={() => setOrderbyOptions(`displayName ${direction}`)}
-        />
-        <Chip
-          label="Last Modified"
-          clickable
-          variant={field === "lastModifiedDateTime" ? "filled" : "outlined"}
-          onClick={() => setOrderbyOptions(`lastModifiedDateTime ${direction}`)}
-        />
-        <Chip
-          label={direction === "desc" ? "↓ Descending" : "↑ Ascending"}
-          clickable
-          variant="outlined"
-          onClick={() =>
-            setOrderbyOptions(
-              `${field} ${direction === "desc" ? "asc" : "desc"}`
-            )
-          }
-        />
-      </div>
-      <ExternalComponent
-        {...args}
-        orderbyOptions={orderbyOptions}
-        onOrderbyOptionsChange={(newOrderbyOptions) => {
-          action("orderby options changed")(newOrderbyOptions);
-          if (newOrderbyOptions) {
-            setOrderbyOptions(newOrderbyOptions);
-          }
-        }}
-      />
-    </div>
-  );
-};
-
-export const TableWithControlledSort: StoryObj<typeof ITwinGrid> = {
-  render: (args) => <TableWithControlledSortRender {...args} />,
-  args: { ...baseArgs, viewMode: "cells" },
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "The sort state is fully controlled by the parent via `orderbyOptions` and `onOrderbyOptionsChange`, so it can be saved anywhere the consumer wants.",
-      },
     },
   },
 };

@@ -137,11 +137,9 @@ const ITwinGridMUIInternal = ({
   // Translate the `orderbyOptions` prop (an OData `$orderby` string such as
   // "number DESC" or "displayName ASC") into the equivalent DataGrid sort model
   // so the table view reflects the requested sort without reordering the fetched
-  // list (which keeps its default sort). Left undefined when no sort is
-  // requested so the table stays uncontrolled.
-  const initialTableSortModel = React.useMemo<
-    ITwinTableSortModel | undefined
-  >(() => {
+  // list (which keeps its default sort). The table is sort-controlled only when
+  // `onOrderbyOptionsChange` is provided.
+  const tableSortModel = React.useMemo<ITwinTableSortModel | undefined>(() => {
     if (!orderbyOptions) {
       return undefined;
     }
@@ -157,18 +155,8 @@ const ITwinGridMUIInternal = ({
     ];
   }, [orderbyOptions]);
 
-  // Own the sort state so column-header clicks re-sort the table even when the
-  // consumer does not control it, while staying in sync with the prop-derived
-  // sort and forwarding changes through `onOrderbyOptionsChange`.
-  const [tableSortModel, setTableSortModel] = React.useState<
-    ITwinTableSortModel | undefined
-  >(initialTableSortModel);
-  React.useEffect(() => {
-    setTableSortModel(initialTableSortModel);
-  }, [initialTableSortModel]);
   const handleSortModelChange = React.useCallback(
     (model: ITwinTableSortModel) => {
-      setTableSortModel(model);
       const item = model[0];
       onOrderbyOptionsChange?.(
         item ? `${item.field} ${item.sort ?? "asc"}` : undefined
@@ -358,7 +346,9 @@ const ITwinGridMUIInternal = ({
       isLoading={fetchStatus === DataStatus.Fetching}
       fetchMore={fetchMore}
       sortModel={tableSortModel}
-      onSortModelChange={handleSortModelChange}
+      onSortModelChange={
+        onOrderbyOptionsChange ? handleSortModelChange : undefined
+      }
       nonce={nonce}
     />
   );

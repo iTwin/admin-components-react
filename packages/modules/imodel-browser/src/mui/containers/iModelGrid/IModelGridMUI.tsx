@@ -36,10 +36,7 @@ import {
 } from "../../../utils/iModelApi";
 import { BaseCardLoading } from "../../components/baseCard/BaseCardLoading";
 import { NoResultsMUI as NoResults } from "../../components/noResults/NoResultsMUI";
-import {
-  type IModelTableOverridesMUI,
-  type IModelTableSortModel,
-} from "../../types";
+import { type IModelTableOverridesMUI } from "../../types";
 import { stripNonTileProps } from "../../utils/stripNonTileProps";
 import {
   type IModelTileMUIProps,
@@ -152,7 +149,7 @@ const IModelGridInternal = ({
   removeFromRecentsIcon,
   actions,
   iTwinId,
-  sortOptions = { sortType: "name", descending: false },
+  sortOptions,
   requestType,
   stringsOverrides,
   tileOverrides,
@@ -180,45 +177,10 @@ const IModelGridInternal = ({
           descending: false,
         }
       : {
-          sortType: sortOptions.sortType,
-          descending: sortOptions.descending,
+          sortType: sortOptions?.sortType ?? "name",
+          descending: sortOptions?.descending ?? false,
         };
-  }, [sortOptions.descending, sortOptions.sortType, viewMode]);
-
-  // Translate the `sortOptions` prop into the equivalent DataGrid sort model so
-  // the table view reflects the requested sort without reordering the fetched
-  // list (which keeps its default sort).
-  const initialTableSortModel = React.useMemo<IModelTableSortModel>(
-    () => [
-      {
-        field: sortOptions.sortType,
-        sort: sortOptions.descending ? "desc" : "asc",
-      },
-    ],
-    [sortOptions.sortType, sortOptions.descending]
-  );
-
-  // Own the sort state so column-header clicks re-sort the table even when the
-  // consumer does not control it, while staying in sync with the prop-derived
-  // sort and forwarding changes through `onSortOptionsChange`.
-  const [tableSortModel, setTableSortModel] =
-    React.useState<IModelTableSortModel>(initialTableSortModel);
-  React.useEffect(() => {
-    setTableSortModel(initialTableSortModel);
-  }, [initialTableSortModel]);
-  const handleSortModelChange = React.useCallback(
-    (model: IModelTableSortModel) => {
-      setTableSortModel(model);
-      const item = model[0];
-      if (item) {
-        onSortOptionsChange?.({
-          sortType: item.field,
-          descending: item.sort === "desc",
-        });
-      }
-    },
-    [onSortOptionsChange]
-  );
+  }, [sortOptions?.descending, sortOptions?.sortType, viewMode]);
 
   const strings = React.useMemo(
     () =>
@@ -470,8 +432,8 @@ const IModelGridInternal = ({
             tableOverrides={tableOverrides}
             isLoading={fetchStatus === DataStatus.Fetching}
             fetchMore={fetchMore}
-            onSortModelChange={handleSortModelChange}
-            sortModel={tableSortModel}
+            sortOptions={sortOptions}
+            onSortOptionsChange={onSortOptionsChange}
             nonce={nonce}
             data-testid="imodel-table"
           />

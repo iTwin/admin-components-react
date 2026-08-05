@@ -70,7 +70,6 @@ export default {
 
 const baseArgs: IModelGridMUIProps = {
   apiOverrides: { serverEnvironmentPrefix: "qa" },
-  sortOptions: { sortType: "name", descending: false },
   actions: [
     {
       key: "open",
@@ -92,6 +91,7 @@ const baseArgs: IModelGridMUIProps = {
       onClick: (iModel) => action("Details for " + iModel?.displayName)(iModel),
     },
   ],
+  onSortOptionsChange: undefined,
 };
 
 export const Primary: StoryObj<typeof IModelGridMUI> = {
