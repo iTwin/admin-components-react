@@ -316,8 +316,14 @@ export const StatefulPropsOverrides: StoryObj<typeof ITwinGrid> = {
 };
 
 const WithPostProcessCallbackRender = (args: ITwinGridProps) => {
+  const [totalCount, setTotalCount] = React.useState<number | undefined>();
   const addStartTile = React.useCallback(
-    (iTwins: ITwinFull[], status: DataStatus | undefined) => {
+    (
+      iTwins: ITwinFull[],
+      status: DataStatus | undefined,
+      totalCount: number | undefined
+    ) => {
+      setTotalCount(totalCount);
       if (status !== DataStatus.Complete) {
         return iTwins;
       }
@@ -336,7 +342,11 @@ const WithPostProcessCallbackRender = (args: ITwinGridProps) => {
       <Text as="p" variant="body">
         Property <Code>postProcessCallback</Code> allows modification of the
         data that is sent to the grid, here, we add a new tile at the start of
-        the list for a 'New Project'.
+        the list for a 'New Project'. It also receives the{" "}
+        <Code>totalCount</Code> from the response headers.
+      </Text>
+      <Text as="p" variant="body">
+        Total iTwin count: {totalCount ?? "unknown"}
       </Text>
       <ITwinGrid {...args} postProcessCallback={addStartTile} />
     </div>

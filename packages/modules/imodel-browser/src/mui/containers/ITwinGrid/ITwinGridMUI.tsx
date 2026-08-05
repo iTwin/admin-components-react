@@ -191,6 +191,7 @@ const ITwinGridMUIInternal = ({
   const {
     iTwins: fetchedItwins,
     status: fetchStatus,
+    totalCount,
     fetchMore,
     refetchITwins,
   } = useITwinData({
@@ -206,8 +207,9 @@ const ITwinGridMUIInternal = ({
 
   const iTwins = React.useMemo(
     () =>
-      postProcessCallback?.([...fetchedItwins], fetchStatus) ?? fetchedItwins,
-    [postProcessCallback, fetchedItwins, fetchStatus]
+      postProcessCallback?.([...fetchedItwins], fetchStatus, totalCount) ??
+      fetchedItwins,
+    [postProcessCallback, fetchedItwins, fetchStatus, totalCount]
   );
 
   const noResultsText = {

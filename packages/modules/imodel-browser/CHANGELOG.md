@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Fri, 17 Jul 2026 15:48:49 GMT and should not be manually modified.
+This log was last generated on Wed, 05 Aug 2026 16:42:24 GMT and should not be manually modified.
+
+## 4.5.0
+Wed, 05 Aug 2026 16:42:24 GMT
+
+### Minor changes
+
+- Add totalCount as an argument to `postProcessCallback`
 
 ## 4.4.0
 Fri, 17 Jul 2026 15:48:49 GMT
