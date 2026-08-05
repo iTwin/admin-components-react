@@ -25,7 +25,6 @@ import { NoResultsMUI } from "../../components/noResults/NoResultsMUI";
 import {
   type ITwinSortOptionsMUI,
   type ITwinTableOverridesMUI,
-  type ITwinTableSortModel,
 } from "../../types";
 import { stripNonTileProps } from "../../utils/stripNonTileProps";
 import { type ITwinTableMUIStrings, ITwinTableMUI } from "./ITwinTableMUI";
@@ -142,31 +141,12 @@ const ITwinGridMUIInternal = ({
   } = useITwinFavorites(accessToken, apiOverrides?.serverEnvironmentPrefix);
 
   // Translate the `sortOptions` prop into the OData `$orderby` string expected
-  // by the iTwins API (e.g. "displayName asc") and into the equivalent DataGrid
-  // sort model so the table view reflects the requested sort. The table is
-  // sort-controlled only when `onSortOptionsChange` is provided.
+  // by the iTwins API (e.g. "displayName asc").
   const sortField = sortOptions?.field;
   const sortDirection = sortOptions?.direction;
   const orderbyOptions = React.useMemo(
     () => (sortField ? `${sortField} ${sortDirection}` : undefined),
     [sortField, sortDirection]
-  );
-
-  const tableSortModel = React.useMemo<ITwinTableSortModel | undefined>(
-    () => (sortField ? [{ field: sortField, sort: sortDirection }] : undefined),
-    [sortField, sortDirection]
-  );
-
-  const handleSortModelChange = React.useCallback(
-    (model: ITwinTableSortModel) => {
-      const first = model[0];
-      onSortOptionsChange?.(
-        first
-          ? { field: first.field, direction: first.sort ?? "asc" }
-          : undefined
-      );
-    },
-    [onSortOptionsChange]
   );
 
   const strings = React.useMemo(
@@ -349,10 +329,8 @@ const ITwinGridMUIInternal = ({
       tableOverrides={tableOverrides}
       isLoading={fetchStatus === DataStatus.Fetching}
       fetchMore={fetchMore}
-      sortModel={tableSortModel}
-      onSortModelChange={
-        onSortOptionsChange ? handleSortModelChange : undefined
-      }
+      sortOptions={sortOptions}
+      onSortOptionsChange={onSortOptionsChange}
       nonce={nonce}
     />
   );

@@ -22,6 +22,7 @@ import { formatDate } from "../../../utils/formatDate";
 import MoreMenuMUI from "../../components/MoreMenuMUI";
 import { FavoriteIconMUI } from "../../components/tileFavoriteIcon/FavoriteIconMUI";
 import {
+  type ITwinSortOptionsMUI,
   type ITwinTableOverridesMUI,
   type ITwinTableSortModel,
 } from "../../types";
@@ -69,12 +70,19 @@ export interface ITwinTableMUIProps {
   /** Called when more data should be loaded. */
   fetchMore?: (() => void) | false;
   /**
-   * Controlled sort model. When provided, the table's sort state is fully
-   * controlled by the parent and must be kept in sync via `onSortModelChange`.
+   * Requested sort, e.g. `{ field: "displayName", direction: "asc" }`. When
+   * `onSortOptionsChange` is provided the sort is fully controlled: store the
+   * reported value and pass it back through this prop. Otherwise this is only
+   * the initial sort and the table manages its own.
    */
-  sortModel?: ITwinTableSortModel;
-  /** Called whenever the sort model changes. */
-  onSortModelChange?: (sortModel: ITwinTableSortModel) => void;
+  sortOptions?: ITwinSortOptionsMUI;
+  /**
+   * Called when the user changes the table sort (e.g. by clicking a column
+   * header). Providing this makes the sort controlled; receive the new sort
+   * in the same shape as the `sortOptions` prop and pass it back as-is.
+   * Receives `undefined` when the sort is cleared.
+   */
+  onSortOptionsChange?: (sortOptions?: ITwinSortOptionsMUI) => void;
   /** Nonce applied to `<style>` elements. Required if your application uses a Content Security Policy (CSP) that restricts inline styles. */
   nonce?: string;
 }
@@ -97,8 +105,8 @@ export const ITwinTableMUI = ({
   } = {},
   isLoading,
   fetchMore,
-  sortModel,
-  onSortModelChange,
+  sortOptions,
+  onSortOptionsChange,
   nonce,
 }: ITwinTableMUIProps) => {
   // Eagerly load all available data so the table has the full dataset
@@ -108,6 +116,31 @@ export const ITwinTableMUI = ({
       fetchMore();
     }
   }, [fetchMore]);
+
+  // Translate the `sortOptions` prop into the equivalent DataGrid sort model.
+  const sortField = sortOptions?.field;
+  const sortDirection = sortOptions?.direction;
+  const sortModel = React.useMemo<ITwinTableSortModel>(
+    () => (sortField ? [{ field: sortField, sort: sortDirection }] : []),
+    [sortField, sortDirection]
+  );
+
+  // Controlled when `onSortOptionsChange` is provided: the consumer stores the
+  // sort and passes it back through `sortOptions`.
+  const isSortControlled = !!onSortOptionsChange;
+
+  const handleSortModelChange = React.useCallback(
+    (model: ITwinTableSortModel) => {
+      const first = model[0];
+      onSortOptionsChange?.(
+        first
+          ? { field: first.field, direction: first.sort ?? "asc" }
+          : undefined
+      );
+    },
+    [onSortOptionsChange]
+  );
+
   const columns = React.useMemo<GridColDef<ITwinFull>[]>(() => {
     const cols: (GridColDef<ITwinFull> | false)[] = [
       !hideColumns.includes(ITwinCellColumn.Favorite) && {
@@ -204,13 +237,13 @@ export const ITwinTableMUI = ({
       columns={columns}
       nonce={nonce}
       loading={isLoading}
-      sortModel={sortModel}
+      sortModel={isSortControlled ? sortModel : undefined}
       onSortModelChange={
-        onSortModelChange
-          ? (model) => onSortModelChange([...model] as ITwinTableSortModel)
+        isSortControlled
+          ? (model) => handleSortModelChange([...model] as ITwinTableSortModel)
           : undefined
       }
-      sortingOrder={onSortModelChange ? ["asc", "desc"] : ["asc", "desc", null]}
+      sortingOrder={isSortControlled ? ["asc", "desc"] : ["asc", "desc", null]}
       onRowClick={
         actions
           ? (params) => {
@@ -243,8 +276,8 @@ export const ITwinTableMUI = ({
       disableColumnSelector
       disableColumnFilter
       initialState={{
+        sorting: { sortModel },
         pagination: { paginationModel: { pageSize: 25 } },
-        ...(sortModel ? { sorting: { sortModel } } : {}),
       }}
       pageSizeOptions={[25, 50, 100]}
       localeText={{
