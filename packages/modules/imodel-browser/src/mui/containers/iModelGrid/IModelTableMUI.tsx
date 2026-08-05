@@ -67,7 +67,7 @@ export interface IModelTableMUIProps {
   /** Called when more data should be loaded. */
   fetchMore?: (() => void) | false;
   /**
-   * Requested sort, e.g. `[{ field: "name", direction: "asc" }]`. When
+   * Requested sort, e.g. `{ field: "name", direction: "asc" }`. When
    * `onSortOptionsChange` is provided the sort is fully controlled: store the
    * reported value and pass it back through this prop. Otherwise this is only
    * the initial sort and the table manages its own.
@@ -77,8 +77,9 @@ export interface IModelTableMUIProps {
    * Called when the user changes the table sort (e.g. by clicking a column
    * header). Providing this makes the sort controlled; receive the new sort
    * in the same shape as the `sortOptions` prop and pass it back as-is.
+   * Receives `undefined` when the sort is cleared.
    */
-  onSortOptionsChange?: (sortOptions: IModelSortOptionsMUI) => void;
+  onSortOptionsChange?: (sortOptions?: IModelSortOptionsMUI) => void;
   /** Nonce applied to `<style>` elements. Required if your application uses a Content Security Policy (CSP) that restricts inline styles. */
   nonce?: string;
 }
@@ -112,13 +113,11 @@ export const IModelTableMUI = ({
   const favoritesContext = useIModelFavoritesContext();
 
   // Translate the `sortOptions` prop into the equivalent DataGrid sort model.
+  const sortField = sortOptions?.field;
+  const sortDirection = sortOptions?.direction;
   const sortModel = React.useMemo<IModelTableSortModel>(
-    () =>
-      sortOptions?.map(({ field, direction }) => ({
-        field,
-        sort: direction,
-      })) ?? [],
-    [sortOptions]
+    () => (sortField ? [{ field: sortField, sort: sortDirection }] : []),
+    [sortField, sortDirection]
   );
 
   // Controlled when `onSortOptionsChange` is provided: the consumer stores the
@@ -127,8 +126,11 @@ export const IModelTableMUI = ({
 
   const handleSortModelChange = React.useCallback(
     (model: IModelTableSortModel) => {
+      const first = model[0];
       onSortOptionsChange?.(
-        model.map(({ field, sort }) => ({ field, direction: sort ?? "asc" }))
+        first
+          ? { field: first.field, direction: first.sort ?? "asc" }
+          : undefined
       );
     },
     [onSortOptionsChange]

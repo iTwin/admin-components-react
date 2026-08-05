@@ -120,11 +120,11 @@ export const TableViewWithOverrides: StoryObj<typeof ITwinGrid> = {
 };
 
 const TableWithControlledSortRender = (args: ITwinGridProps) => {
-  const [sortOptions, setSortOptions] = React.useState<ITwinSortOptionsMUI>([
-    { field: "number", direction: "desc" },
-  ]);
-  const field = sortOptions[0]?.field;
-  const direction = sortOptions[0]?.direction ?? "asc";
+  const [sortOptions, setSortOptions] = React.useState<
+    ITwinSortOptionsMUI | undefined
+  >({ field: "number", direction: "desc" });
+  const field = sortOptions?.field;
+  const direction = sortOptions?.direction ?? "asc";
 
   return (
     <div>
@@ -141,20 +141,20 @@ const TableWithControlledSortRender = (args: ITwinGridProps) => {
           label="iTwin Number"
           clickable
           variant={field === "number" ? "filled" : "outlined"}
-          onClick={() => setSortOptions([{ field: "number", direction }])}
+          onClick={() => setSortOptions({ field: "number", direction })}
         />
         <Chip
           label="iTwin Name"
           clickable
           variant={field === "displayName" ? "filled" : "outlined"}
-          onClick={() => setSortOptions([{ field: "displayName", direction }])}
+          onClick={() => setSortOptions({ field: "displayName", direction })}
         />
         <Chip
           label="Last Modified"
           clickable
           variant={field === "lastModifiedDateTime" ? "filled" : "outlined"}
           onClick={() =>
-            setSortOptions([{ field: "lastModifiedDateTime", direction }])
+            setSortOptions({ field: "lastModifiedDateTime", direction })
           }
         />
         <Chip
@@ -162,11 +162,12 @@ const TableWithControlledSortRender = (args: ITwinGridProps) => {
           clickable
           variant="outlined"
           onClick={() =>
-            setSortOptions((prev) =>
-              prev.map((item) => ({
-                ...item,
-                direction: item.direction === "desc" ? "asc" : "desc",
-              }))
+            setSortOptions(
+              (prev) =>
+                prev && {
+                  ...prev,
+                  direction: prev.direction === "desc" ? "asc" : "desc",
+                }
             )
           }
         />

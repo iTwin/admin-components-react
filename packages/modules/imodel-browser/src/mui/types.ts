@@ -45,11 +45,11 @@ export type SortOptionMUI<Field extends string> = {
   direction: "asc" | "desc";
 };
 
-/** Sort for the MUI iModel grid/table, e.g. `[{ field: "name", direction: "asc" }]`. */
-export type IModelSortOptionsMUI = SortOptionMUI<IModelTableSortField>[];
+/** Sort for the MUI iModel grid/table, e.g. `{ field: "name", direction: "asc" }`. */
+export type IModelSortOptionsMUI = SortOptionMUI<IModelTableSortField>;
 
-/** Sort for the MUI iTwin grid/table, e.g. `[{ field: "displayName", direction: "asc" }]`. */
-export type ITwinSortOptionsMUI = SortOptionMUI<ITwinTableSortField>[];
+/** Sort for the MUI iTwin grid/table, e.g. `{ field: "displayName", direction: "asc" }`. */
+export type ITwinSortOptionsMUI = SortOptionMUI<ITwinTableSortField>;
 
 export type IModelTableOverridesMUI = {
   /** Per-column overrides merged onto the default column definitions. */

@@ -117,16 +117,16 @@ export interface IModelGridMUIProps
   nonce?: string;
   stringsOverrides?: Partial<IModelGridStringsMUI>;
   /**
-   * Requested sort, e.g. `[{ field: "name", direction: "asc" }]`.
-   * Only the first entry is used for data fetching in tile view.
+   * Requested sort, e.g. `{ field: "name", direction: "asc" }`.
    */
   sortOptions?: IModelSortOptionsMUI;
   /**
    * Called when the user changes the table sort (e.g. by clicking a column
    * header). Receives the new sort in the same shape as the `sortOptions`
-   * prop, so it can be stored and passed back as-is.
+   * prop, so it can be stored and passed back as-is. Receives `undefined`
+   * when the sort is cleared.
    */
-  onSortOptionsChange?: (sortOptions: IModelSortOptionsMUI) => void;
+  onSortOptionsChange?: (sortOptions?: IModelSortOptionsMUI) => void;
 }
 
 /**
@@ -179,9 +179,10 @@ const IModelGridInternal = ({
   nonce,
 }: IModelGridMUIProps) => {
   const logger = useLogger();
-  // Translate the `sortOptions` array into the `{ sortType, descending }` shape
-  // used by the data hooks. Only the first entry is honored.
-  const firstSort = sortOptions?.[0];
+  // Translate the `sortOptions` prop into the `{ sortType, descending }` shape
+  // used by the data hooks.
+  const sortField = sortOptions?.field;
+  const sortDirection = sortOptions?.direction;
   const sort = React.useMemo<IModelSortOptions>(() => {
     return viewMode === "cells"
       ? {
@@ -189,10 +190,10 @@ const IModelGridInternal = ({
           descending: false,
         }
       : {
-          sortType: firstSort?.field ?? "name",
-          descending: firstSort?.direction === "desc",
+          sortType: sortField ?? "name",
+          descending: sortDirection === "desc",
         };
-  }, [firstSort?.field, firstSort?.direction, viewMode]);
+  }, [sortField, sortDirection, viewMode]);
 
   const strings = React.useMemo(
     () =>

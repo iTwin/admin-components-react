@@ -88,17 +88,17 @@ export interface ITwinGridPropsMUI
   /** Localized string overrides - falls back to default English strings if not provided */
   stringsOverrides?: Partial<ITwinGridStringsMUI>;
   /**
-   * Requested sort, e.g. `[{ field: "displayName", direction: "asc" }]`.
-   * An empty array (or `undefined`) means the default server sort.
+   * Requested sort, e.g. `{ field: "displayName", direction: "asc" }`.
+   * `undefined` means the default server sort.
    */
   sortOptions?: ITwinSortOptionsMUI;
   /**
    * Called when the user changes the table sort (e.g. by clicking a column
    * header). Receives the new sort in the same shape as the `sortOptions`
-   * prop, so it can be stored and passed back as-is. Receives an empty array
+   * prop, so it can be stored and passed back as-is. Receives `undefined`
    * when the sort is cleared.
    */
-  onSortOptionsChange?: (sortOptions: ITwinSortOptionsMUI) => void;
+  onSortOptionsChange?: (sortOptions?: ITwinSortOptionsMUI) => void;
 }
 
 /**
@@ -145,26 +145,25 @@ const ITwinGridMUIInternal = ({
   // by the iTwins API (e.g. "displayName asc") and into the equivalent DataGrid
   // sort model so the table view reflects the requested sort. The table is
   // sort-controlled only when `onSortOptionsChange` is provided.
+  const sortField = sortOptions?.field;
+  const sortDirection = sortOptions?.direction;
   const orderbyOptions = React.useMemo(
-    () =>
-      sortOptions?.length
-        ? sortOptions
-            .map(({ field, direction }) => `${field} ${direction}`)
-            .join(",")
-        : undefined,
-    [sortOptions]
+    () => (sortField ? `${sortField} ${sortDirection}` : undefined),
+    [sortField, sortDirection]
   );
 
   const tableSortModel = React.useMemo<ITwinTableSortModel | undefined>(
-    () =>
-      sortOptions?.map(({ field, direction }) => ({ field, sort: direction })),
-    [sortOptions]
+    () => (sortField ? [{ field: sortField, sort: sortDirection }] : undefined),
+    [sortField, sortDirection]
   );
 
   const handleSortModelChange = React.useCallback(
     (model: ITwinTableSortModel) => {
+      const first = model[0];
       onSortOptionsChange?.(
-        model.map(({ field, sort }) => ({ field, direction: sort ?? "asc" }))
+        first
+          ? { field: first.field, direction: first.sort ?? "asc" }
+          : undefined
       );
     },
     [onSortOptionsChange]
