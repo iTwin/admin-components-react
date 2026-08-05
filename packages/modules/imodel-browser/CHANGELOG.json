@@ -2,6 +2,18 @@
   "name": "@itwin/imodel-browser-react",
   "entries": [
     {
+      "version": "4.5.0",
+      "tag": "@itwin/imodel-browser-react_v4.5.0",
+      "date": "Wed, 05 Aug 2026 16:42:24 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Add totalCount as an argument to `postProcessCallback`"
+          }
+        ]
+      }
+    },
+    {
       "version": "4.4.0",
       "tag": "@itwin/imodel-browser-react_v4.4.0",
       "date": "Fri, 17 Jul 2026 15:48:49 GMT",
