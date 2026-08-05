@@ -39,6 +39,18 @@ export type ITwinTableSortField =
 /** Sort model for the MUI iTwin table, limited to its sortable field names. */
 export type ITwinTableSortModel = TypedGridSortModel<ITwinTableSortField>;
 
+/** Sort descriptor in `{ field, direction }` form, used by the MUI grid `sortOptions` props. */
+export type SortOptionMUI<Field extends string> = {
+  field: Field;
+  direction: "asc" | "desc";
+};
+
+/** Sort for the MUI iModel grid/table, e.g. `[{ field: "name", direction: "asc" }]`. */
+export type IModelSortOptionsMUI = SortOptionMUI<IModelTableSortField>[];
+
+/** Sort for the MUI iTwin grid/table, e.g. `[{ field: "displayName", direction: "asc" }]`. */
+export type ITwinSortOptionsMUI = SortOptionMUI<ITwinTableSortField>[];
+
 export type IModelTableOverridesMUI = {
   /** Per-column overrides merged onto the default column definitions. */
   columnOverrides?: Partial<

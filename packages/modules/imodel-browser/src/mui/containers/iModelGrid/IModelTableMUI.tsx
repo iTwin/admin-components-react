@@ -12,11 +12,7 @@ import { Icon } from "@stratakit/mui";
 import React from "react";
 
 import { useIModelFavoritesContext } from "../../../contexts/IModelFavoritesContext";
-import {
-  type IModelFull,
-  type IModelSortOptions,
-  IModelCellColumn,
-} from "../../../types";
+import { type IModelFull, IModelCellColumn } from "../../../types";
 import {
   type MoreActionsMenuItemMUI,
   type ResolvedCardActionItem,
@@ -27,6 +23,7 @@ import { formatDate } from "../../../utils/formatDate";
 import MoreMenuMUI from "../../components/MoreMenuMUI";
 import { FavoriteIconMUI } from "../../components/tileFavoriteIcon/FavoriteIconMUI";
 import {
+  type IModelSortOptionsMUI,
   type IModelTableOverridesMUI,
   type IModelTableSortModel,
 } from "../../types";
@@ -70,17 +67,18 @@ export interface IModelTableMUIProps {
   /** Called when more data should be loaded. */
   fetchMore?: (() => void) | false;
   /**
-   * Requested sort. When `onSortOptionsChange` is provided the sort is fully
-   * controlled: store the reported value and pass it back through this prop.
-   * Otherwise this is only the initial sort and the table manages its own.
+   * Requested sort, e.g. `[{ field: "name", direction: "asc" }]`. When
+   * `onSortOptionsChange` is provided the sort is fully controlled: store the
+   * reported value and pass it back through this prop. Otherwise this is only
+   * the initial sort and the table manages its own.
    */
-  sortOptions?: IModelSortOptions;
+  sortOptions?: IModelSortOptionsMUI;
   /**
    * Called when the user changes the table sort (e.g. by clicking a column
    * header). Providing this makes the sort controlled; receive the new sort
    * in the same shape as the `sortOptions` prop and pass it back as-is.
    */
-  onSortOptionsChange?: (sortOptions: IModelSortOptions) => void;
+  onSortOptionsChange?: (sortOptions: IModelSortOptionsMUI) => void;
   /** Nonce applied to `<style>` elements. Required if your application uses a Content Security Policy (CSP) that restricts inline styles. */
   nonce?: string;
 }
@@ -116,14 +114,10 @@ export const IModelTableMUI = ({
   // Translate the `sortOptions` prop into the equivalent DataGrid sort model.
   const sortModel = React.useMemo<IModelTableSortModel>(
     () =>
-      sortOptions
-        ? [
-            {
-              field: sortOptions.sortType,
-              sort: sortOptions.descending ? "desc" : "asc",
-            },
-          ]
-        : [],
+      sortOptions?.map(({ field, direction }) => ({
+        field,
+        sort: direction,
+      })) ?? [],
     [sortOptions]
   );
 
@@ -133,13 +127,9 @@ export const IModelTableMUI = ({
 
   const handleSortModelChange = React.useCallback(
     (model: IModelTableSortModel) => {
-      const item = model[0];
-      if (item) {
-        onSortOptionsChange?.({
-          sortType: item.field,
-          descending: item.sort === "desc",
-        });
-      }
+      onSortOptionsChange?.(
+        model.map(({ field, sort }) => ({ field, direction: sort ?? "asc" }))
+      );
     },
     [onSortOptionsChange]
   );

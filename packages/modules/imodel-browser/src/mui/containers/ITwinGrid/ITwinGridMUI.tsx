@@ -23,6 +23,7 @@ import {
 import { BaseCardLoading } from "../../components/baseCard/BaseCardLoading";
 import { NoResultsMUI } from "../../components/noResults/NoResultsMUI";
 import {
+  type ITwinSortOptionsMUI,
   type ITwinTableOverridesMUI,
   type ITwinTableSortModel,
 } from "../../types";
@@ -56,6 +57,7 @@ export interface ITwinGridPropsMUI
     | "stringsOverrides"
     | "status"
     | "onOpen"
+    | "orderbyOptions"
   > {
   /**
    * Factory that returns actions for a given iTwin.
@@ -86,12 +88,17 @@ export interface ITwinGridPropsMUI
   /** Localized string overrides - falls back to default English strings if not provided */
   stringsOverrides?: Partial<ITwinGridStringsMUI>;
   /**
-   * Called when the user changes the table sort (e.g. by clicking a column
-   * header). Receives the new sort in the same shape as the `orderbyOptions`
-   * prop (e.g. `displayName asc`), so it can be stored and passed back as-is.
-   * Receives `undefined` when the sort is cleared.
+   * Requested sort, e.g. `[{ field: "displayName", direction: "asc" }]`.
+   * An empty array (or `undefined`) means the default server sort.
    */
-  onOrderbyOptionsChange?: (orderbyOptions: string | undefined) => void;
+  sortOptions?: ITwinSortOptionsMUI;
+  /**
+   * Called when the user changes the table sort (e.g. by clicking a column
+   * header). Receives the new sort in the same shape as the `sortOptions`
+   * prop, so it can be stored and passed back as-is. Receives an empty array
+   * when the sort is cleared.
+   */
+  onSortOptionsChange?: (sortOptions: ITwinSortOptionsMUI) => void;
 }
 
 /**
@@ -110,7 +117,7 @@ const ITwinGridMUIInternal = ({
   accessToken,
   apiOverrides,
   filterOptions,
-  orderbyOptions,
+  sortOptions,
   actions,
   moreActions,
   requestType,
@@ -122,7 +129,7 @@ const ITwinGridMUIInternal = ({
   viewMode,
   tableOverrides,
   className,
-  onOrderbyOptionsChange,
+  onSortOptionsChange,
   nonce,
 }: ITwinGridPropsMUI) => {
   const logger = useLogger();
@@ -134,35 +141,33 @@ const ITwinGridMUIInternal = ({
     resetShouldRefetchFavorites,
   } = useITwinFavorites(accessToken, apiOverrides?.serverEnvironmentPrefix);
 
-  // Translate the `orderbyOptions` prop (an OData `$orderby` string such as
-  // "number DESC" or "displayName ASC") into the equivalent DataGrid sort model
-  // so the table view reflects the requested sort without reordering the fetched
-  // list (which keeps its default sort). The table is sort-controlled only when
-  // `onOrderbyOptionsChange` is provided.
-  const tableSortModel = React.useMemo<ITwinTableSortModel | undefined>(() => {
-    if (!orderbyOptions) {
-      return undefined;
-    }
-    const [field, direction] = orderbyOptions.split(",")[0].trim().split(/\s+/);
-    if (!field) {
-      return undefined;
-    }
-    return [
-      {
-        field: field as ITwinTableSortModel[number]["field"],
-        sort: direction?.toLowerCase() === "desc" ? "desc" : "asc",
-      },
-    ];
-  }, [orderbyOptions]);
+  // Translate the `sortOptions` prop into the OData `$orderby` string expected
+  // by the iTwins API (e.g. "displayName asc") and into the equivalent DataGrid
+  // sort model so the table view reflects the requested sort. The table is
+  // sort-controlled only when `onSortOptionsChange` is provided.
+  const orderbyOptions = React.useMemo(
+    () =>
+      sortOptions?.length
+        ? sortOptions
+            .map(({ field, direction }) => `${field} ${direction}`)
+            .join(",")
+        : undefined,
+    [sortOptions]
+  );
+
+  const tableSortModel = React.useMemo<ITwinTableSortModel | undefined>(
+    () =>
+      sortOptions?.map(({ field, direction }) => ({ field, sort: direction })),
+    [sortOptions]
+  );
 
   const handleSortModelChange = React.useCallback(
     (model: ITwinTableSortModel) => {
-      const item = model[0];
-      onOrderbyOptionsChange?.(
-        item ? `${item.field} ${item.sort ?? "asc"}` : undefined
+      onSortOptionsChange?.(
+        model.map(({ field, sort }) => ({ field, direction: sort ?? "asc" }))
       );
     },
-    [onOrderbyOptionsChange]
+    [onSortOptionsChange]
   );
 
   const strings = React.useMemo(
@@ -347,7 +352,7 @@ const ITwinGridMUIInternal = ({
       fetchMore={fetchMore}
       sortModel={tableSortModel}
       onSortModelChange={
-        onOrderbyOptionsChange ? handleSortModelChange : undefined
+        onSortOptionsChange ? handleSortModelChange : undefined
       }
       nonce={nonce}
     />

@@ -69,4 +69,10 @@ export type {
   AccessTokenProvider,
 } from "../types";
 export { DataStatus, IModelCellColumn, ITwinCellColumn } from "../types";
-export type { IModelTableOverridesMUI, ITwinTableOverridesMUI } from "./types";
+export type {
+  IModelTableOverridesMUI,
+  ITwinTableOverridesMUI,
+  IModelSortOptionsMUI,
+  ITwinSortOptionsMUI,
+  SortOptionMUI,
+} from "./types";

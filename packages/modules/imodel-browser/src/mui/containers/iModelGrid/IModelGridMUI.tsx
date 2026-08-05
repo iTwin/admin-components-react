@@ -36,7 +36,10 @@ import {
 } from "../../../utils/iModelApi";
 import { BaseCardLoading } from "../../components/baseCard/BaseCardLoading";
 import { NoResultsMUI as NoResults } from "../../components/noResults/NoResultsMUI";
-import { type IModelTableOverridesMUI } from "../../types";
+import {
+  type IModelSortOptionsMUI,
+  type IModelTableOverridesMUI,
+} from "../../types";
 import { stripNonTileProps } from "../../utils/stripNonTileProps";
 import {
   type IModelTileMUIProps,
@@ -78,6 +81,7 @@ export interface IModelGridMUIProps
     | "status"
     | "removeFromRecentsIcon"
     | "onOpen"
+    | "sortOptions"
   > {
   /**
    * Factory that returns actions for a given iModel.
@@ -113,11 +117,16 @@ export interface IModelGridMUIProps
   nonce?: string;
   stringsOverrides?: Partial<IModelGridStringsMUI>;
   /**
+   * Requested sort, e.g. `[{ field: "name", direction: "asc" }]`.
+   * Only the first entry is used for data fetching in tile view.
+   */
+  sortOptions?: IModelSortOptionsMUI;
+  /**
    * Called when the user changes the table sort (e.g. by clicking a column
    * header). Receives the new sort in the same shape as the `sortOptions`
    * prop, so it can be stored and passed back as-is.
    */
-  onSortOptionsChange?: (sortOptions: IModelSortOptions) => void;
+  onSortOptionsChange?: (sortOptions: IModelSortOptionsMUI) => void;
 }
 
 /**
@@ -170,6 +179,9 @@ const IModelGridInternal = ({
   nonce,
 }: IModelGridMUIProps) => {
   const logger = useLogger();
+  // Translate the `sortOptions` array into the `{ sortType, descending }` shape
+  // used by the data hooks. Only the first entry is honored.
+  const firstSort = sortOptions?.[0];
   const sort = React.useMemo<IModelSortOptions>(() => {
     return viewMode === "cells"
       ? {
@@ -177,10 +189,10 @@ const IModelGridInternal = ({
           descending: false,
         }
       : {
-          sortType: sortOptions?.sortType ?? "name",
-          descending: sortOptions?.descending ?? false,
+          sortType: firstSort?.field ?? "name",
+          descending: firstSort?.direction === "desc",
         };
-  }, [sortOptions?.descending, sortOptions?.sortType, viewMode]);
+  }, [firstSort?.field, firstSort?.direction, viewMode]);
 
   const strings = React.useMemo(
     () =>

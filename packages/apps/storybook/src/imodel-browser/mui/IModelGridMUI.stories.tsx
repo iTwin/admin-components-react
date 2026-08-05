@@ -5,10 +5,10 @@
 import {
   type IModelFull,
   type IModelGridProps as IModelGridMUIProps,
+  type IModelSortOptionsMUI,
   DataStatus,
   IModelCellColumn,
   IModelGrid as ExternalComponent,
-  IModelSortOptions,
 } from "@itwin/imodel-browser-react/mui";
 import Avatar from "@mui/material/Avatar";
 import AvatarGroup from "@mui/material/AvatarGroup";
@@ -155,10 +155,11 @@ export const TableViewWithOverrides: StoryObj<typeof IModelGridMUI> = {
 };
 
 const TableWithControlledSortRender = (args: IModelGridMUIProps) => {
-  const [sortOptions, setSortOptions] = React.useState<IModelSortOptions>({
-    sortType: "name",
-    descending: true,
-  });
+  const [sortOptions, setSortOptions] = React.useState<IModelSortOptionsMUI>([
+    { field: "name", direction: "desc" },
+  ]);
+  const field = sortOptions[0]?.field;
+  const direction = sortOptions[0]?.direction ?? "asc";
 
   return (
     <div>
@@ -174,48 +175,38 @@ const TableWithControlledSortRender = (args: IModelGridMUIProps) => {
         <Chip
           label="Name"
           clickable
-          variant={sortOptions.sortType === "name" ? "filled" : "outlined"}
-          onClick={() =>
-            setSortOptions((prev) => ({ ...prev, sortType: "name" }))
-          }
+          variant={field === "name" ? "filled" : "outlined"}
+          onClick={() => setSortOptions([{ field: "name", direction }])}
         />
         <Chip
           label="Last Modified"
           clickable
           variant={
-            sortOptions.sortType === "lastChangesetPushDateTime"
-              ? "filled"
-              : "outlined"
+            field === "lastChangesetPushDateTime" ? "filled" : "outlined"
           }
           onClick={() =>
-            setSortOptions((prev) => ({
-              ...prev,
-              sortType: "lastChangesetPushDateTime",
-            }))
+            setSortOptions([{ field: "lastChangesetPushDateTime", direction }])
           }
         />
         <Chip
           label="Created Date"
           clickable
-          variant={
-            sortOptions.sortType === "createdDateTime" ? "filled" : "outlined"
-          }
+          variant={field === "createdDateTime" ? "filled" : "outlined"}
           onClick={() =>
-            setSortOptions((prev) => ({
-              ...prev,
-              sortType: "createdDateTime",
-            }))
+            setSortOptions([{ field: "createdDateTime", direction }])
           }
         />
         <Chip
-          label={sortOptions.descending ? "↓ Descending" : "↑ Ascending"}
+          label={direction === "desc" ? "↓ Descending" : "↑ Ascending"}
           clickable
           variant="outlined"
           onClick={() =>
-            setSortOptions((prev) => ({
-              ...prev,
-              descending: !prev.descending,
-            }))
+            setSortOptions((prev) =>
+              prev.map((item) => ({
+                ...item,
+                direction: item.direction === "desc" ? "asc" : "desc",
+              }))
+            )
           }
         />
       </div>

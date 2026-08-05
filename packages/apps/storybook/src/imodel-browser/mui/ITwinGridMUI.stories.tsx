@@ -6,6 +6,7 @@ import {
   type IndividualITwinStateHook,
   type ITwinFull,
   type ITwinGridProps,
+  type ITwinSortOptionsMUI,
   DataStatus,
   ITwinCellColumn,
   ITwinGrid as ExternalComponent,
@@ -44,7 +45,7 @@ const baseArgs: ITwinGridProps = {
       onClick: (iTwin) => action("Open " + iTwin.displayName)(iTwin),
     },
   ],
-  onOrderbyOptionsChange: undefined,
+  onSortOptionsChange: undefined,
 };
 
 export const Primary: StoryObj<typeof ITwinGrid> = {
@@ -119,8 +120,11 @@ export const TableViewWithOverrides: StoryObj<typeof ITwinGrid> = {
 };
 
 const TableWithControlledSortRender = (args: ITwinGridProps) => {
-  const [orderbyOptions, setOrderbyOptions] = React.useState("number desc");
-  const [field, direction] = orderbyOptions.split(/\s+/);
+  const [sortOptions, setSortOptions] = React.useState<ITwinSortOptionsMUI>([
+    { field: "number", direction: "desc" },
+  ]);
+  const field = sortOptions[0]?.field;
+  const direction = sortOptions[0]?.direction ?? "asc";
 
   return (
     <div>
@@ -137,39 +141,42 @@ const TableWithControlledSortRender = (args: ITwinGridProps) => {
           label="iTwin Number"
           clickable
           variant={field === "number" ? "filled" : "outlined"}
-          onClick={() => setOrderbyOptions(`number ${direction}`)}
+          onClick={() => setSortOptions([{ field: "number", direction }])}
         />
         <Chip
           label="iTwin Name"
           clickable
           variant={field === "displayName" ? "filled" : "outlined"}
-          onClick={() => setOrderbyOptions(`displayName ${direction}`)}
+          onClick={() => setSortOptions([{ field: "displayName", direction }])}
         />
         <Chip
           label="Last Modified"
           clickable
           variant={field === "lastModifiedDateTime" ? "filled" : "outlined"}
-          onClick={() => setOrderbyOptions(`lastModifiedDateTime ${direction}`)}
+          onClick={() =>
+            setSortOptions([{ field: "lastModifiedDateTime", direction }])
+          }
         />
         <Chip
           label={direction === "desc" ? "↓ Descending" : "↑ Ascending"}
           clickable
           variant="outlined"
           onClick={() =>
-            setOrderbyOptions(
-              `${field} ${direction === "desc" ? "asc" : "desc"}`
+            setSortOptions((prev) =>
+              prev.map((item) => ({
+                ...item,
+                direction: item.direction === "desc" ? "asc" : "desc",
+              }))
             )
           }
         />
       </div>
       <ExternalComponent
         {...args}
-        orderbyOptions={orderbyOptions}
-        onOrderbyOptionsChange={(newOrderbyOptions) => {
-          action("orderby options changed")(newOrderbyOptions);
-          if (newOrderbyOptions) {
-            setOrderbyOptions(newOrderbyOptions);
-          }
+        sortOptions={sortOptions}
+        onSortOptionsChange={(newSortOptions) => {
+          action("sort options changed")(newSortOptions);
+          setSortOptions(newSortOptions);
         }}
       />
     </div>
@@ -183,7 +190,7 @@ export const TableWithControlledSort: StoryObj<typeof ITwinGrid> = {
     docs: {
       description: {
         story:
-          "The sort state is fully controlled by the parent via `orderbyOptions` and `onOrderbyOptionsChange`, so it can be saved anywhere the consumer wants.",
+          "The sort state is fully controlled by the parent via `sortOptions` and `onSortOptionsChange`, so it can be saved anywhere the consumer wants.",
       },
     },
   },
