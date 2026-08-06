@@ -73,9 +73,9 @@ export interface ITwinGridProps {
   iTwinSubClass?: ITwinSubClass;
   /** Thumbnail click handler. */
   onThumbnailClick?(iTwin: ITwinFull): void;
-  /** String/function that configure iTwin filtering behavior.
-   * A string will filter on displayed text only ().
-   * A function allow filtering on anything, is used in a normal array.filter.
+  /** Text to filter iTwins by, substring-matched case-insensitively against display name and
+   * number. When non-empty it is also sent as the `$search` parameter, unless the `requestType`
+   * is "favorites" or "recents", which are filtered client-side only.
    */
   filterOptions?: ITwinFilterOptions;
   /**

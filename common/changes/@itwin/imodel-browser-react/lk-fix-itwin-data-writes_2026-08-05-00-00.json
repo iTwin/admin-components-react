@@ -1,0 +1,25 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/imodel-browser-react",
+      "comment": "Fix `ITwinGrid` refetch doing nothing when the first page of results is full",
+      "type": "patch"
+    },
+    {
+      "packageName": "@itwin/imodel-browser-react",
+      "comment": "Discard iTwin responses that arrive after their query was replaced",
+      "type": "patch"
+    },
+    {
+      "packageName": "@itwin/imodel-browser-react",
+      "comment": "Keep already-loaded iTwins when a later page fails",
+      "type": "patch"
+    },
+    {
+      "packageName": "@itwin/imodel-browser-react",
+      "comment": "Clear `totalCount` when the query changes",
+      "type": "patch"
+    }
+  ],
+  "packageName": "@itwin/imodel-browser-react"
+}
