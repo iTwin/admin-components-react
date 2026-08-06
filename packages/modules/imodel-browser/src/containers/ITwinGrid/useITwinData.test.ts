@@ -444,6 +444,53 @@ describe("useITwinData hook", () => {
     });
   });
 
+  describe("totalCount", () => {
+    const respondWithTotal = (total: string) =>
+      server.use(
+        rest.get("https://api.bentley.com/itwins/", (_req, res, ctx) =>
+          res(
+            ctx.status(200),
+            ctx.set("x-total-count", total),
+            ctx.json({ iTwins: [{ id: "my1", displayName: "myName1" }] })
+          )
+        )
+      );
+
+    it("reports the total from the response header", async () => {
+      respondWithTotal("250");
+
+      const { result, waitForNextUpdate } = renderHook(() =>
+        useITwinData({ accessToken })
+      );
+
+      await waitForNextUpdate();
+      expect(result.current.totalCount).toEqual(250);
+    });
+
+    it("does not report the previous query's total while the next one is fetching", async () => {
+      respondWithTotal("250");
+
+      const { result, rerender, waitForNextUpdate } = renderHook<
+        Parameters<typeof useITwinData>,
+        ReturnType<typeof useITwinData>
+      >((args) => useITwinData(...args), {
+        initialProps: [{ accessToken, orderbyOptions: "first" }],
+      });
+
+      await waitForNextUpdate();
+      expect(result.current.totalCount).toEqual(250);
+
+      respondWithTotal("7");
+      rerender([{ accessToken, orderbyOptions: "second" }]);
+
+      expect(result.current.status).toEqual(DataStatus.Fetching);
+      expect(result.current.totalCount).toBeUndefined();
+
+      await waitForNextUpdate();
+      expect(result.current.totalCount).toEqual(7);
+    });
+  });
+
   describe("refetchITwins", () => {
     it("refetches when the first page filled the page size", async () => {
       const fullPage = Array.from({ length: 100 }, (_, i) => ({

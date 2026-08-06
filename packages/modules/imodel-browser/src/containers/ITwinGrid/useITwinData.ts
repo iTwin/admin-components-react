@@ -52,6 +52,7 @@ export const useITwinData = ({
   const resetData = React.useCallback(() => {
     setStatus(DataStatus.Fetching);
     setProjects([]);
+    setTotalCount(undefined);
     setPage(0);
     setMorePages(true);
     fetchingMoreRef.current = true;
