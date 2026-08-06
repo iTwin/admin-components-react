@@ -530,4 +530,78 @@ describe("useITwinData hook", () => {
       expect(result.current.iTwins).toEqual([{ id: "current" }]);
     });
   });
+
+  describe("client side filtering", () => {
+    const favorites = [
+      { id: "fav1", displayName: "alpha" },
+      { id: "fav2", displayName: "beta" },
+    ];
+
+    it("does not refetch favorites when the filter changes after all pages are loaded", async () => {
+      let requests = 0;
+      server.use(
+        rest.get(
+          "https://api.bentley.com/itwins/favorites",
+          (_req, res, ctx) => {
+            requests += 1;
+            return res(ctx.status(200), ctx.json({ iTwins: favorites }));
+          }
+        )
+      );
+
+      const { result, rerender, waitFor, waitForNextUpdate } = renderHook<
+        Parameters<typeof useITwinData>,
+        ReturnType<typeof useITwinData>
+      >((args) => useITwinData(...args), {
+        initialProps: [{ accessToken, requestType: "favorites" }],
+      });
+
+      await waitForNextUpdate();
+      expect(requests).toEqual(1);
+      expect(result.current.fetchMore).toBeUndefined();
+
+      rerender([
+        { accessToken, requestType: "favorites", filterOptions: "alpha" },
+      ]);
+      await waitFor(() => result.current.iTwins.length === 1);
+
+      expect(requests).toEqual(1);
+      expect(result.current.iTwins).toEqual([favorites[0]]);
+    });
+
+    it("refetches favorites when the filter changes while more pages remain", async () => {
+      const fullPage = Array.from({ length: 100 }, (_, i) => ({
+        id: `fav-${i}`,
+        displayName: `alpha-${i}`,
+      }));
+      let requests = 0;
+      server.use(
+        rest.get(
+          "https://api.bentley.com/itwins/favorites",
+          (_req, res, ctx) => {
+            requests += 1;
+            return res(ctx.status(200), ctx.json({ iTwins: fullPage }));
+          }
+        )
+      );
+
+      const { result, rerender, waitForNextUpdate } = renderHook<
+        Parameters<typeof useITwinData>,
+        ReturnType<typeof useITwinData>
+      >((args) => useITwinData(...args), {
+        initialProps: [{ accessToken, requestType: "favorites" }],
+      });
+
+      await waitForNextUpdate();
+      expect(requests).toEqual(1);
+      expect(result.current.fetchMore).toBeDefined();
+
+      rerender([
+        { accessToken, requestType: "favorites", filterOptions: "alpha" },
+      ]);
+      await waitForNextUpdate();
+
+      expect(requests).toEqual(2);
+    });
+  });
 });
