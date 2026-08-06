@@ -448,4 +448,86 @@ describe("useITwinData hook", () => {
       expect(requestedPages).toEqual(["0", "100", "0"]);
     });
   });
+
+  describe("superseded requests", () => {
+    // globalThis.fetch is already a jest mock, and jest.spyOn returns an existing mock as-is
+    // without registering a restore, so restoreAllMocks would not undo a mockImplementation.
+    const originalFetch = globalThis.fetch;
+
+    afterEach(() => {
+      globalThis.fetch = originalFetch;
+    });
+
+    // These fakes ignore the abort signal, so only the request id can keep a superseded result out.
+    const resolveAfter = (body: unknown, delayMs: number) =>
+      new Promise<Response>((resolve) =>
+        setTimeout(
+          () =>
+            resolve({
+              ok: true,
+              json: async () => body,
+              headers: { get: () => null },
+            } as unknown as Response),
+          delayMs
+        )
+      );
+
+    const respondByUrl = (impl: (url: string) => Promise<Response>) => {
+      globalThis.fetch = ((input: RequestInfo | URL) =>
+        impl(String(input))) as typeof globalThis.fetch;
+    };
+
+    const settle = async () => {
+      await act(async () => {
+        await new Promise((resolve) => setTimeout(resolve, 150));
+      });
+    };
+
+    it("ignores a response that resolves after its query was replaced", async () => {
+      respondByUrl((url) =>
+        url.includes("superseded")
+          ? resolveAfter({ iTwins: [{ id: "superseded" }] }, 80)
+          : resolveAfter({ iTwins: [{ id: "current" }] }, 0)
+      );
+
+      const { result, rerender, waitFor } = renderHook<
+        Parameters<typeof useITwinData>,
+        ReturnType<typeof useITwinData>
+      >((args) => useITwinData(...args), {
+        initialProps: [{ accessToken, orderbyOptions: "superseded" }],
+      });
+
+      rerender([{ accessToken, orderbyOptions: "current" }]);
+      await waitFor(() => result.current.status === DataStatus.Complete);
+      expect(result.current.iTwins).toEqual([{ id: "current" }]);
+
+      await settle();
+      expect(result.current.iTwins).toEqual([{ id: "current" }]);
+      expect(result.current.status).toEqual(DataStatus.Complete);
+    });
+
+    it("ignores a failure that rejects after its query was replaced", async () => {
+      respondByUrl((url) =>
+        url.includes("failing")
+          ? new Promise<Response>((_resolve, reject) =>
+              setTimeout(() => reject(new Error("superseded failure")), 80)
+            )
+          : resolveAfter({ iTwins: [{ id: "current" }] }, 0)
+      );
+
+      const { result, rerender, waitFor } = renderHook<
+        Parameters<typeof useITwinData>,
+        ReturnType<typeof useITwinData>
+      >((args) => useITwinData(...args), {
+        initialProps: [{ accessToken, orderbyOptions: "failing" }],
+      });
+
+      rerender([{ accessToken, orderbyOptions: "current" }]);
+      await waitFor(() => result.current.status === DataStatus.Complete);
+
+      await settle();
+      expect(result.current.status).toEqual(DataStatus.Complete);
+      expect(result.current.iTwins).toEqual([{ id: "current" }]);
+    });
+  });
 });

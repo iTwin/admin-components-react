@@ -76,6 +76,9 @@ export const useITwinData = ({
     setRefetchCount((count) => count + 1);
   }, [resetData]);
 
+  // Abort alone is not enough: an already-resolved response still runs its continuation.
+  const activeRequestRef = React.useRef<symbol | undefined>(undefined);
+
   const morePagesRef = React.useRef(morePages);
   morePagesRef.current = morePages;
 
@@ -122,6 +125,8 @@ export const useITwinData = ({
     if (page === 0) {
       setStatus(DataStatus.Fetching);
     }
+    const requestId = Symbol();
+    activeRequestRef.current = requestId;
     const abortController = new AbortController();
     const endpoint = ["favorites", "recents"].includes(requestType)
       ? requestType
@@ -166,6 +171,9 @@ export const useITwinData = ({
         : await response.text().then((errorText) => {
             throw new Error(errorText);
           });
+      if (activeRequestRef.current !== requestId) {
+        return;
+      }
       const totalCountHeader = response.headers.get("x-total-count");
       if (totalCountHeader !== null) {
         setTotalCount(Number(totalCountHeader));
@@ -182,8 +190,8 @@ export const useITwinData = ({
     };
 
     makeFetchRequest().catch((e) => {
-      if (e.name === "AbortError") {
-        // Aborting because unmounting is not an error, swallow.
+      if (activeRequestRef.current !== requestId || e.name === "AbortError") {
+        // Superseded or aborted, not a failure worth reporting.
         return;
       }
       setProjects([]);
@@ -192,6 +200,7 @@ export const useITwinData = ({
       logger.logError("Failed to fetch iTwins", e);
     });
     return () => {
+      activeRequestRef.current = undefined;
       abortController.abort();
     };
   }, [
