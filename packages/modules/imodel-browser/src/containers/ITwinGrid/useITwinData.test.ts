@@ -354,4 +354,98 @@ describe("useITwinData hook", () => {
       });
     });
   });
+
+  describe("refetchITwins", () => {
+    it("refetches when the first page filled the page size", async () => {
+      const fullPage = Array.from({ length: 100 }, (_, i) => ({
+        id: `id-${i}`,
+        displayName: `name-${i}`,
+      }));
+      const requestedPages: (string | null)[] = [];
+      server.use(
+        rest.get("https://api.bentley.com/itwins/", (req, res, ctx) => {
+          requestedPages.push(req.url.searchParams.get("$skip"));
+          return res(ctx.status(200), ctx.json({ iTwins: fullPage }));
+        })
+      );
+
+      const { result, waitForNextUpdate } = renderHook(() =>
+        useITwinData({ accessToken })
+      );
+
+      await waitForNextUpdate();
+      expect(requestedPages).toEqual(["0"]);
+      expect(result.current.fetchMore).toBeDefined();
+
+      act(() => {
+        result.current.refetchITwins();
+      });
+      expect(result.current.status).toEqual(DataStatus.Fetching);
+
+      await waitForNextUpdate();
+      expect(requestedPages).toEqual(["0", "0"]);
+      expect(result.current.status).toEqual(DataStatus.Complete);
+      expect(result.current.iTwins).toHaveLength(100);
+    });
+
+    it("refetches when the first page did not fill the page size", async () => {
+      const requestedPages: (string | null)[] = [];
+      server.use(
+        rest.get("https://api.bentley.com/itwins/", (req, res, ctx) => {
+          requestedPages.push(req.url.searchParams.get("$skip"));
+          return res(
+            ctx.status(200),
+            ctx.json({ iTwins: [{ id: "my1", displayName: "myName1" }] })
+          );
+        })
+      );
+
+      const { result, waitForNextUpdate } = renderHook(() =>
+        useITwinData({ accessToken })
+      );
+
+      await waitForNextUpdate();
+      expect(requestedPages).toEqual(["0"]);
+
+      act(() => {
+        result.current.refetchITwins();
+      });
+
+      await waitForNextUpdate();
+      expect(requestedPages).toEqual(["0", "0"]);
+      expect(result.current.status).toEqual(DataStatus.Complete);
+    });
+
+    it("issues a single request when refetching after fetching more pages", async () => {
+      const fullPage = Array.from({ length: 100 }, (_, i) => ({
+        id: `id-${i}`,
+        displayName: `name-${i}`,
+      }));
+      const requestedPages: (string | null)[] = [];
+      server.use(
+        rest.get("https://api.bentley.com/itwins/", (req, res, ctx) => {
+          requestedPages.push(req.url.searchParams.get("$skip"));
+          return res(ctx.status(200), ctx.json({ iTwins: fullPage }));
+        })
+      );
+
+      const { result, waitForNextUpdate } = renderHook(() =>
+        useITwinData({ accessToken })
+      );
+
+      await waitForNextUpdate();
+      act(() => {
+        result.current.fetchMore?.();
+      });
+      await waitForNextUpdate();
+      expect(requestedPages).toEqual(["0", "100"]);
+
+      act(() => {
+        result.current.refetchITwins();
+      });
+      await waitForNextUpdate();
+
+      expect(requestedPages).toEqual(["0", "100", "0"]);
+    });
+  });
 });

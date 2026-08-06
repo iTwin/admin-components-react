@@ -49,7 +49,7 @@ export const useITwinData = ({
   const [page, setPage] = React.useState(0);
   const [morePages, setMorePages] = React.useState(true);
 
-  const refetchData = React.useCallback(() => {
+  const resetData = React.useCallback(() => {
     setStatus(DataStatus.Fetching);
     setProjects([]);
     setPage(0);
@@ -67,6 +67,15 @@ export const useITwinData = ({
     setPage((page) => page + 1);
   }, []);
 
+  // A full first page leaves "page" at 0 and "morePages" true, so a reset alone changes nothing the
+  // fetch effect depends on. Only refetchITwins bumps this: bumping inside resetData would abort
+  // and re-issue the request that a dependency change had just started.
+  const [refetchCount, setRefetchCount] = React.useState(0);
+  const refetchITwins = React.useCallback(() => {
+    resetData();
+    setRefetchCount((count) => count + 1);
+  }, [resetData]);
+
   const morePagesRef = React.useRef(morePages);
   morePagesRef.current = morePages;
 
@@ -78,13 +87,13 @@ export const useITwinData = ({
       morePagesRef.current ||
       !["favorites", "recents"].includes(requestType)
     ) {
-      refetchData();
+      resetData();
     }
-  }, [filterOptions, requestType, refetchData]);
+  }, [filterOptions, requestType, resetData]);
 
   React.useEffect(() => {
     // If any of the dependencies change, always restart the fetch from scratch.
-    refetchData();
+    resetData();
   }, [
     accessToken,
     requestType,
@@ -92,7 +101,7 @@ export const useITwinData = ({
     orderbyOptions,
     data,
     serverEnvironmentPrefix,
-    refetchData,
+    resetData,
   ]);
 
   React.useEffect(() => {
@@ -194,6 +203,7 @@ export const useITwinData = ({
     orderbyOptions,
     page,
     morePages,
+    refetchCount,
     iTwinSubClass,
     shouldRefetchFavorites,
     resetShouldRefetchFavorites,
@@ -204,6 +214,6 @@ export const useITwinData = ({
     status,
     totalCount,
     fetchMore: morePages ? fetchMore : undefined,
-    refetchITwins: refetchData,
+    refetchITwins,
   };
 };
