@@ -197,7 +197,9 @@ export const useITwinData = ({
         // Superseded or aborted, not a failure worth reporting.
         return;
       }
-      setProjects([]);
+      if (page === 0) {
+        setProjects([]);
+      }
       setStatus(DataStatus.FetchFailed);
       fetchingMoreRef.current = false;
       logger.logError("Failed to fetch iTwins", e);

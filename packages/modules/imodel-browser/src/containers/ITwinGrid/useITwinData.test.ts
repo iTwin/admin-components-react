@@ -353,6 +353,95 @@ describe("useITwinData hook", () => {
         displayName: "second-0",
       });
     });
+
+    it("keeps the pages already loaded when a later page fails", async () => {
+      const firstPage = Array.from({ length: 100 }, (_, i) => ({
+        id: `first-${i}`,
+        displayName: `first-${i}`,
+      }));
+      server.use(
+        rest.get("https://api.bentley.com/itwins/", (req, res, ctx) =>
+          req.url.searchParams.get("$skip") === "0"
+            ? res(ctx.status(200), ctx.json({ iTwins: firstPage }))
+            : res(ctx.status(500))
+        )
+      );
+
+      const { result, waitForNextUpdate, waitForValueToChange } = renderHook(
+        () => useITwinData({ accessToken })
+      );
+
+      await waitForNextUpdate();
+      expect(result.current.iTwins).toHaveLength(100);
+
+      act(() => {
+        result.current.fetchMore?.();
+      });
+      await waitForValueToChange(() => result.current.status);
+
+      expect(result.current.status).toEqual(DataStatus.FetchFailed);
+      expect(result.current.iTwins).toHaveLength(100);
+      // morePages is deliberately untouched, because favorites and recents read it as
+      // "everything is loaded" and would stop refetching entirely.
+      expect(result.current.fetchMore).toBeDefined();
+    });
+
+    it("recovers from a failure when the favorites filter changes", async () => {
+      let shouldFail = true;
+      let requests = 0;
+      server.use(
+        rest.get(
+          "https://api.bentley.com/itwins/favorites",
+          (_req, res, ctx) => {
+            requests += 1;
+            return shouldFail
+              ? res(ctx.status(500))
+              : res(
+                  ctx.status(200),
+                  ctx.json({ iTwins: [{ id: "fav1", displayName: "alpha" }] })
+                );
+          }
+        )
+      );
+
+      const { result, rerender, waitForValueToChange, waitFor } = renderHook<
+        Parameters<typeof useITwinData>,
+        ReturnType<typeof useITwinData>
+      >((args) => useITwinData(...args), {
+        initialProps: [{ accessToken, requestType: "favorites" }],
+      });
+
+      await waitForValueToChange(() => result.current.status);
+      expect(result.current.status).toEqual(DataStatus.FetchFailed);
+      expect(requests).toEqual(1);
+
+      shouldFail = false;
+      rerender([
+        { accessToken, requestType: "favorites", filterOptions: "alpha" },
+      ]);
+
+      await waitFor(() => result.current.status === DataStatus.Complete);
+      expect(requests).toEqual(2);
+      expect(result.current.iTwins).toEqual([
+        { id: "fav1", displayName: "alpha" },
+      ]);
+    });
+
+    it("clears the results when the first page fails", async () => {
+      server.use(
+        rest.get("https://api.bentley.com/itwins/", (_req, res, ctx) =>
+          res(ctx.status(500))
+        )
+      );
+
+      const { result, waitForValueToChange } = renderHook(() =>
+        useITwinData({ accessToken })
+      );
+
+      await waitForValueToChange(() => result.current.status);
+      expect(result.current.status).toEqual(DataStatus.FetchFailed);
+      expect(result.current.iTwins).toEqual([]);
+    });
   });
 
   describe("refetchITwins", () => {
