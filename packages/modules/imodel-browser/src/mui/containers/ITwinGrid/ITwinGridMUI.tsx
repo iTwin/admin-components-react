@@ -27,6 +27,7 @@ import {
   type ITwinTableOverridesMUI,
 } from "../../types";
 import { stripNonTileProps } from "../../utils/stripNonTileProps";
+import { clientSideITwinSort } from "./clientSideITwinSort";
 import { type ITwinTableMUIStrings, ITwinTableMUI } from "./ITwinTableMUI";
 import { type ITwinTilePropsMUI, ITwinTileMUI } from "./ITwinTileMUI";
 
@@ -88,7 +89,6 @@ export interface ITwinGridPropsMUI
   stringsOverrides?: Partial<ITwinGridStringsMUI>;
   /**
    * Requested sort, e.g. `{ field: "displayName", direction: "asc" }`.
-   * `undefined` means the default server sort.
    */
   sortOptions?: ITwinSortOptionsMUI;
   /**
@@ -205,12 +205,24 @@ const ITwinGridMUIInternal = ({
     resetShouldRefetchFavorites,
   });
 
-  const iTwins = React.useMemo(
-    () =>
+  const iTwins = React.useMemo(() => {
+    const processed =
       postProcessCallback?.([...fetchedItwins], fetchStatus, totalCount) ??
-      fetchedItwins,
-    [postProcessCallback, fetchedItwins, fetchStatus, totalCount]
-  );
+      fetchedItwins;
+    return clientSideITwinSort(processed, {
+      viewMode,
+      requestType,
+      sort: sortOptions,
+    });
+  }, [
+    postProcessCallback,
+    fetchedItwins,
+    fetchStatus,
+    totalCount,
+    viewMode,
+    requestType,
+    sortOptions,
+  ]);
 
   const noResultsText = {
     [DataStatus.Fetching]: "",
