@@ -127,11 +127,11 @@ export const IModelTableMUI = ({
   const handleSortModelChange = React.useCallback(
     (model: IModelTableSortModel) => {
       const first = model[0];
-      onSortOptionsChange?.(
-        first
-          ? { field: first.field, direction: first.sort ?? "asc" }
-          : undefined
-      );
+      if (!first) return;
+      onSortOptionsChange?.({
+        field: first.field,
+        direction: first.sort ?? "asc",
+      });
     },
     [onSortOptionsChange]
   );
