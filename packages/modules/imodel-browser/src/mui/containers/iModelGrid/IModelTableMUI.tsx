@@ -79,7 +79,7 @@ export interface IModelTableMUIProps {
    * in the same shape as the `sortOptions` prop and pass it back as-is.
    * Receives `undefined` when the sort is cleared.
    */
-  onSortOptionsChange?: (sortOptions?: IModelSortOptionsMUI) => void;
+  onSortOptionsChange?: (sortOptions: IModelSortOptionsMUI) => void;
   /** Nonce applied to `<style>` elements. Required if your application uses a Content Security Policy (CSP) that restricts inline styles. */
   nonce?: string;
 }
@@ -127,7 +127,9 @@ export const IModelTableMUI = ({
   const handleSortModelChange = React.useCallback(
     (model: IModelTableSortModel) => {
       const first = model[0];
-      if (!first) return;
+      if (!first) {
+        return;
+      }
       onSortOptionsChange?.({
         field: first.field,
         direction: first.sort ?? "asc",

@@ -97,7 +97,7 @@ export interface ITwinGridPropsMUI
    * prop, so it can be stored and passed back as-is. Receives `undefined`
    * when the sort is cleared.
    */
-  onSortOptionsChange?: (sortOptions?: ITwinSortOptionsMUI) => void;
+  onSortOptionsChange?: (sortOptions: ITwinSortOptionsMUI) => void;
 }
 
 /**

@@ -82,7 +82,7 @@ export interface ITwinTableMUIProps {
    * in the same shape as the `sortOptions` prop and pass it back as-is.
    * Receives `undefined` when the sort is cleared.
    */
-  onSortOptionsChange?: (sortOptions?: ITwinSortOptionsMUI) => void;
+  onSortOptionsChange?: (sortOptions: ITwinSortOptionsMUI) => void;
   /** Nonce applied to `<style>` elements. Required if your application uses a Content Security Policy (CSP) that restricts inline styles. */
   nonce?: string;
 }
@@ -132,11 +132,13 @@ export const ITwinTableMUI = ({
   const handleSortModelChange = React.useCallback(
     (model: ITwinTableSortModel) => {
       const first = model[0];
-      onSortOptionsChange?.(
-        first
-          ? { field: first.field, direction: first.sort ?? "asc" }
-          : undefined
-      );
+      if (!first) {
+        return undefined;
+      }
+      onSortOptionsChange?.({
+        field: first.field,
+        direction: first.sort ?? "asc",
+      });
     },
     [onSortOptionsChange]
   );
