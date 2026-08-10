@@ -86,10 +86,8 @@ export const useITwinData = ({
     setRefetchCount((count) => count + 1);
   }, [resetData]);
 
-  // Abort alone is not enough: an already-resolved response still runs its continuation.
   const activeRequestRef = React.useRef<symbol | undefined>(undefined);
 
-  // In an effect, not during render: a discarded render must not leave an uncommitted value here.
   const morePagesRef = React.useRef(morePages);
   React.useEffect(() => {
     morePagesRef.current = morePages;
