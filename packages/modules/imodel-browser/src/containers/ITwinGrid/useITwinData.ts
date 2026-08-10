@@ -77,9 +77,7 @@ export const useITwinData = ({
     setPage((page) => page + 1);
   }, []);
 
-  // A full first page leaves "page" at 0 and "morePages" true, so a reset alone changes nothing the
-  // fetch effect depends on. Only refetchITwins bumps this: bumping inside resetData would abort
-  // and re-issue the request that a dependency change had just started.
+  // The refetch counter is mostly useful for testing.
   const [refetchCount, setRefetchCount] = React.useState(0);
   const refetchITwins = React.useCallback(() => {
     resetData();
