@@ -386,6 +386,106 @@ describe("useITwinData hook", () => {
       expect(result.current.fetchMore).toBeDefined();
     });
 
+    it("retries the failed page instead of advancing past it", async () => {
+      const pageOf = (start: number) =>
+        Array.from({ length: 100 }, (_, i) => ({
+          id: `it-${start + i}`,
+          displayName: `it-${start + i}`,
+        }));
+      const requested: (string | null)[] = [];
+      let failSecondPage = true;
+      server.use(
+        rest.get("https://api.bentley.com/itwins/", (req, res, ctx) => {
+          const skip = req.url.searchParams.get("$skip");
+          requested.push(skip);
+          if (skip === "100" && failSecondPage) {
+            return res(ctx.status(500));
+          }
+          return res(
+            ctx.status(200),
+            ctx.json({ iTwins: pageOf(Number(skip)) })
+          );
+        })
+      );
+
+      const { result, waitForNextUpdate, waitForValueToChange } = renderHook(
+        () => useITwinData({ accessToken })
+      );
+
+      await waitForNextUpdate();
+      act(() => {
+        result.current.fetchMore?.();
+      });
+      await waitForValueToChange(() => result.current.status);
+      expect(result.current.status).toEqual(DataStatus.FetchFailed);
+      expect(requested).toEqual(["0", "100"]);
+
+      failSecondPage = false;
+      act(() => {
+        result.current.fetchMore?.();
+      });
+      await waitForValueToChange(() => result.current.status);
+
+      expect(requested).toEqual(["0", "100", "100"]);
+      expect(result.current.status).toEqual(DataStatus.Complete);
+      expect(result.current.iTwins.map((iTwin) => iTwin.id)).toContain(
+        "it-150"
+      );
+    });
+
+    it("advances normally when the query changed after a failed page", async () => {
+      const requested: { skip: string | null; search: string | null }[] = [];
+      let failSecondPage = true;
+      server.use(
+        rest.get("https://api.bentley.com/itwins/", (req, res, ctx) => {
+          const skip = req.url.searchParams.get("$skip");
+          requested.push({ skip, search: req.url.searchParams.get("$search") });
+          if (skip === "100" && failSecondPage) {
+            return res(ctx.status(500));
+          }
+          return res(
+            ctx.status(200),
+            ctx.json({
+              iTwins: Array.from({ length: 100 }, (_, i) => ({
+                id: `id-${skip}-${i}`,
+              })),
+            })
+          );
+        })
+      );
+
+      const { result, rerender, waitForNextUpdate, waitForValueToChange } =
+        renderHook<
+          Parameters<typeof useITwinData>,
+          ReturnType<typeof useITwinData>
+        >((args) => useITwinData(...args), {
+          initialProps: [{ accessToken }],
+        });
+
+      await waitForNextUpdate();
+      act(() => {
+        result.current.fetchMore?.();
+      });
+      await waitForValueToChange(() => result.current.status);
+      expect(result.current.status).toEqual(DataStatus.FetchFailed);
+
+      failSecondPage = false;
+      rerender([{ accessToken, filterOptions: "next" }]);
+      await waitForValueToChange(() => result.current.status);
+      expect(result.current.status).toEqual(DataStatus.Complete);
+
+      act(() => {
+        result.current.fetchMore?.();
+      });
+      await waitForNextUpdate();
+
+      // The pending retry belonged to the previous query, so this must page forward.
+      expect(requested[requested.length - 1]).toEqual({
+        skip: "100",
+        search: "next",
+      });
+    });
+
     it("recovers from a failure when the favorites filter changes", async () => {
       let shouldFail = true;
       let requests = 0;

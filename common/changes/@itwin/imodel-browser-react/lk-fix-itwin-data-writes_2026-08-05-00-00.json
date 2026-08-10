@@ -17,6 +17,11 @@
     },
     {
       "packageName": "@itwin/imodel-browser-react",
+      "comment": "Retry a failed page of iTwins instead of skipping past it",
+      "type": "patch"
+    },
+    {
+      "packageName": "@itwin/imodel-browser-react",
       "comment": "Clear `totalCount` when the query changes",
       "type": "patch"
     }

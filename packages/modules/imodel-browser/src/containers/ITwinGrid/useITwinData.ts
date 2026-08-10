@@ -56,15 +56,24 @@ export const useITwinData = ({
     setPage(0);
     setMorePages(true);
     fetchingMoreRef.current = true;
+    lastPageFailedRef.current = false;
   }, []);
 
   // We start in a fetching state
   const fetchingMoreRef = React.useRef(true);
+  const lastPageFailedRef = React.useRef(false);
+  const [retryCount, setRetryCount] = React.useState(0);
   const fetchMore = React.useCallback(() => {
     if (fetchingMoreRef.current) {
       return;
     }
     fetchingMoreRef.current = true;
+    if (lastPageFailedRef.current) {
+      // Ask for the same page again. Advancing would leave a hole where it should have been.
+      lastPageFailedRef.current = false;
+      setRetryCount((count) => count + 1);
+      return;
+    }
     setPage((page) => page + 1);
   }, []);
 
@@ -203,6 +212,7 @@ export const useITwinData = ({
       }
       setStatus(DataStatus.FetchFailed);
       fetchingMoreRef.current = false;
+      lastPageFailedRef.current = true;
       logger.logError("Failed to fetch iTwins", e);
     });
     return () => {
@@ -219,6 +229,7 @@ export const useITwinData = ({
     page,
     morePages,
     refetchCount,
+    retryCount,
     iTwinSubClass,
     shouldRefetchFavorites,
     resetShouldRefetchFavorites,
