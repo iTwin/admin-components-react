@@ -77,7 +77,7 @@ export const useITwinData = ({
     setPage((page) => page + 1);
   }, []);
 
-  // The refetch counter is mostly useful for testing.
+  // counter to force a new request when resetting the existing state would not change an effect dependency
   const [refetchCount, setRefetchCount] = React.useState(0);
   const refetchITwins = React.useCallback(() => {
     resetData();
