@@ -10,6 +10,7 @@ import {
   rest,
 } from "msw";
 
+import { deferred, responseFor } from "../../tests/helpers";
 import { server } from "../../tests/mocks/server";
 import { DataStatus } from "../../types";
 import { useITwinData } from "./useITwinData";
@@ -352,6 +353,478 @@ describe("useITwinData hook", () => {
         id: "second-0",
         displayName: "second-0",
       });
+    });
+
+    it("keeps the pages already loaded when a later page fails", async () => {
+      const firstPage = Array.from({ length: 100 }, (_, i) => ({
+        id: `first-${i}`,
+        displayName: `first-${i}`,
+      }));
+      server.use(
+        rest.get("https://api.bentley.com/itwins/", (req, res, ctx) =>
+          req.url.searchParams.get("$skip") === "0"
+            ? res(ctx.status(200), ctx.json({ iTwins: firstPage }))
+            : res(ctx.status(500))
+        )
+      );
+
+      const { result, waitForNextUpdate, waitForValueToChange } = renderHook(
+        () => useITwinData({ accessToken })
+      );
+
+      await waitForNextUpdate();
+      expect(result.current.iTwins).toHaveLength(100);
+
+      act(() => {
+        result.current.fetchMore?.();
+      });
+      await waitForValueToChange(() => result.current.status);
+
+      expect(result.current.status).toEqual(DataStatus.FetchFailed);
+      expect(result.current.iTwins).toHaveLength(100);
+      // morePages is deliberately untouched, because favorites and recents read it as
+      // "everything is loaded" and would stop refetching entirely.
+      expect(result.current.fetchMore).toBeDefined();
+    });
+
+    it("retries the failed page instead of advancing past it", async () => {
+      const pageOf = (start: number) =>
+        Array.from({ length: 100 }, (_, i) => ({
+          id: `it-${start + i}`,
+          displayName: `it-${start + i}`,
+        }));
+      const requested: (string | null)[] = [];
+      let failSecondPage = true;
+      server.use(
+        rest.get("https://api.bentley.com/itwins/", (req, res, ctx) => {
+          const skip = req.url.searchParams.get("$skip");
+          requested.push(skip);
+          if (skip === "100" && failSecondPage) {
+            return res(ctx.status(500));
+          }
+          return res(
+            ctx.status(200),
+            ctx.json({ iTwins: pageOf(Number(skip)) })
+          );
+        })
+      );
+
+      const { result, waitForNextUpdate, waitForValueToChange } = renderHook(
+        () => useITwinData({ accessToken })
+      );
+
+      await waitForNextUpdate();
+      act(() => {
+        result.current.fetchMore?.();
+      });
+      await waitForValueToChange(() => result.current.status);
+      expect(result.current.status).toEqual(DataStatus.FetchFailed);
+      expect(requested).toEqual(["0", "100"]);
+
+      failSecondPage = false;
+      act(() => {
+        result.current.fetchMore?.();
+      });
+      await waitForValueToChange(() => result.current.status);
+
+      expect(requested).toEqual(["0", "100", "100"]);
+      expect(result.current.status).toEqual(DataStatus.Complete);
+      expect(result.current.iTwins.map((iTwin) => iTwin.id)).toContain(
+        "it-150"
+      );
+    });
+
+    it("advances normally when the query changed after a failed page", async () => {
+      const requested: { skip: string | null; search: string | null }[] = [];
+      let failSecondPage = true;
+      server.use(
+        rest.get("https://api.bentley.com/itwins/", (req, res, ctx) => {
+          const skip = req.url.searchParams.get("$skip");
+          requested.push({ skip, search: req.url.searchParams.get("$search") });
+          if (skip === "100" && failSecondPage) {
+            return res(ctx.status(500));
+          }
+          return res(
+            ctx.status(200),
+            ctx.json({
+              iTwins: Array.from({ length: 100 }, (_, i) => ({
+                id: `id-${skip}-${i}`,
+              })),
+            })
+          );
+        })
+      );
+
+      const { result, rerender, waitForNextUpdate, waitForValueToChange } =
+        renderHook<
+          Parameters<typeof useITwinData>,
+          ReturnType<typeof useITwinData>
+        >((args) => useITwinData(...args), {
+          initialProps: [{ accessToken }],
+        });
+
+      await waitForNextUpdate();
+      act(() => {
+        result.current.fetchMore?.();
+      });
+      await waitForValueToChange(() => result.current.status);
+      expect(result.current.status).toEqual(DataStatus.FetchFailed);
+
+      failSecondPage = false;
+      rerender([{ accessToken, filterOptions: "next" }]);
+      await waitForValueToChange(() => result.current.status);
+      expect(result.current.status).toEqual(DataStatus.Complete);
+
+      act(() => {
+        result.current.fetchMore?.();
+      });
+      await waitForNextUpdate();
+
+      // The pending retry belonged to the previous query, so this must page forward.
+      expect(requested[requested.length - 1]).toEqual({
+        skip: "100",
+        search: "next",
+      });
+    });
+
+    it("recovers from a failure when the favorites filter changes", async () => {
+      let shouldFail = true;
+      let requests = 0;
+      server.use(
+        rest.get(
+          "https://api.bentley.com/itwins/favorites",
+          (_req, res, ctx) => {
+            requests += 1;
+            return shouldFail
+              ? res(ctx.status(500))
+              : res(
+                  ctx.status(200),
+                  ctx.json({ iTwins: [{ id: "fav1", displayName: "alpha" }] })
+                );
+          }
+        )
+      );
+
+      const { result, rerender, waitForValueToChange, waitFor } = renderHook<
+        Parameters<typeof useITwinData>,
+        ReturnType<typeof useITwinData>
+      >((args) => useITwinData(...args), {
+        initialProps: [{ accessToken, requestType: "favorites" }],
+      });
+
+      await waitForValueToChange(() => result.current.status);
+      expect(result.current.status).toEqual(DataStatus.FetchFailed);
+      expect(requests).toEqual(1);
+
+      shouldFail = false;
+      rerender([
+        { accessToken, requestType: "favorites", filterOptions: "alpha" },
+      ]);
+
+      await waitFor(() => result.current.status === DataStatus.Complete);
+      expect(requests).toEqual(2);
+      expect(result.current.iTwins).toEqual([
+        { id: "fav1", displayName: "alpha" },
+      ]);
+    });
+
+    it("clears the results when the first page fails", async () => {
+      server.use(
+        rest.get("https://api.bentley.com/itwins/", (_req, res, ctx) =>
+          res(ctx.status(500))
+        )
+      );
+
+      const { result, waitForValueToChange } = renderHook(() =>
+        useITwinData({ accessToken })
+      );
+
+      await waitForValueToChange(() => result.current.status);
+      expect(result.current.status).toEqual(DataStatus.FetchFailed);
+      expect(result.current.iTwins).toEqual([]);
+    });
+  });
+
+  describe("totalCount", () => {
+    const respondWithTotal = (total: string) =>
+      server.use(
+        rest.get("https://api.bentley.com/itwins/", (_req, res, ctx) =>
+          res(
+            ctx.status(200),
+            ctx.set("x-total-count", total),
+            ctx.json({ iTwins: [{ id: "my1", displayName: "myName1" }] })
+          )
+        )
+      );
+
+    it("reports the total from the response header", async () => {
+      respondWithTotal("250");
+
+      const { result, waitForNextUpdate } = renderHook(() =>
+        useITwinData({ accessToken })
+      );
+
+      await waitForNextUpdate();
+      expect(result.current.totalCount).toEqual(250);
+    });
+
+    it("does not report the previous query's total while the next one is fetching", async () => {
+      respondWithTotal("250");
+
+      const { result, rerender, waitForNextUpdate } = renderHook<
+        Parameters<typeof useITwinData>,
+        ReturnType<typeof useITwinData>
+      >((args) => useITwinData(...args), {
+        initialProps: [{ accessToken, orderbyOptions: "first" }],
+      });
+
+      await waitForNextUpdate();
+      expect(result.current.totalCount).toEqual(250);
+
+      respondWithTotal("7");
+      rerender([{ accessToken, orderbyOptions: "second" }]);
+
+      expect(result.current.status).toEqual(DataStatus.Fetching);
+      expect(result.current.totalCount).toBeUndefined();
+
+      await waitForNextUpdate();
+      expect(result.current.totalCount).toEqual(7);
+    });
+  });
+
+  describe("refetchITwins", () => {
+    it("refetches when the first page filled the page size", async () => {
+      const fullPage = Array.from({ length: 100 }, (_, i) => ({
+        id: `id-${i}`,
+        displayName: `name-${i}`,
+      }));
+      const requestedPages: (string | null)[] = [];
+      server.use(
+        rest.get("https://api.bentley.com/itwins/", (req, res, ctx) => {
+          requestedPages.push(req.url.searchParams.get("$skip"));
+          return res(ctx.status(200), ctx.json({ iTwins: fullPage }));
+        })
+      );
+
+      const { result, waitForNextUpdate } = renderHook(() =>
+        useITwinData({ accessToken })
+      );
+
+      await waitForNextUpdate();
+      expect(requestedPages).toEqual(["0"]);
+      expect(result.current.fetchMore).toBeDefined();
+
+      act(() => {
+        result.current.refetchITwins();
+      });
+      expect(result.current.status).toEqual(DataStatus.Fetching);
+
+      await waitForNextUpdate();
+      expect(requestedPages).toEqual(["0", "0"]);
+      expect(result.current.status).toEqual(DataStatus.Complete);
+      expect(result.current.iTwins).toHaveLength(100);
+    });
+
+    it("refetches when the first page did not fill the page size", async () => {
+      const requestedPages: (string | null)[] = [];
+      server.use(
+        rest.get("https://api.bentley.com/itwins/", (req, res, ctx) => {
+          requestedPages.push(req.url.searchParams.get("$skip"));
+          return res(
+            ctx.status(200),
+            ctx.json({ iTwins: [{ id: "my1", displayName: "myName1" }] })
+          );
+        })
+      );
+
+      const { result, waitForNextUpdate } = renderHook(() =>
+        useITwinData({ accessToken })
+      );
+
+      await waitForNextUpdate();
+      expect(requestedPages).toEqual(["0"]);
+
+      act(() => {
+        result.current.refetchITwins();
+      });
+
+      await waitForNextUpdate();
+      expect(requestedPages).toEqual(["0", "0"]);
+      expect(result.current.status).toEqual(DataStatus.Complete);
+    });
+
+    it("issues a single request when refetching after fetching more pages", async () => {
+      const fullPage = Array.from({ length: 100 }, (_, i) => ({
+        id: `id-${i}`,
+        displayName: `name-${i}`,
+      }));
+      const requestedPages: (string | null)[] = [];
+      server.use(
+        rest.get("https://api.bentley.com/itwins/", (req, res, ctx) => {
+          requestedPages.push(req.url.searchParams.get("$skip"));
+          return res(ctx.status(200), ctx.json({ iTwins: fullPage }));
+        })
+      );
+
+      const { result, waitForNextUpdate } = renderHook(() =>
+        useITwinData({ accessToken })
+      );
+
+      await waitForNextUpdate();
+      act(() => {
+        result.current.fetchMore?.();
+      });
+      await waitForNextUpdate();
+      expect(requestedPages).toEqual(["0", "100"]);
+
+      act(() => {
+        result.current.refetchITwins();
+      });
+      await waitForNextUpdate();
+
+      expect(requestedPages).toEqual(["0", "100", "0"]);
+    });
+  });
+
+  describe("superseded requests", () => {
+    // globalThis.fetch is already a jest mock, and jest.spyOn returns an existing mock as-is
+    // without registering a restore, so restoreAllMocks would not undo a mockImplementation.
+    const originalFetch = globalThis.fetch;
+
+    afterEach(() => {
+      globalThis.fetch = originalFetch;
+    });
+
+    const respondByUrl = (impl: (url: string) => Promise<Response>) => {
+      globalThis.fetch = ((input: RequestInfo | URL) =>
+        impl(String(input))) as typeof globalThis.fetch;
+    };
+
+    const renderWithOrderby = (orderbyOptions: string) =>
+      renderHook<
+        Parameters<typeof useITwinData>,
+        ReturnType<typeof useITwinData>
+      >((args) => useITwinData(...args), {
+        initialProps: [{ accessToken, orderbyOptions }],
+      });
+
+    it("ignores a response that resolves after its query was replaced", async () => {
+      const superseded = deferred<Response>();
+      respondByUrl((url) =>
+        url.includes("superseded")
+          ? superseded.promise
+          : Promise.resolve(responseFor({ iTwins: [{ id: "current" }] }))
+      );
+
+      const { result, rerender, waitFor } = renderWithOrderby("superseded");
+
+      rerender([{ accessToken, orderbyOptions: "current" }]);
+      await waitFor(() => result.current.status === DataStatus.Complete);
+      expect(result.current.iTwins).toEqual([{ id: "current" }]);
+
+      await act(async () => {
+        superseded.resolve(responseFor({ iTwins: [{ id: "superseded" }] }));
+        await superseded.promise;
+      });
+
+      expect(result.current.iTwins).toEqual([{ id: "current" }]);
+      expect(result.current.status).toEqual(DataStatus.Complete);
+    });
+
+    it("ignores a failure that rejects after its query was replaced", async () => {
+      const superseded = deferred<Response>();
+      respondByUrl((url) =>
+        url.includes("failing")
+          ? superseded.promise
+          : Promise.resolve(responseFor({ iTwins: [{ id: "current" }] }))
+      );
+
+      const { result, rerender, waitFor } = renderWithOrderby("failing");
+
+      rerender([{ accessToken, orderbyOptions: "current" }]);
+      await waitFor(() => result.current.status === DataStatus.Complete);
+
+      await act(async () => {
+        superseded.reject(new Error("superseded failure"));
+        await superseded.promise.catch(() => undefined);
+      });
+
+      expect(result.current.status).toEqual(DataStatus.Complete);
+      expect(result.current.iTwins).toEqual([{ id: "current" }]);
+    });
+  });
+
+  describe("client side filtering", () => {
+    const favorites = [
+      { id: "fav1", displayName: "alpha" },
+      { id: "fav2", displayName: "beta" },
+    ];
+
+    it("does not refetch favorites when the filter changes after all pages are loaded", async () => {
+      let requests = 0;
+      server.use(
+        rest.get(
+          "https://api.bentley.com/itwins/favorites",
+          (_req, res, ctx) => {
+            requests += 1;
+            return res(ctx.status(200), ctx.json({ iTwins: favorites }));
+          }
+        )
+      );
+
+      const { result, rerender, waitFor, waitForNextUpdate } = renderHook<
+        Parameters<typeof useITwinData>,
+        ReturnType<typeof useITwinData>
+      >((args) => useITwinData(...args), {
+        initialProps: [{ accessToken, requestType: "favorites" }],
+      });
+
+      await waitForNextUpdate();
+      expect(requests).toEqual(1);
+      expect(result.current.fetchMore).toBeUndefined();
+
+      rerender([
+        { accessToken, requestType: "favorites", filterOptions: "alpha" },
+      ]);
+      await waitFor(() => result.current.iTwins.length === 1);
+
+      expect(requests).toEqual(1);
+      expect(result.current.iTwins).toEqual([favorites[0]]);
+    });
+
+    it("refetches favorites when the filter changes while more pages remain", async () => {
+      const fullPage = Array.from({ length: 100 }, (_, i) => ({
+        id: `fav-${i}`,
+        displayName: `alpha-${i}`,
+      }));
+      let requests = 0;
+      server.use(
+        rest.get(
+          "https://api.bentley.com/itwins/favorites",
+          (_req, res, ctx) => {
+            requests += 1;
+            return res(ctx.status(200), ctx.json({ iTwins: fullPage }));
+          }
+        )
+      );
+
+      const { result, rerender, waitForNextUpdate } = renderHook<
+        Parameters<typeof useITwinData>,
+        ReturnType<typeof useITwinData>
+      >((args) => useITwinData(...args), {
+        initialProps: [{ accessToken, requestType: "favorites" }],
+      });
+
+      await waitForNextUpdate();
+      expect(requests).toEqual(1);
+      expect(result.current.fetchMore).toBeDefined();
+
+      rerender([
+        { accessToken, requestType: "favorites", filterOptions: "alpha" },
+      ]);
+      await waitForNextUpdate();
+
+      expect(requests).toEqual(2);
     });
   });
 });

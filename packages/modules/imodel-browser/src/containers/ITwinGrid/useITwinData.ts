@@ -49,26 +49,47 @@ export const useITwinData = ({
   const [page, setPage] = React.useState(0);
   const [morePages, setMorePages] = React.useState(true);
 
-  const refetchData = React.useCallback(() => {
+  const resetData = React.useCallback(() => {
     setStatus(DataStatus.Fetching);
     setProjects([]);
+    setTotalCount(undefined);
     setPage(0);
     setMorePages(true);
     fetchingMoreRef.current = true;
+    lastPageFailedRef.current = false;
   }, []);
 
   // We start in a fetching state
   const fetchingMoreRef = React.useRef(true);
+  const lastPageFailedRef = React.useRef(false);
+  const [retryCount, setRetryCount] = React.useState(0);
   const fetchMore = React.useCallback(() => {
     if (fetchingMoreRef.current) {
       return;
     }
     fetchingMoreRef.current = true;
+    if (lastPageFailedRef.current) {
+      // Ask for the same page again. Advancing would leave a hole where it should have been.
+      lastPageFailedRef.current = false;
+      setRetryCount((count) => count + 1);
+      return;
+    }
     setPage((page) => page + 1);
   }, []);
 
+  // counter to force a new request when resetting the existing state would not change an effect dependency
+  const [refetchCount, setRefetchCount] = React.useState(0);
+  const refetchITwins = React.useCallback(() => {
+    resetData();
+    setRefetchCount((count) => count + 1);
+  }, [resetData]);
+
+  const activeRequestRef = React.useRef<symbol | undefined>(undefined);
+
   const morePagesRef = React.useRef(morePages);
-  morePagesRef.current = morePages;
+  React.useEffect(() => {
+    morePagesRef.current = morePages;
+  }, [morePages]);
 
   React.useEffect(() => {
     // If filter changes but we already have all the data for favorites or recents,
@@ -78,13 +99,13 @@ export const useITwinData = ({
       morePagesRef.current ||
       !["favorites", "recents"].includes(requestType)
     ) {
-      refetchData();
+      resetData();
     }
-  }, [filterOptions, requestType, refetchData]);
+  }, [filterOptions, requestType, resetData]);
 
   React.useEffect(() => {
     // If any of the dependencies change, always restart the fetch from scratch.
-    refetchData();
+    resetData();
   }, [
     accessToken,
     requestType,
@@ -92,7 +113,7 @@ export const useITwinData = ({
     orderbyOptions,
     data,
     serverEnvironmentPrefix,
-    refetchData,
+    resetData,
   ]);
 
   React.useEffect(() => {
@@ -113,6 +134,8 @@ export const useITwinData = ({
     if (page === 0) {
       setStatus(DataStatus.Fetching);
     }
+    const requestId = Symbol();
+    activeRequestRef.current = requestId;
     const abortController = new AbortController();
     const endpoint = ["favorites", "recents"].includes(requestType)
       ? requestType
@@ -157,6 +180,9 @@ export const useITwinData = ({
         : await response.text().then((errorText) => {
             throw new Error(errorText);
           });
+      if (activeRequestRef.current !== requestId) {
+        return;
+      }
       const totalCountHeader = response.headers.get("x-total-count");
       if (totalCountHeader !== null) {
         setTotalCount(Number(totalCountHeader));
@@ -173,16 +199,20 @@ export const useITwinData = ({
     };
 
     makeFetchRequest().catch((e) => {
-      if (e.name === "AbortError") {
-        // Aborting because unmounting is not an error, swallow.
+      if (activeRequestRef.current !== requestId || e.name === "AbortError") {
+        // Superseded or aborted, not a failure worth reporting.
         return;
       }
-      setProjects([]);
+      if (page === 0) {
+        setProjects([]);
+      }
       setStatus(DataStatus.FetchFailed);
       fetchingMoreRef.current = false;
+      lastPageFailedRef.current = true;
       logger.logError("Failed to fetch iTwins", e);
     });
     return () => {
+      activeRequestRef.current = undefined;
       abortController.abort();
     };
   }, [
@@ -194,6 +224,8 @@ export const useITwinData = ({
     orderbyOptions,
     page,
     morePages,
+    refetchCount,
+    retryCount,
     iTwinSubClass,
     shouldRefetchFavorites,
     resetShouldRefetchFavorites,
@@ -204,6 +236,6 @@ export const useITwinData = ({
     status,
     totalCount,
     fetchMore: morePages ? fetchMore : undefined,
-    refetchITwins: refetchData,
+    refetchITwins,
   };
 };

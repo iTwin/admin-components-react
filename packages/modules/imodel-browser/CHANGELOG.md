@@ -1,6 +1,17 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Wed, 05 Aug 2026 16:42:24 GMT and should not be manually modified.
+This log was last generated on Wed, 12 Aug 2026 20:36:43 GMT and should not be manually modified.
+
+## 4.5.1
+Wed, 12 Aug 2026 20:36:43 GMT
+
+### Patches
+
+- Fix `ITwinGrid` refetch doing nothing when the first page of results is full
+- Discard iTwin responses that arrive after their query was replaced
+- Keep already-loaded iTwins when a later page fails
+- Retry a failed page of iTwins instead of skipping past it
+- Clear `totalCount` when the query changes
 
 ## 4.5.0
 Wed, 05 Aug 2026 16:42:24 GMT
