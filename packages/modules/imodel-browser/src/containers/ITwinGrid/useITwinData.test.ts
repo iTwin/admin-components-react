@@ -10,6 +10,7 @@ import {
   rest,
 } from "msw";
 
+import { deferred, responseFor } from "../../tests/helpers";
 import { server } from "../../tests/mocks/server";
 import { DataStatus } from "../../types";
 import { useITwinData } from "./useITwinData";
@@ -694,74 +695,60 @@ describe("useITwinData hook", () => {
       globalThis.fetch = originalFetch;
     });
 
-    // These fakes ignore the abort signal, so only the request id can keep a superseded result out.
-    const resolveAfter = (body: unknown, delayMs: number) =>
-      new Promise<Response>((resolve) =>
-        setTimeout(
-          () =>
-            resolve({
-              ok: true,
-              json: async () => body,
-              headers: { get: () => null },
-            } as unknown as Response),
-          delayMs
-        )
-      );
-
     const respondByUrl = (impl: (url: string) => Promise<Response>) => {
       globalThis.fetch = ((input: RequestInfo | URL) =>
         impl(String(input))) as typeof globalThis.fetch;
     };
 
-    const settle = async () => {
-      await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 150));
-      });
-    };
-
-    it("ignores a response that resolves after its query was replaced", async () => {
-      respondByUrl((url) =>
-        url.includes("superseded")
-          ? resolveAfter({ iTwins: [{ id: "superseded" }] }, 80)
-          : resolveAfter({ iTwins: [{ id: "current" }] }, 0)
-      );
-
-      const { result, rerender, waitFor } = renderHook<
+    const renderWithOrderby = (orderbyOptions: string) =>
+      renderHook<
         Parameters<typeof useITwinData>,
         ReturnType<typeof useITwinData>
       >((args) => useITwinData(...args), {
-        initialProps: [{ accessToken, orderbyOptions: "superseded" }],
+        initialProps: [{ accessToken, orderbyOptions }],
       });
+
+    it("ignores a response that resolves after its query was replaced", async () => {
+      const superseded = deferred<Response>();
+      respondByUrl((url) =>
+        url.includes("superseded")
+          ? superseded.promise
+          : Promise.resolve(responseFor({ iTwins: [{ id: "current" }] }))
+      );
+
+      const { result, rerender, waitFor } = renderWithOrderby("superseded");
 
       rerender([{ accessToken, orderbyOptions: "current" }]);
       await waitFor(() => result.current.status === DataStatus.Complete);
       expect(result.current.iTwins).toEqual([{ id: "current" }]);
 
-      await settle();
+      await act(async () => {
+        superseded.resolve(responseFor({ iTwins: [{ id: "superseded" }] }));
+        await superseded.promise;
+      });
+
       expect(result.current.iTwins).toEqual([{ id: "current" }]);
       expect(result.current.status).toEqual(DataStatus.Complete);
     });
 
     it("ignores a failure that rejects after its query was replaced", async () => {
+      const superseded = deferred<Response>();
       respondByUrl((url) =>
         url.includes("failing")
-          ? new Promise<Response>((_resolve, reject) =>
-              setTimeout(() => reject(new Error("superseded failure")), 80)
-            )
-          : resolveAfter({ iTwins: [{ id: "current" }] }, 0)
+          ? superseded.promise
+          : Promise.resolve(responseFor({ iTwins: [{ id: "current" }] }))
       );
 
-      const { result, rerender, waitFor } = renderHook<
-        Parameters<typeof useITwinData>,
-        ReturnType<typeof useITwinData>
-      >((args) => useITwinData(...args), {
-        initialProps: [{ accessToken, orderbyOptions: "failing" }],
-      });
+      const { result, rerender, waitFor } = renderWithOrderby("failing");
 
       rerender([{ accessToken, orderbyOptions: "current" }]);
       await waitFor(() => result.current.status === DataStatus.Complete);
 
-      await settle();
+      await act(async () => {
+        superseded.reject(new Error("superseded failure"));
+        await superseded.promise.catch(() => undefined);
+      });
+
       expect(result.current.status).toEqual(DataStatus.Complete);
       expect(result.current.iTwins).toEqual([{ id: "current" }]);
     });
