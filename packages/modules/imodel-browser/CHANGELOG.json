@@ -2,6 +2,30 @@
   "name": "@itwin/imodel-browser-react",
   "entries": [
     {
+      "version": "4.5.1",
+      "tag": "@itwin/imodel-browser-react_v4.5.1",
+      "date": "Wed, 12 Aug 2026 20:36:43 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Fix `ITwinGrid` refetch doing nothing when the first page of results is full"
+          },
+          {
+            "comment": "Discard iTwin responses that arrive after their query was replaced"
+          },
+          {
+            "comment": "Keep already-loaded iTwins when a later page fails"
+          },
+          {
+            "comment": "Retry a failed page of iTwins instead of skipping past it"
+          },
+          {
+            "comment": "Clear `totalCount` when the query changes"
+          }
+        ]
+      }
+    },
+    {
       "version": "4.5.0",
       "tag": "@itwin/imodel-browser-react_v4.5.0",
       "date": "Wed, 05 Aug 2026 16:42:24 GMT",
