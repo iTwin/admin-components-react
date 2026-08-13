@@ -76,7 +76,7 @@ export interface ApiOverrides<T = never> {
 
 type FilterOptions = string;
 
-/** String/function that configures Project filtering behavior. */
+/** Text used to filter iTwins. */
 export type ITwinFilterOptions = FilterOptions;
 
 export enum DataStatus {
