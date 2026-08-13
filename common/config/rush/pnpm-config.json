@@ -5,6 +5,8 @@
       "caniuse-lite": "1.0.30001481",
       "postcss": "8.5.25",
       "autoprefixer": "10.4.14",
-      "xmldom": "npm:@xmldom/xmldom@0.8.13"
+      "xmldom": "npm:@xmldom/xmldom@0.8.13",
+      "tmp": "0.2.7",
+      "brace-expansion@1": "1.1.18"
     }
 }
