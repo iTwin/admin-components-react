@@ -6,7 +6,9 @@ overrides:
   autoprefixer: 10.4.14
   xmldom: npm:@xmldom/xmldom@0.8.13
   tmp: 0.2.7
+  serialize-javascript: 7.1.0
   brace-expansion@1: 1.1.18
+  brace-expansion@5: 5.0.9
 
 importers:
 
@@ -5755,9 +5757,9 @@ packages:
       concat-map: 0.0.1
     dev: true
 
-  /brace-expansion/5.0.6:
-    resolution: {integrity: sha512-kLpxurY4Z4r9sgMsyG0Z9uzsBlgiU/EFKhj/h91/8yHu0edo7XuixOIH3VcJ8kkxs6/jPzoI6U9Vj3WqbMQ94g==}
-    engines: {node: 18 || 20 || >=22}
+  /brace-expansion/5.0.9:
+    resolution: {integrity: sha512-ScQ4IuvIEF1TMlP7Zt+vjJ//9zlPb2SDcxWxM3bk8s6t6GGdJ7KO1dCcTidOPJKePW30LE/2cT7wCyPho9/Wxg==}
+    engines: {node: 20 || >=22}
     dependencies:
       balanced-match: 4.0.4
     dev: true
@@ -9559,7 +9561,7 @@ packages:
     resolution: {integrity: sha512-MULkVLfKGYDFYejP07QOurDLLQpcjk7Fw+7jXS2R2czRQzR56yHRveU5NDJEOviH+hETZKSkIk5c+T23GjFUMg==}
     engines: {node: 18 || 20 || >=22}
     dependencies:
-      brace-expansion: 5.0.6
+      brace-expansion: 5.0.9
     dev: true
 
   /minimatch/3.1.5:
@@ -9818,7 +9820,7 @@ packages:
       base64-js: 1.5.1
       core-js: 3.41.0
       crypto-js: 4.2.0
-      serialize-javascript: 4.0.0
+      serialize-javascript: 7.1.0
     dev: true
 
   /once/1.4.0:
@@ -10662,12 +10664,6 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /randombytes/2.1.0:
-    resolution: {integrity: sha512-vYl3iOX+4CKUWuxGi9Ukhie6fsqXqS9FE2Zaic4tNFD2N2QQaXOMFbuKK4QmDHC0JO6B1Zp41J0LpT0oR68amQ==}
-    dependencies:
-      safe-buffer: 5.2.1
-    dev: true
-
   /range-parser/1.2.1:
     resolution: {integrity: sha512-Hrgsx+orqoygnmhFbKaHE6c296J+HTAQXoxEF6gNupROmmGJRoyzfG3ccAveqCBrwr/2yxQ5BVd/GTl5agOwSg==}
     engines: {node: '>= 0.6'}
@@ -11115,7 +11111,7 @@ packages:
       '@babel/code-frame': 7.26.2
       jest-worker: 26.6.2
       rollup: 2.80.0
-      serialize-javascript: 4.0.0
+      serialize-javascript: 7.1.0
       terser: 5.39.0
     dev: true
 
@@ -11323,10 +11319,9 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
-  /serialize-javascript/4.0.0:
-    resolution: {integrity: sha512-GaNA54380uFefWghODBWEGisLZFj00nS5ACs6yHa9nLqlLpVLO8ChDGeKRjZnV4Nh4n0Qi7nhYZD/9fCPzEqkw==}
-    dependencies:
-      randombytes: 2.1.0
+  /serialize-javascript/7.1.0:
+    resolution: {integrity: sha512-RNEqWOyhhUQYN9V1GfHwu9AR/g+NTciH6Z5u3/no6X3/w+04J2lVDL+svFQVXgXrEGBMG2puMVN3gq2SNGuTGw==}
+    engines: {node: '>=20.0.0'}
     dev: true
 
   /set-cookie-parser/2.7.1:
