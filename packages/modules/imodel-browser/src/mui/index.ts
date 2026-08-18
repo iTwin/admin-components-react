@@ -45,6 +45,8 @@ export {
   type BaseCardLoadingProps as IModelGhostTileProps,
 } from "./components/baseCard/BaseCardLoading";
 
+export { BaseCard, type BaseCardProps } from "./components/baseCard/BaseCard";
+
 export type { MoreActionsMenuItemMUI as MoreActionsMenuItem } from "../utils/_buildMenuOptions";
 export type { CardActionsItemMUI as CardActionsItem } from "../utils/_buildMenuOptions";
 export { ThumbnailIconButton } from "./components/baseCard/ThumbnailIconButton";
