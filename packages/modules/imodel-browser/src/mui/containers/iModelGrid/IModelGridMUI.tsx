@@ -361,7 +361,7 @@ const IModelGridInternal = ({
             sx={{
               display: "grid",
               gap: 2,
-              gridTemplateColumns: "repeat(auto-fill, minmax(18rem, 1fr))",
+              gridTemplateColumns: "repeat(auto-fill, 18rem)",
               listStyle: "none",
               alignItems: "stretch",
               "& > li": {
