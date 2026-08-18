@@ -29,6 +29,22 @@ export interface ProjectDataHookOptions {
 
 const PAGE_SIZE = 100;
 
+/** Held together so a render can never show one query's status beside another query's iTwins. */
+interface FetchState {
+  status: DataStatus;
+  iTwins: ITwinFull[];
+  hasMore: boolean;
+}
+
+const isClientSideFiltered = (requestType: string) =>
+  ["favorites", "recents"].includes(requestType);
+
+const startingOver = (): FetchState => ({
+  status: DataStatus.Fetching,
+  iTwins: [],
+  hasMore: true,
+});
+
 export const useITwinData = ({
   requestType = "",
   iTwinSubClass = "Project",
@@ -42,19 +58,15 @@ export const useITwinData = ({
   const logger = useLogger();
   const data = apiOverrides?.data;
   const serverEnvironmentPrefix = apiOverrides?.serverEnvironmentPrefix;
-  const [projects, setProjects] = React.useState<ITwinFull[]>([]);
-  const [status, setStatus] = React.useState<DataStatus>();
   const [totalCount, setTotalCount] = React.useState<number>();
-  const filteredProjects = useITwinFilter(projects, filterOptions);
   const [page, setPage] = React.useState(0);
-  const [morePages, setMorePages] = React.useState(true);
+  const [fetchState, setFetchState] = React.useState<FetchState>(startingOver);
+  const filteredProjects = useITwinFilter(fetchState.iTwins, filterOptions);
 
   const resetData = React.useCallback(() => {
-    setStatus(DataStatus.Fetching);
-    setProjects([]);
+    setFetchState(startingOver());
     setTotalCount(undefined);
     setPage(0);
-    setMorePages(true);
     fetchingMoreRef.current = true;
     lastPageFailedRef.current = false;
   }, []);
@@ -86,19 +98,16 @@ export const useITwinData = ({
 
   const activeRequestRef = React.useRef<symbol | undefined>(undefined);
 
-  const morePagesRef = React.useRef(morePages);
+  const morePagesRef = React.useRef(fetchState.hasMore);
   React.useEffect(() => {
-    morePagesRef.current = morePages;
-  }, [morePages]);
+    morePagesRef.current = fetchState.hasMore;
+  }, [fetchState.hasMore]);
 
   React.useEffect(() => {
     // If filter changes but we already have all the data for favorites or recents,
     // let client side filtering do its job, otherwise, refetch from scratch.
     // Use ref so "morePages" changes itself does not trigger the effect.
-    if (
-      morePagesRef.current ||
-      !["favorites", "recents"].includes(requestType)
-    ) {
+    if (morePagesRef.current || !isClientSideFiltered(requestType)) {
       resetData();
     }
   }, [filterOptions, requestType, resetData]);
@@ -117,38 +126,46 @@ export const useITwinData = ({
   ]);
 
   React.useEffect(() => {
-    if (!morePages) {
+    if (!fetchState.hasMore) {
       return;
     }
     if (data) {
-      setProjects(data);
-      setStatus(DataStatus.Complete);
-      setMorePages(false);
+      setFetchState((state) => ({
+        ...state,
+        status: DataStatus.Complete,
+        iTwins: data,
+        hasMore: false,
+      }));
       return;
     }
     if (!accessToken) {
-      setStatus(DataStatus.TokenRequired);
-      setProjects([]);
+      setFetchState((state) => ({
+        ...state,
+        status: DataStatus.TokenRequired,
+        iTwins: [],
+      }));
       return;
     }
     if (page === 0) {
-      setStatus(DataStatus.Fetching);
+      setFetchState((state) =>
+        state.status === DataStatus.Fetching
+          ? state
+          : { ...state, status: DataStatus.Fetching }
+      );
     }
     const requestId = Symbol();
     activeRequestRef.current = requestId;
     const abortController = new AbortController();
-    const endpoint = ["favorites", "recents"].includes(requestType)
-      ? requestType
-      : "";
+    const endpoint = isClientSideFiltered(requestType) ? requestType : "";
     const resolvedITwinSubClass = iTwinSubClass === "All" ? "" : iTwinSubClass;
     const subClass = `?subClass=${resolvedITwinSubClass}`;
     const paging = `&$skip=${page * PAGE_SIZE}&$top=${PAGE_SIZE}`;
     const search =
-      ["favorites", "recents"].includes(requestType) || !filterOptions
+      isClientSideFiltered(requestType) || !filterOptions
         ? ""
         : `&$search=${encodeURIComponent(String(filterOptions).trim())}`;
     const orderby =
-      ["favorites", "recents"].includes(requestType) || !orderbyOptions
+      isClientSideFiltered(requestType) || !orderbyOptions
         ? ""
         : `&$orderby=${encodeURIComponent(String(orderbyOptions).trim())}`;
 
@@ -187,15 +204,15 @@ export const useITwinData = ({
       if (totalCountHeader !== null) {
         setTotalCount(Number(totalCountHeader));
       }
-      setStatus(DataStatus.Complete);
       fetchingMoreRef.current = false;
       requestType === "favorites" && resetShouldRefetchFavorites?.();
-      if (result.iTwins.length !== PAGE_SIZE) {
-        setMorePages(false);
-      }
-      setProjects((projects) =>
-        page === 0 ? result.iTwins : [...projects, ...result.iTwins]
-      );
+      setFetchState((state) => ({
+        ...state,
+        status: DataStatus.Complete,
+        iTwins:
+          page === 0 ? result.iTwins : [...state.iTwins, ...result.iTwins],
+        hasMore: result.iTwins.length === PAGE_SIZE,
+      }));
     };
 
     makeFetchRequest().catch((e) => {
@@ -203,12 +220,13 @@ export const useITwinData = ({
         // Superseded or aborted, not a failure worth reporting.
         return;
       }
-      if (page === 0) {
-        setProjects([]);
-      }
-      setStatus(DataStatus.FetchFailed);
       fetchingMoreRef.current = false;
       lastPageFailedRef.current = true;
+      setFetchState((state) => ({
+        ...state,
+        status: DataStatus.FetchFailed,
+        iTwins: page === 0 ? [] : state.iTwins,
+      }));
       logger.logError("Failed to fetch iTwins", e);
     });
     return () => {
@@ -223,7 +241,7 @@ export const useITwinData = ({
     filterOptions,
     orderbyOptions,
     page,
-    morePages,
+    fetchState.hasMore,
     refetchCount,
     retryCount,
     iTwinSubClass,
@@ -233,9 +251,9 @@ export const useITwinData = ({
   ]);
   return {
     iTwins: filteredProjects,
-    status,
+    status: fetchState.status,
     totalCount,
-    fetchMore: morePages ? fetchMore : undefined,
+    fetchMore: fetchState.hasMore ? fetchMore : undefined,
     refetchITwins,
   };
 };
