@@ -57,6 +57,8 @@ export type {
   IModelFull,
   ITwinFull,
   ApiOverrides,
+  ITwinDataQuery,
+  ITwinDataState,
   ITwinFilterOptions,
   DataMode,
   IModelSortOptionsKeys,

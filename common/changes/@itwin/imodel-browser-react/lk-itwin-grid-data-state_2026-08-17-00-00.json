@@ -1,0 +1,15 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/imodel-browser-react",
+      "comment": "Add `onDataStateChange` to `ITwinGrid`, reporting the query, status, iTwins, `hasMore` and any error each time the grid's data state changes",
+      "type": "minor"
+    },
+    {
+      "packageName": "@itwin/imodel-browser-react",
+      "comment": "Report `fetching` rather than `undefined` for the iTwin grid's status on the first render, which `postProcessCallback` receives as its second argument",
+      "type": "minor"
+    }
+  ],
+  "packageName": "@itwin/imodel-browser-react"
+}

@@ -9,6 +9,8 @@ import {
   AccessTokenProvider,
   ApiOverrides,
   DataStatus,
+  ITwinDataQuery,
+  ITwinDataState,
   ITwinFilterOptions,
   ITwinFull,
   ITwinSubClass,
@@ -25,25 +27,41 @@ export interface ProjectDataHookOptions {
   orderbyOptions?: string;
   shouldRefetchFavorites?: boolean;
   resetShouldRefetchFavorites?: () => void;
+  onDataStateChange?: (state: ITwinDataState) => void;
 }
 
 const PAGE_SIZE = 100;
 
-/** Held together so a render can never show one query's status beside another query's iTwins. */
 interface FetchState {
+  query: ITwinDataQuery;
   status: DataStatus;
   iTwins: ITwinFull[];
   hasMore: boolean;
+  error?: unknown;
 }
 
 const isClientSideFiltered = (requestType: string) =>
   ["favorites", "recents"].includes(requestType);
 
-const startingOver = (): FetchState => ({
+const startingOver = (query: ITwinDataQuery): FetchState => ({
+  query,
   status: DataStatus.Fetching,
   iTwins: [],
   hasMore: true,
+  error: undefined,
 });
+
+const sameQuery = (a: ITwinDataQuery, b: ITwinDataQuery) =>
+  a.requestType === b.requestType &&
+  a.filterText === b.filterText &&
+  a.iTwinSubClass === b.iTwinSubClass &&
+  a.orderby === b.orderby;
+
+const hasStartedOver = (state: FetchState, query: ITwinDataQuery) =>
+  sameQuery(state.query, query) &&
+  state.status === DataStatus.Fetching &&
+  state.iTwins.length === 0 &&
+  state.hasMore;
 
 export const useITwinData = ({
   requestType = "",
@@ -54,17 +72,53 @@ export const useITwinData = ({
   orderbyOptions,
   shouldRefetchFavorites,
   resetShouldRefetchFavorites,
+  onDataStateChange,
 }: ProjectDataHookOptions) => {
   const logger = useLogger();
   const data = apiOverrides?.data;
   const serverEnvironmentPrefix = apiOverrides?.serverEnvironmentPrefix;
   const [totalCount, setTotalCount] = React.useState<number>();
   const [page, setPage] = React.useState(0);
-  const [fetchState, setFetchState] = React.useState<FetchState>(startingOver);
+
+  const query = React.useMemo<ITwinDataQuery>(
+    () => ({
+      requestType,
+      filterText: filterOptions ?? "",
+      iTwinSubClass,
+      orderby: orderbyOptions,
+    }),
+    [requestType, filterOptions, iTwinSubClass, orderbyOptions]
+  );
+  const [fetchState, setFetchState] = React.useState<FetchState>(() =>
+    startingOver(query)
+  );
   const filteredProjects = useITwinFilter(fetchState.iTwins, filterOptions);
 
+  const queryRef = React.useRef(query);
+  const onDataStateChangeRef = React.useRef(onDataStateChange);
+  React.useEffect(() => {
+    queryRef.current = query;
+    onDataStateChangeRef.current = onDataStateChange;
+  });
+
+  const dataState = React.useMemo<ITwinDataState>(
+    () => ({ ...fetchState, iTwins: filteredProjects }),
+    [fetchState, filteredProjects]
+  );
+  React.useEffect(() => {
+    // The new query has not reached the state below yet, so reporting now would pair it with the
+    // previous query's result.
+    if (sameQuery(dataState.query, query)) {
+      onDataStateChangeRef.current?.(dataState);
+    }
+  }, [dataState, query]);
+
   const resetData = React.useCallback(() => {
-    setFetchState(startingOver());
+    setFetchState((state) =>
+      hasStartedOver(state, queryRef.current)
+        ? state
+        : startingOver(queryRef.current)
+    );
     setTotalCount(undefined);
     setPage(0);
     fetchingMoreRef.current = true;
@@ -109,8 +163,13 @@ export const useITwinData = ({
     // Use ref so "morePages" changes itself does not trigger the effect.
     if (morePagesRef.current || !isClientSideFiltered(requestType)) {
       resetData();
+    } else {
+      // The data already in hand answers the new query, but it is a new query all the same.
+      setFetchState((state) =>
+        sameQuery(state.query, query) ? state : { ...state, query }
+      );
     }
-  }, [filterOptions, requestType, resetData]);
+  }, [query, requestType, resetData]);
 
   React.useEffect(() => {
     // If any of the dependencies change, always restart the fetch from scratch.
@@ -135,6 +194,7 @@ export const useITwinData = ({
         status: DataStatus.Complete,
         iTwins: data,
         hasMore: false,
+        error: undefined,
       }));
       return;
     }
@@ -143,6 +203,7 @@ export const useITwinData = ({
         ...state,
         status: DataStatus.TokenRequired,
         iTwins: [],
+        error: undefined,
       }));
       return;
     }
@@ -150,7 +211,7 @@ export const useITwinData = ({
       setFetchState((state) =>
         state.status === DataStatus.Fetching
           ? state
-          : { ...state, status: DataStatus.Fetching }
+          : { ...state, status: DataStatus.Fetching, error: undefined }
       );
     }
     const requestId = Symbol();
@@ -212,6 +273,7 @@ export const useITwinData = ({
         iTwins:
           page === 0 ? result.iTwins : [...state.iTwins, ...result.iTwins],
         hasMore: result.iTwins.length === PAGE_SIZE,
+        error: undefined,
       }));
     };
 
@@ -226,6 +288,7 @@ export const useITwinData = ({
         ...state,
         status: DataStatus.FetchFailed,
         iTwins: page === 0 ? [] : state.iTwins,
+        error: e,
       }));
       logger.logError("Failed to fetch iTwins", e);
     });

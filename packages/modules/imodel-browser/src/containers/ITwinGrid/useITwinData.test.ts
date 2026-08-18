@@ -10,9 +10,9 @@ import {
   rest,
 } from "msw";
 
-import { deferred, responseFor } from "../../tests/helpers";
+import { deferred, ids, responseFor } from "../../tests/helpers";
 import { server } from "../../tests/mocks/server";
-import { DataStatus } from "../../types";
+import { DataStatus, ITwinDataState } from "../../types";
 import { useITwinData } from "./useITwinData";
 
 describe("useITwinData hook", () => {
@@ -825,6 +825,219 @@ describe("useITwinData hook", () => {
       await waitForNextUpdate();
 
       expect(requests).toEqual(2);
+    });
+  });
+
+  describe("onDataStateChange", () => {
+    const reportsOf = (states: ITwinDataState[]) =>
+      states.map((state) => [
+        state.query.filterText,
+        state.status,
+        state.iTwins.map(ids),
+      ]);
+
+    it("reports the query it is fetching, then the result of that query", async () => {
+      const states: ITwinDataState[] = [];
+
+      const { waitForNextUpdate } = renderHook(() =>
+        useITwinData({ accessToken, onDataStateChange: (s) => states.push(s) })
+      );
+      await waitForNextUpdate();
+
+      expect(reportsOf(states)).toEqual([
+        ["", DataStatus.Fetching, []],
+        ["", DataStatus.Complete, ["my1"]],
+      ]);
+      expect(states[0].query).toEqual({
+        requestType: "",
+        filterText: "",
+        iTwinSubClass: "Project",
+        orderby: undefined,
+      });
+    });
+
+    it("never reports a settled status against a query that has not run", async () => {
+      const states: ITwinDataState[] = [];
+      const onDataStateChange = (state: ITwinDataState) => states.push(state);
+
+      const { rerender, waitForNextUpdate } = renderHook<
+        Parameters<typeof useITwinData>,
+        ReturnType<typeof useITwinData>
+      >((args) => useITwinData(...args), {
+        initialProps: [{ accessToken, onDataStateChange }],
+      });
+      await waitForNextUpdate();
+
+      rerender([{ accessToken, onDataStateChange, filterOptions: "searched" }]);
+      await waitForNextUpdate();
+
+      expect(reportsOf(states)).toEqual([
+        ["", DataStatus.Fetching, []],
+        ["", DataStatus.Complete, ["my1"]],
+        ["searched", DataStatus.Fetching, []],
+        ["searched", DataStatus.Complete, ["mySearched1"]],
+      ]);
+    });
+
+    it("reports the new query for a filter change that only client side filtering handles", async () => {
+      const favorites = [
+        { id: "fav1", displayName: "alpha" },
+        { id: "fav2", displayName: "beta" },
+      ];
+      server.use(
+        rest.get("https://api.bentley.com/itwins/favorites", (_req, res, ctx) =>
+          res(ctx.status(200), ctx.json({ iTwins: favorites }))
+        )
+      );
+      const states: ITwinDataState[] = [];
+      const onDataStateChange = (state: ITwinDataState) => states.push(state);
+
+      const { rerender, waitFor, waitForNextUpdate } = renderHook<
+        Parameters<typeof useITwinData>,
+        ReturnType<typeof useITwinData>
+      >((args) => useITwinData(...args), {
+        initialProps: [
+          { accessToken, requestType: "favorites" as const, onDataStateChange },
+        ],
+      });
+      await waitForNextUpdate();
+
+      rerender([
+        {
+          accessToken,
+          requestType: "favorites" as const,
+          onDataStateChange,
+          filterOptions: "alpha",
+        },
+      ]);
+      await waitFor(() => states.length >= 3);
+
+      expect(reportsOf(states)).toEqual([
+        ["", DataStatus.Fetching, []],
+        ["", DataStatus.Complete, ["fav1", "fav2"]],
+        ["alpha", DataStatus.Complete, ["fav1"]],
+      ]);
+    });
+
+    it("reports a subclass change as a different query", async () => {
+      server.use(
+        rest.get("https://api.bentley.com/itwins/", (req, res, ctx) =>
+          res(
+            ctx.status(200),
+            ctx.json({
+              iTwins: [{ id: req.url.searchParams.get("subClass") || "none" }],
+            })
+          )
+        )
+      );
+      const states: ITwinDataState[] = [];
+      const onDataStateChange = (state: ITwinDataState) => states.push(state);
+
+      const { rerender, waitForNextUpdate } = renderHook<
+        Parameters<typeof useITwinData>,
+        ReturnType<typeof useITwinData>
+      >((args) => useITwinData(...args), {
+        initialProps: [{ accessToken, onDataStateChange }],
+      });
+      await waitForNextUpdate();
+
+      rerender([
+        { accessToken, onDataStateChange, iTwinSubClass: "Asset" as const },
+      ]);
+      await waitForNextUpdate();
+
+      expect(
+        states.map((state) => [
+          state.query.iTwinSubClass,
+          state.status,
+          state.iTwins.map(ids),
+        ])
+      ).toEqual([
+        ["Project", DataStatus.Fetching, []],
+        ["Project", DataStatus.Complete, ["Project"]],
+        ["Asset", DataStatus.Fetching, []],
+        ["Asset", DataStatus.Complete, ["Asset"]],
+      ]);
+    });
+
+    it("reports hasMore until a partial page comes back", async () => {
+      const fullPage = Array.from({ length: 100 }, (_, i) => ({
+        id: `first-${i}`,
+      }));
+      server.use(
+        rest.get("https://api.bentley.com/itwins/", (req, res, ctx) =>
+          res(
+            ctx.status(200),
+            ctx.json({
+              iTwins:
+                req.url.searchParams.get("$skip") === "0"
+                  ? fullPage
+                  : [{ id: "second-0" }],
+            })
+          )
+        )
+      );
+      const states: ITwinDataState[] = [];
+
+      const { result, waitForNextUpdate } = renderHook(() =>
+        useITwinData({ accessToken, onDataStateChange: (s) => states.push(s) })
+      );
+      await waitForNextUpdate();
+      expect(states[states.length - 1].hasMore).toBe(true);
+
+      act(() => {
+        result.current.fetchMore?.();
+      });
+      await waitForNextUpdate();
+
+      const last = states[states.length - 1];
+      expect(last.hasMore).toBe(false);
+      expect(last.iTwins).toHaveLength(101);
+    });
+
+    it("reports the failure that produced an error status", async () => {
+      server.use(
+        rest.get("https://api.bentley.com/itwins/", (_req, res, ctx) =>
+          res(ctx.status(401), ctx.text("no soup for you"))
+        )
+      );
+      const states: ITwinDataState[] = [];
+
+      const { waitForNextUpdate } = renderHook(() =>
+        useITwinData({ accessToken, onDataStateChange: (s) => states.push(s) })
+      );
+      await waitForNextUpdate();
+
+      const last = states[states.length - 1];
+      expect(last.status).toEqual(DataStatus.FetchFailed);
+      expect(last.error).toEqual(new Error("no soup for you"));
+    });
+
+    it("does not report again for a callback that changed identity", async () => {
+      const states: ITwinDataState[] = [];
+
+      const { rerender, waitForNextUpdate } = renderHook<
+        Parameters<typeof useITwinData>,
+        ReturnType<typeof useITwinData>
+      >((args) => useITwinData(...args), {
+        initialProps: [
+          {
+            accessToken,
+            onDataStateChange: (s: ITwinDataState) => states.push(s),
+          },
+        ],
+      });
+      await waitForNextUpdate();
+      expect(states).toHaveLength(2);
+
+      rerender([
+        {
+          accessToken,
+          onDataStateChange: (s: ITwinDataState) => states.push(s),
+        },
+      ]);
+
+      expect(states).toHaveLength(2);
     });
   });
 });
