@@ -38,10 +38,6 @@ const hasStartedOver = (state: FetchState, query: ITwinDataQuery) =>
   state.iTwins.length === 0 &&
   state.hasMore;
 
-/**
- * The iTwin grid's data as a consumer sees it, and the transitions that move it along. Client side
- * filtering lives here because it is part of what a report says, not part of deciding what to fetch.
- */
 export const useITwinDataState = (
   query: ITwinDataQuery,
   onDataStateChange?: (state: ITwinDataState) => void
