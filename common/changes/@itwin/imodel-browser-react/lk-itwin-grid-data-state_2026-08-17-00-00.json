@@ -2,7 +2,7 @@
   "changes": [
     {
       "packageName": "@itwin/imodel-browser-react",
-      "comment": "Add `onDataStateChange` to `ITwinGrid`, reporting the query, status, iTwins, `hasMore` and any error each time the grid's data state changes",
+      "comment": "Add onDataStateChange callback to ITwinGrid",
       "type": "minor"
     },
     {
