@@ -216,54 +216,21 @@ export const useITwinData = ({
     }
     const requestId = Symbol();
     activeRequestRef.current = requestId;
-    const abortController = new AbortController();
-    const endpoint = isClientSideFiltered(requestType) ? requestType : "";
-    const resolvedITwinSubClass = iTwinSubClass === "All" ? "" : iTwinSubClass;
-    const subClass = `?subClass=${resolvedITwinSubClass}`;
-    const paging = `&$skip=${page * PAGE_SIZE}&$top=${PAGE_SIZE}`;
-    const search =
-      isClientSideFiltered(requestType) || !filterOptions
-        ? ""
-        : `&$search=${encodeURIComponent(String(filterOptions).trim())}`;
-    const orderby =
-      isClientSideFiltered(requestType) || !orderbyOptions
-        ? ""
-        : `&$orderby=${encodeURIComponent(String(orderbyOptions).trim())}`;
+    const { abortController, fetchITwins } = createFetchITwinsFn({
+      query,
+      accessToken,
+      page,
+      serverEnvironmentPrefix,
+      shouldRefetchFavorites,
+    });
 
-    const url = `${_getAPIServer(
-      serverEnvironmentPrefix
-    )}/itwins/${endpoint}${subClass}${paging}${search}${orderby}`;
-
-    const makeFetchRequest = async () => {
-      const options: RequestInit = {
-        signal: abortController.signal,
-        headers: {
-          "Cache-Control":
-            requestType === "favorites" && shouldRefetchFavorites
-              ? "no-cache"
-              : "",
-          Authorization:
-            typeof accessToken === "function"
-              ? await accessToken()
-              : accessToken,
-          Accept: "application/vnd.bentley.itwin-platform.v1+json",
-          Prefer: "return=representation",
-          "x-total-count": "true",
-        },
-      };
-
-      const response = await fetch(url, options);
-      const result: { iTwins: ITwinFull[] } = response.ok
-        ? await response.json()
-        : await response.text().then((errorText) => {
-            throw new Error(errorText);
-          });
+    const applyResult = async () => {
+      const result = await fetchITwins();
       if (activeRequestRef.current !== requestId) {
         return;
       }
-      const totalCountHeader = response.headers.get("x-total-count");
-      if (totalCountHeader !== null) {
-        setTotalCount(Number(totalCountHeader));
+      if (result.totalCount !== undefined) {
+        setTotalCount(result.totalCount);
       }
       fetchingMoreRef.current = false;
       requestType === "favorites" && resetShouldRefetchFavorites?.();
@@ -272,12 +239,12 @@ export const useITwinData = ({
         status: DataStatus.Complete,
         iTwins:
           page === 0 ? result.iTwins : [...state.iTwins, ...result.iTwins],
-        hasMore: result.iTwins.length === PAGE_SIZE,
+        hasMore: result.hasMore,
         error: undefined,
       }));
     };
 
-    makeFetchRequest().catch((e) => {
+    applyResult().catch((e) => {
       if (activeRequestRef.current !== requestId || e.name === "AbortError") {
         // Superseded or aborted, not a failure worth reporting.
         return;
@@ -301,13 +268,11 @@ export const useITwinData = ({
     requestType,
     data,
     serverEnvironmentPrefix,
-    filterOptions,
-    orderbyOptions,
+    query,
     page,
     fetchState.hasMore,
     refetchCount,
     retryCount,
-    iTwinSubClass,
     shouldRefetchFavorites,
     resetShouldRefetchFavorites,
     logger,
@@ -319,4 +284,82 @@ export const useITwinData = ({
     fetchMore: fetchState.hasMore ? fetchMore : undefined,
     refetchITwins,
   };
+};
+
+/**
+ * Builds the request for one page of iTwins. Resolves with the page, or throws what the API
+ * answered. A totalCount of undefined means the response carried no count, which is not zero.
+ */
+const createFetchITwinsFn = ({
+  query,
+  accessToken,
+  page,
+  serverEnvironmentPrefix,
+  shouldRefetchFavorites,
+}: {
+  query: ITwinDataQuery;
+  accessToken: AccessTokenProvider;
+  page: number;
+  serverEnvironmentPrefix?: "" | "dev" | "qa";
+  shouldRefetchFavorites?: boolean;
+}): {
+  abortController: AbortController;
+  fetchITwins: () => Promise<{
+    iTwins: ITwinFull[];
+    totalCount: number | undefined;
+    hasMore: boolean;
+  }>;
+} => {
+  const { requestType, filterText, iTwinSubClass, orderby } = query;
+  const clientSideFiltered = isClientSideFiltered(requestType);
+  const endpoint = clientSideFiltered ? requestType : "";
+  const subClass = `?subClass=${iTwinSubClass === "All" ? "" : iTwinSubClass}`;
+  const paging = `&$skip=${page * PAGE_SIZE}&$top=${PAGE_SIZE}`;
+  const search =
+    clientSideFiltered || !filterText
+      ? ""
+      : `&$search=${encodeURIComponent(filterText.trim())}`;
+  const ordering =
+    clientSideFiltered || !orderby
+      ? ""
+      : `&$orderby=${encodeURIComponent(orderby.trim())}`;
+
+  const abortController = new AbortController();
+  const url = `${_getAPIServer(
+    serverEnvironmentPrefix
+  )}/itwins/${endpoint}${subClass}${paging}${search}${ordering}`;
+
+  const doFetchRequest = async () => {
+    const options: RequestInit = {
+      signal: abortController.signal,
+      headers: {
+        "Cache-Control":
+          requestType === "favorites" && shouldRefetchFavorites
+            ? "no-cache"
+            : "",
+        Authorization:
+          typeof accessToken === "function" ? await accessToken() : accessToken,
+        Accept: "application/vnd.bentley.itwin-platform.v1+json",
+        Prefer: "return=representation",
+        "x-total-count": "true",
+      },
+    };
+
+    const response = await fetch(url, options);
+    const result: { iTwins: ITwinFull[] } = response.ok
+      ? await response.json()
+      : await response.text().then((errorText) => {
+          throw new Error(errorText);
+        });
+
+    const totalCountHeader = response.headers.get("x-total-count");
+    return {
+      iTwins: result.iTwins,
+      totalCount:
+        totalCountHeader !== null ? Number(totalCountHeader) : undefined,
+      hasMore: result.iTwins.length === PAGE_SIZE,
+    };
+  };
+
+  return { abortController, fetchITwins: doFetchRequest };
 };
