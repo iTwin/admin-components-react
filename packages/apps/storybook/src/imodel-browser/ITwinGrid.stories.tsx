@@ -23,6 +23,7 @@ import {
 } from "@itwin/itwinui-react";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
 import React, { PropsWithChildren } from "react";
+import { fn } from "storybook/test";
 
 import { accessTokenArgTypes } from "../utils/storyHelp";
 
@@ -58,6 +59,7 @@ export default {
   args: {
     apiOverrides: { serverEnvironmentPrefix: "qa" },
     requestType: "all",
+    onDataStateChange: fn(),
   },
 
   excludeStories: ["ITwinGrid"],

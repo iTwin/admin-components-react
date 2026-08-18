@@ -21,6 +21,7 @@ import Typography from "@mui/material/Typography";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
 import React from "react";
 import { action } from "storybook/actions";
+import { fn } from "storybook/test";
 
 import bridgeThumbnail from "../../utils/bridge.jpg";
 import nightThumbnail from "../../utils/night.jpg";
@@ -428,6 +429,7 @@ export default {
   },
   args: {
     requestType: "all",
+    onDataStateChange: fn(),
   },
   excludeStories: ["ITwinGrid"],
 } as Meta;
