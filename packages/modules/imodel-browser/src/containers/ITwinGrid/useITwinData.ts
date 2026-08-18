@@ -113,17 +113,84 @@ export const useITwinData = ({
     }
   }, [dataState, query]);
 
-  const resetData = React.useCallback(() => {
+  /** Start over for the query in hand. Reads it from the ref, never a closure: see resetData. */
+  const reset = React.useCallback(() => {
     setFetchState((state) =>
       hasStartedOver(state, queryRef.current)
         ? state
         : startingOver(queryRef.current)
     );
+  }, []);
+
+  /** The iTwins in hand already answer the new query, so keep them and just retarget. */
+  const applyQuery = React.useCallback((query: ITwinDataQuery) => {
+    setFetchState((state) =>
+      sameQuery(state.query, query) ? state : { ...state, query }
+    );
+  }, []);
+
+  const markFetching = React.useCallback(() => {
+    setFetchState((state) =>
+      state.status === DataStatus.Fetching
+        ? state
+        : { ...state, status: DataStatus.Fetching, error: undefined }
+    );
+  }, []);
+
+  const pageLoaded = React.useCallback(
+    (page: { iTwins: ITwinFull[]; isFirstPage: boolean; hasMore: boolean }) => {
+      setFetchState((state) => ({
+        ...state,
+        status: DataStatus.Complete,
+        iTwins: page.isFirstPage
+          ? page.iTwins
+          : [...state.iTwins, ...page.iTwins],
+        hasMore: page.hasMore,
+        error: undefined,
+      }));
+    },
+    []
+  );
+
+  const pageFailed = React.useCallback(
+    (failure: { error: unknown; isFirstPage: boolean }) => {
+      setFetchState((state) => ({
+        ...state,
+        status: DataStatus.FetchFailed,
+        iTwins: failure.isFirstPage ? [] : state.iTwins,
+        error: failure.error,
+      }));
+    },
+    []
+  );
+
+  /** Leaves hasMore alone: flipping it here would re-run the fetch effect into this same branch. */
+  const tokenRequired = React.useCallback(() => {
+    setFetchState((state) => ({
+      ...state,
+      status: DataStatus.TokenRequired,
+      iTwins: [],
+      error: undefined,
+    }));
+  }, []);
+
+  const dataProvided = React.useCallback((iTwins: ITwinFull[]) => {
+    setFetchState((state) => ({
+      ...state,
+      status: DataStatus.Complete,
+      iTwins,
+      hasMore: false,
+      error: undefined,
+    }));
+  }, []);
+
+  const resetData = React.useCallback(() => {
+    reset();
     setTotalCount(undefined);
     setPage(0);
     fetchingMoreRef.current = true;
     lastPageFailedRef.current = false;
-  }, []);
+  }, [reset]);
 
   // We start in a fetching state
   const fetchingMoreRef = React.useRef(true);
@@ -164,12 +231,9 @@ export const useITwinData = ({
     if (morePagesRef.current || !isClientSideFiltered(requestType)) {
       resetData();
     } else {
-      // The data already in hand answers the new query, but it is a new query all the same.
-      setFetchState((state) =>
-        sameQuery(state.query, query) ? state : { ...state, query }
-      );
+      applyQuery(query);
     }
-  }, [query, requestType, resetData]);
+  }, [query, requestType, resetData, applyQuery]);
 
   React.useEffect(() => {
     // If any of the dependencies change, always restart the fetch from scratch.
@@ -189,30 +253,15 @@ export const useITwinData = ({
       return;
     }
     if (data) {
-      setFetchState((state) => ({
-        ...state,
-        status: DataStatus.Complete,
-        iTwins: data,
-        hasMore: false,
-        error: undefined,
-      }));
+      dataProvided(data);
       return;
     }
     if (!accessToken) {
-      setFetchState((state) => ({
-        ...state,
-        status: DataStatus.TokenRequired,
-        iTwins: [],
-        error: undefined,
-      }));
+      tokenRequired();
       return;
     }
     if (page === 0) {
-      setFetchState((state) =>
-        state.status === DataStatus.Fetching
-          ? state
-          : { ...state, status: DataStatus.Fetching, error: undefined }
-      );
+      markFetching();
     }
     const requestId = Symbol();
     activeRequestRef.current = requestId;
@@ -234,14 +283,11 @@ export const useITwinData = ({
       }
       fetchingMoreRef.current = false;
       requestType === "favorites" && resetShouldRefetchFavorites?.();
-      setFetchState((state) => ({
-        ...state,
-        status: DataStatus.Complete,
-        iTwins:
-          page === 0 ? result.iTwins : [...state.iTwins, ...result.iTwins],
+      pageLoaded({
+        iTwins: result.iTwins,
+        isFirstPage: page === 0,
         hasMore: result.hasMore,
-        error: undefined,
-      }));
+      });
     };
 
     applyResult().catch((e) => {
@@ -251,12 +297,7 @@ export const useITwinData = ({
       }
       fetchingMoreRef.current = false;
       lastPageFailedRef.current = true;
-      setFetchState((state) => ({
-        ...state,
-        status: DataStatus.FetchFailed,
-        iTwins: page === 0 ? [] : state.iTwins,
-        error: e,
-      }));
+      pageFailed({ error: e, isFirstPage: page === 0 });
       logger.logError("Failed to fetch iTwins", e);
     });
     return () => {
@@ -276,6 +317,11 @@ export const useITwinData = ({
     shouldRefetchFavorites,
     resetShouldRefetchFavorites,
     logger,
+    dataProvided,
+    tokenRequired,
+    markFetching,
+    pageLoaded,
+    pageFailed,
   ]);
   return {
     iTwins: filteredProjects,
