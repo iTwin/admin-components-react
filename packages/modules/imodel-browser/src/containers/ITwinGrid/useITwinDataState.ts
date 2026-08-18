@@ -12,13 +12,10 @@ import {
 } from "../../types";
 import { useITwinFilter } from "./useITwinFilter";
 
-/** Held together so a render can never show one query's status beside another query's iTwins. */
-interface FetchState {
-  query: ITwinDataQuery;
-  status: DataStatus;
+/** One object, so a render can never pair one query's status with another query's iTwins. */
+interface FetchState extends Omit<ITwinDataState, "iTwins"> {
+  /** Every page fetched, where a report carries only what client side filtering kept. */
   iTwins: ITwinFull[];
-  hasMore: boolean;
-  error?: unknown;
 }
 
 const startingOver = (query: ITwinDataQuery): FetchState => ({
