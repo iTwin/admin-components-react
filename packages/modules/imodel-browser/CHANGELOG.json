@@ -2,6 +2,18 @@
   "name": "@itwin/imodel-browser-react",
   "entries": [
     {
+      "version": "4.5.3",
+      "tag": "@itwin/imodel-browser-react_v4.5.3",
+      "date": "Tue, 18 Aug 2026 14:36:55 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "export BaseCard and BaseCardProps"
+          }
+        ]
+      }
+    },
+    {
       "version": "4.5.2",
       "tag": "@itwin/imodel-browser-react_v4.5.2",
       "date": "Tue, 18 Aug 2026 13:21:58 GMT",

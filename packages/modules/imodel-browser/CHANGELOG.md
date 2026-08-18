@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Tue, 18 Aug 2026 13:21:58 GMT and should not be manually modified.
+This log was last generated on Tue, 18 Aug 2026 14:36:55 GMT and should not be manually modified.
+
+## 4.5.3
+Tue, 18 Aug 2026 14:36:55 GMT
+
+### Patches
+
+- export BaseCard and BaseCardProps
 
 ## 4.5.2
 Tue, 18 Aug 2026 13:21:58 GMT
