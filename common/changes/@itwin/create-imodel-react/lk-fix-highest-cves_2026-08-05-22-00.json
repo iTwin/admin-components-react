@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/create-imodel-react",
+      "comment": "CVE remediation: remove unused dev dependencies and override vulnerable transitive dependencies",
+      "type": "none"
+    }
+  ],
+  "packageName": "@itwin/create-imodel-react"
+}
