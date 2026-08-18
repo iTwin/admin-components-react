@@ -925,7 +925,7 @@ describe("useITwinData hook", () => {
           res(
             ctx.status(200),
             ctx.json({
-              iTwins: [{ id: req.url.searchParams.get("subClass") || "none" }],
+              iTwins: [{ id: req.url.searchParams.get("subClass") ?? "none" }],
             })
           )
         )
