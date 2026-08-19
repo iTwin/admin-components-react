@@ -4,6 +4,8 @@
  *--------------------------------------------------------------------------------------------*/
 import {
   type IndividualITwinStateHook,
+  type ITwinDataQuery,
+  type ITwinDataState,
   type ITwinFull,
   type ITwinGridProps,
   DataStatus,
@@ -21,6 +23,7 @@ import Typography from "@mui/material/Typography";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
 import React from "react";
 import { action } from "storybook/actions";
+import { fn } from "storybook/test";
 
 import bridgeThumbnail from "../../utils/bridge.jpg";
 import nightThumbnail from "../../utils/night.jpg";
@@ -266,6 +269,92 @@ export const WithPostProcessCallback: StoryObj<typeof ITwinGrid> = {
   },
 };
 
+const describeQuery = (query: ITwinDataQuery) =>
+  `${query.requestType || "all"}${
+    query.filterText ? ` "${query.filterText}"` : ""
+  }`;
+
+const WithOnDataStateChangeRender = ({
+  onDataStateChange: reportToActionsPanel,
+  ...args
+}: ITwinGridProps) => {
+  const [log, setLog] = React.useState<string[]>([]);
+  const fetchStartedAt = React.useRef<Record<string, number>>({});
+
+  const onDataStateChange = React.useCallback(
+    (state: ITwinDataState) => {
+      reportToActionsPanel?.(state);
+
+      const query = describeQuery(state.query);
+      const append = (line: string) =>
+        setLog((log) => [`${query}: ${line}`, ...log].slice(0, 12));
+
+      if (state.status === DataStatus.Fetching) {
+        fetchStartedAt.current[query] = performance.now();
+        append("fetching");
+        return;
+      }
+
+      const startedAt = fetchStartedAt.current[query];
+      const timing =
+        startedAt === undefined
+          ? "from the iTwins already loaded"
+          : `after ${Math.round(performance.now() - startedAt)}ms`;
+      append(
+        [
+          `${state.status} ${timing}`,
+          `${state.iTwins.length} iTwins`,
+          state.hasMore ? "more pages remain" : undefined,
+          state.error ? String(state.error) : undefined,
+        ]
+          .filter(Boolean)
+          .join(", ")
+      );
+    },
+    [reportToActionsPanel]
+  );
+
+  return (
+    <div>
+      <Typography variant="body1" sx={{ mb: 2 }}>
+        Property <Code>onDataStateChange</Code> reports the grid&apos;s data
+        state as it changes, newest first, and sends each report to the Actions
+        panel. Search to see a query reported before its result. The favorites
+        and recents tabs answer a search from the iTwins they already hold, so
+        they report a result with no fetch before it.
+      </Typography>
+      <Box
+        sx={{
+          mb: 2,
+          p: 1,
+          height: "12rem",
+          overflowY: "auto",
+          border: "1px solid",
+          borderColor: "divider",
+        }}
+      >
+        {log.length === 0 ? (
+          <Typography variant="body2">Nothing reported yet.</Typography>
+        ) : (
+          log.map((line, index) => (
+            <Typography key={index} variant="body2">
+              <Code>{line}</Code>
+            </Typography>
+          ))
+        )}
+      </Box>
+      <ITwinGrid {...args} onDataStateChange={onDataStateChange} />
+    </div>
+  );
+};
+
+export const WithOnDataStateChange: StoryObj<typeof ITwinGrid> = {
+  render: (args) => <WithOnDataStateChangeRender {...args} />,
+  args: {
+    apiOverrides: { serverEnvironmentPrefix: "qa" },
+  },
+};
+
 export const FetchAllSubclasses: StoryObj<typeof ITwinGrid> = {
   args: {
     apiOverrides: { serverEnvironmentPrefix: "qa" },
@@ -428,6 +517,7 @@ export default {
   },
   args: {
     requestType: "all",
+    onDataStateChange: fn(),
   },
   excludeStories: ["ITwinGrid"],
 } as Meta;

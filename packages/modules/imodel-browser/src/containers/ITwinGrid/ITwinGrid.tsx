@@ -16,6 +16,7 @@ import {
   ApiOverrides,
   DataStatus,
   ITwinCellOverrides,
+  ITwinDataState,
   ITwinFilterOptions,
   ITwinFull,
   ITwinSubClass,
@@ -106,6 +107,11 @@ export interface ITwinGridProps {
     fetchStatus: DataStatus | undefined,
     totalCount: number | undefined
   ) => ITwinFull[];
+  /**
+   * Called with the grid's data state when it changes: once for each query, then for each result it
+   * returns. Does not need to be memoized.
+   */
+  onDataStateChange?: (state: ITwinDataState) => void;
   /**iTwin view mode */
   viewMode?: ViewType;
   /** Overrides for cell rendering in cells viewMode */
@@ -141,6 +147,7 @@ const ITwinGridInternal = ({
   tileOverrides,
   useIndividualState,
   postProcessCallback,
+  onDataStateChange,
   viewMode,
   cellOverrides,
   className,
@@ -191,6 +198,7 @@ const ITwinGridInternal = ({
     orderbyOptions,
     shouldRefetchFavorites,
     resetShouldRefetchFavorites,
+    onDataStateChange,
   });
 
   const iTwins = React.useMemo(

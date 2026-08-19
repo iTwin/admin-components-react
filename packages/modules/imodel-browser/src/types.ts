@@ -87,6 +87,21 @@ export enum DataStatus {
   ContextRequired = "error_contextRequired",
 }
 
+export interface ITwinDataQuery {
+  requestType: "favorites" | "recents" | "";
+  filterText: string;
+  iTwinSubClass: ITwinSubClass;
+  orderby?: string;
+}
+
+export interface ITwinDataState {
+  query: ITwinDataQuery;
+  status: DataStatus;
+  iTwins: ITwinFull[];
+  hasMore: boolean;
+  error?: unknown;
+}
+
 /**
  * Specifies the data management mode for the hook.
  * - "internal": Hook manages all data fetching, pagination, sorting, and filtering. Requires accessToken and iTwinId.
