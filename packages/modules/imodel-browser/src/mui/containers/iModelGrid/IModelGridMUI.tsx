@@ -36,7 +36,10 @@ import {
 } from "../../../utils/iModelApi";
 import { BaseCardLoading } from "../../components/baseCard/BaseCardLoading";
 import { NoResultsMUI as NoResults } from "../../components/noResults/NoResultsMUI";
-import { type IModelTableOverridesMUI } from "../../types";
+import {
+  type IModelSortOptionsMUI,
+  type IModelTableOverridesMUI,
+} from "../../types";
 import { stripNonTileProps } from "../../utils/stripNonTileProps";
 import {
   type IModelTileMUIProps,
@@ -78,6 +81,7 @@ export interface IModelGridMUIProps
     | "status"
     | "removeFromRecentsIcon"
     | "onOpen"
+    | "sortOptions"
   > {
   /**
    * Factory that returns actions for a given iModel.
@@ -112,6 +116,17 @@ export interface IModelGridMUIProps
    */
   nonce?: string;
   stringsOverrides?: Partial<IModelGridStringsMUI>;
+  /**
+   * Requested sort, e.g. `{ field: "name", direction: "asc" }`.
+   */
+  sortOptions?: IModelSortOptionsMUI;
+  /**
+   * Called when the user changes the table sort (e.g. by clicking a column
+   * header). Receives the new sort in the same shape as the `sortOptions`
+   * prop, so it can be stored and passed back as-is. Receives `undefined`
+   * when the sort is cleared.
+   */
+  onSortOptionsChange?: (sortOptions?: IModelSortOptionsMUI) => void;
 }
 
 /**
@@ -143,7 +158,7 @@ const IModelGridInternal = ({
   removeFromRecentsIcon,
   actions,
   iTwinId,
-  sortOptions = { sortType: "name", descending: false },
+  sortOptions,
   requestType,
   stringsOverrides,
   tileOverrides,
@@ -160,24 +175,25 @@ const IModelGridInternal = ({
   onRefetch,
   dataMode = "internal",
   disableAddToRecents = false,
+  onSortOptionsChange,
   nonce,
 }: IModelGridMUIProps) => {
   const logger = useLogger();
-  const [sort, setSort] = React.useState<IModelSortOptions>(sortOptions);
-
-  React.useEffect(() => {
-    setSort(
-      viewMode === "cells"
-        ? {
-            sortType: "name",
-            descending: false,
-          }
-        : {
-            sortType: sortOptions.sortType,
-            descending: sortOptions.descending,
-          }
-    );
-  }, [sortOptions.descending, sortOptions.sortType, viewMode]);
+  // Translate the `sortOptions` prop into the `{ sortType, descending }` shape
+  // used by the data hooks.
+  const sortField = sortOptions?.field;
+  const sortDirection = sortOptions?.direction;
+  const sort = React.useMemo<IModelSortOptions>(() => {
+    return viewMode === "cells"
+      ? {
+          sortType: "name",
+          descending: false,
+        }
+      : {
+          sortType: sortField ?? "name",
+          descending: sortDirection === "desc",
+        };
+  }, [sortField, sortDirection, viewMode]);
 
   const strings = React.useMemo(
     () =>
@@ -429,6 +445,8 @@ const IModelGridInternal = ({
             tableOverrides={tableOverrides}
             isLoading={fetchStatus === DataStatus.Fetching}
             fetchMore={fetchMore}
+            sortOptions={sortOptions}
+            onSortOptionsChange={onSortOptionsChange}
             nonce={nonce}
             data-testid="imodel-table"
           />

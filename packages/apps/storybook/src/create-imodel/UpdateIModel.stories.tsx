@@ -5,6 +5,7 @@
 import { UpdateIModel } from "@itwin/create-imodel-react";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
 import React from "react";
+
 import { accessTokenArgTypes } from "../utils/storyHelp";
 
 function base64ToArrayBuffer(base64: string) {

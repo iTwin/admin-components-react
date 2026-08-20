@@ -11,12 +11,12 @@ import Avatar from "@mui/material/Avatar";
 import AvatarGroup from "@mui/material/AvatarGroup";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
-import { action } from "storybook/actions";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
 import SvgDelete from "@stratakit/icons/delete.svg";
 import svgRoad from "@stratakit/icons/road.svg";
 import SvgShare from "@stratakit/icons/share.svg";
 import React from "react";
+import { action } from "storybook/actions";
 
 import bridgeThumbnail from "../../utils/bridge.jpg";
 import overpassThumbnail from "../../utils/overpass.jpg";

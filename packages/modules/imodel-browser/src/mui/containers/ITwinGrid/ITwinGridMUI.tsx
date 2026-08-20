@@ -22,8 +22,12 @@ import {
 } from "../../../utils/_buildMenuOptions";
 import { BaseCardLoading } from "../../components/baseCard/BaseCardLoading";
 import { NoResultsMUI } from "../../components/noResults/NoResultsMUI";
-import { type ITwinTableOverridesMUI } from "../../types";
+import {
+  type ITwinSortOptionsMUI,
+  type ITwinTableOverridesMUI,
+} from "../../types";
 import { stripNonTileProps } from "../../utils/stripNonTileProps";
+import { clientSideITwinSort } from "./clientSideITwinSort";
 import { type ITwinTableMUIStrings, ITwinTableMUI } from "./ITwinTableMUI";
 import { type ITwinTilePropsMUI, ITwinTileMUI } from "./ITwinTileMUI";
 
@@ -53,6 +57,7 @@ export interface ITwinGridPropsMUI
     | "stringsOverrides"
     | "status"
     | "onOpen"
+    | "orderbyOptions"
   > {
   /**
    * Factory that returns actions for a given iTwin.
@@ -82,6 +87,17 @@ export interface ITwinGridPropsMUI
   nonce?: string;
   /** Localized string overrides - falls back to default English strings if not provided */
   stringsOverrides?: Partial<ITwinGridStringsMUI>;
+  /**
+   * Requested sort, e.g. `{ field: "displayName", direction: "asc" }`.
+   */
+  sortOptions?: ITwinSortOptionsMUI;
+  /**
+   * Called when the user changes the table sort (e.g. by clicking a column
+   * header). Receives the new sort in the same shape as the `sortOptions`
+   * prop, so it can be stored and passed back as-is. Receives `undefined`
+   * when the sort is cleared.
+   */
+  onSortOptionsChange?: (sortOptions: ITwinSortOptionsMUI) => void;
 }
 
 /**
@@ -100,7 +116,7 @@ const ITwinGridMUIInternal = ({
   accessToken,
   apiOverrides,
   filterOptions,
-  orderbyOptions,
+  sortOptions,
   actions,
   moreActions,
   requestType,
@@ -112,6 +128,7 @@ const ITwinGridMUIInternal = ({
   viewMode,
   tableOverrides,
   className,
+  onSortOptionsChange,
   nonce,
 }: ITwinGridPropsMUI) => {
   const logger = useLogger();
@@ -122,6 +139,15 @@ const ITwinGridMUIInternal = ({
     shouldRefetchFavorites,
     resetShouldRefetchFavorites,
   } = useITwinFavorites(accessToken, apiOverrides?.serverEnvironmentPrefix);
+
+  // Translate the `sortOptions` prop into the OData `$orderby` string expected
+  // by the iTwins API (e.g. "displayName asc").
+  const sortField = sortOptions?.field;
+  const sortDirection = sortOptions?.direction;
+  const orderbyOptions = React.useMemo(
+    () => (sortField ? `${sortField} ${sortDirection}` : undefined),
+    [sortField, sortDirection]
+  );
 
   const strings = React.useMemo(
     () =>
@@ -179,12 +205,24 @@ const ITwinGridMUIInternal = ({
     resetShouldRefetchFavorites,
   });
 
-  const iTwins = React.useMemo(
-    () =>
+  const iTwins = React.useMemo(() => {
+    const processed =
       postProcessCallback?.([...fetchedItwins], fetchStatus, totalCount) ??
-      fetchedItwins,
-    [postProcessCallback, fetchedItwins, fetchStatus, totalCount]
-  );
+      fetchedItwins;
+    return clientSideITwinSort(processed, {
+      viewMode,
+      requestType,
+      sort: sortOptions,
+    });
+  }, [
+    postProcessCallback,
+    fetchedItwins,
+    fetchStatus,
+    totalCount,
+    viewMode,
+    requestType,
+    sortOptions,
+  ]);
 
   const noResultsText = {
     [DataStatus.Fetching]: "",
@@ -305,6 +343,8 @@ const ITwinGridMUIInternal = ({
       tableOverrides={tableOverrides}
       isLoading={fetchStatus === DataStatus.Fetching}
       fetchMore={fetchMore}
+      sortOptions={sortOptions}
+      onSortOptionsChange={onSortOptionsChange}
       nonce={nonce}
     />
   );

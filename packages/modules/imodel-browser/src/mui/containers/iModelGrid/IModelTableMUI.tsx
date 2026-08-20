@@ -22,7 +22,11 @@ import {
 import { formatDate } from "../../../utils/formatDate";
 import MoreMenuMUI from "../../components/MoreMenuMUI";
 import { FavoriteIconMUI } from "../../components/tileFavoriteIcon/FavoriteIconMUI";
-import { type IModelTableOverridesMUI } from "../../types";
+import {
+  type IModelSortOptionsMUI,
+  type IModelTableOverridesMUI,
+  type IModelTableSortModel,
+} from "../../types";
 
 const EMPTY_COLUMN_OVERRIDES: NonNullable<
   IModelTableOverridesMUI["columnOverrides"]
@@ -63,8 +67,20 @@ export interface IModelTableMUIProps {
   /** Called when more data should be loaded. */
   fetchMore?: (() => void) | false;
   /**
-   * Nonce applied to `<style>` elements. Required if your application uses a Content Security Policy (CSP) that restricts inline styles.
+   * Requested sort, e.g. `{ field: "name", direction: "asc" }`. When
+   * `onSortOptionsChange` is provided the sort is fully controlled: store the
+   * reported value and pass it back through this prop. Otherwise this is only
+   * the initial sort and the table manages its own.
    */
+  sortOptions?: IModelSortOptionsMUI;
+  /**
+   * Called when the user changes the table sort (e.g. by clicking a column
+   * header). Providing this makes the sort controlled; receive the new sort
+   * in the same shape as the `sortOptions` prop and pass it back as-is.
+   * Receives `undefined` when the sort is cleared.
+   */
+  onSortOptionsChange?: (sortOptions: IModelSortOptionsMUI) => void;
+  /** Nonce applied to `<style>` elements. Required if your application uses a Content Security Policy (CSP) that restricts inline styles. */
   nonce?: string;
 }
 
@@ -83,6 +99,8 @@ export const IModelTableMUI = ({
   } = {},
   isLoading,
   fetchMore,
+  sortOptions,
+  onSortOptionsChange,
   nonce,
 }: IModelTableMUIProps) => {
   // Eagerly load all available data so the table has the full dataset
@@ -93,6 +111,32 @@ export const IModelTableMUI = ({
     }
   }, [fetchMore]);
   const favoritesContext = useIModelFavoritesContext();
+
+  // Translate the `sortOptions` prop into the equivalent DataGrid sort model.
+  const sortField = sortOptions?.field;
+  const sortDirection = sortOptions?.direction;
+  const sortModel = React.useMemo<IModelTableSortModel>(
+    () => (sortField ? [{ field: sortField, sort: sortDirection }] : []),
+    [sortField, sortDirection]
+  );
+
+  // Controlled when `onSortOptionsChange` is provided: the consumer stores the
+  // sort and passes it back through `sortOptions`.
+  const isSortControlled = !!onSortOptionsChange;
+
+  const handleSortModelChange = React.useCallback(
+    (model: IModelTableSortModel) => {
+      const first = model[0];
+      if (!first) {
+        return;
+      }
+      onSortOptionsChange?.({
+        field: first.field,
+        direction: first.sort ?? "asc",
+      });
+    },
+    [onSortOptionsChange]
+  );
 
   const columns = React.useMemo<GridColDef<IModelFull>[]>(() => {
     const cols: (GridColDef<IModelFull> | false)[] = [
@@ -150,6 +194,15 @@ export const IModelTableMUI = ({
           disableColumnMenu: true,
           ...columnOverrides[IModelCellColumn.LastModified],
         },
+      // Hidden column so the sort model can sort by creation date even though
+      // the column is never displayed.
+      {
+        field: "createdDateTime",
+        headerName: "",
+        valueGetter: (_value: string | undefined, row: IModelFull) =>
+          row.createdDateTime ?? "",
+        disableColumnMenu: true,
+      },
       !hideColumns.includes(IModelCellColumn.Options) && {
         field: "actions",
         headerName: "",
@@ -192,8 +245,16 @@ export const IModelTableMUI = ({
     <DataGrid<IModelFull>
       rows={iModels}
       columns={columns}
+      columnVisibilityModel={{ createdDateTime: false }}
       nonce={nonce}
       loading={isLoading}
+      sortModel={isSortControlled ? sortModel : undefined}
+      onSortModelChange={
+        isSortControlled
+          ? (model) => handleSortModelChange([...model] as IModelTableSortModel)
+          : undefined
+      }
+      sortingOrder={isSortControlled ? ["asc", "desc"] : ["asc", "desc", null]}
       onRowClick={
         actions
           ? (params) => {
@@ -226,6 +287,7 @@ export const IModelTableMUI = ({
       disableColumnSelector
       disableColumnFilter
       initialState={{
+        sorting: { sortModel },
         pagination: { paginationModel: { pageSize: 25 } },
       }}
       pageSizeOptions={[25, 50, 100]}
