@@ -4,7 +4,6 @@
  *--------------------------------------------------------------------------------------------*/
 import commonjs from "@rollup/plugin-commonjs";
 import url from "@rollup/plugin-url";
-import svgr from "@svgr/rollup";
 import peerDepsExternal from "rollup-plugin-peer-deps-external";
 import postcss from "rollup-plugin-postcss";
 import { terser } from "rollup-plugin-terser";
@@ -27,7 +26,6 @@ function createPlugins({ declaration = true } = {}) {
         ? {}
         : { compilerOptions: { declaration: false, declarationMap: false } },
     }),
-    svgr(),
     postcss({
       use: {
         sass: { outputStyle: "compressed" },
