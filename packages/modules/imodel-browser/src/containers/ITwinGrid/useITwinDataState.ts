@@ -46,6 +46,7 @@ const hasStartedOver = (state: FetchState, query: ITwinDataQuery) =>
   state.hasMore;
 
 export const useITwinDataState = (
+  /** MUST be memoized. A new object every render reports the same state again on every render. */
   query: ITwinDataQuery,
   onDataStateChange?: (state: ITwinDataState) => void
 ) => {
