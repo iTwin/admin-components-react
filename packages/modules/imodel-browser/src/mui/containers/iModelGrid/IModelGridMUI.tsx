@@ -121,9 +121,8 @@ export interface IModelGridMUIProps
    */
   sortOptions?: IModelSortOptionsMUI;
   /**
-   * Called when the user changes the table sort (e.g. by clicking a column
-   * header). Receives the new sort in the same shape as the `sortOptions`
-   * prop, so it can be stored and passed back as-is.
+   * Called when the user changes the table sort (e.g. by clicking a column header).
+   * Receives the new sort in the same shape as the `sortOptions` prop, so it can be stored and passed back as-is.
    */
   onSortOptionsChange?: (sortOptions: IModelSortOptionsMUI) => void;
 }
