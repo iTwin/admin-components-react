@@ -126,7 +126,7 @@ export interface IModelGridMUIProps
    * prop, so it can be stored and passed back as-is. Receives `undefined`
    * when the sort is cleared.
    */
-  onSortOptionsChange?: (sortOptions?: IModelSortOptionsMUI) => void;
+  onSortOptionsChange?: (sortOptions: IModelSortOptionsMUI) => void;
 }
 
 /**
