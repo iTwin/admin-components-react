@@ -13,9 +13,11 @@ import {
 import { useITwinFilter } from "./useITwinFilter";
 
 /** One object, so a render can never pair one query's status with another query's iTwins. */
-interface FetchState extends Omit<ITwinDataState, "iTwins"> {
+interface FetchState extends Omit<ITwinDataState, "iTwins" | "status"> {
   /** Every page fetched, where a report carries only what client side filtering kept. */
   iTwins: ITwinFull[];
+  /** Undefined until the first transition, which is what postProcessCallback sees on first render. */
+  status: DataStatus | undefined;
 }
 
 const startingOver = (query: ITwinDataQuery): FetchState => ({
@@ -24,6 +26,11 @@ const startingOver = (query: ITwinDataQuery): FetchState => ({
   iTwins: [],
   hasMore: true,
   error: undefined,
+});
+
+const nothingDecidedYet = (query: ITwinDataQuery): FetchState => ({
+  ...startingOver(query),
+  status: undefined,
 });
 
 const sameQuery = (a: ITwinDataQuery, b: ITwinDataQuery) =>
@@ -43,7 +50,7 @@ export const useITwinDataState = (
   onDataStateChange?: (state: ITwinDataState) => void
 ) => {
   const [fetchState, setFetchState] = React.useState<FetchState>(() =>
-    startingOver(query)
+    nothingDecidedYet(query)
   );
   const iTwins = useITwinFilter(fetchState.iTwins, query.filterText);
 
@@ -54,14 +61,14 @@ export const useITwinDataState = (
     onDataStateChangeRef.current = onDataStateChange;
   });
 
-  const dataState = React.useMemo<ITwinDataState>(
-    () => ({ ...fetchState, iTwins }),
-    [fetchState, iTwins]
-  );
+  const dataState = React.useMemo<ITwinDataState | undefined>(() => {
+    const { status } = fetchState;
+    return status === undefined ? undefined : { ...fetchState, status, iTwins };
+  }, [fetchState, iTwins]);
   React.useEffect(() => {
     // The new query has not reached the state yet, so reporting now would pair it with the
     // previous query's result.
-    if (sameQuery(dataState.query, query)) {
+    if (dataState && sameQuery(dataState.query, query)) {
       onDataStateChangeRef.current?.(dataState);
     }
   }, [dataState, query]);

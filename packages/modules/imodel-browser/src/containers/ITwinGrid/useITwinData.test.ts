@@ -42,6 +42,13 @@ describe("useITwinData hook", () => {
     });
     expect(result.current.status).toEqual(DataStatus.Complete);
   });
+  it("has no status on the first render, before anything has been decided", () => {
+    const { result } = renderHook(() => useITwinData({ accessToken }));
+
+    expect(result.all[0]).toHaveProperty("status", undefined);
+    expect(result.current.status).toEqual(DataStatus.Fetching);
+  });
+
   it("returns favorite iTwins and proper status on successful call", async () => {
     const { result, waitForNextUpdate } = renderHook(() =>
       useITwinData({ accessToken, requestType: "favorites" })
