@@ -107,10 +107,7 @@ export interface ITwinGridProps {
     fetchStatus: DataStatus | undefined,
     totalCount: number | undefined
   ) => ITwinFull[];
-  /**
-   * Called with the grid's data state when it changes: once for each query, then for each result it
-   * returns. Does not need to be memoized.
-   */
+  /** Called with the grid's data state each time it changes. Does not need to be memoized. */
   onDataStateChange?: (state: ITwinDataState) => void;
   /**iTwin view mode */
   viewMode?: ViewType;

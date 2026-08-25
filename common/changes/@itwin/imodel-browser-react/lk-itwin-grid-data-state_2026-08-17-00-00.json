@@ -2,7 +2,7 @@
   "changes": [
     {
       "packageName": "@itwin/imodel-browser-react",
-      "comment": "Add onDataStateChange callback to ITwinGrid",
+      "comment": "Add onDataStateChange callback to ITwinGrid and ITwinGridMUI",
       "type": "minor"
     }
   ],
