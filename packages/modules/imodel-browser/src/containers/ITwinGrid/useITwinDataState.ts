@@ -45,8 +45,11 @@ const hasStartedOver = (state: FetchState, query: ITwinDataQuery) =>
   state.iTwins.length === 0 &&
   state.hasMore;
 
+/**
+ * @param query MUST be memoized. A new object every render reports the same state again on every
+ * render.
+ */
 export const useITwinDataState = (
-  /** MUST be memoized. A new object every render reports the same state again on every render. */
   query: ITwinDataQuery,
   onDataStateChange?: (state: ITwinDataState) => void
 ) => {
