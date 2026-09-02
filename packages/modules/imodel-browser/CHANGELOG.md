@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Tue, 18 Aug 2026 14:36:55 GMT and should not be manually modified.
+This log was last generated on Wed, 02 Sep 2026 01:08:34 GMT and should not be manually modified.
+
+## 4.6.0
+Wed, 02 Sep 2026 01:08:34 GMT
+
+### Minor changes
+
+- Add onDataStateChange callback to ITwinGrid and ITwinGridMUI
 
 ## 4.5.3
 Tue, 18 Aug 2026 14:36:55 GMT

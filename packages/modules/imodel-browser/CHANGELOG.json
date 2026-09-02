@@ -2,6 +2,23 @@
   "name": "@itwin/imodel-browser-react",
   "entries": [
     {
+      "version": "4.6.0",
+      "tag": "@itwin/imodel-browser-react_v4.6.0",
+      "date": "Wed, 02 Sep 2026 01:08:34 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "CVE remediation: remove unused dev dependencies and override vulnerable transitive dependencies"
+          }
+        ],
+        "minor": [
+          {
+            "comment": "Add onDataStateChange callback to ITwinGrid and ITwinGridMUI"
+          }
+        ]
+      }
+    },
+    {
       "version": "4.5.3",
       "tag": "@itwin/imodel-browser-react_v4.5.3",
       "date": "Tue, 18 Aug 2026 14:36:55 GMT",
