@@ -14,6 +14,7 @@ module.exports = {
     ],
   },
   transformIgnorePatterns: [
+    "<rootDir>/scripts/setupJest\\.js$",
     "node_modules/(?!(\\.pnpm/(@stratakit|@ariakit|@mui).*|@bentley/ui|@stratakit|@ariakit|@mui))",
     "^.+\\.module\\.(css|sass|scss)$",
   ],

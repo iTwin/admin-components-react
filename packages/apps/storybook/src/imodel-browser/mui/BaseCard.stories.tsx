@@ -7,7 +7,6 @@ import Avatar from "@mui/material/Avatar";
 import AvatarGroup from "@mui/material/AvatarGroup";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
-import { action } from "storybook/actions";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
 import svgGeo from "@stratakit/icons/geospatial-features.svg";
 import svgPin from "@stratakit/icons/pin.svg";
@@ -16,6 +15,7 @@ import svgStatusError from "@stratakit/icons/status-error.svg";
 import svgStatusSuccess from "@stratakit/icons/status-success.svg";
 import svgStatusWarning from "@stratakit/icons/status-warning.svg";
 import React from "react";
+import { action } from "storybook/actions";
 
 import {
   BaseCard,
@@ -255,7 +255,11 @@ export const OpenSitePlus: StoryObj<typeof BaseCardStory> = {
         icon: svgGeo,
       },
       { key: "share", label: "Share", onClick: action("menu: share clicked") },
-      { key: "delete", label: "Delete", onClick: action("menu: delete clicked") },
+      {
+        key: "delete",
+        label: "Delete",
+        onClick: action("menu: delete clicked"),
+      },
     ],
     actions: [
       {
