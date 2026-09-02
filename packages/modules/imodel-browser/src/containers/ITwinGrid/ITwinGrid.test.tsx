@@ -66,6 +66,16 @@ describe("ITwinGrid", () => {
     expect(wrapper.getAllByRole("row").length).toEqual(3); // First row is header
   });
 
+  it("should hand onDataStateChange to the data hook", () => {
+    const onDataStateChange = jest.fn();
+
+    render(<ITwinGrid onDataStateChange={onDataStateChange} />);
+
+    expect(useITwinData.useITwinData).toHaveBeenCalledWith(
+      expect.objectContaining({ onDataStateChange })
+    );
+  });
+
   it("should not refetch iTwins favorites when component rerenders", async () => {
     // Arrange
     jest.spyOn(useITwinData, "useITwinData").mockReturnValue({

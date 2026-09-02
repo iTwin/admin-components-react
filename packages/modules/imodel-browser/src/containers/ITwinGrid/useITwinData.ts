@@ -8,13 +8,14 @@ import { useLogger } from "../../contexts/LoggerContext";
 import {
   AccessTokenProvider,
   ApiOverrides,
-  DataStatus,
+  ITwinDataQuery,
+  ITwinDataState,
   ITwinFilterOptions,
   ITwinFull,
   ITwinSubClass,
 } from "../../types";
 import { _getAPIServer } from "../../utils/_apiOverrides";
-import { useITwinFilter } from "./useITwinFilter";
+import { useITwinDataState } from "./useITwinDataState";
 
 export interface ProjectDataHookOptions {
   requestType?: "favorites" | "recents" | "";
@@ -25,9 +26,13 @@ export interface ProjectDataHookOptions {
   orderbyOptions?: string;
   shouldRefetchFavorites?: boolean;
   resetShouldRefetchFavorites?: () => void;
+  onDataStateChange?: (state: ITwinDataState) => void;
 }
 
 const PAGE_SIZE = 100;
+
+const isClientSideFiltered = (requestType: string) =>
+  ["favorites", "recents"].includes(requestType);
 
 export const useITwinData = ({
   requestType = "",
@@ -38,26 +43,43 @@ export const useITwinData = ({
   orderbyOptions,
   shouldRefetchFavorites,
   resetShouldRefetchFavorites,
+  onDataStateChange,
 }: ProjectDataHookOptions) => {
   const logger = useLogger();
   const data = apiOverrides?.data;
   const serverEnvironmentPrefix = apiOverrides?.serverEnvironmentPrefix;
-  const [projects, setProjects] = React.useState<ITwinFull[]>([]);
-  const [status, setStatus] = React.useState<DataStatus>();
   const [totalCount, setTotalCount] = React.useState<number>();
-  const filteredProjects = useITwinFilter(projects, filterOptions);
   const [page, setPage] = React.useState(0);
-  const [morePages, setMorePages] = React.useState(true);
+
+  const query = React.useMemo<ITwinDataQuery>(
+    () => ({
+      requestType,
+      filterText: filterOptions ?? "",
+      iTwinSubClass,
+      orderby: orderbyOptions,
+    }),
+    [requestType, filterOptions, iTwinSubClass, orderbyOptions]
+  );
+  const {
+    status,
+    iTwins,
+    hasMore,
+    reset,
+    applyQuery,
+    markFetching,
+    pageLoaded,
+    pageFailed,
+    tokenRequired,
+    dataProvided,
+  } = useITwinDataState(query, onDataStateChange);
 
   const resetData = React.useCallback(() => {
-    setStatus(DataStatus.Fetching);
-    setProjects([]);
+    reset();
     setTotalCount(undefined);
     setPage(0);
-    setMorePages(true);
     fetchingMoreRef.current = true;
     lastPageFailedRef.current = false;
-  }, []);
+  }, [reset]);
 
   // We start in a fetching state
   const fetchingMoreRef = React.useRef(true);
@@ -86,22 +108,21 @@ export const useITwinData = ({
 
   const activeRequestRef = React.useRef<symbol | undefined>(undefined);
 
-  const morePagesRef = React.useRef(morePages);
+  const morePagesRef = React.useRef(hasMore);
   React.useEffect(() => {
-    morePagesRef.current = morePages;
-  }, [morePages]);
+    morePagesRef.current = hasMore;
+  }, [hasMore]);
 
   React.useEffect(() => {
     // If filter changes but we already have all the data for favorites or recents,
     // let client side filtering do its job, otherwise, refetch from scratch.
     // Use ref so "morePages" changes itself does not trigger the effect.
-    if (
-      morePagesRef.current ||
-      !["favorites", "recents"].includes(requestType)
-    ) {
+    if (morePagesRef.current || !isClientSideFiltered(requestType)) {
       resetData();
+    } else {
+      applyQuery(query);
     }
-  }, [filterOptions, requestType, resetData]);
+  }, [query, requestType, resetData, applyQuery]);
 
   React.useEffect(() => {
     // If any of the dependencies change, always restart the fetch from scratch.
@@ -117,98 +138,55 @@ export const useITwinData = ({
   ]);
 
   React.useEffect(() => {
-    if (!morePages) {
+    if (!hasMore) {
       return;
     }
     if (data) {
-      setProjects(data);
-      setStatus(DataStatus.Complete);
-      setMorePages(false);
+      dataProvided(data);
       return;
     }
     if (!accessToken) {
-      setStatus(DataStatus.TokenRequired);
-      setProjects([]);
+      tokenRequired();
       return;
     }
     if (page === 0) {
-      setStatus(DataStatus.Fetching);
+      markFetching();
     }
     const requestId = Symbol();
     activeRequestRef.current = requestId;
-    const abortController = new AbortController();
-    const endpoint = ["favorites", "recents"].includes(requestType)
-      ? requestType
-      : "";
-    const resolvedITwinSubClass = iTwinSubClass === "All" ? "" : iTwinSubClass;
-    const subClass = `?subClass=${resolvedITwinSubClass}`;
-    const paging = `&$skip=${page * PAGE_SIZE}&$top=${PAGE_SIZE}`;
-    const search =
-      ["favorites", "recents"].includes(requestType) || !filterOptions
-        ? ""
-        : `&$search=${encodeURIComponent(String(filterOptions).trim())}`;
-    const orderby =
-      ["favorites", "recents"].includes(requestType) || !orderbyOptions
-        ? ""
-        : `&$orderby=${encodeURIComponent(String(orderbyOptions).trim())}`;
+    const { abortController, fetchITwins } = createFetchITwinsFn({
+      query,
+      accessToken,
+      page,
+      serverEnvironmentPrefix,
+      shouldRefetchFavorites,
+    });
 
-    const url = `${_getAPIServer(
-      serverEnvironmentPrefix
-    )}/itwins/${endpoint}${subClass}${paging}${search}${orderby}`;
-
-    const makeFetchRequest = async () => {
-      const options: RequestInit = {
-        signal: abortController.signal,
-        headers: {
-          "Cache-Control":
-            requestType === "favorites" && shouldRefetchFavorites
-              ? "no-cache"
-              : "",
-          Authorization:
-            typeof accessToken === "function"
-              ? await accessToken()
-              : accessToken,
-          Accept: "application/vnd.bentley.itwin-platform.v1+json",
-          Prefer: "return=representation",
-          "x-total-count": "true",
-        },
-      };
-
-      const response = await fetch(url, options);
-      const result: { iTwins: ITwinFull[] } = response.ok
-        ? await response.json()
-        : await response.text().then((errorText) => {
-            throw new Error(errorText);
-          });
+    const applyResult = async () => {
+      const result = await fetchITwins();
       if (activeRequestRef.current !== requestId) {
         return;
       }
-      const totalCountHeader = response.headers.get("x-total-count");
-      if (totalCountHeader !== null) {
-        setTotalCount(Number(totalCountHeader));
+      if (result.totalCount !== undefined) {
+        setTotalCount(result.totalCount);
       }
-      setStatus(DataStatus.Complete);
       fetchingMoreRef.current = false;
       requestType === "favorites" && resetShouldRefetchFavorites?.();
-      if (result.iTwins.length !== PAGE_SIZE) {
-        setMorePages(false);
-      }
-      setProjects((projects) =>
-        page === 0 ? result.iTwins : [...projects, ...result.iTwins]
-      );
+      pageLoaded({
+        iTwins: result.iTwins,
+        isFirstPage: page === 0,
+        hasMore: result.hasMore,
+      });
     };
 
-    makeFetchRequest().catch((e) => {
+    applyResult().catch((e) => {
       if (activeRequestRef.current !== requestId || e.name === "AbortError") {
         // Superseded or aborted, not a failure worth reporting.
         return;
       }
-      if (page === 0) {
-        setProjects([]);
-      }
-      setStatus(DataStatus.FetchFailed);
       fetchingMoreRef.current = false;
       lastPageFailedRef.current = true;
+      pageFailed({ error: e, isFirstPage: page === 0 });
       logger.logError("Failed to fetch iTwins", e);
     });
     return () => {
@@ -220,22 +198,103 @@ export const useITwinData = ({
     requestType,
     data,
     serverEnvironmentPrefix,
-    filterOptions,
-    orderbyOptions,
+    query,
     page,
-    morePages,
+    hasMore,
     refetchCount,
     retryCount,
-    iTwinSubClass,
     shouldRefetchFavorites,
     resetShouldRefetchFavorites,
     logger,
+    dataProvided,
+    tokenRequired,
+    markFetching,
+    pageLoaded,
+    pageFailed,
   ]);
   return {
-    iTwins: filteredProjects,
+    iTwins,
     status,
     totalCount,
-    fetchMore: morePages ? fetchMore : undefined,
+    fetchMore: hasMore ? fetchMore : undefined,
     refetchITwins,
   };
+};
+
+/**
+ * Builds the request for one page of iTwins. Resolves with the page, or throws what the API
+ * answered. A totalCount of undefined means the response carried no count, which is not zero.
+ */
+const createFetchITwinsFn = ({
+  query,
+  accessToken,
+  page,
+  serverEnvironmentPrefix,
+  shouldRefetchFavorites,
+}: {
+  query: ITwinDataQuery;
+  accessToken: AccessTokenProvider;
+  page: number;
+  serverEnvironmentPrefix?: "" | "dev" | "qa";
+  shouldRefetchFavorites?: boolean;
+}): {
+  abortController: AbortController;
+  fetchITwins: () => Promise<{
+    iTwins: ITwinFull[];
+    totalCount: number | undefined;
+    hasMore: boolean;
+  }>;
+} => {
+  const { requestType, filterText, iTwinSubClass, orderby } = query;
+  const clientSideFiltered = isClientSideFiltered(requestType);
+  const endpoint = clientSideFiltered ? requestType : "";
+  const subClass = `?subClass=${iTwinSubClass === "All" ? "" : iTwinSubClass}`;
+  const paging = `&$skip=${page * PAGE_SIZE}&$top=${PAGE_SIZE}`;
+  const search =
+    clientSideFiltered || !filterText
+      ? ""
+      : `&$search=${encodeURIComponent(filterText.trim())}`;
+  const ordering =
+    clientSideFiltered || !orderby
+      ? ""
+      : `&$orderby=${encodeURIComponent(orderby.trim())}`;
+
+  const abortController = new AbortController();
+  const url = `${_getAPIServer(
+    serverEnvironmentPrefix
+  )}/itwins/${endpoint}${subClass}${paging}${search}${ordering}`;
+
+  const doFetchRequest = async () => {
+    const options: RequestInit = {
+      signal: abortController.signal,
+      headers: {
+        "Cache-Control":
+          requestType === "favorites" && shouldRefetchFavorites
+            ? "no-cache"
+            : "",
+        Authorization:
+          typeof accessToken === "function" ? await accessToken() : accessToken,
+        Accept: "application/vnd.bentley.itwin-platform.v1+json",
+        Prefer: "return=representation",
+        "x-total-count": "true",
+      },
+    };
+
+    const response = await fetch(url, options);
+    const result: { iTwins: ITwinFull[] } = response.ok
+      ? await response.json()
+      : await response.text().then((errorText) => {
+          throw new Error(errorText);
+        });
+
+    const totalCountHeader = response.headers.get("x-total-count");
+    return {
+      iTwins: result.iTwins,
+      totalCount:
+        totalCountHeader !== null ? Number(totalCountHeader) : undefined,
+      hasMore: result.iTwins.length === PAGE_SIZE,
+    };
+  };
+
+  return { abortController, fetchITwins: doFetchRequest };
 };

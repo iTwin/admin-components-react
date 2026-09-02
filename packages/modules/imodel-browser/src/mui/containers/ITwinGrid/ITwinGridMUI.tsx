@@ -124,6 +124,7 @@ const ITwinGridMUIInternal = ({
   tileOverrides,
   useIndividualState,
   postProcessCallback,
+  onDataStateChange,
   viewMode,
   tableOverrides,
   className,
@@ -202,6 +203,7 @@ const ITwinGridMUIInternal = ({
     orderbyOptions,
     shouldRefetchFavorites,
     resetShouldRefetchFavorites,
+    onDataStateChange,
   });
 
   const iTwins = React.useMemo(() => {
