@@ -221,5 +221,6 @@ export const reduceInfiniteQuery = <TQuery, TItem>(
       return reduceFetchNextPage(state);
     case "refetch":
       return startingOver(state, state.query, policy);
+    // no default
   }
 };
