@@ -1112,5 +1112,51 @@ describe("useITwinData hook", () => {
       expect(urlWatcher).toHaveBeenCalledTimes(1);
       expect(result.current.status).toEqual(DataStatus.Complete);
     });
+
+    it("does not restart an unfinished query when shouldRefetchFavorites flips", async () => {
+      const urlWatcher = jest.fn();
+      const fullPage = Array.from({ length: 100 }, (_unused, index) => ({
+        id: `fav${index}`,
+        displayName: `favName${index}`,
+      }));
+      server.use(
+        rest.get(
+          "https://api.bentley.com/itwins/favorites",
+          (req, res, ctx) => {
+            urlWatcher(req.url.toString());
+            return res(ctx.status(200), ctx.json({ iTwins: fullPage }));
+          }
+        )
+      );
+
+      const resetShouldRefetchFavorites = jest.fn();
+      const { rerender, waitForNextUpdate } = renderHook<
+        Parameters<typeof useITwinData>,
+        ReturnType<typeof useITwinData>
+      >((initialValue) => useITwinData(...initialValue), {
+        initialProps: [
+          {
+            accessToken,
+            requestType: "favorites",
+            shouldRefetchFavorites: false,
+            resetShouldRefetchFavorites,
+          },
+        ],
+      });
+      await waitForNextUpdate();
+      expect(urlWatcher).toHaveBeenCalledTimes(1);
+
+      rerender([
+        {
+          accessToken,
+          requestType: "favorites",
+          shouldRefetchFavorites: true,
+          resetShouldRefetchFavorites,
+        },
+      ]);
+      await act(async () => undefined);
+
+      expect(urlWatcher).toHaveBeenCalledTimes(1);
+    });
   });
 });
