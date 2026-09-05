@@ -160,6 +160,21 @@ describe("infiniteQueryReducer", () => {
         reduce(complete, { type: "queryChanged", query: other }, keeping)
       ).toEqual({ ...complete, query: other });
     });
+
+    it("carries the in-flight request object through unchanged when keeping", () => {
+      const inFlight = started();
+
+      const kept = reduce(
+        inFlight,
+        { type: "queryChanged", query: other },
+        keeping
+      );
+
+      // Identity, not equality: useInfiniteQuery uses this object as an effect dependency, so a
+      // rebuilt-but-equal request would abort and restart a request that is still in flight.
+      expect(kept.pendingRequest).toBe(inFlight.pendingRequest);
+      expect(kept.query).toBe(other);
+    });
   });
 
   describe("pageLoaded", () => {
