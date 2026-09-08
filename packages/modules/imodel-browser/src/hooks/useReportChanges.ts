@@ -5,8 +5,8 @@
 import React from "react";
 
 /**
- * Calls `report(value)` once per distinct value, the first one included. Only this effect writes
- * the ref, so `report` can stay a dependency without re-reporting and without a ref-sync effect.
+ * Calls `report(value)` once per distinct value, the first one included. Deduping on the last
+ * reported value is what lets `report` stay a dependency without re-reporting.
  */
 export const useReportChanges = <TValue>(
   value: TValue,

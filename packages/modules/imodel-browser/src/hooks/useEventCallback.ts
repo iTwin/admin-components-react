@@ -5,9 +5,9 @@
 import React from "react";
 
 /**
- * A function with one identity for the life of the hook that always calls the latest `fn`. Lets a
- * caller pass an inline closure where a stable dependency is needed. The standard `useEffectEvent`
- * polyfill: an insertion effect writes the ref before any layout or passive effect can read it.
+ * A function with one identity for the life of the hook that always calls the latest `fn`, so an
+ * inline closure can be passed where a stable dependency is needed. The `useEffectEvent` polyfill:
+ * the insertion effect writes the ref before any layout or passive effect can read it.
  */
 export const useEventCallback = <TArgs extends unknown[], TResult>(
   fn: (...args: TArgs) => TResult

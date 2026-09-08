@@ -69,10 +69,7 @@ const platformHeaders = async ({
   ...(bypassCache ? { "Cache-Control": "no-cache" } : {}),
 });
 
-/**
- * One page of iTwins, or a rejection carrying what the API answered. A totalCount of undefined
- * means the response had no count, which is not zero.
- */
+/** Rejects with the text a non-OK response carried, so callers see the API's own message. */
 export const fetchITwinsPage = async ({
   query,
   page,

@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { DataStatus } from "../types";
 
-/** One page the effect must have in flight. Identified so a late answer can be dropped. */
+/** The id is what lets a late answer be recognised and dropped. */
 export interface PageRequest<TQuery> {
   id: number;
   query: TQuery;
@@ -18,13 +18,12 @@ export interface LoadedPage<TItem> {
   totalCount?: number;
 }
 
-/** A settled answer the query needs no request for. */
 export type LocalResolution<TItem> =
   | { status: DataStatus.Complete; items: TItem[] }
   | { status: DataStatus.TokenRequired | DataStatus.ContextRequired };
 
 export interface InfiniteQueryPolicy<TQuery, TItem> {
-  /** A settled answer that needs no request, or undefined to fetch. */
+  /** A settled answer needing no request, or undefined to fetch. */
   resolveLocally: (query: TQuery) => LocalResolution<TItem> | undefined;
   /** Whether the loaded items still answer the new query. */
   decideOnQueryChange: (
@@ -84,7 +83,7 @@ const isFirstPage = <TQuery>(request: PageRequest<TQuery>) =>
 const localItems = <TItem>(resolution: LocalResolution<TItem>) =>
   resolution.status === DataStatus.Complete ? resolution.items : [];
 
-/** Requests one page, leaving the status alone: a later page loads behind a Complete status. */
+/** Leaves the status alone: a later page loads behind a Complete status. */
 const requestingPage = <TQuery, TItem>(
   state: InfiniteQueryState<TQuery, TItem>,
   page: number
@@ -97,7 +96,6 @@ const requestingPage = <TQuery, TItem>(
   };
 };
 
-/** Drops everything loaded and answers the query again, locally when the policy can. */
 const startingOver = <TQuery, TItem>(
   state: InfiniteQueryState<TQuery, TItem>,
   query: TQuery,

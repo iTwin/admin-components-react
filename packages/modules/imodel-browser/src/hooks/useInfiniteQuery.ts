@@ -20,7 +20,6 @@ export interface UseInfiniteQueryOptions<TQuery, TItem>
   extends InfiniteQueryPolicy<TQuery, TItem> {
   /** MUST be memoized. A new object every render restarts the query. */
   query: TQuery;
-  /** Resolves with one page, or rejects with what the source answered. */
   fetchPage: (
     request: PageRequest<TQuery>,
     signal: AbortSignal
@@ -44,9 +43,9 @@ const isAbortError = (error: unknown) =>
   error instanceof Error && error.name === "AbortError";
 
 /**
- * Pages a query, one request at a time, and drops the answers of superseded requests. The state
- * machine in `infiniteQueryReducer` is the single source of truth; the two effects here only start
- * the query and keep the pending request in flight.
+ * Pages a query, one request at a time, dropping the answers of superseded requests.
+ * `infiniteQueryReducer` is the single source of truth; the effects here only keep the pending
+ * request in flight.
  */
 export const useInfiniteQuery = <TQuery, TItem>({
   query,
@@ -66,9 +65,8 @@ export const useInfiniteQuery = <TQuery, TItem>({
     initialUndecidedState<TQuery, TItem>(initial)
   );
 
-  // The query prop moved ahead of the state. Telling the reducer during render makes React
-  // re-render with the reduced state before anything is committed: its documented way to adjust
-  // state when a prop changes, with no effect and no intermediate commit.
+  // The query prop moved ahead of the state. Dispatching during render is React's documented way
+  // to adjust state on a prop change: it re-renders with the reduced state before committing.
   if (state.query !== query) {
     dispatch({ type: "queryChanged", query });
   }

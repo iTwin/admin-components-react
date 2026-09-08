@@ -38,22 +38,22 @@ export interface ProjectDataHookOptions {
 }
 
 /**
- * Identifies the credential without holding it. An inline `async () => token` provider is the
- * documented way to keep a token fresh and changes identity on every render, so keying on the
- * function itself would restart a settled query forever. The provider is read at request time.
+ * Identifies the credential without holding it. An inline `async () => token` provider changes
+ * identity every render, so keying on the function itself would refetch forever; it is instead
+ * read at request time.
  */
 const toCredentialKey = (accessToken?: AccessTokenProvider) => {
   if (typeof accessToken === "function") {
     return "provider";
   }
-  // An empty token reads as no credential, as it does today, so `??` would not do.
+  // An empty token means no credential, so `??` would be wrong here.
   if (accessToken === undefined || accessToken === "") {
     return undefined;
   }
   return accessToken;
 };
 
-/** Provided data wins over a missing token, which is the precedence the grid ships with. */
+/** Provided data wins over a missing token. */
 const resolveITwinQueryLocally = (
   query: ITwinQueryKey
 ): LocalResolution<ITwinFull> | undefined => {
@@ -75,8 +75,8 @@ const differsOnlyByFilterText = (a: ITwinQueryKey, b: ITwinQueryKey) =>
   a.providedData === b.providedData;
 
 /**
- * Favorites and recents are filtered in the browser, so once every page is loaded a new filter
- * text is answered by the iTwins in hand. Anything else restarts the query.
+ * Favorites and recents are filtered in the browser, so once every page is loaded the iTwins in
+ * hand already answer a new filter text. Anything else restarts the query.
  */
 const decideOnITwinQueryChange = (
   previous: ITwinQueryKey,
