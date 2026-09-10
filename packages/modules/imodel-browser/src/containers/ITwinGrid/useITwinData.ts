@@ -6,8 +6,8 @@ import React from "react";
 
 import { useLogger } from "../../contexts/LoggerContext";
 import { LocalResolution, PageRequest } from "../../hooks/infiniteQueryReducer";
+import { useEventCallback } from "../../hooks/useEventCallback";
 import { useInfiniteQuery } from "../../hooks/useInfiniteQuery";
-import { useReportChanges } from "../../hooks/useReportChanges";
 import {
   AccessTokenProvider,
   ApiOverrides,
@@ -171,25 +171,25 @@ export const useITwinData = ({
     [status, dataQuery, iTwins, hasMore, error]
   );
 
-  const reportDataState = React.useCallback(
+  const reportDataState = useEventCallback(
     (state: ITwinDataState | undefined) => {
       if (state !== undefined) {
         onDataStateChange?.(state);
       }
-    },
-    [onDataStateChange]
+    }
   );
-  useReportChanges(dataState, reportDataState);
+  React.useEffect(() => {
+    reportDataState(dataState);
+  }, [dataState, reportDataState]);
 
-  const reportFailure = React.useCallback(
-    (failure: unknown) => {
-      if (failure !== undefined) {
-        logger.logError("Failed to fetch iTwins", failure);
-      }
-    },
-    [logger]
-  );
-  useReportChanges(error, reportFailure);
+  const reportFailure = useEventCallback((failure: unknown) => {
+    if (failure !== undefined) {
+      logger.logError("Failed to fetch iTwins", failure);
+    }
+  });
+  React.useEffect(() => {
+    reportFailure(error);
+  }, [error, reportFailure]);
 
   return {
     iTwins,
