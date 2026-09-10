@@ -6,31 +6,31 @@ exports[`BaseCard renders with all the props 1`] = `
   data-_sk-color-scheme="light"
 >
   <article
-    aria-labelledby=":r3:"
-    class="MuiPaper-root MuiPaper-outlined MuiPaper-rounded MuiCard-root css-11apm71-MuiPaper-root-MuiCard-root"
+    aria-labelledby=":r5:"
+    class="MuiPaper-root MuiPaper-outlined MuiPaper-rounded MuiCard-root mui-eb71mb-MuiPaper-root-MuiCard-root"
     data-_sk-actionable=""
   >
     <div
-      class="MuiBox-root css-j4m9l"
+      class="MuiBox-root mui-j4m9l"
     >
       <div
-        class="MuiBox-root css-1a24o1e"
+        class="MuiBox-root mui-1a24o1e"
       >
         <div
-          class="MuiBox-root css-1vuaec4"
+          class="MuiBox-root mui-1vuaec4"
         >
           <div
-            class="MuiChip-root MuiChip-filled MuiChip-sizeSmall MuiChip-colorDefault css-l1x84v-MuiChip-root"
+            class="MuiChip-root MuiChip-filled MuiChip-sizeSmall MuiChip-colorDefault mui-16a082u-MuiChip-root"
           >
             <span
-              class="MuiChip-label css-eccknh-MuiChip-label"
-              id=":r5:"
+              class="MuiChip-label mui-eccknh-MuiChip-label"
+              id=":r7:"
             >
               Top Left
             </span>
           </div>
           <div
-            class="MuiAvatarGroup-root css-1y0l2ft-MuiAvatarGroup-root"
+            class="MuiAvatarGroup-root mui-1y0l2ft-MuiAvatarGroup-root"
             role="list"
             style="--AvatarGroup-spacing: -8px;"
           >
@@ -39,11 +39,11 @@ exports[`BaseCard renders with all the props 1`] = `
               role="listitem"
             >
               <div
-                class="MuiAvatar-root MuiAvatar-circular MuiAvatarGroup-avatar css-an7b4o-MuiAvatar-root"
+                class="MuiAvatar-root MuiAvatar-circular MuiAvatarGroup-avatar mui-an7b4o-MuiAvatar-root"
               >
                 <img
                   alt="User 1"
-                  class="MuiAvatar-img css-1su80sj-MuiAvatar-img"
+                  class="MuiAvatar-img mui-1su80sj-MuiAvatar-img"
                   draggable="false"
                   src="https://i.pravatar.cc/150?img=1"
                 />
@@ -54,11 +54,11 @@ exports[`BaseCard renders with all the props 1`] = `
               role="listitem"
             >
               <div
-                class="MuiAvatar-root MuiAvatar-circular MuiAvatarGroup-avatar css-an7b4o-MuiAvatar-root"
+                class="MuiAvatar-root MuiAvatar-circular MuiAvatarGroup-avatar mui-an7b4o-MuiAvatar-root"
               >
                 <img
                   alt="User 2"
-                  class="MuiAvatar-img css-1su80sj-MuiAvatar-img"
+                  class="MuiAvatar-img mui-1su80sj-MuiAvatar-img"
                   draggable="false"
                   src="https://i.pravatar.cc/150?img=2"
                 />
@@ -69,29 +69,25 @@ exports[`BaseCard renders with all the props 1`] = `
               role="listitem"
             >
               <div
-                class="MuiAvatar-root MuiAvatar-circular MuiAvatarGroup-avatar css-an7b4o-MuiAvatar-root"
+                class="MuiAvatar-root MuiAvatar-circular MuiAvatarGroup-avatar mui-an7b4o-MuiAvatar-root"
               >
                 <img
                   alt="User 3"
-                  class="MuiAvatar-img css-1su80sj-MuiAvatar-img"
+                  class="MuiAvatar-img mui-1su80sj-MuiAvatar-img"
                   draggable="false"
                   src="https://i.pravatar.cc/150?img=3"
                 />
               </div>
             </div>
-            <div
-              class="🥝MuiAvatarGroupItem"
-              role="listitem"
-            />
           </div>
         </div>
       </div>
       <div
-        class="MuiBox-root css-n4fbak"
+        class="MuiBox-root mui-n4fbak"
       >
         <button
           aria-label="Add to favorites"
-          class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorSecondary MuiIconButton-sizeSmall css-qvmoi4-MuiButtonBase-root-MuiIconButton-root"
+          class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorSecondary MuiIconButton-sizeSmall mui-gzrzk4-MuiButtonBase-root-MuiIconButton-root"
           tabindex="0"
           type="button"
         >
@@ -106,7 +102,7 @@ exports[`BaseCard renders with all the props 1`] = `
         </button>
         <button
           aria-label="Muted icon button"
-          class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorSecondary MuiIconButton-sizeSmall css-vjaiy1-MuiButtonBase-root-MuiIconButton-root"
+          class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorSecondary MuiIconButton-sizeSmall mui-2p5fww-MuiButtonBase-root-MuiIconButton-root"
           tabindex="0"
           type="button"
         >
@@ -121,47 +117,47 @@ exports[`BaseCard renders with all the props 1`] = `
         </button>
       </div>
       <div
-        class="MuiBox-root css-1i04t5p"
+        class="MuiBox-root mui-1i04t5p"
       >
         <div
-          class="MuiChip-root MuiChip-filled MuiChip-sizeSmall MuiChip-colorDefault css-l1x84v-MuiChip-root"
+          class="MuiChip-root MuiChip-filled MuiChip-sizeSmall MuiChip-colorDefault mui-16a082u-MuiChip-root"
         >
           <span
-            class="MuiChip-label css-eccknh-MuiChip-label"
-            id=":rb:"
+            class="MuiChip-label mui-eccknh-MuiChip-label"
+            id=":rd:"
           >
             Bottom left
           </span>
         </div>
       </div>
       <div
-        class="MuiBox-root css-17hjogf"
+        class="MuiBox-root mui-17hjogf"
       >
         <div
-          class="MuiChip-root MuiChip-filled MuiChip-sizeSmall MuiChip-colorDefault css-l1x84v-MuiChip-root"
+          class="MuiChip-root MuiChip-filled MuiChip-sizeSmall MuiChip-colorDefault mui-16a082u-MuiChip-root"
         >
           <span
-            class="MuiChip-label css-eccknh-MuiChip-label"
-            id=":rd:"
+            class="MuiChip-label mui-eccknh-MuiChip-label"
+            id=":rf:"
           >
             Bottom right
           </span>
         </div>
       </div>
     </div>
-    <hr
-      class="MuiDivider-root MuiDivider-fullWidth css-4icces-MuiDivider-root"
+    <div
+      class="MuiDivider-root MuiDivider-fullWidth mui-4icces-MuiDivider-root"
       role="presentation"
     />
     <div
-      class="MuiCardHeader-root css-qpjmc7-MuiCardHeader-root"
+      class="MuiCardHeader-root mui-qpjmc7-MuiCardHeader-root"
     >
       <div
-        class="MuiCardHeader-avatar css-1r9wl67-MuiCardHeader-avatar"
+        class="MuiCardHeader-avatar mui-1r9wl67-MuiCardHeader-avatar"
       >
         <div
           aria-hidden="true"
-          class="MuiBox-root css-1fru31a"
+          class="MuiBox-root mui-1fru31a"
           data-testid="status-icon"
           role="img"
         >
@@ -177,39 +173,36 @@ exports[`BaseCard renders with all the props 1`] = `
         </div>
       </div>
       <div
-        class="MuiCardHeader-content css-17kxlwy-MuiCardHeader-content"
+        class="MuiCardHeader-content mui-17kxlwy-MuiCardHeader-content"
       >
         <h2
-          class="MuiTypography-root MuiTypography-body2 MuiCardHeader-title css-19x7l83-MuiTypography-root"
-          id=":r3:"
+          class="MuiTypography-root MuiTypography-body2 MuiCardHeader-title mui-19x7l83-MuiTypography-root"
+          id=":r5:"
         >
           <button
-            class="MuiButtonBase-root MuiCardActionArea-root css-faos08-MuiButtonBase-root-MuiCardActionArea-root"
+            class="MuiButtonBase-root MuiCardActionArea-root mui-6cx05u-MuiButtonBase-root-MuiCardActionArea-root"
             tabindex="0"
             type="button"
           >
             Test Card
-            <span
-              class="MuiCardActionArea-focusHighlight css-1h5un5t-MuiCardActionArea-focusHighlight"
-            />
           </button>
         </h2>
         <h3
-          class="MuiTypography-root MuiTypography-caption css-1578r2f-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-caption mui-1578r2f-MuiTypography-root"
         >
           This is a subheader
         </h3>
       </div>
       <div
-        class="MuiCardHeader-action css-116l9hl-MuiCardHeader-action"
+        class="MuiCardHeader-action mui-116l9hl-MuiCardHeader-action"
       >
         <button
           aria-expanded="false"
           aria-haspopup="true"
           aria-label="More options"
-          class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorSecondary MuiIconButton-sizeSmall css-1ron3nm-MuiButtonBase-root-MuiIconButton-root"
+          class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorSecondary MuiIconButton-sizeSmall mui-yzbewk-MuiButtonBase-root-MuiIconButton-root"
           data-testid="more-options-button"
-          id=":rf:"
+          id=":rh:"
           tabindex="0"
           type="button"
         >
@@ -225,34 +218,34 @@ exports[`BaseCard renders with all the props 1`] = `
       </div>
     </div>
     <div
-      class="MuiCardContent-root css-1li13yv-MuiCardContent-root"
+      class="MuiCardContent-root mui-1li13yv-MuiCardContent-root"
       data-testid="card-description"
     >
       <p
-        class="MuiTypography-root MuiTypography-body2 css-72qc7z-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-body2 mui-72qc7z-MuiTypography-root"
       >
         When there is more than one \`action\` prop they will be rendered as buttons in the footer of the card and the whole card is not clickable.
       </p>
     </div>
     <div
-      class="MuiCardActions-root MuiCardActions-spacing css-1q4nm6f-MuiCardActions-root"
+      class="MuiCardActions-root MuiCardActions-spacing mui-1q4nm6f-MuiCardActions-root"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary css-1wyu1lz-MuiButtonBase-root-MuiButton-root"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorPrimary mui-2k21b6-MuiButtonBase-root-MuiButton-root"
         tabindex="0"
         type="button"
       >
         Open
       </button>
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorSecondary css-1pk93v4-MuiButtonBase-root-MuiButton-root"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorSecondary mui-egn2xp-MuiButtonBase-root-MuiButton-root"
         tabindex="0"
         type="button"
       >
         Share
       </button>
       <button
-        class="MuiButtonBase-root Mui-disabled MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorSecondary css-1pk93v4-MuiButtonBase-root-MuiButton-root"
+        class="MuiButtonBase-root Mui-disabled MuiButton-root MuiButton-contained MuiButton-sizeMedium MuiButton-colorSecondary mui-egn2xp-MuiButtonBase-root-MuiButton-root"
         disabled=""
         tabindex="-1"
         type="button"
@@ -270,35 +263,35 @@ exports[`BaseCard renders with only a title 1`] = `
   data-_sk-color-scheme="light"
 >
   <article
-    aria-labelledby=":r1:"
-    class="MuiPaper-root MuiPaper-outlined MuiPaper-rounded MuiCard-root css-11apm71-MuiPaper-root-MuiCard-root"
+    aria-labelledby=":r2:"
+    class="MuiPaper-root MuiPaper-outlined MuiPaper-rounded MuiCard-root mui-eb71mb-MuiPaper-root-MuiCard-root"
   >
     <div
-      class="MuiBox-root css-j4m9l"
+      class="MuiBox-root mui-j4m9l"
     />
-    <hr
-      class="MuiDivider-root MuiDivider-fullWidth css-4icces-MuiDivider-root"
+    <div
+      class="MuiDivider-root MuiDivider-fullWidth mui-4icces-MuiDivider-root"
       role="presentation"
     />
     <div
-      class="MuiCardHeader-root css-qpjmc7-MuiCardHeader-root"
+      class="MuiCardHeader-root mui-qpjmc7-MuiCardHeader-root"
     >
       <div
-        class="MuiCardHeader-content css-17kxlwy-MuiCardHeader-content"
+        class="MuiCardHeader-content mui-17kxlwy-MuiCardHeader-content"
       >
         <h2
-          class="MuiTypography-root MuiTypography-h5 MuiCardHeader-title css-pt4l7i-MuiTypography-root"
-          id=":r1:"
+          class="MuiTypography-root MuiTypography-h5 MuiCardHeader-title mui-ej25ov-MuiTypography-root"
+          id=":r2:"
         >
           Test Card
         </h2>
         <h3
-          class="MuiTypography-root MuiTypography-caption css-1578r2f-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-caption mui-1578r2f-MuiTypography-root"
         />
       </div>
     </div>
     <div
-      class="MuiCardContent-root css-1li13yv-MuiCardContent-root"
+      class="MuiCardContent-root mui-1li13yv-MuiCardContent-root"
     />
   </article>
 </div>

@@ -56,7 +56,7 @@ export const NoResultsMUI = ({
           style={{
             width: "5rem",
             height: "5rem",
-            color: "var(--stratakit-color-text-muted)",
+            color: "var(--stratakit-color-text-neutral-tertiary)",
           }}
         />
         {/* eslint-disable-next-line jsx-a11y/heading-has-content */}
