@@ -2,7 +2,7 @@
   "changes": [
     {
       "packageName": "@itwin/imodel-browser-react",
-      "comment": "Fix `ITwinGrid` refetching repeatedly when an inline access token provider is used",
+      "comment": "ITwinGrid no longer refetches iTwins on every render with an unmemoized token provider",
       "type": "patch"
     },
     {

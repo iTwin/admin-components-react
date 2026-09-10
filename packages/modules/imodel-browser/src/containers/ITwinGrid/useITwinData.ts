@@ -40,7 +40,11 @@ export interface ProjectDataHookOptions {
 /**
  * Identifies the credential without holding it. An inline `async () => token` provider changes
  * identity every render, so keying on the function itself would refetch forever; it is instead
- * read at request time.
+ * read at request time, which always yields the latest provider.
+ *
+ * The trade-off: every function is the same key, so swapping one provider for another does not
+ * restart a settled query. Note `<ITwinGrid>` still documents that a provider must be memoized,
+ * because `useITwinFavorites` keys on its identity.
  */
 const toCredentialKey = (accessToken?: AccessTokenProvider) => {
   if (typeof accessToken === "function") {
