@@ -32,15 +32,16 @@ importers:
       '@itwin/itwinui-react': ^3.19.4
       '@itwin/manage-versions-react': workspace:*
       '@itwin/storybook-auth-addon': workspace:*
-      '@mui/material': ~9.0.0
-      '@mui/system': ~9.0.0
+      '@mui/material': ~9.4.0
+      '@mui/system': ~9.4.0
       '@mui/x-data-grid': ~9.3.0
       '@storybook/addon-docs': 10.4.1
       '@storybook/addon-webpack5-compiler-swc': ^4.0.3
       '@storybook/icons': ^2.0.2
       '@storybook/react-webpack5': ^10.4.0
-      '@stratakit/icons': ~0.3.1
-      '@stratakit/mui': ~0.4.1
+      '@stratakit/foundations': ~1.0.0
+      '@stratakit/icons': ~0.4.3
+      '@stratakit/mui': ~1.0.0
       '@types/react': ^18.3.5
       '@types/react-dom': ^18.3.0
       '@typescript-eslint/eslint-plugin': ^8.0.0
@@ -78,18 +79,19 @@ importers:
       '@itwin/delete-itwin-react': link:../../modules/delete-itwin
       '@itwin/imodel-browser-react': link:../../modules/imodel-browser
       '@itwin/itwinui-icons-react': 2.10.0_nnrd3gsncyragczmpvfhocinkq
-      '@itwin/itwinui-react': 3.19.4_nnrd3gsncyragczmpvfhocinkq
+      '@itwin/itwinui-react': 3.19.4_3czfwttyejsdkmrndxcryf6cce
       '@itwin/manage-versions-react': link:../../modules/manage-versions
       '@itwin/storybook-auth-addon': link:../../modules/storybook-auth-addon
-      '@mui/material': 9.0.1_27kzlijtntas6645qwojwuhdba
-      '@mui/system': 9.0.1_po4keleilqsm4vrhgxl2cr46aq
-      '@mui/x-data-grid': 9.3.0_7mpntgkhpya3s3ktsfitjpkb5y
+      '@mui/material': 9.4.0_27kzlijtntas6645qwojwuhdba
+      '@mui/system': 9.4.0_po4keleilqsm4vrhgxl2cr46aq
+      '@mui/x-data-grid': 9.3.0_txj5b633f4tuqhenjmprk2v2vi
       '@storybook/addon-docs': 10.4.1_5wxpuceljsettvvmc55j7mftuu
       '@storybook/addon-webpack5-compiler-swc': 4.0.3_3r7jhhea4uhlattdxe4biwrhfu
       '@storybook/icons': 2.0.2_nnrd3gsncyragczmpvfhocinkq
       '@storybook/react-webpack5': 10.4.1_pxwaj4fa7rs5amymhn6xb7fxr4
-      '@stratakit/icons': 0.3.2
-      '@stratakit/mui': 0.4.2_khtwlpggtuvdxv4ufkxjwosrqm
+      '@stratakit/foundations': 1.0.0_nnrd3gsncyragczmpvfhocinkq
+      '@stratakit/icons': 0.4.3
+      '@stratakit/mui': 1.0.0_4nwzdvcezto2qgwpq5mvcq3pha
       '@types/react': 18.3.20
       '@types/react-dom': 18.3.6_@types+react@18.3.20
       '@typescript-eslint/eslint-plugin': 8.59.3_tcraa7oljkxsvwn3lqv4kf3bzu
@@ -338,12 +340,13 @@ importers:
     specifiers:
       '@itwin/itwinui-icons-react': ^2.9.0
       '@itwin/itwinui-react': ^3.19.4
-      '@mui/material': ^9.0.0
+      '@mui/material': ^9.4.0
       '@mui/x-data-grid': ^9.3.0
       '@rollup/plugin-commonjs': ~17.1.0
       '@rollup/plugin-url': ^8.0.1
-      '@stratakit/icons': ^0.3.1
-      '@stratakit/mui': ^0.4.1
+      '@stratakit/foundations': ^1.0.0
+      '@stratakit/icons': ^0.4.3
+      '@stratakit/mui': ^1.0.0
       '@testing-library/jest-dom': ^6.6.3
       '@testing-library/react': ^11.1.0
       '@testing-library/react-hooks': ^5.1.0
@@ -392,13 +395,14 @@ importers:
       classnames: 2.5.1
       react-intersection-observer: 8.34.0_react@18.3.1
     devDependencies:
-      '@itwin/itwinui-react': 3.19.4_nnrd3gsncyragczmpvfhocinkq
-      '@mui/material': 9.0.1_27kzlijtntas6645qwojwuhdba
-      '@mui/x-data-grid': 9.3.0_khtwlpggtuvdxv4ufkxjwosrqm
+      '@itwin/itwinui-react': 3.19.4_3czfwttyejsdkmrndxcryf6cce
+      '@mui/material': 9.4.0_27kzlijtntas6645qwojwuhdba
+      '@mui/x-data-grid': 9.3.0_3mqbheih6o7lvwdokkqzfodgpu
       '@rollup/plugin-commonjs': 17.1.0_rollup@2.80.0
       '@rollup/plugin-url': 8.0.2_rollup@2.80.0
-      '@stratakit/icons': 0.3.2
-      '@stratakit/mui': 0.4.2_khtwlpggtuvdxv4ufkxjwosrqm
+      '@stratakit/foundations': 1.0.0_nnrd3gsncyragczmpvfhocinkq
+      '@stratakit/icons': 0.4.3
+      '@stratakit/mui': 1.0.0_4nwzdvcezto2qgwpq5mvcq3pha
       '@testing-library/jest-dom': 6.6.3
       '@testing-library/react': 11.2.7_nnrd3gsncyragczmpvfhocinkq
       '@testing-library/react-hooks': 5.1.3_fs7zzattp7ispciphqk72hx22m
@@ -622,70 +626,70 @@ packages:
       '@jridgewell/trace-mapping': 0.3.25
     dev: true
 
-  /@ariakit/components/0.1.2:
-    resolution: {integrity: sha512-tvh2P0x1cJnoPXnmDEJwdRk3z7x6cTB8ArctcZdAUXlRg9tuwW/rJoBFJMzD5qMI9CDDlQ3Zctx58HvENw4BYw==}
+  /@ariakit/components/0.1.12:
+    resolution: {integrity: sha512-50Rg4Fp7W49fEVqa16eX2eYoIDrMGr+NbrQeTy0ujVZ/d12qwNZsdyA+wnbDfaZjoTy717Ohu0YYMAW+8tUusA==}
     dependencies:
-      '@ariakit/store': 0.1.2
-      '@ariakit/utils': 0.1.2
+      '@ariakit/store': 0.1.9
+      '@ariakit/utils': 0.2.0
     dev: true
 
-  /@ariakit/react-components/0.1.2_nnrd3gsncyragczmpvfhocinkq:
-    resolution: {integrity: sha512-SM+SPMAVlOZmGAfWNBza+0k9y4mkA5/dJhDoOyhE96cbNARy665uLdwowSJl1JGuFfcZzuzAwGon7f/rYeyfkQ==}
+  /@ariakit/react-components/0.6.0_nnrd3gsncyragczmpvfhocinkq:
+    resolution: {integrity: sha512-T+u+8UzJEGbEg9f4yb76MFjaWMY9NYd47Bk8MOMStDuMh+vyn3GKj1m6++7gXUziQ+wD2f+uQkB3n+ay1seKbw==}
     peerDependencies:
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^17.0.0 || ^18.0.0 || ^19.0.0
     dependencies:
-      '@ariakit/components': 0.1.2
-      '@ariakit/react-store': 0.1.2_react@18.3.1
-      '@ariakit/react-utils': 0.1.2_react@18.3.1
-      '@ariakit/store': 0.1.2
-      '@ariakit/utils': 0.1.2
+      '@ariakit/components': 0.1.12
+      '@ariakit/react-store': 0.1.10_react@18.3.1
+      '@ariakit/react-utils': 0.2.5_react@18.3.1
+      '@ariakit/store': 0.1.9
+      '@ariakit/utils': 0.2.0
       '@floating-ui/dom': 1.7.4
       react: 18.3.1
       react-dom: 18.3.1_react@18.3.1
     dev: true
 
-  /@ariakit/react-store/0.1.2_react@18.3.1:
-    resolution: {integrity: sha512-1r1Gn0tqhnOS0LFvHNGzn5/8C5aOANO5vb0Gxh94oR/be4zwCSE2zfQjOjRfpL+BBDhOcProME2+G6UslEJxbg==}
+  /@ariakit/react-store/0.1.10_react@18.3.1:
+    resolution: {integrity: sha512-DTpWLkfZDWDJqqH9aIcu/AYft1o3BGk/apkJyzSdSZtdFgOqcvDH+9m8zuuF6wMoZghpiS1pysRMk1X7gXVjfw==}
     peerDependencies:
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
     dependencies:
-      '@ariakit/react-utils': 0.1.2_react@18.3.1
-      '@ariakit/store': 0.1.2
-      '@ariakit/utils': 0.1.2
+      '@ariakit/react-utils': 0.2.5_react@18.3.1
+      '@ariakit/store': 0.1.9
+      '@ariakit/utils': 0.2.0
       react: 18.3.1
       use-sync-external-store: 1.6.0_react@18.3.1
     dev: true
 
-  /@ariakit/react-utils/0.1.2_react@18.3.1:
-    resolution: {integrity: sha512-Rnl6D1542Mqu80xK++oUv1JXS0PtNmKXd9nkdud5nyvySiBDTrmPqRW44/D+5GbuZrboreQuY3tPYwKL7a7onQ==}
+  /@ariakit/react-utils/0.2.5_react@18.3.1:
+    resolution: {integrity: sha512-VfE0o5SH3TxEoivA8KgKd6Z+h1zDIYdRPEKxTCEOuBFwMlayGZbOxmmZGBZdmkg1M3GTf4iNfUfpFqAh0mUYqw==}
     peerDependencies:
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
     dependencies:
-      '@ariakit/store': 0.1.2
-      '@ariakit/utils': 0.1.2
+      '@ariakit/store': 0.1.9
+      '@ariakit/utils': 0.2.0
       react: 18.3.1
     dev: true
 
-  /@ariakit/react/0.4.29_nnrd3gsncyragczmpvfhocinkq:
-    resolution: {integrity: sha512-SLXlsddWHSwfUol4Yi0zULlalNWjzWjpS3zg7B7aaPd64saONQ5ktWf9KMxqBklcpjMLeF2dB9BAHAvpPVdCIQ==}
+  /@ariakit/react/0.4.39_nnrd3gsncyragczmpvfhocinkq:
+    resolution: {integrity: sha512-Urj6knR0+xJzs/xpccl3AKB0OwDlEZvvUI3BFcb7QJge96quy8cub5QLwsE1Suiu1jUBvj4GIbja3jGhuU301w==}
     peerDependencies:
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^17.0.0 || ^18.0.0 || ^19.0.0
     dependencies:
-      '@ariakit/react-components': 0.1.2_nnrd3gsncyragczmpvfhocinkq
+      '@ariakit/react-components': 0.6.0_nnrd3gsncyragczmpvfhocinkq
       react: 18.3.1
       react-dom: 18.3.1_react@18.3.1
     dev: true
 
-  /@ariakit/store/0.1.2:
-    resolution: {integrity: sha512-SS7bV4+a+1q9M9i0WV6DD4P/ypRKlCvII8soo2UMe1yuaxZA/Fc0htHe+EZwjJ6TMLjHfHh2TDSnXyrjC7QImA==}
+  /@ariakit/store/0.1.9:
+    resolution: {integrity: sha512-VXT8GQxmbKR4KKWiZuuVL8Bkvsz7IT5sLYppPnFsmszl1KeKR6dcbo08VKVk6yGL6Gu1AvqmrMwV02DMAv5ZAQ==}
     dependencies:
-      '@ariakit/utils': 0.1.2
+      '@ariakit/utils': 0.2.0
     dev: true
 
-  /@ariakit/utils/0.1.2:
-    resolution: {integrity: sha512-lBJhtBWpKjIck/9i7G8cahvaUgLsyGklI/Pjv+VtY9KTzyuzX5GpRbbLKMS/e1qLnFPS4C3CybYB70b1bVcAkw==}
+  /@ariakit/utils/0.2.0:
+    resolution: {integrity: sha512-y8GtynpLOsjz4H1juJEVRXtrL2+TEt+wIVoz09cnAnWVMfXggN2akH+vF6dP4jPJd0/F2yniwe08cLpkua+HWw==}
     dev: true
 
   /@babel/code-frame/7.26.2:
@@ -2826,7 +2830,7 @@ packages:
       react-table: 7.8.0_react@18.3.1
     dev: false
 
-  /@itwin/itwinui-react/3.19.4_nnrd3gsncyragczmpvfhocinkq:
+  /@itwin/itwinui-react/3.19.4_3czfwttyejsdkmrndxcryf6cce:
     resolution: {integrity: sha512-DEKmeMyW2w3DDyzt1KHrfXmyj1A0DkTbgF7R+PvrQrkDVh5+08vnAV/Q+EK9fkKUOuRL8P0lvhMhIPhRa1l1eQ==}
     peerDependencies:
       '@stratakit/foundations': '>=0.2.0'
@@ -2838,6 +2842,7 @@ packages:
     dependencies:
       '@floating-ui/react': 0.27.16_nnrd3gsncyragczmpvfhocinkq
       '@itwin/itwinui-illustrations-react': 2.1.0_nnrd3gsncyragczmpvfhocinkq
+      '@stratakit/foundations': 1.0.0_nnrd3gsncyragczmpvfhocinkq
       '@swc/helpers': 0.5.17
       '@tanstack/react-virtual': 3.13.12_nnrd3gsncyragczmpvfhocinkq
       classnames: 2.5.1
@@ -3147,17 +3152,17 @@ packages:
       set-cookie-parser: 2.7.1
     dev: true
 
-  /@mui/core-downloads-tracker/9.1.1:
-    resolution: {integrity: sha512-AupmMICbdJHqAh6FfOMaaiiIr7dfEgZJn5DFfiPuGNrbs+ZZy9cD1APwO0TSVBz5j08MJEEY6n7iC76/2wjMEA==}
+  /@mui/core-downloads-tracker/9.4.0:
+    resolution: {integrity: sha512-d+gIYM1raJP87yrVQcVg+Q3vycVMArMkgu/TjJLi2vTvO9FHKWNRR1xs9nnN4eLpM9nGxxm02UMvc9BrmcUKvQ==}
     dev: true
 
-  /@mui/material/9.0.1_27kzlijtntas6645qwojwuhdba:
-    resolution: {integrity: sha512-voyCpeUxcSWLN7KPZuq0pGCIt726T9K6kiVM3XUcywZDAlZSarLHaUxJVQpospbjjOzN53hwyjo8s6KoWl6utw==}
+  /@mui/material/9.4.0_27kzlijtntas6645qwojwuhdba:
+    resolution: {integrity: sha512-6KKUIvkQ2r/s48s9VZV9JEZ1W2dRa7RndVsF+Ipx4CYxDOQeozeRsS5r9NiheFf8A5hpbqJJIGoX7hjg5X4XUw==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       '@emotion/react': ^11.5.0
       '@emotion/styled': ^11.3.0
-      '@mui/material-pigment-css': ^9.0.1
+      '@mui/material-pigment-css': ^9.4.0
       '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -3172,10 +3177,10 @@ packages:
         optional: true
     dependencies:
       '@babel/runtime': 7.29.7
-      '@mui/core-downloads-tracker': 9.1.1
-      '@mui/system': 9.0.1_po4keleilqsm4vrhgxl2cr46aq
-      '@mui/types': 9.1.1_@types+react@18.3.20
-      '@mui/utils': 9.1.1_po4keleilqsm4vrhgxl2cr46aq
+      '@mui/core-downloads-tracker': 9.4.0
+      '@mui/system': 9.4.0_po4keleilqsm4vrhgxl2cr46aq
+      '@mui/types': 9.4.0_@types+react@18.3.20
+      '@mui/utils': 9.4.0_po4keleilqsm4vrhgxl2cr46aq
       '@popperjs/core': 2.11.8
       '@types/react': 18.3.20
       '@types/react-transition-group': 4.4.12_@types+react@18.3.20
@@ -3184,12 +3189,12 @@ packages:
       prop-types: 15.8.1
       react: 18.3.1
       react-dom: 18.3.1_react@18.3.1
-      react-is: 19.2.7
+      react-is: 19.3.0
       react-transition-group: 4.4.5_nnrd3gsncyragczmpvfhocinkq
     dev: true
 
-  /@mui/private-theming/9.1.1_po4keleilqsm4vrhgxl2cr46aq:
-    resolution: {integrity: sha512-oH6c+d6sJ1CZT0Vg2/fHdUQ5zvo9Pn+f+WWk0tlQliHqqIRdN32DZ7UxjalW3LUj4OkHbdWR31biWuLxK9i7Cg==}
+  /@mui/private-theming/9.4.0_po4keleilqsm4vrhgxl2cr46aq:
+    resolution: {integrity: sha512-qQpX/2XPGDz5F2OIWzo4kkorURlDeXGKytRQudXCdLS5TuwKsMKaZyx77LZEVSB73c7o3UrLWwQ/goRuHBdtjw==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -3199,14 +3204,14 @@ packages:
         optional: true
     dependencies:
       '@babel/runtime': 7.29.7
-      '@mui/utils': 9.1.1_po4keleilqsm4vrhgxl2cr46aq
+      '@mui/utils': 9.4.0_po4keleilqsm4vrhgxl2cr46aq
       '@types/react': 18.3.20
       prop-types: 15.8.1
       react: 18.3.1
     dev: true
 
-  /@mui/styled-engine/9.1.1_react@18.3.1:
-    resolution: {integrity: sha512-neaYKdJfvEG54q8efHLJR7swpHG/gfSv9xGqW5iTSMsubD7yPCPFrhVBt284j1DOF3uZaaDJSHQL7gz6jGF21Q==}
+  /@mui/styled-engine/9.4.0_react@18.3.1:
+    resolution: {integrity: sha512-SlqVEYqnyEgXMFW4JuIDMelyhKzoWBJ85v2mNCQd0XtU0uk7U9E1zaJZ06XqodhA8oJrb+4Q+3E/JlwBe4jWkw==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       '@emotion/react': ^11.4.1
@@ -3227,8 +3232,8 @@ packages:
       react: 18.3.1
     dev: true
 
-  /@mui/system/9.0.1_po4keleilqsm4vrhgxl2cr46aq:
-    resolution: {integrity: sha512-WvlioaLxk6ewUIOfh0StxUvOPDS1mCfzaulcudsL1brZNXuh0N9FMk7RpH7ImJKjEz412SEy/V/yvqmtxbqxCQ==}
+  /@mui/system/9.4.0_po4keleilqsm4vrhgxl2cr46aq:
+    resolution: {integrity: sha512-AZz9z13oGS1J0BYeAFHTbV7PegCtPiE/uMEIi7TJ1kTx3Vkt+jUpLyXF/2uV8B6Y79iTh98kVeOH9fX3x3zXXg==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       '@emotion/react': ^11.5.0
@@ -3244,10 +3249,10 @@ packages:
         optional: true
     dependencies:
       '@babel/runtime': 7.29.7
-      '@mui/private-theming': 9.1.1_po4keleilqsm4vrhgxl2cr46aq
-      '@mui/styled-engine': 9.1.1_react@18.3.1
-      '@mui/types': 9.1.1_@types+react@18.3.20
-      '@mui/utils': 9.1.1_po4keleilqsm4vrhgxl2cr46aq
+      '@mui/private-theming': 9.4.0_po4keleilqsm4vrhgxl2cr46aq
+      '@mui/styled-engine': 9.4.0_react@18.3.1
+      '@mui/types': 9.4.0_@types+react@18.3.20
+      '@mui/utils': 9.4.0_po4keleilqsm4vrhgxl2cr46aq
       '@types/react': 18.3.20
       clsx: 2.1.1
       csstype: 3.2.3
@@ -3257,6 +3262,18 @@ packages:
 
   /@mui/types/9.1.1_@types+react@18.3.20:
     resolution: {integrity: sha512-Zjt7u8wNvDg40rPTGoL+TnfkpuSKjwubsNSFRH1KAVZLcaV4I3AFNHIFbvH7p4F3alEibSbdd90xAgn5Rnfndg==}
+    peerDependencies:
+      '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+    dependencies:
+      '@babel/runtime': 7.29.7
+      '@types/react': 18.3.20
+    dev: true
+
+  /@mui/types/9.4.0_@types+react@18.3.20:
+    resolution: {integrity: sha512-13DH0Oniua4WmGqeYbQAZqmiN7r4nfd0zwIoGJ5QeJwyIHgEmf+LkRw/jV1HZb6AiUoHX8Oxf4xgalq3vYHcIw==}
     peerDependencies:
       '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
     peerDependenciesMeta:
@@ -3307,8 +3324,8 @@ packages:
       react-is: 19.2.7
     dev: true
 
-  /@mui/utils/9.1.1_po4keleilqsm4vrhgxl2cr46aq:
-    resolution: {integrity: sha512-qSNfnkzZMptaaWFFklpDf4NPJztgwsMDVfM/sSDt+wq4ssYSBhLYwwjuB6eS/+p2IUYbeRzHluzXbw0Zn7aI4A==}
+  /@mui/utils/9.4.0_po4keleilqsm4vrhgxl2cr46aq:
+    resolution: {integrity: sha512-WkzY8uYtqUDyGKPShrRQRBomfMQHddlsyKu/gRRESYO24tDPD2z0xRE8CBoUsWqpBa+YrFs9KixiS7kQRjsPAQ==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -3318,16 +3335,16 @@ packages:
         optional: true
     dependencies:
       '@babel/runtime': 7.29.7
-      '@mui/types': 9.1.1_@types+react@18.3.20
+      '@mui/types': 9.4.0_@types+react@18.3.20
       '@types/prop-types': 15.7.15
       '@types/react': 18.3.20
       clsx: 2.1.1
       prop-types: 15.8.1
       react: 18.3.1
-      react-is: 19.2.7
+      react-is: 19.3.0
     dev: true
 
-  /@mui/x-data-grid/9.3.0_7mpntgkhpya3s3ktsfitjpkb5y:
+  /@mui/x-data-grid/9.3.0_3mqbheih6o7lvwdokkqzfodgpu:
     resolution: {integrity: sha512-MWzp4YH4iFFG6H1M6r9zqQhPYGA74noekxi/RxS+Gr3w/jHshNAVJECwjgMazQUwtnO/Pwx0TA/grzmj1Wzamg==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
@@ -3344,8 +3361,7 @@ packages:
         optional: true
     dependencies:
       '@babel/runtime': 7.29.7
-      '@mui/material': 9.0.1_27kzlijtntas6645qwojwuhdba
-      '@mui/system': 9.0.1_po4keleilqsm4vrhgxl2cr46aq
+      '@mui/material': 9.4.0_27kzlijtntas6645qwojwuhdba
       '@mui/utils': 9.0.1_po4keleilqsm4vrhgxl2cr46aq
       '@mui/x-internals': 9.1.0_po4keleilqsm4vrhgxl2cr46aq
       '@mui/x-virtualizer': 9.0.0-alpha.7_27kzlijtntas6645qwojwuhdba
@@ -3358,7 +3374,7 @@ packages:
       - '@types/react'
     dev: true
 
-  /@mui/x-data-grid/9.3.0_khtwlpggtuvdxv4ufkxjwosrqm:
+  /@mui/x-data-grid/9.3.0_txj5b633f4tuqhenjmprk2v2vi:
     resolution: {integrity: sha512-MWzp4YH4iFFG6H1M6r9zqQhPYGA74noekxi/RxS+Gr3w/jHshNAVJECwjgMazQUwtnO/Pwx0TA/grzmj1Wzamg==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
@@ -3375,7 +3391,8 @@ packages:
         optional: true
     dependencies:
       '@babel/runtime': 7.29.7
-      '@mui/material': 9.0.1_27kzlijtntas6645qwojwuhdba
+      '@mui/material': 9.4.0_27kzlijtntas6645qwojwuhdba
+      '@mui/system': 9.4.0_po4keleilqsm4vrhgxl2cr46aq
       '@mui/utils': 9.0.1_po4keleilqsm4vrhgxl2cr46aq
       '@mui/x-internals': 9.1.0_po4keleilqsm4vrhgxl2cr46aq
       '@mui/x-virtualizer': 9.0.0-alpha.7_27kzlijtntas6645qwojwuhdba
@@ -4297,42 +4314,56 @@ packages:
       - supports-color
     dev: true
 
-  /@stratakit/foundations/0.4.8_nnrd3gsncyragczmpvfhocinkq:
-    resolution: {integrity: sha512-hu5KVGDdxp1x9dmLw0SLJ1iUpr5IF0m6wsKAggl0xHf2XHk3GuYRWHVDBWglnP06kG8xQKa4aegfteVw07i2WA==}
+  /@stratakit/foundations/1.0.0_nnrd3gsncyragczmpvfhocinkq:
+    resolution: {integrity: sha512-O2WfaYgG25XJ7yil6M712mQLY7ngSDWoFsrO6/mHEU4W8gq/Jr4DsLDEVYOWbArAolxbLbIqaF0qJXi2srX1lQ==}
     peerDependencies:
-      react: '>=18.0.0'
-      react-dom: '>=18.0.0'
+      react: ^19.0.0
+      react-dom: ^19.0.0
     peerDependenciesMeta:
       react:
         optional: true
       react-dom:
         optional: true
     dependencies:
-      '@ariakit/react': 0.4.29_nnrd3gsncyragczmpvfhocinkq
+      '@ariakit/react': 0.4.39_nnrd3gsncyragczmpvfhocinkq
+      '@stratakit/internal-utils': 0.2.0_nnrd3gsncyragczmpvfhocinkq
       classnames: 2.5.1
       react: 18.3.1
       react-compiler-runtime: 1.0.0_react@18.3.1
       react-dom: 18.3.1_react@18.3.1
     dev: true
 
-  /@stratakit/icons/0.3.2:
-    resolution: {integrity: sha512-MXwpKADbIYZjDu5Cb29GeleqXp5kSInuAzp/ZMN30bhMxCjVeKufDHFMlf/5xYQuo4ierceDpz9fZt5wyQix+g==}
+  /@stratakit/icons/0.4.3:
+    resolution: {integrity: sha512-WiCRYKBuIOJ0te/bpIjpDsvF47C/wgwRIqxNktcLXm2nh+b4Xi43VAUoR86pnK+1P5ygAAhFihEtTqWd3x4zvw==}
     dev: true
 
-  /@stratakit/mui/0.4.2_khtwlpggtuvdxv4ufkxjwosrqm:
-    resolution: {integrity: sha512-/Vf90vbEFxF+vW3j24xX3lhjSOcbBpdl9BE7ZsHssCSq7uWUtc6j0ZeX61yme4HvM9tPgmJXEYlBl1rzqdXxUQ==}
+  /@stratakit/internal-utils/0.2.0_nnrd3gsncyragczmpvfhocinkq:
+    resolution: {integrity: sha512-QCJ7iX1LA0lJ/KDdu935Ghyz1K3kG3klXDxbNqE2iMm70V0QBLbk+W7IUViszMzdn/eb/8WZyDwbHDRDSphomg==}
     peerDependencies:
-      '@mui/material': ^9.0.0
-      react: '>=18.0.0'
-      react-dom: '>=18.0.0'
+      react: ^19.0.0
+      react-dom: ^19.0.0
     dependencies:
-      '@ariakit/react': 0.4.29_nnrd3gsncyragczmpvfhocinkq
+      react: 18.3.1
+      react-compiler-runtime: 1.0.0_react@18.3.1
+      react-dom: 18.3.1_react@18.3.1
+    dev: true
+
+  /@stratakit/mui/1.0.0_4nwzdvcezto2qgwpq5mvcq3pha:
+    resolution: {integrity: sha512-dvwgdqUSySojJHFyLhxVkJS5WL1UwOt3fyWuiVoJdqLLubn+8cQ/8QaKhh33qX8OnSa81jdW7oK5K0DBfn0EWA==}
+    peerDependencies:
+      '@mui/material': ^9.4.0
+      '@stratakit/foundations': ^1.0.0
+      react: ^19.0.0
+      react-dom: ^19.0.0
+    dependencies:
+      '@ariakit/react': 0.4.39_nnrd3gsncyragczmpvfhocinkq
       '@emotion/cache': 11.14.0
       '@emotion/react': 11.14.0_po4keleilqsm4vrhgxl2cr46aq
       '@emotion/styled': 11.14.1_46x4ncsoxvhgfjfiir5bhnd67y
-      '@mui/material': 9.0.1_27kzlijtntas6645qwojwuhdba
-      '@stratakit/foundations': 0.4.8_nnrd3gsncyragczmpvfhocinkq
-      '@stratakit/icons': 0.3.2
+      '@mui/material': 9.4.0_27kzlijtntas6645qwojwuhdba
+      '@stratakit/foundations': 1.0.0_nnrd3gsncyragczmpvfhocinkq
+      '@stratakit/icons': 0.4.3
+      '@stratakit/internal-utils': 0.2.0_nnrd3gsncyragczmpvfhocinkq
       classnames: 2.5.1
       react: 18.3.1
       react-compiler-runtime: 1.0.0_react@18.3.1
@@ -5228,6 +5259,7 @@ packages:
   /@xmldom/xmldom/0.8.13:
     resolution: {integrity: sha512-KRYzxepc14G/CEpEGc3Yn+JKaAeT63smlDr+vjB8jRfgTBBI9wRj/nkQEO+ucV8p8I9bfKLWp37uHgFrbntPvw==}
     engines: {node: '>=10.0.0'}
+    deprecated: this version has critical issues, please update to the latest version
     dev: true
 
   /@xtuc/ieee754/1.2.0:
@@ -10761,6 +10793,10 @@ packages:
 
   /react-is/19.2.7:
     resolution: {integrity: sha512-kZFnouyVv7eP/Phmrlo9FK+zcAdriZJvzxXHF1Sl1P377WSGe2G/JxVolhTrB/jeV47lKImhNUsijjHAAbcl/A==}
+    dev: true
+
+  /react-is/19.3.0:
+    resolution: {integrity: sha512-UpMYezM4v5/18F28aC66AEsjXIgE02kyEMH6yLdgLXu/UTfa1Ntwck/nNLrbqJsEXW7gPb0coNO9FQse9WTovA==}
     dev: true
 
   /react-shallow-renderer/16.15.0_react@18.3.1:

@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "comment": "Upgrade @stratakit/mui to 1.0.0, add @stratakit/foundations peer dependency, bump @mui/material to ^9.4.0, and update @stratakit/icons to ^0.4.3",
+      "type": "minor",
+      "packageName": "@itwin/imodel-browser-react"
+    }
+  ],
+  "packageName": "@itwin/imodel-browser-react",
+  "email": "toddsouthenbentley@users.noreply.github.com"
+}
