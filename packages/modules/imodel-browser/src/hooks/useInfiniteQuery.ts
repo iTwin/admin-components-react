@@ -30,7 +30,9 @@ export interface InfiniteQueryResult<TItem> {
   items: TItem[];
   /** Undefined on the first render, before anything has been decided. */
   status: DataStatus | undefined;
-  /** Whether a page is in flight, which a later page does not show in the status. */
+  /** Whether a request is in flight. This is different from the status, which reports
+   * `Fetching` only for the first page. Here we know a request is in flight even after
+   * the first page has loaded. */
   isFetching: boolean;
   hasMore: boolean;
   error: unknown;
