@@ -64,6 +64,8 @@ export const initialUndecidedState = <TQuery, TItem>(
   query,
   status: undefined,
   items: [],
+  /** It would be logical for this status to be "false" by default, but that is
+   * the existing behavior. */
   hasMore: true,
   error: undefined,
   totalCount: undefined,
