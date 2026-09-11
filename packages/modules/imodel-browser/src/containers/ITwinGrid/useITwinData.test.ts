@@ -1084,35 +1084,6 @@ describe("useITwinData hook", () => {
       expect(result.current.iTwins.map(ids)).toEqual(["fav1"]);
     });
 
-    it("does not refetch when an inline token provider changes identity", async () => {
-      const urlWatcher = jest.fn();
-      server.use(
-        rest.get("https://api.bentley.com/itwins/", (req, res, ctx) => {
-          urlWatcher(req.url.toString());
-          return res(
-            ctx.status(200),
-            ctx.json({ iTwins: [{ id: "my1", displayName: "myName1" }] })
-          );
-        })
-      );
-
-      const { result, rerender, waitForNextUpdate } = renderHook<
-        Parameters<typeof useITwinData>,
-        ReturnType<typeof useITwinData>
-      >((initialValue) => useITwinData(...initialValue), {
-        initialProps: [{ accessToken: async () => accessToken }],
-      });
-      await waitForNextUpdate();
-      expect(urlWatcher).toHaveBeenCalledTimes(1);
-
-      rerender([{ accessToken: async () => accessToken }]);
-      rerender([{ accessToken: async () => accessToken }]);
-      await act(async () => undefined);
-
-      expect(urlWatcher).toHaveBeenCalledTimes(1);
-      expect(result.current.status).toEqual(DataStatus.Complete);
-    });
-
     it("does not restart an unfinished query when shouldRefetchFavorites flips", async () => {
       const urlWatcher = jest.fn();
       const fullPage = Array.from({ length: 100 }, (_unused, index) => ({

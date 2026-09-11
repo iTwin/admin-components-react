@@ -37,25 +37,6 @@ export interface ProjectDataHookOptions {
   onDataStateChange?: (state: ITwinDataState) => void;
 }
 
-/**
- * Identifies the credential: the token itself for a string, `"provider"` for a function. Keying on
- * a function's identity would refetch every render, so the provider is read at request time.
- *
- * The trade-off: every function is the same key, so swapping one provider for another does not
- * restart a settled query. Note `<ITwinGrid>` still documents that a provider must be memoized,
- * because `useITwinFavorites` keys on its identity.
- */
-const toCredentialKey = (accessToken?: AccessTokenProvider) => {
-  if (typeof accessToken === "function") {
-    return "provider";
-  }
-  // An empty token means no credential, so `??` would be wrong here.
-  if (accessToken === undefined || accessToken === "") {
-    return undefined;
-  }
-  return accessToken;
-};
-
 /** Provided data wins over a missing token. */
 const resolveITwinQueryLocally = (
   query: ITwinQueryParams
@@ -63,7 +44,7 @@ const resolveITwinQueryLocally = (
   if (query.providedData !== undefined) {
     return { status: DataStatus.Complete, items: query.providedData };
   }
-  if (query.credentialKey === undefined) {
+  if (!query.accessToken) {
     return { status: DataStatus.TokenRequired };
   }
   return undefined;
@@ -73,7 +54,7 @@ const differsOnlyByFilterText = (a: ITwinQueryParams, b: ITwinQueryParams) =>
   a.requestType === b.requestType &&
   a.iTwinSubClass === b.iTwinSubClass &&
   a.orderby === b.orderby &&
-  a.credentialKey === b.credentialKey &&
+  a.accessToken === b.accessToken &&
   a.serverEnvironmentPrefix === b.serverEnvironmentPrefix &&
   a.providedData === b.providedData;
 
@@ -112,7 +93,6 @@ export const useITwinData = ({
   onDataStateChange,
 }: ProjectDataHookOptions) => {
   const logger = useLogger();
-  const credentialKey = toCredentialKey(accessToken);
   const providedData = apiOverrides?.data;
   const serverEnvironmentPrefix = apiOverrides?.serverEnvironmentPrefix;
 
@@ -128,11 +108,11 @@ export const useITwinData = ({
   const queryParams = React.useMemo<ITwinQueryParams>(
     () => ({
       ...dataQuery,
-      credentialKey,
+      accessToken,
       serverEnvironmentPrefix,
       providedData,
     }),
-    [dataQuery, credentialKey, serverEnvironmentPrefix, providedData]
+    [dataQuery, accessToken, serverEnvironmentPrefix, providedData]
   );
 
   const fetchPage = async (

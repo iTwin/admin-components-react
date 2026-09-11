@@ -19,7 +19,7 @@ describe("iTwinsApi", () => {
     filterText: "",
     iTwinSubClass: "Project",
     orderby: undefined,
-    credentialKey: "accessToken",
+    accessToken: "accessToken",
   };
 
   describe("buildITwinsPageUrl", () => {

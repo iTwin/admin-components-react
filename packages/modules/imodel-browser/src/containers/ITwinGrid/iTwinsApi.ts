@@ -15,8 +15,7 @@ export const isClientSideFiltered = (
 
 /** Everything that identifies a request, so two equal values generate the same query. */
 export interface ITwinQueryParams extends ITwinDataQuery {
-  /** Undefined without a credential, the token itself for a string, "provider" for a function. */
-  credentialKey: string | undefined;
+  accessToken?: AccessTokenProvider;
   serverEnvironmentPrefix?: "" | "dev" | "qa";
   providedData?: ITwinFull[];
 }

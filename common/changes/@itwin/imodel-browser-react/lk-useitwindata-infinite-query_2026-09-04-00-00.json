@@ -2,11 +2,6 @@
   "changes": [
     {
       "packageName": "@itwin/imodel-browser-react",
-      "comment": "ITwinGrid no longer refetches iTwins on every render with an unmemoized token provider",
-      "type": "patch"
-    },
-    {
-      "packageName": "@itwin/imodel-browser-react",
       "comment": "Stop a `shouldRefetchFavorites` flip from restarting a query with more pages to load",
       "type": "patch"
     },
