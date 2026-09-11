@@ -17,7 +17,7 @@ describe("useInfiniteQuery", () => {
 
   const restarting = {
     resolveLocally: () => undefined,
-    decideOnQueryChange: () => "restart" as const,
+    shouldRestartQuery: () => true,
   };
 
   const renderWith = (initialProps: Options) =>
@@ -54,7 +54,7 @@ describe("useInfiniteQuery", () => {
     const { result } = renderWith({
       query: { text: "" },
       fetchPage,
-      decideOnQueryChange: () => "restart",
+      shouldRestartQuery: () => true,
       resolveLocally: () => ({ status: DataStatus.TokenRequired }),
     });
     await act(async () => undefined);
@@ -142,14 +142,14 @@ describe("useInfiniteQuery", () => {
       query: { text: "" },
       fetchPage,
       resolveLocally: () => undefined,
-      decideOnQueryChange: () => "keep",
+      shouldRestartQuery: () => false,
     });
     await waitForNextUpdate();
     rerender({
       query: { text: "next" },
       fetchPage,
       resolveLocally: () => undefined,
-      decideOnQueryChange: () => "keep",
+      shouldRestartQuery: () => false,
     });
     await act(async () => undefined);
 

@@ -19,11 +19,11 @@ describe("infiniteQueryReducer", () => {
 
   const fetching: InfiniteQueryPolicy<Query, string> = {
     resolveLocally: () => undefined,
-    decideOnQueryChange: () => "restart",
+    shouldRestartQuery: () => true,
   };
   const keeping: InfiniteQueryPolicy<Query, string> = {
     ...fetching,
-    decideOnQueryChange: () => "keep",
+    shouldRestartQuery: () => false,
   };
 
   const query: Query = { text: "", scope: "all" };

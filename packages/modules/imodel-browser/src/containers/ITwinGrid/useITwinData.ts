@@ -62,16 +62,17 @@ const differsOnlyByFilterText = (a: ITwinQueryParams, b: ITwinQueryParams) =>
  * Favorites and recents are filtered in the browser, so once every page is loaded the iTwins in
  * hand already answer a new filter text. Anything else restarts the query.
  */
-const decideOnITwinQueryChange = (
+const shouldRestartITwinQuery = (
   previous: ITwinQueryParams,
   next: ITwinQueryParams,
   loaded: { hasMore: boolean }
-) =>
-  isClientSideFiltered(next.requestType) &&
-  differsOnlyByFilterText(previous, next) &&
-  !loaded.hasMore
-    ? "keep"
-    : "restart";
+) => {
+  const answeredByClientSideFilter =
+    isClientSideFiltered(next.requestType) &&
+    differsOnlyByFilterText(previous, next) &&
+    !loaded.hasMore;
+  return !answeredByClientSideFilter;
+};
 
 /** A query with no credential resolves to TokenRequired, so no page is requested. */
 const requireAccessToken = (accessToken?: AccessTokenProvider) => {
@@ -138,7 +139,7 @@ export const useITwinData = ({
       query: queryParams,
       fetchPage,
       resolveLocally: resolveITwinQueryLocally,
-      decideOnQueryChange: decideOnITwinQueryChange,
+      shouldRestartQuery: shouldRestartITwinQuery,
     });
 
   const iTwins = useITwinFilter(items, dataQuery.filterText);

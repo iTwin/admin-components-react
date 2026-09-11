@@ -53,7 +53,7 @@ export const useInfiniteQuery = <TQuery, TItem>({
   query,
   fetchPage,
   resolveLocally,
-  decideOnQueryChange,
+  shouldRestartQuery,
 }: UseInfiniteQueryOptions<TQuery, TItem>): InfiniteQueryResult<TItem> => {
   const reduce = (
     current: InfiniteQueryState<TQuery, TItem>,
@@ -61,7 +61,7 @@ export const useInfiniteQuery = <TQuery, TItem>({
   ) =>
     reduceInfiniteQuery(current, action, {
       resolveLocally,
-      decideOnQueryChange,
+      shouldRestartQuery,
     });
   const [state, dispatch] = React.useReducer(reduce, query, (initial: TQuery) =>
     initialUndecidedState<TQuery, TItem>(initial)

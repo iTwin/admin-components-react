@@ -25,12 +25,12 @@ export type LocalResolution<TItem> =
 export interface InfiniteQueryPolicy<TQuery, TItem> {
   /** A settled answer needing no request, or undefined to fetch. */
   resolveLocally: (query: TQuery) => LocalResolution<TItem> | undefined;
-  /** Whether the loaded items still answer the new query. */
-  decideOnQueryChange: (
+  /** Whether the new query must be fetched again, or the loaded items already answer it. */
+  shouldRestartQuery: (
     previous: TQuery,
     next: TQuery,
     loaded: { hasMore: boolean }
-  ) => "keep" | "restart";
+  ) => boolean;
 }
 
 export interface InfiniteQueryState<TQuery, TItem> {
@@ -144,12 +144,10 @@ const reduceQueryChanged = <TQuery, TItem>(
   if (nothingDecidedYet) {
     return { ...state, query };
   }
-  const decision = policy.decideOnQueryChange(state.query, query, {
+  const restart = policy.shouldRestartQuery(state.query, query, {
     hasMore: state.hasMore,
   });
-  return decision === "keep"
-    ? { ...state, query }
-    : startingOver(state, query, policy);
+  return restart ? startingOver(state, query, policy) : { ...state, query };
 };
 
 const reducePageLoaded = <TQuery, TItem>(
