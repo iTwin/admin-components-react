@@ -21,7 +21,7 @@ import {
 import {
   fetchITwinsPage,
   isClientSideFiltered,
-  ITwinQueryKey,
+  ITwinQueryParams,
 } from "./iTwinsApi";
 import { useITwinFilter } from "./useITwinFilter";
 
@@ -38,9 +38,8 @@ export interface ProjectDataHookOptions {
 }
 
 /**
- * Identifies the credential without holding it. An inline `async () => token` provider changes
- * identity every render, so keying on the function itself would refetch forever; it is instead
- * read at request time, which always yields the latest provider.
+ * Identifies the credential: the token itself for a string, `"provider"` for a function. Keying on
+ * a function's identity would refetch every render, so the provider is read at request time.
  *
  * The trade-off: every function is the same key, so swapping one provider for another does not
  * restart a settled query. Note `<ITwinGrid>` still documents that a provider must be memoized,
@@ -59,7 +58,7 @@ const toCredentialKey = (accessToken?: AccessTokenProvider) => {
 
 /** Provided data wins over a missing token. */
 const resolveITwinQueryLocally = (
-  query: ITwinQueryKey
+  query: ITwinQueryParams
 ): LocalResolution<ITwinFull> | undefined => {
   if (query.providedData !== undefined) {
     return { status: DataStatus.Complete, items: query.providedData };
@@ -70,7 +69,7 @@ const resolveITwinQueryLocally = (
   return undefined;
 };
 
-const differsOnlyByFilterText = (a: ITwinQueryKey, b: ITwinQueryKey) =>
+const differsOnlyByFilterText = (a: ITwinQueryParams, b: ITwinQueryParams) =>
   a.requestType === b.requestType &&
   a.iTwinSubClass === b.iTwinSubClass &&
   a.orderby === b.orderby &&
@@ -83,8 +82,8 @@ const differsOnlyByFilterText = (a: ITwinQueryKey, b: ITwinQueryKey) =>
  * hand already answer a new filter text. Anything else restarts the query.
  */
 const decideOnITwinQueryChange = (
-  previous: ITwinQueryKey,
-  next: ITwinQueryKey,
+  previous: ITwinQueryParams,
+  next: ITwinQueryParams,
   loaded: { hasMore: boolean }
 ) =>
   isClientSideFiltered(next.requestType) &&
@@ -93,7 +92,7 @@ const decideOnITwinQueryChange = (
     ? "keep"
     : "restart";
 
-/** The core requests a page only after `resolveITwinQueryLocally` accepted the credential. */
+/** A query with no credential resolves to TokenRequired, so no page is requested. */
 const requireAccessToken = (accessToken?: AccessTokenProvider) => {
   if (accessToken === undefined || accessToken === "") {
     throw new Error("A page was requested without an access token");
@@ -126,7 +125,7 @@ export const useITwinData = ({
     }),
     [requestType, filterOptions, iTwinSubClass, orderbyOptions]
   );
-  const queryKey = React.useMemo<ITwinQueryKey>(
+  const queryParams = React.useMemo<ITwinQueryParams>(
     () => ({
       ...dataQuery,
       credentialKey,
@@ -137,7 +136,7 @@ export const useITwinData = ({
   );
 
   const fetchPage = async (
-    request: PageRequest<ITwinQueryKey>,
+    request: PageRequest<ITwinQueryParams>,
     signal: AbortSignal
   ) => {
     const forFavorites = request.query.requestType === "favorites";
@@ -156,7 +155,7 @@ export const useITwinData = ({
 
   const { items, status, hasMore, error, totalCount, fetchNextPage, refetch } =
     useInfiniteQuery({
-      query: queryKey,
+      query: queryParams,
       fetchPage,
       resolveLocally: resolveITwinQueryLocally,
       decideOnQueryChange: decideOnITwinQueryChange,

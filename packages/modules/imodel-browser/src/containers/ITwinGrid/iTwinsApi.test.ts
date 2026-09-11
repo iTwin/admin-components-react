@@ -9,12 +9,12 @@ import { ITwinFull } from "../../types";
 import {
   buildITwinsPageUrl,
   fetchITwinsPage,
-  ITwinQueryKey,
+  ITwinQueryParams,
   ITWINS_PAGE_SIZE,
 } from "./iTwinsApi";
 
 describe("iTwinsApi", () => {
-  const baseQuery: ITwinQueryKey = {
+  const baseQuery: ITwinQueryParams = {
     requestType: "",
     filterText: "",
     iTwinSubClass: "Project",

@@ -13,8 +13,8 @@ export const isClientSideFiltered = (
   requestType: ITwinDataQuery["requestType"]
 ) => requestType === "favorites" || requestType === "recents";
 
-/** Everything that identifies a request, so two equal keys mean one query. */
-export interface ITwinQueryKey extends ITwinDataQuery {
+/** Everything that identifies a request, so two equal values generate the same query. */
+export interface ITwinQueryParams extends ITwinDataQuery {
   /** Undefined without a credential, the token itself for a string, "provider" for a function. */
   credentialKey: string | undefined;
   serverEnvironmentPrefix?: "" | "dev" | "qa";
@@ -25,7 +25,7 @@ export const buildITwinsPageUrl = ({
   query,
   page,
 }: {
-  query: ITwinQueryKey;
+  query: ITwinQueryParams;
   page: number;
 }) => {
   const { requestType, filterText, iTwinSubClass, orderby } = query;
@@ -47,7 +47,7 @@ export const buildITwinsPageUrl = ({
 };
 
 export interface FetchITwinsPageOptions {
-  query: ITwinQueryKey;
+  query: ITwinQueryParams;
   page: number;
   accessToken: AccessTokenProvider;
   bypassCache: boolean;
