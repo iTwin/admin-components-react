@@ -1,6 +1,13 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Wed, 02 Sep 2026 01:08:34 GMT and should not be manually modified.
+This log was last generated on Thu, 10 Sep 2026 19:45:18 GMT and should not be manually modified.
+
+## 4.7.0
+Thu, 10 Sep 2026 19:45:18 GMT
+
+### Minor changes
+
+- Upgrade @stratakit/mui to 1.0.0, add @stratakit/foundations peer dependency, bump @mui/material to ^9.4.0, and update @stratakit/icons to ^0.4.3
 
 ## 4.6.0
 Wed, 02 Sep 2026 01:08:34 GMT
