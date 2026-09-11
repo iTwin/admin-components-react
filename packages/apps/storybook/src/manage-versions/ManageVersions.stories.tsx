@@ -7,9 +7,10 @@ import {
   ManageVersions as ExternalComponent,
   ManageVersionsProps,
 } from "@itwin/manage-versions-react";
-import { action } from "storybook/actions";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
 import React from "react";
+import { action } from "storybook/actions";
+
 import { accessTokenArgTypes } from "../utils/storyHelp";
 
 export const ManageVersions = (props: ManageVersionsProps) => (

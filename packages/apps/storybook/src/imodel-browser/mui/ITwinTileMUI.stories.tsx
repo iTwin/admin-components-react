@@ -10,10 +10,10 @@ import {
 import { SvgThumbnail } from "@itwin/imodel-browser-react/mui";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
-import { action } from "storybook/actions";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
 import svgMagnet from "@stratakit/icons/magnet.svg";
 import React from "react";
+import { action } from "storybook/actions";
 
 import { DefaultThumbnail } from "../../../../../modules/imodel-browser/src/mui/containers/ITwinGrid/ITwinTileMUI";
 import bridgeThumbnail from "../../utils/bridge.jpg";
