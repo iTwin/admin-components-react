@@ -2,6 +2,18 @@
   "name": "@itwin/imodel-browser-react",
   "entries": [
     {
+      "version": "4.7.0",
+      "tag": "@itwin/imodel-browser-react_v4.7.0",
+      "date": "Thu, 10 Sep 2026 19:45:18 GMT",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Upgrade @stratakit/mui to 1.0.0, add @stratakit/foundations peer dependency, bump @mui/material to ^9.4.0, and update @stratakit/icons to ^0.4.3"
+          }
+        ]
+      }
+    },
+    {
       "version": "4.6.0",
       "tag": "@itwin/imodel-browser-react_v4.6.0",
       "date": "Wed, 02 Sep 2026 01:08:34 GMT",
