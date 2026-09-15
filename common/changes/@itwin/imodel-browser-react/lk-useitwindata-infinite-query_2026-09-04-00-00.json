@@ -1,0 +1,20 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/imodel-browser-react",
+      "comment": "Stop a `shouldRefetchFavorites` flip from restarting a query with more pages to load",
+      "type": "patch"
+    },
+    {
+      "packageName": "@itwin/imodel-browser-react",
+      "comment": "Do not offer `fetchMore` while an access token is required",
+      "type": "patch"
+    },
+    {
+      "packageName": "@itwin/imodel-browser-react",
+      "comment": "Omit the empty `Cache-Control` header unless the favorites cache is bypassed",
+      "type": "patch"
+    }
+  ],
+  "packageName": "@itwin/imodel-browser-react"
+}
