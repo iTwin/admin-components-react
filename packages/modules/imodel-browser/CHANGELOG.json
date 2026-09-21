@@ -2,6 +2,24 @@
   "name": "@itwin/imodel-browser-react",
   "entries": [
     {
+      "version": "4.7.1",
+      "tag": "@itwin/imodel-browser-react_v4.7.1",
+      "date": "Tue, 15 Sep 2026 16:03:45 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "Stop a `shouldRefetchFavorites` flip from restarting a query with more pages to load"
+          },
+          {
+            "comment": "Do not offer `fetchMore` while an access token is required"
+          },
+          {
+            "comment": "Omit the empty `Cache-Control` header unless the favorites cache is bypassed"
+          }
+        ]
+      }
+    },
+    {
       "version": "4.7.0",
       "tag": "@itwin/imodel-browser-react_v4.7.0",
       "date": "Thu, 10 Sep 2026 19:45:18 GMT",
