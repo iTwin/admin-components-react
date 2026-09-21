@@ -1,6 +1,15 @@
 # Change Log - @itwin/imodel-browser-react
 
-This log was last generated on Thu, 10 Sep 2026 19:45:18 GMT and should not be manually modified.
+This log was last generated on Tue, 15 Sep 2026 16:03:45 GMT and should not be manually modified.
+
+## 4.7.1
+Tue, 15 Sep 2026 16:03:45 GMT
+
+### Patches
+
+- Stop a `shouldRefetchFavorites` flip from restarting a query with more pages to load
+- Do not offer `fetchMore` while an access token is required
+- Omit the empty `Cache-Control` header unless the favorites cache is bypassed
 
 ## 4.7.0
 Thu, 10 Sep 2026 19:45:18 GMT

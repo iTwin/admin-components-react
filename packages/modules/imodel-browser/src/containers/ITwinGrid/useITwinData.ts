@@ -5,17 +5,25 @@
 import React from "react";
 
 import { useLogger } from "../../contexts/LoggerContext";
+import { LocalResolution, PageRequest } from "../../hooks/infiniteQueryReducer";
+import { useEventCallback } from "../../hooks/useEventCallback";
+import { useInfiniteQuery } from "../../hooks/useInfiniteQuery";
 import {
   AccessTokenProvider,
   ApiOverrides,
+  DataStatus,
   ITwinDataQuery,
   ITwinDataState,
   ITwinFilterOptions,
   ITwinFull,
   ITwinSubClass,
 } from "../../types";
-import { _getAPIServer } from "../../utils/_apiOverrides";
-import { useITwinDataState } from "./useITwinDataState";
+import {
+  fetchITwinsPage,
+  isClientSideFiltered,
+  ITwinQueryParams,
+} from "./iTwinsApi";
+import { useITwinFilter } from "./useITwinFilter";
 
 export interface ProjectDataHookOptions {
   requestType?: "favorites" | "recents" | "";
@@ -29,10 +37,50 @@ export interface ProjectDataHookOptions {
   onDataStateChange?: (state: ITwinDataState) => void;
 }
 
-const PAGE_SIZE = 100;
+/** Provided data wins over a missing token. */
+const resolveITwinQueryLocally = (
+  query: ITwinQueryParams
+): LocalResolution<ITwinFull> | undefined => {
+  if (query.providedData !== undefined) {
+    return { status: DataStatus.Complete, items: query.providedData };
+  }
+  if (!query.accessToken) {
+    return { status: DataStatus.TokenRequired };
+  }
+  return undefined;
+};
 
-const isClientSideFiltered = (requestType: string) =>
-  ["favorites", "recents"].includes(requestType);
+const differsOnlyByFilterText = (a: ITwinQueryParams, b: ITwinQueryParams) =>
+  a.requestType === b.requestType &&
+  a.iTwinSubClass === b.iTwinSubClass &&
+  a.orderby === b.orderby &&
+  a.accessToken === b.accessToken &&
+  a.serverEnvironmentPrefix === b.serverEnvironmentPrefix &&
+  a.providedData === b.providedData;
+
+/**
+ * Favorites and recents are filtered in the browser, so once every page is loaded the iTwins in
+ * hand already answer a new filter text. Anything else restarts the query.
+ */
+const shouldRestartITwinQuery = (
+  previous: ITwinQueryParams,
+  next: ITwinQueryParams,
+  loaded: { hasMore: boolean }
+) => {
+  const answeredByClientSideFilter =
+    isClientSideFiltered(next.requestType) &&
+    differsOnlyByFilterText(previous, next) &&
+    !loaded.hasMore;
+  return !answeredByClientSideFilter;
+};
+
+/** A query with no credential resolves to TokenRequired, so no page is requested. */
+const requireAccessToken = (accessToken?: AccessTokenProvider) => {
+  if (accessToken === undefined || accessToken === "") {
+    throw new Error("A page was requested without an access token");
+  }
+  return accessToken;
+};
 
 export const useITwinData = ({
   requestType = "",
@@ -46,12 +94,10 @@ export const useITwinData = ({
   onDataStateChange,
 }: ProjectDataHookOptions) => {
   const logger = useLogger();
-  const data = apiOverrides?.data;
+  const providedData = apiOverrides?.data;
   const serverEnvironmentPrefix = apiOverrides?.serverEnvironmentPrefix;
-  const [totalCount, setTotalCount] = React.useState<number>();
-  const [page, setPage] = React.useState(0);
 
-  const query = React.useMemo<ITwinDataQuery>(
+  const dataQuery = React.useMemo<ITwinDataQuery>(
     () => ({
       requestType,
       filterText: filterOptions ?? "",
@@ -60,241 +106,76 @@ export const useITwinData = ({
     }),
     [requestType, filterOptions, iTwinSubClass, orderbyOptions]
   );
-  const {
-    status,
-    iTwins,
-    hasMore,
-    reset,
-    applyQuery,
-    markFetching,
-    pageLoaded,
-    pageFailed,
-    tokenRequired,
-    dataProvided,
-  } = useITwinDataState(query, onDataStateChange);
-
-  const resetData = React.useCallback(() => {
-    reset();
-    setTotalCount(undefined);
-    setPage(0);
-    fetchingMoreRef.current = true;
-    lastPageFailedRef.current = false;
-  }, [reset]);
-
-  // We start in a fetching state
-  const fetchingMoreRef = React.useRef(true);
-  const lastPageFailedRef = React.useRef(false);
-  const [retryCount, setRetryCount] = React.useState(0);
-  const fetchMore = React.useCallback(() => {
-    if (fetchingMoreRef.current) {
-      return;
-    }
-    fetchingMoreRef.current = true;
-    if (lastPageFailedRef.current) {
-      // Ask for the same page again. Advancing would leave a hole where it should have been.
-      lastPageFailedRef.current = false;
-      setRetryCount((count) => count + 1);
-      return;
-    }
-    setPage((page) => page + 1);
-  }, []);
-
-  // counter to force a new request when resetting the existing state would not change an effect dependency
-  const [refetchCount, setRefetchCount] = React.useState(0);
-  const refetchITwins = React.useCallback(() => {
-    resetData();
-    setRefetchCount((count) => count + 1);
-  }, [resetData]);
-
-  const activeRequestRef = React.useRef<symbol | undefined>(undefined);
-
-  const morePagesRef = React.useRef(hasMore);
-  React.useEffect(() => {
-    morePagesRef.current = hasMore;
-  }, [hasMore]);
-
-  React.useEffect(() => {
-    // If filter changes but we already have all the data for favorites or recents,
-    // let client side filtering do its job, otherwise, refetch from scratch.
-    // Use ref so "morePages" changes itself does not trigger the effect.
-    if (morePagesRef.current || !isClientSideFiltered(requestType)) {
-      resetData();
-    } else {
-      applyQuery(query);
-    }
-  }, [query, requestType, resetData, applyQuery]);
-
-  React.useEffect(() => {
-    // If any of the dependencies change, always restart the fetch from scratch.
-    resetData();
-  }, [
-    accessToken,
-    requestType,
-    iTwinSubClass,
-    orderbyOptions,
-    data,
-    serverEnvironmentPrefix,
-    resetData,
-  ]);
-
-  React.useEffect(() => {
-    if (!hasMore) {
-      return;
-    }
-    if (data) {
-      dataProvided(data);
-      return;
-    }
-    if (!accessToken) {
-      tokenRequired();
-      return;
-    }
-    if (page === 0) {
-      markFetching();
-    }
-    const requestId = Symbol();
-    activeRequestRef.current = requestId;
-    const { abortController, fetchITwins } = createFetchITwinsFn({
-      query,
+  const queryParams = React.useMemo<ITwinQueryParams>(
+    () => ({
+      ...dataQuery,
       accessToken,
-      page,
       serverEnvironmentPrefix,
-      shouldRefetchFavorites,
+      providedData,
+    }),
+    [dataQuery, accessToken, serverEnvironmentPrefix, providedData]
+  );
+
+  const fetchPage = async (
+    request: PageRequest<ITwinQueryParams>,
+    signal: AbortSignal
+  ) => {
+    const forFavorites = request.query.requestType === "favorites";
+    const page = await fetchITwinsPage({
+      query: request.query,
+      page: request.page,
+      accessToken: requireAccessToken(accessToken),
+      bypassCache: forFavorites && Boolean(shouldRefetchFavorites),
+      signal,
+    });
+    if (forFavorites && !signal.aborted) {
+      resetShouldRefetchFavorites?.();
+    }
+    return page;
+  };
+
+  const { items, status, hasMore, error, totalCount, fetchNextPage, refetch } =
+    useInfiniteQuery({
+      query: queryParams,
+      fetchPage,
+      resolveLocally: resolveITwinQueryLocally,
+      shouldRestartQuery: shouldRestartITwinQuery,
     });
 
-    const applyResult = async () => {
-      const result = await fetchITwins();
-      if (activeRequestRef.current !== requestId) {
-        return;
-      }
-      if (result.totalCount !== undefined) {
-        setTotalCount(result.totalCount);
-      }
-      fetchingMoreRef.current = false;
-      requestType === "favorites" && resetShouldRefetchFavorites?.();
-      pageLoaded({
-        iTwins: result.iTwins,
-        isFirstPage: page === 0,
-        hasMore: result.hasMore,
-      });
-    };
+  const iTwins = useITwinFilter(items, dataQuery.filterText);
+  const dataState = React.useMemo<ITwinDataState | undefined>(
+    () =>
+      status === undefined
+        ? undefined
+        : { query: dataQuery, status, iTwins, hasMore, error },
+    [status, dataQuery, iTwins, hasMore, error]
+  );
 
-    applyResult().catch((e) => {
-      if (activeRequestRef.current !== requestId || e.name === "AbortError") {
-        // Superseded or aborted, not a failure worth reporting.
-        return;
+  const reportDataState = useEventCallback(
+    (state: ITwinDataState | undefined) => {
+      if (state !== undefined) {
+        onDataStateChange?.(state);
       }
-      fetchingMoreRef.current = false;
-      lastPageFailedRef.current = true;
-      pageFailed({ error: e, isFirstPage: page === 0 });
-      logger.logError("Failed to fetch iTwins", e);
-    });
-    return () => {
-      activeRequestRef.current = undefined;
-      abortController.abort();
-    };
-  }, [
-    accessToken,
-    requestType,
-    data,
-    serverEnvironmentPrefix,
-    query,
-    page,
-    hasMore,
-    refetchCount,
-    retryCount,
-    shouldRefetchFavorites,
-    resetShouldRefetchFavorites,
-    logger,
-    dataProvided,
-    tokenRequired,
-    markFetching,
-    pageLoaded,
-    pageFailed,
-  ]);
+    }
+  );
+  React.useEffect(() => {
+    reportDataState(dataState);
+  }, [dataState, reportDataState]);
+
+  const reportFailure = useEventCallback((failure: unknown) => {
+    if (failure !== undefined) {
+      logger.logError("Failed to fetch iTwins", failure);
+    }
+  });
+  React.useEffect(() => {
+    reportFailure(error);
+  }, [error, reportFailure]);
+
   return {
     iTwins,
     status,
     totalCount,
-    fetchMore: hasMore ? fetchMore : undefined,
-    refetchITwins,
+    fetchMore: hasMore ? fetchNextPage : undefined,
+    refetchITwins: refetch,
   };
-};
-
-/**
- * Builds the request for one page of iTwins. Resolves with the page, or throws what the API
- * answered. A totalCount of undefined means the response carried no count, which is not zero.
- */
-const createFetchITwinsFn = ({
-  query,
-  accessToken,
-  page,
-  serverEnvironmentPrefix,
-  shouldRefetchFavorites,
-}: {
-  query: ITwinDataQuery;
-  accessToken: AccessTokenProvider;
-  page: number;
-  serverEnvironmentPrefix?: "" | "dev" | "qa";
-  shouldRefetchFavorites?: boolean;
-}): {
-  abortController: AbortController;
-  fetchITwins: () => Promise<{
-    iTwins: ITwinFull[];
-    totalCount: number | undefined;
-    hasMore: boolean;
-  }>;
-} => {
-  const { requestType, filterText, iTwinSubClass, orderby } = query;
-  const clientSideFiltered = isClientSideFiltered(requestType);
-  const endpoint = clientSideFiltered ? requestType : "";
-  const subClass = `?subClass=${iTwinSubClass === "All" ? "" : iTwinSubClass}`;
-  const paging = `&$skip=${page * PAGE_SIZE}&$top=${PAGE_SIZE}`;
-  const search =
-    clientSideFiltered || !filterText
-      ? ""
-      : `&$search=${encodeURIComponent(filterText.trim())}`;
-  const ordering =
-    clientSideFiltered || !orderby
-      ? ""
-      : `&$orderby=${encodeURIComponent(orderby.trim())}`;
-
-  const abortController = new AbortController();
-  const url = `${_getAPIServer(
-    serverEnvironmentPrefix
-  )}/itwins/${endpoint}${subClass}${paging}${search}${ordering}`;
-
-  const doFetchRequest = async () => {
-    const options: RequestInit = {
-      signal: abortController.signal,
-      headers: {
-        "Cache-Control":
-          requestType === "favorites" && shouldRefetchFavorites
-            ? "no-cache"
-            : "",
-        Authorization:
-          typeof accessToken === "function" ? await accessToken() : accessToken,
-        Accept: "application/vnd.bentley.itwin-platform.v1+json",
-        Prefer: "return=representation",
-        "x-total-count": "true",
-      },
-    };
-
-    const response = await fetch(url, options);
-    const result: { iTwins: ITwinFull[] } = response.ok
-      ? await response.json()
-      : await response.text().then((errorText) => {
-          throw new Error(errorText);
-        });
-
-    const totalCountHeader = response.headers.get("x-total-count");
-    return {
-      iTwins: result.iTwins,
-      totalCount:
-        totalCountHeader !== null ? Number(totalCountHeader) : undefined,
-      hasMore: result.iTwins.length === PAGE_SIZE,
-    };
-  };
-
-  return { abortController, fetchITwins: doFetchRequest };
 };
