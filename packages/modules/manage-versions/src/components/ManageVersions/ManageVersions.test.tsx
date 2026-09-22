@@ -71,14 +71,19 @@ describe("ManageVersions", () => {
   it("should show versions table with data", async () => {
     const { container } = renderComponent();
 
-    await waitFor(() =>
-      expect(container.querySelector(".iac-versions-table-body")).toBeVisible()
-    );
+    // Wait for at least one virtualized row to actually be mounted, not just
+    // for the table body wrapper to appear. The virtualizer measures the
+    // container and mounts visible rows in a later render pass, so asserting
+    // on the wrapper alone is a race that can flake on slower CI runners.
+    await waitFor(() => {
+      const rows = container.querySelectorAll(
+        ".iac-versions-table-body [role='row']"
+      );
+      expect(rows.length).toBeGreaterThanOrEqual(1);
+    });
     const versionRows = container.querySelectorAll(
       ".iac-versions-table-body [role='row']"
     );
-    // Virtualization renders only visible rows
-    expect(versionRows.length).toBeGreaterThanOrEqual(1);
 
     // Check that at least the first visible row has the expected structure
     const firstRow = versionRows[0];
