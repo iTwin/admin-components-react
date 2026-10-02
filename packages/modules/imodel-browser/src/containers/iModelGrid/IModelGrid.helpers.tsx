@@ -96,11 +96,11 @@ export interface IModelGridProps {
     fetchStatus: DataStatus | undefined,
     searchText: string | undefined
   ) => IModelFull[];
-  /**Component to show when there is no iModel */
+  /** Component to show when there is no iModel */
   emptyStateComponent?: React.ReactNode;
-  /**  Exact name of the iModel to display */
+  /** Exact name of the iModel to display */
   searchText?: string;
-  /**iModel view mode */
+  /** iModel view mode */
   viewMode?: ViewType;
   /** The maximum number of iModels that can be fetched per request */
   pageSize?: number;
@@ -226,7 +226,12 @@ const IModelGridInternal = ({
   const [sort, setSort] = React.useState<IModelSortOptions>(sortOptions);
 
   React.useEffect(() => {
-    setSort(calculateSort(viewMode, sortOptions));
+    setSort(
+      calculateSort(viewMode, {
+        descending: sortOptions.descending,
+        sortType: sortOptions.sortType,
+      })
+    );
   }, [sortOptions.descending, sortOptions.sortType, viewMode]);
 
   const strings = generateStrings(requestType, stringsOverrides);

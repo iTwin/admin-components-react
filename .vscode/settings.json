@@ -13,5 +13,27 @@
   "search.exclude": {
     "**/CHANGELOG.md": true
   },
-  "js/ts.preferences.autoImportSpecifierExcludeRegexes": ["^@mui/[^/]+$"]
+  "js/ts.preferences.autoImportSpecifierExcludeRegexes": ["^@mui/[^/]+$"],
+  "jest.virtualFolders": [
+    {
+      "name": "create-imodel",
+      "rootPath": "packages/modules/create-imodel"
+    },
+    {
+      "name": "delete-imodel",
+      "rootPath": "packages/modules/delete-imodel"
+    },
+    {
+      "name": "delete-itwin",
+      "rootPath": "packages/modules/delete-itwin"
+    },
+    {
+      "name": "imodel-browser",
+      "rootPath": "packages/modules/imodel-browser"
+    },
+    {
+      "name": "manage-versions",
+      "rootPath": "packages/modules/manage-versions"
+    }
+  ]
 }
