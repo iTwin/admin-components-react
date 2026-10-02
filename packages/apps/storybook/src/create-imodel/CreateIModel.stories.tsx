@@ -14,7 +14,6 @@ import {
 import { LabeledInput, LabeledSelect } from "@itwin/itwinui-react";
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
 import React from "react";
-
 import { iTwinAndAccessTokenArgTypes } from "../utils/storyHelp";
 
 export default {

@@ -4,7 +4,6 @@
  *--------------------------------------------------------------------------------------------*/
 
 import type { Meta, StoryObj } from "@storybook/react-webpack5";
-
 import { ITwinAwareComponent } from "./ITwinAwareComponent";
 
 export default {
