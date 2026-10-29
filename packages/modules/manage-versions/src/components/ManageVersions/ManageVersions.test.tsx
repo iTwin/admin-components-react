@@ -113,6 +113,38 @@ describe("ManageVersions", () => {
     });
   });
 
+  it.each([undefined, true, false])(
+    "should respect enableDownload=%s without removing other actions",
+    async (enableDownload) => {
+      const { container } = renderComponent({
+        enableDownload,
+        enableHideVersions: true,
+      });
+
+      const row = await waitFor(() => {
+        const firstRow = container.querySelector(
+          ".iac-versions-table-body [role='row']"
+        );
+        expect(firstRow).not.toBeNull();
+        return firstRow as HTMLElement;
+      });
+
+      fireEvent.click(within(row).getByRole("button", { name: "More" }));
+
+      expect(
+        await screen.findByText(defaultStrings.updateNamedVersion)
+      ).toBeVisible();
+      expect(screen.getByText(defaultStrings.hide!)).toBeVisible();
+      if (enableDownload === false) {
+        expect(
+          screen.queryByText(defaultStrings.download)
+        ).not.toBeInTheDocument();
+      } else {
+        expect(screen.getByText(defaultStrings.download)).toBeVisible();
+      }
+    }
+  );
+
   it("should show changesets table with data", async () => {
     const { container } = renderComponent();
 

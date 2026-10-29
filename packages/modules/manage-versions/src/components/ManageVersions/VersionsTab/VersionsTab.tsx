@@ -74,7 +74,8 @@ const VersionsTab = (props: VersionsTabProps) => {
     nameFilter,
   } = props;
   const toaster = useToaster();
-  const { stringsOverrides, imodelId, enableHideVersions } = useConfig();
+  const { stringsOverrides, imodelId, enableHideVersions, enableDownload } =
+    useConfig();
 
   const tableInstance = React.useRef<TableInstance<VersionTableData>>();
   const collapseAllRows = useCallback(() => {
@@ -205,7 +206,9 @@ const VersionsTab = (props: VersionsTabProps) => {
             setIsUpdateVersionModalOpen(true);
           },
         },
-        {
+      ];
+      if (enableDownload) {
+        mainToolbarActions.push({
           title: stringsOverrides.download,
           label: stringsOverrides.download,
           icon: <SvgDownload />,
@@ -214,8 +217,8 @@ const VersionsTab = (props: VersionsTabProps) => {
             const { changesetIndex } = version;
             await onDownloadClick(changesetIndex);
           },
-        },
-      ];
+        });
+      }
       if (enableHideVersions) {
         mainToolbarActions.push({
           title: isHidden ? stringsOverrides.unhide : stringsOverrides.hide,
@@ -229,6 +232,7 @@ const VersionsTab = (props: VersionsTabProps) => {
       return mainToolbarActions;
     },
     [
+      enableDownload,
       enableHideVersions,
       onDownloadClick,
       stringsOverrides.download,
