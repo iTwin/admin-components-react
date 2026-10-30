@@ -2,6 +2,29 @@
   "name": "@itwin/manage-versions-react",
   "entries": [
     {
+      "version": "2.2.5",
+      "tag": "@itwin/manage-versions-react_v2.2.5",
+      "date": "Fri, 30 Oct 2026 13:06:27 GMT",
+      "comments": {
+        "none": [
+          {
+            "comment": "Fix flakey table row test"
+          },
+          {
+            "comment": "CVE remediation: remove unused dev dependencies and override vulnerable transitive dependencies"
+          },
+          {
+            "comment": "Fix flaky test"
+          }
+        ],
+        "patch": [
+          {
+            "comment": "Add an enableDownload option to hide named-version downloads while preserving existing behavior by default."
+          }
+        ]
+      }
+    },
+    {
       "version": "2.2.4",
       "tag": "@itwin/manage-versions-react_v2.2.4",
       "date": "Thu, 29 Jan 2026 09:00:08 GMT",

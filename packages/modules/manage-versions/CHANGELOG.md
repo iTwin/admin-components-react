@@ -1,6 +1,13 @@
 # Change Log - @itwin/manage-versions-react
 
-This log was last generated on Thu, 29 Jan 2026 09:00:08 GMT and should not be manually modified.
+This log was last generated on Fri, 30 Oct 2026 13:06:27 GMT and should not be manually modified.
+
+## 2.2.5
+Fri, 30 Oct 2026 13:06:27 GMT
+
+### Patches
+
+- Add an enableDownload option to hide named-version downloads while preserving existing behavior by default.
 
 ## 2.2.4
 Thu, 29 Jan 2026 09:00:08 GMT
