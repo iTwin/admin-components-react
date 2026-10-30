@@ -102,6 +102,10 @@ export type ManageVersionsProps = {
   onTabChange?: (tab: ManageVersionsTabs) => void;
   /** Enable hide versions feature */
   enableHideVersions?: boolean;
+  /** Show the named-version download action.
+   * @default true
+   */
+  enableDownload?: boolean;
 };
 
 export enum ManageVersionsTabs {
@@ -205,6 +209,7 @@ const ManageVersionsComponent = (props: ManageVersionsProps) => {
     currentTab = ManageVersionsTabs.Versions,
     onTabChange,
     enableHideVersions = false,
+    enableDownload = true,
   } = props;
 
   const toaster = useToaster();
@@ -628,6 +633,7 @@ const ManageVersionsComponent = (props: ManageVersionsProps) => {
       stringsOverrides={stringsOverrides}
       log={log}
       enableHideVersions={enableHideVersions}
+      enableDownload={enableDownload}
     >
       <div>
         <Flex>

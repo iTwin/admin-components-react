@@ -27,6 +27,23 @@ const App = () => (
 );
 ```
 
+## Download action
+
+`enableDownload` controls the Download action in a named version's More menu.
+It defaults to `true`, preserving existing behavior. Set it to `false` for
+experiences that should not offer named-version downloads:
+
+```jsx
+<ManageVersions
+  accessToken={accessToken}
+  imodelId={imodelId}
+  enableDownload={false}
+/>
+```
+
+This only removes the UI action; it does not change API permissions or the
+availability of other named-version actions.
+
 ## Development
 
 When making changes to the src, run `rushx start` in the dev folder to enable source watching and rebuild, so the storybook dev-server will have access to updated code on successful code compilation.

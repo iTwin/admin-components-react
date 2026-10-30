@@ -18,6 +18,7 @@ const ConfigContext = React.createContext<
       stringsOverrides: ManageVersionsStringOverrides;
       log?: LogFunc;
       enableHideVersions: boolean;
+      enableDownload: boolean;
     }
   | undefined
 >(undefined);
@@ -30,12 +31,15 @@ export type ConfigProviderProps = {
   log?: LogFunc;
   children: React.ReactNode;
   enableHideVersions: boolean;
+  enableDownload?: boolean;
 };
 
 export const ConfigProvider = (props: ConfigProviderProps) => {
-  const { children, ...rest } = props;
+  const { children, enableDownload = true, ...rest } = props;
   return (
-    <ConfigContext.Provider value={rest}>{children}</ConfigContext.Provider>
+    <ConfigContext.Provider value={{ ...rest, enableDownload }}>
+      {children}
+    </ConfigContext.Provider>
   );
 };
 
