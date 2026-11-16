@@ -3,11 +3,11 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 
-import { renderHook } from "@testing-library/react-hooks";
 import React from "react";
 import { act } from "react";
 
 import { LoggerContext } from "../../contexts/LoggerContext";
+import { renderHook } from "../../tests/renderHook";
 import { useIModelFavorites } from "./useIModelFavorites";
 
 export function mockFetch(data: any, status = 200) {
