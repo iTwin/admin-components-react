@@ -2,8 +2,6 @@
   "$schema": "https://developer.microsoft.com/json-schemas/rush/v5/common-versions.schema.json",
 
   "preferredVersions": {
-    "@types/react": "18.3.20",
-    "@types/react-dom": "18.3.6",
     "lint-staged": "^10.2.11",
     "browserslist": "^4.20.4"
   }

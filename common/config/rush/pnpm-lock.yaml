@@ -10,6 +10,8 @@ overrides:
   brace-expansion@1: 1.1.18
   brace-expansion@5: 5.0.9
 
+packageExtensionsChecksum: 4703ece0a7a72666ebfae1ad635c7470
+
 importers:
 
   .:
@@ -79,7 +81,7 @@ importers:
       '@itwin/delete-itwin-react': link:../../modules/delete-itwin
       '@itwin/imodel-browser-react': link:../../modules/imodel-browser
       '@itwin/itwinui-icons-react': 2.10.0_f2n36xlxc25aoyqwd2vti3toze
-      '@itwin/itwinui-react': 3.19.4_6hb2lv5bvdnippjdy5c6dd4q4i
+      '@itwin/itwinui-react': 3.19.4_k7prehb6oqg5oapecgjzgebbe4
       '@itwin/manage-versions-react': link:../../modules/manage-versions
       '@itwin/storybook-auth-addon': link:../../modules/storybook-auth-addon
       '@mui/material': 9.4.0_6osubdcdoijdu5fots7kwb2com
@@ -126,7 +128,7 @@ importers:
       '@testing-library/react': ^16.2.0
       '@types/jest': ^29.5.0
       '@types/node': ^14.14.35
-      '@types/react': 18.3.20
+      '@types/react': ^18.3.5
       '@typescript-eslint/eslint-plugin': ^8.0.0
       '@typescript-eslint/parser': ^8.57.0
       eslint: ^8.57.0
@@ -154,7 +156,7 @@ importers:
       tslib: ^2.6.2
       typescript: ~6.0.3
     dependencies:
-      '@itwin/itwinui-react': 3.18.0_nnrd3gsncyragczmpvfhocinkq
+      '@itwin/itwinui-react': 3.18.0_27kzlijtntas6645qwojwuhdba
     devDependencies:
       '@rollup/plugin-commonjs': 17.1.0_rollup@2.80.0
       '@testing-library/dom': 10.4.0
@@ -199,7 +201,7 @@ importers:
       '@testing-library/react': ^11.1.0
       '@types/jest': ^29.5.0
       '@types/node': ^14.14.35
-      '@types/react': 18.3.20
+      '@types/react': ^18.3.5
       '@typescript-eslint/eslint-plugin': ^8.0.0
       '@typescript-eslint/parser': ^8.57.0
       eslint: ^8.57.0
@@ -228,7 +230,7 @@ importers:
       typescript: ~6.0.3
     dependencies:
       '@itwin/itwinui-icons-react': 2.10.0_nnrd3gsncyragczmpvfhocinkq
-      '@itwin/itwinui-react': 3.18.0_nnrd3gsncyragczmpvfhocinkq
+      '@itwin/itwinui-react': 3.18.0_27kzlijtntas6645qwojwuhdba
     devDependencies:
       '@rollup/plugin-commonjs': 17.1.0_rollup@2.80.0
       '@rollup/plugin-image': 2.1.1_rollup@2.80.0
@@ -272,7 +274,7 @@ importers:
       '@testing-library/react': ^11.1.0
       '@types/jest': ^29.5.0
       '@types/node': ^14.14.35
-      '@types/react': 18.3.20
+      '@types/react': ^18.3.5
       '@typescript-eslint/eslint-plugin': ^8.0.0
       '@typescript-eslint/parser': ^8.57.0
       eslint: ^8.57.0
@@ -301,7 +303,7 @@ importers:
       typescript: ~6.0.3
     dependencies:
       '@itwin/itwinui-icons-react': 2.10.0_nnrd3gsncyragczmpvfhocinkq
-      '@itwin/itwinui-react': 2.12.26_nnrd3gsncyragczmpvfhocinkq
+      '@itwin/itwinui-react': 2.12.26_27kzlijtntas6645qwojwuhdba
     devDependencies:
       '@rollup/plugin-commonjs': 17.1.0_rollup@2.80.0
       '@rollup/plugin-image': 2.1.1_rollup@2.80.0
@@ -394,7 +396,7 @@ importers:
       classnames: 2.5.1
       react-intersection-observer: 9.16.0_f2n36xlxc25aoyqwd2vti3toze
     devDependencies:
-      '@itwin/itwinui-react': 3.19.4_6hb2lv5bvdnippjdy5c6dd4q4i
+      '@itwin/itwinui-react': 3.19.4_k7prehb6oqg5oapecgjzgebbe4
       '@mui/material': 9.4.0_6osubdcdoijdu5fots7kwb2com
       '@mui/x-data-grid': 9.3.0_4c7fuxmx5mkssyxcuyjz4b7b7i
       '@rollup/plugin-commonjs': 17.1.0_rollup@2.80.0
@@ -452,8 +454,8 @@ importers:
       '@testing-library/jest-dom': ^6.6.3
       '@testing-library/react': ^16.2.0
       '@types/jest': ^29.5.0
-      '@types/react': 18.3.20
-      '@types/react-dom': 18.3.6
+      '@types/react': ^18.3.5
+      '@types/react-dom': ^18.3.0
       '@types/react-table': ~7.7.14
       '@typescript-eslint/eslint-plugin': ^8.0.0
       '@typescript-eslint/parser': ^8.57.0
@@ -484,7 +486,7 @@ importers:
       typescript: ~6.0.3
     dependencies:
       '@itwin/itwinui-icons-react': 2.10.0_nnrd3gsncyragczmpvfhocinkq
-      '@itwin/itwinui-react': 3.18.0_nnrd3gsncyragczmpvfhocinkq
+      '@itwin/itwinui-react': 3.18.0_2xcipno2e5bp5cvaetizqkvbci
       classnames: 2.5.1
     devDependencies:
       '@rollup/plugin-commonjs': 17.1.0_rollup@2.80.0
@@ -528,8 +530,8 @@ importers:
       '@bentley/frontend-authorization-client': 2.11.0
       '@bentley/itwin-client': 2.11.0
       '@storybook/icons': ^2.0.2
-      '@types/react': 18.3.20
-      '@types/react-dom': 18.3.6
+      '@types/react': ^18.3.5
+      '@types/react-dom': ^18.3.0
       '@typescript-eslint/eslint-plugin': ^8.0.0
       '@typescript-eslint/parser': ^8.57.0
       esbuild: ^0.25.0
@@ -2832,15 +2834,23 @@ packages:
       react-dom: 18.3.1_react@18.3.1
     dev: false
 
-  /@itwin/itwinui-react/2.12.26_nnrd3gsncyragczmpvfhocinkq:
+  /@itwin/itwinui-react/2.12.26_27kzlijtntas6645qwojwuhdba:
     resolution: {integrity: sha512-SzedS6sz1iupq0JZm0SAfynFPR8xB9/GbTtQz/8XyuTEvrBoXyHMZJGAySR99TdLwpm3r+cxAEpFK5UOpQ+0Vw==}
     deprecated: iTwinUI v2 has reached end-of-life. Please upgrade to the latest version.
     peerDependencies:
+      '@types/react': '*'
+      '@types/react-dom': '*'
       react: '>=16.8.6 < 19.0.0'
       react-dom: '>=16.8.6 < 19.0.0'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      '@types/react-dom':
+        optional: true
     dependencies:
       '@itwin/itwinui-illustrations-react': 2.1.0_nnrd3gsncyragczmpvfhocinkq
       '@tippyjs/react': 4.2.6_nnrd3gsncyragczmpvfhocinkq
+      '@types/react': 18.3.20
       '@types/react-table': 7.7.20
       classnames: 2.5.1
       react: 18.3.1
@@ -2850,30 +2860,69 @@ packages:
       tippy.js: 6.3.7
     dev: false
 
-  /@itwin/itwinui-react/3.18.0_nnrd3gsncyragczmpvfhocinkq:
+  /@itwin/itwinui-react/3.18.0_27kzlijtntas6645qwojwuhdba:
     resolution: {integrity: sha512-zmri5oB406Qc6M2YAPtvoNcqDZ+r+ZuE2pczlIgYxTCvBB7rDCh91ng0wroyZYLgQLuYnarcnjLLSRaicy1Rrw==}
     peerDependencies:
+      '@types/react': '*'
+      '@types/react-dom': '*'
       react: '>=17.0.0'
       react-dom: '>=17.0.0'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      '@types/react-dom':
+        optional: true
     dependencies:
       '@floating-ui/react': 0.27.16_nnrd3gsncyragczmpvfhocinkq
       '@itwin/itwinui-illustrations-react': 2.1.0_nnrd3gsncyragczmpvfhocinkq
       '@swc/helpers': 0.5.17
       '@tanstack/react-virtual': 3.13.12_nnrd3gsncyragczmpvfhocinkq
+      '@types/react': 18.3.20
       classnames: 2.5.1
       react: 18.3.1
       react-dom: 18.3.1_react@18.3.1
       react-table: 7.8.0_react@18.3.1
     dev: false
 
-  /@itwin/itwinui-react/3.19.4_6hb2lv5bvdnippjdy5c6dd4q4i:
+  /@itwin/itwinui-react/3.18.0_2xcipno2e5bp5cvaetizqkvbci:
+    resolution: {integrity: sha512-zmri5oB406Qc6M2YAPtvoNcqDZ+r+ZuE2pczlIgYxTCvBB7rDCh91ng0wroyZYLgQLuYnarcnjLLSRaicy1Rrw==}
+    peerDependencies:
+      '@types/react': '*'
+      '@types/react-dom': '*'
+      react: '>=17.0.0'
+      react-dom: '>=17.0.0'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      '@types/react-dom':
+        optional: true
+    dependencies:
+      '@floating-ui/react': 0.27.16_nnrd3gsncyragczmpvfhocinkq
+      '@itwin/itwinui-illustrations-react': 2.1.0_nnrd3gsncyragczmpvfhocinkq
+      '@swc/helpers': 0.5.17
+      '@tanstack/react-virtual': 3.13.12_nnrd3gsncyragczmpvfhocinkq
+      '@types/react': 18.3.20
+      '@types/react-dom': 18.3.6_@types+react@18.3.20
+      classnames: 2.5.1
+      react: 18.3.1
+      react-dom: 18.3.1_react@18.3.1
+      react-table: 7.8.0_react@18.3.1
+    dev: false
+
+  /@itwin/itwinui-react/3.19.4_k7prehb6oqg5oapecgjzgebbe4:
     resolution: {integrity: sha512-DEKmeMyW2w3DDyzt1KHrfXmyj1A0DkTbgF7R+PvrQrkDVh5+08vnAV/Q+EK9fkKUOuRL8P0lvhMhIPhRa1l1eQ==}
     peerDependencies:
       '@stratakit/foundations': '>=0.2.0'
+      '@types/react': '*'
+      '@types/react-dom': '*'
       react: '>=17.0.0'
       react-dom: '>=17.0.0'
     peerDependenciesMeta:
       '@stratakit/foundations':
+        optional: true
+      '@types/react':
+        optional: true
+      '@types/react-dom':
         optional: true
     dependencies:
       '@floating-ui/react': 0.27.16_f2n36xlxc25aoyqwd2vti3toze
@@ -2881,6 +2930,8 @@ packages:
       '@stratakit/foundations': 1.0.0_f2n36xlxc25aoyqwd2vti3toze
       '@swc/helpers': 0.5.17
       '@tanstack/react-virtual': 3.13.12_f2n36xlxc25aoyqwd2vti3toze
+      '@types/react': 19.3.0
+      '@types/react-dom': 19.3.0_@types+react@19.3.0
       classnames: 2.5.1
       react: 19.3.1
       react-dom: 19.3.1_react@19.3.1
@@ -4957,7 +5008,6 @@ packages:
       '@types/react': ^18.0.0
     dependencies:
       '@types/react': 18.3.20
-    dev: true
 
   /@types/react-dom/19.3.0_@types+react@19.3.0:
     resolution: {integrity: sha512-ZI7bU42mZXXKHn/qNLEw2IrbiINU7X5+vfgdixBHkCNpYWXjKgfQ/P+uyGb5CjOLB9UcnTeg3rylQtV2hym44Q==}
@@ -4970,7 +5020,7 @@ packages:
   /@types/react-table/7.7.20:
     resolution: {integrity: sha512-ahMp4pmjVlnExxNwxyaDrFgmKxSbPwU23sGQw2gJK4EhCvnvmib2s/O/+y1dfV57dXOwpr2plfyBol+vEHbi2w==}
     dependencies:
-      '@types/react': 18.3.20
+      '@types/react': 19.3.0
 
   /@types/react-transition-group/4.4.12_@types+react@19.3.0:
     resolution: {integrity: sha512-8TV6R3h2j7a91c+1DXdJi3Syo69zzIZbz7Lg5tORM5LEJG7X/E6a1V3drRyBRZq7/utz7A+c4OgYLiLcYGHG6w==}
@@ -4990,7 +5040,6 @@ packages:
     resolution: {integrity: sha512-N0rFCuH9YoxG9/m61l9MfpJKfmLOVU0em7ipIz6TRgSSkvReLB9vL85GB+yr8Bs5leqpvg96JSwF4ZS1s4viQg==}
     dependencies:
       csstype: 3.2.3
-    dev: true
 
   /@types/resolve/1.20.6:
     resolution: {integrity: sha512-A4STmOXPhMUtHH+S6ymgE2GiBSMqf4oTvcQZMcHzokuTLVYzXTB8ttjcgxOVaAp2lGwEdzZ0J+cRbbeevQj1UQ==}
