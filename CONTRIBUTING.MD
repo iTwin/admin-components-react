@@ -101,13 +101,7 @@ We follow the normal [GitHub pull request workflow](https://help.github.com/en/g
 
 Every change must be tested with proper unit tests. Integration tests are highly encouraged in libraries with critical workflows to ensure end-to-end consistency.
 
-Every change must be described with a change log: Run "rush change" on your committed changes and choose the change type following [semantic versioning](https://semver.org/):
-
-- `patch`: backward compatible bug fixes and internal changes.
-- `minor`: backward compatible new features, such as new props or support for a new peer dependency version.
-- `major`: breaking changes, such as removed or renamed APIs or dropped support for a peer dependency version.
-
-Commit your change log along with your pull request.
+Every change must be described with a change log: Run "rush change" on your committed and always choose "patch" as the change type. Commit your change log along with your pull request.
 
 ### Code Change Workflow
 
