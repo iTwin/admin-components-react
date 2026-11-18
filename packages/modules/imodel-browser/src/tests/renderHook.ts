@@ -2,7 +2,6 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import type { waitForOptions } from "@testing-library/react";
 import {
   act,
   renderHook as renderHookRtl,
@@ -13,27 +12,20 @@ import type React from "react";
 export { act };
 
 /** Like the legacy `waitFor`: the callback may return `false` to keep waiting instead of throwing. */
-const waitForCondition = (
-  callback: () => boolean | void,
-  options?: waitForOptions
-) =>
+const waitForCondition = (callback: () => boolean | void) =>
   waitForRtl(() => {
     if (callback() === false) {
       throw new Error("Timed out waiting for the condition to be met");
     }
-  }, options);
+  });
 
-const waitForChange = <T>(
-  read: () => T,
-  message: string,
-  options?: waitForOptions
-) => {
+const waitForChange = <T>(read: () => T, message: string) => {
   const initial = read();
   return waitForRtl(() => {
     if (Object.is(read(), initial)) {
       throw new Error(message);
     }
-  }, options);
+  });
 };
 
 /**
@@ -58,22 +50,14 @@ export const renderHook = <TProps, TResult>(
     return value;
   }, options);
 
-  const waitForNextUpdate = (options?: waitForOptions) =>
+  const waitForNextUpdate = () =>
     waitForChange(
       () => renderCount,
-      "Timed out waiting for the next hook update",
-      options
+      "Timed out waiting for the next hook update"
     );
 
-  const waitForValueToChange = (
-    selector: () => unknown,
-    options?: waitForOptions
-  ) =>
-    waitForChange(
-      selector,
-      "Timed out waiting for the value to change",
-      options
-    );
+  const waitForValueToChange = (selector: () => unknown) =>
+    waitForChange(selector, "Timed out waiting for the value to change");
 
   return {
     result: {
