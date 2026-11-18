@@ -46,8 +46,6 @@
     "react-intersection-observer": "^9.16.0"
   },
   "devDependencies": {
-    "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.1",
     "@itwin/itwinui-react": "^3.19.4",
     "@mui/material": "^9.4.0",
     "@mui/x-data-grid": "^9.3.0",
@@ -100,7 +98,6 @@
   "peerDependencies": {
     "@itwin/itwinui-react": "^3.17.3",
     "@mui/material": "^9.4.0",
-    "@mui/system": "^9.0.0",
     "@mui/x-data-grid": "^9.3.0",
     "@stratakit/foundations": "^1.0.0",
     "@stratakit/icons": "^0.4.3",

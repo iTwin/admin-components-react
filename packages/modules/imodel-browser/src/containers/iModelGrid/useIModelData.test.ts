@@ -3,10 +3,10 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import { rest } from "msw";
-import { act, StrictMode } from "react";
+import { StrictMode } from "react";
 
 import { server } from "../../tests/mocks/server";
-import { renderHook } from "../../tests/renderHook";
+import { act, renderHook } from "../../tests/renderHook";
 import { DataStatus } from "../../types";
 import { useIModelData } from "./useIModelData";
 

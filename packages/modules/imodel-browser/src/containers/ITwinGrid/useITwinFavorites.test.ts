@@ -4,10 +4,9 @@
  *--------------------------------------------------------------------------------------------*/
 
 import React from "react";
-import { act } from "react";
 
 import { LoggerContext } from "../../contexts/LoggerContext";
-import { renderHook } from "../../tests/renderHook";
+import { act, renderHook } from "../../tests/renderHook";
 import { useITwinFavorites } from "./useITwinFavorites";
 
 export function mockFetch(data: any, status = 200) {

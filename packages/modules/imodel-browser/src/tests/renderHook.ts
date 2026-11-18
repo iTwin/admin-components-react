@@ -11,13 +11,22 @@ import type React from "react";
 
 export { act };
 
-/** Like the legacy helper: the callback may return `false` to keep waiting instead of throwing. */
-const waitFor = (callback: () => boolean | void) =>
+/** Like the legacy `waitFor`: the callback may return `false` to keep waiting instead of throwing. */
+const waitForCondition = (callback: () => boolean | void) =>
   waitForRtl(() => {
     if (callback() === false) {
       throw new Error("Timed out waiting for the condition to be met");
     }
   });
+
+const waitForChange = <T>(read: () => T, message: string) => {
+  const initial = read();
+  return waitForRtl(() => {
+    if (Object.is(read(), initial)) {
+      throw new Error(message);
+    }
+  });
+};
 
 /**
  * `renderHook` on top of `@testing-library/react` (which supports React 19), keeping the
@@ -34,33 +43,21 @@ export const renderHook = <TProps, TResult>(
   let renderCount = 0;
   const all: TResult[] = [];
 
-  const utils = renderHookRtl(
-    (props: TProps) => {
-      renderCount++;
-      const value = callback(props);
-      all.push(value);
-      return value;
-    },
-    { initialProps: options?.initialProps as TProps, wrapper: options?.wrapper }
-  );
+  const utils = renderHookRtl((props: TProps) => {
+    renderCount++;
+    const value = callback(props);
+    all.push(value);
+    return value;
+  }, options);
 
-  const waitForNextUpdate = async () => {
-    const startCount = renderCount;
-    await waitFor(() => {
-      if (renderCount === startCount) {
-        throw new Error("Timed out waiting for the next hook update");
-      }
-    });
-  };
+  const waitForNextUpdate = () =>
+    waitForChange(
+      () => renderCount,
+      "Timed out waiting for the next hook update"
+    );
 
-  const waitForValueToChange = async (selector: () => unknown) => {
-    const initial = selector();
-    await waitFor(() => {
-      if (Object.is(selector(), initial)) {
-        throw new Error("Timed out waiting for the value to change");
-      }
-    });
-  };
+  const waitForValueToChange = (selector: () => unknown) =>
+    waitForChange(selector, "Timed out waiting for the value to change");
 
   return {
     result: {
@@ -71,7 +68,7 @@ export const renderHook = <TProps, TResult>(
     },
     rerender: utils.rerender,
     unmount: utils.unmount,
-    waitFor,
+    waitFor: waitForCondition,
     waitForNextUpdate,
     waitForValueToChange,
   };

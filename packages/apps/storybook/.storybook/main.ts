@@ -3,10 +3,14 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import type { StorybookConfig } from "@storybook/react-webpack5";
+import { createRequire } from "module";
 import path from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const require = createRequire(import.meta.url);
+const resolvePackageDir = (name: string) =>
+  path.dirname(require.resolve(`${name}/package.json`));
 
 const config: StorybookConfig = {
   core: {
@@ -64,10 +68,14 @@ const config: StorybookConfig = {
       ),
     };
 
-    // Alias local packages to source directories for both dev and production builds
+    // Alias local packages to source directories for both dev and production builds.
+    // React is pinned to storybook's copy because aliased sources would otherwise resolve
+    // their own (possibly different) React version and break hooks.
     config.resolve.alias = {
       ...config.resolve.alias,
       ...packagePaths,
+      react: resolvePackageDir("react"),
+      "react-dom": resolvePackageDir("react-dom"),
     };
 
     // Enable HMR for local packages in development by aliasing to source directories
