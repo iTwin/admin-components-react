@@ -23,7 +23,12 @@ export const _buildManagedContextMenuOptions: <T>(
   value: T,
   closeMenu?: () => void,
   refetchData?: () => void
-) => JSX.Element[] | undefined = (options, value, closeMenu, refetchData) => {
+) => React.JSX.Element[] | undefined = (
+  options,
+  value,
+  closeMenu,
+  refetchData
+) => {
   return options
     ?.filter?.(({ visible }) => {
       return typeof visible === "function" ? visible(value) : visible ?? true;

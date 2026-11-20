@@ -2,9 +2,8 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { act, renderHook } from "@testing-library/react-hooks";
-
 import { deferred } from "../tests/helpers";
+import { act, renderHook } from "../tests/renderHook";
 import { DataStatus } from "../types";
 import { LoadedPage, PageRequest } from "./infiniteQueryReducer";
 import { useInfiniteQuery, UseInfiniteQueryOptions } from "./useInfiniteQuery";

@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import "@testing-library/jest-dom";
 
-import { render, waitFor } from "@testing-library/react";
+import { fireEvent, render, waitFor } from "@testing-library/react";
 import React from "react";
 
 import { DataStatus, IModelCellOverrides, IModelFull, IModelGrid } from "../..";
@@ -182,7 +182,7 @@ describe("IModelGrid", () => {
     expect(optionsButton).toBeDefined();
     let menuItems = queryAllByRole("menuitem");
     expect(menuItems.length).toBe(0);
-    optionsButton.click();
+    fireEvent.click(optionsButton);
     // the dropdown should open and show the actions label Action 1 and Action 2
     menuItems = queryAllByRole("menuitem");
     expect(menuItems.length).toBe(2); // Action 1 and Action 2

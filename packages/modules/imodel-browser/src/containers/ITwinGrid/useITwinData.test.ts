@@ -2,7 +2,6 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { act, renderHook } from "@testing-library/react-hooks";
 import {
   type ResponseComposition,
   type RestContext,
@@ -12,6 +11,7 @@ import {
 
 import { deferred, ids, responseFor } from "../../tests/helpers";
 import { server } from "../../tests/mocks/server";
+import { act, renderHook } from "../../tests/renderHook";
 import { DataStatus, ITwinDataState } from "../../types";
 import { useITwinData } from "./useITwinData";
 

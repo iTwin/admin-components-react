@@ -6,7 +6,7 @@ exports[`BaseCard renders with all the props 1`] = `
   data-_sk-color-scheme="light"
 >
   <article
-    aria-labelledby=":r5:"
+    aria-labelledby="_r_5_"
     class="MuiPaper-root MuiPaper-outlined MuiPaper-rounded MuiCard-root mui-eb71mb-MuiPaper-root-MuiCard-root"
     data-_sk-actionable=""
   >
@@ -24,7 +24,7 @@ exports[`BaseCard renders with all the props 1`] = `
           >
             <span
               class="MuiChip-label mui-eccknh-MuiChip-label"
-              id=":r7:"
+              id="_r_7_"
             >
               Top Left
             </span>
@@ -124,7 +124,7 @@ exports[`BaseCard renders with all the props 1`] = `
         >
           <span
             class="MuiChip-label mui-eccknh-MuiChip-label"
-            id=":rd:"
+            id="_r_d_"
           >
             Bottom left
           </span>
@@ -138,7 +138,7 @@ exports[`BaseCard renders with all the props 1`] = `
         >
           <span
             class="MuiChip-label mui-eccknh-MuiChip-label"
-            id=":rf:"
+            id="_r_f_"
           >
             Bottom right
           </span>
@@ -177,7 +177,7 @@ exports[`BaseCard renders with all the props 1`] = `
       >
         <h2
           class="MuiTypography-root MuiTypography-body2 MuiCardHeader-title mui-19x7l83-MuiTypography-root"
-          id=":r5:"
+          id="_r_5_"
         >
           <button
             class="MuiButtonBase-root MuiCardActionArea-root mui-6cx05u-MuiButtonBase-root-MuiCardActionArea-root"
@@ -202,7 +202,7 @@ exports[`BaseCard renders with all the props 1`] = `
           aria-label="More options"
           class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorSecondary MuiIconButton-sizeSmall mui-yzbewk-MuiButtonBase-root-MuiIconButton-root"
           data-testid="more-options-button"
-          id=":rh:"
+          id="_r_h_"
           tabindex="0"
           type="button"
         >
@@ -263,7 +263,7 @@ exports[`BaseCard renders with only a title 1`] = `
   data-_sk-color-scheme="light"
 >
   <article
-    aria-labelledby=":r2:"
+    aria-labelledby="_r_2_"
     class="MuiPaper-root MuiPaper-outlined MuiPaper-rounded MuiCard-root mui-eb71mb-MuiPaper-root-MuiCard-root"
   >
     <div
@@ -281,7 +281,7 @@ exports[`BaseCard renders with only a title 1`] = `
       >
         <h2
           class="MuiTypography-root MuiTypography-h5 MuiCardHeader-title mui-ej25ov-MuiTypography-root"
-          id=":r2:"
+          id="_r_2_"
         >
           Test Card
         </h2>

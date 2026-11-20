@@ -53,7 +53,7 @@ export interface IModelGridProps {
   /** List of actions to build for each imodel context menu. */
   iModelActions?: ContextMenuBuilderItem<IModelFull>[];
   /** Custom icon for the "Remove from recents" context menu action. Only applies when requestType is "recents". */
-  removeFromRecentsIcon?: JSX.Element;
+  removeFromRecentsIcon?: React.JSX.Element;
   /** Function (can be a react hook) that returns state for an iModel, returned values will be applied as props to the IModelTile, overrides IModelGrid provided values */
   useIndividualState?: (
     iModel: IModelFull,

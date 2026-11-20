@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "packageName": "@itwin/imodel-browser-react",
+      "comment": "Add React 19 support: allow react and react-dom ^19.0.0 as peer dependencies and upgrade react-intersection-observer to v9, which supports React 19.",
+      "type": "minor"
+    }
+  ],
+  "packageName": "@itwin/imodel-browser-react"
+}

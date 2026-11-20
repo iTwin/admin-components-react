@@ -2,9 +2,8 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { renderHook } from "@testing-library/react-hooks";
-
 import { ids } from "../../tests/helpers";
+import { renderHook } from "../../tests/renderHook";
 import { ITwinFull } from "../../types";
 import { useITwinFilter } from "./useITwinFilter";
 
